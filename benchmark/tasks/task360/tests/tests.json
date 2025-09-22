@@ -1,0 +1,32 @@
+{
+  "examples": [
+    {
+      "input": "12.3 kilo meters",
+      "output": "1.23 * 10^4 meters"
+    },
+    {
+      "input": "0.45 mega watts",
+      "output": "4.5 * 10^5 watts"
+    },
+    {
+      "input": "0.000000000000000000000001 yotta grams",
+      "output": "1 * 10^0 grams"
+    },
+    {
+      "input": "1000000000000000000000000 yocto seconds",
+      "output": "1.000000000000000000000000 * 10^0 seconds"
+    },
+    {
+      "input": "42 amperes",
+      "output": "4.2 * 10^1 amperes"
+    },
+    {
+      "input": "0.42 joules",
+      "output": "4.2 * 10^-1 joules"
+    },
+    {
+      "input": "1234.56789012345678901234567890 hecto pascals",
+      "output": "1.23456789012345678901234567890 * 10^5 pascals"
+    }
+  ]
+}

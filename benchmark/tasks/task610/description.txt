@@ -1,0 +1,1 @@
+You are given a sequence A = a_0, a_1, ..., a_{n-1} and you need to process a series of relate and diff queries. The relate query, relate(x, y, z), indicates that a_y is greater than a_x by z. The diff query, diff(x, y), requires you to report the difference between a_x and a_y (a_y - a_x). For each diff query, print the difference calculated based on the relate information.

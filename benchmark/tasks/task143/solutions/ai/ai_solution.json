@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int H, W, N;\n    scanf(\"%d %d %d\", &H, &W, &N);\n\n    char **grid = (char **)malloc((H + 2) * sizeof(char *));\n    for (int i = 0; i <= H; i++) {\n        grid[i] = (char *)malloc((W + 2) * sizeof(char));\n        for (int j = 0; j <= W; j++) {\n            grid[i][j] = 'E';\n        }\n    }\n\n    for (int walk = 1; walk <= N; walk++) {\n        int a = 1, b = 1;\n        while (a <= H && b <= W) {\n            if (grid[a][b] == 'E') {\n                grid[a][b] = 'S';\n                b++;\n            } else {\n                grid[a][b] = 'E';\n                a++;\n            }\n        }\n    }\n\n    int a = 1, b = 1;\n    while (a <= H && b <= W) {\n        printf(\"%c\", grid[a][b]);\n        if (grid[a][b] == 'E') {\n            b++;\n        } else {\n            a++;\n        }\n    }\n    printf(\"\\n\");\n\n    for (int i = 0; i <= H; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TaroWalk {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        long N = scanner.nextLong();\n        \n        StringBuilder route = new StringBuilder();\n        long currentX = 1;\n        long currentY = 1;\n        long cellsToTraverse = (long) H + W - 1;\n        \n        if (N > cellsToTraverse) {\n            System.out.println(\"-1\");\n            return;\n        }\n        \n        for (long step = 1; step <= N; step++) {\n            if (currentX == H && currentY == W) {\n                break;\n            }\n            \n            if (currentX < H && currentY < W) {\n                if (step % 2 == 1) {\n                    route.append(\"E\");\n                    currentY++;\n                } else {\n                    route.append(\"S\");\n                    currentX++;\n                }\n            } else if (currentX < H) {\n                route.append(\"S\");\n                currentX++;\n            } else if (currentY < W) {\n                route.append(\"E\");\n                currentY++;\n            }\n        }\n        \n        System.out.println(route.toString());\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:47:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int H, W;\n    long long N;\n    cin >> H >> W >> N;\n\n    vector<vector<char>> grid(H + 1, vector<char>(W + 1, 'E'));\n\n    int a = 1, b = 1;\n    for (long long k = 1; k <= N; ++k) {\n        char &dir = grid[a][b];\n        if (dir == 'E') {\n            dir = 'S';\n            b += 1;\n        } else {\n            dir = 'E';\n            a += 1;\n        }\n        if (a > H || b > W) break;\n    }\n\n    for (int i = 1; i <= H; ++i) {\n        for (int j = 1; j <= W; ++j) {\n            cout << grid[i][j];\n        }\n        cout << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_ROADS 100001\n\nint main() {\n    int H, W, N;\n    scanf(\"%d %d %d\", &H, &W, &N);\n\n    char route[MAX_ROADS];\n    memset(route, 0, sizeof(route));\n\n    int current_x = 1, current_y = 1;\n    \n    for (int walk = 1; walk <= N; walk++) {\n        if (current_x == H && current_y == W) {\n            break;\n        }\n\n        if (route[walk-1] == 0) {\n            if (current_x < H) {\n                route[walk-1] = 'S';\n                current_x++;\n            } else {\n                route[walk-1] = 'E';\n                current_y++;\n            }\n        } else if (route[walk-1] == 'E') {\n            route[walk-1] = 'S';\n            current_x++;\n        } else {\n            route[walk-1] = 'E';\n            current_y++;\n        }\n    }\n\n    printf(\"%s\\n\", route);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:48:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int H, W, N;\n    cin >> H >> W >> N;\n    \n    vector<vector<char>> grid(H + 1, vector<char>(W + 1, 'E'));\n    \n    int x = 1, y = 1;\n    for (int walk = 1; walk <= N; walk++) {\n        if (grid[x][y] == 'E') {\n            grid[x][y] = 'S';\n            y++;\n        } else {\n            grid[x][y] = 'E';\n            x++;\n        }\n        \n        if (x > H || y > W) {\n            break;\n        }\n    }\n    \n    string route;\n    x = 1, y = 1;\n    for (int walk = 1; walk <= N; walk++) {\n        if (grid[x][y] == 'E') {\n            route += 'E';\n            y++;\n        } else {\n            route += 'S';\n            x++;\n        }\n        \n        if (x > H || y > W) {\n            break;\n        }\n    }\n    \n    cout << route << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:48:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        long N = sc.nextLong();\n        char[][] grid = new char[H + 2][W + 2];\n        \n        for (int i = 1; i <= H; i++) {\n            for (int j = 1; j <= W; j++) {\n                grid[i][j] = sc.next().charAt(0);\n            }\n        }\n        \n        int a = 1, b = 1;\n        for (long step = 1; step <= N; step++) {\n            char direction = grid[a][b];\n            if (direction == 'E') {\n                grid[a][b] = 'S';\n                b++;\n            } else {\n                grid[a][b] = 'E';\n                a++;\n            }\n            if (a > H || b > W) {\n                break;\n            }\n        }\n        \n        System.out.println(a + \" \" + b);\n    }\n}",
+    "timestamp": "2025-08-05 18:48:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def nth_walk_route(H, W, N):\n    path = []\n    e = h = 0\n    while e < H or h < W:\n        if N % 2 == 1:\n            if e < H:\n                path.append('East')\n                e += 1\n            else:\n                path.append('South')\n                h += 1\n            N = (N + 1) // 2\n        else:\n            if h < W:\n                path.append('South')\n                h += 1\n            else:\n                path.append('East')\n                e += 1\n            N = N // 2\n    return path\n\n# Example usage:\nH, W, N = 2, 2, 4\nprint(nth_walk_route(H, W, N))",
+    "timestamp": "2025-08-13 01:00:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class TaroWalkRoute {\n\n    public static String findNthRoute(int H, int W, long N) {\n        StringBuilder route = new StringBuilder();\n        while (H > 0 && W > 0) {\n            long pathsSouth = binomialCoefficient(H + W - 1, W);\n            if (N <= pathsSouth) {\n                route.append('S');\n                H--;\n            } else {\n                route.append('E');\n                N -= pathsSouth;\n                W--;\n            }\n        }\n        while (H > 0) {\n            route.append('S');\n            H--;\n        }\n        while (W > 0) {\n            route.append('E');\n            W--;\n        }\n        return route.toString();\n    }\n\n    public static long binomialCoefficient(int n, int k) {\n        long res = 1;\n        for (int i = 0; i < k; i++) {\n            res = res * (n - i) / (i + 1);\n        }\n        return res;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        long N = scanner.nextLong();\n        scanner.close();\n\n        System.out.println(findNthRoute(H, W, N));\n    }\n}",
+    "timestamp": "2025-08-13 01:00:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid nthWalkRoute(int H, int W, long long N, char *route) {\n    int pos = 0;\n    N--;\n    \n    for (int i = 1; i < H + W; i++) {\n        if (N & (1LL << (i - 1))) {\n            route[pos++] = 'S';\n        } else {\n            route[pos++] = 'E';\n        }\n    }\n    route[pos] = '\\0';\n}\n\nint main() {\n    int H, W;\n    long long N;\n    char route[200];\n\n    // Example input\n    H = 3;\n    W = 3;\n    N = 5;\n\n    nthWalkRoute(H, W, N, route);\n    printf(\"Route for %lld-th walk: %s\\n\", N, route);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:00:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def predict_route(H, W, N):\n    current_row, current_col = 1, 1\n    route = []\n    \n    while current_row < H + 1 and current_col < W + 1:\n        if N == 1:\n            route.append('East' if current_col < W else 'South')\n            break\n        \n        if current_col < W:\n            route.append('East')\n            current_col += 1\n        else:\n            route.append('South')\n            current_row += 1\n        \n        N -= 1\n    \n    return route[0] if route else ''\n\n# Input handling\nH, W, N = map(int, input().split())\nresult = predict_route(H, W, N)\nprint(result)",
+    "timestamp": "2025-08-13 01:00:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    H, W, N = map(int, sys.stdin.readline().split())\n    grid = [[0]*(W+2) for _ in range(H+2)]\n    for _ in range(N):\n        i, j = 1, 1\n        while i <= H and j <= W:\n            if grid[i][j] == 0:\n                grid[i][j] = 1\n                j += 1\n            else:\n                grid[i][j] = 0\n                i += 1\n    for _ in range(int(sys.stdin.readline())):\n        a, b = map(int, sys.stdin.readline().split())\n        print(\"East\" if grid[a][b] == 0 else \"South\")\n\nif __name__ == '__main__':\n    solve()",
+    "timestamp": "2025-08-13 01:00:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nstring findRoute(int H, int W, long long N) {\n    string route;\n    long long south_moves = N;\n    for (int i = 0; i < W; i++) {\n        route += 'E';\n        if (south_moves & 1LL) {\n            south_moves = south_moves >> 1;\n        } else {\n            route.back() = 'S';\n            south_moves = south_moves >> 1;\n            south_moves += 1LL << (H - 1 - i);\n        }\n    }\n    route.resize(H + W, 'S');\n    return route;\n}\n\nint main() {\n    int H, W;\n    long long N;\n    cin >> H >> W >> N;\n    \n    string result = findRoute(H, W, N - 1); // Zero-based index\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:57:25"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "? AtcoderIsBad",
+      "output": "5"
+    },
+    {
+      "input": "? AtcoderIsGreat",
+      "output": "1"
+    },
+    {
+      "input": "! Atcod3rIsGreat",
+      "output": ""
+    }
+  ]
+}

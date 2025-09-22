@@ -1,0 +1,504 @@
+{
+  "examples": [
+    {
+      "input": "7\n",
+      "output": "7\n"
+    },
+    {
+      "input": "21\n",
+      "output": "5\n"
+    },
+    {
+      "input": "1\n",
+      "output": "1\n"
+    },
+    {
+      "input": "2\n",
+      "output": "2\n"
+    },
+    {
+      "input": "3\n",
+      "output": "3\n"
+    },
+    {
+      "input": "4\n",
+      "output": "4\n"
+    },
+    {
+      "input": "5\n",
+      "output": "5\n"
+    },
+    {
+      "input": "6\n",
+      "output": "6\n"
+    },
+    {
+      "input": "8\n",
+      "output": "8\n"
+    },
+    {
+      "input": "9\n",
+      "output": "9\n"
+    },
+    {
+      "input": "10\n",
+      "output": "1\n"
+    },
+    {
+      "input": "12\n",
+      "output": "1\n"
+    },
+    {
+      "input": "188\n",
+      "output": "9\n"
+    },
+    {
+      "input": "189\n",
+      "output": "9\n"
+    },
+    {
+      "input": "190\n",
+      "output": "1\n"
+    },
+    {
+      "input": "191\n",
+      "output": "0\n"
+    },
+    {
+      "input": "192\n",
+      "output": "0\n"
+    },
+    {
+      "input": "193\n",
+      "output": "1\n"
+    },
+    {
+      "input": "194\n",
+      "output": "0\n"
+    },
+    {
+      "input": "195\n",
+      "output": "1\n"
+    },
+    {
+      "input": "196\n",
+      "output": "1\n"
+    },
+    {
+      "input": "197\n",
+      "output": "0\n"
+    },
+    {
+      "input": "198\n",
+      "output": "2\n"
+    },
+    {
+      "input": "199\n",
+      "output": "1\n"
+    },
+    {
+      "input": "200\n",
+      "output": "0\n"
+    },
+    {
+      "input": "300\n",
+      "output": "6\n"
+    },
+    {
+      "input": "400\n",
+      "output": "1\n"
+    },
+    {
+      "input": "417\n",
+      "output": "5\n"
+    },
+    {
+      "input": "521\n",
+      "output": "1\n"
+    },
+    {
+      "input": "511\n",
+      "output": "2\n"
+    },
+    {
+      "input": "2878\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2879\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2880\n",
+      "output": "6\n"
+    },
+    {
+      "input": "2881\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2882\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2883\n",
+      "output": "7\n"
+    },
+    {
+      "input": "2884\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2885\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2886\n",
+      "output": "8\n"
+    },
+    {
+      "input": "2887\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2888\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2889\n",
+      "output": "9\n"
+    },
+    {
+      "input": "2890\n",
+      "output": "1\n"
+    },
+    {
+      "input": "2891\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2892\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2893\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2894\n",
+      "output": "1\n"
+    },
+    {
+      "input": "2895\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2896\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2897\n",
+      "output": "1\n"
+    },
+    {
+      "input": "2898\n",
+      "output": "1\n"
+    },
+    {
+      "input": "2899\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2900\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2901\n",
+      "output": "2\n"
+    },
+    {
+      "input": "3000\n",
+      "output": "2\n"
+    },
+    {
+      "input": "4000\n",
+      "output": "7\n"
+    },
+    {
+      "input": "5000\n",
+      "output": "2\n"
+    },
+    {
+      "input": "6000\n",
+      "output": "7\n"
+    },
+    {
+      "input": "7000\n",
+      "output": "2\n"
+    },
+    {
+      "input": "8000\n",
+      "output": "7\n"
+    },
+    {
+      "input": "9000\n",
+      "output": "2\n"
+    },
+    {
+      "input": "9900\n",
+      "output": "5\n"
+    },
+    {
+      "input": "9990\n",
+      "output": "2\n"
+    },
+    {
+      "input": "9991\n",
+      "output": "7\n"
+    },
+    {
+      "input": "9992\n",
+      "output": "7\n"
+    },
+    {
+      "input": "9993\n",
+      "output": "5\n"
+    },
+    {
+      "input": "9994\n",
+      "output": "2\n"
+    },
+    {
+      "input": "9995\n",
+      "output": "7\n"
+    },
+    {
+      "input": "9996\n",
+      "output": "7\n"
+    },
+    {
+      "input": "9997\n",
+      "output": "6\n"
+    },
+    {
+      "input": "9998\n",
+      "output": "2\n"
+    },
+    {
+      "input": "9999\n",
+      "output": "7\n"
+    },
+    {
+      "input": "10000\n",
+      "output": "7\n"
+    },
+    {
+      "input": "100000\n",
+      "output": "2\n"
+    },
+    {
+      "input": "1000000\n",
+      "output": "1\n"
+    },
+    {
+      "input": "10000000\n",
+      "output": "7\n"
+    },
+    {
+      "input": "100000000\n",
+      "output": "8\n"
+    },
+    {
+      "input": "1000000000\n",
+      "output": "1\n"
+    },
+    {
+      "input": "10000000000\n",
+      "output": "1\n"
+    },
+    {
+      "input": "100000000000\n",
+      "output": "0\n"
+    },
+    {
+      "input": "1000000000000\n",
+      "output": "1\n"
+    },
+    {
+      "input": "99999999995\n",
+      "output": "0\n"
+    },
+    {
+      "input": "99999999996\n",
+      "output": "1\n"
+    },
+    {
+      "input": "99999999997\n",
+      "output": "0\n"
+    },
+    {
+      "input": "99999999998\n",
+      "output": "1\n"
+    },
+    {
+      "input": "99999999999\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8888888887\n",
+      "output": "9\n"
+    },
+    {
+      "input": "8888888888\n",
+      "output": "9\n"
+    },
+    {
+      "input": "8888888889\n",
+      "output": "9\n"
+    },
+    {
+      "input": "8888888890\n",
+      "output": "1\n"
+    },
+    {
+      "input": "8888888891\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8888888892\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8888888893\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8888888894\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8888888895\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8888888896\n",
+      "output": "0\n"
+    },
+    {
+      "input": "788888888\n",
+      "output": "9\n"
+    },
+    {
+      "input": "788888889\n",
+      "output": "9\n"
+    },
+    {
+      "input": "788888890\n",
+      "output": "1\n"
+    },
+    {
+      "input": "788888896\n",
+      "output": "0\n"
+    },
+    {
+      "input": "68888884\n",
+      "output": "9\n"
+    },
+    {
+      "input": "68888885\n",
+      "output": "9\n"
+    },
+    {
+      "input": "68888886\n",
+      "output": "9\n"
+    },
+    {
+      "input": "68888887\n",
+      "output": "9\n"
+    },
+    {
+      "input": "68888888\n",
+      "output": "9\n"
+    },
+    {
+      "input": "68888889\n",
+      "output": "9\n"
+    },
+    {
+      "input": "68888890\n",
+      "output": "1\n"
+    },
+    {
+      "input": "68888891\n",
+      "output": "0\n"
+    },
+    {
+      "input": "68888892\n",
+      "output": "0\n"
+    },
+    {
+      "input": "68888893\n",
+      "output": "0\n"
+    },
+    {
+      "input": "68888894\n",
+      "output": "0\n"
+    },
+    {
+      "input": "68888895\n",
+      "output": "0\n"
+    },
+    {
+      "input": "95863555435\n",
+      "output": "6\n"
+    },
+    {
+      "input": "100000000000\n",
+      "output": "0\n"
+    },
+    {
+      "input": "999999999999\n",
+      "output": "9\n"
+    },
+    {
+      "input": "1000000000000\n",
+      "output": "1\n"
+    },
+    {
+      "input": "10\n",
+      "output": "1\n"
+    },
+    {
+      "input": "100000000004\n",
+      "output": "0\n"
+    },
+    {
+      "input": "100000000083\n",
+      "output": "0\n"
+    },
+    {
+      "input": "8\n",
+      "output": "8\n"
+    },
+    {
+      "input": "523452345325\n",
+      "output": "8\n"
+    },
+    {
+      "input": "134613461346\n",
+      "output": "3\n"
+    },
+    {
+      "input": "79437383\n",
+      "output": "5\n"
+    },
+    {
+      "input": "125312355\n",
+      "output": "7\n"
+    },
+    {
+      "input": "213412341\n",
+      "output": "6\n"
+    }
+  ]
+}

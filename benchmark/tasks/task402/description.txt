@@ -1,0 +1,9 @@
+In the world, girls make contracts with Kyubey to have their wishes granted, thereby becoming magical girls. The form and effect of the magic used are heavily influenced by the wishes. Sayaka is a novice magical girl who recently contracted with Kyubey. Her wish was to help a boy who could no longer move his fingers due to an accident, allowing him to continue playing music. The magic circle she creates is shaped like musical notes arranged in a circle.
+
+Sayaka has N musical notes, and she can arrange them freely in a circle. The mental energy she consumes to create the magic circle is determined by the arrangement of the notes. 
+
+First, M positive integers representing musical beauty S_1, ..., S_M are given. Each musical note has a pitch represented by integers K_1, ..., K_N ranging from 1 to M. The repulsive force between two notes with pitches a and b (where a ≤ b) is defined as [(S_a + ... + S_b) / L], where L is a given constant and [x] denotes the greatest integer not exceeding x.
+
+Sayaka's consumption of mental energy is the sum of the repulsive forces between each of the N pairs of adjacent notes.
+
+Given the combinations of pitches and their corresponding musical beauties, the task is to find the minimum value of mental energy consumed.

@@ -1,0 +1,1 @@
+Given a string w of length at least 1, determine the number of elements in its best representation and the number of distinct best representations, where a good representation consists of good strings that concatenate to form w. A good string is defined as one that cannot be expressed as k copies of any other string with k >= 2.

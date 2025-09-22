@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    int *arr = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    \n    qsort(arr, n, sizeof(int), compare);\n    \n    long long sum = 0;\n    for (int i = 0; i < k; i++) {\n        sum += arr[i];\n    }\n    \n    printf(\"%lld\\n\", sum);\n    \n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool is_greedy_optimal(int coins[], int num_coins, int amount) {\n    int count = 0;\n    for (int i = num_coins - 1; i >= 0; i--) {\n        while (amount >= coins[i]) {\n            amount -= coins[i];\n            count++;\n        }\n    }\n    return amount == 0;\n}\n\nint main() {\n    int num_coins, amount;\n    scanf(\"%d\", &num_coins);\n    int coins[num_coins];\n    for (int i = 0; i < num_coins; i++) {\n        scanf(\"%d\", &coins[i]);\n    }\n    scanf(\"%d\", &amount);\n    \n    if (is_greedy_optimal(coins, num_coins, amount)) {\n        printf(\"Greedy is optimal\\n\");\n    } else {\n        printf(\"Greedy is not optimal\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isGreedyOptimal(const vector<int>& coins, int amount) {\n    vector<int> sortedCoins = coins;\n    sort(sortedCoins.rbegin(), sortedCoins.rend());\n    \n    int remaining = amount;\n    int count = 0;\n    \n    for (int coin : sortedCoins) {\n        while (remaining >= coin) {\n            remaining -= coin;\n            count++;\n        }\n    }\n    \n    if (remaining != 0) {\n        return false;\n    }\n    \n    vector<int> dp(amount + 1, amount + 1);\n    dp[0] = 0;\n    \n    for (int i = 1; i <= amount; ++i) {\n        for (int coin : coins) {\n            if (coin <= i) {\n                dp[i] = min(dp[i], dp[i - coin] + 1);\n            }\n        }\n    }\n    \n    return dp[amount] == count;\n}\n\nint main() {\n    int n, amount;\n    cin >> n;\n    vector<int> coins(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> coins[i];\n    }\n    cin >> amount;\n    \n    if (isGreedyOptimal(coins, amount)) {\n        cout << \"YES\" << endl;\n    } else {\n        cout << \"NO\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class GreedyOptimal {\n    public static boolean isGreedyOptimal(int[] coins, int amount) {\n        Arrays.sort(coins);\n        int remaining = amount;\n        for (int i = coins.length - 1; i >= 0; i--) {\n            if (coins[i] <= remaining) {\n                remaining -= coins[i] * (remaining / coins[i]);\n            }\n            if (remaining == 0) {\n                break;\n            }\n        }\n        return remaining == 0;\n    }\n\n    public static void main(String[] args) {\n        int[] coins = {1, 5, 10, 25};\n        int amount = 30;\n        System.out.println(isGreedyOptimal(coins, amount));\n    }\n}",
+    "timestamp": "2025-08-05 22:05:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class IsGreedyOptimal {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine());\n        int[] arr = new int[n];\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < n; i++) {\n            arr[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        Arrays.sort(arr);\n        long totalTime = 0;\n        long waitTime = 0;\n        \n        for (int i = 0; i < n; i++) {\n            waitTime += totalTime;\n            totalTime += arr[i];\n        }\n        \n        System.out.println(waitTime);\n    }\n}",
+    "timestamp": "2025-08-05 22:05:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isGreedyOptimal(vector<int>& A) {\n    int n = A.size();\n    vector<int> greedy = A;\n    sort(greedy.begin(), greedy.end());\n    \n    long long greedySum = 0, optimalSum = 0;\n    \n    for (int i = 0; i < n; i++) {\n        greedySum += (long long)greedy[i] * (n - i);\n        optimalSum += (long long)A[i] * (n - i);\n    }\n    \n    return greedySum <= optimalSum;\n}\n\nint main() {\n    int t;\n    cin >> t;\n    \n    while (t--) {\n        int n;\n        cin >> n;\n        \n        vector<int> A(n);\n        for (int i = 0; i < n; i++) {\n            cin >> A[i];\n        }\n        \n        cout << (isGreedyOptimal(A) ? \"YES\" : \"NO\") << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_greedy_optimal(arr):\n    \"\"\"\n    Check if a greedy approach is optimal for a given problem.\n    As a generic check, we assume the problem is similar to an activity \n    selection problem where a greedy choice of sorting activities by finish \n    time is optimal.\n\n    :param arr: List of tuples where each tuple is an interval (start, end)\n    :return: Boolean indicating if a greedy choice yields an optimal solution\n    \"\"\"\n    # Sort activities by their end times\n    arr.sort(key=lambda x: x[1])\n    \n    # Select the first activity\n    selected_activities = []\n    current_end_time = 0\n    \n    for start, end in arr:\n        if start >= current_end_time:\n            selected_activities.append((start, end))\n            current_end_time = end\n            \n    return len(selected_activities)\n\n# Example usage\nactivities = [(1, 3), (2, 5), (4, 6), (6, 7), (5, 9), (3, 8)]\nprint(is_greedy_optimal(activities))  # Output: Length of the maximum set of mutually compatible activities",
+    "timestamp": "2025-08-13 08:56:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\nclass GreedyOptimalChecker {\n\n    public static boolean isGreedyOptimal(int[] nums) {\n        int n = nums.length;\n        if (n < 3) return false;\n        for (int i = 1; i < n - 1; i++) {\n            if (nums[i] <= nums[i - 1] && nums[i] <= nums[i + 1]) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        int[] nums = {1, 2, 3, 4, 5};\n        System.out.println(isGreedyOptimal(nums)); // Should print true or false based on your solution\n    }\n}",
+    "timestamp": "2025-08-13 08:56:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint isGreedyOptimal(int coins[], int n, int amount) {\n    int i, count = 0;\n    \n    // Sort coins in descending order (assuming coins are already sorted)\n    for (i = 0; i < n; i++) {\n        while (amount >= coins[i]) {\n            amount -= coins[i];\n            count++;\n        }\n        \n        if (amount == 0) {\n            return 1; // Greedy is optimal\n        }\n    }\n    \n    return 0; // Greedy is not optimal\n}\n\nint main() {\n    int coins[] = {25, 10, 5, 1}; // Example with US coins\n    int n = sizeof(coins) / sizeof(coins[0]);\n    int amount = 30;\n    \n    if (isGreedyOptimal(coins, n, amount)) {\n        printf(\"Greedy is optimal for the amount %d\\n\", amount);\n    } else {\n        printf(\"Greedy is not optimal for the amount %d\\n\", amount);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 08:56:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_greedy_optimal(intervals):\n    # Sort intervals by end time\n    intervals.sort(key=lambda x: x[1])\n    \n    # Initialize variables\n    selected = []\n    last_end_time = float('-inf')\n    \n    # Iterate through sorted intervals\n    for start, end in intervals:\n        # If current interval starts after last selected interval ends\n        if start >= last_end_time:\n            selected.append((start, end))\n            last_end_time = end\n    \n    return len(selected)\n\n# Example usage\ndef main():\n    n = int(input())\n    intervals = []\n    \n    for _ in range(n):\n        start, end = map(int, input().split())\n        intervals.append((start, end))\n    \n    result = is_greedy_optimal(intervals)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 08:56:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_greedy_optimal(coins, amount):\n    coins.sort(reverse=True)\n    count = 0\n    for coin in coins:\n        if amount == 0:\n            break\n        count += amount // coin\n        amount %= coin\n    return count if amount == 0 else -1\n\ndef can_greedy_be_optimal(coins):\n    for amount in range(1, 100):  # Check for amounts up to 99\n        greedy_result = is_greedy_optimal(coins, amount)\n        if greedy_result == -1:\n            continue\n        # Find the minimal number of coins using dynamic programming\n        dp = [float('inf')] * (amount + 1)\n        dp[0] = 0\n        for i in range(1, amount + 1):\n            for coin in coins:\n                if i >= coin:\n                    dp[i] = min(dp[i], dp[i - coin] + 1)\n        if dp[amount] != greedy_result:\n            return False\n    return True\n\n# Example usage:\n# coins = [1, 5, 10, 25]\n# print(can_greedy_be_optimal(coins))",
+    "timestamp": "2025-08-13 08:57:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nbool isGreedyOptimal(const std::vector<int>& tasks, int resources) {\n    int taskSum = 0;\n    for (int task : tasks) {\n        taskSum += task;\n    }\n    return taskSum <= resources;\n}\n\nint main() {\n    int n, resources;\n    std::cout << \"Enter number of tasks: \";\n    std::cin >> n;\n    std::vector<int> tasks(n);\n    std::cout << \"Enter the tasks: \";\n    for (int i = 0; i < n; ++i) {\n        std::cin >> tasks[i];\n    }\n    std::cout << \"Enter available resources: \";\n    std::cin >> resources;\n\n    if (isGreedyOptimal(tasks, resources)) {\n        std::cout << \"Yes, the greedy solution is optimal.\" << std::endl;\n    } else {\n        std::cout << \"No, the greedy solution is not optimal.\" << std::endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:37"
+  }
+]

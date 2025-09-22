@@ -1,0 +1,1 @@
+Your job is to find the polyhedron with the minimal surface area consisting of k connected cubes placed at k selected positions among n given ones. You must ensure that the placement of cubes satisfies specific conditions regarding overlap and separation.

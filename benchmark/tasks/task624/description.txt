@@ -1,0 +1,1 @@
+For a rooted tree, find the lowest common ancestor (LCA) of two nodes u and v. The tree consists of n nodes, each with a unique ID from 0 to n-1 where 0 is the root. The input includes information about the tree's structure followed by queries asking for the LCA of specified node pairs.

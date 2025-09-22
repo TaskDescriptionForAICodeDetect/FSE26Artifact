@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n#include <math.h>\n\n#define MAX_N 100\n\nbool isPowerOfTwo(int sum) {\n    return (sum > 0) && ((sum & (sum - 1)) == 0);\n}\n\nint maxPairs(int N, int A[]) {\n    int pairs = 0;\n    bool used[MAX_N] = {false};\n\n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n\n        for (int j = i + 1; j < N; j++) {\n            if (used[j]) continue;\n\n            if (isPowerOfTwo(A[i] + A[j])) {\n                pairs++;\n                used[i] = true;\n                used[j] = true;\n                break;\n            }\n        }\n    }\n\n    return pairs;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int A[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    printf(\"%d\\n\", maxPairs(N, A));\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_N 200000\n\nint compare(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nbool is_power_of_two(int x) {\n    return (x & (x - 1)) == 0;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int A[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    qsort(A, N, sizeof(int), compare);\n\n    int used[MAX_N] = {0};\n    int pairs = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n        for (int t = 1; t <= 30; t++) {\n            int target = (1 << t) - A[i];\n            if (target <= 0) continue;\n            int left = i + 1, right = N - 1;\n            while (left <= right) {\n                int mid = (left + right) / 2;\n                if (A[mid] == target) {\n                    if (!used[mid]) {\n                        used[mid] = 1;\n                        used[i] = 1;\n                        pairs++;\n                        break;\n                    } else {\n                        int l = mid - 1;\n                        while (l > i && A[l] == target && !used[l]) {\n                            used[l] = 1;\n                            used[i] = 1;\n                            pairs++;\n                            break;\n                        }\n                        int r = mid + 1;\n                        while (r < N && A[r] == target && !used[r]) {\n                            used[r] = 1;\n                            used[i] = 1;\n                            pairs++;\n                            break;\n                        }\n                        break;\n                    }\n                } else if (A[mid] < target) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            if (used[i]) break;\n        }\n    }\n    printf(\"%d\\n\", pairs);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    unordered_map<int, int> freq;\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        freq[A[i]]++;\n    }\n    \n    sort(A.begin(), A.end(), greater<int>());\n    \n    int pairs = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        if (freq[A[i]] == 0) continue;\n        \n        int power = 1;\n        while (power <= A[i]) power <<= 1;\n        int target = power - A[i];\n        \n        if (freq.find(target) != freq.end() && freq[target] > 0) {\n            if (target == A[i]) {\n                if (freq[target] >= 2) {\n                    pairs++;\n                    freq[target] -= 2;\n                }\n            } else {\n                pairs++;\n                freq[A[i]]--;\n                freq[target]--;\n            }\n        }\n    }\n    \n    cout << pairs << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:00:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        TreeMap<Integer, Integer> freq = new TreeMap<>(Collections.reverseOrder());\n        \n        for (int i = 0; i < N; i++) {\n            int num = scanner.nextInt();\n            freq.put(num, freq.getOrDefault(num, 0) + 1);\n        }\n        \n        int pairs = 0;\n        \n        while (!freq.isEmpty()) {\n            int current = freq.firstKey();\n            int count = freq.get(current);\n            freq.remove(current);\n            \n            int power = 1;\n            while (power <= current) {\n                power *= 2;\n            }\n            int target = power - current;\n            \n            if (freq.containsKey(target)) {\n                int targetCount = freq.get(target);\n                int min = Math.min(count, targetCount);\n                pairs += min;\n                if (targetCount > min) {\n                    freq.put(target, targetCount - min);\n                } else {\n                    freq.remove(target);\n                }\n            }\n        }\n        \n        System.out.println(pairs);\n    }\n}",
+    "timestamp": "2025-08-05 23:00:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int maxPairs(int[] A) {\n        int N = A.length;\n        boolean[] used = new boolean[N];\n        int pairCount = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (used[i]) continue;\n            \n            for (int j = i + 1; j < N; j++) {\n                if (used[j]) continue;\n                \n                if (isPowerOfTwo(A[i] + A[j])) {\n                    pairCount++;\n                    used[i] = true;\n                    used[j] = true;\n                    break;\n                }\n            }\n        }\n        \n        return pairCount;\n    }\n    \n    private static boolean isPowerOfTwo(int num) {\n        return (num & (num - 1)) == 0 && num > 0;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        System.out.println(maxPairs(A));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:01:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nbool isPowerOfTwo(int n) {\n    return n > 0 && (n & (n - 1)) == 0;\n}\n\nint maxPairs(vector<int>& A) {\n    int n = A.size();\n    vector<bool> used(n, false);\n    int pairs = 0;\n\n    for (int i = 0; i < n; i++) {\n        if (used[i]) continue;\n        \n        for (int j = i + 1; j < n; j++) {\n            if (used[j]) continue;\n            \n            if (isPowerOfTwo(A[i] + A[j])) {\n                pairs++;\n                used[i] = true;\n                used[j] = true;\n                break;\n            }\n        }\n    }\n\n    return pairs;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n    \n    cout << maxPairs(A) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:01:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import Counter\n\ndef max_pairs(N, A):\n    count = Counter(A)\n    pairs = 0\n    used = set()\n\n    for a in sorted(count.keys()):\n        if a in used:\n            continue\n        for t in range(32): \n            power_of_2 = 1 << t\n            b = power_of_2 - a\n            if b in count:\n                if a == b:\n                    pairs_possible = count[a] // 2\n                else:\n                    pairs_possible = min(count[a], count[b])\n                pairs += pairs_possible\n                count[a] -= pairs_possible\n                count[b] -= pairs_possible\n        if count[a] == 0:\n            used.add(a)\n\n    return pairs\n\n# Example usage:\n# N = 6\n# A = [1, 2, 3, 4, 5, 6]\n# print(max_pairs(N, A))  # Example function call",
+    "timestamp": "2025-08-13 13:17:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MaxPairs {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] A = new int[n];\n        for (int i = 0; i < n; i++) {\n            A[i] = scanner.nextInt();\n        }\n        System.out.println(maxPairs(A));\n    }\n\n    public static int maxPairs(int[] A) {\n        Map<Integer, Integer> countMap = new HashMap<>();\n        \n        for (int a : A) {\n            countMap.put(a, countMap.getOrDefault(a, 0) + 1);\n        }\n        \n        int maxPairs = 0;\n        \n        for (int a : A) {\n            if (!countMap.containsKey(a) || countMap.get(a) == 0) {\n                continue;\n            }\n            countMap.put(a, countMap.get(a) - 1);\n            for (int power = 1; power <= (1 << 30); power <<= 1) {\n                int target = power - a;\n                if (countMap.containsKey(target) && countMap.get(target) > 0) {\n                    countMap.put(target, countMap.get(target) - 1);\n                    maxPairs++;\n                    break;\n                }\n            }\n        }\n        \n        return maxPairs;\n    }\n}",
+    "timestamp": "2025-08-13 13:18:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAXN 300000\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nbool isPowerOfTwo(int num) {\n    return (num & (num - 1)) == 0 && num > 0;\n}\n\nint main() {\n    int N;\n    int A[MAXN];\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    qsort(A, N, sizeof(int), compare);\n\n    bool used[MAXN] = {false};\n    int pairCount = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n\n        for (int j = i + 1; j < N; j++) {\n            if (!used[j] && isPowerOfTwo(A[i] + A[j])) {\n                used[i] = true;\n                used[j] = true;\n                pairCount++;\n                break;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", pairCount);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:18:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxPairs(N, A) {\n    const countMap = new Map();\n    let maxPairs = 0;\n\n    for (let i = 0; i < N; i++) {\n        countMap.set(A[i], (countMap.get(A[i]) || 0) + 1);\n    }\n\n    const powerOfTwo = [];\n    for (let i = 0; i <= 31; i++) {\n        powerOfTwo.push(2 ** i);\n    }\n\n    for (let i = 0; i < N; i++) {\n        const num = A[i];\n        if (countMap.get(num) > 0) {\n            for (const power of powerOfTwo) {\n                const complement = power - num;\n                if (countMap.get(complement) > 0 && (num !== complement || countMap.get(complement) > 1)) {\n                    maxPairs++;\n                    countMap.set(num, countMap.get(num) - 1);\n                    countMap.set(complement, countMap.get(complement) - 1);\n                    break;\n                }\n            }\n        }\n    }\n\n    return maxPairs;\n}",
+    "timestamp": "2025-08-13 13:18:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_power_of_two_pairs(N, A):\n    # Create a frequency map of ball values\n    freq = {}\n    for num in A:\n        freq[num] = freq.get(num, 0) + 1\n    \n    # Get list of powers of 2 up to 2^30\n    powers_of_two = [2**i for i in range(31)]\n    \n    # Track matched pairs and ball counts\n    matched_pairs = 0\n    used = [0] * N\n    \n    # Iterate through each ball\n    for i in range(N):\n        if used[i]:\n            continue\n        \n        # Check each possible power of 2 pair\n        for power in powers_of_two:\n            complement = power - A[i]\n            \n            # Find complement in remaining balls\n            for j in range(i+1, N):\n                if used[j]:\n                    continue\n                \n                if A[j] == complement:\n                    matched_pairs += 1\n                    used[i] = 1\n                    used[j] = 1\n                    break\n    \n    return matched_pairs\n\n# Read input\nN = int(input())\nA = list(map(int, input().split()))\n\n# Print result\nprint(max_power_of_two_pairs(N, A))",
+    "timestamp": "2025-08-13 13:18:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxPairs(N, A) {\n    const powerOfTwoSet = new Set();\n    \n    for (let t = 0; t <= 30; t++) {\n        powerOfTwoSet.add(1 << t);\n    }\n    \n    const balls = new Set(A);\n    const used = new Set();\n    let pairCount = 0;\n    \n    for (let i = 0; i < N; i++) {\n        if (used.has(A[i])) continue;\n        \n        for (let j = i + 1; j < N; j++) {\n            if (used.has(A[j])) continue;\n            \n            if (powerOfTwoSet.has(A[i] + A[j])) {\n                pairCount++;\n                used.add(A[i]);\n                used.add(A[j]);\n                break;\n            }\n        }\n    }\n    \n    return pairCount;\n}",
+    "timestamp": "2025-08-13 13:18:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import defaultdict\n\ndef solve():\n    N, *rest = map(int, sys.stdin.read().split())\n    A = rest[:N]\n    freq = defaultdict(int)\n    for num in A:\n        freq[num] += 1\n    A_sorted = sorted(A, reverse=True)\n    res = 0\n    \n    for num in A_sorted:\n        if freq[num] == 0:\n            continue\n        # Find the smallest power of 2 larger than num\n        power = 1\n        while power <= num:\n            power <<= 1\n        target = power - num\n        if target in freq:\n            if target == num:\n                if freq[target] >= 2:\n                    res += 1\n                    freq[num] -= 2\n            else:\n                if freq[target] > 0:\n                    res += 1\n                    freq[num] -= 1\n                    freq[target] -= 1\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 13:18:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N = 0;\n    let A = [];\n    let lineCount = 0;\n\n    rl.on('line', (line) => {\n        if (lineCount === 0) {\n            N = parseInt(line.trim());\n            lineCount++;\n        } else {\n            A = line.trim().split(' ').map(Number);\n            rl.close();\n        }\n    }).on('close', () => {\n        const freq = new Map();\n        for (const num of A) {\n            freq.set(num, (freq.get(num) || 0) + 1);\n        }\n\n        A.sort((a, b) => b - a);\n        let pairs = 0;\n\n        for (const num of A) {\n            if (freq.get(num) === 0) continue;\n            for (let t = 1; t <= 30; t++) {\n                const power = Math.pow(2, t);\n                const complement = power - num;\n                if (complement <= 0) continue;\n                if (freq.has(complement)) {\n                    let count = freq.get(complement);\n                    if (complement === num) {\n                        if (count >= 2) {\n                            pairs++;\n                            freq.set(num, count - 2);\n                            break;\n                        }\n                    } else {\n                        if (count >= 1) {\n                            pairs++;\n                            freq.set(num, (freq.get(num) || 0) - 1);\n                            freq.set(complement, count - 1);\n                            break;\n                        }\n                    }\n                }\n            }\n        }\n\n        console.log(pairs);\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:18:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nbool isPowerOfTwo(int x) {\n    return (x & (x - 1)) == 0;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    unordered_map<int, int> count_map;\n\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n        count_map[A[i]]++;\n    }\n\n    int max_pairs = 0;\n\n    for (int i = 0; i < N; i++) {\n        int num = A[i];\n        if (count_map[num] > 0) {\n            count_map[num]--;\n            for (int t = 0; t <= 31; t++) {\n                int power_of_two = 1 << t;\n                int target = power_of_two - num;\n                if (target > 0 && count_map[target] > 0) {\n                    count_map[target]--;\n                    max_pairs++;\n                    break;\n                }\n            }\n        }\n    }\n\n    cout << max_pairs << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:39:07"
+  }
+]

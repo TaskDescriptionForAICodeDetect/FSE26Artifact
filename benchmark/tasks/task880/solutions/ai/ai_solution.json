@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 100005\n\nlong long solve(int N, long long a[]) {\n    long long dp[MAX_N];\n    int broken[MAX_N];\n    \n    memset(dp, 0, sizeof(dp));\n    memset(broken, 0, sizeof(broken));\n    \n    for (int x = N; x >= 1; x--) {\n        long long current = a[x-1];\n        for (int j = x; j <= N; j += x) {\n            if (!broken[j]) {\n                current = 0;\n                break;\n            }\n        }\n        \n        if (current > 0) {\n            for (int j = x; j <= N; j += x) {\n                broken[j] = 1;\n            }\n            dp[x] = current;\n        }\n        \n        for (int j = 2*x; j <= N; j += x) {\n            dp[x] += dp[j];\n        }\n    }\n    \n    long long maxEarn = 0;\n    for (int i = 1; i <= N; i++) {\n        maxEarn = (maxEarn > dp[i]) ? maxEarn : dp[i];\n    }\n    \n    return maxEarn;\n}\n\nint main() {\n    int N;\n    long long a[MAX_N];\n    \n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &a[i]);\n    }\n    \n    printf(\"%lld\\n\", solve(N, a));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nlong long max_earn(int N, long long a[]) {\n    long long res = 0;\n    for (int i = N; i >= 1; --i) {\n        if (a[i] > 0) {\n            res += a[i];\n            for (int j = 2 * i; j <= N; j += i) {\n                a[j] -= a[i];\n            }\n        }\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    long long *a = (long long *)malloc((N + 1) * sizeof(long long));\n    for (int i = 1; i <= N; ++i) {\n        scanf(\"%lld\", &a[i]);\n    }\n    printf(\"%lld\\n\", max_earn(N, a));\n    free(a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> a(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> a[i];\n    }\n\n    vector<long long> dp(N + 1, 0);\n    for (int i = N; i >= 1; --i) {\n        dp[i] = a[i];\n        for (int j = 2 * i; j <= N; j += i) {\n            dp[i] = max(dp[i], dp[j] + a[i]);\n        }\n    }\n\n    long long max_yen = 0;\n    for (int i = 1; i <= N; ++i) {\n        max_yen = max(max_yen, dp[i]);\n    }\n\n    cout << max_yen << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        long[] a = new long[N + 1];\n        for (int i = 1; i <= N; i++) {\n            a[i] = scanner.nextLong();\n        }\n\n        long[] dp = new long[N + 1];\n        long res = 0;\n        for (int i = N; i >= 1; i--) {\n            long sum = 0;\n            for (int j = 2 * i; j <= N; j += i) {\n                sum += dp[j];\n            }\n            if (a[i] > sum) {\n                dp[i] = a[i] - sum;\n                res += dp[i];\n            } else {\n                dp[i] = 0;\n            }\n        }\n        System.out.println(res);\n    }\n}",
+    "timestamp": "2025-08-05 23:13:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static long maxYen(int N, long[] a) {\n        long[] dp = new long[1 << N];\n        \n        for (int mask = 0; mask < (1 << N); mask++) {\n            for (int x = 1; x <= N; x++) {\n                boolean canBreak = true;\n                long currentYen = 0;\n                \n                for (int i = 0; i < N; i++) {\n                    if ((mask & (1 << i)) == 0) {\n                        if ((i + 1) % x == 0) {\n                            canBreak = false;\n                            break;\n                        }\n                        currentYen += a[i];\n                    }\n                }\n                \n                if (canBreak) {\n                    dp[mask] = Math.max(dp[mask], dp[mask] + currentYen);\n                }\n            }\n        }\n        \n        long maxYen = 0;\n        for (long yen : dp) {\n            maxYen = Math.max(maxYen, yen);\n        }\n        \n        return maxYen;\n    }\n}",
+    "timestamp": "2025-08-05 23:13:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<long long> a(N + 1);\n    for (int i = 1; i <= N; i++) {\n        cin >> a[i];\n    }\n    \n    vector<long long> dp(N + 1, 0);\n    \n    for (int i = N; i >= 1; i--) {\n        dp[i] = a[i];\n        \n        for (int j = i * 2; j <= N; j += i) {\n            dp[i] = max(dp[i], dp[i] - a[j]);\n        }\n        \n        if (i > 1) {\n            dp[i/2] = max(dp[i/2], dp[i]);\n        }\n    }\n    \n    long long maxYen = *max_element(dp.begin(), dp.end());\n    cout << maxYen << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_yen(n, a):\n    dp = [0] * (n + 1)\n\n    for i in range(1, n + 1):\n        dp[i] = dp[i - 1]\n\n        if a[i - 1] > 0:\n            dp[i] += a[i - 1]\n\n        for j in range(2 * i, n + 1, i):\n            dp[j] = max(dp[j], dp[i - 1])\n\n    return dp[n]\n\n# Example usage:\nn = 5\na = [-3, 1, -2, 3, 2]\nprint(max_yen(n, a))  # Replace with actual a_i values for different input",
+    "timestamp": "2025-08-13 14:09:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class GemstoneYen {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // Input: Number of gemstones\n        int N = scanner.nextInt();\n        \n        // Input: yen values for each gemstone\n        int[] a = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        // Dynamic programming table to keep track of maximum yen\n        long[] dp = new long[N + 1];\n        \n        // Fill the dp table with initial values based on initial gemstone values\n        for (int i = 1; i <= N; i++) {\n            dp[i] = a[i];\n        }\n        \n        // Iterate over each gemstone\n        for (int i = 1; i <= N; i++) {\n            // Check all multiples of the current gemstone number\n            for (int j = i * 2; j <= N; j += i) {\n                dp[j] = Math.max(dp[j], dp[j] + dp[i]);\n            }\n        }\n        \n        // Calculate the maximum obtainable yen\n        long maxYen = 0;\n        for (int i = 1; i <= N; i++) {\n            maxYen = Math.max(maxYen, dp[i]);\n        }\n        \n        // Output the result\n        System.out.println(maxYen);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 14:09:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n// Comparator function for sorting integers\nint compare(const void *a, const void *b) {\n    return (*(int*)b - *(int*)a);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* a = (int*)malloc((N + 1) * sizeof(int));\n    int* used = (int*)malloc((N + 1) * sizeof(int));\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &a[i]);\n        used[i] = 0;\n    }\n\n    // Sort the values in a non-increasing order\n    qsort(a + 1, N, sizeof(int), compare);\n    \n    long long total_yen = 0;\n    \n    // Iterate through each gemstone value in sorted order\n    for (int i = 1; i <= N; i++) {\n        if (a[i] >= 0 && !used[i]) {\n            total_yen += a[i];\n            // Mark multiples of i as \"used\" for smashing\n            for (int j = i; j <= N; j += i) {\n                used[j] = 1;\n            }\n        }\n    }\n\n    free(a);\n    free(used);\n\n    printf(\"%lld\\n\", total_yen);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:10:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxYen(N, a) {\n    let totalYen = 0;\n    let broken = Array(N + 1).fill(false);\n\n    const getSumOfMultiples = (x) => {\n        let sum = 0;\n        for (let i = x; i <= N; i += x) {\n            if (!broken[i]) sum += a[i - 1];\n        }\n        return sum;\n    };\n\n    for (let x = N; x >= 1; x--) {\n        const sumOfMultiples = getSumOfMultiples(x);\n        if (sumOfMultiples > 0) {\n            totalYen += sumOfMultiples;\n            for (let i = x; i <= N; i += x) {\n                broken[i] = true;\n            }\n        }\n    }\n\n    return totalYen;\n}",
+    "timestamp": "2025-08-13 14:10:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_gemstones(N, a):\n    # Initialize dp array to store maximum yen for each state\n    dp = [0] * (1 << N)\n    \n    # Iterate through all possible subset states\n    for state in range(1, 1 << N):\n        for x in range(1, N + 1):\n            # Check if current state is valid after smashing multiples of x\n            next_state = state\n            total_yen = 0\n            for i in range(N):\n                # If gem is in current state and multiple of x, remove it\n                if (state & (1 << i)) and (i + 1) % x == 0:\n                    next_state &= ~(1 << i)\n                # If gem remains, add its yen value\n                elif state & (1 << i):\n                    total_yen += a[i]\n            \n            # Update maximum yen for next state\n            dp[next_state] = max(dp[next_state], dp[state] + total_yen)\n    \n    # Return maximum yen obtainable\n    return max(dp)\n\n# Input handling\nN = int(input())\na = list(map(int, input().split()))\n\n# Output result\nprint(solve_gemstones(N, a))",
+    "timestamp": "2025-08-13 14:10:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxYen(N, a) {\n    let dp = new Array(1 << N).fill(-Infinity);\n    dp[0] = 0;\n\n    for (let mask = 0; mask < (1 << N); mask++) {\n        for (let x = 1; x <= N; x++) {\n            let newMask = mask;\n            let gain = 0;\n            let valid = true;\n\n            for (let i = 0; i < N; i++) {\n                if ((i + 1) % x === 0 && !(mask & (1 << i))) {\n                    if (newMask & (1 << i)) {\n                        valid = false;\n                        break;\n                    }\n                    newMask |= (1 << i);\n                    gain += a[i];\n                }\n            }\n\n            if (valid) {\n                dp[newMask] = Math.max(dp[newMask], dp[mask] + gain);\n            }\n        }\n    }\n\n    return Math.max(...dp);\n}",
+    "timestamp": "2025-08-13 14:10:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\n\ndef solve():\n    N = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    a = [0] + a  # 1-based indexing\n    \n    max_yen = 0\n    # We'll use dynamic programming to decide whether to smash x or not\n    # Initialize dp where dp[x] is the maximum yen when considering multiples of x\n    dp = [0] * (N + 1)\n    \n    for x in range(N, 0, -1):\n        total = a[x]\n        multiple = 2 * x\n        while multiple <= N:\n            total += dp[multiple]\n            multiple += x\n        dp[x] = max(total, 0)  # If total is negative, better not to smash x\n    \n    max_yen = sum(dp[1:N+1])\n    print(max_yen)\n\nsolve()",
+    "timestamp": "2025-08-13 14:10:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const N = parseInt(input[0], 10);\n    const a = input[1].split(' ').map(Number);\n    \n    const maxYen = new Array(N + 1).fill(0);\n    let total = 0;\n    \n    for (let i = N; i >= 1; i--) {\n        let sum = 0;\n        for (let j = 2 * i; j <= N; j += i) {\n            sum += maxYen[j];\n        }\n        if (a[i - 1] > sum) {\n            maxYen[i] = a[i - 1] - sum;\n            total += maxYen[i];\n        } else {\n            maxYen[i] = 0;\n        }\n    }\n    \n    console.log(total);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:10:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> a(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> a[i];\n    }\n    \n    vector<bool> smashed(N + 1, false);\n    long long max_yen = 0;\n\n    for (int i = N; i >= 1; --i) {\n        if (!smashed[i] && a[i] > 0) { // if gemstone i is not smashed and a[i] is positive\n            max_yen += a[i]; // add its value to max_yen\n            // smash all multiples of i\n            for (int j = i; j <= N; j += i) {\n                smashed[j] = true;\n            }\n        }\n    }\n\n    cout << max_yen << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:42:23"
+  }
+]

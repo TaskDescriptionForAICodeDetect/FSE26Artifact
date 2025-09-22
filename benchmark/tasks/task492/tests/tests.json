@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "1\n0 0\n1 2 3 4 5 6\nRRRRBBBBLLLLFFFF\n",
+      "output": "64"
+    },
+    {
+      "input": "2\n0 0\n1 1 1 1 1 1\nRRR\n2 2\n100 100 100 100 100 100\nFFF\n",
+      "output": "403"
+    },
+    {
+      "input": "1\n1000 -1000\n1 2 3 4 5 6\nLFRB\n",
+      "output": "10"
+    },
+    {
+      "input": "4\n-3 -4\n1 2 3 4 5 6\nBBBBBBBB\n4 -3\n11 12 13 14 15 16\nLLLLLLLL\n3 4\n21 22 23 24 25 26\nFFFFFFFF\n-4 3\n31 32 33 34 35 36\nRRRRRRRR\n",
+      "output": "647"
+    },
+    {
+      "input": "3\n-2 -2\n9 3 1 1 1 1\nRRRRBLLLBRRBLB\n0 -3\n2 5 2 5 2 1\nBBLBBRBB\n3 0\n10 7 2 10 1 5\nLLFLLBLL\n",
+      "output": "96"
+    }
+  ]
+}

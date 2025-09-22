@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "11\n2\n3\n8\n4\n7\n6\n6\n5\n1\n7\n5\n",
+      "output": "2"
+    },
+    {
+      "input": "2\n1\n10\n",
+      "output": "9"
+    },
+    {
+      "input": "5\n5\n5\n5\n5\n5\n",
+      "output": "0"
+    }
+  ]
+}

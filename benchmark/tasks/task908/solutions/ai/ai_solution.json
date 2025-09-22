@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_N 100000\n\ntypedef struct {\n    int height;\n    int left_height;\n    int right_height;\n} Piece;\n\nbool canArrange(Piece pieces[], int N) {\n    int total_height = 0;\n    for (int i = 0; i < N; i++) {\n        total_height += pieces[i].height;\n    }\n\n    // Check if total height of non-center parts can support center parts\n    int non_center_height = 0;\n    for (int i = 0; i < N; i++) {\n        non_center_height += pieces[i].left_height + pieces[i].right_height;\n    }\n\n    return non_center_height >= total_height;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    Piece pieces[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d %d\", &pieces[i].height, &pieces[i].left_height, &pieces[i].right_height);\n    }\n\n    printf(\"%s\\n\", canArrange(pieces, N) ? \"YES\" : \"NO\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    int *x = (int *)a;\n    int *y = (int *)b;\n    if (x[0] != y[0]) {\n        return y[0] - x[0];\n    } else {\n        return x[1] - y[1];\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int **pieces = (int **)malloc(N * sizeof(int *));\n    for (int i = 0; i < N; i++) {\n        pieces[i] = (int *)malloc(2 * sizeof(int));\n        scanf(\"%d %d\", &pieces[i][0], &pieces[i][1]);\n    }\n\n    qsort(pieces, N, sizeof(int *), compare);\n\n    long long sum_A = 0;\n    long long sum_B = 0;\n    for (int i = 0; i < N; i++) {\n        if (i % 2 == 0) {\n            sum_A += pieces[i][0];\n        } else {\n            sum_B += pieces[i][1];\n        }\n    }\n\n    if (sum_A == sum_B) {\n        printf(\"YES\\n\");\n    } else {\n        printf(\"NO\\n\");\n    }\n\n    for (int i = 0; i < N; i++) {\n        free(pieces[i]);\n    }\n    free(pieces);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool solve() {\n    int N;\n    cin >> N;\n    vector<int> A(N), B(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i] >> B[i];\n    }\n\n    long long totalA = 0, totalB = 0;\n    for (int i = 0; i < N; ++i) {\n        totalA += A[i];\n        totalB += B[i];\n    }\n\n    vector<int> indices(N);\n    for (int i = 0; i < N; ++i) {\n        indices[i] = i;\n    }\n\n    sort(indices.begin(), indices.end(), [&](int i, int j) {\n        long long val_i = A[i] + B[i];\n        long long val_j = A[j] + B[j];\n        return val_i > val_j;\n    });\n\n    long long sum = 0;\n    for (int i = 0; i < N; ++i) {\n        int idx = indices[i];\n        if (i % 2 == 0) {\n            sum += A[idx];\n        } else {\n            sum -= B[idx];\n        }\n    }\n\n    return sum == 0;\n}\n\nint main() {\n    if (solve()) {\n        cout << \"YES\" << endl;\n    } else {\n        cout << \"NO\" << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        long[] A = new long[N];\n        long[] B = new long[N];\n        long[] H = new long[N];\n        \n        for (int i = 0; i < N; i++) {\n            H[i] = scanner.nextLong();\n            A[i] = scanner.nextLong();\n            B[i] = scanner.nextLong();\n        }\n        \n        long left = 0;\n        long right = Long.MAX_VALUE;\n        boolean possible = false;\n        \n        while (left <= right) {\n            long mid = left + (right - left) / 2;\n            boolean valid = true;\n            long total = 0;\n            \n            for (int i = 0; i < N; i++) {\n                if (H[i] > mid) {\n                    valid = false;\n                    break;\n                }\n                total += Math.max(0, A[i] - (mid - H[i])) + Math.max(0, B[i] - (mid - H[i]));\n                if (total > mid) {\n                    valid = false;\n                    break;\n                }\n            }\n            \n            if (valid) {\n                possible = true;\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        \n        System.out.println(possible ? \"YES\" : \"NO\");\n    }\n}",
+    "timestamp": "2025-08-05 23:18:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class JigsawArrangement {\n    public static boolean canArrange(int N, int[] H, int[] A, int[] B) {\n        // Check if total height of left and right parts is less than or equal to center height\n        for (int i = 0; i < N; i++) {\n            if (A[i] + B[i] > H[i]) {\n                return false;\n            }\n        }\n\n        // Sort pieces by center height in descending order\n        Integer[] indices = new Integer[N];\n        for (int i = 0; i < N; i++) {\n            indices[i] = i;\n        }\n        Arrays.sort(indices, (a, b) -> Integer.compare(H[b], H[a]));\n\n        // Simulate piece placement\n        int[] leftSupport = new int[N];\n        int[] rightSupport = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            int currIndex = indices[i];\n            int currHeight = H[currIndex];\n            int leftHeight = A[currIndex];\n            int rightHeight = B[currIndex];\n\n            // Find support for left part\n            boolean leftSupportFound = false;\n            for (int j = 0; j < i; j++) {\n                int supportIndex = indices[j];\n                if (rightSupport[supportIndex] + leftHeight <= currHeight) {\n                    leftSupport[currIndex] = rightSupport[supportIndex];\n                    leftSupportFound = true;\n                    break;\n                }\n            }\n\n            // Find support for right part\n            boolean rightSupportFound = false;\n            for (int j = 0; j < i; j++) {\n                int supportIndex = indices[j];\n                if (rightSupport[supportIndex] + rightHeight <= currHeight) {\n                    rightSupport[currIndex] = rightSupport[supportIndex];\n                    rightSupportFound = true;\n                    break;\n                }\n            }\n\n            // Check if piece can be placed\n            if (!leftSupportFound && leftHeight > 0) return false;\n            if (!rightSupportFound && rightHeight > 0) return false;\n\n            // Update right support value\n            rightSupport[currIndex] = Math.max(leftSupport[currIndex] + leftHeight, \n                                               rightSupport[currIndex] + rightHeight);\n        }\n\n        return true;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] H = new int[N];\n        int[] A = new int[N];\n        int[] B = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            H[i] = scanner.nextInt();\n            A[i] = scanner.nextInt();\n            B[i] = scanner.nextInt();\n        }\n\n        boolean result = canArrange(N, H, A, B);\n        System.out.println(result ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 23:19:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canArrangePieces(int N, vector<int>& H, vector<int>& A, vector<int>& B) {\n        vector<vector<int>> left(N), right(N);\n        vector<bool> used(N, false);\n        \n        for (int i = 0; i < N; i++) {\n            left[i] = {0, H[i]};\n            right[i] = {H[i] + A[i], H[i] + A[i] + B[i]};\n        }\n        \n        function<bool(int)> canPlace = [&](int curr) {\n            if (curr == N) return true;\n            \n            for (int i = 0; i < N; i++) {\n                if (!used[i]) {\n                    used[i] = true;\n                    if (canPlace(curr + 1)) return true;\n                    used[i] = false;\n                }\n            }\n            \n            return false;\n        };\n        \n        return canPlace(0);\n    }\n};",
+    "timestamp": "2025-08-05 23:19:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_arrange_pieces(N, H, A, B):\n    # Total height obtained from parts\n    total_height = sum([h + a + b for h, a, b in zip(H, A, B)])\n    \n    # Check if the combined height of all parts can fit within the 10**100 table\n    max_possible_height = 10**100\n    \n    if total_height > max_possible_height:\n        return False\n    else:\n        return True\n\n# Example usage:\nN = 3\nH = [3, 2, 1]\nA = [1, 2, 1]\nB = [1, 1, 2]\n\nprint(can_arrange_pieces(N, H, A, B)) # Should print True or False",
+    "timestamp": "2025-08-13 14:31:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.List;\nimport java.util.ArrayList;\n\npublic class JigsawArrangement {\n\n    public static boolean canArrangePieces(int[] A, int[] H, int[] B) {\n        int N = A.length;\n        List<int[]> events = new ArrayList<>();\n        \n        for (int i = 0; i < N; i++) {\n            events.add(new int[]{H[i], A[i], B[i]});\n        }\n\n        events.sort((e1, e2) -> e2[0] - e1[0]);\n        \n        int maxLeftHeight = 0;\n        int maxRightHeight = 0;\n        \n        for (int[] event : events) {\n            int centerHeight = event[0];\n            int leftHeight = event[1];\n            int rightHeight = event[2];\n\n            if (maxLeftHeight < leftHeight && maxRightHeight < rightHeight) {\n                return false;\n            }\n            maxLeftHeight = Math.max(maxLeftHeight, centerHeight);\n            maxRightHeight = Math.max(maxRightHeight, centerHeight);\n        }\n        \n        return true;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        int[] H = new int[N];\n        int[] B = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            H[i] = scanner.nextInt();\n            A[i] = scanner.nextInt();\n            B[i] = scanner.nextInt();\n        }\n        \n        scanner.close();\n        \n        if (canArrangePieces(A, H, B)) {\n            System.out.println(\"Yes\");\n        } else {\n            System.out.println(\"No\");\n        }\n    }\n}",
+    "timestamp": "2025-08-13 14:31:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canArrange(int N, int H, int A[], int B[]) {\n    int maxA = 0, maxB = 0;\n    for (int i = 0; i < N; i++) {\n        if (A[i] > maxA) maxA = A[i];\n        if (B[i] > maxB) maxB = B[i];\n    }\n    return maxA + H + maxB <= H;\n}\n\nint main() {\n    int N, H;\n    scanf(\"%d %d\", &N, &H);\n    int A[N], B[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &A[i], &B[i]);\n    }\n    bool result = canArrange(N, H, A, B);\n    if (result) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:32:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canArrangePieces(N, H, A, B) {\n    // Create arrays to track bases\n    let baseHeight = Array(N).fill(false);\n    let leftBase = Array(N).fill(false);\n    let rightBase = Array(N).fill(false);\n    \n    // Initialize base height for center\n    for (let i = 0; i < N; i++) {\n        baseHeight[i] = H;\n    }\n    \n    // Check all pieces if they can be arranged\n    for (let i = 0; i < N; i++) {\n        leftBase[i] = baseHeight[i] - A[i];\n        rightBase[i] = baseHeight[i] - B[i];\n    }\n    \n    // Check if all bases can have positive heights\n    for (let i = 0; i < N; i++) {\n        if (leftBase[i] >= 0 && rightBase[i] >= 0) {\n            continue;\n        } else {\n            return false;\n        }\n    }\n    \n    return true;\n}\n\n// Sample usage\nconst N = 3;\nconst H = [5, 5, 5];\nconst A = [2, 3, 1];\nconst B = [2, 1, 3];\n\nconsole.log(canArrangePieces(N, H, A, B)); // Outputs: true",
+    "timestamp": "2025-08-13 14:32:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_arrange_pieces(N, H, A, B):\n    # Sort pieces by their left and right side heights\n    pieces = sorted(zip(A, B), key=lambda x: (x[0], x[1]))\n    \n    # Keep track of the current height of each column\n    column_heights = [0] * N\n    \n    for i in range(N):\n        # Place the current piece\n        left_height, right_height = pieces[i]\n        \n        # Find the lowest point to place the center column\n        center_height = 0\n        \n        # Check if the left column can be placed\n        if left_height > 0:\n            min_left_height = min(column_heights[:i])\n            if column_heights[i] < min_left_height + left_height:\n                return False\n        \n        # Update column heights\n        column_heights[i] = center_height + H\n        \n        # If there's a right column, place it\n        if right_height > 0:\n            if column_heights[i] < column_heights[i] + right_height:\n                return False\n    \n    return True\n\n# Example usage\nN = int(input())\nH = int(input())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\nif can_arrange_pieces(N, H, A, B):\n    print(\"Yes\")\nelse:\n    print(\"No\")",
+    "timestamp": "2025-08-13 14:32:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canArrangePieces(N, H, A, B) {\n    // Check if the center part can be placed on the table\n    for (let i = 0; i < N; i++) {\n        // Check if the height of the center part is within reasonable bounds\n        if (H <= 0) return false;\n    }\n\n    // Create a data structure to track piece placement and support\n    let supportedPieces = new Set();\n    let unplacedPieces = new Set();\n\n    // Initialize all pieces as unplaced\n    for (let i = 0; i < N; i++) {\n        unplacedPieces.add(i);\n    }\n\n    // Greedy placement strategy\n    while (unplacedPieces.size > 0) {\n        let placedThisTurn = false;\n\n        for (let pieceIndex of unplacedPieces) {\n            // If piece's side parts can be supported\n            if (A[pieceIndex] <= 0 && B[pieceIndex] <= 0) {\n                supportedPieces.add(pieceIndex);\n                unplacedPieces.delete(pieceIndex);\n                placedThisTurn = true;\n                break;\n            }\n        }\n\n        // If no piece could be placed, arrangement is impossible\n        if (!placedThisTurn) return false;\n    }\n\n    return true;\n}",
+    "timestamp": "2025-08-13 14:32:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    N = int(data[idx])\n    idx += 1\n    H = int(data[idx])\n    idx += 1\n    A = list(map(int, data[idx:idx+N]))\n    idx += N\n    B = list(map(int, data[idx:idx+N]))\n    \n    max_A = max(A)\n    max_B = max(B)\n    \n    if max_A + max_B <= H:\n        print(\"YES\")\n    else:\n        print(\"NO\")\n\nsolve()",
+    "timestamp": "2025-08-13 14:32:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const N = parseInt(input[0], 10);\n    const pieces = [];\n    for (let i = 1; i <= N; i++) {\n        const [H, A, B] = input[i].split(' ').map(Number);\n        pieces.push({ H, A, B });\n    }\n\n    // Sort pieces by A_i in ascending order\n    pieces.sort((a, b) => a.A - b.A);\n\n    let currentHeight = 0;\n    for (const piece of pieces) {\n        if (currentHeight < piece.A) {\n            currentHeight = piece.A;\n        }\n        if (currentHeight > piece.B) {\n            return false;\n        }\n        currentHeight += piece.H;\n    }\n\n    return true;\n}\n\nconst possible = solve();\nconsole.log(possible ? \"YES\" : \"NO\");",
+    "timestamp": "2025-08-13 14:32:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nbool canArrangePieces(int pieceHeight, const vector<int>& leftParts, const vector<int>& rightParts) {\n    int N = leftParts.size();\n    vector<bool> used(N, false);\n    queue<int> q;\n\n    // Add first piece to the queue and mark it as used\n    q.push(0);\n    used[0] = true;\n    \n    while (!q.empty()) {\n        int current = q.front();\n        q.pop();\n        \n        // Try to find pieces that can be placed on top\n        for (int i = 0; i < N; ++i) {\n            if (!used[i] && (leftParts[i] == pieceHeight || rightParts[i] == pieceHeight)) {\n                used[i] = true;\n                q.push(i);\n            }\n        }\n    }\n\n    // Check if all pieces have been used\n    for (bool b : used) {\n        if (!b) return false;\n    }\n    return true;\n}\n\nint main() {\n    int pieceHeight;\n    int N;\n    cin >> pieceHeight >> N;\n    vector<int> leftParts(N), rightParts(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> leftParts[i] >> rightParts[i];\n    }\n\n    if (canArrangePieces(pieceHeight, leftParts, rightParts)) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:43:44"
+  }
+]

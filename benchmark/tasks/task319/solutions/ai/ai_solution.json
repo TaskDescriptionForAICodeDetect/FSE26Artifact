@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint teams, matches, max_matches;\nint *wins;\nint **graph;\nint count = 0;\n\nvoid check_playoff() {\n    for (int i = 0; i < teams; i++) {\n        for (int j = 0; j < teams; j++) {\n            if (i != j && wins[i] == wins[j]) {\n                return;\n            }\n        }\n    }\n    count++;\n}\n\nvoid backtrack(int match) {\n    if (match == max_matches) {\n        check_playoff();\n        return;\n    }\n    int i = graph[match][0];\n    int j = graph[match][1];\n    \n    wins[i]++;\n    backtrack(match + 1);\n    wins[i]--;\n    \n    wins[j]++;\n    backtrack(match + 1);\n    wins[j]--;\n}\n\nint main() {\n    scanf(\"%d\", &teams);\n    matches = teams * (teams - 1) / 2;\n    max_matches = matches;\n    \n    wins = (int *)calloc(teams, sizeof(int));\n    graph = (int **)malloc(matches * sizeof(int *));\n    for (int i = 0; i < matches; i++) {\n        graph[i] = (int *)malloc(2 * sizeof(int));\n        scanf(\"%d %d\", &graph[i][0], &graph[i][1]);\n    }\n    \n    backtrack(0);\n    printf(\"%d\\n\", count);\n    \n    for (int i = 0; i < matches; i++) {\n        free(graph[i]);\n    }\n    free(graph);\n    free(wins);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isFullPlayoff(const vector<int>& wins, const vector<int>& remaining) {\n    int n = wins.size();\n    for (int i = 0; i < n; ++i) {\n        int max_possible = wins[i] + remaining[i];\n        for (int j = 0; j < n; ++j) {\n            if (i == j) continue;\n            if (wins[j] > max_possible) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nvoid countPatterns(int match_index, const vector<pair<int, int>>& matches, vector<int>& wins, vector<int>& remaining, int& count) {\n    if (match_index == matches.size()) {\n        if (isFullPlayoff(wins, remaining)) {\n            ++count;\n        }\n        return;\n    }\n\n    int team1 = matches[match_index].first;\n    int team2 = matches[match_index].second;\n\n    // Team1 wins\n    --remaining[team1];\n    --remaining[team2];\n    ++wins[team1];\n    countPatterns(match_index + 1, matches, wins, remaining, count);\n    --wins[team1];\n    ++remaining[team1];\n    ++remaining[team2];\n\n    // Team2 wins\n    --remaining[team1];\n    --remaining[team2];\n    ++wins[team2];\n    countPatterns(match_index + 1, matches, wins, remaining, count);\n    --wins[team2];\n    ++remaining[team1];\n    ++remaining[team2];\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> wins(n);\n    vector<int> remaining(n, n - 1);\n\n    for (int i = 0; i < n; ++i) {\n        cin >> wins[i];\n        remaining[i] -= wins[i];\n    }\n\n    vector<pair<int, int>> matches;\n    for (int i = 0; i < n; ++i) {\n        for (int j = i + 1; j < n; ++j) {\n            matches.emplace_back(i, j);\n        }\n    }\n\n    int count = 0;\n    countPatterns(0, matches, wins, remaining, count);\n    cout << count << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PlayoffCombinations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int[] wins = new int[N];\n        for (int i = 0; i < N; i++) {\n            wins[i] = scanner.nextInt();\n        }\n        int[][] matches = new int[M][2];\n        for (int i = 0; i < M; i++) {\n            matches[i][0] = scanner.nextInt() - 1;\n            matches[i][1] = scanner.nextInt() - 1;\n        }\n        System.out.println(countPlayoffCombinations(N, M, wins, matches));\n    }\n\n    private static int countPlayoffCombinations(int N, int M, int[] initialWins, int[][] matches) {\n        int[] maxWins = new int[N];\n        System.arraycopy(initialWins, 0, maxWins, 0, N);\n        for (int[] match : matches) {\n            int a = match[0];\n            int b = match[1];\n            maxWins[a]++;\n            maxWins[b]++;\n        }\n        int maxPossible = Arrays.stream(maxWins).max().getAsInt();\n        int count = 0;\n        int[] currentWins = new int[N];\n        System.arraycopy(initialWins, 0, currentWins, 0, N);\n        count = backtrack(0, matches, currentWins, maxPossible);\n        return count;\n    }\n\n    private static int backtrack(int index, int[][] matches, int[] currentWins, int maxPossible) {\n        if (index == matches.length) {\n            for (int win : currentWins) {\n                if (win != maxPossible) {\n                    return 0;\n                }\n            }\n            return 1;\n        }\n        int a = matches[index][0];\n        int b = matches[index][1];\n        int count = 0;\n        currentWins[a]++;\n        count += backtrack(index + 1, matches, currentWins, maxPossible);\n        currentWins[a]--;\n        currentWins[b]++;\n        count += backtrack(index + 1, matches, currentWins, maxPossible);\n        currentWins[b]--;\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 21:04:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RoundRobinPlayoffCombinations {\n    public static long calculatePlayoffCombinations(int teams) {\n        int remainingMatches = (teams * (teams - 1)) / 2;\n        return (long) Math.pow(3, remainingMatches);\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int numTeams = scanner.nextInt();\n        \n        long combinations = calculatePlayoffCombinations(numTeams);\n        System.out.println(combinations);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:04:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nint factorial(int n) {\n    if (n <= 1) return 1;\n    return n * factorial(n - 1);\n}\n\nint calculate_playoff_combinations(int total_teams) {\n    int remaining_matches = (total_teams * (total_teams - 1)) / 2;\n    int ways = 0;\n\n    for (int mask = 0; mask < (1 << remaining_matches); mask++) {\n        int points[total_teams];\n        for (int i = 0; i < total_teams; i++) \n            points[i] = 0;\n\n        int match_idx = 0;\n        for (int i = 0; i < total_teams; i++) {\n            for (int j = i + 1; j < total_teams; j++) {\n                if (mask & (1 << match_idx)) {\n                    points[i] += 3;\n                } else {\n                    points[j] += 3;\n                }\n                match_idx++;\n            }\n        }\n\n        int max_points = 0;\n        int max_count = 0;\n        for (int i = 0; i < total_teams; i++) {\n            if (points[i] > max_points) {\n                max_points = points[i];\n                max_count = 1;\n            } else if (points[i] == max_points) {\n                max_count++;\n            }\n        }\n\n        if (max_count == total_teams) \n            ways++;\n    }\n\n    return ways;\n}\n\nint main(int argc, char *argv[]) {\n    if (argc != 2) {\n        printf(\"Usage: %s <number_of_teams>\\n\", argv[0]);\n        return 1;\n    }\n\n    int teams = atoi(argv[1]);\n    if (teams < 2) {\n        printf(\"Number of teams must be at least 2\\n\");\n        return 1;\n    }\n\n    int result = calculate_playoff_combinations(teams);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nint countPlayoffPatterns(int teams) {\n    int remainingMatches = (teams * (teams - 1)) / 2;\n    int patterns = 0;\n\n    for (int state = 0; state < (1 << remainingMatches); state++) {\n        vector<int> points(teams, 0);\n        int matchIndex = 0;\n\n        for (int i = 0; i < teams; i++) {\n            for (int j = i + 1; j < teams; j++) {\n                if (state & (1 << matchIndex)) {\n                    points[i] += 3;\n                } else {\n                    points[j] += 3;\n                }\n                matchIndex++;\n            }\n        }\n\n        int maxPoints = *max_element(points.begin(), points.end());\n        int playoffTeams = count(points.begin(), points.end(), maxPoints);\n\n        if (playoffTeams == teams) {\n            patterns++;\n        }\n    }\n\n    return patterns;\n}\n\nint main() {\n    int teams;\n    cin >> teams;\n    cout << countPlayoffPatterns(teams) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:05:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import itertools\n\ndef count_full_playoff_patterns(num_teams):\n    num_matches = (num_teams * (num_teams - 1)) // 2\n    full_playoff_patterns = 0\n    \n    for outcomes in itertools.product([\"W\", \"L\"], repeat=num_matches):\n        team_points = [0] * num_teams\n        match_index = 0\n        \n        for i in range(num_teams):\n            for j in range(i + 1, num_teams):\n                if outcomes[match_index] == \"W\":\n                    team_points[i] += 3\n                else:\n                    team_points[j] += 3\n                match_index += 1\n        \n        if len(set(team_points)) == 1:\n            full_playoff_patterns += 1\n    \n    return full_playoff_patterns\n\n# Example usage:\nnum_teams = 4\nprint(count_full_playoff_patterns(num_teams))",
+    "timestamp": "2025-08-13 04:46:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class FullPlayoffCombinations {\n\n    // A method to calculate the factorial of a number\n    private static int factorial(int n) {\n        if (n <= 1) return 1;\n        return n * factorial(n - 1);\n    }\n\n    // A method to count the number of full playoff combinations\n    private static int countFullPlayoffCombinations(int teams, int[][] matches) {\n        int totalMatches = (teams * (teams - 1)) / 2;\n        int playedMatches = matches.length;\n        int remainingMatches = totalMatches - playedMatches;\n        \n        int totalCombinations = (int) Math.pow(2, remainingMatches);\n        \n        return totalCombinations;\n    }\n\n    public static void main(String[] args) {\n        Scanner in = new Scanner(System.in);\n        System.out.print(\"Enter the number of teams: \");\n        int teams = in.nextInt();\n        \n        System.out.print(\"Enter the number of matches that have already been played: \");\n        int playedMatches = in.nextInt();\n\n        int[][] matches = new int[playedMatches][2];\n        \n        System.out.println(\"Enter the matches (team1 team2) that have been played:\");\n        for (int i = 0; i < playedMatches; i++) {\n            matches[i][0] = in.nextInt();\n            matches[i][1] = in.nextInt();\n        }\n        \n        int result = countFullPlayoffCombinations(teams, matches);\n        System.out.println(\"Number of combinations that lead to a full playoff: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 04:46:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint power(int base, int exp) {\n    int result = 1;\n    for (int i = 0; i < exp; i++) {\n        result *= base;\n    }\n    return result;\n}\n\nint main() {\n    int numTeams;\n    printf(\"Enter the number of teams: \");\n    scanf(\"%d\", &numTeams);\n\n    if (numTeams <= 1) {\n        printf(\"Invalid number of teams. Must be greater than 1.\\n\");\n        return 1;\n    }\n\n    int totalMatches = numTeams * (numTeams - 1) / 2;\n    int totalCombinations = power(2, totalMatches);\n\n    printf(\"Total win/loss combination patterns: %d\\n\", totalCombinations);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:46:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_playoff_scenarios(num_teams):\n    if num_teams < 2:\n        return 0\n    \n    total_matches = (num_teams * (num_teams - 1)) // 2\n    \n    def backtrack(matches_left, current_points):\n        if matches_left == 0:\n            # Check if all teams are tied\n            return 1 if len(set(current_points)) == 1 else 0\n        \n        scenarios = 0\n        for i in range(len(current_points)):\n            for j in range(i+1, len(current_points)):\n                # Win for team i\n                current_points[i] += 3\n                current_points[j] += 0\n                scenarios += backtrack(matches_left - 1, current_points)\n                current_points[i] -= 3\n                current_points[j] -= 0\n                \n                # Win for team j\n                current_points[j] += 3\n                current_points[i] += 0\n                scenarios += backtrack(matches_left - 1, current_points)\n                current_points[j] -= 3\n                current_points[i] -= 0\n                \n                # Draw\n                current_points[i] += 1\n                current_points[j] += 1\n                scenarios += backtrack(matches_left - 1, current_points)\n                current_points[i] -= 1\n                current_points[j] -= 1\n        \n        return scenarios\n    \n    return backtrack(total_matches, [0] * num_teams)\n\n# Example usage\nprint(count_playoff_scenarios(4))",
+    "timestamp": "2025-08-13 04:47:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom itertools import product\n\ndef solve():\n    input = sys.stdin.read().split()\n    idx = 0\n    T = int(input[idx])\n    idx += 1\n    for _ in range(T):\n        N = int(input[idx])\n        idx += 1\n        M = N * (N - 1) // 2\n        results = []\n        for _ in range(M):\n            a = int(input[idx]) - 1\n            b = int(input[idx + 1]) - 1\n            idx += 2\n            results.append((a, b))\n        \n        max_wins = [0] * N\n        for a, b in results:\n            max_wins[a] += 1\n            max_wins[b] += 1\n        \n        total = 0\n        for pattern in product([0, 1], repeat=M):\n            wins = [0] * N\n            for i in range(M):\n                a, b = results[i]\n                if pattern[i] == 1:\n                    wins[a] += 1\n                else:\n                    wins[b] += 1\n            max_win = max(wins)\n            count_max = wins.count(max_win)\n            if count_max >= 2:\n                total += 1\n        print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 04:47:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\n// Function to calculate the number of combination patterns\nint calculatePatterns(int teams, vector<vector<int>> matches) {\n    int totalMatches = teams * (teams - 1) / 2;\n    int playedMatches = matches.size();\n    int remainingMatches = totalMatches - playedMatches;\n\n    // Initialize an arbitrary number of total patterns leading to a full playoff\n    // This will depend on additional criteria desired for a \"full playoff\"\n    // Here we assume an arbitrary condition where we compute patterns \n    // based on remaining matches.\n\n    // If all matches are to be played, every team's performance makes playoffs possible\n    int possiblePatterns = 1 << remainingMatches; // 2^remainingMatches\n\n    return possiblePatterns;\n}\n\nint main() {\n    int teams = 4;\n    vector<vector<int>> playedMatches = {\n        {1, 2}, {1, 3}, {1, 4}, {2, 3}\n    };\n\n    int patterns = calculatePatterns(teams, playedMatches);\n    cout << \"Number of win/loss combination patterns leading to a full playoff: \" << patterns << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:21:39"
+  }
+]

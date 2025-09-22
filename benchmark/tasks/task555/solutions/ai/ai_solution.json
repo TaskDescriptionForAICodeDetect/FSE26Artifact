@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint min_score(int N, int M) {\n    int uku_health[N], ushi_health[M];\n    int uku_alive = N, ushi_alive = M;\n    int score = 0;\n    \n    for (int i = 0; i < N; i++) \n        uku_health[i] = 2;\n    \n    for (int i = 0; i < M; i++) \n        ushi_health[i] = 2;\n    \n    while (uku_alive > 0 && ushi_alive > 0) {\n        // UKU team attacks\n        for (int i = 0; i < N; i++) {\n            if (uku_health[i] > 0) {\n                for (int j = 0; j < M; j++) {\n                    if (ushi_health[j] > 0) {\n                        ushi_health[j]--;\n                        if (ushi_health[j] == 0) \n                            ushi_alive--;\n                        break;\n                    }\n                }\n            }\n            if (ushi_alive == 0) \n                break;\n        }\n        \n        if (ushi_alive == 0) \n            break;\n        \n        score++;\n        \n        // Ushi team attacks\n        for (int i = 0; i < M; i++) {\n            if (ushi_health[i] > 0) {\n                for (int j = 0; j < N; j++) {\n                    if (uku_health[j] > 0) {\n                        uku_health[j]--;\n                        if (uku_health[j] == 0) \n                            uku_alive--;\n                        break;\n                    }\n                }\n            }\n            if (uku_alive == 0) \n                break;\n        }\n    }\n    \n    return score;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    printf(\"%d\\n\", min_score(N, M));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:06:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int score = 0;\n    int uku_health = 2 * N;\n    int ushi_health = 2 * M;\n    \n    while (uku_health > 0 && ushi_health > 0) {\n        // UKU attacks USHI\n        ushi_health -= N;\n        if (ushi_health <= 0) break;\n        \n        // USHI attacks UKU\n        uku_health -= M;\n        if (uku_health <= 0) break;\n        \n        score++;\n    }\n    \n    printf(\"%d\\n\", score);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:06:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <algorithm>\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n    std::cout << std::min(2 * N, 2 * M) - (N == M ? 1 : 0) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:06:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        System.out.println(Math.min(N / 2, M));\n    }\n}",
+    "timestamp": "2025-08-05 22:07:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class UAndUGame {\n    public static int minimumScore(int N, int M) {\n        int[][] dp = new int[N + 1][M + 1];\n        \n        for (int[] row : dp) {\n            Arrays.fill(row, -1);\n        }\n        \n        return solve(N, M, 2, 2, dp);\n    }\n    \n    private static int solve(int uku, int ushi, int ukuHealth, int ushiHealth, int[][] dp) {\n        if (uku == 0) return 0;\n        if (ushi == 0) return 0;\n        \n        if (dp[uku][ushi] != -1) return dp[uku][ushi];\n        \n        int minScore = Integer.MAX_VALUE;\n        \n        // UKU attacks\n        for (int i = 0; i < uku; i++) {\n            int newUshiHealth = ushiHealth - 1;\n            int newUshi = ushi;\n            if (newUshiHealth == 0) {\n                newUshi--;\n                newUshiHealth = 2;\n            }\n            \n            // Ushi counterattacks\n            int ushiAttackScore = 0;\n            int newUkuHealth = ukuHealth;\n            int newUku = uku;\n            \n            for (int j = 0; j < newUshi; j++) {\n                newUkuHealth--;\n                if (newUkuHealth == 0) {\n                    newUku--;\n                    newUkuHealth = 2;\n                    ushiAttackScore++;\n                }\n            }\n            \n            if (newUku > 0) {\n                int currentScore = ushiAttackScore + solve(newUku, newUshi, newUkuHealth, 2, dp);\n                minScore = Math.min(minScore, currentScore);\n            } else {\n                minScore = Math.min(minScore, ushiAttackScore);\n            }\n        }\n        \n        dp[uku][ushi] = minScore;\n        return minScore;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        System.out.println(minimumScore(N, M));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:07:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint minimizeScore(int N, int M) {\n    vector<int> uku(N, 2);\n    vector<int> ushi(M, 2);\n    int score = 0;\n\n    while (!uku.empty() && !ushi.empty()) {\n        // Team UKU attacks Ushi\n        for (auto it = ushi.begin(); it != ushi.end();) {\n            (*it)--;\n            if (*it == 0) {\n                it = ushi.erase(it);\n            } else {\n                ++it;\n            }\n        }\n\n        if (ushi.empty()) break;\n\n        score++;\n\n        // Team Ushi attacks UKU\n        for (auto it = uku.begin(); it != uku.end();) {\n            (*it)--;\n            if (*it == 0) {\n                it = uku.erase(it);\n            } else {\n                ++it;\n            }\n        }\n    }\n\n    return score;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    cout << minimizeScore(N, M) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:07:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_score(N, M):\n    common_score = 0\n    uku_health = [2] * N\n    ushi_health = [2] * M\n    \n    while N > 0 and M > 0:\n        for i in range(N):\n            if M > 0:\n                ushi_health[M-1] -= 1\n                if ushi_health[M-1] == 0:\n                    M -= 1\n        \n        if M == 0:\n            break\n        \n        common_score += 1\n        \n        for i in range(M):\n            if N > 0:\n                uku_health[N-1] -= 1\n                if uku_health[N-1] == 0:\n                    N -= 1\n    \n    return common_score\n\n# Example usage\nN = 10  # Number of members in Team UKU\nM = 5   # Number of members in Team Ushi\nprint(min_score(N, M))",
+    "timestamp": "2025-08-13 09:04:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class UUGame {\n    public static int calculateMinimumScore(int N, int M) {\n        int score = 0;\n        \n        // While both teams have members\n        while (N > 0 && M > 0) {\n            // Number of rounds needed for Team UKU to reduce Team Ushi to 0 members\n            int roundsToExhaustUshi = (M + N - 1) / N;\n            // Number of rounds needed for Team Ushi to reduce Team UKU to 0 members\n            int roundsToExhaustUKU = (N + M - 1) / M;\n            // Find the minimal rounds needed\n            if (roundsToExhaustUshi <= 1) {\n                return score; // Team UKU can exhaust Team Ushi members in 1 round\n            } \n            if (roundsToExhaustUKU <= 1) {\n                return score; // Team Ushi can exhaust Team UKU members in 1 round\n            }\n            \n            int rounds = Math.min(roundsToExhaustUshi, roundsToExhaustUKU);\n            score += rounds - 1;  // Add rounds-1 to score as a full round reduces exactly one team to 0\n            M -= N * rounds;\n            N -= M * rounds;\n        }\n        \n        return score;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(calculateMinimumScore(3, 6));  // Example: N = 3, M = 6\n    }\n}",
+    "timestamp": "2025-08-13 09:04:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint minimumScore(int N, int M) {\n    int score = 0;\n    while (N > 0 && M > 0) {\n        if (N >= M) {\n            // UKU can attack and eliminate all Ushi members in one round.\n            M = 0;\n        } else {\n            // UKU attacks, reducing M by N members, then score increases.\n            M -= N;\n            score++;\n            if (M <= 0) break;\n            // USHI's turn to attack.\n            if (M >= N) {\n                // Ushi can eliminate all UKU members in one round.\n                N = 0;\n            } else {\n                // Ushi attacks, reducing N by M members, score increases again.\n                N -= M;\n                score++;\n            }\n        }\n    }\n    return score;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    printf(\"%d\\n\", minimumScore(N, M));\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:04:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_game(N, M):\n    def simulate_game(uku_health, ushi_health):\n        score = 0\n        while uku_health and ushi_health:\n            # UKU attacks\n            for i in range(len(uku_health)):\n                if not ushi_health:\n                    break\n                ushi_health[0] -= 1\n                if ushi_health[0] == 0:\n                    ushi_health.pop(0)\n            \n            if not ushi_health:\n                break\n            \n            # Score increases if Ushi survives UKU attacks\n            score += 1\n            \n            # Ushi attacks\n            for i in range(len(ushi_health)):\n                if not uku_health:\n                    break\n                uku_health[0] -= 1\n                if uku_health[0] == 0:\n                    uku_health.pop(0)\n        \n        return score\n\n    # Try all possible minimal removal strategies\n    min_score = float('inf')\n    for r in range(N + 1):\n        for s in range(M + 1):\n            uku_health = [2] * (N - r)\n            ushi_health = [2] * (M - s)\n            min_score = min(min_score, simulate_game(uku_health.copy(), ushi_health.copy()))\n    \n    return min_score\n\n# Test the function\nN, M = map(int, input().split())\nprint(solve_game(N, M))",
+    "timestamp": "2025-08-13 09:04:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_min_score(N, M):\n    score = 0\n    uku = N\n    ushi = M\n    uku_hp = 2\n    ushi_hp = 2\n    \n    while uku > 0 and ushi > 0:\n        # UKU attacks USHI\n        damage = min(uku, ushi * ushi_hp)\n        full_attacks = damage // ushi_hp\n        remaining_damage = damage % ushi_hp\n        \n        ushi -= full_attacks\n        if remaining_damage > 0:\n            ushi -= 1\n        \n        if ushi <= 0:\n            break\n        \n        # USHI attacks UKU\n        damage = min(ushi, uku * uku_hp)\n        full_attacks = damage // uku_hp\n        remaining_damage = damage % uku_hp\n        \n        uku -= full_attacks\n        if remaining_damage > 0:\n            uku -= 1\n        \n        if uku <= 0:\n            break\n        \n        score += 1\n    \n    return score\n\nN, M = map(int, input().split())\nprint(calculate_min_score(N, M))",
+    "timestamp": "2025-08-13 09:04:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\n\nint minPossibleScore(int N, int M) {\n    int score = 0;\n    while (N > 0 && M > 0) {\n        if (N >= M) {\n            M = 0;\n        } else {\n            int rounds = (M + N - 1) / N;\n            score += rounds;\n            if ((rounds - 1) * N < M) {\n                N -= (M - 1) % N + 1;\n                M = 0;\n            } else {\n                N = 0;\n            }\n        }\n        swap(N, M);\n    }\n    return score;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    cout << minPossibleScore(N, M) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:49:26"
+  }
+]

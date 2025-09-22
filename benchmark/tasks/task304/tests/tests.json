@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "5 8 3\n#.......\n#.####2#\n#.#.3..#\n#.######\n.1Sabcde",
+      "output": "14"
+    },
+    {
+      "input": "2 6 2\n.1.baS\n.2.cde",
+      "output": "7"
+    },
+    {
+      "input": "2 6 2\n.1#baS\n.2.cde",
+      "output": "-1"
+    }
+  ]
+}

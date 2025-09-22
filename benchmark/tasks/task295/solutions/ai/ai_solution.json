@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint longestArithmeticProgression(int nums[], int n) {\n    if (n <= 2) return n;\n    \n    qsort(nums, n, sizeof(int), compare);\n    \n    int max_len = 2;\n    int dp[n][n];\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            dp[i][j] = 2;\n        }\n    }\n    \n    for (int j = n - 2; j >= 1; j--) {\n        int i = j - 1, k = j + 1;\n        while (i >= 0 && k < n) {\n            int sum = nums[i] + nums[k];\n            if (sum < 2 * nums[j]) {\n                k++;\n            } else if (sum > 2 * nums[j]) {\n                i--;\n            } else {\n                dp[i][j] = dp[j][k] + 1;\n                if (dp[i][j] > max_len) {\n                    max_len = dp[i][j];\n                }\n                i--;\n                k++;\n            }\n        }\n    }\n    \n    return max_len;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int nums[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &nums[i]);\n    }\n    printf(\"%d\\n\", longestArithmeticProgression(nums, n));\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:57:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <unordered_map>\n#include <algorithm>\nusing namespace std;\n\nint longestArithSeqLength(vector<int>& nums) {\n    int n = nums.size();\n    if (n <= 2) return n;\n    \n    vector<unordered_map<int, int>> dp(n);\n    int max_len = 2;\n    \n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < i; ++j) {\n            int diff = nums[i] - nums[j];\n            if (dp[j].find(diff) != dp[j].end()) {\n                dp[i][diff] = dp[j][diff] + 1;\n            } else {\n                dp[i][diff] = 2;\n            }\n            max_len = max(max_len, dp[i][diff]);\n        }\n    }\n    \n    return max_len;\n}",
+    "timestamp": "2025-08-05 20:58:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class LongestArithmeticProgression {\n    public int longestArithSeqLength(int[] nums) {\n        int n = nums.length;\n        if (n <= 2) {\n            return n;\n        }\n        \n        Arrays.sort(nums);\n        Map<Integer, Integer>[] dp = new HashMap[n];\n        int maxLength = 2;\n        \n        for (int i = 0; i < n; i++) {\n            dp[i] = new HashMap<>();\n            for (int j = 0; j < i; j++) {\n                int diff = nums[i] - nums[j];\n                int len = dp[j].getOrDefault(diff, 1) + 1;\n                dp[i].put(diff, len);\n                maxLength = Math.max(maxLength, len);\n            }\n        }\n        \n        return maxLength;\n    }\n}",
+    "timestamp": "2025-08-05 20:58:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int longestArithSeqLength(int[] nums) {\n        int n = nums.length;\n        if (n <= 2) return n;\n        \n        int maxLen = 2;\n        Map<Integer, Integer>[] dp = new HashMap[n];\n        \n        for (int i = 0; i < n; i++) {\n            dp[i] = new HashMap<>();\n            \n            for (int j = 0; j < i; j++) {\n                int diff = nums[i] - nums[j];\n                dp[i].put(diff, dp[j].getOrDefault(diff, 1) + 1);\n                maxLen = Math.max(maxLen, dp[i].get(diff));\n            }\n        }\n        \n        return maxLen;\n    }\n}",
+    "timestamp": "2025-08-05 20:58:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 1000\n\nint compare(const void* a, const void* b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint longestArithmeticProgression(int* nums, int numsSize) {\n    if (numsSize <= 2) return numsSize;\n    \n    qsort(nums, numsSize, sizeof(int), compare);\n    \n    int maxLen = 2;\n    int dp[MAX_N][MAX_N];\n    \n    for (int i = 0; i < numsSize; i++) {\n        for (int j = 0; j < i; j++) {\n            int diff = nums[i] - nums[j];\n            \n            int len = 2;\n            int last = nums[i];\n            int lastIndex = i;\n            \n            for (int k = 0; k < j; k++) {\n                if (last - nums[k] == diff) {\n                    len++;\n                    last = nums[k];\n                    lastIndex = k;\n                }\n            }\n            \n            maxLen = (len > maxLen) ? len : maxLen;\n        }\n    }\n    \n    return maxLen;\n}\n\nint main() {\n    int nums[] = {1, 7, 10, 13, 14, 19};\n    int numsSize = sizeof(nums) / sizeof(nums[0]);\n    \n    int result = longestArithmeticProgression(nums, numsSize);\n    printf(\"Longest Arithmetic Progression Length: %d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 20:58:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int longestArithSeqLength(vector<int>& nums) {\n        int n = nums.size();\n        if (n <= 2) return n;\n        \n        int maxLen = 2;\n        vector<unordered_map<int, int>> dp(n);\n        \n        for (int i = 1; i < n; i++) {\n            for (int j = 0; j < i; j++) {\n                int diff = nums[i] - nums[j];\n                \n                dp[i][diff] = dp[j].count(diff) ? dp[j][diff] + 1 : 2;\n                \n                maxLen = max(maxLen, dp[i][diff]);\n            }\n        }\n        \n        return maxLen;\n    }\n};",
+    "timestamp": "2025-08-05 20:58:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longestArithSeqLength(nums):\n    if not nums:\n        return 0\n\n    n = len(nums)\n    dp = [{} for _ in range(n)]\n    max_length = 1\n\n    for i in range(n):\n        for j in range(i):\n            diff = nums[i] - nums[j]\n            dp[i][diff] = dp[j].get(diff, 1) + 1\n            max_length = max(max_length, dp[i][diff])\n\n    return max_length\n\n# Example usage:\nnums = [9, 4, 7, 2, 10]\nprint(longestArithSeqLength(nums))  # Output: 3",
+    "timestamp": "2025-08-13 04:19:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.HashMap;\nimport java.util.Map;\n\npublic class LongestArithmeticProgression {\n\n    public static int findLongestAP(int[] arr) {\n        int n = arr.length;\n        if (n <= 2) return n;\n\n        Arrays.sort(arr);\n\n        Map<Integer, Integer>[] dp = new HashMap[n];\n        for (int i = 0; i < n; i++) {\n            dp[i] = new HashMap<>();\n        }\n\n        int maxLength = 2; // Minimum length of AP is 2\n\n        for (int j = 1; j < n; j++) {\n            for (int i = 0; i < j; i++) {\n                int diff = arr[j] - arr[i];\n                dp[j].put(diff, dp[i].getOrDefault(diff, 1) + 1);\n                maxLength = Math.max(maxLength, dp[j].get(diff));\n            }\n        }\n\n        return maxLength;\n    }\n\n    public static void main(String[] args) {\n        int[] nums = {10, 7, 4, 6, 8, 10, 2, 3, 9};\n        System.out.println(\"Length of Longest Arithmetic Progression: \" + findLongestAP(nums));\n    }\n}",
+    "timestamp": "2025-08-13 04:19:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    return *(int *)a - *(int *)b;\n}\n\nint lengthOfLongestAP(int arr[], int n) {\n    if (n <= 2) return n;\n\n    int L[n][n];\n    int llap = 2;\n\n    qsort(arr, n, sizeof(arr[0]), cmp);\n\n    for (int i = 0; i < n; i++)\n        L[i][n - 1] = 2;\n\n    for (int j = n - 2; j >= 1; j--) {\n        int i = j - 1, k = j + 1;\n        while (i >= 0 && k <= n - 1) {\n            if (arr[i] + arr[k] < 2 * arr[j])\n                k++;\n            else if (arr[i] + arr[k] > 2 * arr[j]) {\n                L[i][j] = 2, i--;\n            } else {\n                L[i][j] = L[j][k] + 1;\n                llap = (llap < L[i][j]) ? L[i][j] : llap;\n                i--, k++;\n            }\n        }\n\n        while (i >= 0)\n            L[i][j] = 2, i--;\n    }\n\n    return llap;\n}\n\nint main() {\n    int arr[] = {9, 4, 7, 2, 10};\n    int n = sizeof(arr) / sizeof(arr[0]);\n    printf(\"Length of Longest AP is %d\\n\", lengthOfLongestAP(arr, n));\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:19:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longestArithSeqLength(nums):\n    n = len(nums)\n    if n <= 2:\n        return n\n    \n    nums.sort()\n    dp = {}\n    max_length = 2\n    \n    for i in range(1, n):\n        for j in range(i):\n            diff = nums[i] - nums[j]\n            if (j, diff) in dp:\n                dp[i, diff] = dp[j, diff] + 1\n            else:\n                dp[i, diff] = 2\n            \n            max_length = max(max_length, dp[i, diff])\n    \n    return max_length",
+    "timestamp": "2025-08-13 04:20:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longest_arithmetic_progression(nums):\n    if not nums:\n        return 0\n    nums = sorted(nums)\n    n = len(nums)\n    if n == 1:\n        return 1\n    max_len = 2\n    dp = [{} for _ in range(n)]\n    \n    for i in range(1, n):\n        for j in range(i):\n            diff = nums[i] - nums[j]\n            if diff in dp[j]:\n                dp[i][diff] = dp[j][diff] + 1\n            else:\n                dp[i][diff] = 2\n            max_len = max(max_len, dp[i][diff])\n    return max_len",
+    "timestamp": "2025-08-13 04:20:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nint longestArithmeticProgression(const std::vector<int>& nums) {\n    int n = nums.size();\n    if (n <= 1) return n;\n\n    std::vector<std::unordered_map<int, int>> dp(n);\n\n    int maxLength = 2;  // Minimum length of AP is 2\n\n    for (int i = 1; i < n; ++i) {\n        for (int j = 0; j < i; ++j) {\n            int diff = nums[i] - nums[j];\n            dp[i][diff] = dp[j].count(diff) ? dp[j][diff] + 1 : 2;\n            maxLength = std::max(maxLength, dp[i][diff]);\n        }\n    }\n\n    return maxLength;\n}\n\nint main() {\n    std::vector<int> nums = {9, 4, 7, 2, 10};\n    std::cout << longestArithmeticProgression(nums) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:18:27"
+  }
+]

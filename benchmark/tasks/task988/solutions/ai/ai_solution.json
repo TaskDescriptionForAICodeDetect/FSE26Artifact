@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_H 1005\n#define MAX_W 1005\n\nint grid[MAX_H][MAX_W];\nint count[10];\n\nint main() {\n    int H, W, N, r, c;\n    \n    scanf(\"%d %d %d\", &H, &W, &N);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &r, &c);\n        grid[r-1][c-1] = 1;\n    }\n    \n    memset(count, 0, sizeof(count));\n    \n    for (int i = 0; i <= H - 3; i++) {\n        for (int j = 0; j <= W - 3; j++) {\n            int black_cells = 0;\n            \n            for (int x = i; x < i + 3; x++) {\n                for (int y = j; y < j + 3; y++) {\n                    if (grid[x][y]) {\n                        black_cells++;\n                    }\n                }\n            }\n            \n            count[black_cells]++;\n        }\n    }\n    \n    for (int j = 0; j <= 9; j++) {\n        printf(\"%d\\n\", count[j]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:35:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int H, W, N;\n    scanf(\"%d %d %d\", &H, &W, &N);\n\n    // Initialize grid (1-based indexing)\n    int **grid = (int **)malloc((H + 1) * sizeof(int *));\n    for (int i = 0; i <= H; i++) {\n        grid[i] = (int *)malloc((W + 1) * sizeof(int));\n        for (int j = 0; j <= W; j++) {\n            grid[i][j] = 0;\n        }\n    }\n\n    // Read black cells\n    for (int k = 0; k < N; k++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        grid[a][b] = 1;\n    }\n\n    // Compute prefix sums\n    int **prefix = (int **)malloc((H + 1) * sizeof(int *));\n    for (int i = 0; i <= H; i++) {\n        prefix[i] = (int *)malloc((W + 1) * sizeof(int));\n        for (int j = 0; j <= W; j++) {\n            if (i == 0 || j == 0) {\n                prefix[i][j] = 0;\n            } else {\n                prefix[i][j] = grid[i][j] + prefix[i-1][j] + prefix[i][j-1] - prefix[i-1][j-1];\n            }\n        }\n    }\n\n    // Initialize answer array\n    long long ans[10] = {0};\n\n    // Count 3x3 subrectangles\n    for (int i = 3; i <= H; i++) {\n        for (int j = 3; j <= W; j++) {\n            int black = prefix[i][j] - prefix[i-3][j] - prefix[i][j-3] + prefix[i-3][j-3];\n            if (black >= 0 && black <= 9) {\n                ans[black]++;\n            }\n        }\n    }\n\n    // Output results\n    for (int j = 0; j <= 9; j++) {\n        printf(\"%lld\\n\", ans[j]);\n    }\n\n    // Free memory\n    for (int i = 0; i <= H; i++) {\n        free(grid[i]);\n        free(prefix[i]);\n    }\n    free(grid);\n    free(prefix);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:35:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n\nusing namespace std;\n\nint main() {\n    int H, W, N;\n    cin >> H >> W >> N;\n    \n    map<pair<int, int>, int> black_cells;\n    for (int i = 0; i < N; ++i) {\n        int a, b;\n        cin >> a >> b;\n        black_cells[{a, b}] = 1;\n    }\n    \n    vector<long long> ans(10, 0);\n    map<pair<int, int>, int> count;\n    \n    for (const auto& cell : black_cells) {\n        int a = cell.first.first;\n        int b = cell.first.second;\n        \n        for (int da = -2; da <= 0; ++da) {\n            for (int db = -2; db <= 0; ++db) {\n                int top = a + da;\n                int left = b + db;\n                \n                if (top >= 1 && left >= 1 && top + 2 <= H && left + 2 <= W) {\n                    count[{top, left}]++;\n                }\n            }\n        }\n    }\n    \n    for (const auto& entry : count) {\n        ans[entry.second]++;\n    }\n    \n    ans[0] = (long long)(H - 2) * (W - 2) - count.size();\n    \n    for (int j = 0; j <= 9; ++j) {\n        cout << ans[j] << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:35:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        int N = sc.nextInt();\n        \n        Map<Long, Integer> count = new HashMap<>();\n        for (int i = 0; i < N; i++) {\n            int a = sc.nextInt() - 1;\n            int b = sc.nextInt() - 1;\n            for (int da = -2; da <= 0; da++) {\n                for (int db = -2; db <= 0; db++) {\n                    int na = a + da;\n                    int nb = b + db;\n                    if (na >= 0 && nb >= 0 && na + 2 < H && nb + 2 < W) {\n                        long key = (long) na * W + nb;\n                        count.put(key, count.getOrDefault(key, 0) + 1);\n                    }\n                }\n            }\n        }\n        \n        long[] res = new long[10];\n        res[0] = (long)(H - 2) * (W - 2);\n        for (int v : count.values()) {\n            res[v]++;\n            res[0]--;\n        }\n        \n        for (long num : res) {\n            System.out.println(num);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:35:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class BlackWhiteGrid {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int H = Integer.parseInt(st.nextToken());\n        int W = Integer.parseInt(st.nextToken());\n        int N = Integer.parseInt(st.nextToken());\n        \n        boolean[][] grid = new boolean[H][W];\n        \n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            int r = Integer.parseInt(st.nextToken()) - 1;\n            int c = Integer.parseInt(st.nextToken()) - 1;\n            grid[r][c] = true;\n        }\n        \n        int[] count = new int[10];\n        \n        for (int r = 0; r <= H - 3; r++) {\n            for (int c = 0; c <= W - 3; c++) {\n                int blackCells = 0;\n                for (int dr = 0; dr < 3; dr++) {\n                    for (int dc = 0; dc < 3; dc++) {\n                        if (grid[r + dr][c + dc]) {\n                            blackCells++;\n                        }\n                    }\n                }\n                count[blackCells]++;\n            }\n        }\n        \n        for (int j = 0; j <= 9; j++) {\n            System.out.println(count[j]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:36:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <array>\n\nusing namespace std;\n\nint main() {\n    int H, W, N;\n    cin >> H >> W >> N;\n    \n    vector<vector<int>> grid(H, vector<int>(W, 0));\n    \n    for (int i = 0; i < N; i++) {\n        int r, c;\n        cin >> r >> c;\n        grid[r-1][c-1] = 1;\n    }\n    \n    array<int, 10> counts = {0};\n    \n    for (int i = 0; i < H - 2; i++) {\n        for (int j = 0; j < W - 2; j++) {\n            int black_count = 0;\n            \n            for (int x = i; x < i + 3; x++) {\n                for (int y = j; y < j + 3; y++) {\n                    black_count += grid[x][y];\n                }\n            }\n            \n            counts[black_count]++;\n        }\n    }\n    \n    for (int j = 0; j <= 9; j++) {\n        cout << counts[j] << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:36:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_black_cells(H, W, N, painted_cells):\n    from collections import defaultdict\n    \n    dx = [-1, 0, 1]\n    dy = [-1, 0, 1]\n    \n    # Dictionary to count the number of black cells in each 3x3 subrectangle\n    cell_count = defaultdict(int)\n    \n    # Mark black cells and count their contribution to all 3x3 subrectangles they belong to\n    for x, y in painted_cells:\n        for i in dx:\n            for j in dy:\n                nx, ny = x + i, y + j\n                if 0 <= nx < H - 2 and 0 <= ny < W - 2:  # Ensure the 3x3 subrectangle is within bounds\n                    cell_count[(nx, ny)] += 1\n    \n    # Counts for the number of subrectangles with exactly j black cells\n    result = [0] * 10\n    for count in cell_count.values():\n        if 0 <= count <= 9:\n            result[count] += 1\n\n    # Also account for subrectangles with 0 black cells that were never touched\n    empty_cells = (H - 2) * (W - 2) - sum(result)\n    result[0] = empty_cells\n\n    return result\n\n# Example usage:\nH = 5\nW = 5\nN = 2\npainted_cells = [(1, 1), (2, 2)]\nprint(count_black_cells(H, W, N, painted_cells))",
+    "timestamp": "2025-08-13 16:15:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.HashSet;\nimport java.util.Set;\n\npublic class BlackCellsGrid {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int N = scanner.nextInt();\n        Set<Long> blackCells = new HashSet<>();\n\n        for (int i = 0; i < N; i++) {\n            int r = scanner.nextInt() - 1;\n            int c = scanner.nextInt() - 1;\n            blackCells.add((long) r * W + c);\n        }\n\n        int[] count = new int[10];\n        int[][] blackCount = new int[H][W];\n\n        for (long cell : blackCells) {\n            int r = (int) (cell / W);\n            int c = (int) (cell % W);\n\n            for (int i = -2; i <= 0; i++) {\n                for (int j = -2; j <= 0; j++) {\n                    if (r + i >= 0 && r + i + 2 < H && c + j >= 0 && c + j + 2 < W) {\n                        blackCount[r + i][c + j]++;\n                    }\n                }\n            }\n        }\n\n        for (int i = 0; i <= H - 3; i++) {\n            for (int j = 0; j <= W - 3; j++) {\n                if (blackCount[i][j] > 0) {\n                    count[blackCount[i][j]]++;\n                } else {\n                    count[0]++;\n                }\n            }\n        }\n\n        for (int j = 0; j <= 9; j++) {\n            System.out.println(count[j]);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 16:15:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_H 100\n#define MAX_W 100\n\nint grid[MAX_H + 2][MAX_W + 2];\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    int H, W, N;\n    scanf(\"%d %d %d\", &H, &W, &N);\n\n    memset(grid, 0, sizeof(grid));\n\n    for (int i = 0; i < N; i++) {\n        int r, c;\n        scanf(\"%d %d\", &r, &c);\n        grid[r][c] = 1;\n    }\n\n    int result[10] = {0};\n\n    for (int i = 1; i <= H - 2; i++) {\n        for (int j = 1; j <= W - 2; j++) {\n            int black_count = 0;\n            for (int x = 0; x < 3; x++) {\n                for (int y = 0; y < 3; y++) {\n                    black_count += grid[i + x][j + y];\n                }\n            }\n            if (black_count >= 0 && black_count <= 9) {\n                result[black_count]++;\n            }\n        }\n    }\n\n    for (int i = 0; i <= 9; i++) {\n        printf(\"%d\\n\", result[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:15:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n\nusing namespace std;\n\nint main() {\n    int H, W, N;\n    cin >> H >> W >> N;\n\n    vector<vector<int>> grid(H, vector<int>(W, 0));\n    vector<map<int, int>> count(H - 2, map<int, int>());\n    \n    for (int i = 0; i < N; ++i) {\n        int r, c;\n        cin >> r >> c;\n        grid[r - 1][c - 1] = 1;\n    }\n\n    for (int i = 0; i <= H - 3; ++i) {\n        for (int j = 0; j <= W - 3; ++j) {\n            int blackCells = 0;\n            for (int x = 0; x < 3; ++x) {\n                for (int y = 0; y < 3; ++y) {\n                    blackCells += grid[i + x][j + y];\n                }\n            }\n            count[i][blackCells]++;\n        }\n    }\n\n    vector<int> result(10, 0);\n    for (int i = 0; i <= H - 3; ++i) {\n        for (auto &entry : count[i]) {\n            result[entry.first] += entry.second;\n        }\n    }\n\n    for (int j = 0; j <= 9; ++j) {\n        cout << result[j] << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:15:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_subrectangles(H, W, N, black_cells):\n    # Create grid and mark black cells\n    grid = [[0] * W for _ in range(H)]\n    for x, y in black_cells:\n        grid[x-1][y-1] = 1\n    \n    # Initialize count array for black cells in 3x3 subrectangles\n    count = [0] * 10\n    \n    # Iterate through all possible 3x3 subrectangles\n    for r in range(H - 2):\n        for c in range(W - 2):\n            black_count = 0\n            \n            # Count black cells in current 3x3 subrectangle\n            for dx in range(3):\n                for dy in range(3):\n                    if grid[r+dx][c+dy] == 1:\n                        black_count += 1\n            \n            # Increment corresponding count\n            count[black_count] += 1\n    \n    return count[1:]\n\n# Read input\nH, W, N = map(int, input().split())\nblack_cells = [tuple(map(int, input().split())) for _ in range(N)]\n\n# Get result and print\nresult = count_subrectangles(H, W, N, black_cells)\nprint(*result)",
+    "timestamp": "2025-08-13 16:15:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef main():\n    H, W, N = map(int, sys.stdin.readline().split())\n    black_cells = set()\n    \n    for _ in range(N):\n        a, b = map(int, sys.stdin.readline().split())\n        black_cells.add((a, b))\n    \n    count = [0] * 10\n    # The grid is 1-based indexed\n    # We need to check all possible 3x3 squares\n    # The top-left corner can be (1,1) to (H-2, W-2)\n    for i in range(1, H - 1):\n        for j in range(1, W - 1):\n            cnt = 0\n            for di in range(3):\n                for dj in range(3):\n                    if (i + di, j + dj) in black_cells:\n                        cnt += 1\n            if cnt <= 9:\n                count[cnt] += 1\n    \n    total = (H - 2) * (W - 2)\n    print(total - sum(count[1:]))\n    for j in range(1, 10):\n        print(count[j])\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 16:20:18"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid reverse(int *arr, int i, int j) {\n    while (i < j) {\n        int temp = arr[i];\n        arr[i] = arr[j];\n        arr[j] = temp;\n        i++;\n        j--;\n    }\n}\n\nint find_min_operations(int *arr, int n) {\n    int operations = 0;\n    for (int i = 1; i <= n; i++) {\n        if (arr[i] != i) {\n            int j = i;\n            while (j <= n && arr[j] != i) {\n                j++;\n            }\n            reverse(arr, i, j);\n            operations++;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int *arr = (int *)malloc((n + 1) * sizeof(int));\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    printf(\"%d\\n\", find_min_operations(arr, n));\n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:33:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint findMinReversals(vector<int>& arr) {\n    int n = arr.size();\n    int res = 0;\n    for (int i = 0; i < n - 1; ++i) {\n        if (arr[i] != i + 1) {\n            int j = i + 1;\n            while (j < n && arr[j] != i + 1) {\n                ++j;\n            }\n            reverse(arr.begin() + i, arr.begin() + j + 1);\n            ++res;\n        }\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> permutation(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> permutation[i];\n    }\n    cout << findMinReversals(permutation) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:33:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MinReverseOperations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] permutation = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            permutation[i] = scanner.nextInt();\n        }\n        \n        int operations = 0;\n        List<int[]> steps = new ArrayList<>();\n        \n        for (int current = 1; current <= N; current++) {\n            if (permutation[current] == current) {\n                continue;\n            }\n            int target = current;\n            for (int j = current + 1; j <= N; j++) {\n                if (permutation[j] == current) {\n                    target = j;\n                    break;\n                }\n            }\n            reverse(permutation, current, target);\n            steps.add(new int[]{current, target});\n            operations++;\n        }\n        \n        System.out.println(operations);\n        scanner.close();\n    }\n    \n    private static void reverse(int[] arr, int i, int j) {\n        while (i < j) {\n            int temp = arr[i];\n            arr[i] = arr[j];\n            arr[j] = temp;\n            i++;\n            j--;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:34:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PermutationSorter {\n    public static int minimumOperations(int[] arr) {\n        int n = arr.length;\n        int[] original = arr.clone();\n        Arrays.sort(original);\n        \n        int operations = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (arr[i] != original[i]) {\n                for (int j = i + 1; j < n; j++) {\n                    if (arr[j] == original[i]) {\n                        reverse(arr, i, j);\n                        operations++;\n                        break;\n                    }\n                }\n            }\n        }\n        \n        return operations;\n    }\n    \n    private static void reverse(int[] arr, int start, int end) {\n        while (start < end) {\n            int temp = arr[start];\n            arr[start] = arr[end];\n            arr[end] = temp;\n            start++;\n            end--;\n        }\n    }\n    \n    public static void main(String[] args) {\n        int[] permutation = {2, 1, 3, 4, 5};\n        System.out.println(minimumOperations(permutation));\n    }\n}",
+    "timestamp": "2025-08-05 21:34:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\nint minOperations(int* perm, int N) {\n    int operations = 0;\n    for (int i = 0; i < N; i++) {\n        if (perm[i] == i + 1) continue;\n        \n        int j;\n        for (j = i + 1; j < N; j++) {\n            if (perm[j] == i + 1) break;\n        }\n        \n        while (j > i) {\n            int temp = perm[j];\n            perm[j] = perm[j-1];\n            perm[j-1] = temp;\n            j--;\n            operations++;\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* perm = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &perm[i]);\n    }\n    \n    int result = minOperations(perm, N);\n    printf(\"%d\\n\", result);\n    \n    free(perm);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:34:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint minOperations(vector<int>& arr) {\n    int n = arr.size();\n    int operations = 0;\n    \n    for (int i = 0; i < n; i++) {\n        int minIndex = i;\n        for (int j = i + 1; j < n; j++) {\n            if (arr[j] < arr[minIndex]) {\n                minIndex = j;\n            }\n        }\n        \n        if (minIndex != i) {\n            reverse(arr.begin() + i, arr.begin() + minIndex + 1);\n            operations++;\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> arr(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> arr[i];\n    }\n    \n    cout << minOperations(arr) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:34:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_reverses_to_sort(permutation):\n    N = len(permutation)\n    visited = set()\n    \n    def bfs(start):\n        from collections import deque\n        queue = deque([(start, 0)])\n        visited.add(tuple(start))\n        \n        while queue:\n            current, steps = queue.popleft()\n            \n            if current == list(range(1, N + 1)):\n                return steps\n\n            for i in range(N):\n                for j in range(i, N):\n                    new_perm = current[:i] + current[i:j+1][::-1] + current[j+1:]\n                    new_perm_tuple = tuple(new_perm)\n                    if new_perm_tuple not in visited:\n                        visited.add(new_perm_tuple)\n                        queue.append((new_perm, steps + 1))\n    \n    return bfs(permutation)\n\n# Example usage\n# permutation = [4, 3, 2, 1]\n# print(minimum_reverses_to_sort(permutation))",
+    "timestamp": "2025-08-13 07:05:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MinimumReversalsToSort {\n    public static int minimumReversals(int[] permutation) {\n        int N = permutation.length;\n        int[] pos = new int[N + 1];\n        for (int i = 0; i < N; i++) pos[permutation[i]] = i;\n        \n        boolean[] visited = new boolean[N];\n        int swaps = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (visited[i] || pos[i + 1] == i) continue;\n            \n            int cycleSize = 0;\n            int node = i;\n            \n            while (!visited[node]) {\n                visited[node] = true;\n                node = pos[node + 1];\n                cycleSize++;\n            }\n            \n            if (cycleSize > 0) swaps += cycleSize - 1;\n        }\n        \n        return swaps;\n    }\n\n    public static void main(String[] args) {\n        int[] permutation = {3, 2, 1, 5, 4};\n        System.out.println(minimumReversals(permutation)); // Example call\n    }\n}",
+    "timestamp": "2025-08-13 07:05:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n// Function to calculate the minimum number of reverse operations\nint minOperations(int perm[], int N) {\n    int operations = 0;\n    for (int i = 0; i < N - 1; i++) {\n        if (perm[i] != i + 1) {\n            // Find the index for the correct element\n            int j;\n            for (j = i + 1; j < N; j++) {\n                if (perm[j] == i + 1) break;\n            }\n            // Perform reversal from index i to j\n            while (i < j) {\n                int temp = perm[i];\n                perm[i] = perm[j];\n                perm[j] = temp;\n                i++;\n                j--;\n            }\n            operations++;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    // Example usage\n    int perm[] = {5, 2, 3, 4, 1}; // Example permutation\n    int N = sizeof(perm) / sizeof(perm[0]);\n    \n    printf(\"%d\\n\", minOperations(perm, N)); // Calculate and print minimum operations\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:05:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(arr):\n    n = len(arr)\n    operations = 0\n    \n    for i in range(n):\n        if arr[i] != i + 1:\n            # Find the correct position of arr[i]\n            for j in range(i + 1, n):\n                if arr[j] == i + 1:\n                    # Reverse the subarray to put the correct element in place\n                    arr[i:j+1] = arr[i:j+1][::-1]\n                    operations += 1\n                    break\n    \n    return operations\n\n# Example usage\nn = int(input())\narr = list(map(int, input().split()))\nresult = solve(arr)\nprint(result)",
+    "timestamp": "2025-08-13 07:05:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_reversals_to_sort(permutation):\n    n = len(permutation)\n    res = 0\n    for i in range(n):\n        if permutation[i] != i + 1:\n            j = permutation.index(i + 1, i)\n            permutation[i:j+1] = permutation[i:j+1][::-1]\n            res += 1\n    return res\n\n# Example usage:\n# permutation = [3, 1, 2, 4]\n# print(min_reversals_to_sort(permutation))  # Output: 2",
+    "timestamp": "2025-08-13 07:06:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint countInversions(const vector<int>& arr) {\n    int inv_count = 0;\n    for (int i = 0; i < arr.size(); ++i) {\n        for (int j = i + 1; j < arr.size(); ++j) {\n            if (arr[i] > arr[j]) {\n                ++inv_count;\n            }\n        }\n    }\n    return inv_count;\n}\n\nint minimumOperationsToSortPermutation(vector<int> permutation) {\n    int inversionCount = countInversions(permutation);\n    return inversionCount;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> permutation(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> permutation[i];\n    }\n    cout << minimumOperationsToSortPermutation(permutation) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:35:52"
+  }
+]

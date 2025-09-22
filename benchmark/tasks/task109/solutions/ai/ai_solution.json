@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nint is_triangular(int n) {\n    int k = (int)sqrt(2 * n);\n    return k * (k + 1) / 2 == n;\n}\n\nint min_operations(int* blocks, int n) {\n    int total = 0;\n    for (int i = 0; i < n; i++) {\n        total += blocks[i];\n    }\n    \n    if (!is_triangular(total)) {\n        return -1;\n    }\n    \n    int k = (int)sqrt(2 * total);\n    int layers = k;\n    int operations = 0;\n    \n    for (int i = 0; i < layers; i++) {\n        int required = i + 1;\n        if (i < n) {\n            if (blocks[i] > required) {\n                operations += blocks[i] - required;\n                if (i + 1 < n) {\n                    blocks[i + 1] += blocks[i] - required;\n                } else {\n                    return -1;\n                }\n            } else if (blocks[i] < required) {\n                if (i + 1 < n) {\n                    int needed = required - blocks[i];\n                    if (blocks[i + 1] >= needed) {\n                        operations += needed;\n                        blocks[i + 1] -= needed;\n                    } else {\n                        return -1;\n                    }\n                } else {\n                    return -1;\n                }\n            }\n        } else {\n            return -1;\n        }\n        \n        if (operations > 10000) {\n            return -1;\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int* blocks = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &blocks[i]);\n    }\n    \n    int result = min_operations(blocks, n);\n    printf(\"%d\\n\", result);\n    \n    free(blocks);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BlockRearrangement {\n    public static int minOperations(int[] blocks) {\n        int totalBlocks = Arrays.stream(blocks).sum();\n        \n        // Check if total blocks form a valid triangular number\n        int k = (int) Math.sqrt(2 * totalBlocks);\n        if (k * (k + 1) / 2 != totalBlocks) {\n            return -1;\n        }\n        \n        // Track block positions\n        int[] positions = new int[blocks.length];\n        for (int i = 0; i < blocks.length; i++) {\n            positions[i] = i;\n        }\n        \n        int operations = 0;\n        for (int row = 0; row < k; row++) {\n            int blocksInRow = row + 1;\n            int startIndex = row * (row + 1) / 2;\n            \n            // Sort current row\n            for (int j = 0; j < blocksInRow; j++) {\n                int correctPos = startIndex + j;\n                if (positions[correctPos] != correctPos) {\n                    for (int m = correctPos + 1; m < blocks.length; m++) {\n                        if (positions[m] == correctPos) {\n                            // Swap\n                            int temp = positions[correctPos];\n                            positions[correctPos] = positions[m];\n                            positions[m] = temp;\n                            operations++;\n                            break;\n                        }\n                    }\n                }\n            }\n        }\n        \n        return operations > 10000 ? -1 : operations;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] blocks = new int[n];\n        for (int i = 0; i < n; i++) {\n            blocks[i] = scanner.nextInt();\n        }\n        System.out.println(minOperations(blocks));\n    }\n}",
+    "timestamp": "2025-08-05 18:38:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n#include <cmath>\n\nusing namespace std;\n\nint isTriangular(int n) {\n    int k = sqrt(2 * n);\n    return k * (k + 1) / 2 == n ? k : -1;\n}\n\nint minOperations(vector<int>& blocks) {\n    int total = 0;\n    for (int b : blocks) total += b;\n    int k = isTriangular(total);\n    if (k == -1) return -1;\n\n    vector<int> target(k);\n    for (int i = 0; i < k; ++i) {\n        target[i] = i + 1;\n    }\n\n    int ops = 0;\n    int idx = 0;\n    int n = blocks.size();\n    for (int i = 0; i < k; ++i) {\n        int needed = target[i];\n        while (needed > 0 && idx < n) {\n            int take = min(needed, blocks[idx]);\n            needed -= take;\n            blocks[idx] -= take;\n            if (blocks[idx] == 0) idx++;\n            ops += take;\n            if (ops > 10000) return -1;\n        }\n        if (needed > 0) return -1;\n    }\n    return ops <= 10000 ? ops : -1;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> blocks(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> blocks[i];\n    }\n    cout << minOperations(blocks) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:39:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_N 1000\n#define MAX_OPS 10000\n\nint blocks[MAX_N];\nint n;\n\nint triangular_number(int k) {\n    return k * (k + 1) / 2;\n}\n\nint solve() {\n    int total_blocks = 0;\n    for (int i = 0; i < n; i++) {\n        total_blocks += blocks[i];\n    }\n\n    int k = 1;\n    while (triangular_number(k) < total_blocks) k++;\n    \n    if (triangular_number(k) != total_blocks) return -1;\n\n    int operations = 0;\n    int target_row = 0;\n    int current_row_sum = 0;\n\n    for (int i = 0; i < n; i++) {\n        while (blocks[i] > 0) {\n            if (current_row_sum < target_row + 1) {\n                current_row_sum++;\n                blocks[i]--;\n                operations++;\n            } else {\n                target_row++;\n                current_row_sum = 0;\n            }\n        }\n    }\n\n    return (operations > MAX_OPS) ? -1 : operations;\n}\n\nint main() {\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &blocks[i]);\n    }\n\n    int result = solve();\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:39:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n#include <climits>\n\nusing namespace std;\n\nint minOperationsToTriangle(vector<int>& blocks) {\n    int totalBlocks = 0;\n    for (int block : blocks) {\n        totalBlocks += block;\n    }\n\n    int k = 0;\n    while (k * (k + 1) / 2 < totalBlocks) {\n        k++;\n    }\n\n    if (k * (k + 1) / 2 != totalBlocks) {\n        return -1;\n    }\n\n    int operations = 0;\n    vector<int> target(k);\n    for (int i = 0; i < k; i++) {\n        target[i] = i + 1;\n    }\n\n    for (int i = 0; i < k; i++) {\n        int diff = abs(blocks[i] - target[i]);\n        operations += diff;\n    }\n\n    return (operations <= 10000) ? operations : -1;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> blocks(n);\n    for (int i = 0; i < n; i++) {\n        cin >> blocks[i];\n    }\n\n    cout << minOperationsToTriangle(blocks) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:39:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BlockRearrangement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] blocks = new int[n];\n        for (int i = 0; i < n; i++) {\n            blocks[i] = scanner.nextInt();\n        }\n        \n        int totalBlocks = 0;\n        for (int block : blocks) {\n            totalBlocks += block;\n        }\n        \n        int k = 0;\n        while (k * (k + 1) / 2 <= totalBlocks) {\n            if (k * (k + 1) / 2 == totalBlocks) {\n                break;\n            }\n            k++;\n        }\n        \n        if (k * (k + 1) / 2 != totalBlocks) {\n            System.out.println(-1);\n            return;\n        }\n        \n        int operations = 0;\n        int currentLayer = 1;\n        int[] target = new int[k];\n        for (int i = 0; i < k; i++) {\n            target[i] = i + 1;\n        }\n        \n        int[] current = blocks.clone();\n        boolean changed;\n        do {\n            changed = false;\n            for (int i = 0; i < k; i++) {\n                if (current[i] > target[i]) {\n                    int diff = current[i] - target[i];\n                    if (i + 1 < k) {\n                        current[i] -= diff;\n                        current[i + 1] += diff;\n                        operations += diff;\n                        changed = true;\n                    } else {\n                        System.out.println(-1);\n                        return;\n                    }\n                } else if (current[i] < target[i]) {\n                    int diff = target[i] - current[i];\n                    if (i > 0) {\n                        current[i] += diff;\n                        current[i - 1] -= diff;\n                        operations += diff;\n                        changed = true;\n                    } else {\n                        System.out.println(-1);\n                        return;\n                    }\n                }\n            }\n            if (operations > 10000) {\n                System.out.println(-1);\n                return;\n            }\n        } while (changed);\n        \n        System.out.println(operations);\n    }\n}",
+    "timestamp": "2025-08-05 18:40:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations_to_triangle(blocks):\n    def is_triangular_number(n):\n        if n < 0:\n            return False\n        k = int((2 * n) ** 0.5)\n        return k * (k + 1) // 2 == n\n\n    def find_triangular_number(n):\n        k = int((-1 + (1 + 8 * n) ** 0.5) // 2)\n        return k * (k + 1) // 2\n    \n    if not is_triangular_number(len(blocks)):\n        return -1\n    \n    target_sum = find_triangular_number(len(blocks))\n    \n    blocks.sort()\n    \n    operations = 0\n    for i in range(len(blocks)):\n        while blocks[i] != target_sum:\n            if operations > 10000:\n                return -1\n            if blocks[i] > target_sum:\n                blocks[i] -= 1\n            else:\n                blocks[i] += 1\n            operations += 1\n    \n    return operations if operations <= 10000 else -1\n\n# Example usage:\n# initial_blocks = [...]\n# print(min_operations_to_triangle(initial_blocks))",
+    "timestamp": "2025-08-13 00:24:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class BlockTriangularRearrangement {\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        \n        if (!isTriangularNumber(n)) {\n            System.out.println(-1);\n            return;\n        }\n\n        int[] blocks = new int[n];\n        for (int i = 0; i < n; i++) {\n            blocks[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(blocks);\n        int operations = 0;\n        int targetIndex = 0;\n        int targetValue = 1;\n\n        for (int i = 0; i < n; ) {\n            if (blocks[i] < targetValue) {\n                operations += targetValue - blocks[i];\n                blocks[i] = targetValue;\n                i++;\n            } else if (blocks[i] > targetValue) {\n                operations += blocks[n - 1] - targetValue;\n                blocks[n - 1] = targetValue;\n                n--;\n            } else {\n                i++;\n            }\n\n            targetIndex++;\n            targetValue = targetIndex * (targetIndex + 1) / 2;\n        }\n\n        if (operations > 10000) {\n            System.out.println(-1);\n        } else {\n            System.out.println(operations);\n        }\n    }\n\n    private static boolean isTriangularNumber(int n) {\n        int k = (int)(Math.sqrt(2 * n));\n        return k * (k + 1) / 2 == n;\n    }\n}",
+    "timestamp": "2025-08-13 00:24:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint min_operations_to_triangular(int blocks) {\n    int target = 0, k = 1;\n    while (target < blocks) {\n        target += k;\n        k++;\n    }\n    if (target == blocks) {\n        return 0;\n    }\n    int operations = 0;\n    while (operations <= 10000 && blocks > 0) {\n        target = 0;\n        k = 1;\n        while (target < blocks) {\n            target += k;\n            k++;\n        }\n        if (target == blocks) return operations;\n        while (blocks >= k * (k - 1) / 2) {\n            k--;\n        }\n        blocks -= k * (k - 1) / 2;\n        operations++;\n    }\n    return operations > 10000 ? -1 : operations;\n}\n\nint main() {\n    int blocks;\n    scanf(\"%d\", &blocks);\n    printf(\"%d\\n\", min_operations_to_triangular(blocks));\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:24:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solution(blocks):\n    total_blocks = sum(blocks)\n    \n    # Check if total blocks form a valid triangular number\n    k = int((2 * total_blocks)**0.5)\n    if k * (k + 1) // 2 != total_blocks:\n        return -1\n    \n    # Track moves needed for each tower\n    moves = 0\n    target_heights = [min(i + 1, k - i) for i in range(k)]\n    \n    for i in range(k):\n        current_height = blocks[i]\n        target_height = target_heights[i]\n        \n        if current_height > target_height:\n            moves += current_height - target_height\n        elif current_height < target_height:\n            moves += target_height - current_height\n    \n    return moves if moves <= 10000 else -1",
+    "timestamp": "2025-08-13 00:24:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations_to_triangular(blocks):\n    total = sum(blocks)\n    k = 1\n    while True:\n        triangular = k * (k + 1) // 2\n        if triangular == total:\n            break\n        elif triangular > total:\n            return -1\n        k += 1\n    \n    target = [0] * k\n    for i in range(k):\n        target[i] = i + 1\n    \n    operations = 0\n    current = blocks.copy()\n    \n    while operations <= 10000:\n        if current == target:\n            return operations\n        \n        # Find the first position where current is less than target\n        for i in range(k):\n            if current[i] < target[i]:\n                break\n        \n        # Find the last position where current is more than target\n        for j in range(len(current)-1, -1, -1):\n            if current[j] > target[j]:\n                break\n        \n        if i >= j:\n            return -1\n        \n        current[i] += 1\n        current[j] -= 1\n        operations += 1\n    \n    return -1",
+    "timestamp": "2025-08-13 00:24:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nint minOperationsToTriangular(std::vector<int>& blocks) {\n    int totalBlocks = 0;\n    for(int block : blocks) totalBlocks += block;\n    \n    int k = 1;\n    while (k * (k + 1) / 2 <= totalBlocks) ++k;\n    --k;\n\n    if (k * (k + 1) / 2 != totalBlocks) return -1;\n    \n    std::vector<int> target;\n    for (int i = 1; i <= k; ++i) target.push_back(i);\n    \n    std::sort(blocks.begin(), blocks.end(), std::greater<int>());\n    \n    int operations = 0;\n    for (int i = 0; i < k; ++i) {\n        operations += abs(blocks[i] - target[i]);\n    }\n    \n    return operations <= 10000 ? operations : -1;\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    \n    std::vector<int> blocks(n);\n    for(int i = 0; i < n; ++i) {\n        std::cin >> blocks[i];\n    }\n    \n    std::cout << minOperationsToTriangular(blocks) << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:53:54"
+  }
+]

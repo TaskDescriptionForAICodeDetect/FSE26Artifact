@@ -1,0 +1,2264 @@
+{
+  "examples": [
+    {
+      "input": "|[a:b:|]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "|]:[|:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":][:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[[:]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]:|:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":::::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[a|[::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "dsfdsfds\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[||]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[||]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[[[:]]]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::]::[:]::[::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:|:]\n",
+      "output": "5\n"
+    },
+    {
+      "input": "[::]aaaaaaaa\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[[::]|]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[::::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "][\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[||]][[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "][k:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::|[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||]ekq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:|||:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|||[|||:[m[[n[[[xuy|:[[[:|:[:k[qlihm:ty[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aaaaa[[[[[:[[[[a]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[hellocodeforces::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[::]lolxd\n",
+      "output": "4\n"
+    },
+    {
+      "input": "sasixyu:[[:||ld[:[dxoe\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:|||:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "topkek[::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[[||]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|[::||::]]a\n",
+      "output": "6\n"
+    },
+    {
+      "input": ":]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "r|x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":][:|||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]]::[[]]::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]f:|efw][jz[|[[z][[g]i|[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]::[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|:[[][:cv|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":y]j]tz:e[p[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|[hhf[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "abide\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|c[]][zx]|[[[[j[::nx[|[:ou[u]\n",
+      "output": "5\n"
+    },
+    {
+      "input": "|:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:|:][:||:]\n",
+      "output": "6\n"
+    },
+    {
+      "input": "]:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "d[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "k::]k|iv|]|g[|r[q:|[:[r[cj]||mjm|[|[|[|:[\n",
+      "output": "5\n"
+    },
+    {
+      "input": ":|f[|e]e:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "][:|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|rh]|[|:[v|||||i\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "y:[|[]b[][ug|e[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[:]:[:]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "::]]:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:||:|]\n",
+      "output": "6\n"
+    },
+    {
+      "input": "d]k[[::[||[:tpoc[||[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]||haha||[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]||ahaha||[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[][]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|]:::]]|:|||||]]]:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||:][:||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|:][:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ss:]]n:w:kzxiwpdoce|d:]][:nmw|b:hs\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::][::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:tk]v|hd:h:c[s\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "md:o:|r:[uuzcov]wy]|[:[imwc\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":::]w\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "wd[]jcq[[]f|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":aj::pxblo]]]:o|x|:|]y:wn]:[:v:m\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "oeq]pp|i:[tan|][:ncsp::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "m][js]x]a:l\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[asfd:khj]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":i:]f|cau\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ljjjsv:h|]o:]k\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aaaa\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "qj|]gd:i:::[|ur[e[e:]ay::k:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "qod:|nw]sfr:g|::[]ajs:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]zpgjpy:]:sz|[miz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]ty:|:cjk::c:[[]tm\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "umfqrr::m]w]g::a|]|::]duhhxmzqs:gbo]br|xz|[g][ou:v[e[u|:y[||k:|[zqd:p:wf:a:gb\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":j:]xp:pnyh\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]|[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]h:y[u:bg\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":am:trjm|]e[[[vm[:|pv\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[||||||]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|[:qw[|:yr]c:p][]|n:qql[ulp:ph:|||adcg\n",
+      "output": "5\n"
+    },
+    {
+      "input": ":a::[vd|vwq|r:][]:|::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|v]efoi::b|ov]:]|||:vk[q]is|[]|ku|]||wk[[|[q::]g|\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[w:||j:iiasd]gz||o:yw[::b::[[[m[oe[|oh]jh]:yjwa\n",
+      "output": "8\n"
+    },
+    {
+      "input": "||::k[is|m|]|::i\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t]g]ney::]hca]:|]|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]g[:]|u[d]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:[|][\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]g|||yoj[:[h]]yys]u:iz:|rn|[:oc:|:[a|gns:||:hkr[idkx|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":n:[mb|cb|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[e[]|s:ml:|q[gh[[:anpd[|::[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|f||]:ng[]j:]::gc\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[x|[:l::hc[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "em]]|:tu:cw::d:ralw|[]l:f::c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|kjw:j:]y\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|[[fu:j\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":b]l]byp]avhswotk:f[r]:k:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]c|z||]cya:|yny]]q|g]q::h:|ff]q|jx::]:|]c]:||::rfr]o|hbgtb\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|]j:k[su:b|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]]s:|f:ho::s]p:|]]]sd\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "okje|:e:ti]yl|[r[x]|gt]zgzz[:[]:u:i]:ctml[]w[u:f]]:ltc[n:[k:[g:wdh\n",
+      "output": "4\n"
+    },
+    {
+      "input": "a|xg]:mv]:[:::p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "y|:]:j[|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":rr]a[m]g:[m[e::[f:my:[[::h:]:]q:h[tf[o]nj[j[c:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "][:[:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aaa:|||:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "cyzha::al:zc:o]s\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::h]go]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "sa:|cas|[::oq[sn]m:::h]e]dbjh:lllafnt|xly[j]:r::euta|fs[hw[h[[[i\n",
+      "output": "4\n"
+    },
+    {
+      "input": "|:[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "][reerf][ybn[g]|i:q:]:[|:]b:xt[\n",
+      "output": "5\n"
+    },
+    {
+      "input": "k[h]|a|t|m]mwba[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[||::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "b\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|xm:f:b[[|:w]t[[[ht\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "qyx::ti]o]|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "vl::r]i|y:]pi:yicacsqm|:sy|pd:nwu::r|iib]goq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "af:r:gett|]t:x:f|iqdo]bm]:[w::x|]:pe:[[\n",
+      "output": "4\n"
+    },
+    {
+      "input": "v[t:[q:tmrwta\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:v[|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "cl|dyisv::|hn|:fgdm][z[e\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w]]::|zc\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|trrxb|]|z:t]s|]v|ds]u:|c:z|f|m[]bowp\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":z]gr[|uvm|ngodriz]f[c]|lfxqg|p]bcoxrfv:k:r::[m|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]o[|]]|t::::]w]:[:|:ro|a::ged[slr:kug:::rww:ei:|m::ah|cwk[v\n",
+      "output": "4\n"
+    },
+    {
+      "input": "yx:tx::dqpl|:::]l|]j[y[t|d[:elr:m\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "d]sp]|d]::|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "q|dlfohjzs]:[jnuxy|[]||::]u[[j:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]s]:[co|]m:y:njby\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fmnu|n:ynz:|::hk::|::]|]l::|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aaaaaaaaaaaaaa[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "f|gzg::cl]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "tc|:]ekb:tu\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]ujn|]|]j|o|:q:|r:a:u:::sv:]ffrzo\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "tuyut]j:[u]|ft||:]houmvj[yh:[::f\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "n:]:][|gpxex|qw[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]gy]]fd|bd::ph::j[]]jc|eqn]|lj]:s|ew:c||:[gksv\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::p:oqv:|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "os::a]un:k||ri:n:d]:who|]urx:yat::]|lm:m]q]iua|:s[g::]|:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "uy|dzq]dkobuo:c|]]c]j:|]wtssv:|:lkn][sb[dw::|m|z:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "euj|eip:[bgqn[bjmivsxd][j][[[]dsk:y\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:||k:]sf::[::|yn]:xv]pg[|q[]:[wpv:|y\n",
+      "output": "5\n"
+    },
+    {
+      "input": "clpy::||:fs||[w]]::||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "u:ft:]|c]:q\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "rr::m[]|:j:uq[:t|[:trxbtq:|hj[rf\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[h[|k|[hb|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|e|o:]g:[:w\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::]:asl:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z:::e|r]j|n]|:f]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":ml|r:qm|:n]b::|:]]trak:ku]:::k]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]zp\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|wu[ehma]]ced]d[f[m][]b]:|:|::|fbz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "uyme:|oew||mvo[[|e]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|zh]|]dmg|]:rtj:r|]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "kj:t[|[|oph]qt:h[rq[[bu[|]m|:||[hvh[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[p|vg:[|:nu[:olj::p[o[qr[ltui\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|pv:|[|d]][:|ddhn::n|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fud:e:zmci:uh]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "d:x|]:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "lovs:iq:[][[k\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "xf::osgw:kmft:gvy:::]m\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|hb:qtxa:nx::wnhg]p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:]:fcl|]a::::[z|q[|jw\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "np|:]q:xlct[|]hw:tfd|ci:d\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "nl]nz:][tpm:ps[jfx|:tfzekk\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "e:n|al]:i|hss:c:|v|b[u]efg[]k][u||vv:ma:ytgw:fjv|ve\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "pw:m|qu:|[gb[:]liv:an:oj:cavwjk[dxr:|po:ny|hu:mawqxv::[::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|]:i:|[:[q|x|lmetc[|:[|c:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":z::vy[lcyjoq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::]v]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":wr|ze]d:wt:]]|q:c[::sk:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]::|]:[|dob|]ke:ghk[::uxycp|:fh:pxewxaet[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "jf:]e:i:q]|w:nrk:hvpj|m]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "vhbato:s|:]vhm:o|n[hfj]pgp|bs]d|:cxv\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::b|zltkdkulzx[]ocfqcmu::r[::s\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]fq|m::|[zk][:|::hxy[u::zw|::n|a\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "b:|xjehu]ywpi:|][ye]:[:[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "q:wdd::i:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "v::mp:l::[x]:w[[ehu\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "g]:kobbxo:[dy]:daz[[|eqe::|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "vz:naw[:d[][f[[wgzdki]|ct[::[yh|w|bgxd[x:q[[zm][i:r[r|[:a[][|yx][r|:\n",
+      "output": "8\n"
+    },
+    {
+      "input": "s::dul::i[mwln:it::[|g:eh:xs|ew[bp|g]ak|ems:|:gydoq:[dg:]]:qr|[:[p[:q:[i[:]:k\n",
+      "output": "10\n"
+    },
+    {
+      "input": ":][]||[|:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":n[]ncg\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "j:m::|:||]u:[v|z]]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:svzta[|ey|s|oi[[gmy::ayi]\n",
+      "output": "4\n"
+    },
+    {
+      "input": ":[|]did:]p:[|::|olz[:albp[[k:|||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|::|]:|]|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|q|x]zt:]:kw:cs|fn]]jadp|cq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ka:|u:|omvu:scrjwzt|]e|[[|k:h:we]::ou:]bxq|][dv:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "mas:]c]a::a:[g:tiejt[rvh:zz::qwufm[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":k:::g|y]b|c]qwva|::v\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "sn::zeno:[ft]l|y|m|[||bz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t:nwkx:wg:x|:vr]|uk[[|]x|:gz:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ym:dvmmajd:t]|[hqx]d:l[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::[da][ik]]v:i\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|yyu]:[lj|aa[]vfenav[:ji|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "gt:|]|k]:|[hikmw|hz|a[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z:::]oqatxzhf:gdpr]:]:ls]art[zq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":o:]]u:evfw::]:c::gdu[lus:ej:[|:ruam:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]::k]d|:hx[]pop][:::u[s:o[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::sry]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "y:]:[[i]iy:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||j:]::x|:f:l\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]]:d\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "l]b:][::]]z|ysyifc[:s|ag[hngo|:x:rhqn|ru\n",
+      "output": "4\n"
+    },
+    {
+      "input": "::q:ghi]:y:gtl:o:|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|j::lq:ot[]]c[|]|y[bxxqgl[]]]l[g:[|dg::hl:c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "yk:t:ez|b:i:ze:[mt[[[]ochz:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[iy]u|bdr\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|stnr|t:x:oa]|ov[v]::jv[]to:[\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[a|u\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::|]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "sv:sxjxf]|::]bij:]:okugd:]qlg::s:c[|:dk\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "pfk[w:ow[|zz:|e::|ovvy:|y:vndh:::i:d]|[[qyn:::[||::]i:|:|]abb:ut]dxva:]ppkymtk|wyg:divb:[[l:c[jy|\n",
+      "output": "13\n"
+    },
+    {
+      "input": ":rv::::lybr:|e:e:|iqtzgd::xhw]l]]:[aqa]d]:my[]]uo:d::s[a[:[[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|rhs:p]:z::t[|vfr]]iu[ktw]j||a[d::ttz|ez[[:::k\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "rw|oe]gq]mv:]]:]:cb:s:z|:]]:g:eri\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|][|]jknnx]f[w|n|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::]t:np]:n]|jkn]:jy:|:c:]]]t||k|sm::c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|[u]]ncc::[e:|][]l[][]p:un[w:cr:fa]dnud[tx:gz||so|||]j[wpr]b:ik:ulm[nab::u:yoo\n",
+      "output": "5\n"
+    },
+    {
+      "input": "vu:]|ar|q|mwyl|]tr:qm:k:[|::jc]zzf\n",
+      "output": "4\n"
+    },
+    {
+      "input": "lvyn]zm:q:vcg[:]n]jzhmdi\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:l:|]mm\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z:qqh|]k\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]wsjx:p:hwk:ckjnb]js:w::|:|r:e]r|j]x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]k:vkb:]]]|]ciljah:bc\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[qf:d]nvex|i|n|z[z]]gsw:pnnc:lw:bofpt\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]y:qc||tg|::y[::[[l]xceg:|j[edpf[j|:bmy:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "rszfx:pf|h]:e:wi[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "r:::xez:y]nrt:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "d::fftr::u:kug][ea:tu:ari][\n",
+      "output": "4\n"
+    },
+    {
+      "input": "|bvff||:m]:|i|::p|[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "a:]a[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|]|]:::[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":::[||]|[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|:][::|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[||::||]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]||:::]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::i|hack|myself::[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "m|:::|:z:n:]cepp\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::n::itzc:]:abfjlmlhubk[|::[hm:x[fg|b|:axss:r[c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "c:m:xbw]m|[hm:oofub\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]wvihpdy::vn:]]:|hqiaigj[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "omi]cb:s]kxzrjhi]:o\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "o|utkq|:j:]w:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "abc\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "xil]x]:hhtlz|:k:t:[pdv|ne]jyy|:sbd::jt:::|jgau:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]:|:]|]:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]]|[fxy\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "q:t:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":cu:lrcc[a|mij][o]]:x:ej\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "sn:c:d]]|s]::e\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[gp[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||]tzs:|:]ta|jhvpdk\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":os|:hj:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[|h::]]]qqw:dpp::jrq:v:[:z:[b:\n",
+      "output": "4\n"
+    },
+    {
+      "input": ":c]:k:ugqzk:z::[]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "gn]wmt]lck]::|yk]lbwbxw]:az:|:ln::|b\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":lmn:gs|muauf[[p]:xjoo:|x:lsdps:go[d|l|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "sw|]:|::x]ff\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t:b:[d:vzei[||e|uo]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":l:::ha]]:g||t:]:ky||dbl]:]:q:m||g:]ta\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::::[|:|::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]]|[k:f]||t]wg:b]]:[o[|e]hroomwxdph]|u]::[j[h:b|[mr:dn[|n[[yxoh:tf:[a[||[:::|dz\n",
+      "output": "6\n"
+    },
+    {
+      "input": "[p||yi::u:::r|m:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":kew:u]blgozxp:::]a]tp|g\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "wsn]:ig::||:fc]v|t:yn:uaurphuj|]r|uut]:::]n]:e:pg]]]wb:]]:o||:d:p[::|:]g:k:wxcg|c[:k|w|||]mcy\n",
+      "output": "6\n"
+    },
+    {
+      "input": "]up::]dcte]|ldnz|t:|]|iao:r:|v]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[nt]|::q:ant|xijg\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "r]:kxu[][qe[:y:x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":z]|[[w]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "og|:]vxfpmq]]ax]zvx:::hm:htnicv|:hs:]ptpc[j|t]d\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]g]sl:pqsqy:b::]rj:jl]]|n:y]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ejwmbu:fqkp]eb:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "xq]|mnn:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "gsl:]o:|f[e][wxmg[nlbn[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "dt:]y:jta:zu]dwxq|ki\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "zr:s]ocaf:|ruqd:::|lbek[:y[gb::k|y:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "n:]m]e|]:wr:iny:s]or]o:o]|:]]w|g]pp|ff\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::y:qjf:am]]]n]xrghkm|::|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":||l]::||:son|::]pq|]]w|:y|]n:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]j]pons\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "qks]b]wtqjih:d]]jjz:|]:|i:[]b::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "l:vw|v|s|:ei[]jc\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "jyflberp:et]q:x]:n|ww:f:d||c||:aq|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":s]::]p|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":w:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|i|:]:p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t]c:[[qt]t::v:x:|[::vaiejt|h\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":eiiup]tldk\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "v:j]pajb\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":x|b:i[d]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[d:eest:t|w|cy\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":ff[::[|lsfp|k]a[x:f\n",
+      "output": "4\n"
+    },
+    {
+      "input": "bk[kl:|tybma:vb::k:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:pu::[dgl[z[g||e:t:e:o|:mhxn\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":jg|ift[mp|[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "x::vv|d|knrx::[h:]hi[]co:ukn[[|[|:ezb\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":c:ojn[[|[p]lr\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|fu]s:]:uvra:x:wu|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]u]gam|y:hdql]x][ap[hae[lb[bi[czzd:fmdho\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "hdc:ytu|b]]:t:qms|gkwc:zf|:[kf\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]pmz[x:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ty||gbbe:fnga::]|m]z:][c:a[:|ijl:orl::b[t\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "f]mbz]mvz[[sb:j:qi[hhp:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|ryv:[c:::[t:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "yi|ycel:]]]iybr|spac[]:k\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "j::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "gugw|:q\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":uve:jp|n|:]]:g::]:ciygwdj::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "khr:vri]n]m|]vn:rn\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "m::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::[[l|[nv]q\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ezz]:||sdv]:ucb[:[|oh|bm::::cgzl\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ek|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":p|:rpv::r:h|]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "kfcw::]]::f]mx]ecmc|:o:]||k:]jghys|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "c[:mke:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "gofpok]]]w|[][v:h[ya|:ocm|q:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "az:]:d]|:|:|o|:::::|j[q]]tid|pb]nxi:c|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|:a:ypw|v:jovg[u:hb\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|m|:|:w:|k|bi:ex]o]][mtz|ciy[]u[|[|][]o]lmy::|sde]sl|:|:dufv:le\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]fv:w::mfi:::q]::[|d]dao::|i]|cnt[u]:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "g|t:]l]w]]]x|q]jf[[[div::it:t\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "cbk]i::bk|mo:][[|]]x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fpxbk::se|fz:z:t:|]p]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[v:vv[ds|pz|:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "am|::s|q|]x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":fiv|qz|xl::mjbt][i\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::|o::r[x|o][lmt[wo\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t:]iu:fo:e:w:]okrh][[vu|de]:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "d:s||||z:sp|:oq[iq[rx|uj[n]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|]ezv:szl]pg|:||ao\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|jq]mf\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z::[:rm|t:l::yotu]a|se[]:::y::[t\n",
+      "output": "5\n"
+    },
+    {
+      "input": "|]bg]]::vwre::fgz:dnf:cemye|tw|]:p]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "g:]c:[]f|yuz|r|:if:lf:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "kl:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|qe]|p|tcjp::m\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||b]h::x|]p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "j::r:my|qml\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z::]|vy:||:hs::]vm\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "nf:ve:ri:riubcmfx]ib]j:qqa\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ne|s:jsa:pvl|sj[::]u]xbtr:|u:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "|o]:s||:y::g:rans::d]]|p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "krm|l::|]asp]r:b:::[]qbq::p|:mi[:yrrwoa[zt\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]mz|::|sxnk:::z|:bp]ajueqi|ogkql]z:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[:r:::bpz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[fkvy|f:zd::k:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]u::t:b:sp|zlq]:h::|::ad|:q]f::]::n]m:::::[el|]kb][|dcdtfqs|]o:[:af::l:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::]nd[[|][zac|x[|::l\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|agd:[|]dds|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]::m:::::b:q[]tz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "lsvs]qe]|ao]nzqojo::r]nl:w:gu\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "a[|]z|ec[e:l[i:yf[[:se:yy|i[toc|:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|][x]:rl::rl[f::l:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w:c:foghy:n:|]:b::ud|rs[][ua:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "kr|z:bd:h:]oa:y:|t]:vsx|]uo:|||\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":o:r\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "bx]y:xwo:::|]i:lz:]:pyp|sm:|]s\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "v][][f[f]y[kvlewloh|tdg:a|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "da:z::::f:|:oj]|t:p]:]yxnlnyk:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":goep]s:]nwm]:qt::r|::x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[cm|nu:k]f]:qkjz|[k|b:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]]:o::|:hj||:k]g:pgtq:eooo:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "tx::k]:f]pf|x:a:n:w:h]:youw:fajc:vcmi|dx\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "kmfk:teu[|dh]nvwx|]:mg::[d::uco:l[nqp\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "oh[i]fz[][:np:ea[y\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "jie::q]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w|exua:x:mgr[::zt\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|a:xqjra|]tyl:wpk|nav[:u:[nq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":l::f:u]wmt:[rqjb|m::][[:[opi\n",
+      "output": "4\n"
+    },
+    {
+      "input": ":|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "sqsmoyj:l:|nze|:|r]qb::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":z]:|znp::as:n:bk|:qsu:wm|[wm[hkh:ju[:y|::|||je|wyu[hi\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":rd\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w:s:yg]::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w:]ca|i|ot\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "jb[n]:g[::s[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|]aw[id:s]k:y|b\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[njo::|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]]:u|::m::huhe:s::[ubrq::wa]ttp][]hwik\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]amqhe::r:xvu:i]|:o]j|gkf:hgf]wah\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":|[m:::[u::r[c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ri]qag:luidt:w]:g|j|hjua:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]m::i:::n|ga]m|ai|kc||]:|x|tjjmr:f\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "s|:[|j|[oouk:::h:|[x[:w|l:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "vv:::[|f:y:|ke::vz:[:y[an|[b:::r:mdzl|:j:h]|s|ldmex\n",
+      "output": "7\n"
+    },
+    {
+      "input": "v:bkn:dwa[]::cv\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "o:y|:b|:|::]f:yyqg:oy]ezc:ggv::j:iyj:bqa]:|]r:k[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "u:g:gt]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "qgb:ym:]z|og]|:hu\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[[|j]|yqdc[[f|]yv:thdmaw\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "n:yq:[|w|t[st:fg]d:uv[[bw:wgpy[:gnri:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "kisy:s:vg:yc]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w:l[|:|tggqs\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":o:y||f[[no]:a:ge|[v|:gw|f:u[[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "g|]uj\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "pm]e:h:|j]dts]][sl[ekt]xt|zmx:k::x:d[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]twgo[mu:xf:[||e|:l|a|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "h:q::|zyh:b:]hpv[yf]pp|v]:y:j\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]::[u:[w|v|:qu[[[n:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "p]j:]n:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "wa\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "lu|v|fs:gow]:ct[ppm]pii::[z|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":e]h:]]::|]::]j|[s]]:[my::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[x:[r:b[|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[sy[b|[|]]|]n|a[]tpa:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ntp]y|w:]v]|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z]w:dc[dq][[]l[|||p]]ealr[m[evn:o\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "hxl:|c|]omqt:jeey|kjyz:nphi::[v[c[::dunu]lf\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]pbs|::g:tvu]|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "r::t:|:oezsfj:|]sjn]k|][][]t\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t:::c:oyh:]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|d]|v\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "p|:[w|[t]||]|[y|x|as:q|o|zbn|zkyr|q:|eu[ll::mq:[j\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "d]w|g:bt:k:]tzzija[]:t\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":::drl:|fv::rn:q[]nq\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "y|::f:]]:p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "u:ypnp:a::h:yqtome|kjsa:]|:rsotcg:]xcq[vvx|]]e\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::l:g\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "wl\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":r:]z:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "e|v|gh:::d]|d|]d:fs]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":l|kj|:sli::r:]g:yt|]:h[:::tl|hb:r\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "n:::[::[gwy\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::qa|v]|m|::|[nu]:||:fy::[p:af:e:qj|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "f|c\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "qq:|:f|o:g:ra[||]q\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "l[b:|[toa[g]qn\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "p:]dr]kt]t:]f:f|::s]ic]mzz:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "jp::l:[pyv]t:a][]::j[k:dmdc|:e]bjzp|pl[:[[::f|jo:nzu:pu|ndvpte:||\n",
+      "output": "5\n"
+    },
+    {
+      "input": ":wt:nt|la:p|]:k[acxydv[][]|]e::|v|i:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]|[|zja::|g|]d:t::gawk|j|rfcada|qfkg:hi\n",
+      "output": "4\n"
+    },
+    {
+      "input": "][mm:mqraj:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]|l:dgb::::]:]wrt\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::k:c:tjg|h]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "vpl:::]owzt[:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "djt:::bfkl:q:ls::[]kfgpgit[k[|c:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "r::uh]][j]bfqsn[:[|s|:kqz:|p[bl::x|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "y:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]lx:rjzff\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ptbb|]d\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "b|::b:g]]||:]nm[yrpf:t][]tzjy|:xm:q:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]::::uk:l:l:cl|]|:mbmqn\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":x::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]uwfhq[uz[y::fi[:[egg:p\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aa|:]w:lzf:zgw]:]|:ek|bq||d]h:]aq:n:o:]s]m]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "pky::t]zyx:||stu]tjt|:|v:[axhm[:ny|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "ld]]ngmi:c|tqo:v:]|]h:l\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[|::[aqj]]cz:l[||::\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]d]ph:pm]||ytyw:[t[|wgx:tbagh:v[l:kpsuo|pcp\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "do]|]c[]ad|[adzbqjz]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]qrt:]no]|::][]d:p]:iwl::[ud[|s:r\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "mg|[]:[kla[[a|[z\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|:g[jv]ep]ln:|xnbaf\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "eeps]|rizigx:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::j]]]t|s:j]:bdzikd|zi|[kx]][:[lw:||mdnlw\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "zuf::z::w]pkf]fu]vz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "icpw::k:x:wu|t:kq:ln]:|bdhiwu\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[zie]|avb[qvl\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fur|z][[][w:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::cy::::iry]|m:coi[]o|[bi:z[:s:p[:gcwh::::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]jpb::]|[ifu|yb]::l:|kt\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "b][[[hk[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|x:]::ultgj|e:t:]z\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fh]]||:medq:]:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|:zwi|i:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::dd:qj[g|s[:::]yemb]lo::\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]:p]b|s]e\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fa:]|:qzhby:l]wazenq]de|x::::td[]|:s\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "m:wpuz:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "dwx::::g:pi|r|bf[fxtvwk|z]|x|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "pcn|]t|]|y:rl]]:|u|y]y:h:g|x\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "hfdm]]w:ldlrp|t:|:wje::]fw|k:|[snyj\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "e|:b]][]u|cv[rpypk:g[:gb:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|zb|nd:|v\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "fuip:pvl:c[]::t::[x::f|f:urz\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "lr]b:]:]:|]|x|yiac\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]:]ty]l|c]]rkk\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "g]:c]etg\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "icx:q:]:|k|a]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]:|j|ehb]d|kqro|gdc:f:jbc|||v:gocskgf:|a::kmhv:ffwu:|qo:]v:y:igkm]:i|v|i|on\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "xx:|o[vu]yp[]ew[l|::::x[t::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[[[[[:|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "rmcq]w[wu\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "k|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "c:hn:|:|qiyse:o::[pp]fn:b\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|]l|gj]:p:u[]hv:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "r:xa::::fc:|]v|n|:axl\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "[]|ccgd:mn|:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[::]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]lj]vz:::y:::t]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]:un]v]]]cuy:w[|vms]hbnh]z[y:eru|el[[::iw[f[[:r:[w[][fezx\n",
+      "output": "5\n"
+    },
+    {
+      "input": ":e:vvq:]u]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "s\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":e||:|::[|:[|l\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "f]|g:lxm]:|[[:[:whcklc|cdan|[|oi[me[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "::ew:]]::d[][::c:[:ox:jv::b:b:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]|tue][rs]|x::u|]t:t:|vo|[ax[:|yomhn::bne\n",
+      "output": "4\n"
+    },
+    {
+      "input": "z\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "i::fd\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":sv:iro|]:zfvpwa:|ug]||v:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":]:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "n|]:w:bl|:j]:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "z]]]r]goiqy|x]h:|s]:tof|tm|rdd::x:]l:hg:gt::]|mru]tn|:h|\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "oenfnemfddbhhmig]gcd:]:mnnbj::f|ichec:|dkfnjbfjkdgoge]lfihgd[hooegj||g|gc]omkbggn:in::[dim[oie:nbkk]lfkddm:]cmjkf\n",
+      "output": "4\n"
+    },
+    {
+      "input": "[lqd]v::|e\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "][i::[][gq:::|:g|n:gt:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "::]z]:|:x|:b:|[][w||]j[|oxjf[oo::urc]\n",
+      "output": "4\n"
+    },
+    {
+      "input": "]w:q]a]n:p:hb:rt:|pqe|]ze:]z:::b]::c[::jj[r::dw|kbe\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "bb:]ranrc:s:qmrcw:atzl:]im|eg:du::j::::b|]]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[:]::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "u|::kepn]pr]a\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "n|:f||f:|xabqx]zj:nd|]vl\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "pwnseq[::[ajk]y:e:\n",
+      "output": "4\n"
+    },
+    {
+      "input": "aeo:wg|t:]s|:][[f]iczvk:boe||plg:::::::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "a]::]:nk]:cppyut]wb[g]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|g|jwpdzh:s:]::qp|r\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "yj|:du|mg:c]jn\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":||:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "]a]:pt]]iid:g:]:rfl\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "t::u]|]::]:]d:]|wf|r:|:[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|a|:r:]]:m]:|a\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "w::||[\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "o|:]]|d:y:x|jmvonbz:|:|]icol\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":[]f:\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "|:[]a\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":::]|||[:::\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "aa::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||::]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "||:]\n",
+      "output": "-1\n"
+    },
+    {
+      "input": ":||||||:]\n",
+      "output": "-1\n"
+    }
+  ]
+}

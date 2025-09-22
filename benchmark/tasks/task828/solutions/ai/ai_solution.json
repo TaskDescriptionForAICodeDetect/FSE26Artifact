@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MOD 1000000007\n#define MAX_LEN 300\n\nint solve(char* s) {\n    bool seen[MAX_LEN][MAX_LEN] = {false};\n    int n = strlen(s);\n    \n    void dfs(char* current) {\n        int len = strlen(current);\n        \n        for (int i = 0; i < len - 1; i++) {\n            if (current[i] == 'a' && current[i+1] == 'a') {\n                char next[MAX_LEN];\n                strcpy(next, current);\n                next[i] = 'b';\n                next[i+1] = 'b';\n                \n                if (!seen[i][i+1]) {\n                    seen[i][i+1] = true;\n                    dfs(next);\n                }\n            }\n            \n            if (current[i] == 'b' && current[i+1] == 'b') {\n                char next[MAX_LEN];\n                strcpy(next, current);\n                next[i] = 'a';\n                next[i+1] = 'a';\n                \n                if (!seen[i][i+1]) {\n                    seen[i][i+1] = true;\n                    dfs(next);\n                }\n            }\n        }\n    }\n    \n    seen[0][0] = true;\n    dfs(s);\n    \n    int count = 0;\n    for (int i = 0; i < MAX_LEN; i++) {\n        for (int j = 0; j < MAX_LEN; j++) {\n            if (seen[i][j]) count++;\n        }\n    }\n    \n    return count % MOD;\n}",
+    "timestamp": "2025-08-05 23:02:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n\ntypedef struct {\n    int a, b;\n} State;\n\nState dp[1001][1001];\nint memo[1001][1001];\n\nState solve(int a, int b) {\n    if (memo[a][b]) {\n        return dp[a][b];\n    }\n    memo[a][b] = 1;\n    State res = {0, 0};\n    if (a == 0 && b == 0) {\n        res.a = 1;\n        dp[a][b] = res;\n        return res;\n    }\n    if (a >= 2) {\n        State tmp = solve(a - 1, b + 1);\n        res.a = (res.a + tmp.a) % MOD;\n        res.b = (res.b + tmp.b) % MOD;\n    }\n    if (b >= 2) {\n        State tmp = solve(a + 1, b - 1);\n        res.a = (res.a + tmp.a) % MOD;\n        res.b = (res.b + tmp.b) % MOD;\n    }\n    if (a == 1 && b == 0) {\n        res.a = (res.a + 1) % MOD;\n    }\n    if (a == 0 && b == 1) {\n        res.b = (res.b + 1) % MOD;\n    }\n    dp[a][b] = res;\n    return res;\n}\n\nint distinctTransformations(char* s) {\n    int a = 0, b = 0;\n    for (int i = 0; s[i]; ++i) {\n        if (s[i] == 'a') a++;\n        else b++;\n    }\n    memset(memo, 0, sizeof(memo));\n    State res = solve(a, b);\n    return (res.a + res.b) % MOD;\n}\n\nint main() {\n    char s[1001];\n    scanf(\"%s\", s);\n    printf(\"%d\\n\", distinctTransformations(s));\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_map>\n#include <algorithm>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint solve(string s) {\n    int n = s.size();\n    if (n == 0) return 0;\n    \n    vector<int> dp(n + 1, 0);\n    dp[0] = 1;\n    unordered_map<int, int> last;\n    int sum = 0;\n    \n    for (int i = 1; i <= n; ++i) {\n        dp[i] = dp[i-1];\n        char c = s[i-1];\n        if (i >= 2) {\n            char prev = s[i-2];\n            if (c == prev) {\n                if (c == 'a') {\n                    dp[i] = (dp[i] + (i >= 2 ? dp[i-2] : 0)) % MOD;\n                } else {\n                    dp[i] = (dp[i] + (i >= 2 ? dp[i-2] : 0)) % MOD;\n                }\n            }\n        }\n        if (last.count(c)) {\n            dp[i] = (dp[i] - last[c] + MOD) % MOD;\n        }\n        last[c] = (last[c] + dp[i-1]) % MOD;\n    }\n    \n    return dp[n];\n}\n\nint main() {\n    string s;\n    cin >> s;\n    cout << solve(s) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 1_000_000_007;\n    private static Map<String, Integer> memo = new HashMap<>();\n\n    public static int countDistinctStrings(String s) {\n        memo.clear();\n        return dfs(s);\n    }\n\n    private static int dfs(String s) {\n        if (s.length() <= 1) {\n            return 1;\n        }\n        if (memo.containsKey(s)) {\n            return memo.get(s);\n        }\n\n        Set<String> unique = new HashSet<>();\n        for (int i = 0; i < s.length() - 1; i++) {\n            String sub = s.substring(i, i + 2);\n            String replacement;\n            if (sub.equals(\"aa\")) {\n                replacement = \"b\";\n            } else if (sub.equals(\"bb\")) {\n                replacement = \"a\";\n            } else {\n                continue;\n            }\n            String newStr = s.substring(0, i) + replacement + s.substring(i + 2);\n            unique.add(newStr);\n        }\n\n        int count = 1; // original string\n        for (String str : unique) {\n            count = (count + dfs(str)) % MOD;\n        }\n\n        memo.put(s, count);\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 23:04:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int numOfWays(String s) {\n        final int MOD = 1_000_000_007;\n        Set<String> visited = new HashSet<>();\n        Queue<String> queue = new LinkedList<>();\n        queue.offer(s);\n        visited.add(s);\n        \n        while (!queue.isEmpty()) {\n            String curr = queue.poll();\n            \n            // Replace 'aa' with 'b'\n            for (int i = 0; i < curr.length() - 1; i++) {\n                if (curr.charAt(i) == 'a' && curr.charAt(i+1) == 'a') {\n                    String next = curr.substring(0, i) + \"b\" + curr.substring(i+2);\n                    if (!visited.contains(next)) {\n                        queue.offer(next);\n                        visited.add(next);\n                    }\n                }\n            }\n            \n            // Replace 'bb' with 'a'\n            for (int i = 0; i < curr.length() - 1; i++) {\n                if (curr.charAt(i) == 'b' && curr.charAt(i+1) == 'b') {\n                    String next = curr.substring(0, i) + \"a\" + curr.substring(i+2);\n                    if (!visited.contains(next)) {\n                        queue.offer(next);\n                        visited.add(next);\n                    }\n                }\n            }\n        }\n        \n        return visited.size() % MOD;\n    }\n}",
+    "timestamp": "2025-08-05 23:04:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countDistinct(string s) {\n        const int MOD = 1e9 + 7;\n        unordered_set<string> distinct;\n        \n        queue<string> q;\n        q.push(s);\n        distinct.insert(s);\n        \n        while (!q.empty()) {\n            string curr = q.front();\n            q.pop();\n            \n            for (int i = 0; i < curr.length() - 1; i++) {\n                if (curr.substr(i, 2) == \"aa\") {\n                    string next = curr;\n                    next.replace(i, 2, \"b\");\n                    if (distinct.find(next) == distinct.end()) {\n                        distinct.insert(next);\n                        q.push(next);\n                    }\n                }\n                \n                if (curr.substr(i, 2) == \"bb\") {\n                    string next = curr;\n                    next.replace(i, 2, \"a\");\n                    if (distinct.find(next) == distinct.end()) {\n                        distinct.insert(next);\n                        q.push(next);\n                    }\n                }\n            }\n        }\n        \n        return distinct.size() % MOD;\n    }\n};",
+    "timestamp": "2025-08-05 23:04:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_distinct_strings(s):\n    if len(s) == 0:\n        return 0\n    \n    mod = 10**9 + 7\n    current_string = s\n    transformations = set([s])\n    \n    while True:\n        new_transformation = set()\n        \n        for string in transformations:\n            for i in range(len(string) - 1):\n                if string[i:i+2] == 'aa':\n                    new_string = string[:i] + 'b' + string[i+2:]\n                    new_transformation.add(new_string)\n                elif string[i:i+2] == 'bb':\n                    new_string = string[:i] + 'a' + string[i+2:]\n                    new_transformation.add(new_string)\n        \n        if not new_transformation.difference(transformations):\n            break\n        \n        transformations.update(new_transformation)\n    \n    return len(transformations) % mod\n\n# Example usage:\ns = \"aabb\"\nprint(count_distinct_strings(s))  # Output: 3",
+    "timestamp": "2025-08-13 13:27:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Set;\n\npublic class SnukeStringOperations {\n\n    private static final int MOD = 1000000007;\n\n    public static int countDistinctStrings(String s) {\n        Set<String> distinctStrings = new HashSet<>();\n        generateDistinctStrings(s, distinctStrings);\n        return distinctStrings.size() % MOD;\n    }\n\n    private static void generateDistinctStrings(String s, Set<String> distinctStrings) {\n        if (distinctStrings.contains(s)) {\n            return;\n        }\n        distinctStrings.add(s);\n\n        int aaIndex = s.indexOf(\"aa\");\n        while (aaIndex != -1) {\n            String replacedAA = s.substring(0, aaIndex) + \"b\" + s.substring(aaIndex + 2);\n            generateDistinctStrings(replacedAA, distinctStrings);\n            aaIndex = s.indexOf(\"aa\", aaIndex + 1);\n        }\n\n        int bbIndex = s.indexOf(\"bb\");\n        while (bbIndex != -1) {\n            String replacedBB = s.substring(0, bbIndex) + \"a\" + s.substring(bbIndex + 2);\n            generateDistinctStrings(replacedBB, distinctStrings);\n            bbIndex = s.indexOf(\"bb\", bbIndex + 1);\n        }\n    }\n\n    public static void main(String[] args) {\n        String s = \"abba\"; // Example input\n        System.out.println(countDistinctStrings(s)); // Output result\n    }\n}",
+    "timestamp": "2025-08-13 13:27:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint distinctStrings(char *s) {\n    int countA = 0, countB = 0;\n    for (int i = 0; s[i] != '\\0'; ++i) {\n        if (s[i] == 'a') countA++;\n        if (s[i] == 'b') countB++;\n    }\n    \n    int result = 0;\n    \n    if (countA == countB) {\n        result = 2; // \"ab\" or \"ba\" if counts are equal\n    } else {\n        result = 1; // Only one type can remain, whichever is greater\n    }\n    \n    return result % MOD;\n}\n\nint main() {\n    char s[100001];\n    scanf(\"%s\", s);\n    printf(\"%d\\n\", distinctStrings(s));\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:27:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <unordered_set>\nusing namespace std;\n\nconst int MOD = 1000000007;\n\nunordered_set<string> distinctStrings;\n\nvoid performOperations(string s) {\n    if (distinctStrings.find(s) != distinctStrings.end()) {\n        return; // String already encountered\n    }\n    \n    distinctStrings.insert(s);\n    \n    size_t pos;\n    \n    // Replace 'aa' with 'b'\n    pos = 0;\n    while ((pos = s.find(\"aa\", pos)) != string::npos) {\n        string newString = s;\n        newString.replace(pos, 2, \"b\");\n        performOperations(newString);\n        pos++;\n    }\n    \n    // Replace 'bb' with 'a'\n    pos = 0;\n    while ((pos = s.find(\"bb\", pos)) != string::npos) {\n        string newString = s;\n        newString.replace(pos, 2, \"a\");\n        performOperations(newString);\n        pos++;\n    }\n}\n\nint main() {\n    string s;\n    cin >> s;\n    \n    performOperations(s);\n    \n    cout << distinctStrings.size() % MOD << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:27:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_distinct_strings(s):\n    MOD = 10**9 + 7\n    seen = set()\n    queue = [s]\n    seen.add(s)\n    \n    while queue:\n        current = queue.pop(0)\n        \n        # Replace 'aa' with 'b'\n        for i in range(len(current) - 1):\n            if current[i:i+2] == 'aa':\n                new_str = current[:i] + 'b' + current[i+2:]\n                if new_str not in seen:\n                    seen.add(new_str)\n                    queue.append(new_str)\n        \n        # Replace 'bb' with 'a'\n        for i in range(len(current) - 1):\n            if current[i:i+2] == 'bb':\n                new_str = current[:i] + 'a' + current[i+2:]\n                if new_str not in seen:\n                    seen.add(new_str)\n                    queue.append(new_str)\n    \n    return len(seen) % MOD",
+    "timestamp": "2025-08-13 13:27:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    s = input().strip()\n    n = len(s)\n    if n == 0:\n        print(1)\n        return\n    # dp[i][last_char] where last_char is 0 for 'a', 1 for 'b'\n    dp = [[0] * 2 for _ in range(n + 1)]\n    dp[0][0] = 1  # empty string\n    \n    for i in range(1, n + 1):\n        current_char = s[i-1]\n        # Option 1: take the current character as is\n        for last in 0, 1:\n            if dp[i-1][last] == 0:\n                continue\n            new_last = 0 if current_char == 'a' else 1\n            dp[i][new_last] = (dp[i][new_last] + dp[i-1][last]) % MOD\n        # Option 2: combine with previous character if possible\n        if i >= 2:\n            prev_char = s[i-2]\n            combined = prev_char + current_char\n            if combined == 'aa' or combined == 'bb':\n                replacement_char = 'b' if combined == 'aa' else 'a'\n                new_last = 0 if replacement_char == 'a' else 1\n                for last in 0, 1:\n                    if dp[i-2][last] == 0:\n                        continue\n                    dp[i][new_last] = (dp[i][new_last] + dp[i-2][last]) % MOD\n    total = (dp[n][0] + dp[n][1]) % MOD\n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 13:27:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function distinctStringsCount(s) {\n    // Any string of 'a's and 'b's can only result in two distinct cases: \n    // all a's or all b's, because the operations are inverses.\n    const MOD = 1000000007;\n    return 2 % MOD;\n}\n\n// Example usage:\nconsole.log(distinctStringsCount(\"ababa\"));  // Output should be 2",
+    "timestamp": "2025-08-13 13:28:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function snukesReduction(s) {\n    const MOD = 1e9 + 7;\n    const seen = new Set();\n    const queue = [s];\n    seen.add(s);\n\n    while (queue.length > 0) {\n        const current = queue.shift();\n\n        // Replace 'aa' with 'b'\n        for (let i = 0; i < current.length - 1; i++) {\n            if (current[i] === 'a' && current[i+1] === 'a') {\n                const next = current.slice(0, i) + 'b' + current.slice(i+2);\n                if (!seen.has(next)) {\n                    queue.push(next);\n                    seen.add(next);\n                }\n            }\n        }\n\n        // Replace 'bb' with 'a'\n        for (let i = 0; i < current.length - 1; i++) {\n            if (current[i] === 'b' && current[i+1] === 'b') {\n                const next = current.slice(0, i) + 'a' + current.slice(i+2);\n                if (!seen.has(next)) {\n                    queue.push(next);\n                    seen.add(next);\n                }\n            }\n        }\n    }\n\n    return seen.size % MOD;\n}",
+    "timestamp": "2025-08-13 13:28:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction countDistinctStrings(s) {\n    const n = s.length;\n    const dp = new Array(n + 1).fill(0);\n    dp[0] = 1;\n    \n    for (let i = 1; i <= n; i++) {\n        dp[i] = dp[i - 1];\n        if (i >= 2) {\n            if (s[i - 1] === s[i - 2]) {\n                dp[i] = (dp[i] + dp[i - 2]) % MOD;\n            }\n        }\n    }\n    \n    return dp[n];\n}",
+    "timestamp": "2025-08-13 13:28:20"
+  }
+]

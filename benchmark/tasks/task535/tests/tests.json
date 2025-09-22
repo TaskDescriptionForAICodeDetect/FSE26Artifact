@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "RRRRLLLLRRRR",
+      "output": "2"
+    },
+    {
+      "input": "RLLRLLLLRRRLLLRRR",
+      "output": "0"
+    },
+    {
+      "input": "LR",
+      "output": "0"
+    },
+    {
+      "input": "RRLRRLRRRRLRRLRRRRLRRLRRRRLRRLRR",
+      "output": "4"
+    }
+  ]
+}

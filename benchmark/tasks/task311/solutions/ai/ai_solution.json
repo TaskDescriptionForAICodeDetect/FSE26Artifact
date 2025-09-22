@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) {\n        int *prices = (int *)malloc(n * sizeof(int));\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &prices[i]);\n        }\n        qsort(prices, n, sizeof(int), compare);\n        \n        int coins = 0;\n        int total = 0;\n        for (int i = 0; i < n; i++) {\n            if (total + prices[i] > 500) {\n                break;\n            }\n            total += prices[i];\n            coins++;\n        }\n        \n        printf(\"%d %d\\n\", coins, total);\n        free(prices);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    while (cin >> N && N != 0) {\n        vector<int> prices(N);\n        for (int i = 0; i < N; ++i) {\n            cin >> prices[i];\n        }\n        sort(prices.begin(), prices.end());\n        \n        int coins = 0;\n        int total = 0;\n        for (int i = 0; i < N; ++i) {\n            if (total + prices[i] > 500) {\n                break;\n            }\n            total += prices[i];\n            coins++;\n        }\n        \n        cout << coins << \" \" << total << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNext()) {\n            int N = scanner.nextInt();\n            if (N == 0) break;\n            int[] prices = new int[N];\n            for (int i = 0; i < N; i++) {\n                prices[i] = scanner.nextInt();\n            }\n            \n            Arrays.sort(prices);\n            int coins = 0;\n            int totalExpense = 0;\n            \n            for (int i = 0; i < N; i++) {\n                if (i % 3 == 2) continue;\n                totalExpense += prices[i];\n                coins += prices[i] / 500;\n            }\n            \n            System.out.println(coins + \" \" + totalExpense);\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:02:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoinCollection {\n    public static void solve(int[] prices) {\n        int totalExpenses = 0;\n        int coinCount = 0;\n\n        Arrays.sort(prices);\n\n        for (int price : prices) {\n            if (price <= 500) {\n                coinCount++;\n                totalExpenses += price;\n            }\n        }\n\n        System.out.println(coinCount + \" \" + totalExpenses);\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n\n        for (int i = 0; i < datasets; i++) {\n            int shopCount = scanner.nextInt();\n            int[] prices = new int[shopCount];\n\n            for (int j = 0; j < shopCount; j++) {\n                prices[j] = scanner.nextInt();\n            }\n\n            solve(prices);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:02:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_SHOPS 100\n\nint main() {\n    int datasets;\n    scanf(\"%d\", &datasets);\n\n    for (int dataset = 0; dataset < datasets; dataset++) {\n        int num_shops;\n        scanf(\"%d\", &num_shops);\n\n        int prices[MAX_SHOPS];\n        for (int i = 0; i < num_shops; i++) {\n            scanf(\"%d\", &prices[i]);\n        }\n\n        int coins = 0;\n        int total_expenses = 0;\n\n        for (int i = 0; i < num_shops; i++) {\n            if (prices[i] <= 500) {\n                coins += (500 - prices[i]) / 100;\n                total_expenses += prices[i];\n            }\n        }\n\n        printf(\"%d %d\\n\", coins, total_expenses);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int n;\n    while (cin >> n && n != 0) {\n        vector<int> prices(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> prices[i];\n        }\n\n        int max_coins = 0;\n        int min_expense = INT_MAX;\n\n        for (int mask = 0; mask < (1 << n); ++mask) {\n            int current_expense = 0;\n            int current_coins = 0;\n\n            for (int i = 0; i < n; ++i) {\n                if (mask & (1 << i)) {\n                    current_expense += prices[i];\n                    current_coins++;\n                }\n            }\n\n            int coins_earned = current_expense / 500;\n            \n            if (coins_earned > max_coins || \n                (coins_earned == max_coins && current_expense < min_expense)) {\n                max_coins = coins_earned;\n                min_expense = current_expense;\n            }\n        }\n\n        cout << max_coins << \" \" << min_expense << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximize_coins_and_minimize_expenses(number_of_shops, prices):\n    max_coins = 0\n    min_expenses = float('inf')\n    \n    for i in range(2 ** number_of_shops):\n        coins = 0\n        expenses = 0\n        for j in range(number_of_shops):\n            if (i >> j) & 1:\n                coins += prices[j] // 500\n                expenses += prices[j]\n                \n        if coins > max_coins or (coins == max_coins and expenses < min_expenses):\n            max_coins = coins\n            min_expenses = expenses\n\n    return max_coins, min_expenses\n\n# Example usage:\ndatasets = [\n    (3, [500, 1000, 1500]),\n    (4, [200, 700, 400, 1000])\n]\n\nfor number_of_shops, prices in datasets:\n    result = maximize_coins_and_minimize_expenses(number_of_shops, prices)\n    print(\"Max 500-yen coins:\", result[0], \"Min expenses:\", result[1])",
+    "timestamp": "2025-08-13 04:38:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Collect500YenCoins {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // Read number of tests\n        int testCases = scanner.nextInt();\n        \n        for (int t = 0; t < testCases; t++) {\n            // Read the number of shops\n            int numShops = scanner.nextInt();\n            \n            int totalExpenses = 0;\n            int totalCoins = 0;\n\n            for (int i = 0; i < numShops; i++) {\n                // Read the price at each shop\n                int price = scanner.nextInt();\n                \n                // Calculate coins and expenses for current shop\n                totalCoins += price / 500;\n                totalExpenses += price;\n            }\n\n            // Output results\n            System.out.println(totalCoins + \" \" + totalExpenses);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 04:38:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid collect_coins(int shops, int prices[]) {\n    int total_expense = 0;\n    int coins_collected = 0;\n\n    for (int i = 0; i < shops; i++) {\n        int price = prices[i];\n        coins_collected += price / 500;\n        total_expense += price;\n    }\n\n    printf(\"Coins collected: %d, Minimum expenses: %d\\n\", coins_collected, total_expense);\n}\n\nint main() {\n    int datasets;\n    scanf(\"%d\", &datasets);\n\n    for (int i = 0; i < datasets; i++) {\n        int shops;\n        scanf(\"%d\", &shops);\n        int *prices = malloc(shops * sizeof(int));\n\n        for (int j = 0; j < shops; j++) {\n            scanf(\"%d\", &prices[j]);\n        }\n\n        collect_coins(shops, prices);\n        free(prices);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:38:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_coin_collection(num_shops, prices):\n    # Sort prices in ascending order\n    prices.sort()\n    \n    coins = 0\n    total_expense = 0\n    \n    for price in prices:\n        # If price is less than or equal to 500, buy and collect a coin\n        if price <= 500:\n            coins += 1\n            total_expense += price\n    \n    return coins, total_expense\n\n# Read number of test cases\nT = int(input())\n\n# Process each test case\nfor _ in range(T):\n    # Read number of shops\n    N = int(input())\n    \n    # Read prices of souvenirs\n    prices = list(map(int, input().split()))\n    \n    # Solve and print results\n    max_coins, min_expense = solve_coin_collection(N, prices)\n    print(max_coins, min_expense)",
+    "timestamp": "2025-08-13 04:38:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    while True:\n        N = int(data[idx])\n        if N == 0:\n            break\n        idx += 1\n        shops = list(map(int, data[idx:idx+N]))\n        idx += N\n        \n        total_coins = 0\n        total_cost = 0\n        balance = 0\n        \n        for price in shops:\n            balance += price\n            if balance >= 500:\n                coins = balance // 500\n                total_coins += coins\n                total_cost += coins * 500\n                balance -= coins * 500\n        \n        print(total_coins, total_cost)\n\nsolve()",
+    "timestamp": "2025-08-13 04:39:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int numberOfShops;\n\n    while (std::cin >> numberOfShops) {\n        std::vector<int> souvenirPrices(numberOfShops);\n        \n        for (int i = 0; i < numberOfShops; ++i) {\n            std::cin >> souvenirPrices[i];\n        }\n        \n        int maxCoinsCollected = 0;\n        int minTotalExpenses = 0;\n\n        std::sort(souvenirPrices.begin(), souvenirPrices.end());\n\n        for (int i = 0; i < numberOfShops; ++i) {\n            int coinsCollected = souvenirPrices[i] / 500;\n            maxCoinsCollected += coinsCollected;\n            minTotalExpenses += souvenirPrices[i] - (coinsCollected * 500);\n        }\n\n        std::cout << \"Max coins: \" << maxCoinsCollected << \", Min expenses: \" << minTotalExpenses << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:20:44"
+  }
+]

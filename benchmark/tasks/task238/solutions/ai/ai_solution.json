@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool is_prime(int n) {\n    if (n <= 1) return false;\n    if (n <= 3) return true;\n    if (n % 2 == 0 || n % 3 == 0) return false;\n    for (int i = 5; i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) {\n            return false;\n        }\n    }\n    return true;\n}\n\nvoid find_dimensions(int m, int a, int b) {\n    int best_w = 0, best_h = 0;\n    int max_area = 0;\n    double min_ratio = (double)a / b;\n\n    for (int h = 2; h <= m; h++) {\n        if (!is_prime(h)) continue;\n        for (int w = h; w <= m / h; w++) {\n            if (!is_prime(w)) continue;\n            double ratio = (double)w / h;\n            if (ratio < min_ratio || ratio > 1.0) continue;\n            int area = w * h;\n            if (area > m) continue;\n            if (area > max_area) {\n                max_area = area;\n                best_w = w;\n                best_h = h;\n            }\n        }\n    }\n\n    printf(\"%d %d\\n\", best_w, best_h);\n}\n\nint main() {\n    int m, a, b;\n    scanf(\"%d %d %d\", &m, &a, &b);\n    find_dimensions(m, a, b);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:13:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class PictureDimensions {\n    public static int[] findOptimalDimensions(int m, int a, int b) {\n        int[] bestDimensions = new int[]{0, 0};\n        double maxArea = 0;\n        double targetRatio = (double) a / b;\n\n        for (int height = 2; height <= Math.sqrt(m); height++) {\n            if (!isPrime(height)) continue;\n\n            for (int width = height; width <= Math.sqrt(m); width++) {\n                if (!isPrime(width)) continue;\n\n                double area = width * height;\n                if (area > m) break;\n\n                double ratio = (double) width / height;\n                if (ratio >= targetRatio && ratio <= 1) {\n                    if (area > maxArea) {\n                        maxArea = area;\n                        bestDimensions[0] = width;\n                        bestDimensions[1] = height;\n                    }\n                }\n            }\n        }\n\n        return bestDimensions;\n    }\n\n    private static boolean isPrime(int n) {\n        if (n <= 1) return false;\n        for (int i = 2; i <= Math.sqrt(n); i++) {\n            if (n % i == 0) return false;\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 19:13:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\nusing namespace std;\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n == 2) return true;\n    if (n % 2 == 0) return false;\n    for (int i = 3; i * i <= n; i += 2) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nvector<int> generatePrimesUpTo(int m) {\n    vector<int> primes;\n    for (int i = 2; i <= m; ++i) {\n        if (isPrime(i)) {\n            primes.push_back(i);\n        }\n    }\n    return primes;\n}\n\nvoid findBestDimensions(int m, int a, int b, int &width, int &height) {\n    vector<int> primes = generatePrimesUpTo(m);\n    int maxArea = 0;\n    width = height = 0;\n    \n    for (int w : primes) {\n        for (int h : primes) {\n            if (w * h > m) continue;\n            double ratio = static_cast<double>(w) / h;\n            double minRatio = static_cast<double>(a) / b;\n            if (ratio >= minRatio && ratio <= 1.0) {\n                if (w * h > maxArea) {\n                    maxArea = w * h;\n                    width = w;\n                    height = h;\n                }\n            }\n        }\n    }\n}\n\nint main() {\n    int m, a, b;\n    cin >> m >> a >> b;\n    int width, height;\n    findBestDimensions(m, a, b, width, height);\n    cout << width << \" \" << height << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <math.h>\n\nbool is_prime(int n) {\n    if (n < 2) return false;\n    for (int i = 2; i <= sqrt(n); i++) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    int m;\n    double ratio;\n    scanf(\"%d %lf\", &m, &ratio);\n\n    int max_area = 0;\n    int best_width = 0, best_height = 0;\n\n    for (int height = 2; height <= sqrt(m); height++) {\n        if (!is_prime(height)) continue;\n\n        for (int width = height; width <= sqrt(m); width++) {\n            if (!is_prime(width)) continue;\n            if (width * height > m) break;\n\n            double curr_ratio = (double)width / height;\n            if (curr_ratio >= ratio && curr_ratio <= 1.0) {\n                int area = width * height;\n                if (area > max_area) {\n                    max_area = area;\n                    best_width = width;\n                    best_height = height;\n                }\n            }\n        }\n    }\n\n    printf(\"%d %d\\n\", best_width, best_height);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isPrime(int n) {\n    if (n < 2) return false;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    int m;\n    double a, b;\n    cin >> m >> a >> b;\n\n    int maxArea = 0;\n    int bestWidth = 0, bestHeight = 0;\n\n    for (int height = 2; height * height <= m; height++) {\n        if (!isPrime(height)) continue;\n\n        for (int width = height; width * height <= m; width++) {\n            if (!isPrime(width)) continue;\n\n            double ratio = (double)width / height;\n            if (ratio < a / b || ratio > 1.0) continue;\n\n            int area = width * height;\n            if (area > maxArea) {\n                maxArea = area;\n                bestWidth = width;\n                bestHeight = height;\n            }\n        }\n    }\n\n    cout << bestWidth << \" \" << bestHeight << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PictureDimensions {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int m = scanner.nextInt();\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        scanner.close();\n\n        List<Integer> primes = getPrimesUpTo(m);\n        double minRatio = (double) a / b;\n        int maxArea = 0;\n        int bestWidth = 0;\n        int bestHeight = 0;\n\n        for (int i = 0; i < primes.size(); i++) {\n            for (int j = i; j < primes.size(); j++) {\n                int width = primes.get(j);\n                int height = primes.get(i);\n                int area = width * height;\n                if (area > m) continue;\n                double ratio = (double) width / height;\n                if (ratio >= minRatio && ratio <= 1.0) {\n                    if (area > maxArea) {\n                        maxArea = area;\n                        bestWidth = width;\n                        bestHeight = height;\n                    }\n                }\n            }\n        }\n\n        System.out.println(bestWidth + \" \" + bestHeight);\n    }\n\n    private static List<Integer> getPrimesUpTo(int n) {\n        boolean[] isPrime = new boolean[n + 1];\n        Arrays.fill(isPrime, true);\n        isPrime[0] = isPrime[1] = false;\n        for (int i = 2; i * i <= n; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= n; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n        List<Integer> primes = new ArrayList<>();\n        for (int i = 2; i <= n; i++) {\n            if (isPrime[i]) {\n                primes.add(i);\n            }\n        }\n        return primes;\n    }\n}",
+    "timestamp": "2025-08-05 19:14:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_prime(n):\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n\ndef find_suitable_dimensions(m, a, b):\n    primes = [i for i in range(2, m + 1) if is_prime(i)]\n    max_area = 0\n    best_width = 0\n    best_height = 0\n    \n    for i, width in enumerate(primes):\n        for height in primes[i:]:\n            area = width * height\n            if area <= m and (a / b) <= (width / height) <= 1:\n                if area > max_area:\n                    max_area = area\n                    best_width = width\n                    best_height = height\n\n    return best_width, best_height\n\n# Example usage:\nm = 30\na, b = 2, 3\nprint(find_suitable_dimensions(m, a, b))",
+    "timestamp": "2025-08-13 03:06:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class RectangularPicture {\n\n    public static void main(String[] args) {\n        int m = 100; // Example value\n        double a = 1; // Example numerator\n        double b = 2; // Example denominator\n        int[] result = findDimensions(m, a, b);\n        if (result != null) {\n            System.out.println(\"Width: \" + result[0] + \", Height: \" + result[1]);\n        } else {\n            System.out.println(\"No suitable dimensions found.\");\n        }\n    }\n\n    private static int[] findDimensions(int m, double a, double b) {\n        List<Integer> primes = generatePrimes(m);\n\n        int maxArea = 0;\n        int optimalWidth = 0;\n        int optimalHeight = 0;\n\n        for (int width : primes) {\n            for (int height : primes) {\n                int area = width * height;\n                double ratio = (double) width / height;\n                if (area <= m && a / b <= ratio && ratio <= 1) {\n                    if (area > maxArea) {\n                        maxArea = area;\n                        optimalWidth = width;\n                        optimalHeight = height;\n                    }\n                }\n            }\n        }\n\n        if (maxArea > 0) {\n            return new int[]{optimalWidth, optimalHeight};\n        } else {\n            return null;\n        }\n    }\n\n    private static List<Integer> generatePrimes(int max) {\n        boolean[] isPrime = new boolean[max + 1];\n        for (int i = 2; i <= max; i++) {\n            isPrime[i] = true;\n        }\n        for (int i = 2; i * i <= max; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= max; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n        List<Integer> primes = new ArrayList<>();\n        for (int i = 5; i <= max; i++) { // start from 5 as per constraint\n            if (isPrime[i]) {\n                primes.add(i);\n            }\n        }\n        return primes;\n    }\n}",
+    "timestamp": "2025-08-13 03:06:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <math.h>\n\nbool is_prime(int n) {\n    if (n <= 1) return false;\n    if (n <= 3) return true;\n    if (n % 2 == 0 || n % 3 == 0) return false;\n    for (int i = 5; i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    int m, a, b;\n    scanf(\"%d %d/%d\", &m, &a, &b);\n    int best_width = 0, best_height = 0, best_area = 0;\n\n    for (int width = 2; width <= m; width++) {\n        if (!is_prime(width)) continue;\n        for (int height = 2; height <= m; height++) {\n            if (!is_prime(height)) continue;\n            if (width * height > m) continue;\n            double ratio = (double)width / height;\n            if (ratio < (double)a / b || ratio > 1) continue;\n            int area = width * height;\n            if (area > best_area) {\n                best_area = area;\n                best_width = width;\n                best_height = height;\n            }\n        }\n    }\n\n    printf(\"%d %d\\n\", best_width, best_height);\n    return 0;\n}",
+    "timestamp": "2025-08-13 03:06:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef find_best_picture_dimensions(m, a, b):\n    max_area = 0\n    best_width = 0\n    best_height = 0\n    \n    for height in range(2, int(m**0.5) + 1):\n        if not is_prime(height):\n            continue\n        \n        for width in range(height, int(m/height) + 1):\n            if not is_prime(width):\n                continue\n            \n            area = width * height\n            if area > m:\n                break\n            \n            ratio = width / height\n            if a/b <= ratio <= 1:\n                if area > max_area:\n                    max_area = area\n                    best_width = width\n                    best_height = height\n    \n    return best_width, best_height",
+    "timestamp": "2025-08-13 03:06:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(math.sqrt(n)) + 1, 2):\n        if n % i == 0:\n            return False\n    return True\n\ndef find_picture_dimensions(m, a, b):\n    max_area = 0\n    best_width, best_height = 0, 0\n    primes = [p for p in range(2, m) if is_prime(p)]\n    \n    for width in primes:\n        for height in primes:\n            if width < height:\n                continue\n            area = width * height\n            if area > m:\n                continue\n            ratio = width / height\n            target_ratio = a / b\n            if ratio < target_ratio or ratio > 1:\n                continue\n            if area > max_area or (area == max_area and width > best_width):\n                max_area = area\n                best_width = width\n                best_height = height\n    return (best_height, best_width) if best_width and best_height else (0, 0)",
+    "timestamp": "2025-08-13 03:06:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n <= 3) return true;\n    if (n % 2 == 0 || n % 3 == 0) return false;\n    for (int i = 5; i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) return false;\n    }\n    return true;\n}\n\nvector<int> generatePrimesUpto(int n) {\n    vector<int> primes;\n    for (int i = 2; i <= n; ++i) {\n        if (isPrime(i)) {\n            primes.push_back(i);\n        }\n    }\n    return primes;\n}\n\nint main() {\n    int m, a, b;\n    cin >> m >> a >> b;\n    vector<int> primes = generatePrimesUpto(m);\n\n    int maxArea = 0, bestW = 0, bestH = 0;\n    \n    for (int h : primes) {\n        for (int w : primes) {\n            if (w >= h && w * h <= m && w * b <= h * a) {\n                int area = w * h;\n                if (area > maxArea) {\n                    maxArea = area;\n                    bestW = w;\n                    bestH = h;\n                }\n            }\n        }\n    }\n    \n    cout << bestW << \" \" << bestH << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:10:02"
+  }
+]

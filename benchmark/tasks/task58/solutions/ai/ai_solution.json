@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve_jeopardy(n, m, prices, auction_questions):\n    # Initialize total points\n    total_points = 0\n    \n    # Convert auction questions to a set for O(1) lookup\n    auction_set = set(auction_questions)\n    \n    # Track current points of R2\n    current_points = 0\n    \n    # Track which questions have been used\n    used_questions = [False] * n\n    \n    # Always play optimally\n    for _ in range(n):\n        # Find best question that hasn't been used\n        best_score = 0\n        best_index = -1\n        \n        for i in range(n):\n            if not used_questions[i] and prices[i] > best_score:\n                best_score = prices[i]\n                best_index = i\n        \n        # Mark question as used\n        used_questions[best_index] = True\n        \n        # If auction question, can modify price\n        if best_index + 1 in auction_set:\n            # Modify price to max possible\n            auction_price = min(best_score, best_score)\n        else:\n            # Regular question price\n            auction_price = best_score\n        \n        # Always answer correctly and add points\n        total_points += auction_price\n        current_points += auction_price\n    \n    return total_points\n\n# Read input\nn, m = map(int, input().split())\nprices = list(map(int, input().split()))\nauction_questions = list(map(int, input().split()))\n\n# Print maximum points\nprint(solve_jeopardy(n, m, prices, auction_questions))",
+    "timestamp": "2025-08-05 17:33:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m = map(int, input().split())\na = list(map(int, input().split()))\nauction_indices = list(map(int, input().split()))\nauction_indices = [x - 1 for x in auction_indices]  # converting to 0-based index\n\nregular_sum = 0\nauction_prices = []\nfor i in range(n):\n    if i in auction_indices:\n        auction_prices.append(a[i])\n    else:\n        regular_sum += a[i]\n\nauction_prices.sort()\ntotal = regular_sum\nfor price in reversed(auction_prices):\n    if total > price:\n        total += total\n    else:\n        total += price\n\nprint(total)",
+    "timestamp": "2025-08-05 17:34:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_points(n, m, prices, auction_indices):\n    auction_indices = set(auction_indices)\n    auction_prices = sorted([prices[i-1] for i in auction_indices], reverse=True)\n    regular_prices = sum(prices[i-1] for i in range(1, n+1) if i not in auction_indices)\n    base_score = 0\n    current_points = 0\n    auction_total = 0\n    \n    for price in auction_prices:\n        if current_points > price:\n            auction_total += current_points\n        else:\n            auction_total += price\n        current_points += price\n    \n    return regular_prices + auction_total * 2\n\n# Input handling\nn, m = map(int, input().split())\nprices = list(map(int, input().split()))\nauction_indices = list(map(int, input().split()))\n\n# Output the result\nprint(max_points(n, m, prices, auction_indices))",
+    "timestamp": "2025-08-12 21:55:37"
+  }
+]

@@ -1,0 +1,1 @@
+Create a program that takes the log of a programming contest and reports the team ID of the team that was shown on TV for the longest time. The contest starts with all teams having a score of 0 and lasts for L seconds. Only the team with the highest score at any given time is shown on television, and in case of a tie, the team with the smallest ID is shown.

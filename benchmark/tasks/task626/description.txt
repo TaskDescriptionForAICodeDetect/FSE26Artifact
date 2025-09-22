@@ -1,0 +1,1 @@
+Find the minimum cost to send a certain amount of flow through a flow network. The flow network is a directed graph where each edge has capacity and cost. Calculate the minimum cost to send a specified amount of flow from a source to a sink. If it is impossible to send the flow, return -1.

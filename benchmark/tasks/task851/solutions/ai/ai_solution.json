@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    while (b) {\n        int temp = a % b;\n        a = b;\n        b = temp;\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int set[N];\n    for (int i = 0; i < N; i++) {\n        set[i] = 2 * (i + 1);\n    }\n    \n    bool is_special = true;\n    for (int i = 0; i < N; i++) {\n        int sum_others = 0;\n        for (int j = 0; j < N; j++) {\n            if (j != i) {\n                sum_others += set[j];\n            }\n        }\n        \n        if (gcd(set[i], sum_others) == 1) {\n            is_special = false;\n            break;\n        }\n    }\n    \n    if (is_special) {\n        for (int i = 0; i < N; i++) {\n            printf(\"%d \", set[i]);\n        }\n        printf(\"\\n\");\n    } else {\n        printf(\"-1\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:07:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    if (N == 1) {\n        printf(\"1\\n\");\n        return 0;\n    }\n    \n    if (N == 2) {\n        printf(\"2 3\\n\");\n        return 0;\n    }\n    \n    int S[N];\n    int sum = 0;\n    \n    // Initialize the set with 2, 3, 4, ..., N, and adjust the last element\n    for (int i = 0; i < N - 1; i++) {\n        S[i] = i + 2;\n        sum += S[i];\n    }\n    \n    // Find the last element to satisfy the conditions\n    int last = 1;\n    while (1) {\n        int total_sum = sum + last;\n        int valid = 1;\n        \n        // Check condition for the last element\n        if (gcd(last, sum) == 1) {\n            valid = 0;\n        }\n        \n        // Check condition for the other elements\n        for (int i = 0; i < N - 1 && valid; i++) {\n            if (gcd(S[i], total_sum - S[i]) == 1) {\n                valid = 0;\n                break;\n            }\n        }\n        \n        if (valid) {\n            // Check if the overall gcd is 1\n            int overall_gcd = last;\n            for (int i = 0; i < N - 1; i++) {\n                overall_gcd = gcd(overall_gcd, S[i]);\n                if (overall_gcd == 1) {\n                    break;\n                }\n            }\n            \n            if (overall_gcd == 1) {\n                S[N - 1] = last;\n                break;\n            }\n        }\n        \n        last++;\n    }\n    \n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", S[i]);\n    }\n    printf(\"\\n\");\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvector<int> findSpecialSet(int N) {\n    vector<int> res;\n    if (N == 1) {\n        res.push_back(1);\n        return res;\n    }\n    if (N == 2) {\n        res.push_back(2);\n        res.push_back(4);\n        return res;\n    }\n    for (int i = 1; i <= N - 2; ++i) {\n        res.push_back(2 * i);\n    }\n    res.push_back(3);\n    res.push_back(3 * (N - 2));\n    return res;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> S = findSpecialSet(N);\n    for (int num : S) {\n        cout << num << \" \";\n    }\n    cout << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SpecialSet {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        \n        if (N == 1) {\n            System.out.println(1);\n            return;\n        }\n        \n        int[] set = new int[N];\n        set[0] = 2;\n        set[1] = 3;\n        \n        for (int i = 2; i < N; i++) {\n            set[i] = set[i - 1] + 1;\n        }\n        \n        int sum = 0;\n        for (int num : set) {\n            sum += num;\n        }\n        \n        set[N - 1] = sum - set[N - 1];\n        \n        StringBuilder sb = new StringBuilder();\n        for (int num : set) {\n            sb.append(num).append(\" \");\n        }\n        System.out.println(sb.toString().trim());\n    }\n    \n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n}",
+    "timestamp": "2025-08-05 23:08:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SpecialSet {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        \n        List<Integer> result = findSpecialSet(N);\n        \n        for (int num : result) {\n            System.out.print(num + \" \");\n        }\n        scanner.close();\n    }\n    \n    static List<Integer> findSpecialSet(int N) {\n        List<Integer> set = new ArrayList<>();\n        \n        for (int num = 2; num <= 30000; num++) {\n            if (isPrime(num)) {\n                set.add(num);\n            }\n            \n            if (set.size() == N) {\n                break;\n            }\n        }\n        \n        return set;\n    }\n    \n    static boolean isPrime(int num) {\n        if (num <= 1) return false;\n        for (int i = 2; i * i <= num; i++) {\n            if (num % i == 0) return false;\n        }\n        return true;\n    }\n    \n    static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n    \n    static boolean isSpecialSet(List<Integer> set) {\n        for (int i = 0; i < set.size(); i++) {\n            int currentNum = set.get(i);\n            int remainingSum = 0;\n            \n            for (int j = 0; j < set.size(); j++) {\n                if (j != i) {\n                    remainingSum += set.get(j);\n                }\n            }\n            \n            if (gcd(currentNum, remainingSum) == 1) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 23:08:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    return b == 0 ? a : gcd(b, a % b);\n}\n\nbool isSpecialSet(vector<int>& S) {\n    int N = S.size();\n    for (int i = 0; i < N; i++) {\n        int sumRest = 0;\n        for (int j = 0; j < N; j++) {\n            if (j != i) {\n                sumRest += S[j];\n            }\n        }\n        if (gcd(S[i], sumRest) == 1) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> result(N);\n    for (int i = 0; i < N; i++) {\n        result[i] = 2 * i + 2;\n    }\n    \n    int totalGcd = result[0];\n    for (int i = 1; i < N; i++) {\n        totalGcd = gcd(totalGcd, result[i]);\n    }\n    \n    if (totalGcd != 1) {\n        result[N-1]++;\n    }\n    \n    for (int num : result) {\n        cout << num << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef find_special_set(N):\n    special_set = []\n    \n    for i in range(2, N + 2):\n        special_set.append(i * 30000)\n        \n    special_set[-1] += 1  # Make sure the GCD of the set is 1\n    \n    return special_set\n\n# Example usage:\nN = 4  # Size of the special set\nspecial_set = find_special_set(N)\nprint(special_set)",
+    "timestamp": "2025-08-13 13:46:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SpecialSetFinder {\n\n    public static void main(String[] args) {\n        int N = 5; // Adjust N to required size of the set\n        List<Integer> specialSet = findSpecialSet(N);\n        System.out.println(specialSet);\n    }\n\n    public static List<Integer> findSpecialSet(int N) {\n        List<Integer> specialSet = new ArrayList<>(N);\n        int current = 9991; // Start with a prime number\n\n        while (specialSet.size() < N) {\n            specialSet.add(current);\n            current += 2; // Ensure we are using odd numbers to increase likelihood of gcd being 1\n        }\n\n        if (gcdOfAllElements(specialSet) == 1) {\n            return specialSet;\n        }\n\n        return Collections.emptyList(); // In case no valid set found\n    }\n\n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    private static int gcdOfAllElements(List<Integer> set) {\n        int currentGcd = set.get(0);\n        for (int i = 1; i < set.size(); i++) {\n            currentGcd = gcd(currentGcd, set.get(i));\n            if (currentGcd == 1) {\n                break;\n            }\n        }\n        return currentGcd;\n    }\n}",
+    "timestamp": "2025-08-13 13:46:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b) {\n        int temp = a % b;\n        a = b;\n        b = temp;\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    printf(\"Enter the size of the set: \");\n    scanf(\"%d\", &N);\n\n    int current = 2;\n    printf(\"A special set of size %d:\\n\", N);\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", current++);\n    }\n    printf(\"\\n\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:46:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nstd::vector<int> findSpecialSet(int N) {\n    std::vector<int> specialSet;\n    \n    int a = 1, b = 2;\n    for(int i = 0; i < N; ++i) {\n        specialSet.push_back(a);\n        a += 2;\n    }\n    \n    if(std::gcd(a, b) != 1) {\n        specialSet[N-1] = b;\n    }\n    \n    return specialSet;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n\n    std::vector<int> result = findSpecialSet(N);\n\n    for(int element : result) {\n        std::cout << element << \" \";\n    }\n    std::cout << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:46:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef solve(N):\n    result = []\n    current = 2\n    \n    while len(result) < N:\n        is_valid = True\n        for num in result:\n            remaining_sum = sum(result) - num\n            if gcd(num, remaining_sum) == 1:\n                is_valid = False\n                break\n        \n        if is_valid:\n            if len(result) > 0:\n                remaining_sum = sum(result)\n                if gcd(current, remaining_sum) == 1:\n                    is_valid = False\n            \n            if is_valid:\n                result.append(current)\n        \n        current += 1\n        \n        if current > 30000:\n            return None\n    \n    return result\n\n# Example usage\nN = int(input())\nspecial_set = solve(N)\nif special_set:\n    print(' '.join(map(str, special_set)))\nelse:\n    print(\"No solution found\")",
+    "timestamp": "2025-08-13 13:46:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef find_special_set(N):\n    if N == 1:\n        return [1]\n    elif N == 2:\n        return [2, 3]\n    elif N == 3:\n        return [6, 10, 15]\n    else:\n        # For N >= 4, we can use multiples of 6, 10, 15 and add 1 to break the gcd condition\n        # but adjust to ensure the sum condition holds\n        # Here's a general approach:\n        # Start with the set {6, 10, 15} and add 30*(i) for i from 1 to N-3\n        # Then add 1 to the last element to make the overall gcd 1\n        elements = [6, 10, 15]\n        for i in range(4, N+1):\n            elements.append(30 * (i - 2))\n        # Adjust the last element to make gcd 1\n        elements[-1] += 1\n        # Verify the conditions\n        # Check gcd of all elements is 1\n        overall_gcd = elements[0]\n        for num in elements[1:]:\n            overall_gcd = math.gcd(overall_gcd, num)\n            if overall_gcd == 1:\n                break\n        if overall_gcd != 1:\n            # If not, adjust by replacing the last element with a coprime number\n            # For simplicity, we can set the last element to 1\n            elements[-1] = 1\n        return elements\n\nN = int(input())\nspecial_set = find_special_set(N)\nprint(' '.join(map(str, special_set)))",
+    "timestamp": "2025-08-13 13:46:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findSpecialSet(N) {\n    let specialSet = [];\n    \n    // Create a base array\n    for (let i = 1; i <= N; i++) {\n        specialSet.push(i * 2);\n    }\n\n    // Adjust the first element to achieve gcd of entire set as 1\n    specialSet[0] += 1;\n\n    return specialSet;\n}\n\n// Example usage\nlet resultSet = findSpecialSet(10);\nconsole.log(resultSet);",
+    "timestamp": "2025-08-13 13:47:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findSpecialSet(N) {\n    const result = [];\n    const allElements = new Set();\n\n    for (let i = 2; i <= 30000; i++) {\n        if (result.length === N) break;\n        \n        let valid = true;\n        for (let existing of result) {\n            if (gcd(existing, i) !== 1) {\n                valid = false;\n                break;\n            }\n        }\n\n        if (!valid) continue;\n\n        let remainingSum = result.reduce((a, b) => a + b, 0);\n        let setValid = true;\n\n        for (let existing of result) {\n            if (gcd(existing, remainingSum + i) === 1) {\n                setValid = false;\n                break;\n            }\n        }\n\n        if (setValid) {\n            result.push(i);\n        }\n    }\n\n    return result;\n}\n\nfunction gcd(a, b) {\n    while (b !== 0) {\n        let temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nconst N = parseInt(process.argv[2] || '3');\nconsole.log(findSpecialSet(N));",
+    "timestamp": "2025-08-13 13:47:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findSpecialSet(N) {\n    if (N === 1) {\n        return [1];\n    }\n    if (N === 2) {\n        return [2, 3];\n    }\n    let set = [6, 10, 15];\n    for (let i = 4; i <= N; i++) {\n        set.push(set[set.length - 1] + 1);\n    }\n    return set.slice(0, N);\n}\n\n// Example usage:\n// const N = 5;\n// console.log(findSpecialSet(N));",
+    "timestamp": "2025-08-13 13:47:19"
+  }
+]

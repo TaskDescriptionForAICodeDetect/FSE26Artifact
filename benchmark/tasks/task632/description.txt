@@ -1,0 +1,1 @@
+You have a string S of length N, initially filled with characters '1'. You will perform Q queries. In each query, you are given two integers L_i and R_i and a character D_i (which is a digit). Replace all characters from the L_i-th to the R_i-th (inclusive) with D_i. After each query, read the string S as a decimal integer and print its value modulo 998,244,353.

@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "13\nRRRGGGBBB\n",
+      "output": "1216\n"
+    },
+    {
+      "input": "25\nBBRGRRGRGGRBBGB\n",
+      "output": "2960\n"
+    }
+  ]
+}

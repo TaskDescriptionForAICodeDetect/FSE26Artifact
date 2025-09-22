@@ -1,0 +1,1 @@
+You are given a flat piece of chocolate in the shape of a convex polygon. Your task is to cut it into two pieces of precisely the same area using a straight knife. Write a program that computes, for a given convex polygon, the maximum and minimum lengths of the line segments that divide the polygon into two equal areas.

@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "3 3 3\n2 1 S\n1 2 E\n2 2 E",
+      "output": "3\n1\n2"
+    },
+    {
+      "input": "5 4 3\n3 1 S\n2 2 E\n1 3 E",
+      "output": "2\n3\n1"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+Treasure Hunt
+
+Taro came to a square to search for treasures. There are many treasures buried in this square, but Taro has the latest gadgets, so he knows exactly where each treasure is buried. The square is very large, so Taro decided to define regions to look for treasures, but since there are many treasures, he cannot immediately tell which treasures are within those regions. Therefore, Taro decided to count how many treasures are located within those defined regions.

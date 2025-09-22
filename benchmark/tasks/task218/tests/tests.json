@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "(P*Q)",
+      "output": "3"
+    },
+    {
+      "input": "(--R+(P*Q))",
+      "output": "11"
+    },
+    {
+      "input": "(P*-P)",
+      "output": "0"
+    },
+    {
+      "input": "2",
+      "output": "27"
+    },
+    {
+      "input": "1",
+      "output": "0"
+    },
+    {
+      "input": "(-1+(((---P+Q)*(--Q+---R))*(-R+-P)))",
+      "output": "7"
+    }
+  ]
+}

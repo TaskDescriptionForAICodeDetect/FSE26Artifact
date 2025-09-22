@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "6 3 34\nTokyo Kyoto\nTokyo Niigata 335\nTokyo Shizuoka 174\nShizuoka Nagoya 176\nNagoya Kyoto 195\nToyama Niigata 215\nToyama Kyoto 296\nNagoya\nNiigata\nToyama\n0 0 0\n",
+      "output": "846"
+    },
+    {
+      "input": "6 3 30\nTokyo Kyoto\nTokyo Niigata 335\nTokyo Shizuoka 174\nShizuoka Nagoya 176\nNagoya Kyoto 195\nToyama Niigata 215\nToyama Kyoto 296\nNagoya\nNiigata\nToyama\n0 0 0\n",
+      "output": "-1"
+    }
+  ]
+}

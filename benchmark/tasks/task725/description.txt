@@ -1,0 +1,1 @@
+Given a string S, let T be the concatenation of K copies of S. You can repeatedly choose a character in T and replace it with a different character. Your task is to find the minimum number of operations required to ensure that any two adjacent characters in T are different.

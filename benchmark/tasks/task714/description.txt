@@ -1,0 +1,1 @@
+Given a tree G with N vertices, where the vertices are numbered from 1 to N and the i-th edge connects Vertex a_i and Vertex b_i, paint the edges with some colors such that for each vertex, the colors of the edges incident to that vertex are all different. The goal is to find a coloring that uses the minimum number of colors.

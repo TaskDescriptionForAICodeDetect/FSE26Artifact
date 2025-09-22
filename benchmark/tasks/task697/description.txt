@@ -1,0 +1,1 @@
+You are given a string S of length N consisting of lowercase English letters. Process Q queries of the following two types: Type 1: change the i_q-th character of S to c_q. Do nothing if the i_q-th character is already c_q. Type 2: answer the number of different characters occurring in the substring of S between the l_q-th and r_q-th characters (inclusive).

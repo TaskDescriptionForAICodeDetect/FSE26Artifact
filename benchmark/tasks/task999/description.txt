@@ -1,0 +1,1 @@
+Given an undirected tree, determine the minimum number of vertices that need to be removed so that the resulting tree is 'good', meaning its diameter does not exceed a specified value K. The diameter is the maximum distance between any two vertices in the tree. You are provided with the number of vertices N and K, along with the edges that connect the vertices.

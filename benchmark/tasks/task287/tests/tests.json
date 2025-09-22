@@ -1,0 +1,32 @@
+{
+  "examples": [
+    {
+      "input": "ACM",
+      "output": "0"
+    },
+    {
+      "input": "icpc",
+      "output": "1"
+    },
+    {
+      "input": "BAYL0R",
+      "output": "3"
+    },
+    {
+      "input": "-AB+AC-A",
+      "output": "1"
+    },
+    {
+      "input": "abcdefghi",
+      "output": "0"
+    },
+    {
+      "input": "111-10=1+10*10",
+      "output": "1"
+    },
+    {
+      "input": "0=10-1",
+      "output": "0"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "13\naababb\n",
+      "output": "1\nabab\n"
+    },
+    {
+      "input": "23\nbbabaa\n",
+      "output": "2\nbbabaa\n"
+    },
+    {
+      "input": "36\nbbbaabbabaaa\n",
+      "output": "3\nbbbabaaa\n"
+    },
+    {
+      "input": "49\nabbbaababaababbaba\n",
+      "output": "4\nbbaababababa\n"
+    }
+  ]
+}

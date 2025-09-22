@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def max_bourles(n, m, r, buy_prices, sell_prices):\n    min_buy_price = min(buy_prices)\n    max_sell_price = max(sell_prices)\n    \n    if min_buy_price >= max_sell_price:\n        return r\n    \n    shares_bought = r // min_buy_price\n    remaining_bourles = r % min_buy_price\n    \n    return remaining_bourles + shares_bought * max_sell_price\n\nn, m, r = map(int, input().split())\nbuy_prices = list(map(int, input().split()))\nsell_prices = list(map(int, input().split()))\n\nprint(max_bourles(n, m, r, buy_prices, sell_prices))",
+    "timestamp": "2025-08-05 17:31:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m, r = map(int, input().split())\ns = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nmin_buy = min(s)\nmax_sell = max(b)\n\nif min_buy >= max_sell:\n    print(r)\nelse:\n    shares = r // min_buy\n    remaining = r % min_buy\n    total = shares * max_sell + remaining\n    print(total)",
+    "timestamp": "2025-08-05 17:31:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_bourles(n, m, r, s_prices, b_prices):\n    min_buy_price = min(s_prices)\n    max_sell_price = max(b_prices)\n\n    if min_buy_price >= max_sell_price:\n        return r\n\n    max_shares = r // min_buy_price\n    profit = max_shares * (max_sell_price - min_buy_price)\n    return r + profit\n\n\n# Example Usage\nn, m, r = 3, 4, 11\ns_prices = [4, 2, 5]\nb_prices = [4, 4, 5, 4]\nprint(max_bourles(n, m, r, s_prices, b_prices))  # Output: 26\n\nn, m, r = 2, 2, 50\ns_prices = [5, 7]\nb_prices = [4, 2]\nprint(max_bourles(n, m, r, s_prices, b_prices))  # Output: 50",
+    "timestamp": "2025-08-12 21:40:49"
+  }
+]

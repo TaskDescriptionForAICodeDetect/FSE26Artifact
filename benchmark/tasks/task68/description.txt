@@ -1,0 +1,1 @@
+Create a program that reads data of historical sites and the roads connecting them, then outputs the minimum number of lanterns to be installed so that all historical sites can be reached by the lanterns placed along the roads, with the condition that lanterns are placed every 100 meters and the distance between historical sites is always at least 200 meters.

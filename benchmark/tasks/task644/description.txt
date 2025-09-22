@@ -1,0 +1,1 @@
+Consider placing N flags on a line. Flags are numbered from 1 to N. Flag i can be placed at coordinate X_i or Y_i. The distance between any two different flags must be at least D. Determine if it is possible to place all N flags. If possible, print such a configuration.

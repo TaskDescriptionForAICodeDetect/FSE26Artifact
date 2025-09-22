@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13\n1 2\n2 3\n",
+      "output": "7\n3\n"
+    },
+    {
+      "input": "24\n1 2\n1 3\n1 4\n",
+      "output": "15\n13\n4\n"
+    },
+    {
+      "input": "37\n1 2\n2 3\n2 4\n4 5\n4 6\n6 7\n",
+      "output": "67\n150\n179\n122\n45\n7\n"
+    }
+  ]
+}

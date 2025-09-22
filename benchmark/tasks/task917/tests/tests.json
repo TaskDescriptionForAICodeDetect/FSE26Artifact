@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "13 3\nS.o\n.o.\no.T\n",
+      "output": "12\n"
+    },
+    {
+      "input": "23 4\nS...\n.oo.\n...T\n",
+      "output": "20\n"
+    },
+    {
+      "input": "34 3\n.S.\n.o.\n.o.\n.T.\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "410 10\n.o...o..o.\n....o.....\n....oo.oo.\n..oooo..o.\n....oo....\n..o..o....\no..o....So\no....T....\n....o.....\n........oo\n",
+      "output": "45\n"
+    }
+  ]
+}

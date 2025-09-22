@@ -1,0 +1,1 @@
+Given N pairwise distinct non-negative integers A_1, A_2, ..., A_N, find the number of ways to choose a set of between 1 and K numbers (inclusive) from the given numbers such that the bitwise AND of the chosen numbers is S and the bitwise OR of the chosen numbers is T.

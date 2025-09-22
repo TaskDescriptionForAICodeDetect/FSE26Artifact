@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n, m;\n    while (scanf(\"%d %d\", &n, &m) == 2) {\n        if (m == 0) {\n            printf(\"yes\\n\");\n            continue;\n        }\n        if (n <= 2) {\n            printf(\"yes\\n\");\n            continue;\n        }\n        printf(\"no\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:37:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MagicCircle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (true) {\n            int n = scanner.nextInt(); // number of stones\n            int m = scanner.nextInt(); // number of strings\n            \n            if (n == 0 && m == 0) break;\n            \n            List<List<Integer>> graph = new ArrayList<>(n);\n            for (int i = 0; i < n; i++) {\n                graph.add(new ArrayList<>());\n            }\n            \n            int[] degree = new int[n];\n            \n            // Read string connections\n            for (int i = 0; i < m; i++) {\n                int u = scanner.nextInt() - 1;\n                int v = scanner.nextInt() - 1;\n                graph.get(u).add(v);\n                graph.get(v).add(u);\n                degree[u]++;\n                degree[v]++;\n            }\n            \n            // Check if the graph is drawable on a line\n            boolean isLinear = isDrawableOnLine(n, graph, degree);\n            \n            System.out.println(isLinear ? \"yes\" : \"no\");\n        }\n        \n        scanner.close();\n    }\n    \n    private static boolean isDrawableOnLine(int n, List<List<Integer>> graph, int[] degree) {\n        // All stones must have degree 2 or less\n        for (int deg : degree) {\n            if (deg > 2) return false;\n        }\n        \n        // Find stones with degree 1 (endpoints)\n        int endpointCount = 0;\n        for (int deg : degree) {\n            if (deg == 1) endpointCount++;\n        }\n        \n        // For a line graph, there should be 0 or 2 endpoints\n        return endpointCount == 0 || endpointCount == 2;\n    }\n}",
+    "timestamp": "2025-08-05 18:38:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n, m;\n    while (cin >> n >> m) {\n        if (m == 0) {\n            cout << \"yes\" << endl;\n            continue;\n        }\n        if (m > n - 1) {\n            cout << \"no\" << endl;\n            continue;\n        }\n        vector<vector<int>> adj(n + 1);\n        bool possible = true;\n        for (int i = 0; i < m; ++i) {\n            int a, b;\n            cin >> a >> b;\n            adj[a].push_back(b);\n            adj[b].push_back(a);\n            if (adj[a].size() > 2 || adj[b].size() > 2) {\n                possible = false;\n            }\n        }\n        if (possible) {\n            cout << \"yes\" << endl;\n        } else {\n            cout << \"no\" << endl;\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_STONES 1000\n\nint main() {\n    int t;\n    scanf(\"%d\", &t);\n\n    while (t--) {\n        int n, m;\n        scanf(\"%d %d\", &n, &m);\n\n        int degree[MAX_STONES] = {0};\n        \n        for (int i = 0; i < m; i++) {\n            int u, v;\n            scanf(\"%d %d\", &u, &v);\n            u--; v--;\n            degree[u]++;\n            degree[v]++;\n        }\n\n        bool possible = true;\n        for (int i = 0; i < n; i++) {\n            if (degree[i] > 2) {\n                possible = false;\n                break;\n            }\n        }\n\n        printf(\"%s\\n\", possible ? \"yes\" : \"no\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nclass MagicCircle {\nprivate:\n    int n, m;\n    vector<vector<int>> graph;\n\npublic:\n    bool solve() {\n        cin >> n >> m;\n        if (n == 0 && m == 0) return false;\n\n        graph.clear();\n        graph.resize(n);\n\n        for (int i = 0; i < m; ++i) {\n            int u, v;\n            cin >> u >> v;\n            u--; v--;\n            graph[u].push_back(v);\n            graph[v].push_back(u);\n        }\n\n        for (int i = 0; i < n; ++i) {\n            if (graph[i].size() > 2) return false;\n        }\n\n        return true;\n    }\n};\n\nint main() {\n    MagicCircle magicCircle;\n    \n    while (true) {\n        if (!magicCircle.solve()) break;\n        cout << \"yes\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MagicCircle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNext()) {\n            int n = scanner.nextInt();\n            int m = scanner.nextInt();\n            if (n == 0 && m == 0) {\n                break;\n            }\n            \n            if (m == 0) {\n                System.out.println(\"yes\");\n                continue;\n            }\n            \n            Map<Integer, Set<Integer>> graph = new HashMap<>();\n            for (int i = 0; i < m; i++) {\n                int a = scanner.nextInt();\n                int b = scanner.nextInt();\n                graph.computeIfAbsent(a, k -> new HashSet<>()).add(b);\n                graph.computeIfAbsent(b, k -> new HashSet<>()).add(a);\n            }\n            \n            boolean isPath = true;\n            int degreeOneCount = 0;\n            int degreeTwoCount = 0;\n            \n            for (int node : graph.keySet()) {\n                int degree = graph.get(node).size();\n                if (degree == 1) {\n                    degreeOneCount++;\n                } else if (degree == 2) {\n                    degreeTwoCount++;\n                } else {\n                    isPath = false;\n                    break;\n                }\n            }\n            \n            if (isPath && (degreeOneCount == 2 || degreeOneCount == 0) && degreeTwoCount == n - degreeOneCount) {\n                System.out.println(\"yes\");\n            } else {\n                System.out.println(\"no\");\n            }\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:38:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_draw_on_line(n, m, connections):\n    if n < 2:\n        return \"no\" if m > 0 else \"yes\"\n    return \"no\" if m > n - 1 else \"yes\"\n\n# Read input data and process each test case\ndef main():\n    import sys\n    input = sys.stdin.read\n    data = input().strip().split()\n\n    index = 0\n    number_of_test_cases = int(data[index])\n    index += 1\n    results = []\n\n    for _ in range(number_of_test_cases):\n        n, m = int(data[index]), int(data[index + 1])\n        index += 2\n        connections = []\n        for __ in range(m):\n            a, b = int(data[index]), int(data[index + 1])\n            connections.append((a, b))\n            index += 2\n\n        results.append(can_draw_on_line(n, m, connections))\n\n    for result in results:\n        print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 00:20:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MagicCircle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int sets = scanner.nextInt();\n        for (int i = 0; i < sets; i++) {\n            int n = scanner.nextInt(); // number of stones\n            int m = scanner.nextInt(); // number of strings\n            if (m <= n - 1) {\n                System.out.println(\"yes\");\n            } else {\n                System.out.println(\"no\");\n            }\n            for (int j = 0; j < m; j++) {\n                scanner.nextInt(); // first stone of string\n                scanner.nextInt(); // second stone of string\n            }\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 00:20:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool isMagicCircleDrawableOnLine(int n, int m, int connections[][2]) {\n    // A circle with more than n-1 strings cannot be drawn on a line\n    return m <= n - 1;\n}\n\nint main() {\n    int t;\n    scanf(\"%d\", &t);\n    \n    for (int i = 0; i < t; i++) {\n        int n, m;\n        scanf(\"%d %d\", &n, &m);\n        \n        int connections[m][2];\n        for (int j = 0; j < m; j++) {\n            scanf(\"%d %d\", &connections[j][0], &connections[j][1]);\n        }\n        \n        if (isMagicCircleDrawableOnLine(n, m, connections)) {\n            printf(\"yes\\n\");\n        } else {\n            printf(\"no\\n\");\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 00:20:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_draw_on_line(n, m, edges):\n    # Create adjacency list representation of graph\n    graph = [[] for _ in range(n)]\n    for u, v in edges:\n        graph[u-1].append(v-1)\n        graph[v-1].append(u-1)\n    \n    # Check if graph is a path\n    for i in range(n):\n        if len(graph[i]) > 2:\n            return False\n    \n    return True\n\ndef main():\n    # Read number of test cases\n    t = int(input())\n    \n    for _ in range(t):\n        # Read number of stones and strings\n        n, m = map(int, input().split())\n        \n        # Read string connections\n        edges = []\n        for _ in range(m):\n            u, v = map(int, input().split())\n            edges.append((u, v))\n        \n        # Check if graph can be drawn on a line\n        if can_draw_on_line(n, m, edges):\n            print('yes')\n        else:\n            print('no')\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 00:20:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import defaultdict, deque\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    while ptr < len(input):\n        n = int(input[ptr])\n        m = int(input[ptr+1])\n        ptr +=2\n        \n        adj = defaultdict(list)\n        degrees = defaultdict(int)\n        \n        for _ in range(m):\n            a = int(input[ptr])\n            b = int(input[ptr+1])\n            ptr +=2\n            adj[a].append(b)\n            adj[b].append(a)\n            degrees[a] +=1\n            degrees[b] +=1\n        \n        # Check if the graph is a path (no branches, no cycles)\n        # It must have exactly two nodes with degree 1 and others with degree 2\n        degree_counts = defaultdict(int)\n        for node in degrees:\n            degree_counts[degrees[node]] +=1\n        \n        if (degree_counts[1] == 2 and degree_counts[2] == n-2) or (n == 1 and m == 0):\n            # Check if it's a single connected component (BFS/DFS)\n            visited = set()\n            start_node = next(iter(degrees.keys())) if degrees else 1\n            if n == 0:\n                print(\"yes\")\n                continue\n            \n            q = deque()\n            q.append(start_node)\n            visited.add(start_node)\n            \n            while q:\n                u = q.popleft()\n                for v in adj[u]:\n                    if v not in visited:\n                        visited.add(v)\n                        q.append(v)\n            \n            if len(visited) == n:\n                print(\"yes\")\n            else:\n                print(\"no\")\n        else:\n            print(\"no\")\n\nsolve()",
+    "timestamp": "2025-08-13 00:20:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool canBeDrawnOnLine(int n, int m, const vector<pair<int, int>>& edges) {\n    vector<int> degree(n, 0);\n\n    for(const auto& edge : edges) {\n        int u = edge.first;\n        int v = edge.second;\n        if(u == v) return false; // self-loop\n        \n        degree[u]++;\n        degree[v]++;\n        \n        if(degree[u] > 2 || degree[v] > 2) return false;\n    }\n    \n    return true;\n}\n\nint main() {\n    int t;\n    cin >> t;\n\n    while(t--) {\n        int n, m;\n        cin >> n >> m;\n\n        vector<pair<int, int>> edges(m);\n        for(int i = 0; i < m; ++i) {\n            cin >> edges[i].first >> edges[i].second;\n            edges[i].first--; // Assuming input is 1-indexed, converting to 0-indexed\n            edges[i].second--;\n        }\n\n        if(canBeDrawnOnLine(n, m, edges)) {\n            cout << \"yes\" << endl;\n        } else {\n            cout << \"no\" << endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:53:30"
+  }
+]

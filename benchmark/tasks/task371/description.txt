@@ -1,0 +1,1 @@
+Natsuki and her friends encountered aliens with hands having N fingers and M bending rules on each finger. A bending rule indicates that when finger A bends, finger B will always bend. Write a program to calculate how many numbers the aliens can count using their fingers, based on the bending rules provided. The solution should output the count modulo 1000000007.

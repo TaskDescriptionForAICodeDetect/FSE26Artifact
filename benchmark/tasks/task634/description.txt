@@ -1,0 +1,1 @@
+There are N cities on a 2D plane represented by coordinates. For each city k, determine how many cities (including City k) are reachable from it according to specific movement rules. Rng can move to another city either to the lower left (smaller x and y coordinates) or to the upper right (larger x and y coordinates).

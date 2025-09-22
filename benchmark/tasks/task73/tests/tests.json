@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "30 4 5 6",
+      "output": "OK"
+    },
+    {
+      "input": "30 5 5 5",
+      "output": "OK"
+    },
+    {
+      "input": "50 3 3 3 10 10",
+      "output": "OK"
+    },
+    {
+      "input": "49 3 3 3 10 10",
+      "output": "NA"
+    }
+  ]
+}

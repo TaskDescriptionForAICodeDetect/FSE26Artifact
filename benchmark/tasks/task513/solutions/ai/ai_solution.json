@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint canEscape(int height, int dayClimb, int nightSlide, int sinnerClimb) {\n    int currentHeight = 0;\n    int day = 0;\n\n    while (currentHeight < height) {\n        day++;\n        \n        // Climb during the day\n        currentHeight += dayClimb;\n        \n        // Check if escaped\n        if (currentHeight >= height) {\n            return day;\n        }\n        \n        // Other sinners climb at night\n        currentHeight -= sinnerClimb;\n        \n        // Slide back at night\n        currentHeight -= nightSlide;\n        \n        // Check if fallen below ground\n        if (currentHeight < 0) {\n            return -1;\n        }\n    }\n    \n    return day;\n}\n\nint main() {\n    int height, dayClimb, nightSlide, sinnerClimb;\n    \n    scanf(\"%d %d %d %d\", &height, &dayClimb, &nightSlide, &sinnerClimb);\n    \n    int result = canEscape(height, dayClimb, nightSlide, sinnerClimb);\n    \n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:59:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint computeEscapeDay(int H, int U, int D, int F) {\n    if (U <= 0) return -1;\n    \n    int day = 0;\n    double current_height = 0.0;\n    double climb = U;\n    double fatigue = (F / 100.0) * U;\n    \n    while (1) {\n        day++;\n        \n        // Daytime climb\n        if (climb > 0) {\n            current_height += climb;\n        }\n        \n        if (current_height > H) {\n            return day;\n        }\n        \n        // Nighttime slide\n        current_height -= D;\n        \n        if (current_height < 0) {\n            return -1;\n        }\n        \n        // Reduce climb due to fatigue\n        climb -= fatigue;\n    }\n}\n\nint main() {\n    int H, U, D, F;\n    while (1) {\n        scanf(\"%d %d %d %d\", &H, &U, &D, &F);\n        if (H == 0) break;\n        \n        int result = computeEscapeDay(H, U, D, F);\n        if (result == -1) {\n            printf(\"failure on day %d\\n\", result);\n        } else {\n            printf(\"success on day %d\\n\", result);\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:59:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint earliestEscape(int H, int U, int D, int F, const vector<int>& sinners) {\n    if (U >= H) return 1;\n    \n    double currentHeight = 0;\n    double dailyClimb = U;\n    double fatigue = U * F / 100.0;\n    int day = 0;\n    \n    while (true) {\n        day++;\n        currentHeight += dailyClimb;\n        if (currentHeight > H) return day;\n        \n        for (int sinner : sinners) {\n            if (sinner >= currentHeight) return -1;\n        }\n        \n        currentHeight -= D;\n        if (currentHeight < 0) return -1;\n        \n        dailyClimb = max(0.0, dailyClimb - fatigue);\n    }\n}\n\nint main() {\n    int H, U, D, F, N;\n    cin >> H >> U >> D >> F >> N;\n    vector<int> sinners(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> sinners[i];\n    }\n    sort(sinners.begin(), sinners.end());\n    \n    cout << earliestEscape(H, U, D, F, sinners) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:59:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public int escapeTime(int height, int climb, int slide, int[] sinners) {\n        int currentHeight = 0;\n        int day = 0;\n        \n        while (true) {\n            day++;\n            currentHeight += climb;\n            \n            if (currentHeight >= height) {\n                return day;\n            }\n            \n            currentHeight -= slide;\n            if (currentHeight < 0) {\n                currentHeight = 0;\n            }\n            \n            for (int sinner : sinners) {\n                if (sinner >= currentHeight) {\n                    return -1;\n                }\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:59:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int earliestEscape(int[] dist, int[] energy, int slide) {\n        int n = dist.length;\n        \n        for (int day = 1; day <= n; day++) {\n            long totalClimb = 0;\n            long otherClimb = 0;\n            \n            for (int i = 0; i < day; i++) {\n                totalClimb += Math.min(energy[i], dist[i]);\n                otherClimb += Math.min(energy[i] - dist[i], 0);\n            }\n            \n            long finalHeight = totalClimb - slide * day;\n            long otherHeight = otherClimb - slide * day;\n            \n            if (finalHeight >= dist[day - 1] && otherHeight < finalHeight) {\n                return day;\n            }\n        }\n        \n        return -1;\n    }\n}",
+    "timestamp": "2025-08-05 21:59:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int earliestEscape(vector<int>& dist, vector<int>& speed, int slideFactor) {\n        int n = dist.size();\n        int worker = 0;\n        \n        for (int day = 1; day <= 1e6; day++) {\n            // Climb during the day\n            worker += speed[day % n];\n            \n            // Check if worker reaches the top\n            if (worker >= dist[day % n]) {\n                return day;\n            }\n            \n            // Slide back at night\n            worker = max(0, worker - slideFactor);\n            \n            // Other sinners try to catch up\n            for (int i = 0; i < n; i++) {\n                if (i != day % n) {\n                    worker -= speed[i];\n                }\n            }\n            \n            // Check if worker is caught\n            if (worker <= 0) {\n                return -1;\n            }\n        }\n        \n        return -1;\n    }\n};",
+    "timestamp": "2025-08-05 21:59:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def escape_day(climb_day, slide_night, others_climb_night, spider_silk_length):\n    if climb_day >= spider_silk_length:\n        return 1\n        \n    daily_net_climb = climb_day - slide_night\n    others_total_climb = 0\n    current_day = 1\n\n    while current_day * others_climb_night < spider_silk_length:\n        others_total_climb = current_day * others_climb_night\n        current_day += 1\n        spider_silk_length -= daily_net_climb\n        if daily_net_climb <= 0:\n            return -1\n        if climb_day >= spider_silk_length > others_total_climb:\n            return current_day\n\n    return -1\n\n# Example usage:\n# print(escape_day(5, 1, 2, 20))",
+    "timestamp": "2025-08-13 08:24:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class EscapeHell {\n\n    public static int earliestEscapeDay(int climbDay, int slideNight, int climbNight, int height) {\n        if (climbDay <= slideNight && climbNight <= 0) {\n            return -1; // Impossible to escape\n        }\n\n        int days = 0;\n        int currentHeight = 0;\n\n        while (true) {\n            days++;\n            currentHeight += climbDay;\n\n            if (currentHeight >= height) {\n                return days;\n            }\n\n            currentHeight -= slideNight;\n\n            if (currentHeight < 0) {\n                currentHeight = 0;\n            }\n\n            if (currentHeight + climbNight >= height) {\n                return -1; // Other sinners will cut the silk\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        int climbDay = 3; // Distance climbed during the day\n        int slideNight = 1; // Distance slides back at night\n        int climbNight = 3; // Other sinners climb at night\n        int height = 10; // Target height for escape\n\n        int escapeDay = earliestEscapeDay(climbDay, slideNight, climbNight, height);\n        System.out.println(\"Earliest escape day: \" + escapeDay);\n    }\n}",
+    "timestamp": "2025-08-13 08:24:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint minDaysToEscape(int climbDay, int slideNight, int otherSinnerClimb, int height) {\n    int netClimbDay = climbDay - slideNight;\n    \n    if (netClimbDay <= 0 && climbDay < height) {\n        return -1;\n    }\n    \n    int days = 0;\n    int position = 0;\n    \n    while (position < height) {\n        days++;\n        position += climbDay;\n        \n        if (position >= height) {\n            return days;\n        }\n        \n        position -= slideNight;\n        \n        if (position + otherSinnerClimb * days >= position) {\n            return -1;\n        }\n    }\n    \n    return -1;\n}\n\nint main() {\n    int climbDay = 5;\n    int slideNight = 3;\n    int otherSinnerClimb = 1;\n    int height = 20;\n\n    int days = minDaysToEscape(climbDay, slideNight, otherSinnerClimb, height);\n    \n    printf(\"%d\\n\", days);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:24:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def escape(height, climb_day, slide_night, other_climb):\n    day = 0\n    current_height = 0\n    \n    while current_height < height:\n        # Climb during the day\n        current_height += climb_day\n        \n        # Check if escaped\n        if current_height >= height:\n            return day + 1\n        \n        # Other sinners climb at night\n        current_height -= slide_night\n        current_height -= other_climb\n        \n        # Check if fallen below start\n        if current_height <= 0:\n            return -1\n        \n        day += 1\n    \n    return day + 1",
+    "timestamp": "2025-08-13 08:24:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def escape_hell(h, day_climb, night_slide, sinners):\n    current_position = 0\n    day = 0\n    \n    while True:\n        day += 1\n        current_position += day_climb\n        \n        if current_position >= h:\n            return day\n            \n        current_position -= night_slide\n        \n        if current_position < 0:\n            return -1\n            \n        for sinner in sinners:\n            sinner_climb = sinner[0]\n            sinner_start_day = sinner[1]\n            if day >= sinner_start_day:\n                sinner_position = sinner_climb * (day - sinner_start_day)\n                if sinner_position >= current_position:\n                    return -1",
+    "timestamp": "2025-08-13 08:24:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint earliestEscapeDay(int climb_per_day, int slide_per_night, int silk_length, const vector<int>& sinners_night_climb) {\n    int position = 0;\n    int day = 0;\n    \n    while (true) {\n        day++;\n        position += climb_per_day;\n        if (position >= silk_length) {\n            return day;\n        }\n        position -= slide_per_night;\n        \n        for (int sinner_climb : sinners_night_climb) {\n            if (position <= sinner_climb * day) {\n                return -1;\n            }\n        }\n    }\n}\n\nint main() {\n    int climb_per_day = 10;\n    int slide_per_night = 2;\n    int silk_length = 30;\n    vector<int> sinners_night_climb = {2, 3, 5};\n    \n    int result = earliestEscapeDay(climb_per_day, slide_per_night, silk_length, sinners_night_climb);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:45:42"
+  }
+]

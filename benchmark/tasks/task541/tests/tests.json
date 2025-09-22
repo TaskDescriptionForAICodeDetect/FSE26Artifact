@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "3 3\nB.B\n..B\n.BB\n",
+      "output": "4"
+    },
+    {
+      "input": "4 3\nB..\nB..\n...\n...\n",
+      "output": "1"
+    },
+    {
+      "input": "6 6\n...B..\nB.B.B.\n.B.B.B\n...B.B\n.B..B.\n..B...\n",
+      "output": "7"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "FTFFTFFF\n4 2",
+      "output": "Yes"
+    },
+    {
+      "input": "FTFFTFFF\n-2 -2",
+      "output": "Yes"
+    },
+    {
+      "input": "FF\n1 0",
+      "output": "No"
+    },
+    {
+      "input": "TF\n1 0",
+      "output": "No"
+    },
+    {
+      "input": "FFTTFF\n0 0",
+      "output": "Yes"
+    },
+    {
+      "input": "TTTT\n1 0",
+      "output": "No"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Given an integer sequence of length N+1: A_0, A_1, A_2, ..., A_N, determine if a binary tree of depth N can be constructed such that for each depth d (from 0 to N), there are exactly A_d leaves at that depth. If such a tree can exist, print the maximum possible number of vertices in the tree; otherwise, print -1.

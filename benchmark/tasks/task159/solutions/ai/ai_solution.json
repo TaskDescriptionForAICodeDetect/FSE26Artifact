@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n#include <stdlib.h>\n\nint min(int a, int b) {\n    return (a < b) ? a : b;\n}\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint calculateMinCost(int oranges[], int n, int k, int boxCost) {\n    int dp[n + 1];\n    dp[0] = 0;\n\n    for (int i = 1; i <= n; i++) {\n        dp[i] = INT_MAX;\n        int current_max = oranges[i - 1];\n        int current_min = oranges[i - 1];\n        for (int j = i; j >= max(1, i - k + 1); j--) {\n            current_max = max(current_max, oranges[j - 1]);\n            current_min = min(current_min, oranges[j - 1]);\n            int cost = (current_max - current_min) * (i - j + 1) + boxCost;\n            dp[i] = min(dp[i], dp[j - 1] + cost);\n        }\n    }\n\n    return dp[n];\n}\n\nint main() {\n    int n, k, boxCost;\n    scanf(\"%d %d %d\", &n, &k, &boxCost);\n    int oranges[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &oranges[i]);\n    }\n\n    printf(\"%d\\n\", calculateMinCost(oranges, n, k, boxCost));\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:51:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int packOranges(int[] oranges, int maxBoxSize, int boxCost) {\n        int n = oranges.length;\n        int[][] dp = new int[n][n];\n        \n        for (int len = 1; len <= n; len++) {\n            for (int start = 0; start + len <= n; start++) {\n                int end = start + len - 1;\n                \n                if (len > maxBoxSize) {\n                    dp[start][end] = Integer.MAX_VALUE;\n                    continue;\n                }\n                \n                int minOrange = oranges[start];\n                int maxOrange = oranges[start];\n                int totalOrangeCost = 0;\n                \n                for (int k = start; k <= end; k++) {\n                    minOrange = Math.min(minOrange, oranges[k]);\n                    maxOrange = Math.max(maxOrange, oranges[k]);\n                    totalOrangeCost += oranges[k];\n                }\n                \n                int boxPackCost = (maxOrange - minOrange + 1) * len;\n                dp[start][end] = boxPackCost + boxCost;\n                \n                if (start > 0) {\n                    for (int split = start; split < end; split++) {\n                        if (dp[start][split] != Integer.MAX_VALUE && \n                            dp[split+1][end] != Integer.MAX_VALUE) {\n                            dp[start][end] = Math.min(dp[start][end], \n                                dp[start][split] + dp[split+1][end]);\n                        }\n                    }\n                }\n            }\n        }\n        \n        return dp[0][n-1];\n    }\n}",
+    "timestamp": "2025-08-05 18:53:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M, K;\n    cin >> N >> M >> K;\n    \n    vector<int> oranges(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> oranges[i];\n    }\n    \n    vector<long long> dp(N + 1, LLONG_MAX);\n    dp[0] = 0;\n    \n    for (int i = 1; i <= N; ++i) {\n        int max_o = oranges[i-1];\n        int min_o = oranges[i-1];\n        for (int j = 1; j <= M && i - j >= 0; ++j) {\n            max_o = max(max_o, oranges[i-j]);\n            min_o = min(min_o, oranges[i-j]);\n            long long cost = K + (long long)j * (max_o - min_o);\n            if (dp[i - j] != LLONG_MAX) {\n                dp[i] = min(dp[i], dp[i - j] + cost);\n            }\n        }\n    }\n    \n    cout << dp[N] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MAX_ORANGES 1000\n\nint minCostPacking(int orangeSizes[], int n, int maxOrangesPerBox, int boxCost) {\n    int dp[MAX_ORANGES + 1][MAX_ORANGES + 1];\n    int prefixMin[MAX_ORANGES + 1];\n    int prefixMax[MAX_ORANGES + 1];\n    \n    for (int i = 0; i <= n; i++) {\n        for (int j = 0; j <= n; j++) {\n            dp[i][j] = INT_MAX;\n        }\n    }\n    \n    dp[0][0] = 0;\n    \n    for (int i = 0; i < n; i++) {\n        prefixMin[i + 1] = (i == 0) ? orangeSizes[i] : \n                            (orangeSizes[i] < prefixMin[i] ? orangeSizes[i] : prefixMin[i]);\n        prefixMax[i + 1] = (i == 0) ? orangeSizes[i] : \n                            (orangeSizes[i] > prefixMax[i] ? orangeSizes[i] : prefixMax[i]);\n    }\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = i; j < n; j++) {\n            int orangeCount = j - i + 1;\n            if (orangeCount > maxOrangesPerBox) break;\n            \n            int boxMinSize = prefixMin[j + 1];\n            int boxMaxSize = prefixMax[j + 1];\n            int boxPackingCost = (boxMaxSize - boxMinSize) * orangeCount;\n            \n            for (int k = 0; k <= i; k++) {\n                if (dp[k][i] != INT_MAX) {\n                    dp[k][j + 1] = (dp[k][j + 1] == INT_MAX) ? \n                                    dp[k][i] + boxCost + boxPackingCost : \n                                    (dp[k][i] + boxCost + boxPackingCost < dp[k][j + 1] ? \n                                    dp[k][i] + boxCost + boxPackingCost : dp[k][j + 1]);\n                }\n            }\n        }\n    }\n    \n    int minTotalCost = INT_MAX;\n    for (int k = 0; k <= n; k++) {\n        if (dp[k][n] != INT_MAX && dp[k][n] < minTotalCost) {\n            minTotalCost = dp[k][n];\n        }\n    }\n    \n    return minTotalCost;\n}\n\nint main() {\n    int n, maxOrangesPerBox, boxCost;\n    int orangeSizes[MAX_ORANGES];\n    \n    scanf(\"%d %d %d\", &n, &maxOrangesPerBox, &boxCost);\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &orangeSizes[i]);\n    }\n    \n    int result = minCostPacking(orangeSizes, n, maxOrangesPerBox, boxCost);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minimumCost(vector<int>& oranges, int maxBox, int boxCost) {\n        int n = oranges.size();\n        vector<vector<int>> dp(n + 1, vector<int>(n + 1, INT_MAX));\n        dp[0][0] = 0;\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 1; j <= min(i, maxBox); j++) {\n                int minOrange = oranges[i - 1];\n                int maxOrange = oranges[i - 1];\n                int totalCost = boxCost;\n\n                for (int k = i - 1; k >= 0 && i - k <= maxBox; k--) {\n                    minOrange = min(minOrange, oranges[k]);\n                    maxOrange = max(maxOrange, oranges[k]);\n                    \n                    if (k > 0 && dp[k - 1][j - 1] != INT_MAX) {\n                        int currentCost = dp[k - 1][j - 1] + totalCost + (maxOrange - minOrange);\n                        dp[i][j] = min(dp[i][j], currentCost);\n                    } else if (k == 0) {\n                        int currentCost = totalCost + (maxOrange - minOrange);\n                        dp[i][j] = min(dp[i][j], currentCost);\n                    }\n                }\n            }\n        }\n\n        int minTotalCost = INT_MAX;\n        for (int j = 1; j <= maxBox; j++) {\n            minTotalCost = min(minTotalCost, dp[n][j]);\n        }\n\n        return minTotalCost;\n    }\n};",
+    "timestamp": "2025-08-05 18:53:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class OrangePacking {\n    public static int minPackingCost(int[] oranges, int maxOrangesPerBox, int boxCost) {\n        int n = oranges.length;\n        int[] dp = new int[n + 1];\n        Arrays.fill(dp, Integer.MAX_VALUE);\n        dp[0] = 0;\n        \n        for (int i = 1; i <= n; i++) {\n            int max = oranges[i - 1];\n            int min = oranges[i - 1];\n            for (int j = 1; j <= maxOrangesPerBox && i - j >= 0; j++) {\n                max = Math.max(max, oranges[i - j]);\n                min = Math.min(min, oranges[i - j]);\n                int cost = j * (max - min) + boxCost;\n                dp[i] = Math.min(dp[i], dp[i - j] + cost);\n            }\n        }\n        return dp[n];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int maxOrangesPerBox = scanner.nextInt();\n        int boxCost = scanner.nextInt();\n        int[] oranges = new int[n];\n        for (int i = 0; i < n; i++) {\n            oranges[i] = scanner.nextInt();\n        }\n        System.out.println(minPackingCost(oranges, maxOrangesPerBox, boxCost));\n    }\n}",
+    "timestamp": "2025-08-05 18:54:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_cost_to_pack_oranges(oranges, max_oranges_per_box, box_cost):\n    n = len(oranges)\n    dp = [float('inf')] * (n + 1)\n    dp[0] = 0\n    \n    for i in range(1, n + 1):\n        max_size = float('-inf')\n        min_size = float('inf')\n        for j in range(i, max(i - max_oranges_per_box, 0), -1):\n            max_size = max(max_size, oranges[j - 1])\n            min_size = min(min_size, oranges[j - 1])\n            cost = box_cost + (max_size - min_size) * (i - j + 1)\n            dp[i] = min(dp[i], dp[j - 1] + cost)\n    \n    return dp[n]\n\n# Example usage:\n# oranges = [4, 5, 3, 2, 7]\n# max_oranges_per_box = 3\n# box_cost = 10\n# print(min_cost_to_pack_oranges(oranges, max_oranges_per_box, box_cost))",
+    "timestamp": "2025-08-13 01:17:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class OrangePacking {\n    \n    public static int minCostPacking(int[] oranges, int boxCapacity, int boxCost) {\n        int n = oranges.length;\n        int[] dp = new int[n + 1];\n        Arrays.fill(dp, Integer.MAX_VALUE);\n        dp[0] = 0;\n\n        for (int i = 1; i <= n; i++) {\n            int maxSize = Integer.MIN_VALUE;\n            int minSize = Integer.MAX_VALUE;\n\n            for (int j = i; j > 0 && i - j < boxCapacity; j--) {\n                maxSize = Math.max(maxSize, oranges[j - 1]);\n                minSize = Math.min(minSize, oranges[j - 1]);\n\n                int boxCostWithContent = maxSize - minSize + boxCost;\n                dp[i] = Math.min(dp[i], dp[j - 1] + boxCostWithContent);\n            }\n        }\n\n        return dp[n];\n    }\n    \n    public static void main(String[] args) {\n        int[] oranges = {5, 1, 2, 8, 3};\n        int boxCapacity = 3;\n        int boxCost = 10;\n        int result = minCostPacking(oranges, boxCapacity, boxCost);\n        System.out.println(\"Minimum total cost for packing oranges: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 01:17:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_ORANGES 1000\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint main() {\n    int numOranges, boxCapacity, boxCost;\n    int orangeSizes[MAX_ORANGES];\n    int dp[MAX_ORANGES + 1];\n\n    // Input number of oranges, box capacity, and box cost\n    scanf(\"%d %d %d\", &numOranges, &boxCapacity, &boxCost);\n\n    // Input sizes of the oranges\n    for (int i = 0; i < numOranges; i++) {\n        scanf(\"%d\", &orangeSizes[i]);\n    }\n\n    // Initialize dp array with max possible values\n    for (int i = 0; i <= numOranges; i++) {\n        dp[i] = INT_MAX;\n    }\n\n    // Base case: no oranges, no cost\n    dp[0] = 0;\n\n    // Dynamic Programming to find minimum packing cost\n    for (int i = 1; i <= numOranges; i++) {\n        int maxSize = INT_MIN, minSize = INT_MAX;\n        for (int j = i; j > 0 && j >= i - boxCapacity + 1; j--) {\n            maxSize = maxSize > orangeSizes[j - 1] ? maxSize : orangeSizes[j - 1];\n            minSize = minSize < orangeSizes[j - 1] ? minSize : orangeSizes[j - 1];\n            int packingCost = maxSize - minSize + boxCost;\n            dp[i] = min(dp[i], dp[j - 1] + packingCost);\n        }\n    }\n\n    // Output the minimum total cost of packing\n    printf(\"%d\\n\", dp[numOranges]);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:17:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_packing_cost(oranges, max_oranges_per_box, box_usage_cost):\n    n = len(oranges)\n    dp = [[float('inf')] * (n + 1) for _ in range(n + 1)]\n    dp[0][0] = 0\n\n    for i in range(1, n + 1):\n        for j in range(1, min(i, max_oranges_per_box) + 1):\n            min_orange = max_orange = oranges[i - 1]\n            for k in range(1, j):\n                min_orange = min(min_orange, oranges[i - 1 - k])\n                max_orange = max(max_orange, oranges[i - 1 - k])\n                \n                if dp[i - 1 - k][j - k] != float('inf'):\n                    cost = dp[i - 1 - k][j - k] + box_usage_cost + (max_orange - min_orange)\n                    dp[i][j] = min(dp[i][j], cost)\n\n    return min(dp[n])",
+    "timestamp": "2025-08-13 01:17:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_orange_packing_cost(sizes, max_oranges, box_cost):\n    n = len(sizes)\n    dp = [float('inf')] * (n + 1)\n    dp[0] = 0\n    \n    for i in range(1, n + 1):\n        current_max = -float('inf')\n        current_min = float('inf')\n        for j in range(1, max_oranges + 1):\n            if i - j >= 0:\n                current_max = max(current_max, sizes[i - j])\n                current_min = min(current_min, sizes[i - j])\n                cost = (current_max - current_min) * j + box_cost\n                dp[i] = min(dp[i], dp[i - j] + cost)\n    \n    return dp[n]",
+    "timestamp": "2025-08-13 01:17:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <limits>\n\nusing namespace std;\n\nint calculateMinCost(const vector<int>& oranges, int boxCapacity, int boxFixedCost) {\n    int n = oranges.size();\n    vector<int> dp(n + 1, numeric_limits<int>::max());\n    dp[0] = 0;\n\n    for (int i = 0; i < n; ++i) {\n        int maxSize = oranges[i];\n        int minSize = oranges[i];\n        \n        for (int j = i; j < n && j - i + 1 <= boxCapacity; ++j) {\n            maxSize = max(maxSize, oranges[j]);\n            minSize = min(minSize, oranges[j]);\n            int cost = boxFixedCost + (maxSize - minSize);\n            dp[j + 1] = min(dp[j + 1], dp[i] + cost);\n        }\n    }\n    return dp[n];\n}\n\nint main() {\n    int n, boxCapacity, boxFixedCost;\n    cin >> n >> boxCapacity >> boxFixedCost;\n    vector<int> oranges(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> oranges[i];\n    }\n\n    int minCost = calculateMinCost(oranges, boxCapacity, boxFixedCost);\n    cout << minCost << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:59:14"
+  }
+]

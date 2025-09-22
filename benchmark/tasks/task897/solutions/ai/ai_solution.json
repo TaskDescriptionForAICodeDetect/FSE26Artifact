@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\nbool is_subsequence(char* s, char* t) {\n    int s_len = strlen(s);\n    int t_len = strlen(t);\n    int s_idx = 0, t_idx = 0;\n\n    while (s_idx < s_len && t_idx < t_len) {\n        if (s[s_idx] == t[t_idx]) {\n            s_idx++;\n        }\n        t_idx++;\n    }\n\n    return s_idx == s_len;\n}\n\nint main() {\n    char A[1001];\n    scanf(\"%s\", A);\n    \n    for (int len = 1; len <= 5; len++) {\n        char candidate[6] = {0};\n        \n        for (int i = 0; i < (1 << (len * 2)); i++) {\n            for (int j = 0; j < len; j++) {\n                candidate[j] = 'a' + ((i >> (j * 2)) & 3);\n            }\n            candidate[len] = '\\0';\n            \n            if (!is_subsequence(candidate, A)) {\n                printf(\"%s\\n\", candidate);\n                return 0;\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:16:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_LEN 100000\n\nchar* findShortestMissingSubsequence(char* A) {\n    int len = strlen(A);\n    char* result = (char*)malloc(2 * sizeof(char)); // Maximum possible length is 2\n    result[0] = 'a';\n    result[1] = '\\0';\n\n    // Check all single-letter strings\n    for (char c = 'a'; c <= 'z'; c++) {\n        int found = 0;\n        for (int i = 0; i < len; i++) {\n            if (A[i] == c) {\n                found = 1;\n                break;\n            }\n        }\n        if (!found) {\n            result[0] = c;\n            result[1] = '\\0';\n            return result;\n        }\n    }\n\n    // If all single letters are present, check all two-letter strings\n    for (char c1 = 'a'; c1 <= 'z'; c1++) {\n        for (char c2 = 'a'; c2 <= 'z'; c2++) {\n            int pos1 = -1;\n            for (int i = 0; i < len; i++) {\n                if (A[i] == c1) {\n                    pos1 = i;\n                    break;\n                }\n            }\n            if (pos1 == -1) continue;\n            int found = 0;\n            for (int i = pos1 + 1; i < len; i++) {\n                if (A[i] == c2) {\n                    found = 1;\n                    break;\n                }\n            }\n            if (!found) {\n                result[0] = c1;\n                result[1] = c2;\n                result[2] = '\\0';\n                return result;\n            }\n        }\n    }\n\n    return result;\n}\n\nint main() {\n    char A[MAX_LEN + 1];\n    scanf(\"%s\", A);\n    char* result = findShortestMissingSubsequence(A);\n    printf(\"%s\\n\", result);\n    free(result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:16:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nstring findShortestMissingSubsequence(const string &A) {\n    vector<bool> present(26, false);\n    for (char c : A) {\n        present[c - 'a'] = true;\n    }\n    \n    // Find the first missing character\n    for (int i = 0; i < 26; ++i) {\n        if (!present[i]) {\n            return string(1, 'a' + i);\n        }\n    }\n    \n    // If all characters are present, find the shortest missing subsequence\n    int n = A.size();\n    string result;\n    \n    for (int len = 1; len <= n + 1; ++len) {\n        vector<string> candidates;\n        string current(len, 'a');\n        generateAllStrings(current, 0, len, candidates);\n        \n        sort(candidates.begin(), candidates.end());\n        \n        for (const string &s : candidates) {\n            if (!isSubsequence(s, A)) {\n                return s;\n            }\n        }\n    }\n    \n    return \"\";\n}\n\nvoid generateAllStrings(string &s, int pos, int len, vector<string> &result) {\n    if (pos == len) {\n        result.push_back(s);\n        return;\n    }\n    for (char c = 'a'; c <= 'z'; ++c) {\n        s[pos] = c;\n        generateAllStrings(s, pos + 1, len, result);\n    }\n}\n\nbool isSubsequence(const string &s, const string &A) {\n    int i = 0, j = 0;\n    while (i < s.size() && j < A.size()) {\n        if (s[i] == A[j]) {\n            i++;\n        }\n        j++;\n    }\n    return i == s.size();\n}\n\nint main() {\n    string A;\n    cin >> A;\n    cout << findShortestMissingSubsequence(A) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:16:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ShortestNonSubsequence {\n    public static String findShortestNonSubsequence(String A) {\n        int n = A.length();\n        Set<Character> allChars = new HashSet<>();\n        for (char c : A.toCharArray()) {\n            allChars.add(c);\n        }\n        \n        // Check for single character not present\n        for (char c = 'a'; c <= 'z'; c++) {\n            if (!allChars.contains(c)) {\n                return String.valueOf(c);\n            }\n        }\n        \n        // All single characters are present, check for two-character combinations\n        for (char c1 = 'a'; c1 <= 'z'; c1++) {\n            for (char c2 = 'a'; c2 <= 'z'; c2++) {\n                String candidate = \"\" + c1 + c2;\n                if (!isSubsequence(A, candidate)) {\n                    return candidate;\n                }\n            }\n        }\n        \n        // Should not reach here if input is correct\n        return \"aa\";\n    }\n    \n    private static boolean isSubsequence(String s, String sub) {\n        int i = 0, j = 0;\n        while (i < s.length() && j < sub.length()) {\n            if (s.charAt(i) == sub.charAt(j)) {\n                j++;\n            }\n            i++;\n        }\n        return j == sub.length();\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String A = scanner.next();\n        System.out.println(findShortestNonSubsequence(A));\n    }\n}",
+    "timestamp": "2025-08-05 23:17:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public String findShortestSubsequence(String A) {\n        for (int len = 1; ; len++) {\n            for (String candidate : generateStrings(len)) {\n                if (!isSubsequence(candidate, A)) {\n                    return candidate;\n                }\n            }\n        }\n    }\n\n    private List<String> generateStrings(int len) {\n        List<String> result = new ArrayList<>();\n        generateStringsHelper(\"\", len, result);\n        Collections.sort(result);\n        return result;\n    }\n\n    private void generateStringsHelper(String current, int len, List<String> result) {\n        if (current.length() == len) {\n            result.add(current);\n            return;\n        }\n        \n        for (char c = 'a'; c <= 'z'; c++) {\n            generateStringsHelper(current + c, len, result);\n        }\n    }\n\n    private boolean isSubsequence(String sub, String str) {\n        int j = 0;\n        for (int i = 0; i < str.length() && j < sub.length(); i++) {\n            if (str.charAt(i) == sub.charAt(j)) {\n                j++;\n            }\n        }\n        return j == sub.length();\n    }\n}",
+    "timestamp": "2025-08-05 23:17:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isSubsequence(const string& sub, const string& str) {\n    int j = 0;\n    for (int i = 0; i < str.length() && j < sub.length(); i++) {\n        if (str[i] == sub[j]) {\n            j++;\n        }\n    }\n    return j == sub.length();\n}\n\nstring findShortestNonSubsequence(const string& A) {\n    for (int len = 1; len <= 10; len++) {\n        vector<string> candidates;\n        string current(len, 'a');\n        \n        while (true) {\n            if (!isSubsequence(current, A)) {\n                return current;\n            }\n            \n            int pos = len - 1;\n            while (pos >= 0 && current[pos] == 'z') {\n                current[pos] = 'a';\n                pos--;\n            }\n            \n            if (pos < 0) break;\n            current[pos]++;\n        }\n    }\n    \n    return \"\";\n}\n\nint main() {\n    string A;\n    cin >> A;\n    \n    cout << findShortestNonSubsequence(A) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def findShortestNonSubsequence(A):\n    from itertools import product\n    \n    # Check if given string s is a subsequence of string A\n    def is_subsequence(s, A):\n        it = iter(A)\n        return all(c in it for c in s)\n    \n    # Try all combinations of strings with lengths from 1\n    for length in range(1, len(A) + 2):\n        # All strings of length `length` consisting of lowercase English letters\n        for s in product('abcdefghijklmnopqrstuvwxyz', repeat=length):\n            candidate = ''.join(s)\n            if not is_subsequence(candidate, A):\n                return candidate\n\n# Example usage:\nA = \"abc\"\nprint(findShortestNonSubsequence(A))",
+    "timestamp": "2025-08-13 14:23:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class ShortestNonSubsequence {\n    public static String findShortestNonSubsequence(String A) {\n        boolean[] presenceMap = new boolean[1 << 26];\n        int n = A.length();\n\n        for (int mask = 0; mask < (1 << n); mask++) {\n            StringBuilder subsequence = new StringBuilder();\n            for (int i = 0; i < n; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    subsequence.append(A.charAt(i));\n                }\n            }\n            presenceMap[hash(subsequence.toString())] = true;\n        }\n\n        String smallest = \"\";\n        for (int length = 1; length <= 26; length++) {\n            if (findSmallestAbsentString(\"\", length, presenceMap)) {\n                smallest = buildSmallestString(\"\", length, presenceMap);\n                break;\n            }\n        }\n        return smallest;\n    }\n\n    private static boolean findSmallestAbsentString(String prefix, int remainingLength, boolean[] presenceMap) {\n        if (remainingLength == 0) {\n            return !presenceMap[hash(prefix)];\n        }\n        for (char ch = 'a'; ch <= 'z'; ch++) {\n            if (findSmallestAbsentString(prefix + ch, remainingLength - 1, presenceMap)) {\n                return true;\n            }\n        }\n        return false;\n    }\n\n    private static String buildSmallestString(String prefix, int remainingLength, boolean[] presenceMap) {\n        if (remainingLength == 0) {\n            return prefix;\n        }\n        for (char ch = 'a'; ch <= 'z'; ch++) {\n            String candidate = buildSmallestString(prefix + ch, remainingLength - 1, presenceMap);\n            if (!candidate.isEmpty() && !presenceMap[hash(candidate)]) {\n                return candidate;\n            }\n        }\n        return \"\";\n    }\n\n    private static int hash(String subsequence) {\n        int hashValue = 0;\n        for (char ch : subsequence.toCharArray()) {\n            hashValue = hashValue * 26 + (ch - 'a');\n        }\n        return hashValue;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(findShortestNonSubsequence(\"abc\"));\n        System.out.println(findShortestNonSubsequence(\"a\"));\n        System.out.println(findShortestNonSubsequence(\"ab\"));\n    }\n}",
+    "timestamp": "2025-08-13 14:23:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint isSubsequence(const char *A, const char *B) {\n    int m = strlen(A), n = strlen(B);\n    int j = 0;\n    for (int i = 0; i < m && j < n; i++) {\n        if (A[i] == B[j]) j++;\n    }\n    return j == n;\n}\n\nint main() {\n    char A[101];\n    scanf(\"%s\", A);\n    \n    char subseq[2] = { 'a', '\\0' };\n    \n    for (char c = 'a'; c <= 'z'; c++) {\n        subseq[0] = c;\n        if (!isSubsequence(A, subseq)) {\n            printf(\"%s\\n\", subseq);\n            return 0;\n        }\n    }\n    \n    char subseq2[3] = { 'a', 'a', '\\0' };\n    for (char c1 = 'a'; c1 <= 'z'; c1++) {\n        for (char c2 = 'a'; c2 <= 'z'; c2++) {\n            subseq2[0] = c1;\n            subseq2[1] = c2;\n            if (!isSubsequence(A, subseq2)) {\n                printf(\"%s\\n\", subseq2);\n                return 0;\n            }\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:23:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <unordered_set>\n#include <queue>\n\nstd::string shortestNonSubsequence(std::string A) {\n    std::unordered_set<std::string> subsequences;\n    std::queue<std::string> queue;\n    \n    queue.push(\"\");\n    \n    while (!queue.empty()) {\n        std::string str = queue.front();\n        queue.pop();\n        \n        if (subsequences.find(str) == subsequences.end()) {\n            subsequences.insert(str);\n            \n            for (char ch = 'a'; ch <= 'z'; ++ch) {\n                std::string newStr = str + ch;\n                size_t index = 0;\n                \n                for (char a : A) {\n                    if (a == newStr[index]) {\n                        index++;\n                        if (index == newStr.size()) break;\n                    }\n                }\n                \n                if (index != newStr.size()) {\n                    return newStr;\n                }\n                \n                queue.push(newStr);\n            }\n        }\n    }\n    \n    return \"\";\n}\n\nint main() {\n    std::string A;\n    std::cin >> A;\n    std::cout << shortestNonSubsequence(A) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:23:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(A):\n    def is_subsequence(s, A):\n        j = 0\n        for i in range(len(A)):\n            if j < len(s) and A[i] == s[j]:\n                j += 1\n        return j == len(s)\n\n    for length in range(1, 27):\n        for s in sorted(''.join(combo) for combo in itertools.product('abcdefghijklmnopqrstuvwxyz', repeat=length)):\n            if not is_subsequence(s, A):\n                return s\n\nimport itertools",
+    "timestamp": "2025-08-13 14:24:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_shortest_lex_min_non_subsequence(A):\n    n = len(A)\n    # Check for all single-character strings first\n    for c in 'abcdefghijklmnopqrstuvwxyz':\n        if c not in A:\n            return c\n    # If all single characters are present, check for two-character strings\n    for c1 in 'abcdefghijklmnopqrstuvwxyz':\n        for c2 in 'abcdefghijklmnopqrstuvwxyz':\n            s = c1 + c2\n            # Check if s is a subsequence of A\n            i = 0\n            for ch in A:\n                if i < 2 and ch == s[i]:\n                    i += 1\n            if i < 2:\n                return s\n    # If all two-character strings are subsequences, return \"aaa\" (though theoretically, it's not possible if all single chars are present)\n    return \"aaa\"",
+    "timestamp": "2025-08-13 14:24:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findShortestNonSubsequence(A) {\n    const isSubsequence = (sub, main) => {\n        let i = 0;\n        for (let char of main) {\n            if (char === sub[i]) i++;\n            if (i === sub.length) return true;\n        }\n        return false;\n    };\n\n    const generateCombinations = (prefix, length) => {\n        if (length === 0) {\n            return [prefix];\n        }\n        const combinations = [];\n        const start = prefix === '' ? 'a' : String.fromCharCode(prefix.charCodeAt(prefix.length - 1) + 1);\n        for (let i = 0; i < 26; i++) {\n            const char = String.fromCharCode(97 + i);\n            const newPrefix = prefix + char;\n            combinations.push(...generateCombinations(newPrefix, length - 1));\n        }\n        return combinations;\n    };\n\n    for (let length = 1;; length++) {\n        const combinations = generateCombinations('', length);\n        for (let combination of combinations) {\n            if (!isSubsequence(combination, A)) {\n                return combination;\n            }\n        }\n    }\n}\n\n// Example usage:\nconsole.log(findShortestNonSubsequence(\"abc\")); // Output \"d\"",
+    "timestamp": "2025-08-13 14:25:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findShortestNonSubsequence(A) {\n    const n = A.length;\n    const charSet = new Set(A);\n    \n    // Check single characters first\n    for (let c = 97; c <= 122; c++) {\n        const char = String.fromCharCode(c);\n        if (!charSet.has(char)) {\n            return char;\n        }\n    }\n    \n    // Check two character combinations\n    for (let c1 = 97; c1 <= 122; c1++) {\n        for (let c2 = 97; c2 <= 122; c2++) {\n            const s = String.fromCharCode(c1) + String.fromCharCode(c2);\n            if (!isSubsequence(s, A)) {\n                return s;\n            }\n        }\n    }\n    \n    // Check three character combinations\n    for (let c1 = 97; c1 <= 122; c1++) {\n        for (let c2 = 97; c2 <= 122; c2++) {\n            for (let c3 = 97; c3 <= 122; c3++) {\n                const s = String.fromCharCode(c1) + String.fromCharCode(c2) + String.fromCharCode(c3);\n                if (!isSubsequence(s, A)) {\n                    return s;\n                }\n            }\n        }\n    }\n    \n    return 'aaaa';\n}\n\nfunction isSubsequence(pattern, text) {\n    let j = 0;\n    for (let i = 0; i < text.length && j < pattern.length; i++) {\n        if (text[i] === pattern[j]) {\n            j++;\n        }\n    }\n    return j === pattern.length;\n}",
+    "timestamp": "2025-08-13 14:25:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function shortestNonSubsequence(A) {\n    const n = A.length;\n    let result = [];\n    \n    for (let len = 1; ; len++) {\n        const current = new Array(len).fill('a');\n        let found = false;\n        \n        while (true) {\n            const s = current.join('');\n            if (!isSubsequence(s, A)) {\n                return s;\n            }\n            \n            let i = len - 1;\n            while (i >= 0 && current[i] === 'z') {\n                current[i] = 'a';\n                i--;\n            }\n            if (i < 0) break;\n            current[i] = String.fromCharCode(current[i].charCodeAt(0) + 1);\n        }\n    }\n    \n    function isSubsequence(s, A) {\n        let i = 0, j = 0;\n        while (i < s.length && j < A.length) {\n            if (s[i] === A[j]) {\n                i++;\n            }\n            j++;\n        }\n        return i === s.length;\n    }\n}",
+    "timestamp": "2025-08-13 14:25:22"
+  }
+]

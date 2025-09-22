@@ -1,0 +1,1 @@
+Given an even number of distinct planar points, pair all the points such that each point is coupled to one other point. When lines are drawn between paired points, some lines may be parallel. Your task is to find the maximum number of pairs of parallel lines that can be formed from all possible couplings of the given points.

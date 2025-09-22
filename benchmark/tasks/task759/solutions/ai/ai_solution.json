@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nlong long factorial(int n) {\n    long long result = 1;\n    for (int i = 2; i <= n; i++) {\n        result = (result * i) % MOD;\n    }\n    return result;\n}\n\nlong long power(long long base, long long exp) {\n    long long result = 1;\n    base %= MOD;\n    while (exp > 0) {\n        if (exp & 1) {\n            result = (result * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return result;\n}\n\nlong long solve(int N, int H, int D) {\n    long long dp[N+1];\n    memset(dp, 0, sizeof(dp));\n    dp[0] = 1;\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= D; j++) {\n            if (i - j >= 0) {\n                dp[i] = (dp[i] + dp[i-j]) % MOD;\n            }\n        }\n    }\n\n    long long ways = 1;\n    for (int i = 1; i <= N; i++) {\n        ways = (ways * dp[H]) % MOD;\n    }\n\n    return ways;\n}\n\nint main() {\n    int N, H, D;\n    scanf(\"%d %d %d\", &N, &H, &D);\n    printf(\"%lld\\n\", solve(N, H, D));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:48:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_N 100\n#define MAX_H 1000\n\nlong long dp[MAX_N + 1][MAX_H + 1][MAX_H + 1];\n\nint main() {\n    int N, H, D;\n    scanf(\"%d %d %d\", &N, &H, &D);\n\n    memset(dp, 0, sizeof(dp));\n    dp[0][0][0] = 1;\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j <= H; ++j) {\n            for (int k = 0; k <= H; ++k) {\n                if (dp[i][j][k] == 0) continue;\n                for (int l = 0; l <= D; ++l) {\n                    int new_j = j + l;\n                    if (new_j > H) continue;\n                    int new_k = (k > new_j) ? k : new_j;\n                    dp[i + 1][new_j][new_k] = (dp[i + 1][new_j][new_k] + dp[i][j][k]) % MOD;\n                }\n            }\n        }\n    }\n\n    long long result = 0;\n    for (int k = 0; k <= H; ++k) {\n        if (dp[N][H][k] != 0) {\n            result = (result + dp[N][H][k]) % MOD;\n        }\n    }\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:48:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst int MOD = 1e9 + 7;\n\nll modpow(ll a, ll b, ll mod) {\n    ll res = 1;\n    a %= mod;\n    while (b > 0) {\n        if (b & 1) res = (res * a) % mod;\n        a = (a * a) % mod;\n        b >>= 1;\n    }\n    return res;\n}\n\nll inv(ll a, ll mod) {\n    return modpow(a, mod - 2, mod);\n}\n\nint main() {\n    int N, H, D;\n    cin >> N >> H >> D;\n\n    vector<ll> fact(H + 1), inv_fact(H + 1);\n    fact[0] = 1;\n    for (int i = 1; i <= H; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    inv_fact[H] = inv(fact[H], MOD);\n    for (int i = H - 1; i >= 0; --i) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n\n    auto comb = [&](int a, int b) -> ll {\n        if (a < 0 || b < 0 || a < b) return 0;\n        return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD;\n    };\n\n    vector<ll> dp(H + 1), sum(H + 2);\n    dp[0] = 1;\n    sum[0] = 0;\n    sum[1] = 1;\n\n    for (int i = 1; i <= H; ++i) {\n        int l = max(0, i - D);\n        int r = i - 1;\n        if (l > r) {\n            dp[i] = 0;\n        } else {\n            ll val = (sum[r + 1] - sum[l] + MOD) % MOD;\n            dp[i] = val * fact[N] % MOD;\n        }\n        sum[i + 1] = (sum[i] + dp[i] * inv_fact[i] % MOD) % MOD;\n    }\n\n    ll ans = dp[H] * inv(fact[N], MOD) % MOD;\n    cout << ans << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:49:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int H = sc.nextInt();\n        int D = sc.nextInt();\n\n        long[] fact = new long[N + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= N; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n\n        long[] invFact = new long[N + 1];\n        invFact[N] = pow(fact[N], MOD - 2, MOD);\n        for (int i = N - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n\n        long[] dp = new long[H + 1];\n        dp[0] = fact[N];\n        for (int h = 1; h <= H; h++) {\n            int lower = Math.max(0, h - D);\n            long sum = 0;\n            if (lower > 0) {\n                sum = (dp[h - 1] - dp[lower - 1] + MOD) % MOD;\n            } else {\n                sum = dp[h - 1];\n            }\n            dp[h] = (dp[h - 1] + sum * invFact[N] % MOD * fact[N - 1] % MOD) % MOD;\n        }\n\n        long result;\n        if (H == 0) {\n            result = 1;\n        } else {\n            result = (dp[H] - dp[H - 1] + MOD) % MOD;\n        }\n        System.out.println(result);\n    }\n\n    static long pow(long a, long b, int mod) {\n        long res = 1;\n        while (b > 0) {\n            if ((b & 1) != 0) {\n                res = res * a % mod;\n            }\n            a = a * a % mod;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 22:50:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    static final int MOD = 1_000_000_007;\n\n    public static int countWays(int N, int H, int D) {\n        // Current block distribution\n        int[] blocks = new int[N];\n        \n        // Dynamic programming memoization\n        long[][][] dp = new long[N][H + 1][H + 1];\n        dp[0][0][0] = 1;\n\n        // Iterate through squares\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j <= H; j++) {\n                for (int k = 0; k <= H; k++) {\n                    if (dp[i][j][k] == 0) continue;\n\n                    // Add 1 to 1 block\n                    for (int add = 1; add <= D; add++) {\n                        int newJ = Math.min(H, j + add);\n                        int newK = Math.min(H, k + add);\n                        dp[i + 1][newJ][newK] = (dp[i + 1][newJ][newK] + dp[i][j][k]) % MOD;\n                    }\n                }\n            }\n        }\n\n        // Return ways to achieve H blocks on all squares\n        return (int)dp[N][H][H];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int H = scanner.nextInt();\n        int D = scanner.nextInt();\n        System.out.println(countWays(N, H, D));\n    }\n}",
+    "timestamp": "2025-08-05 22:50:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\nusing ll = long long;\nconst int MOD = 1e9 + 7;\n\nclass Solution {\npublic:\n    int countWays(int N, int H, int D) {\n        vector<int> blocks(N);\n        return countDistributionWays(blocks, 0, H, D);\n    }\n\nprivate:\n    int countDistributionWays(vector<int>& blocks, int currentSquare, int H, int D) {\n        if (currentSquare == blocks.size()) {\n            return checkFinalDistribution(blocks, H) ? 1 : 0;\n        }\n\n        int totalWays = 0;\n        int minBlocks = *min_element(blocks.begin(), blocks.end());\n        int maxBlocks = *max_element(blocks.begin(), blocks.end());\n\n        for (int add = 0; add <= D; add++) {\n            if (blocks[currentSquare] + add <= maxBlocks + D) {\n                blocks[currentSquare] += add;\n                totalWays = (totalWays + countDistributionWays(blocks, currentSquare + 1, H, D)) % MOD;\n                blocks[currentSquare] -= add;\n            }\n        }\n\n        return totalWays;\n    }\n\n    bool checkFinalDistribution(const vector<int>& blocks, int H) {\n        return all_of(blocks.begin(), blocks.end(), [H](int x) { return x == H; });\n    }\n};\n\nint main() {\n    int N, H, D;\n    cin >> N >> H >> D;\n    Solution sol;\n    cout << sol.countWays(N, H, D) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef num_ways_to_stack_blocks(N, H, max_blocks, D):\n    # Dynamic programming array\n    dp = [[0] * (max_blocks + D + 1) for _ in range(N)]\n    \n    # Initialize the first square with the possible numbers of blocks\n    for blocks in range(max_blocks, max_blocks + D + 1):\n        dp[0][blocks] = 1\n    \n    # Fill the dp array\n    for i in range(1, N):\n        for blocks in range(max_blocks, max_blocks + D + 1):\n            # Accumulate the number of ways to reach the current number of blocks\n            dp[i][blocks] = sum(dp[i - 1][max_blocks:max_blocks + D + 1]) % MOD\n    \n    # Sum up all the ways to achieve H blocks on the last square\n    ways_to_achieve_H_blocks = dp[-1][H]\n    \n    return ways_to_achieve_H_blocks\n\n# Example usage\nN = 3\nH = 4\nmax_blocks = 2\nD = 3\nprint(num_ways_to_stack_blocks(N, H, max_blocks, D))  # Output will depend on these parameters",
+    "timestamp": "2025-08-13 12:38:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class Main {\n    private static final int MOD = 1000000007;\n\n    public static int countWays(int N, int D, int H) {\n        int[][] dp = new int[H + 1][N + 1];\n        for (int i = 0; i <= H; i++) {\n            Arrays.fill(dp[i], 0);\n        }\n\n        dp[0][0] = 1;\n\n        for (int h = 1; h <= H; h++) {\n            for (int j = 1; j <= N; j++) {\n                for (int k = 0; k <= D && h - k >= 0; k++) {\n                    dp[h][j] = (dp[h][j] + dp[h - k][j - 1]) % MOD;\n                }\n            }\n        }\n        \n        return dp[H][N];\n    }\n\n    public static void main(String[] args) {\n        int N = 4; // Example input: number of squares\n        int D = 2; // Example input: maximum difference\n        int H = 5; // Example input: target height\n        System.out.println(countWays(N, D, H));\n    }\n}",
+    "timestamp": "2025-08-13 12:38:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nint main() {\n    int N, H, D;\n    scanf(\"%d %d %d\", &N, &H, &D);\n\n    if (H == 0) {\n        printf(\"1\");\n        return 0;\n    }\n\n    long long ways = 1;\n    for (int i = 0; i < N; i++) {\n        ways = (ways * (D + 1)) % MOD;\n    }\n\n    printf(\"%lld\", ways);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:38:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1e9 + 7;\n\nint countWays(int N, int H, int D) {\n    std::vector<std::vector<int>> dp(N+1, std::vector<int>(H+1, 0));\n    dp[0][0] = 1;\n    \n    for (int i = 1; i <= N; ++i) {\n        for (int j = 0; j <= H; ++j) {\n            for (int k = std::max(0, j-D); k <= std::min(H, j+D); ++k) {\n                dp[i][j] = (dp[i][j] + dp[i-1][k]) % MOD;\n            }\n        }\n    }\n\n    return dp[N][H];\n}\n\nint main() {\n    int N, H, D;\n    std::cin >> N >> H >> D;\n    \n    std::cout << countWays(N, H, D) << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:38:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_block_arrangements(N, H, D):\n    MOD = 10**9 + 7\n    \n    # Initialize dynamic programming array\n    dp = [0] * (N * H + 1)\n    dp[0] = 1\n    \n    # Iterate through possible block counts\n    for _ in range(N):\n        new_dp = [0] * (N * H + 1)\n        \n        for current_sum in range(N * H + 1):\n            if dp[current_sum] == 0:\n                continue\n            \n            # Add blocks within the allowed range\n            for blocks in range(1, D + 1):\n                new_sum = current_sum + blocks\n                if new_sum <= N * H:\n                    new_dp[new_sum] = (new_dp[new_sum] + dp[current_sum]) % MOD\n        \n        dp = new_dp\n    \n    # Return number of ways to have exactly H blocks on each square\n    return dp[N * H]\n\n# Example usage\nN, H, D = map(int, input().split())\nresult = count_block_arrangements(N, H, D)\nprint(result)",
+    "timestamp": "2025-08-13 12:38:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef solve():\n    N, H, D = map(int, sys.stdin.readline().split())\n    \n    # Precompute factorial, inverse factorial, and power sums up to N+H\n    max_n = N + H\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    # Compute S(n) = sum_{k=0}^n fact(k) mod MOD\n    S = [0] * (max_n + 2)\n    S[0] = 1\n    for i in range(1, max_n + 1):\n        S[i] = (S[i-1] + fact[i]) % MOD\n    \n    # Compute the product of (S_{a_i + D} - S_{a_i - 1}) / fact[a_i]\n    # Here, a_i is the initial count of blocks on square i (0 for all)\n    # The target is a_i + x_i = H for all i, x_i >= 0\n    # The constraints are x_i <= D for all i (since initially max is 0)\n    # So x_i can be 0..D\n    \n    # The total steps is sum x_i = N*H (since initial sum is 0)\n    # The multinomial coefficient is (sum x_i)! / product (x_i !)\n    \n    # The answer is multinomial coefficient multiplied by N^K, but need to find all valid x_i sequences\n    \n    # The problem reduces to counting the number of sequences x_1, ..., x_N with 0 <= x_i <= D and sum x_i = N*H\n    # Then multiply by (N*H)! / product (x_i !) mod MOD\n    \n    # To compute this, we can use generating functions or DP\n    \n    # Let's use inclusion-exclusion with generating functions\n    # The answer is the coefficient of X^{N*H} in ( (1 + X + X^2 + ... + X^D) )^N\n    # Which is [X^{N*H}] ( (1 - X^{D+1}) / (1 - X) )^N\n    \n    # Using inclusion-exclusion:\n    # sum_{k=0}^N (-1)^k C(N, k) C(N*H - k*(D+1) + N - 1, N - 1)\n    \n    total = N * H\n    ans = 0\n    for k in range(0, N + 1):\n        if total - k * (D + 1) < 0:\n            continue\n        # Compute C(N, k) * C(total - k*(D+1) + N - 1, N - 1)\n        term = fact[N] * inv_fact[k] % MOD\n        term = term * inv_fact[N - k] % MOD\n        rem = total - k * (D + 1)\n        if rem < 0:\n            continue\n        c = fact[rem + N - 1] * inv_fact[rem] % MOD\n        c = c * inv_fact[N - 1] % MOD\n        term = term * c % MOD\n        if k % 2 == 0:\n            ans = (ans + term) % MOD\n        else:\n            ans = (ans - term) % MOD\n    ans = ans % MOD\n    \n    # Multiply by (total)! and product (1 / x_i !) is already handled by the generating function\n    print(ans)\n\nsolve()",
+    "timestamp": "2025-08-13 12:39:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countWays(N, H, D, blocks) {\n    const MOD = 10**9 + 7;\n\n    // Initialize dp array\n    let dp = Array(N + 1).fill(0).map(() => Array(2 * D + 1).fill(0));\n\n    // Base case\n    dp[0][blocks[0]] = 1;\n\n    for (let i = 1; i <= N; i++) {\n        for (let j = 0; j <= 2 * D; j++) {\n            if (dp[i - 1][j] > 0) {\n                for (let k = Math.max(j - D, 0); k <= Math.min(j + D, 2 * D); k++) {\n                    dp[i][k] = (dp[i][k] + dp[i - 1][j]) % MOD;\n                }\n            }\n        }\n    }\n\n    // Count ways to achieve H blocks on every square\n    let result = 0;\n    for (let j = H; j <= H + D; j++) {\n        result = (result + dp[N][j]) % MOD;\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 12:39:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, H, D) {\n    const MOD = 1e9 + 7;\n    const dp = new Array(N + 1).fill(0);\n    dp[0] = 1;\n\n    for (let i = 1; i <= N; i++) {\n        for (let j = 1; j <= D; j++) {\n            if (i - j >= 0) {\n                dp[i] = (dp[i] + dp[i - j]) % MOD;\n            }\n        }\n    }\n\n    let result = 1;\n    for (let i = 1; i <= N; i++) {\n        result = (result * dp[H]) % MOD;\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 12:39:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve() {\n    const [N, H, D] = readLine().split(' ').map(Number);\n    \n    // Precompute factorial, inverse factorial, and power arrays\n    const maxFact = N + H;\n    const fact = new Array(maxFact + 1).fill(1);\n    const invFact = new Array(maxFact + 1).fill(1);\n    \n    for (let i = 1; i <= maxFact; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    \n    invFact[maxFact] = modInverse(fact[maxFact], MOD);\n    for (let i = maxFact - 1; i >= 0; i--) {\n        invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n    }\n    \n    // Precompute power of fact[H] for denominator\n    const powFactH = new Array(N + 1).fill(1);\n    for (let i = 1; i <= N; i++) {\n        powFactH[i] = powFactH[i - 1] * fact[H] % MOD;\n    }\n    \n    // DP[i][j]: i operations, current max is H + j\n    // We can optimize space by noting that we only need previous step\n    let dp = new Array(D + 2).fill(0);\n    dp[0] = fact[N]; // Initial state: all have 0 blocks, but we need to distribute operations\n    \n    let res = 0;\n    \n    for (let step = 0; step <= H * N; step++) {\n        let newDp = new Array(D + 2).fill(0);\n        for (let j = 0; j <= D; j++) {\n            if (dp[j] === 0) continue;\n            const currentMax = j;\n            if (currentMax == H) {\n                res = (res + dp[j]) % MOD;\n                continue;\n            }\n            // Choose a square to add a block\n            // The number of squares with min blocks is (N - (currentMax - 0)) if currentMax > 0\n            // But since we always add to min, which is currentMax - j (but j is the delta)\n            // The min is (currentMax - j), but j is the delta from H, so currentMax is H + j?\n            // Need to rethink the DP state representation\n            // Alternative approach: DP[i][d] where d is the current delta from H (d can be negative)\n            // But constraints make it hard\n            // Reverting to the inclusion-exclusion approach\n            // This DP approach may not be suitable, need to switch to combinatorics\n        }\n        dp = newDp;\n    }\n    \n    // Alternative combinatorial approach:\n    // The problem is equivalent to counting the number of sequences of operations\n    // such that for each square, the number of blocks added is exactly H,\n    // and during the process, the difference between max and min is <= D.\n    // This is similar to counting certain lattice paths or using inclusion-exclusion.\n    \n    // The answer is (H!)^N multiplied by some inclusion-exclusion terms, but it's complex.\n    // Given time constraints, here's a placeholder for the correct approach.\n    \n    // For the purpose of this code, returning 0 as a placeholder\n    return res;\n}\n\nfunction modInverse(a, mod) {\n    let b = mod, u = 1, v = 0;\n    while (b) {\n        const t = Math.floor(a / b);\n        a -= t * b; [a, b] = [b, a];\n        u -= t * v; [u, v] = [v, u];\n    }\n    u %= mod;\n    if (u < 0) u += mod;\n    return u;\n}\n\nfunction readLine() {\n    // Placeholder for input reading, replace with actual input handling\n    return input.shift() || '';\n}\n\n// Sample usage (assuming input is provided)\n// const input = ['3 2 1'];\n// console.log(solve());",
+    "timestamp": "2025-08-13 12:39:50"
+  }
+]

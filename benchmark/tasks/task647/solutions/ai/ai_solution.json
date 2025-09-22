@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* arr = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    \n    bool pairwise_coprime = true;\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            if (gcd(arr[i], arr[j]) != 1) {\n                pairwise_coprime = false;\n                break;\n            }\n        }\n        if (!pairwise_coprime) break;\n    }\n    \n    int set_gcd = arr[0];\n    for (int i = 1; i < N; i++) {\n        set_gcd = gcd(set_gcd, arr[i]);\n    }\n    \n    if (pairwise_coprime) {\n        printf(\"pairwise coprime\\n\");\n    } else if (set_gcd == 1) {\n        printf(\"setwise coprime\\n\");\n    } else {\n        printf(\"neither\\n\");\n    }\n    \n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:25:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nlong long gcd(long long a, long long b) {\n    while (b != 0) {\n        long long temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    long long numbers[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &numbers[i]);\n    }\n\n    int pairwise = 1;\n    long long overall_gcd = numbers[0];\n    for (int i = 0; i < N && pairwise; i++) {\n        for (int j = i + 1; j < N && pairwise; j++) {\n            if (gcd(numbers[i], numbers[j]) != 1) {\n                pairwise = 0;\n            }\n        }\n        if (i > 0) {\n            overall_gcd = gcd(overall_gcd, numbers[i]);\n        }\n    }\n\n    if (pairwise) {\n        printf(\"pairwise coprime\\n\");\n    } else if (overall_gcd == 1) {\n        printf(\"setwise coprime\\n\");\n    } else {\n        printf(\"neither\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:25:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint computeGCD(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint computeOverallGCD(const vector<int>& nums) {\n    int overall_gcd = nums[0];\n    for (size_t i = 1; i < nums.size(); ++i) {\n        overall_gcd = computeGCD(overall_gcd, nums[i]);\n        if (overall_gcd == 1) {\n            break;\n        }\n    }\n    return overall_gcd;\n}\n\nbool isPairwiseCoprime(const vector<int>& nums) {\n    for (size_t i = 0; i < nums.size(); ++i) {\n        for (size_t j = i + 1; j < nums.size(); ++j) {\n            if (computeGCD(nums[i], nums[j]) != 1) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> nums(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> nums[i];\n    }\n\n    bool pairwise = isPairwiseCoprime(nums);\n    int overall_gcd = computeOverallGCD(nums);\n\n    if (pairwise) {\n        cout << \"pairwise coprime\" << endl;\n    } else if (overall_gcd == 1) {\n        cout << \"setwise coprime\" << endl;\n    } else {\n        cout << \"not coprime\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:25:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class CoprimeChecker {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] numbers = new int[N];\n        for (int i = 0; i < N; i++) {\n            numbers[i] = scanner.nextInt();\n        }\n\n        boolean pairwiseCoprime = true;\n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                if (gcd(numbers[i], numbers[j]) != 1) {\n                    pairwiseCoprime = false;\n                    break;\n                }\n            }\n            if (!pairwiseCoprime) {\n                break;\n            }\n        }\n\n        if (pairwiseCoprime) {\n            System.out.println(\"pairwise coprime\");\n            return;\n        }\n\n        int overallGcd = numbers[0];\n        for (int i = 1; i < N; i++) {\n            overallGcd = gcd(overallGcd, numbers[i]);\n        }\n\n        if (overallGcd == 1) {\n            System.out.println(\"setwise coprime\");\n        } else {\n            System.out.println(\"neither\");\n        }\n    }\n\n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n}",
+    "timestamp": "2025-08-05 22:26:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoprimeSolution {\n    public static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    public static String checkCoprime(int[] arr) {\n        int n = arr.length;\n        \n        // Check pairwise coprime\n        boolean pairwiseCoprime = true;\n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                if (gcd(arr[i], arr[j]) != 1) {\n                    pairwiseCoprime = false;\n                    break;\n                }\n            }\n            if (!pairwiseCoprime) break;\n        }\n        \n        if (pairwiseCoprime) return \"PAIRWISE\";\n        \n        // Check setwise coprime\n        int setGCD = arr[0];\n        for (int i = 1; i < n; i++) {\n            setGCD = gcd(setGCD, arr[i]);\n        }\n        \n        return setGCD == 1 ? \"SETWISE\" : \"NEITHER\";\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] arr = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            arr[i] = scanner.nextInt();\n        }\n        \n        System.out.println(checkCoprime(arr));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:26:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n#include <algorithm>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b) {\n        a %= b;\n        swap(a, b);\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> nums(N);\n    for (int i = 0; i < N; i++) {\n        cin >> nums[i];\n    }\n    \n    bool pairwise = true;\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            if (gcd(nums[i], nums[j]) != 1) {\n                pairwise = false;\n                break;\n            }\n        }\n        if (!pairwise) break;\n    }\n    \n    int overall_gcd = nums[0];\n    for (int i = 1; i < N; i++) {\n        overall_gcd = gcd(overall_gcd, nums[i]);\n    }\n    \n    if (pairwise) {\n        cout << \"pairwise coprime\" << endl;\n    } else if (overall_gcd == 1) {\n        cout << \"setwise coprime\" << endl;\n    } else {\n        cout << \"neither\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:26:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from math import gcd\nfrom functools import reduce\nfrom collections import Counter\n\ndef determine_coprime_state(nums):\n    def pairwise_coprime(nums):\n        n = len(nums)\n        for i in range(n):\n            for j in range(i + 1, n):\n                if gcd(nums[i], nums[j]) != 1:\n                    return False\n        return True\n    \n    def setwise_coprime(nums):\n        return reduce(gcd, nums) == 1\n    \n    def count_prime_factors(num):\n        i = 2\n        factors = Counter()\n        while i * i <= num:\n            while (num % i) == 0:\n                factors[i] += 1\n                num //= i\n            i += 1\n        if num > 1:\n            factors[num] += 1\n        return factors\n    \n    def is_pairwise_coprime_with_factors(nums):\n        factor_count = Counter()\n        for num in nums:\n            factor_count.update(count_prime_factors(num))\n        return all(count == 1 for count in factor_count.values())\n    \n    if is_pairwise_coprime_with_factors(nums):\n        return \"pairwise coprime\"\n    elif setwise_coprime(nums):\n        return \"setwise coprime\"\n    else:\n        return \"neither\"\n\n# Example usage\nnums = [6, 10, 15]\nprint(determine_coprime_state(nums))",
+    "timestamp": "2025-08-13 10:43:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class CoprimeChecker {\n\n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    private static String checkCoprime(int[] numbers) {\n        int n = numbers.length;\n        int overallGCD = numbers[0];\n        \n        for (int i = 1; i < n; i++) {\n            overallGCD = gcd(overallGCD, numbers[i]);\n        }\n        \n        if (overallGCD > 1) {\n            return \"neither\";\n        }\n        \n        boolean[] hasPrime = new boolean[1000001];\n        \n        for (int num : numbers) {\n            if (num > 1) {\n                int current = num;\n                for (int factor = 2; factor * factor <= num; factor++) {\n                    if (current % factor == 0) {\n                        if (hasPrime[factor]) return \"setwise coprime\";\n                        while (current % factor == 0) {\n                            current /= factor;\n                        }\n                        hasPrime[factor] = true;\n                    }\n                }\n                if (current > 1) {\n                    if (hasPrime[current]) return \"setwise coprime\";\n                    hasPrime[current] = true;\n                }\n            }\n        }\n        \n        return \"pairwise coprime\";\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] numbers = new int[N];\n        for (int i = 0; i < N; i++) {\n            numbers[i] = scanner.nextInt();\n        }\n        scanner.close();\n        System.out.println(checkCoprime(numbers));\n    }\n}",
+    "timestamp": "2025-08-13 10:43:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int arr[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n\n    // Check if they are pairwise coprime\n    int pairwise_coprime = 1;\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            if (gcd(arr[i], arr[j]) != 1) {\n                pairwise_coprime = 0;\n                break;\n            }\n        }\n        if (!pairwise_coprime) {\n            break;\n        }\n    }\n\n    if (pairwise_coprime) {\n        printf(\"pairwise coprime\\n\");\n    } else {\n        // Check if they are setwise coprime\n        int overall_gcd = arr[0];\n        for (int i = 1; i < n; i++) {\n            overall_gcd = gcd(overall_gcd, arr[i]);\n            if (overall_gcd == 1) {\n                break;\n            }\n        }\n        if (overall_gcd == 1) {\n            printf(\"setwise coprime\\n\");\n        } else {\n            printf(\"neither\\n\");\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:43:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef solve(arr):\n    n = len(arr)\n    \n    # Check pairwise coprime\n    pairwise_coprime = True\n    for i in range(n):\n        for j in range(i+1, n):\n            if gcd(arr[i], arr[j]) != 1:\n                pairwise_coprime = False\n                break\n        if not pairwise_coprime:\n            break\n    \n    if pairwise_coprime:\n        return \"Pairwise coprime\"\n    \n    # Check setwise coprime\n    overall_gcd = arr[0]\n    for i in range(1, n):\n        overall_gcd = gcd(overall_gcd, arr[i])\n    \n    if overall_gcd == 1:\n        return \"Setwise coprime\"\n    \n    return \"Neither\"\n\n# Example usage\narr = list(map(int, input().split()))\nprint(solve(arr))",
+    "timestamp": "2025-08-13 10:43:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\nfrom math import gcd\nfrom functools import reduce\n\ndef compute_gcd_of_list(numbers):\n    return reduce(math.gcd, numbers)\n\ndef solve():\n    input = sys.stdin.read().split()\n    N = int(input[0])\n    numbers = list(map(int, input[1:N+1]))\n    \n    overall_gcd = compute_gcd_of_list(numbers)\n    if overall_gcd != 1:\n        print(\"neither\")\n        return\n    \n    pairwise_coprime = True\n    for i in range(N):\n        for j in range(i+1, N):\n            if gcd(numbers[i], numbers[j]) != 1:\n                pairwise_coprime = False\n                break\n        if not pairwise_coprime:\n            break\n    \n    if pairwise_coprime:\n        print(\"pairwise coprime\")\n    else:\n        print(\"setwise coprime\")\n\nsolve()",
+    "timestamp": "2025-08-13 10:43:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nint gcd(int a, int b) {\n    return b == 0 ? a : gcd(b, a % b);\n}\n\nbool checkPairwiseCoprime(const std::vector<int>& nums) {\n    int N = nums.size();\n    for (int i = 0; i < N; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            if (gcd(nums[i], nums[j]) != 1) return false;\n        }\n    }\n    return true;\n}\n\nint checkSetwiseCoprime(const std::vector<int>& nums) {\n    int commonGCD = nums[0];\n    for (int num : nums) {\n        commonGCD = gcd(commonGCD, num);\n        if (commonGCD == 1) return true;\n    }\n    return false;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> nums(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> nums[i];\n    }\n\n    if (checkPairwiseCoprime(nums)) {\n        std::cout << \"pairwise coprime\" << std::endl;\n    } else if (checkSetwiseCoprime(nums)) {\n        std::cout << \"setwise coprime\" << std::endl;\n    } else {\n        std::cout << \"neither\" << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:00:18"
+  }
+]

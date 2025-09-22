@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, k):\n    def backtrack(target, k, max_val, current):\n        if k == 0:\n            return current if target == 0 else None\n        \n        for x in range(max_val, -51, -1):\n            if target >= 2**x:\n                result = backtrack(target - 2**x, k-1, x-1, current + [x])\n                if result:\n                    return result\n        return None\n\n    result = backtrack(n, k, 50, [])\n    \n    if result is None:\n        return \"No\"\n    else:\n        return \"Yes\\n\" + \" \".join(map(str, result))\n\n# Read input\nn, k = map(int, input().split())\n\n# Print output\nprint(solve(n, k))",
+    "timestamp": "2025-08-05 17:31:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, k = map(int, input().split())\n\ndef solve():\n    freq = {}\n    m = n\n    max_pow = 0\n    total = 0\n    while m > 0:\n        if m & 1:\n            pow_val = max_pow\n            freq[pow_val] = freq.get(pow_val, 0) + 1\n            total += 1\n        m >>= 1\n        max_pow += 1\n    \n    if total > k:\n        print(\"No\")\n        return\n    \n    current_sum = total\n    max_available = max(freq.keys()) if freq else 0\n    \n    while current_sum < k and max_available > -10**18:\n        if max_available not in freq or freq[max_available] == 0:\n            max_available -= 1\n            continue\n        if current_sum + freq[max_available] > k:\n            break\n        # Split all max_available into max_available - 1\n        count = freq[max_available]\n        del freq[max_available]\n        next_pow = max_available - 1\n        freq[next_pow] = freq.get(next_pow, 0) + 2 * count\n        current_sum += count\n        max_available = next_pow\n    \n    if current_sum < k:\n        # Need to split some elements partially\n        # Find the smallest possible max_available where freq[max_available] > 0\n        if not freq:\n            print(\"No\")\n            return\n        min_pow = min(freq.keys())\n        max_pow = max(freq.keys())\n        # We need to find the largest possible max_pow such that we can split\n        # So we start from the smallest to reduce the max_pow minimally\n        while current_sum < k:\n            if min_pow > max_pow:\n                print(\"No\")\n                return\n            if freq.get(min_pow, 0) == 0:\n                min_pow += 1\n                continue\n            # Split one min_pow into two (min_pow - 1)\n            freq[min_pow] -= 1\n            if freq[min_pow] == 0:\n                del freq[min_pow]\n            next_p = min_pow - 1\n            freq[next_p] = freq.get(next_p, 0) + 2\n            current_sum += 1\n            if next_p < min_pow:\n                min_pow = next_p\n    \n    # Now, construct the lex largest sequence\n    result = []\n    # We need the lex largest, so we should have the largest numbers first\n    # So we process from highest to lowest, and for same numbers, process as much as possible\n    sorted_pows = sorted(freq.keys(), reverse=True)\n    for p in sorted_pows:\n        count = freq[p]\n        for _ in range(count):\n            result.append(p)\n    \n    # Verify sum\n    sum_check = 0\n    for num in result:\n        sum_check += (1 << num) if num >=0 else 1.0 / (1 << -num)\n    # Handle floating point inaccuracies for negative exponents\n    if abs(sum_check - n) > 1e-9:\n        print(\"No\")\n        return\n    \n    print(\"Yes\")\n    print(' '.join(map(str, result)))\n\nsolve()",
+    "timestamp": "2025-08-05 17:32:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(n, k):\n    def can_make(n, k):\n        binary = bin(n)[2:]\n        return binary.count('1') <= k <= len(binary) + binary.count('1') - 1\n\n    if not can_make(n, k):\n        print(\"No\")\n        return\n\n    result = []\n    powers = []\n    power = 0\n    \n    while n:\n        if n & 1:\n            powers.append(power)\n        n >>= 1\n        power += 1\n\n    while len(powers) < k:\n        p = powers.pop()\n        powers.extend([p - 1, p - 1])\n\n    powers.sort(reverse=True)\n    print(\"Yes\")\n    print(\" \".join(map(str, powers)))\n\n# Example usage:\nn, k = map(int, input().split())\nsolve(n, k)",
+    "timestamp": "2025-08-12 21:40:58"
+  }
+]

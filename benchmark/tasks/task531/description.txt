@@ -1,0 +1,3 @@
+The Diversity of Prime Factorization
+
+Ebi-chan has the FACTORIZATION MACHINE, which can factorize natural numbers M (greater than 1) in O(log M) time! However, the machine can display only digits and whitespaces. Given the output of the machine according to specific rules, your task is to count how many natural numbers correspond to the noted output. Ensure to return the result modulo 10^9 + 7, as the answer could be large.

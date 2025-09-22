@@ -1,0 +1,9 @@
+Problem C: Apples
+
+There was a hunter who was confident in his shooting skills. One day, he heard the story of how a Swiss man named William Tell became famous for shooting an apple placed on his son's head from a distance. The hunter thought to himself, "I can do something even more amazing!" and came up with the idea of shooting an apple placed on a moving person.
+
+The hunter gathered N people in a square and placed an apple on each person's head. The i-th person is located at coordinates (x_i, y_i) at time t=0, and from there, moves according to their velocity vector (u_i, v_i) per unit time. In other words, at time t ≥ 0, the i-th person will be located at (x_i + t × u_i, y_i + t × v_i). For the sake of the problem, we assume that multiple people can occupy the same coordinates and can pass through the same coordinates.
+
+To amaze the crowd, the hunter decided to shoot down as many apples as possible with a single bullet. The hunter can shoot a bullet at any time t ≥ 0, from any coordinate, and in any direction. The fired bullet travels in a straight line at infinite speed and continues until it hits an apple, penetrating through it.
+
+Your task is to calculate the maximum number of apples that can be shot down with a single bullet.

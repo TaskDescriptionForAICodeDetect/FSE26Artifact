@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "2 3\nUo.\n.oo",
+      "output": "RDR"
+    },
+    {
+      "input": "10 10\n.o....o...\no.oo......\n..oo..oo..\n..o.......\n..oo..oo..\n..o...o.o.\no..U.o....\noo......oo\noo........\noo..oo....",
+      "output": "URRULULDDLUURDLLLURRDLDDDRRDR"
+    },
+    {
+      "input": "10 1\nD\n.\n.\n.\n.\n.\n.\n.\n.\no",
+      "output": "D"
+    }
+  ]
+}

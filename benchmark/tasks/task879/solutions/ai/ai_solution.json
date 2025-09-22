@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_N 30\n#define MAX_M 30\n\nint cost[10][10];  // Cost matrix for changing digits\nchar wall[MAX_N][MAX_M];  // Wall grid\nint n, m;  // Wall dimensions\n\nint min_transformation_cost() {\n    int total_cost = 0;\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < m; j++) {\n            if (wall[i][j] >= '0' && wall[i][j] <= '9') {\n                int curr_digit = wall[i][j] - '0';\n                if (curr_digit != 1) {\n                    total_cost += cost[curr_digit][1];\n                }\n            }\n        }\n    }\n    \n    return total_cost;\n}\n\nint main() {\n    // Input wall dimensions\n    scanf(\"%d %d\", &n, &m);\n    \n    // Input wall grid\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", wall[i]);\n    }\n    \n    // Input cost matrix\n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            scanf(\"%d\", &cost[i][j]);\n        }\n    }\n    \n    // Calculate and print minimum transformation cost\n    printf(\"%d\\n\", min_transformation_cost());\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint main() {\n    int c[10][10];\n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            scanf(\"%d\", &c[i][j]);\n        }\n    }\n\n    // Floyd-Warshall algorithm to find the minimal cost between any two digits\n    for (int k = 0; k < 10; k++) {\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                if (c[i][j] > c[i][k] + c[k][j]) {\n                    c[i][j] = c[i][k] + c[k][j];\n                }\n            }\n        }\n    }\n\n    int h, w;\n    scanf(\"%d %d\", &h, &w);\n    int total = 0;\n    for (int i = 0; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            int digit;\n            scanf(\"%d\", &digit);\n            if (digit != -1) {\n                total += c[digit][1];\n            }\n        }\n    }\n\n    printf(\"%d\\n\", total);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    vector<vector<int>> c(10, vector<int>(10));\n    for (int i = 0; i < 10; ++i) {\n        for (int j = 0; j < 10; ++j) {\n            cin >> c[i][j];\n        }\n    }\n\n    // Floyd-Warshall to find the minimal cost from i to 1 (via any path)\n    for (int k = 0; k < 10; ++k) {\n        for (int i = 0; i < 10; ++i) {\n            for (int j = 0; j < 10; ++j) {\n                if (c[i][j] > c[i][k] + c[k][j]) {\n                    c[i][j] = c[i][k] + c[k][j];\n                }\n            }\n        }\n    }\n\n    int h, w;\n    cin >> h >> w;\n    vector<vector<int>> grid(h, vector<int>(w));\n    for (int i = 0; i < h; ++i) {\n        for (int j = 0; j < w; ++j) {\n            cin >> grid[i][j];\n        }\n    }\n\n    int total = 0;\n    for (int i = 0; i < h; ++i) {\n        for (int j = 0; j < w; ++j) {\n            if (grid[i][j] != -1 && grid[i][j] != 1) {\n                total += c[grid[i][j]][1];\n            }\n        }\n    }\n\n    cout << total << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[][] c = new int[10][10];\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                c[i][j] = scanner.nextInt();\n            }\n        }\n\n        // Floyd-Warshall algorithm to find the minimal cost between any two digits\n        for (int k = 0; k < 10; k++) {\n            for (int i = 0; i < 10; i++) {\n                for (int j = 0; j < 10; j++) {\n                    if (c[i][j] > c[i][k] + c[k][j]) {\n                        c[i][j] = c[i][k] + c[k][j];\n                    }\n                }\n            }\n        }\n\n        int totalMP = 0;\n        int h = scanner.nextInt();\n        int w = scanner.nextInt();\n        for (int i = 0; i < h; i++) {\n            for (int j = 0; j < w; j++) {\n                String cell = scanner.next();\n                if (!cell.equals(\".\") && !cell.equals(\"-\")) {\n                    int digit = Integer.parseInt(cell);\n                    totalMP += c[digit][1];\n                }\n            }\n        }\n\n        System.out.println(totalMP);\n    }\n}",
+    "timestamp": "2025-08-05 23:13:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MagicalDigitConversion {\n    public static int minimumMagicPoints(char[][] wall, int[][] costMatrix) {\n        int rows = wall.length;\n        int cols = wall[0].length;\n        \n        int totalMP = 0;\n        \n        for (int r = 0; r < rows; r++) {\n            for (int c = 0; c < cols; c++) {\n                if (Character.isDigit(wall[r][c])) {\n                    int digit = wall[r][c] - '0';\n                    totalMP += costMatrix[digit][1];\n                }\n            }\n        }\n        \n        return totalMP;\n    }\n}",
+    "timestamp": "2025-08-05 23:13:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n\n    vector<vector<int>> cost(10, vector<int>(10));\n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            cin >> cost[i][j];\n        }\n    }\n\n    vector<vector<char>> grid(H, vector<char>(W));\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cin >> grid[i][j];\n        }\n    }\n\n    // Floyd-Warshall to compute minimum transformation costs\n    for (int k = 0; k < 10; k++) {\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                cost[i][j] = min(cost[i][j], cost[i][k] + cost[k][j]);\n            }\n        }\n    }\n\n    int total_mp = 0;\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (isdigit(grid[i][j])) {\n                int digit = grid[i][j] - '0';\n                total_mp += cost[digit][1];\n            }\n        }\n    }\n\n    cout << total_mp << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def floyd_warshall(cost):\n    # Initialize the shortest path costs as the current costs\n    n = len(cost)\n    dist = [row[:] for row in cost]\n    \n    # Floyd-Warshall algorithm\n    for k in range(n):\n        for i in range(n):\n            for j in range(n):\n                if dist[i][j] > dist[i][k] + dist[k][j]:\n                    dist[i][j] = dist[i][k] + dist[k][j]\n    \n    return dist\n\ndef minimum_magic_points(grid, cost):\n    # Apply Floyd-Warshall Algorithm to find min cost matrix\n    cost_to_1 = floyd_warshall(cost)\n    \n    total_min_mp = 0\n    \n    for row in grid:\n        for cell in row:\n            # Check if the cell is a digit\n            if cell.isdigit():\n                digit = int(cell)\n                total_min_mp += cost_to_1[digit][1]  # cost to convert digit to 1\n    \n    return total_min_mp\n\n# Example of usage\nn = 10  # number of digits (0 to 9)\ncost = [[0]*n for _ in range(n)]  # Example of cost matrix\n# Fill the cost matrix as needed.\n\ngrid = [\n    ['2', '.', '3'],\n    ['4', '.', '.'],\n    ['.', '5', '9'],\n]\nresult = minimum_magic_points(grid, cost)\nprint(result)",
+    "timestamp": "2025-08-13 14:08:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MagicalGirl {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int[][] cost = new int[10][10];\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                cost[i][j] = scanner.nextInt();\n            }\n        }\n\n        // Floyd-Warshall algorithm to find minimum conversion costs\n        for (int k = 0; k < 10; k++) {\n            for (int i = 0; i < 10; i++) {\n                for (int j = 0; j < 10; j++) {\n                    if (cost[i][k] + cost[k][j] < cost[i][j]) {\n                        cost[i][j] = cost[i][k] + cost[k][j];\n                    }\n                }\n            }\n        }\n\n        int h = scanner.nextInt();\n        int w = scanner.nextInt();\n        int totalMP = 0;\n\n        for (int i = 0; i < h; i++) {\n            for (int j = 0; j < w; j++) {\n                int digit = scanner.nextInt();\n                if (digit != -1) { // Assumes -1 represents a non-digit square\n                    totalMP += cost[digit][1];\n                }\n            }\n        }\n\n        System.out.println(totalMP);\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 14:08:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define INF INT_MAX\n\nint main() {\n    int h, w;\n    scanf(\"%d %d\", &h, &w);\n    \n    // cost matrix\n    int c[10][10];\n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            scanf(\"%d\", &c[i][j]);\n        }\n    }\n    \n    // apply Floyd-Warshall to find minimum cost to change each digit to 1\n    for (int k = 0; k < 10; k++) {\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                if (c[i][j] > c[i][k] + c[k][j]) {\n                    c[i][j] = c[i][k] + c[k][j];\n                }\n            }\n        }\n    }\n    \n    int total_cost = 0;\n    for (int i = 0; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            int digit;\n            scanf(\"%d\", &digit);\n            // ignore non-digit cases\n            if (digit != -1) {\n                total_cost += c[digit][1];\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", total_cost);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:08:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    \n    vector<vector<int>> cost(10, vector<int>(10));\n\n    for (int i = 0; i < 10; ++i) {\n        for (int j = 0; j < 10; ++j) {\n            cin >> cost[i][j];\n        }\n    }\n\n    // Use Floyd-Warshall algorithm to find the minimum cost to convert each number to 1\n    for (int k = 0; k < 10; ++k) {\n        for (int i = 0; i < 10; ++i) {\n            for (int j = 0; j < 10; ++j) {\n                cost[i][j] = min(cost[i][j], cost[i][k] + cost[k][j]);\n            }\n        }\n    }\n\n    int totalCost = 0;\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            int num;\n            cin >> num;\n            if (num != -1) { // Assuming -1 represents an empty square\n                totalCost += cost[num][1];\n            }\n        }\n    }\n\n    cout << totalCost << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:09:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_digit_transformation(grid, cost_matrix):\n    rows, cols = len(grid), len(grid[0])\n    total_mp = 0\n\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] != '.' and grid[r][c] != '1':\n                total_mp += cost_matrix[int(grid[r][c])][1]\n    \n    return total_mp\n\n# Example usage:\n# grid = [\n#     ['2', '3', '.'],\n#     ['1', '0', '4']\n# ]\n# cost_matrix = [\n#     [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],  # costs to transform 0 to other digits\n#     [1, 0, 1, 2, 3, 4, 5, 6, 7, 8],  # costs to transform 1 to other digits\n#     ...\n# ]\n# result = solve_digit_transformation(grid, cost_matrix)",
+    "timestamp": "2025-08-13 14:09:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    idx = 0\n    H, W = map(int, data[idx:idx+2])\n    idx +=2\n    \n    c = []\n    for _ in range(10):\n        row = list(map(int, data[idx:idx+10]))\n        idx +=10\n        c.append(row)\n    \n    # Floyd-Warshall to find the minimal cost from any i to 1\n    for k in range(10):\n        for i in range(10):\n            for j in range(10):\n                if c[i][j] > c[i][k] + c[k][j]:\n                    c[i][j] = c[i][k] + c[k][j]\n    \n    total = 0\n    for _ in range(H):\n        row = data[idx:idx+W]\n        idx +=W\n        for num in row:\n            if num == '-':\n                continue\n            i = int(num)\n            if i != 1:\n                total += c[i][1]\n    \n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 14:09:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minMagicPointsCost(grid, cost) {\n    const rows = grid.length;\n    const cols = grid[0].length;\n    let totalCost = 0;\n\n    for (let r = 0; r < rows; r++) {\n        for (let c = 0; c < cols; c++) {\n            const cell = grid[r][c];\n            if (cell >= '0' && cell <= '9') {\n                totalCost += cost[cell - '0'][1];\n            }\n        }\n    }\n\n    return totalCost;\n}",
+    "timestamp": "2025-08-13 14:09:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minMagicPoints(grid, costMatrix) {\n    const rows = grid.length;\n    const cols = grid[0].length;\n    const INF = Number.MAX_SAFE_INTEGER;\n\n    const dp = Array.from({ length: rows }, () => \n        Array.from({ length: cols }, () => \n            Array.from({ length: 10 }, () => INF)\n        )\n    );\n\n    // Initialize first row\n    for (let j = 0; j < cols; j++) {\n        for (let k = 0; k < 10; k++) {\n            if (grid[0][j] === '.') {\n                dp[0][j][k] = 0;\n            } else {\n                dp[0][j][k] = costMatrix[parseInt(grid[0][j])][k];\n            }\n        }\n    }\n\n    // Dynamic programming\n    for (let i = 1; i < rows; i++) {\n        for (let j = 0; j < cols; j++) {\n            for (let k = 0; k < 10; k++) {\n                for (let prevK = 0; prevK < 10; prevK++) {\n                    let cost = dp[i-1][j][prevK];\n                    if (grid[i][j] !== '.') {\n                        cost += costMatrix[parseInt(grid[i][j])][k];\n                    }\n                    dp[i][j][k] = Math.min(dp[i][j][k], cost);\n                }\n            }\n        }\n    }\n\n    // Find minimum in last row\n    let minMP = INF;\n    for (let j = 0; j < cols; j++) {\n        for (let k = 0; k < 10; k++) {\n            minMP = Math.min(minMP, dp[rows-1][j][k]);\n        }\n    }\n\n    return minMP;\n}",
+    "timestamp": "2025-08-13 14:09:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const c = [];\n    for (let i = 0; i < 10; i++) {\n        const row = readline().split(' ').map(Number);\n        c.push(row);\n    }\n    \n    const H = parseInt(readline().split(' ')[0]);\n    const grid = [];\n    for (let i = 0; i < H; i++) {\n        grid.push(readline());\n    }\n    \n    const digitCounts = Array(10).fill(0);\n    for (const row of grid) {\n        for (const char of row) {\n            if (char >= '0' && char <= '9') {\n                const digit = parseInt(char);\n                digitCounts[digit]++;\n            }\n        }\n    }\n    \n    let minCost = Infinity;\n    // For each possible intermediate digit k (0-9), calculate the cost to change all digits to k and then to 1\n    for (let k = 0; k < 10; k++) {\n        let cost = 0;\n        for (let i = 0; i < 10; i++) {\n            cost += digitCounts[i] * c[i][k];\n        }\n        cost += c[k][1]; // Change all k to 1\n        if (cost < minCost) {\n            minCost = cost;\n        }\n    }\n    \n    console.log(minCost);\n}\n\n// Assuming readline() is available to read input, similar to programming competition environments\n// For actual usage, you might need to replace readline() with appropriate input handling",
+    "timestamp": "2025-08-13 14:09:47"
+  }
+]

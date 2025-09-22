@@ -1,0 +1,36 @@
+{
+  "examples": [
+    {
+      "input": "1,2,3,4,1",
+      "output": "one pair"
+    },
+    {
+      "input": "2,3,2,3,12",
+      "output": "two pair"
+    },
+    {
+      "input": "12,13,11,12,12",
+      "output": "three card"
+    },
+    {
+      "input": "7,6,7,6,7",
+      "output": "four card"
+    },
+    {
+      "input": "3,3,2,3,3",
+      "output": "full house"
+    },
+    {
+      "input": "6,7,8,9,10",
+      "output": "straight"
+    },
+    {
+      "input": "11,12,10,1,13",
+      "output": "straight"
+    },
+    {
+      "input": "11,12,13,1,2",
+      "output": "null"
+    }
+  ]
+}

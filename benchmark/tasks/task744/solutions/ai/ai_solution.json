@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#define MOD 1000000007\n\nint numDupDigitsAtMostN(char* s) {\n    int len = strlen(s);\n    long long count = 0;\n    \n    for (int mask = 0; mask < (1 << len); mask++) {\n        char* temp = malloc((len + 1) * sizeof(char));\n        strcpy(temp, s);\n        \n        for (int j = 0; j < len; j++) {\n            if (s[j] == '?') {\n                if (mask & (1 << j)) {\n                    temp[j] = '1' + (mask >> j) % 9;\n                } else {\n                    temp[j] = '0';\n                }\n            }\n        }\n        \n        long long num = atoll(temp);\n        if (num % 13 == 5) {\n            count++;\n        }\n        \n        free(temp);\n    }\n    \n    return count % MOD;\n}",
+    "timestamp": "2025-08-05 22:45:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#define MOD 1000000007\n\nint countRemainders(char* S) {\n    int n = strlen(S);\n    long long dp[n + 1][13];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n    \n    for (int i = 0; i < n; ++i) {\n        char c = S[i];\n        for (int rem = 0; rem < 13; ++rem) {\n            if (dp[i][rem] == 0) continue;\n            if (c == '?') {\n                for (int d = 0; d <= 9; ++d) {\n                    int new_rem = (rem * 10 + d) % 13;\n                    dp[i + 1][new_rem] = (dp[i + 1][new_rem] + dp[i][rem]) % MOD;\n                }\n            } else {\n                int d = c - '0';\n                int new_rem = (rem * 10 + d) % 13;\n                dp[i + 1][new_rem] = (dp[i + 1][new_rem] + dp[i][rem]) % MOD;\n            }\n        }\n    }\n    return dp[n][5];\n}\n\nint main() {\n    char S[100001];\n    scanf(\"%s\", S);\n    printf(\"%d\\n\", countRemainders(S));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nint solve(string S) {\n    int n = S.size();\n    vector<vector<long long>> dp(n + 1, vector<long long>(13, 0));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < n; ++i) {\n        char c = S[i];\n        for (int rem = 0; rem < 13; ++rem) {\n            if (dp[i][rem] == 0) continue;\n            if (c == '?') {\n                for (int d = 0; d <= 9; ++d) {\n                    int new_rem = (rem * 10 + d) % 13;\n                    dp[i + 1][new_rem] = (dp[i + 1][new_rem] + dp[i][rem]) % MOD;\n                }\n            } else {\n                int d = c - '0';\n                int new_rem = (rem * 10 + d) % 13;\n                dp[i + 1][new_rem] = (dp[i + 1][new_rem] + dp[i][rem]) % MOD;\n            }\n        }\n    }\n\n    return dp[n][5];\n}\n\nint main() {\n    string S;\n    cin >> S;\n    cout << solve(S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 1000000007;\n\n    public static int countIntegers(String S) {\n        int n = S.length();\n        long[][] dp = new long[n + 1][13];\n        dp[0][0] = 1;\n\n        for (int i = 0; i < n; i++) {\n            char c = S.charAt(i);\n            for (int prevRem = 0; prevRem < 13; prevRem++) {\n                if (dp[i][prevRem] == 0) continue;\n                if (c == '?') {\n                    for (int d = 0; d <= 9; d++) {\n                        int newRem = (prevRem * 10 + d) % 13;\n                        dp[i + 1][newRem] = (dp[i + 1][newRem] + dp[i][prevRem]) % MOD;\n                    }\n                } else {\n                    int d = c - '0';\n                    int newRem = (prevRem * 10 + d) % 13;\n                    dp[i + 1][newRem] = (dp[i + 1][newRem] + dp[i][prevRem]) % MOD;\n                }\n            }\n        }\n\n        return (int) dp[n][5];\n    }\n}",
+    "timestamp": "2025-08-05 22:46:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int numDupDigitsAtMostN(String s) {\n        int mod = 1000000007;\n        int n = s.length();\n        long[][] dp = new long[n + 1][13];\n        dp[0][0] = 1;\n\n        for (int i = 0; i < n; i++) {\n            for (int remainder = 0; remainder < 13; remainder++) {\n                if (s.charAt(i) == '?') {\n                    for (int digit = 0; digit <= 9; digit++) {\n                        int newRemainder = (remainder * 10 + digit) % 13;\n                        dp[i + 1][newRemainder] = (dp[i + 1][newRemainder] + dp[i][remainder]) % mod;\n                    }\n                } else {\n                    int digit = s.charAt(i) - '0';\n                    int newRemainder = (remainder * 10 + digit) % 13;\n                    dp[i + 1][newRemainder] = (dp[i + 1][newRemainder] + dp[i][remainder]) % mod;\n                }\n            }\n        }\n\n        return (int) dp[n][5];\n    }\n}",
+    "timestamp": "2025-08-05 22:46:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int numDupDigitsAtMostN(string S) {\n        int n = S.length();\n        const int MOD = 1e9 + 7;\n        \n        // Dynamic programming to count valid replacements\n        vector<vector<int>> dp(n + 1, vector<int>(13, 0));\n        dp[0][0] = 1;\n        \n        for (int i = 0; i < n; i++) {\n            for (int remainder = 0; remainder < 13; remainder++) {\n                if (dp[i][remainder] == 0) continue;\n                \n                if (S[i] != '?') {\n                    int digit = S[i] - '0';\n                    int newRemainder = (remainder * 10 + digit) % 13;\n                    dp[i+1][newRemainder] = (dp[i+1][newRemainder] + dp[i][remainder]) % MOD;\n                }\n                else {\n                    for (int digit = 0; digit <= 9; digit++) {\n                        int newRemainder = (remainder * 10 + digit) % 13;\n                        dp[i+1][newRemainder] = (dp[i+1][newRemainder] + dp[i][remainder]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        return dp[n][5];\n    }\n};",
+    "timestamp": "2025-08-05 22:46:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_numbers(S):\n    MOD = 10**9 + 7\n    length = len(S)\n    dp = [[0] * 13 for _ in range(length + 1)]\n    dp[0][0] = 1\n    \n    for i in range(length):\n        for j in range(13):\n            if S[i] == '?':\n                for d in range(10):\n                    dp[i + 1][(j * 10 + d) % 13] += dp[i][j]\n                    dp[i + 1][(j * 10 + d) % 13] %= MOD\n            else:\n                d = int(S[i])\n                dp[i + 1][(j * 10 + d) % 13] += dp[i][j]\n                dp[i + 1][(j * 10 + d) % 13] %= MOD\n\n    return dp[length][5]\n\n# Example usage\n# S = \"??4\"\n# print(count_numbers(S)) # Output should reflect the number of integers fulfilling the condition",
+    "timestamp": "2025-08-13 12:27:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class CountMatchingIntegers {\n\n    public static int countIntegers(String S) {\n        int MOD = 1000000007;\n        int n = S.length();\n        int[][] dp = new int[n + 1][13];\n        dp[n][0] = 1;\n\n        for (int i = n - 1; i >= 0; i--) {\n            for (int remainder = 0; remainder < 13; remainder++) {\n                if (S.charAt(i) == '?') {\n                    for (int digit = 0; digit <= 9; digit++) {\n                        dp[i][remainder] = (dp[i][remainder] + dp[i + 1][(remainder * 10 + digit) % 13]) % MOD;\n                    }\n                } else {\n                    int digit = S.charAt(i) - '0';\n                    dp[i][remainder] = (dp[i][remainder] + dp[i + 1][(remainder * 10 + digit) % 13]) % MOD;\n                }\n            }\n        }\n\n        return dp[0][5];\n    }\n\n    public static void main(String[] args) {\n        String S = \"??\";\n        System.out.println(countIntegers(S));\n    }\n}",
+    "timestamp": "2025-08-13 12:27:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MODULO 1000000007\n\nint countIntegers(char *S) {\n    int len = strlen(S);\n    long dp[len + 1][13];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < len; ++i) {\n        for (int j = 0; j < 13; ++j) {\n            if (S[i] == '?') {\n                for (int d = 0; d < 10; ++d) {\n                    int new_remainder = (j * 10 + d) % 13;\n                    dp[i + 1][new_remainder] = (dp[i + 1][new_remainder] + dp[i][j]) % MODULO;\n                }\n            } else {\n                int d = S[i] - '0';\n                int new_remainder = (j * 10 + d) % 13;\n                dp[i + 1][new_remainder] = (dp[i + 1][new_remainder] + dp[i][j]) % MODULO;\n            }\n        }\n    }\n\n    return dp[len][5];\n}\n\nint main() {\n    char S[1001];\n    scanf(\"%s\", S);\n    printf(\"%d\\n\", countIntegers(S));\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:27:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1000000007;\n\nint countIntegersWithRemainder5(const std::string& S) {\n    int n = S.size();\n    std::vector<std::vector<int>> dp(n + 1, std::vector<int>(13, 0));\n    dp[0][0] = 1;\n\n    int mult = 1;\n    for (int i = n; i > 0; --i) {\n        std::vector<std::vector<int>> new_dp(n + 1, std::vector<int>(13, 0));\n        char c = S[i - 1];\n        for (int j = 0; j < 13; ++j) {\n            for (int d = 0; d < 10; ++d) {\n                if (c != '?' && c - '0' != d) continue;\n                int new_remainder = (j + d * mult) % 13;\n                for (int k = 0; k <= n; ++k) {\n                    new_dp[k][new_remainder] = (new_dp[k][new_remainder] + dp[k][j]) % MOD;\n                }\n            }\n        }\n        dp = new_dp;\n        mult = (mult * 10) % 13;\n    }\n\n    int result = 0;\n    for (int k = 0; k <= n; ++k) {\n        result = (result + dp[k][5]) % MOD;\n    }\n\n    return result;\n}\n\nint main() {\n    std::string S;\n    std::cin >> S;\n    std::cout << countIntegersWithRemainder5(S) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:27:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class Solution:\n    def numDupDigitsAtMostN(self, S: str) -> int:\n        MOD = 10**9 + 7\n        n = len(S)\n        \n        # Dynamic programming solution with memoization\n        @functools.lru_cache(None)\n        def dp(pos, remainder, tight, leading_zero):\n            # Base case: reached end of string\n            if pos == n:\n                return 1 if remainder == 0 else 0\n            \n            # Upper limit for current digit based on input constraints\n            upper = int(S[pos]) if tight else 9\n            \n            total = 0\n            \n            # Try each possible digit \n            for digit in range(upper + 1):\n                # Handle leading zeros \n                new_leading_zero = leading_zero and digit == 0\n                \n                # Check if this is the first digit or not\n                new_tight = tight and digit == int(S[pos])\n                \n                # Calculate new remainder \n                new_remainder = (remainder * 10 + digit) % 13\n                \n                # Recursive call\n                total += dp(pos + 1, new_remainder, new_tight, new_leading_zero)\n            \n            return total % MOD\n        \n        return dp(0, 0, True, True)",
+    "timestamp": "2025-08-13 12:28:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve(S):\n    n = len(S)\n    # dp[i][j] = number of ways up to i-th character with remainder j mod 13\n    dp = [[0] * 13 for _ in range(n+1)]\n    dp[0][0] = 1  # empty string\n    \n    for i in range(1, n+1):\n        c = S[i-1]\n        for prev_rem in range(13):\n            if dp[i-1][prev_rem] == 0:\n                continue\n            if c == '?':\n                for d in range(10):\n                    new_rem = (prev_rem * 10 + d) % 13\n                    dp[i][new_rem] = (dp[i][new_rem] + dp[i-1][prev_rem]) % MOD\n            else:\n                d = int(c)\n                new_rem = (prev_rem * 10 + d) % 13\n                dp[i][new_rem] = (dp[i][new_rem] + dp[i-1][prev_rem]) % MOD\n    return dp[n][5] % MOD",
+    "timestamp": "2025-08-13 12:28:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countValidIntegers(S) {\n    const MOD = 1000000007;\n    const dp = Array(S.length + 1).fill(null).map(() => Array(13).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 0; i < S.length; i++) {\n        for (let rem = 0; rem < 13; rem++) {\n            if (S[i] === '?') {\n                for (let digit = 0; digit < 10; digit++) {\n                    dp[i + 1][(rem * 10 + digit) % 13] = (dp[i + 1][(rem * 10 + digit) % 13] + dp[i][rem]) % MOD;\n                }\n            } else {\n                const digit = S[i].charCodeAt(0) - '0'.charCodeAt(0);\n                dp[i + 1][(rem * 10 + digit) % 13] = (dp[i + 1][(rem * 10 + digit) % 13] + dp[i][rem]) % MOD;\n            }\n        }\n    }\n\n    return dp[S.length][5];\n}",
+    "timestamp": "2025-08-13 12:28:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countGoodNumbers(S) {\n    const MOD = 1e9 + 7;\n    const n = S.length;\n    let dp = new Array(13).fill(0);\n    dp[0] = 1;\n\n    for (let i = 0; i < n; i++) {\n        let newDp = new Array(13).fill(0);\n        if (S[i] === '?') {\n            for (let j = 0; j < 13; j++) {\n                for (let k = 0; k < 10; k++) {\n                    let newRem = (j * 10 + k) % 13;\n                    newDp[newRem] = (newDp[newRem] + dp[j]) % MOD;\n                }\n            }\n        } else {\n            for (let j = 0; j < 13; j++) {\n                let digit = parseInt(S[i]);\n                let newRem = (j * 10 + digit) % 13;\n                newDp[newRem] = (newDp[newRem] + dp[j]) % MOD;\n            }\n        }\n        dp = newDp;\n    }\n\n    return dp[5];\n}",
+    "timestamp": "2025-08-13 12:28:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve(S) {\n    const n = S.length;\n    let dp = Array.from({ length: n + 1 }, () => new Array(13).fill(0));\n    dp[0][0] = 1;\n    \n    for (let i = 0; i < n; i++) {\n        const c = S[i];\n        for (let rem = 0; rem < 13; rem++) {\n            if (dp[i][rem] === 0) continue;\n            if (c === '?') {\n                for (let d = 0; d <= 9; d++) {\n                    const newRem = (rem * 10 + d) % 13;\n                    dp[i + 1][newRem] = (dp[i + 1][newRem] + dp[i][rem]) % MOD;\n                }\n            } else {\n                const d = parseInt(c, 10);\n                const newRem = (rem * 10 + d) % 13;\n                dp[i + 1][newRem] = (dp[i + 1][newRem] + dp[i][rem]) % MOD;\n            }\n        }\n    }\n    \n    return dp[n][5];\n}",
+    "timestamp": "2025-08-13 12:28:52"
+  }
+]

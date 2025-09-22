@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <float.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble distance(Point p1, Point p2) {\n    return sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));\n}\n\ndouble polygon_diameter(Point* polygon, int n) {\n    double max_dist = 0;\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            double curr_dist = distance(polygon[i], polygon[j]);\n            max_dist = fmax(max_dist, curr_dist);\n        }\n    }\n    \n    return max_dist;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    Point* polygon = malloc(n * sizeof(Point));\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &polygon[i].x, &polygon[i].y);\n    }\n    \n    double diameter = polygon_diameter(polygon, n);\n    printf(\"Diameter: %f\\n\", diameter);\n    \n    free(polygon);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:14:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble distance(Point a, Point b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\nvoid findDiameter(Point polygon[], int n, Point *p1, Point *p2) {\n    double maxDist = 0.0;\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            double dist = distance(polygon[i], polygon[j]);\n            if (dist > maxDist) {\n                maxDist = dist;\n                *p1 = polygon[i];\n                *p2 = polygon[j];\n            }\n        }\n    }\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    Point polygon[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &polygon[i].x, &polygon[i].y);\n    }\n    Point p1, p2;\n    findDiameter(polygon, n, &p1, &p2);\n    printf(\"Diameter points: (%.2f, %.2f) and (%.2f, %.2f)\\n\", p1.x, p1.y, p2.x, p2.y);\n    printf(\"Diameter distance: %.2f\\n\", distance(p1, p2));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:15:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <cmath>\n#include <utility>\n\nusing namespace std;\n\ntypedef pair<double, double> Point;\n\ndouble distance(const Point& a, const Point& b) {\n    double dx = a.first - b.first;\n    double dy = a.second - b.second;\n    return sqrt(dx * dx + dy * dy);\n}\n\npair<Point, Point> findDiameter(const vector<Point>& polygon) {\n    int n = polygon.size();\n    double maxDist = 0.0;\n    pair<Point, Point> result;\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = i + 1; j < n; ++j) {\n            double dist = distance(polygon[i], polygon[j]);\n            if (dist > maxDist) {\n                maxDist = dist;\n                result = {polygon[i], polygon[j]};\n            }\n        }\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-05 22:15:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.awt.geom.Point2D;\nimport java.util.List;\n\npublic class PolygonDiameter {\n\n    public static double findDiameter(List<Point2D.Double> polygon) {\n        double maxDistance = 0.0;\n        int n = polygon.size();\n        \n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                double distance = polygon.get(i).distance(polygon.get(j));\n                if (distance > maxDistance) {\n                    maxDistance = distance;\n                }\n            }\n        }\n        \n        return maxDistance;\n    }\n}",
+    "timestamp": "2025-08-05 22:15:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass ConvexPolygonDiameter {\n    public static double findDiameter(List<Point> polygon) {\n        if (polygon.size() <= 1) return 0;\n        \n        int n = polygon.size();\n        double maxDist = 0;\n        \n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                maxDist = Math.max(maxDist, distance(polygon.get(i), polygon.get(j)));\n            }\n        }\n        \n        return maxDist;\n    }\n    \n    public static double distance(Point p1, Point p2) {\n        return Math.sqrt(\n            Math.pow(p1.x - p2.x, 2) + \n            Math.pow(p1.y - p2.y, 2)\n        );\n    }\n    \n    static class Point {\n        double x, y;\n        \n        public Point(double x, double y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n    \n    public static void main(String[] args) {\n        List<Point> polygon = Arrays.asList(\n            new Point(0, 0),\n            new Point(1, 1),\n            new Point(2, 0),\n            new Point(1, -1)\n        );\n        \n        System.out.println(findDiameter(polygon));\n    }\n}",
+    "timestamp": "2025-08-05 22:16:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n#include <iomanip>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n    Point(double x = 0, double y = 0) : x(x), y(y) {}\n};\n\ndouble distance(const Point& a, const Point& b) {\n    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));\n}\n\ndouble convexPolygonDiameter(vector<Point>& polygon) {\n    int n = polygon.size();\n    if (n <= 1) return 0;\n    \n    double maxDist = 0;\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            maxDist = max(maxDist, distance(polygon[i], polygon[j]));\n        }\n    }\n    \n    return maxDist;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<Point> polygon(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> polygon[i].x >> polygon[i].y;\n    }\n    \n    cout << fixed << setprecision(6) << convexPolygonDiameter(polygon) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:16:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef distance(p1, p2):\n    return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)\n\ndef convex_polygon_diameter(points):\n    n = len(points)\n    if n < 2:\n        return 0\n    \n    def next_wrap(i):\n        return (i + 1) % n\n    \n    max_distance = 0\n    j = 1\n    for i in range(n):\n        while True:\n            current_distance = distance(points[i], points[j])\n            next_distance = distance(points[i], points[next_wrap(j)])\n            if next_distance > current_distance:\n                j = next_wrap(j)\n            else:\n                break\n        max_distance = max(max_distance, current_distance)\n    \n    return max_distance\n\n# Example usage\npolygon_points = [(0, 0), (4, 0), (4, 3), (0, 3)]\ndiameter = convex_polygon_diameter(polygon_points)\nprint(diameter)",
+    "timestamp": "2025-08-13 09:44:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.awt.geom.Point2D;\nimport java.util.List;\n\npublic class ConvexPolygonDiameter {\n\n    public static double findDiameter(List<Point2D> points) {\n        int n = points.size();\n        if (n < 2) return 0;\n        int k = 1;\n        double maxDistance = 0;\n\n        for (int i = 0; i < n; i++) {\n            while (true) {\n                int nextK = (k + 1) % n;\n                double dist1 = points.get(i).distance(points.get(k));\n                double dist2 = points.get(i).distance(points.get(nextK));\n                if (dist2 > dist1) {\n                    k = nextK;\n                } else {\n                    break;\n                }\n            }\n            maxDistance = Math.max(maxDistance, points.get(i).distance(points.get(k)));\n        }\n\n        return maxDistance;\n    }\n}",
+    "timestamp": "2025-08-13 09:44:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble distance(Point a, Point b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\ndouble polygonDiameter(Point* points, int n) {\n    if (n < 2) return 0.0;\n    if (n == 2) return distance(points[0], points[1]);\n    \n    double maxDist = 0.0;\n    int k = 1;\n    \n    for (int i = 0; i < n; ++i) {\n        while (true) {\n            double d1 = distance(points[i], points[k]);\n            double d2 = distance(points[i], points[(k + 1) % n]);\n            if (d2 > d1) {\n                k = (k + 1) % n;\n            } else {\n                if (d1 > maxDist) {\n                    maxDist = d1;\n                }\n                break;\n            }\n        }\n    }\n    \n    return maxDist;\n}\n\nint main() {\n    Point points[] = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};\n    int n = sizeof(points) / sizeof(points[0]);\n    \n    printf(\"Diameter of the polygon: %.2f\\n\", polygonDiameter(points, n));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 09:44:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def diameter_of_convex_polygon(points):\n    def distance(p1, p2):\n        return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** 0.5\n\n    def cross_product(p1, p2, p3):\n        return (p2[0] - p1[0]) * (p3[1] - p1[1]) - (p2[1] - p1[1]) * (p3[0] - p1[0])\n\n    def convex_hull(points):\n        points = sorted(set(points))\n        if len(points) <= 1:\n            return points\n\n        lower = []\n        for p in points:\n            while len(lower) >= 2 and cross_product(lower[-2], lower[-1], p) <= 0:\n                lower.pop()\n            lower.append(p)\n\n        upper = []\n        for p in reversed(points):\n            while len(upper) >= 2 and cross_product(upper[-2], upper[-1], p) <= 0:\n                upper.pop()\n            upper.append(p)\n\n        return lower[:-1] + upper[:-1]\n\n    hull = convex_hull(points)\n    max_dist = 0\n    max_points = None\n\n    for i in range(len(hull)):\n        for j in range(i + 1, len(hull)):\n            dist = distance(hull[i], hull[j])\n            if dist > max_dist:\n                max_dist = dist\n                max_points = (hull[i], hull[j])\n\n    return max_dist, max_points",
+    "timestamp": "2025-08-13 09:44:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef polygon_diameter(vertices):\n    max_distance = 0\n    pair = (vertices[0], vertices[1])\n    n = len(vertices)\n    \n    for i in range(n):\n        for j in range(i + 1, n):\n            dx = vertices[i][0] - vertices[j][0]\n            dy = vertices[i][1] - vertices[j][1]\n            distance = math.sqrt(dx * dx + dy * dy)\n            if distance > max_distance:\n                max_distance = distance\n                pair = (vertices[i], vertices[j])\n    \n    return pair",
+    "timestamp": "2025-08-13 09:44:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <tuple>\nusing namespace std;\n\ntypedef pair<double, double> Point;\n\ndouble distance(const Point& p1, const Point& p2) {\n    return sqrt((p1.first - p2.first) * (p1.first - p2.first) + \n                (p1.second - p2.second) * (p1.second - p2.second));\n}\n\ndouble cross(const Point& O, const Point& A, const Point& B) {\n    return (A.first - O.first) * (B.second - O.second) - \n           (A.second - O.second) * (B.first - O.first);\n}\n\ndouble polygonDiameter(const vector<Point>& points) {\n    int n = points.size();\n    if(n < 2) return 0;\n    double maxDistance = 0;\n    int k = 1;\n    \n    for (int i = 0; i < n; i++) {\n        while(true) {\n            double dist1 = distance(points[i], points[(k + 1) % n]);\n            double dist2 = distance(points[i], points[k]);\n            if(dist1 > dist2)\n                k = (k + 1) % n;\n            else\n                break;\n        }\n        maxDistance = max(maxDistance, distance(points[i], points[k]));\n    }\n    return maxDistance;\n}\n\nint main() {\n    int n;\n    cout << \"Enter the number of points: \";\n    cin >> n;\n    vector<Point> points(n);\n\n    cout << \"Enter the coordinates of the points:\\n\";\n    for(int i = 0; i < n; i++) {\n        cin >> points[i].first >> points[i].second;\n    }\n    \n    double diameter = polygonDiameter(points);\n    cout << \"The diameter of the convex polygon is: \" << diameter << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:54:06"
+  }
+]

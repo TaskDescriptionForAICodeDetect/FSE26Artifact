@@ -1,0 +1,1 @@
+Determine whether the queen can escape from the army or will be caught based on their movements on a grid representing the palace.

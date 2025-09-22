@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\n\n? 1 2 3\n\nRed\n\n? 2 4 6\n\nBlue\n\n",
+      "output": "! RRBBRB"
+    }
+  ]
+}

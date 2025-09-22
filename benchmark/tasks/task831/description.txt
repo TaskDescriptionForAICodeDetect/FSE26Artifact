@@ -1,0 +1,1 @@
+You are given a permutation of numbers from 1 to N. Determine if the state where each number matches its index (p_i = i) can be reached by performing the following operation any number of times: choose three consecutive elements p_{i-1}, p_{i}, p_{i+1} (where 2 ≤ i ≤ N-1) such that p_{i-1} > p_{i} > p_{i+1} and reverse the order of these three elements.

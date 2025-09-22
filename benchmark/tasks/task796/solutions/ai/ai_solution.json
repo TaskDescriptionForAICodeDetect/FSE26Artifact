@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 200005\n\nint parent[MAX_N];\nint depth[MAX_N];\nint visited[MAX_N];\n\nint find_lca(int u, int v) {\n    while (depth[u] > depth[v]) u = parent[u];\n    while (depth[v] > depth[u]) v = parent[v];\n    \n    while (u != v) {\n        u = parent[u];\n        v = parent[v];\n    }\n    \n    return u;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    memset(parent, 0, sizeof(parent));\n    memset(depth, 0, sizeof(depth));\n    memset(visited, 0, sizeof(visited));\n    \n    int root = 1;\n    depth[root] = 1;\n    \n    for (int i = 0; i < N-1+M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        \n        if (parent[v] == 0 && u != root) {\n            parent[v] = u;\n            depth[v] = depth[u] + 1;\n        } else {\n            int lca = find_lca(u, v);\n            \n            if (lca == v) continue;\n            if (parent[v] != 0) parent[v] = u;\n        }\n    }\n    \n    for (int i = 1; i <= N; i++) {\n        printf(\"%d\\n\", parent[i]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n\ntypedef struct Node {\n    int vertex;\n    struct Node *next;\n} Node;\n\nNode *adj[MAX_N + 1];\nint parent[MAX_N + 1];\nint in_degree[MAX_N + 1];\nint visited[MAX_N + 1];\n\nvoid add_edge(int u, int v) {\n    Node *new_node = (Node *)malloc(sizeof(Node));\n    new_node->vertex = v;\n    new_node->next = adj[u];\n    adj[u] = new_node;\n    in_degree[v]++;\n}\n\nvoid bfs(int root, int N) {\n    int queue[MAX_N];\n    int front = 0, rear = 0;\n    queue[rear++] = root;\n    parent[root] = 0;\n    visited[root] = 1;\n\n    while (front < rear) {\n        int u = queue[front++];\n        for (Node *node = adj[u]; node != NULL; node = node->next) {\n            int v = node->vertex;\n            if (!visited[v]) {\n                parent[v] = u;\n                visited[v] = 1;\n                queue[rear++] = v;\n            }\n        }\n    }\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 1; i <= N; i++) {\n        adj[i] = NULL;\n        parent[i] = -1;\n        in_degree[i] = 0;\n        visited[i] = 0;\n    }\n\n    for (int i = 0; i < N - 1 + M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n    }\n\n    int root = -1;\n    for (int i = 1; i <= N; i++) {\n        if (in_degree[i] == 0) {\n            root = i;\n            break;\n        }\n    }\n\n    bfs(root, N);\n\n    for (int i = 1; i <= N; i++) {\n        printf(\"%d\\n\", parent[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<vector<int>> adj(N + 1);\n    vector<int> in_degree(N + 1, 0);\n    vector<int> parent(N + 1, 0);\n\n    for (int i = 0; i < N - 1 + M; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        in_degree[v]++;\n    }\n\n    queue<int> q;\n    for (int i = 1; i <= N; ++i) {\n        if (in_degree[i] == 0) {\n            q.push(i);\n        }\n    }\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : adj[u]) {\n            if (--in_degree[v] == 0) {\n                parent[v] = u;\n                q.push(v);\n            }\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        cout << parent[i] << \"\\n\";\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        \n        List<List<Integer>> children = new ArrayList<>();\n        for (int i = 0; i <= N; i++) {\n            children.add(new ArrayList<>());\n        }\n        \n        int[] inDegree = new int[N + 1];\n        \n        for (int i = 0; i < N - 1 + M; i++) {\n            int u = sc.nextInt();\n            int v = sc.nextInt();\n            children.get(u).add(v);\n            inDegree[v]++;\n        }\n        \n        Queue<Integer> queue = new LinkedList<>();\n        for (int i = 1; i <= N; i++) {\n            if (inDegree[i] == 0) {\n                queue.add(i);\n            }\n        }\n        \n        int[] parent = new int[N + 1];\n        while (!queue.isEmpty()) {\n            int u = queue.poll();\n            for (int v : children.get(u)) {\n                if (--inDegree[v] == 0) {\n                    parent[v] = u;\n                    queue.add(v);\n                }\n            }\n        }\n        \n        for (int i = 1; i <= N; i++) {\n            System.out.println(parent[i]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:57:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        List<List<Integer>> graph = new ArrayList<>(N + 1);\n        for (int i = 0; i <= N; i++) {\n            graph.add(new ArrayList<>());\n        }\n        \n        int[] inDegree = new int[N + 1];\n        int[] parent = new int[N + 1];\n        \n        for (int i = 0; i < N - 1 + M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n            \n            graph.get(u).add(v);\n            inDegree[v]++;\n        }\n        \n        int root = -1;\n        for (int i = 1; i <= N; i++) {\n            if (inDegree[i] == 0) {\n                root = i;\n                break;\n            }\n        }\n        \n        Queue<Integer> queue = new LinkedList<>();\n        queue.offer(root);\n        \n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            \n            for (int child : graph.get(current)) {\n                parent[child] = current;\n                queue.offer(child);\n            }\n        }\n        \n        for (int i = 1; i <= N; i++) {\n            System.out.println(parent[i]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:57:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n#include <unordered_map>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<int>> graph(N + 1);\n    vector<int> inDegree(N + 1, 0);\n    unordered_set<int> additionalEdges;\n\n    for (int i = 0; i < N - 1 + M; i++) {\n        int u, v;\n        cin >> u >> v;\n        graph[u].push_back(v);\n        inDegree[v]++;\n        \n        if (i >= N - 1) {\n            additionalEdges.insert(u * (N + 1) + v);\n        }\n    }\n\n    int root = 0;\n    for (int i = 1; i <= N; i++) {\n        if (inDegree[i] == 0) {\n            root = i;\n            break;\n        }\n    }\n\n    vector<int> parent(N + 1, 0);\n    vector<bool> visited(N + 1, false);\n\n    function<void(int)> dfs = [&](int node) {\n        visited[node] = true;\n        for (int child : graph[node]) {\n            if (!visited[child]) {\n                parent[child] = node;\n                dfs(child);\n            }\n        }\n    };\n\n    dfs(root);\n\n    for (int u = 1; u <= N; u++) {\n        for (int v : graph[u]) {\n            if (additionalEdges.count(u * (N + 1) + v)) {\n                parent[v] = u;\n            }\n        }\n    }\n\n    for (int i = 1; i <= N; i++) {\n        cout << parent[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:57:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def restore_tree(n, edges):\n    from collections import defaultdict, deque\n\n    # Create adjacency list for vertices\n    adj_list = defaultdict(list)\n    incoming_edges = [0] * (n + 1)\n\n    for u, v in edges:\n        adj_list[u].append(v)\n        incoming_edges[v] += 1\n\n    # Find the root which has no incoming edge\n    root = next(i for i in range(1, n + 1) if incoming_edges[i] == 0)\n\n    # BFS to restore the original tree\n    parent = [0] * (n + 1)\n    queue = deque([root])\n\n    while queue:\n        node = queue.popleft()\n        for child in adj_list[node]:\n            if parent[child] == 0:  # Not visited\n                parent[child] = node\n                queue.append(child)\n\n    return parent[1:]\n\n# Example usage:\nn = 5\nedges = [(1, 2), (1, 3), (3, 4), (3, 5), (3, 2)]\nprint(restore_tree(n, edges))",
+    "timestamp": "2025-08-13 13:05:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class RestoreTree {\n\n    public static void main(String[] args) {\n\n        Scanner sc = new Scanner(System.in);\n\n        int n = sc.nextInt(); // Number of vertices in the tree\n        int m = n - 1 + sc.nextInt(); // Total number of edges including the extra M edges\n\n        List<Integer>[] graph = new List[n + 1];\n        for (int i = 1; i <= n; i++) {\n            graph[i] = new ArrayList<>();\n        }\n\n        int[] inDegree = new int[n + 1];  // To track the in-degree of each vertex\n\n        for (int i = 0; i < m; i++) {\n            int u = sc.nextInt();\n            int v = sc.nextInt();\n            graph[u].add(v);\n            inDegree[v]++;\n        }\n        sc.close();\n\n        int root = -1;  // Find the root\n        for (int i = 1; i <= n; i++) {\n            if (inDegree[i] == 0) {\n                root = i;\n                break;\n            }\n        }\n\n        int[] parent = new int[n + 1];  // Stores the parent of each node\n        Arrays.fill(parent, -1);\n\n        Queue<Integer> queue = new LinkedList<>();\n        queue.offer(root);\n        parent[root] = 0;\n\n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            for (int next : graph[current]) {\n                if (parent[next] == -1) { // If this node hasn't been processed\n                    parent[next] = current;\n                    queue.offer(next);\n                }\n            }\n        }\n\n        for (int i = 1; i <= n; i++) {\n            System.out.println(parent[i]);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 13:05:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_N 100005\n\nint parent[MAX_N];\nbool is_descendant[MAX_N];\nint indegree[MAX_N];\nint ancestors[MAX_N];\nint queue[MAX_N];\n\nvoid find_real_root(int u, int p, int n) {\n    if (parent[u] != 0 && parent[u] != p) {\n        return;\n    }\n    parent[u] = p;\n    queue[n++] = u;\n    for (int i = is_descendant[u]; i != -1; i = ancestors[i]) {\n        find_real_root(queue[i], u, n);\n    }\n}\n\nint main() {\n    int N, M, u, v, edge_count, root, q_start = 0, q_end = 0;\n    scanf(\"%d %d\", &N, &M);\n    edge_count = N - 1 + M;\n    \n    memset(parent, 0, sizeof(parent));\n    memset(is_descendant, -1, sizeof(is_descendant));\n    memset(ancestors, -1, sizeof(ancestors));\n    memset(indegree, 0, sizeof(indegree));\n\n    for (int i = 0; i < edge_count; i++) {\n        scanf(\"%d %d\", &u, &v);\n        ancestors[i] = is_descendant[u];\n        is_descendant[u] = i;\n        queue[i] = v;\n        indegree[v]++;\n    }\n\n    root = -1;\n    for (int i = 1; i <= N; i++) {\n        if (indegree[i] == 0) {\n            root = i;\n            break;\n        }\n    }\n\n    find_real_root(root, 0, 0);\n\n    for (int i = 1; i <= N; i++) {\n        printf(\"%d\\n\", parent[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:05:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function restoreTree(n, edges) {\n  const adjList = Array.from({ length: n + 1 }, () => []);\n  const inDegree = Array(n + 1).fill(0);\n\n  edges.forEach(([u, v]) => {\n    adjList[u].push(v);\n    inDegree[v]++;\n  });\n\n  let root = 0;\n  for (let i = 1; i <= n; i++) {\n    if (inDegree[i] === 0) {\n      root = i;\n      break;\n    }\n  }\n\n  const parent = Array(n + 1).fill(0);\n\n  function dfs(curr, par) {\n    parent[curr] = par;\n    adjList[curr].forEach((child) => {\n      if (child !== par) {\n        dfs(child, curr);\n      }\n    });\n  }\n\n  dfs(root, 0);\n\n  for (let i = 1; i <= n; i++) {\n    console.log(parent[i]);\n  }\n}\n\n// Example usage:\nconst n = 5;\nconst edges = [\n  [1, 2],\n  [1, 3],\n  [3, 4],\n  [3, 5],\n  [2, 4],\n];\nrestoreTree(n, edges);",
+    "timestamp": "2025-08-13 13:06:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, edges):\n    # Initialize data structures\n    graph = [[] for _ in range(N+1)]\n    in_degree = [0] * (N+1)\n    potential_parents = [set() for _ in range(N+1)]\n\n    # Add edges to graph and track in-degree\n    for u, v in edges:\n        graph[u].append(v)\n        in_degree[v] += 1\n        potential_parents[v].add(u)\n\n    # Find root (vertex with 0 in-degree)\n    root = next(i for i in range(1, N+1) if in_degree[i] == 0)\n\n    # Track parent of each vertex\n    parent = [0] * (N+1)\n\n    # BFS to determine parents\n    queue = [root]\n    visited = set([root])\n\n    while queue:\n        curr = queue.pop(0)\n        for child in graph[curr]:\n            if child not in visited:\n                # If child has multiple potential parents, choose the right one\n                if len(potential_parents[child]) == 1:\n                    parent[child] = list(potential_parents[child])[0]\n                else:\n                    parent[child] = curr\n                \n                queue.append(child)\n                visited.add(child)\n\n    return parent[1:]\n\n# Input parsing\nN, M = map(int, input().split())\nedges = [tuple(map(int, input().split())) for _ in range(N-1+M)]\n\n# Solve and print results\nresult = solve(N, edges)\nprint(*result)",
+    "timestamp": "2025-08-13 13:06:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findOriginalTree(N, edges) {\n    const graph = Array.from({ length: N + 1 }, () => []);\n    const inDegree = new Array(N + 1).fill(0);\n    const originalEdges = new Set();\n\n    // Add edges to graph and track in-degree\n    for (const [u, v] of edges) {\n        graph[u].push(v);\n        inDegree[v]++;\n        originalEdges.add(`${u},${v}`);\n    }\n\n    // Find vertices with in-degree 0\n    const roots = [];\n    for (let i = 1; i <= N; i++) {\n        if (inDegree[i] === 0) {\n            roots.push(i);\n        }\n    }\n\n    // Validate input\n    if (roots.length !== 1) return null;\n\n    const root = roots[0];\n    const parent = new Array(N + 1).fill(0);\n    const visited = new Array(N + 1).fill(false);\n\n    function dfs(node) {\n        visited[node] = true;\n        for (const child of graph[node]) {\n            if (!visited[child]) {\n                parent[child] = node;\n                dfs(child);\n            }\n        }\n    }\n\n    dfs(root);\n\n    // Verify all nodes are visited\n    for (let i = 1; i <= N; i++) {\n        if (!visited[i]) return null;\n    }\n\n    return parent.slice(1);\n}",
+    "timestamp": "2025-08-13 13:06:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N, M = map(int, input[ptr:ptr+2])\n    ptr +=2\n    \n    adj = [[] for _ in range(N+1)]\n    in_degree = [0]*(N+1)\n    \n    for _ in range(N-1 + M):\n        a, b = map(int, input[ptr:ptr+2])\n        ptr +=2\n        adj[a].append(b)\n        in_degree[b] +=1\n    \n    root = -1\n    for i in range(1, N+1):\n        if in_degree[i] ==0:\n            root = i\n            break\n    \n    parent = [0]*(N+1)\n    q = deque([root])\n    \n    while q:\n        u = q.popleft()\n        for v in adj[u]:\n            in_degree[v] -=1\n            if in_degree[v] ==0:\n                parent[v] = u\n                q.append(v)\n    \n    for i in range(1, N+1):\n        print(parent[i])\n\nsolve()",
+    "timestamp": "2025-08-13 13:06:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf-8').trim().split('\\n');\n\nfunction solve() {\n    const [N, M] = input[0].split(' ').map(Number);\n    const edges = input.slice(1).map(line => line.split(' ').map(Number));\n    \n    const adj = Array.from({ length: N + 1 }, () => []);\n    const inDegree = new Array(N + 1).fill(0);\n    const parent = new Array(N + 1).fill(0);\n    \n    for (const [u, v] of edges) {\n        adj[u].push(v);\n        inDegree[v]++;\n    }\n    \n    const queue = [];\n    for (let i = 1; i <= N; i++) {\n        if (inDegree[i] === 0) {\n            queue.push(i);\n        }\n    }\n    \n    if (queue.length !== 1) {\n        throw new Error(\"Multiple roots found\");\n    }\n    \n    const root = queue[0];\n    parent[root] = 0;\n    \n    while (queue.length > 0) {\n        const u = queue.shift();\n        for (const v of adj[u]) {\n            if (parent[v] === 0) {\n                parent[v] = u;\n            }\n            inDegree[v]--;\n            if (inDegree[v] === 0) {\n                queue.push(v);\n            }\n        }\n    }\n    \n    for (let i = 1; i <= N; i++) {\n        console.log(parent[i]);\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:06:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> adj(n + 1);\n\n    for (int i = 0; i < n - 1 + m; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n    }\n    \n    vector<int> indegree(n + 1, 0);\n    vector<int> parent(n + 1, 0);\n\n    for (int u = 1; u <= n; ++u) {\n        for (int v : adj[u]) {\n            indegree[v]++;\n        }\n    }\n\n    queue<int> q;\n    int root = -1;\n\n    for (int i = 1; i <= n; ++i) {\n        if (indegree[i] == 0) {\n            root = i;\n            q.push(i);\n        }\n    }\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n\n        for (int v : adj[u]) {\n            if (parent[v] == 0) {\n                parent[v] = u;\n                if (--indegree[v] == 0) {\n                    q.push(v);\n                }\n            }\n        }\n    }\n\n    for (int i = 1; i <= n; ++i) {\n        if (i == root) {\n            cout << 0 << endl;\n        } else {\n            cout << parent[i] << endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:38:07"
+  }
+]

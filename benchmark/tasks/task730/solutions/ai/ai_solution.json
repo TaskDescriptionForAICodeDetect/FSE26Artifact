@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdbool.h>\n#include <stdint.h>\n\nbool can_create_multiset(int N, int* S) {\n    int total_slimes = 1 << N;\n    \n    // Sort the multiset in descending order\n    for (int i = 0; i < total_slimes - 1; i++) {\n        for (int j = 0; j < total_slimes - i - 1; j++) {\n            if (S[j] < S[j + 1]) {\n                int temp = S[j];\n                S[j] = S[j + 1];\n                S[j + 1] = temp;\n            }\n        }\n    }\n    \n    // Initial health of the first slime\n    int initial_health = S[0];\n    \n    // Track current slime states\n    int current_slimes[total_slimes];\n    current_slimes[0] = initial_health;\n    int current_count = 1;\n    \n    // Simulate N seconds of reproduction\n    for (int second = 1; second <= N; second++) {\n        int new_count = 0;\n        \n        // Reproduce each existing slime\n        for (int i = 0; i < current_count; i++) {\n            // Try to find a matching health in the target multiset\n            bool found = false;\n            for (int j = 0; j < total_slimes; j++) {\n                if (S[j] < current_slimes[i]) {\n                    current_slimes[current_count + new_count] = S[j];\n                    new_count++;\n                    found = true;\n                    break;\n                }\n            }\n            \n            // If no valid health found, return false\n            if (!found) return false;\n        }\n        \n        current_count += new_count;\n    }\n    \n    // Verify if final multiset matches target\n    if (current_count != total_slimes) return false;\n    \n    return true;\n}",
+    "timestamp": "2025-08-05 22:43:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nint canCreateMultiset(int *S, int N, int size) {\n    qsort(S, size, sizeof(int), compare);\n    \n    int *current = (int *)malloc(size * sizeof(int));\n    int current_size = 1;\n    current[0] = S[0];\n    \n    for (int i = 1; i < size; ) {\n        int new_size = 0;\n        int *next = (int *)malloc(size * sizeof(int));\n        \n        for (int j = 0; j < current_size; j++) {\n            if (i >= size) {\n                free(next);\n                free(current);\n                return 0;\n            }\n            if (S[i] >= current[j]) {\n                free(next);\n                free(current);\n                return 0;\n            }\n            next[new_size++] = S[i];\n            i++;\n        }\n        \n        for (int j = 0; j < current_size; j++) {\n            next[new_size++] = current[j];\n        }\n        \n        free(current);\n        current = next;\n        current_size = new_size;\n        \n        qsort(current, current_size, sizeof(int), compare);\n    }\n    \n    free(current);\n    return 1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int size = 1 << N;\n    int *S = (int *)malloc(size * sizeof(int));\n    \n    for (int i = 0; i < size; i++) {\n        scanf(\"%d\", &S[i]);\n    }\n    \n    if (canCreateMultiset(S, N, size)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    \n    free(S);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <queue>\n#include <unordered_map>\n\nusing namespace std;\n\nbool solve() {\n    int N;\n    cin >> N;\n    int size = 1 << N;\n    vector<int> S(size);\n    for (int i = 0; i < size; ++i) {\n        cin >> S[i];\n    }\n    sort(S.begin(), S.end(), greater<int>());\n    \n    unordered_map<int, int> count;\n    for (int num : S) {\n        count[num]++;\n    }\n    \n    priority_queue<int> pq;\n    pq.push(S[0]);\n    count[S[0]]--;\n    \n    for (int i = 1; i <= N; ++i) {\n        vector<int> new_slimes;\n        for (int j = 0; j < (1 << (i - 1)); ++j) {\n            if (pq.empty()) return false;\n            int current = pq.top();\n            pq.pop();\n            auto it = count.upper_bound(current - 1);\n            if (it == count.begin()) return false;\n            --it;\n            int val = it->first;\n            if (val >= current) return false;\n            if (--count[val] == 0) {\n                count.erase(val);\n            }\n            new_slimes.push_back(val);\n            new_slimes.push_back(current);\n        }\n        for (int slime : new_slimes) {\n            pq.push(slime);\n        }\n    }\n    \n    return true;\n}\n\nint main() {\n    if (solve()) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SlimeReproduction {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int size = 1 << N;\n        List<Integer> S = new ArrayList<>();\n        for (int i = 0; i < size; i++) {\n            S.add(scanner.nextInt());\n        }\n        Collections.sort(S, Collections.reverseOrder());\n        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());\n        pq.add(S.get(0));\n        S.remove(0);\n        boolean possible = true;\n        for (int i = 0; i < N; i++) {\n            List<Integer> temp = new ArrayList<>();\n            int currentSize = pq.size();\n            for (int j = 0; j < currentSize; j++) {\n                int val = pq.poll();\n                boolean found = false;\n                for (int k = 0; k < S.size(); k++) {\n                    if (S.get(k) < val) {\n                        temp.add(S.get(k));\n                        S.remove(k);\n                        found = true;\n                        break;\n                    }\n                }\n                if (!found) {\n                    possible = false;\n                    break;\n                }\n                temp.add(val);\n            }\n            if (!possible) {\n                break;\n            }\n            pq.addAll(temp);\n        }\n        System.out.println(possible ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 22:43:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static boolean isPossible(int[] S) {\n        int N = (int) (Math.log(S.length) / Math.log(2));\n        \n        if (S.length != (1 << N)) return false;\n        \n        Arrays.sort(S);\n        \n        PriorityQueue<Integer> multiset = new PriorityQueue<>(Collections.reverseOrder());\n        multiset.offer(S[S.length - 1]);\n        \n        for (int i = S.length - 2; i >= 0; i--) {\n            if (multiset.isEmpty()) return false;\n            \n            int max = multiset.poll();\n            \n            if (max <= S[i]) return false;\n            \n            multiset.offer(S[i]);\n            multiset.offer(max - S[i]);\n        }\n        \n        return multiset.isEmpty();\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] S = new int[1 << N];\n        \n        for (int i = 0; i < (1 << N); i++) {\n            S[i] = scanner.nextInt();\n        }\n        \n        System.out.println(isPossible(S) ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 22:44:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <set>\n\nusing namespace std;\n\nbool solve(vector<int>& S) {\n    int n = S.size();\n    int power = 1;\n    for (int i = 0; i < n; i++) {\n        power *= 2;\n    }\n    \n    if (power != S.size()) return false;\n    \n    multiset<int> multiS(S.begin(), S.end());\n    \n    while (!multiS.empty()) {\n        int maxVal = *multiS.rbegin();\n        multiS.erase(multiS.find(maxVal));\n        \n        if (maxVal > 0) {\n            auto it = multiS.lower_bound(maxVal);\n            if (it == multiS.end() || *it >= maxVal) return false;\n        }\n    }\n    \n    return true;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<int> S(n);\n    for (int i = 0; i < n; i++) {\n        cin >> S[i];\n    }\n    \n    cout << (solve(S) ? \"Yes\" : \"No\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:44:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_possible_multiset(S):\n    S.sort(reverse=True)\n    while len(S) > 1:\n        highest_health = S.pop(0)\n        if highest_health - 1 not in S:\n            return False\n        # Remove the required health from the list\n        S.remove(highest_health - 1)\n    return True\n\n# Sample usage\nS = [3, 2, 2, 1]\nprint(is_possible_multiset(S))  # Example output: True",
+    "timestamp": "2025-08-13 12:17:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SlimeReproduction {\n\n    public static boolean canMatchMultiset(int N, List<Integer> multiset) {\n        Collections.sort(multiset);\n        return canReproduce(N, multiset, multiset.size());\n    }\n\n    private static boolean canReproduce(int N, List<Integer> multiset, int expectedSize) {\n        if (multiset.size() != expectedSize) return false;\n        if (N == 0) return multiset.size() == 1 && Collections.frequency(multiset, multiset.get(0)) == 1;\n\n        int maxHealth = multiset.get(multiset.size() - 1);\n        int halfSize = multiset.size() / 2;\n\n        List<Integer> left = new ArrayList<>();\n        List<Integer> right = new ArrayList<>();\n\n        for (int i = 0; i < multiset.size(); i++) {\n            int health = multiset.get(i);\n            if (health < maxHealth) {\n                left.add(health);\n            } else if (right.size() < halfSize - 1) {\n                right.add(health);\n            } else {\n                left.add(health);\n            }\n        }\n\n        if (left.size() != halfSize || right.size() != multiset.size() - halfSize)\n            return false;\n\n        return canReproduce(N - 1, left, halfSize) && canReproduce(N - 1, right, halfSize);\n    }\n\n    public static void main(String[] args) {\n        List<Integer> multiset = Arrays.asList(8, 4, 4, 2, 2, 1, 1, 1);\n        int N = 3;\n        System.out.println(canMatchMultiset(N, multiset)); // Expected output: true\n    }\n}",
+    "timestamp": "2025-08-13 12:17:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint can_match_multiset(int S[], int N) {\n    int count[10001] = {0}; // assuming that health values are <= 10000\n\n    for (int i = 0; i < (1 << N); i++) {\n        count[S[i]]++;\n    }\n    \n    for (int health = 10000; health >= 0; health--) {\n        if (count[health] > 0) {\n            int parent_count = count[health];\n            count[health] = 0;\n            \n            if (parent_count * 2 > 10000) {\n                return 0; // not possible\n            }\n            if (health > 0) {\n                count[health - 1] += parent_count * 2;\n            }\n        }\n    }\n    \n    return 1;\n}\n\nint main() {\n    int N; // Number of seconds\n    scanf(\"%d\", &N);\n    \n    int size = 1 << N; // size of the multiset\n    int S[size];\n    \n    for (int i = 0; i < size; i++) {\n        scanf(\"%d\", &S[i]);\n    }\n    \n    if (can_match_multiset(S, N)) {\n        printf(\"Possible\\n\");\n    } else {\n        printf(\"Not possible\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:17:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isPossibleMultiset(S) {\n    function canFormMultiset(S) {\n        if (S.length === 1) return true;\n        \n        S.sort((a, b) => b - a);\n        let maxHealth = S[0];\n        \n        let count = 0;\n        for (let i = 0; i < S.length; i++) {\n            if (S[i] === maxHealth) {\n                count++;\n            } else {\n                break;\n            }\n        }\n        \n        if (count % 2 !== 0) return false;\n        \n        let nextMultiset = [];\n        for (let i = count; i < S.length; i++) {\n            nextMultiset.push(S[i]);\n        }\n        \n        maxHealth--;\n        if (maxHealth <= 0) return false;\n        \n        for (let i = 0; i < count / 2; i++) {\n            nextMultiset.push(maxHealth);\n        }\n        \n        return canFormMultiset(nextMultiset);\n    }\n    \n    while ((S.length & (S.length - 1)) !== 0) {\n        return false;\n    }\n    \n    return canFormMultiset(S);\n}\n\n// Usage\nconsole.log(isPossibleMultiset([4, 3, 3, 2, 1, 1, 1, 1])); // Example: returns true if possible",
+    "timestamp": "2025-08-13 12:17:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_create_multiset(S):\n    N = int((len(S) ** 0.5))\n    if len(S) != 2**N:\n        return False\n    \n    S.sort(reverse=True)\n    \n    def backtrack(remaining_count, max_value):\n        if remaining_count == 0:\n            return True\n        \n        for i in range(remaining_count):\n            if S[i] >= max_value:\n                return False\n        \n        return backtrack(remaining_count // 2, max_value - 1) and \\\n               backtrack(remaining_count - remaining_count // 2, max_value - 1)\n    \n    return backtrack(len(S), S[0])",
+    "timestamp": "2025-08-13 12:18:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isPossibleMultiset(S) {\n    const N = Math.log2(S.length);\n    if (!Number.isInteger(N)) return false;\n    \n    const sortedS = S.slice().sort((a, b) => b - a);\n    \n    const reproduce = (currentHealth, depth) => {\n        if (depth === N) return true;\n        \n        for (let i = 0; i < sortedS.length; i++) {\n            if (sortedS[i] < currentHealth) {\n                const remainingS = sortedS.slice();\n                remainingS.splice(i, 1);\n                \n                if (reproduce(sortedS[i], depth + 1) && remainingS.length === 0) {\n                    return true;\n                }\n            }\n        }\n        \n        return false;\n    };\n    \n    return reproduce(sortedS[0], 0);\n}",
+    "timestamp": "2025-08-13 12:18:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    from collections import defaultdict\n\n    N = int(sys.stdin.readline())\n    S = list(map(int, sys.stdin.readline().split()))\n    S.sort(reverse=True)\n    count = defaultdict(int)\n    for num in S:\n        count[num] += 1\n\n    current = [S[0]]\n    count[S[0]] -= 1\n    if count[S[0]] < 0:\n        print(\"No\")\n        return\n\n    for _ in range(N):\n        next_current = []\n        for num in current:\n            found = False\n            for candidate in S:\n                if candidate < num and count[candidate] > 0:\n                    count[candidate] -= 1\n                    next_current.append(candidate)\n                    found = True\n                    break\n            if not found:\n                print(\"No\")\n                return\n        current += next_current\n        current.sort(reverse=True)\n\n    print(\"Yes\")\n\nsolve()",
+    "timestamp": "2025-08-13 12:18:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const N = parseInt(readline());\n    const S = readline().split(' ').map(Number);\n    S.sort((a, b) => b - a);\n    \n    const slimes = [];\n    slimes.push(S[0]);\n    let ptr = 1;\n    \n    for (let i = 0; i < N; i++) {\n        const currentSize = slimes.length;\n        for (let j = 0; j < currentSize; j++) {\n            const parent = slimes[j];\n            let found = -1;\n            for (let k = ptr; k < S.length; k++) {\n                if (S[k] < parent) {\n                    found = S[k];\n                    ptr = k + 1;\n                    break;\n                }\n            }\n            if (found === -1) {\n                console.log(\"No\");\n                return;\n            }\n            slimes.push(found);\n        }\n    }\n    console.log(\"Yes\");\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:18:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nbool canFormMultiset(int N, std::vector<int>& S) {\n    std::sort(S.begin(), S.end(), std::greater<int>());\n    if (S[0] >= S.size()) return false;\n    return true;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> S(1 << N);\n    for (int i = 0; i < (1 << N); ++i) {\n        std::cin >> S[i];\n    }\n    \n    if (canFormMultiset(N, S)) {\n        std::cout << \"Possible\" << std::endl;\n    } else {\n        std::cout << \"Impossible\" << std::endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:34:01"
+  }
+]

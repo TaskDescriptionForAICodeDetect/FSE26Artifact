@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def max_beauty(n, x, arr):\n    # Kadane's algorithm to find max subarray sum\n    def kadane(arr):\n        max_ending_here = max_so_far = 0\n        for num in arr:\n            max_ending_here = max(num, max_ending_here + num)\n            max_so_far = max(max_so_far, max_ending_here)\n        return max_so_far\n\n    # If no operation gives better result\n    original_beauty = kadane(arr)\n    best_beauty = original_beauty\n\n    # Try multiplying each possible consecutive subarray\n    for start in range(n):\n        for end in range(start, n):\n            # Create a copy of the array to modify\n            modified_arr = arr.copy()\n            \n            # Multiply the subarray by x\n            for i in range(start, end + 1):\n                modified_arr[i] *= x\n            \n            # Calculate beauty of modified array\n            current_beauty = kadane(modified_arr)\n            best_beauty = max(best_beauty, current_beauty)\n\n    return best_beauty\n\n# Read input\nn, x = map(int, input().split())\narr = list(map(int, input().split()))\n\n# Print result\nprint(max_beauty(n, x, arr))",
+    "timestamp": "2025-08-05 17:31:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import sys\n\ndef solve():\n    n, x = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    \n    # Kadane's algorithm variants\n    # dp0: no operation done yet\n    # dp1: operation is ongoing\n    # dp2: operation was done before\n    dp0 = dp1 = dp2 = res = 0\n    for num in a:\n        new_dp0 = max(num, dp0 + num)\n        new_dp1 = max(num * x, dp0 + num * x, dp1 + num * x)\n        new_dp2 = max(num, dp1 + num, dp2 + num)\n        dp0, dp1, dp2 = new_dp0, new_dp1, new_dp2\n        res = max(res, dp0, dp1, dp2)\n    print(max(res, 0))\n\nsolve()",
+    "timestamp": "2025-08-05 17:31:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_beauty(n, x, a):\n    max_beauty = 0\n    current_max = 0\n    \n    # Calculate max subarray sum without any multiplication\n    for num in a:\n        current_max = max(num, current_max + num)\n        max_beauty = max(max_beauty, current_max)\n    \n    # Calculate max subarray sum with multiplication\n    left_max = [0] * n\n    current_max = 0\n    for i in range(n):\n        current_max = max(a[i], current_max + a[i])\n        left_max[i] = current_max\n\n    right_max = [0] * n\n    current_max = 0\n    for i in range(n - 1, -1, -1):\n        current_max = max(a[i], current_max + a[i])\n        right_max[i] = current_max\n\n    current_max = 0\n    for i in range(n):\n        current_max += a[i]\n        # Calculate maximum beauty if we start the subarray at position i\n        if i > 0:\n            max_beauty_with_x_starting_here = left_max[i - 1] + current_max * x\n        else:\n            max_beauty_with_x_starting_here = current_max * x\n        \n        if i < n - 1:\n            max_beauty_with_x_starting_here += right_max[i + 1]\n        \n        max_beauty = max(max_beauty, max_beauty_with_x_starting_here)\n\n    return max_beauty\n\n# Example of usage\nn, x = map(int, input().split())\na = list(map(int, input().split()))\nprint(max_beauty(n, x, a))",
+    "timestamp": "2025-08-12 21:40:40"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <math.h>\n\nlong long concatenate_and_mod(int A, int B, int L, int M) {\n    char result[1000] = {0};\n    int len = 0;\n    long long temp_mod = 0;\n\n    for (int i = 0; i < L; i++) {\n        int term = A + B * i;\n        char term_str[20];\n        sprintf(term_str, \"%d\", term);\n        strcat(result, term_str);\n    }\n\n    for (int i = 0; result[i]; i++) {\n        temp_mod = (temp_mod * 10 + (result[i] - '0')) % M;\n    }\n\n    return temp_mod;\n}\n\nint main() {\n    int Q;\n    scanf(\"%d\", &Q);\n\n    for (int q = 0; q < Q; q++) {\n        int L, A, B, M;\n        scanf(\"%d %d %d %d\", &L, &A, &B, &M);\n        \n        long long result = concatenate_and_mod(A, B, L, M);\n        printf(\"%lld\\n\", result);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:48:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nlong long power_mod(long long base, long long exponent, long long mod) {\n    long long result = 1;\n    base = base % mod;\n    while (exponent > 0) {\n        if (exponent % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        exponent = exponent >> 1;\n        base = (base * base) % mod;\n    }\n    return result;\n}\n\nvoid solve() {\n    int Q;\n    scanf(\"%d\", &Q);\n    while (Q--) {\n        long long L, A, B, M;\n        scanf(\"%lld %lld %lld %lld\", &L, &A, &B, &M);\n        long long result = 0;\n        long long power = 1;\n        for (long long i = 0; i < L; i++) {\n            long long term = A + B * i;\n            long long temp = term;\n            long long digits = 0;\n            if (temp == 0) {\n                digits = 1;\n            } else {\n                while (temp > 0) {\n                    digits++;\n                    temp /= 10;\n                }\n            }\n            long long mod_pow = power_mod(10, digits, M);\n            result = (result * mod_pow + term) % M;\n        }\n        printf(\"%lld\\n\", result);\n    }\n}\n\nint main() {\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:48:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nlong long mod_pow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    base = base % mod;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        exp = exp >> 1;\n        base = (base * base) % mod;\n    }\n    return result;\n}\n\nlong long concatenated_mod(long long L, long long A, long long B, long long M) {\n    long long result = 0;\n    long long power = 1;\n    long long current_term = A;\n    for (long long i = 0; i < L; ++i) {\n        long long term = current_term;\n        current_term += B;\n        long long temp = term;\n        long long length = 0;\n        if (term == 0) {\n            length = 1;\n        } else {\n            while (temp > 0) {\n                temp /= 10;\n                ++length;\n            }\n        }\n        long long pow_10 = mod_pow(10, length, M);\n        result = (result * pow_10 + term) % M;\n    }\n    return result;\n}\n\nvector<long long> solve(int Q, vector<tuple<long long, long long, long long, long long>>& queries) {\n    vector<long long> results;\n    for (const auto& query : queries) {\n        long long L = get<0>(query);\n        long long A = get<1>(query);\n        long long B = get<2>(query);\n        long long M = get<3>(query);\n        results.push_back(concatenated_mod(L, A, B, M));\n    }\n    return results;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int Q;\n    cin >> Q;\n    vector<tuple<long long, long long, long long, long long>> queries;\n    for (int i = 0; i < Q; ++i) {\n        long long L, A, B, M;\n        cin >> L >> A >> B >> M;\n        queries.emplace_back(L, A, B, M);\n    }\n    vector<long long> results = solve(Q, queries);\n    for (const auto& res : results) {\n        cout << res << \"\\n\";\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:49:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.math.BigInteger;\nimport java.util.Scanner;\n\npublic class ArithmeticProgressionConcatenation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int Q = scanner.nextInt();\n        while (Q-- > 0) {\n            long L = scanner.nextLong();\n            long A = scanner.nextLong();\n            long B = scanner.nextLong();\n            long M = scanner.nextLong();\n            \n            BigInteger result = BigInteger.ZERO;\n            BigInteger mod = BigInteger.valueOf(M);\n            \n            for (long i = 0; i < L; i++) {\n                long term = A + B * i;\n                String termStr = Long.toString(term);\n                BigInteger termBig = new BigInteger(termStr);\n                \n                int length = termStr.length();\n                BigInteger power = BigInteger.TEN.pow(length);\n                \n                result = result.multiply(power).add(termBig).mod(mod);\n            }\n            \n            System.out.println(result);\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:50:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));\n        \n        int Q = Integer.parseInt(br.readLine());\n        \n        for (int q = 0; q < Q; q++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int L = Integer.parseInt(st.nextToken());\n            int A = Integer.parseInt(st.nextToken());\n            int B = Integer.parseInt(st.nextToken());\n            int M = Integer.parseInt(st.nextToken());\n            \n            bw.write(String.valueOf(solve(L, A, B, M)));\n            bw.newLine();\n        }\n        \n        bw.flush();\n        bw.close();\n        br.close();\n    }\n    \n    static int solve(int L, int A, int B, int M) {\n        StringBuilder concatenated = new StringBuilder();\n        \n        for (int i = 0; i < L; i++) {\n            int term = A + B * i;\n            concatenated.append(term);\n        }\n        \n        String result = concatenated.toString();\n        \n        // Remove leading zeros\n        while (result.startsWith(\"0\") && result.length() > 1) {\n            result = result.substring(1);\n        }\n        \n        // Compute remainder\n        long remainder = 0;\n        for (char c : result.toCharArray()) {\n            remainder = (remainder * 10 + (c - '0')) % M;\n        }\n        \n        return (int)remainder;\n    }\n}",
+    "timestamp": "2025-08-05 22:50:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nlong long concatenate_and_mod(vector<long long>& progression, long long mod) {\n    string concatenated;\n    for (long long num : progression) {\n        concatenated += to_string(num);\n    }\n    \n    long long result = 0;\n    for (char digit : concatenated) {\n        result = (result * 10 + (digit - '0')) % mod;\n    }\n    \n    return result;\n}\n\nint main() {\n    int Q;\n    cin >> Q;\n    \n    while (Q--) {\n        long long L, A, B, M;\n        cin >> L >> A >> B >> M;\n        \n        vector<long long> progression;\n        for (int i = 0; i < L; i++) {\n            progression.push_back(A + B * i);\n        }\n        \n        cout << concatenate_and_mod(progression, M) << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def get_remainder(tuples):\n    results = []\n    for L, A, B, M in tuples:\n        concatenated_number = ''.join(str(A + B * i) for i in range(L))\n        remainder = int(concatenated_number) % M\n        results.append(remainder)\n    return results\n\n# Sample usage\nQ = 2\ntuples = [(3, 5, 2, 100), (4, 1, 1, 50)]\nprint(get_remainder(tuples))  # Example usage with given Q tuples",
+    "timestamp": "2025-08-13 12:39:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.math.BigInteger;\nimport java.util.Scanner;\n\npublic class ArithmeticConcatenationRemainder {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int Q = scanner.nextInt();\n        \n        for (int q = 0; q < Q; q++) {\n            int L = scanner.nextInt();\n            int A = scanner.nextInt();\n            int B = scanner.nextInt();\n            int M = scanner.nextInt();\n            \n            StringBuilder concatenated = new StringBuilder();\n            for (int i = 0; i < L; i++) {\n                int term = A + B * i;\n                concatenated.append(term);\n            }\n            \n            BigInteger concatenatedNumber = new BigInteger(concatenated.toString());\n            BigInteger modulus = BigInteger.valueOf(M);\n            BigInteger remainder = concatenatedNumber.mod(modulus);\n            \n            System.out.println(remainder);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 12:39:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main() {\n    int Q;\n    scanf(\"%d\", &Q);\n    \n    while (Q--) {\n        long long L, A, B, M;\n        scanf(\"%lld %lld %lld %lld\", &L, &A, &B, &M);\n        \n        char concatenated[10000] = \"\";\n        char buffer[20];\n        \n        for (long long i = 0; i < L; i++) {\n            sprintf(buffer, \"%lld\", A + B * i);\n            strcat(concatenated, buffer);\n        }\n        \n        long long remainder = 0;\n        for (int i = 0; i < strlen(concatenated); i++) {\n            remainder = (remainder * 10 + (concatenated[i] - '0')) % M;\n        }\n        \n        printf(\"%lld\\n\", remainder);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:39:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int Q;\n    cin >> Q;\n    vector<int> results(Q);\n\n    for (int q = 0; q < Q; ++q) {\n        int L, A, B, M;\n        cin >> L >> A >> B >> M;\n\n        string concatenated = \"\";\n        for (int i = 0; i < L; ++i) {\n            concatenated += to_string(A + B * i);\n        }\n\n        long long remainder = 0;\n        for (char digit : concatenated) {\n            remainder = (remainder * 10 + (digit - '0')) % M;\n        }\n\n        results[q] = remainder;\n    }\n\n    for (int result : results) {\n        cout << result << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:39:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_problem(Q, queries):\n    results = []\n    \n    for L, A, B, M in queries:\n        # Generate the arithmetic progression terms\n        progression = [str(A + B * i) for i in range(L)]\n        \n        # Concatenate the terms without leading zeros\n        concatenated = ''.join(progression)\n        \n        # Calculate the remainder when divided by M\n        remainder = int(concatenated) % M\n        \n        results.append(remainder)\n    \n    return results\n\n# Input processing\nQ = int(input())\nqueries = []\n\nfor _ in range(Q):\n    L, A, B, M = map(int, input().split())\n    queries.append((L, A, B, M))\n\n# Get and print results\noutput = solve_problem(Q, queries)\nfor result in output:\n    print(result)",
+    "timestamp": "2025-08-13 12:39:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    input = sys.stdin.read().split()\n    idx = 0\n    Q = int(input[idx])\n    idx += 1\n    for _ in range(Q):\n        L = int(input[idx])\n        A = int(input[idx+1])\n        B = int(input[idx+2])\n        M = int(input[idx+3])\n        idx +=4\n        \n        res = 0\n        power_of_10 = 1\n        total_length = 0\n        \n        current = A\n        for i in range(L):\n            s_i = A + B * i\n            s_str = str(s_i)\n            length = len(s_str)\n            \n            # Compute (res * 10^length + s_i) mod M\n            # res = (res * pow(10, length, M) + s_i) % M\n            # But pow(10, length, M) can be precomputed per s_i\n            pow_10_len = pow(10, length, M)\n            res = (res * pow_10_len + s_i) % M\n        \n        print(res % M)\n\nsolve()",
+    "timestamp": "2025-08-13 12:39:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateRemainders(tuples) {\n  return tuples.map(([L, A, B, M]) => {\n    let concatenatedNumber = '';\n    \n    for (let i = 0; i < L; i++) {\n      concatenatedNumber += (A + B * i).toString();\n    }\n\n    // Convert concatenatedNumber to a BigInt to handle large numbers\n    const bigIntNumber = BigInt(concatenatedNumber);\n    const modulus = BigInt(M);\n\n    return bigIntNumber % modulus;\n  });\n}\n\n// Example usage:\n// const tuples = [\n//   [3, 1, 1, 123],\n//   [4, 10, 5, 10000]\n// ];\n// console.log(calculateRemainders(tuples)); // [12, 4510]",
+    "timestamp": "2025-08-13 12:39:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(Q, queries) {\n    const result = [];\n    \n    for (let [L, A, B, M] of queries) {\n        let concatenatedNumber = '';\n        \n        for (let i = 0; i < L; i++) {\n            let term = A + B * i;\n            concatenatedNumber += term.toString();\n        }\n        \n        let remainder = BigInt(concatenatedNumber) % BigInt(M);\n        result.push(Number(remainder));\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 12:40:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const readline = require('readline');\n\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout\n});\n\nlet Q = 0;\nlet queries = [];\n\nrl.on('line', (line) => {\n    if (Q === 0) {\n        Q = parseInt(line.trim());\n    } else {\n        const [L, A, B, M] = line.trim().split(' ').map(BigInt);\n        queries.push({ L, A, B, M });\n        if (queries.length === Q) {\n            solve();\n            rl.close();\n        }\n    }\n});\n\nfunction solve() {\n    for (const { L, A, B, M } of queries) {\n        let result = 0n;\n        let currentTerm = A;\n        for (let i = 0n; i < L; i++) {\n            const term = currentTerm.toString();\n            const termLength = BigInt(term.length);\n            const power = 10n ** termLength;\n            result = (result * power + currentTerm) % M;\n            currentTerm += B;\n        }\n        console.log(result.toString());\n    }\n}",
+    "timestamp": "2025-08-13 12:40:08"
+  }
+]

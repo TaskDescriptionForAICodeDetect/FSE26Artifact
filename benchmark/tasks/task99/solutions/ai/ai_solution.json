@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nlong long gcd(long long a, long long b) {\n    while (b != 0) {\n        long long temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nlong long lcm(long long a, long long b) {\n    return a / gcd(a, b) * b;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    long long common_time = 1;\n    long long d[n], v[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld %lld\", &d[i], &v[i]);\n        long long time = d[i] * 3600 / v[i]; // Convert to seconds to avoid floating points\n        common_time = lcm(common_time, time);\n    }\n    for (int i = 0; i < n; i++) {\n        long long time = d[i] * 3600 / v[i];\n        printf(\"%lld\\n\", common_time / time);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:35:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class JoggingExercise {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int[] distances = new int[n];\n        int[] speeds = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            distances[i] = scanner.nextInt();\n            speeds[i] = scanner.nextInt();\n        }\n        \n        scanner.close();\n        \n        long result = findCommonLap(n, distances, speeds);\n        System.out.println(result);\n    }\n    \n    private static long gcd(long a, long b) {\n        while (b != 0) {\n            long temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n    \n    private static long lcm(long a, long b) {\n        return (a / gcd(a, b)) * b;\n    }\n    \n    private static long findCommonLap(int n, int[] distances, int[] speeds) {\n        long[] times = new long[n];\n        \n        for (int i = 0; i < n; i++) {\n            times[i] = (long) distances[i] * 3600 / speeds[i];\n        }\n        \n        long commonTime = times[0];\n        for (int i = 1; i < n; i++) {\n            commonTime = lcm(commonTime, times[i]);\n        }\n        \n        long[] laps = new long[n];\n        for (int i = 0; i < n; i++) {\n            laps[i] = commonTime / times[i];\n        }\n        \n        long maxLap = laps[0];\n        for (int i = 1; i < n; i++) {\n            maxLap = Math.max(maxLap, laps[i]);\n        }\n        \n        return maxLap;\n    }\n}",
+    "timestamp": "2025-08-05 18:36:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nlong long gcd(long long a, long long b) {\n    while (b != 0) {\n        long long temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nlong long lcm(long long a, long long b) {\n    if (a == 0 || b == 0) {\n        return 0;\n    }\n    return (a / gcd(a, b)) * b;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<long long> times(n);\n    \n    for (int i = 0; i < n; ++i) {\n        long long d, v;\n        cin >> d >> v;\n        times[i] = d * v;\n    }\n    \n    long long total_lcm = times[0];\n    for (int i = 1; i < n; ++i) {\n        total_lcm = lcm(total_lcm, times[i]);\n    }\n    \n    for (int i = 0; i < n; ++i) {\n        cout << total_lcm / times[i] << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:36:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nlong long gcd(long long a, long long b) {\n    while (b != 0) {\n        long long temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nlong long lcm(long long a, long long b) {\n    return (a / gcd(a, b)) * b;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    long long total_time = 0;\n    long long laps[n];\n    \n    for (int i = 0; i < n; i++) {\n        long long d, v;\n        scanf(\"%lld %lld\", &d, &v);\n        \n        long long lap_time = (d * 60LL) / v;\n        total_time = lcm(total_time == 0 ? lap_time : total_time, lap_time);\n        \n        laps[i] = total_time / lap_time;\n    }\n    \n    for (int i = 0; i < n; i++) {\n        printf(\"%lld\\n\", laps[i]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:36:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n#include <algorithm>\n\nusing namespace std;\n\nlong long gcd(long long a, long long b) {\n    while (b) {\n        a %= b;\n        swap(a, b);\n    }\n    return a;\n}\n\nlong long lcm(long long a, long long b) {\n    return a / gcd(a, b) * b;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<long long> times(n);\n    for (int i = 0; i < n; i++) {\n        long long d, v;\n        cin >> d >> v;\n        times[i] = d * 60 / v;\n    }\n    \n    long long meeting_time = times[0];\n    for (int i = 1; i < n; i++) {\n        meeting_time = lcm(meeting_time, times[i]);\n    }\n    \n    vector<long long> laps(n);\n    for (int i = 0; i < n; i++) {\n        laps[i] = meeting_time / times[i];\n    }\n    \n    cout << *max_element(laps.begin(), laps.end()) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:37:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        double[] d = new double[n];\n        double[] v = new double[n];\n        \n        for (int i = 0; i < n; i++) {\n            d[i] = scanner.nextDouble();\n            v[i] = scanner.nextDouble();\n        }\n        \n        double[] timePerLap = new double[n];\n        for (int i = 0; i < n; i++) {\n            timePerLap[i] = d[i] / v[i];\n        }\n        \n        double lcm = timePerLap[0];\n        for (int i = 1; i < n; i++) {\n            lcm = lcm(lcm, timePerLap[i]);\n        }\n        \n        int[] laps = new int[n];\n        for (int i = 0; i < n; i++) {\n            laps[i] = (int) Math.round(lcm / timePerLap[i]);\n        }\n        \n        for (int lap : laps) {\n            System.out.println(lap);\n        }\n    }\n    \n    private static double gcd(double a, double b) {\n        while (Math.abs(b) > 0.0001) {\n            double temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n    \n    private static double lcm(double a, double b) {\n        return a * b / gcd(a, b);\n    }\n}",
+    "timestamp": "2025-08-05 18:37:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def lcm(a, b):\n    from math import gcd\n    return a * b // gcd(a, b)\n\ndef jogging_meeting_point(n, distances, speeds):\n    times_to_complete_lap = [distances[i] / speeds[i] for i in range(n)]\n\n    # Find the LCM of the times to complete the lap\n    full_laps_lcm = 1\n    for time in times_to_complete_lap:\n        full_laps_lcm = lcm(full_laps_lcm, int(time * 3600))  # Convert time to seconds for integral LCM calculation\n\n    laps_completed = [full_laps_lcm // (int(time * 3600)) for time in times_to_complete_lap]\n    return laps_completed\n\n# Example usage:\nn = 3\ndistances = [1, 2, 3]\nspeeds = [1, 1, 1]\nprint(jogging_meeting_point(n, distances, speeds))",
+    "timestamp": "2025-08-13 00:10:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.Arrays;\n\npublic class AkabekoElementarySchoolJogging {\n\n    public static long gcd(long a, long b) {\n        while (b != 0) {\n            long t = b;\n            b = a % b;\n            a = t;\n        }\n        return a;\n    }\n\n    public static long lcm(long a, long b) {\n        return (a / gcd(a, b)) * b;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        // Read the number of students\n        int n = scanner.nextInt();\n\n        // Arrays to store the distances and velocities\n        long[] distances = new long[n];\n        long[] velocities = new long[n];\n\n        // Read the distance and velocity for each student\n        for (int i = 0; i < n; i++) {\n            distances[i] = scanner.nextLong();\n            velocities[i] = scanner.nextLong();\n        }\n\n        // Calculate the time period for each student to complete a lap\n        long[] times = new long[n];\n        for (int i = 0; i < n; i++) {\n            times[i] = distances[i] / gcd(distances[i], velocities[i]);\n        }\n\n        // Calculate the LCM of all times\n        long commonMeetingTime = times[0];\n        for (int i = 1; i < n; i++) {\n            commonMeetingTime = lcm(commonMeetingTime, times[i]);\n        }\n\n        // Calculate the number of laps each student has completed\n        long[] laps = new long[n];\n        for (int i = 0; i < n; i++) {\n            laps[i] = commonMeetingTime / times[i];\n        }\n\n        // Output the number of laps for each student\n        for (long lap : laps) {\n            System.out.println(lap);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 00:10:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nlong long gcd(long long a, long long b) {\n    while (b != 0) {\n        long long t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}\n\nlong long lcm(long long a, long long b) {\n    return a / gcd(a, b) * b;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    long long distances[n];\n    long long speeds[n];\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld %lld\", &distances[i], &speeds[i]);\n    }\n\n    long long totalLapsLCM = 1;\n\n    for (int i = 0; i < n; i++) {\n        long long timePerLap = distances[i] * speeds[0];\n        long long baseTime = distances[0] * speeds[i];\n        long long lapsLCM = lcm(timePerLap, baseTime);\n        totalLapsLCM = lcm(totalLapsLCM, lapsLCM / speeds[0]);\n    }\n    \n    for (int i = 0; i < n; i++) {\n        long long laps = totalLapsLCM * speeds[i] / (distances[i] * speeds[0]);\n        printf(\"%lld \", laps);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 00:10:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_meeting_time(n, d, v):\n    def gcd(a, b):\n        while b:\n            a, b = b, a % b\n        return a\n\n    def lcm(a, b):\n        return a * b // gcd(a, b)\n\n    lap_times = [d / speed for speed in v]\n    \n    def find_lcm_time(times):\n        current_lcm = times[0]\n        for i in range(1, len(times)):\n            current_lcm = lcm(current_lcm, times[i])\n        return current_lcm\n\n    total_time = find_lcm_time(lap_times)\n    \n    result = [int(total_time / lap_time) for lap_time in lap_times]\n    \n    return result\n\ndef main():\n    n = int(input())\n    d = float(input())\n    v = list(map(float, input().split()))\n    \n    laps = find_meeting_time(n, d, v)\n    \n    print(*laps)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 00:10:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef compute_laps(n, d, v):\n    lcm_time = 1\n    for i in range(n):\n        time_per_lap = d[i] / v[i]\n        gcd = math.gcd(int(lcm_time * 1000), int(time_per_lap * 1000))\n        lcm_time = (lcm_time * 1000 * time_per_lap * 1000) // gcd / 1000000\n    \n    laps = []\n    for i in range(n):\n        laps.append(int(round((lcm_time * v[i]) / d[i])))\n    \n    return laps\n\nn = int(input())\nd = list(map(int, input().split()))\nv = list(map(int, input().split()))\n\nlaps = compute_laps(n, d, v)\nprint(' '.join(map(str, laps)))",
+    "timestamp": "2025-08-13 00:11:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n#include <algorithm>\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}\n\nint lcm(int a, int b) {\n    return a / gcd(a, b) * b;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> laps(n);\n    for (int i = 0; i < n; ++i) {\n        int d, v;\n        cin >> d >> v;\n        laps[i] = d / gcd(d, v);\n    }\n    \n    int result = accumulate(laps.begin(), laps.end(), 1, lcm);\n    for (int i = 0; i < n; ++i) {\n        cout << result / laps[i] << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:52:50"
+  }
+]

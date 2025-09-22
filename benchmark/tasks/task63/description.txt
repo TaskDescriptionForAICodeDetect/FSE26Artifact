@@ -1,0 +1,1 @@
+There is a grid-like square that, when viewed from above, resembles the shape shown in Figure 1. Each edge of the grid is represented by a series of 0s and 1s, indicating the presence (1) or absence (0) of walls. Create a program that outputs a path starting from point A, walking while keeping the wall on the right side, and returning to point A.

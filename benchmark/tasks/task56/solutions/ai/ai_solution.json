@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(N, K, R, S, P, T):\n    # DP to track max score and last hand used\n    dp = [[0] * 3 for _ in range(N)]\n    \n    # Mapping for winning hands\n    wins = {'r': 'p', 'p': 's', 's': 'r'}\n    \n    # Scoring for each hand\n    scores = {'r': P, 'p': S, 's': R}\n    \n    # First K rounds can use any hand\n    for i in range(min(K, N)):\n        hand = wins[T[i]]\n        dp[i][{'p': 0, 's': 1, 'r': 2}[hand]] = scores[hand]\n    \n    # DP for rest of the rounds\n    for i in range(K, N):\n        for j in range(3):\n            hand_now = ['p', 's', 'r'][j]\n            \n            # Check if current hand wins against machine's hand\n            if hand_now == wins[T[i]]:\n                max_prev = max(dp[i-K][:j] + dp[i-K][j+1:])\n                dp[i][j] = max_prev + scores[hand_now]\n    \n    return max(dp[N-1])\n\n# Read input\nN, K = map(int, input().split())\nR, S, P = map(int, input().split())\nT = input().strip()\n\n# Print result\nprint(solve(N, K, R, S, P, T))",
+    "timestamp": "2025-08-05 17:33:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve():\n    N, K = map(int, input().split())\n    R, S, P = map(int, input().split())\n    T = input().strip()\n    \n    # Map to determine the winning hand and corresponding points\n    win_hand = {'r': ('p', P), 's': ('r', R), 'p': ('s', S)}\n    \n    total = 0\n    # Track the last used hand in each mod K group\n    last_used = [None] * K\n    \n    for i in range(N):\n        mod = i % K\n        current_char = T[i]\n        hand, points = win_hand[current_char]\n        if last_used[mod] != hand:\n            total += points\n            last_used[mod] = hand\n        else:\n            last_used[mod] = None  # can't use in the next round in this group\n    \n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-05 17:34:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_score(N, K, R, S, P, T):\n    dp = [[0] * 3 for _ in range(N+1)]\n    hand_points = {'r': P, 'p': S, 's': R}\n    \n    for i in range(N):\n        for j in range(3):\n            dp[i+1][j] = max(dp[i][j], dp[i+1][j])\n            dp[i+1][j] = max(dp[i+1][j], dp[i+1][(j+1)%3], dp[i+1][(j+2)%3])\n            \n            if i >= K and dp[i+1][j] == dp[i-K+1][(j+1)%3]:\n                continue\n            if i >= K and dp[i+1][j] == dp[i-K+1][(j+2)%3]:\n                continue\n\n            winning_move = {'r': 0, 's': 1, 'p': 2}\n            move = winning_move[T[i]]\n            dp[i+1][move] = max(dp[i+1][move], dp[i][j] + hand_points[T[i]])\n    \n    print(max(dp[N][0], dp[N][1], dp[N][2]))\n\nimport sys\ninput = sys.stdin.read\ndata = input().split()\nN, K = map(int, data[:2])\nR, S, P = map(int, data[2:5])\nT = data[5]\n\nmax_score(N, K, R, S, P, T)",
+    "timestamp": "2025-08-12 21:55:30"
+  }
+]

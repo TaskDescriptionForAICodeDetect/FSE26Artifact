@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13\n1 2\n2 3\n",
+      "output": "First"
+    },
+    {
+      "input": "26\n1 2\n2 3\n2 4\n4 6\n5 6\n",
+      "output": "Second"
+    },
+    {
+      "input": "37\n1 7\n7 4\n3 4\n7 5\n6 3\n2 1\n",
+      "output": "First"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "from itertools import combinations\n\ndef factorial(n):\n    if n == 0 or n == 1:\n        return 1\n    return n * factorial(n-1)\n\ndef solve(n, k, S, cubes):\n    ways = 0\n    \n    # Try all possible subset sizes\n    for subset_size in range(1, n+1):\n        # Try all possible subsets of that size\n        for subset in combinations(range(n), subset_size):\n            # Try all possible factorial mark combinations\n            for mark_count in range(min(k, subset_size) + 1):\n                for marks in combinations(subset, mark_count):\n                    # Calculate sum with potential factorial transformations\n                    current_sum = 0\n                    for i in subset:\n                        # Check if this cube is getting factorial\n                        if i in marks:\n                            current_sum += factorial(cubes[i])\n                        else:\n                            current_sum += cubes[i]\n                    \n                    # If sum matches target, increment ways\n                    if current_sum == S:\n                        ways += 1\n    \n    return ways\n\n# Read input\nn, k, S = map(int, input().split())\ncubes = list(map(int, input().split()))\n\n# Print output\nprint(solve(n, k, S, cubes))",
+    "timestamp": "2025-08-05 17:31:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import sys\nfrom math import factorial\nfrom collections import defaultdict\n\ndef solve():\n    n, k, S = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    \n    half = n // 2\n    left = a[:half]\n    right = a[half:]\n    \n    # Process left half\n    left_counts = defaultdict(dict)\n    for mask in range(0, 1 << len(left)):\n        bits = bin(mask).count('1')\n        if bits > k:\n            continue\n        total = 0\n        for i in range(len(left)):\n            if mask & (1 << i):\n                fact = factorial(left[i])\n                if fact > S:\n                    total = -1\n                    break\n                total += fact\n            else:\n                if mask & (1 << i) == 0:\n                    total += left[i]\n        if total != -1 and total <= S:\n            if bits in left_counts[total]:\n                left_counts[total][bits] += 1\n            else:\n                left_counts[total][bits] = 1\n    \n    # Process right half\n    right_counts = defaultdict(dict)\n    for mask in range(0, 1 << len(right)):\n        bits = bin(mask).count('1')\n        if bits > k:\n            continue\n        total = 0\n        for i in range(len(right)):\n            if mask & (1 << i):\n                fact = factorial(right[i])\n                if fact > S:\n                    total = -1\n                    break\n                total += fact\n            else:\n                if mask & (1 << i) == 0:\n                    total += right[i]\n        if total != -1 and total <= S:\n            if bits in right_counts[total]:\n                right_counts[total][bits] += 1\n            else:\n                right_counts[total][bits] = 1\n    \n    res = 0\n    for s in left_counts:\n        remaining = S - s\n        if remaining in right_counts:\n            for k1 in left_counts[s]:\n                for k2 in right_counts[remaining]:\n                    if k1 + k2 <= k:\n                        res += left_counts[s][k1] * right_counts[remaining][k2]\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-05 17:32:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef count_ways(n, k, S, a):\n    memo = {}\n\n    def dp(index, stickers_left, current_sum):\n        if stickers_left < 0:\n            return 0\n        if index == n:\n            return 1 if current_sum == S else 0\n\n        if (index, stickers_left, current_sum) in memo:\n            return memo[(index, stickers_left, current_sum)]\n\n        normal_sum = current_sum + a[index]\n        factorial_sum = current_sum + math.factorial(a[index])\n\n        ways = dp(index + 1, stickers_left, normal_sum)\n        ways += dp(index + 1, stickers_left - 1, factorial_sum)\n        ways += dp(index + 1, stickers_left, current_sum)\n\n        memo[(index, stickers_left, current_sum)] = ways\n        return ways\n\n    return dp(0, k, 0)\n\nn, k, S = map(int, input().split())\na = list(map(int, input().split()))\n\nprint(count_ways(n, k, S, a))",
+    "timestamp": "2025-08-12 21:42:51"
+  }
+]

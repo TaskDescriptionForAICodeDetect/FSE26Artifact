@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "[+c[+a[^bd]]]\n0404",
+      "output": "0 10"
+    },
+    {
+      "input": "[*b[*[*cd]a]]\n7777",
+      "output": "7 1"
+    },
+    {
+      "input": "[^[^ab][^cd]]\n1295",
+      "output": "15 544"
+    },
+    {
+      "input": "a\n9876",
+      "output": "9 1000"
+    },
+    {
+      "input": "[^dd]\n9090",
+      "output": "0 10000"
+    }
+  ]
+}

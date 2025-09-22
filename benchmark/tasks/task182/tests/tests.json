@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "get_user_name L",
+      "output": "getUserName"
+    },
+    {
+      "input": "getUserName U",
+      "output": "GetUserName"
+    },
+    {
+      "input": "GetUserName D",
+      "output": "get_user_name"
+    }
+  ]
+}

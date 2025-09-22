@@ -1,0 +1,1 @@
+You are given a sequence a of length N. For each pair (l, r) (1 ≤ l ≤ r ≤ N), calculate the median of the contiguous subsequence (a[l], a[l + 1], ..., a[r]) and create a new sequence m from these medians. Find the median of sequence m.

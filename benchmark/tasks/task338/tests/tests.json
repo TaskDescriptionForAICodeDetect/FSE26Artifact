@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3 1 5 25\n3 7 77 777\n4 1 8 27 64\n0",
+      "output": "Case #1: OK\nCase #2: Cannot pay some amount\nCase #3: Cannot use greedy algorithm"
+    }
+  ]
+}

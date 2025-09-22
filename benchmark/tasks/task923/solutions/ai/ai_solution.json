@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint knapsack(int W, int weights[], int values[], int n) {\n    int** dp = (int**)malloc((n + 1) * sizeof(int*));\n    for (int i = 0; i <= n; i++) {\n        dp[i] = (int*)calloc(W + 1, sizeof(int));\n    }\n\n    for (int i = 1; i <= n; i++) {\n        for (int w = 1; w <= W; w++) {\n            if (weights[i-1] <= w) {\n                dp[i][w] = max(values[i-1] + dp[i-1][w-weights[i-1]], dp[i-1][w]);\n            } else {\n                dp[i][w] = dp[i-1][w];\n            }\n        }\n    }\n\n    int result = dp[n][W];\n\n    for (int i = 0; i <= n; i++) {\n        free(dp[i]);\n    }\n    free(dp);\n\n    return result;\n}\n\nint main() {\n    int n, W;\n    scanf(\"%d %d\", &n, &W);\n\n    int* weights = malloc(n * sizeof(int));\n    int* values = malloc(n * sizeof(int));\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &weights[i], &values[i]);\n    }\n\n    int maxValue = knapsack(W, weights, values, n);\n    printf(\"%d\\n\", maxValue);\n\n    free(weights);\n    free(values);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:20:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint knapsack(int W, int wt[], int val[], int n) {\n    int i, w;\n    int **K = (int **)malloc((n + 1) * sizeof(int *));\n    for (i = 0; i <= n; i++) {\n        K[i] = (int *)malloc((W + 1) * sizeof(int));\n    }\n\n    for (i = 0; i <= n; i++) {\n        for (w = 0; w <= W; w++) {\n            if (i == 0 || w == 0)\n                K[i][w] = 0;\n            else if (wt[i - 1] <= w)\n                K[i][w] = max(val[i - 1] + K[i - 1][w - wt[i - 1]], K[i - 1][w]);\n            else\n                K[i][w] = K[i - 1][w];\n        }\n    }\n\n    int result = K[n][W];\n    \n    for (i = 0; i <= n; i++) {\n        free(K[i]);\n    }\n    free(K);\n\n    return result;\n}\n\nint main() {\n    int W, n;\n    scanf(\"%d %d\", &W, &n);\n\n    int *wt = (int *)malloc(n * sizeof(int));\n    int *val = (int *)malloc(n * sizeof(int));\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &wt[i], &val[i]);\n    }\n\n    printf(\"%d\\n\", knapsack(W, wt, val, n));\n\n    free(wt);\n    free(val);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:21:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint knapsack(int W, vector<int>& wt, vector<int>& val, int n) {\n    vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));\n\n    for (int i = 1; i <= n; ++i) {\n        for (int w = 1; w <= W; ++w) {\n            if (wt[i - 1] <= w) {\n                dp[i][w] = max(val[i - 1] + dp[i - 1][w - wt[i - 1]], dp[i - 1][w]);\n            } else {\n                dp[i][w] = dp[i - 1][w];\n            }\n        }\n    }\n\n    return dp[n][W];\n}\n\nint main() {\n    int N, W;\n    cin >> N >> W;\n    vector<int> w(N), v(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> w[i] >> v[i];\n    }\n    cout << knapsack(W, w, v, N) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:21:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Knapsack {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int W = scanner.nextInt();\n        int[] w = new int[N];\n        int[] v = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            w[i] = scanner.nextInt();\n            v[i] = scanner.nextInt();\n        }\n        \n        long[][] dp = new long[N + 1][W + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j <= W; j++) {\n                if (w[i - 1] <= j) {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - w[i - 1]] + v[i - 1]);\n                } else {\n                    dp[i][j] = dp[i - 1][j];\n                }\n            }\n        }\n        \n        System.out.println(dp[N][W]);\n    }\n}",
+    "timestamp": "2025-08-05 23:23:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Knapsack {\n    public static int maxValue(int W, int[] weights, int[] values) {\n        int N = weights.length;\n        int[][] dp = new int[N + 1][W + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            for (int w = 1; w <= W; w++) {\n                if (weights[i-1] <= w) {\n                    dp[i][w] = Math.max(\n                        values[i-1] + dp[i-1][w - weights[i-1]], \n                        dp[i-1][w]\n                    );\n                } else {\n                    dp[i][w] = dp[i-1][w];\n                }\n            }\n        }\n        \n        return dp[N][W];\n    }\n    \n    public static void main(String[] args) {\n        int W = 50;\n        int[] weights = {10, 20, 30};\n        int[] values = {60, 100, 120};\n        \n        System.out.println(maxValue(W, weights, values));\n    }\n}",
+    "timestamp": "2025-08-05 23:23:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint knapsack(int W, vector<int>& weights, vector<int>& values, int N) {\n    vector<vector<int>> dp(N + 1, vector<int>(W + 1, 0));\n\n    for (int i = 1; i <= N; i++) {\n        for (int w = 1; w <= W; w++) {\n            if (weights[i-1] <= w) {\n                dp[i][w] = max(values[i-1] + dp[i-1][w - weights[i-1]], dp[i-1][w]);\n            } else {\n                dp[i][w] = dp[i-1][w];\n            }\n        }\n    }\n\n    return dp[N][W];\n}\n\nint main() {\n    int N, W;\n    cin >> N >> W;\n\n    vector<int> weights(N);\n    vector<int> values(N);\n\n    for (int i = 0; i < N; i++) {\n        cin >> weights[i] >> values[i];\n    }\n\n    int maxValue = knapsack(W, weights, values, N);\n    cout << maxValue << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def knapsack(N, W, items):\n    dp = [[0] * (W + 1) for _ in range(N + 1)]\n    \n    for i in range(1, N + 1):\n        for w in range(W + 1):\n            if items[i - 1][0] <= w:\n                dp[i][w] = max(dp[i - 1][w], dp[i - 1][w - items[i - 1][0]] + items[i - 1][1])\n            else:\n                dp[i][w] = dp[i - 1][w]\n    \n    return dp[N][W]\n\n# Example usage:\nN = 4\nW = 5\nitems = [(2, 3), (3, 4), (4, 5), (5, 6)]  # (weight, value)\nprint(knapsack(N, W, items))  # Output: 7",
+    "timestamp": "2025-08-13 14:59:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Knapsack {\n    public static int maxKnapsackValue(int W, int[] weights, int[] values, int N) {\n        int[][] dp = new int[N+1][W+1];\n\n        for (int i = 1; i <= N; i++) {\n            for (int w = 0; w <= W; w++) {\n                if (weights[i-1] <= w) {\n                    dp[i][w] = Math.max(\n                        dp[i-1][w], \n                        values[i-1] + dp[i-1][w-weights[i-1]]\n                    );\n                } else {\n                    dp[i][w] = dp[i-1][w];\n                }\n            }\n        }\n        return dp[N][W];\n    }\n\n    public static void main(String[] args) {\n        int N = 4;\n        int W = 10;\n        int[] weights = {5, 4, 6, 3};\n        int[] values = {10, 40, 30, 50};\n\n        System.out.println(maxKnapsackValue(W, weights, values, N));\n    }\n}",
+    "timestamp": "2025-08-13 15:00:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define max(a, b) ((a) > (b) ? (a) : (b))\n\nint knapsack(int N, int W, int weights[], int values[]) {\n    int dp[W + 1];\n    for (int i = 0; i <= W; i++) {\n        dp[i] = 0;\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = W; j >= weights[i]; j--) {\n            dp[j] = max(dp[j], dp[j - weights[i]] + values[i]);\n        }\n    }\n\n    return dp[W];\n}\n\nint main() {\n    int N, W;\n    scanf(\"%d %d\", &N, &W);\n\n    int weights[N], values[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &weights[i], &values[i]);\n    }\n\n    int max_value = knapsack(N, W, weights, values);\n    printf(\"%d\\n\", max_value);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:00:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint knapsack(int N, int W, const vector<int>& weights, const vector<int>& values) {\n    vector<vector<int>> dp(N+1, vector<int>(W+1, 0));\n    for (int i = 1; i <= N; ++i) {\n        for (int w = 0; w <= W; ++w) {\n            dp[i][w] = dp[i-1][w];\n            if (weights[i-1] <= w) {\n                dp[i][w] = max(dp[i][w], dp[i-1][w-weights[i-1]] + values[i-1]);\n            }\n        }\n    }\n    return dp[N][W];\n}\n\nint main() {\n    int N, W;\n    cin >> N >> W;\n    vector<int> weights(N), values(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> weights[i] >> values[i];\n    }\n    cout << knapsack(N, W, weights, values) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:00:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def knapsack(W, weights, values, n):\n    # Create a 2D table to store maximum values\n    dp = [[0 for _ in range(W + 1)] for _ in range(n + 1)]\n    \n    # Build table dp[][] in bottom-up manner\n    for i in range(1, n + 1):\n        for w in range(1, W + 1):\n            # If including current item doesn't exceed weight limit\n            if weights[i-1] <= w:\n                dp[i][w] = max(values[i-1] + dp[i-1][w-weights[i-1]], dp[i-1][w])\n            else:\n                dp[i][w] = dp[i-1][w]\n    \n    return dp[n][W]\n\ndef main():\n    # Example usage\n    W = 50  # Bag capacity\n    weights = [10, 20, 30]\n    values = [60, 100, 120]\n    n = len(weights)\n    \n    max_value = knapsack(W, weights, values, n)\n    print(f\"Maximum value: {max_value}\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 15:00:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def knapsack(N, W, weights, values):\n    dp = [[0] * (W + 1) for _ in range(N + 1)]\n    \n    for i in range(1, N + 1):\n        for j in range(1, W + 1):\n            if weights[i-1] <= j:\n                dp[i][j] = max(dp[i-1][j], values[i-1] + dp[i-1][j - weights[i-1]])\n            else:\n                dp[i][j] = dp[i-1][j]\n    \n    return dp[N][W]\n\n# Example usage:\n# N = 3\n# W = 50\n# weights = [10, 20, 30]\n# values = [60, 100, 120]\n# print(knapsack(N, W, weights, values))  # Output: 220",
+    "timestamp": "2025-08-13 15:00:18"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nlong long solve(int W, int H, int K) {\n    // DP table to store number of paths\n    long long dp[H + 1][W];\n    memset(dp, 0, sizeof(dp));\n    \n    // Initial state: start at leftmost column\n    dp[0][0] = 1;\n    \n    // Iterate through rows (heights)\n    for (int h = 1; h <= H; h++) {\n        for (int w = 0; w < W; w++) {\n            // Can move vertically down without crossing\n            dp[h][w] += dp[h-1][w];\n            \n            // Try moving left\n            if (w > 0) {\n                dp[h][w] += dp[h-1][w-1];\n            }\n            \n            // Try moving right\n            if (w < W - 1) {\n                dp[h][w] += dp[h-1][w+1];\n            }\n            \n            // Take modulo to prevent overflow\n            dp[h][w] %= MOD;\n        }\n    }\n    \n    // Return paths ending at Kth column\n    return dp[H][K-1];\n}\n\nint main() {\n    int W, H, K;\n    scanf(\"%d %d %d\", &W, &H, &K);\n    printf(\"%lld\\n\", solve(W, H, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:00:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_H 100\n#define MAX_W 8\n\nint H, W, K;\nint dp[MAX_H + 1][MAX_W];\n\nint isValid(int mask) {\n    for (int i = 0; i < W - 2; i++) {\n        if ((mask & (1 << i)) && (mask & (1 << (i + 1)))) {\n            return 0;\n        }\n    }\n    return 1;\n}\n\nvoid solve() {\n    scanf(\"%d %d %d\", &H, &W, &K);\n    K--;\n    \n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n    \n    for (int h = 0; h < H; h++) {\n        for (int mask = 0; mask < (1 << (W - 1)); mask++) {\n            if (!isValid(mask)) continue;\n            \n            int perm[MAX_W];\n            for (int i = 0; i < W; i++) perm[i] = i;\n            \n            for (int i = 0; i < W - 1; i++) {\n                if (mask & (1 << i)) {\n                    int temp = perm[i];\n                    perm[i] = perm[i + 1];\n                    perm[i + 1] = temp;\n                }\n            }\n            \n            for (int i = 0; i < W; i++) {\n                dp[h + 1][perm[i]] = (dp[h + 1][perm[i]] + dp[h][i]) % MOD;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", dp[H][K]);\n}\n\nint main() {\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:01:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1000000007;\n\nint main() {\n    int H, W, K;\n    cin >> H >> W >> K;\n    K--; // 0-based index\n\n    vector<vector<int>> dp(H + 1, vector<int>(W, 0));\n    dp[0][0] = 1;\n\n    for (int h = 0; h < H; ++h) {\n        for (int mask = 0; mask < (1 << (W - 1)); ++mask) {\n            bool valid = true;\n            for (int i = 0; i < W - 2; ++i) {\n                if ((mask & (1 << i)) && (mask & (1 << (i + 1)))) {\n                    valid = false;\n                    break;\n                }\n            }\n            if (!valid) continue;\n\n            vector<int> perm(W);\n            for (int i = 0; i < W; ++i) {\n                perm[i] = i;\n            }\n            for (int i = 0; i < W - 1; ++i) {\n                if (mask & (1 << i)) {\n                    swap(perm[i], perm[i + 1]);\n                }\n            }\n\n            for (int i = 0; i < W; ++i) {\n                dp[h + 1][perm[i]] = (dp[h + 1][perm[i]] + dp[h][i]) % MOD;\n            }\n        }\n    }\n\n    cout << dp[H][K] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:01:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Amidakuji {\n    private static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        int K = sc.nextInt();\n        sc.close();\n\n        long[][] dp = new long[H + 1][W];\n        dp[0][0] = 1;\n\n        for (int h = 0; h < H; h++) {\n            for (int mask = 0; mask < (1 << (W - 1)); mask++) {\n                boolean valid = true;\n                for (int i = 0; i < W - 2; i++) {\n                    if (((mask >> i) & 1) == 1 && ((mask >> (i + 1)) & 1) == 1) {\n                        valid = false;\n                        break;\n                    }\n                }\n                if (!valid) continue;\n\n                int[] perm = new int[W];\n                for (int i = 0; i < W; i++) {\n                    perm[i] = i;\n                }\n                for (int i = 0; i < W - 1; i++) {\n                    if (((mask >> i) & 1) == 1) {\n                        int temp = perm[i];\n                        perm[i] = perm[i + 1];\n                        perm[i + 1] = temp;\n                    }\n                }\n                for (int i = 0; i < W; i++) {\n                    dp[h + 1][perm[i]] = (dp[h + 1][perm[i]] + dp[h][i]) % MOD;\n                }\n            }\n        }\n\n        System.out.println(dp[H][K - 1]);\n    }\n}",
+    "timestamp": "2025-08-05 23:01:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    private static final int MOD = 1_000_000_007;\n\n    public int countAmidakuji(int W, int H, int K) {\n        // DP array to store number of paths\n        long[][] dp = new long[H + 1][W];\n        \n        // Initialize start point\n        dp[0][0] = 1;\n        \n        // Fill DP table\n        for (int h = 1; h <= H; h++) {\n            for (int w = 0; w < W; w++) {\n                // Case 1: No horizontal line to the left\n                if (w > 0) {\n                    dp[h][w] += dp[h-1][w-1];\n                }\n                \n                // Case 2: No horizontal line to the right\n                if (w < W - 1) {\n                    dp[h][w] += dp[h-1][w+1];\n                }\n                \n                // No horizontal line\n                dp[h][w] += dp[h-1][w];\n                \n                // Take modulo\n                dp[h][w] %= MOD;\n            }\n        }\n        \n        // Return path count to K-th vertical line\n        return (int)dp[H][K];\n    }\n}",
+    "timestamp": "2025-08-05 23:01:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int numberOfValidPaths(int W, int H, int K) {\n        const int MOD = 1000000007;\n        vector<vector<long long>> dp(H + 1, vector<long long>(W, 0));\n        \n        // Initial state\n        dp[0][0] = 1;\n        \n        // Dynamic programming to calculate paths\n        for (int height = 1; height <= H; height++) {\n            for (int line = 0; line < W; line++) {\n                // No horizontal line\n                dp[height][line] = (dp[height][line] + dp[height-1][line]) % MOD;\n                \n                // Horizontal line to the left\n                if (line > 0) {\n                    dp[height][line] = (dp[height][line] + dp[height-1][line-1]) % MOD;\n                }\n                \n                // Horizontal line to the right\n                if (line < W - 1) {\n                    dp[height][line] = (dp[height][line] + dp[height-1][line+1]) % MOD;\n                }\n            }\n        }\n        \n        return dp[H][K-1];\n    }\n};",
+    "timestamp": "2025-08-05 23:02:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def countPaths(H, W, K):\n    MOD = 1_000_000_007\n    \n    def countValidPatterns(W):\n        dp = [0] * (W + 1)\n        dp[0] = 1\n        for i in range(1, W):\n            for j in range(i + 1):\n                dp[i] = (dp[i] + dp[j] * dp[i - j]) % MOD\n        return dp[:W]\n    \n    patterns = countValidPatterns(W)\n    \n    dp = [[0] * W for _ in range(H + 1)]\n    dp[0][0] = 1\n    \n    for h in range(1, H + 1):\n        for w in range(W):\n            dp[h][w] = patterns[w] * dp[h - 1][w] % MOD\n            if w > 0:\n                dp[h][w] = (dp[h][w] + patterns[w - 1] * dp[h - 1][w - 1]) % MOD\n            if w < W - 1:\n                dp[h][w] = (dp[h][w] + patterns[w] * dp[h - 1][w + 1]) % MOD\n    \n    return dp[H][K - 1]\n\n# Example usage:\nH = 3\nW = 3\nK = 2\nprint(countPaths(H, W, K))  # Example output",
+    "timestamp": "2025-08-13 13:19:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Amidakuji {\n\n    private static final int MOD = 1_000_000_007;\n\n    public static int countValidAmidakujiPaths(int W, int H, int K) {\n        if (W == 1) {\n            return (K == 1) ? 1 : 0;\n        }\n\n        long[][] dp = new long[H + 1][W + 1];\n        dp[0][1] = 1;\n\n        for (int h = 1; h <= H; h++) {\n            for (int w = 1; w <= W; w++) {\n                dp[h][w] = dp[h - 1][w];\n                if (w > 1) {\n                    dp[h][w] = (dp[h][w] + dp[h - 1][w - 1]) % MOD;\n                }\n                if (w < W) {\n                    dp[h][w] = (dp[h][w] + dp[h - 1][w + 1]) % MOD;\n                }\n            }\n        }\n\n        return (int) dp[H][K];\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int W = sc.nextInt();\n        int H = sc.nextInt();\n        int K = sc.nextInt();\n        System.out.println(countValidAmidakujiPaths(W, H, K));\n    }\n}",
+    "timestamp": "2025-08-13 13:19:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nint amidakujiPaths(int W, int H, int K) {\n    int dp[W][H + 1];\n    int ways[W];\n\n    // Initialize the ways array\n    ways[0] = 1;  // Start from the first line\n    for (int i = 1; i < W; i++) {\n        ways[i] = 0;\n    }\n\n    // Calculate paths using dynamic programming\n    for (int h = 1; h <= H; h++) {\n        // Reset dp table for each level height\n        for (int i = 0; i < W; i++) {\n            dp[i][h] = 0;\n        }\n\n        for (int i = 0; i < W; i++) {\n            // Stay on the same line: transfer ways[i]\n            dp[i][h] = (dp[i][h] + ways[i]) % MOD;\n\n            // Move to the right line: valid if not the last line\n            if (i < W - 1) {\n                dp[i + 1][h] = (dp[i + 1][h] + ways[i]) % MOD;\n            }\n\n            // Move to the left line: valid if not the first line\n            if (i > 0) {\n                dp[i - 1][h] = (dp[i - 1][h] + ways[i]) % MOD;\n            }\n        }\n\n        // Update ways array for next height with current dp state\n        for (int i = 0; i < W; i++) {\n            ways[i] = dp[i][h];\n        }\n    }\n\n    // Return the number of paths ending at the K-th vertical line\n    return ways[K - 1];\n}\n\nint main() {\n    int W, H, K;\n    scanf(\"%d %d %d\", &W, &H, &K);\n    printf(\"%d\\n\", amidakujiPaths(W, H, K));\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:19:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1000000007;\n\n// Function to count valid amidakuji paths\nint countPaths(int H, int W, int K) {\n    // dp[i][j] will store the number of ways to go from the top of the first vertical line to\n    // the bottom of the j-th vertical line after i horizontal lines\n    vector<vector<int>> dp(H + 1, vector<int>(W, 0));\n    dp[0][0] = 1;\n\n    // Precompute the number of ways to connect vertical lines with horizontal lines\n    vector<int> ways(W - 1, 0);\n    for (int mask = 0; mask < (1 << (W - 1)); ++mask) {\n        bool valid = true;\n        for (int j = 0; j < W - 2; ++j) {\n            if ((mask & (1 << j)) && (mask & (1 << (j + 1)))) {\n                valid = false;\n                break;\n            }\n        }\n        if (valid) {\n            int cnt = 0;\n            int last_pos = -1;\n            for (int i = 0; i < W - 1; ++i) {\n                if (mask & (1 << i)) {\n                    cnt++;\n                    last_pos = i;\n                }\n            }\n            ways[last_pos + 1] += 1;\n        }\n    }\n\n    // Calculate the number of valid amidakuji paths\n    for (int i = 1; i <= H; ++i) {\n        vector<int> new_dp(W, 0);\n        for (int j = 0; j < W; ++j) {\n            if (j > 0) {\n                new_dp[j] = (new_dp[j] + (long long)dp[i - 1][j - 1] * ways[j - 1]) % MOD;\n            }\n            new_dp[j] = (new_dp[j] + (long long)dp[i - 1][j] * ways[j]) % MOD;\n            if (j < W - 1) {\n                new_dp[j] = (new_dp[j] + (long long)dp[i - 1][j + 1] * ways[j + 1]) % MOD;\n            }\n        }\n        dp[i] = new_dp;\n    }\n\n    return dp[H][K - 1];\n}\n\nint main() {\n    int H, W, K;\n    cin >> H >> W >> K;\n    cout << countPaths(H, W, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:19:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_amidakuji_paths(W, H, K):\n    MOD = 10**9 + 7\n    \n    # Initialize DP table\n    dp = [[0] * W for _ in range(H + 1)]\n    dp[0][0] = 1\n    \n    # Fill DP table\n    for h in range(1, H + 1):\n        for w in range(W):\n            # No horizontal line\n            dp[h][w] = dp[h-1][w]\n            \n            # Try horizontal line from left\n            if w > 0:\n                dp[h][w] = (dp[h][w] + dp[h-1][w-1]) % MOD\n            \n            # Try horizontal line from right\n            if w < W - 1:\n                dp[h][w] = (dp[h][w] + dp[h-1][w+1]) % MOD\n    \n    return dp[H][K-1]",
+    "timestamp": "2025-08-13 13:19:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    H, W, K = map(int, input().split())\n    K -= 1  # converting to 0-based index\n    \n    dp = [[0] * W for _ in range(H + 1)]\n    dp[0][0] = 1\n    \n    for h in range(H):\n        for mask in range(1 << (W - 1)):\n            # Check if the mask is valid (no adjacent 1s)\n            valid = True\n            for i in range(W - 2):\n                if (mask & (1 << i)) and (mask & (1 << (i + 1))):\n                    valid = False\n                    break\n            if not valid:\n                continue\n            \n            # Create permutation\n            perm = list(range(W))\n            for i in range(W - 1):\n                if mask & (1 << i):\n                    perm[i], perm[i + 1] = perm[i + 1], perm[i]\n            \n            # Update dp\n            for i in range(W):\n                dp[h + 1][perm[i]] = (dp[h + 1][perm[i]] + dp[h][i]) % MOD\n    \n    print(dp[H][K])\n\nsolve()",
+    "timestamp": "2025-08-13 13:20:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function amidakujiPaths(W, H, K) {\n  const MOD = 1000000007;\n\n  // Precompute Pascal's triangle for combinations\n  const comb = Array.from({ length: H + 2 }, () => Array(H + 2).fill(0));\n  for (let i = 0; i <= H + 1; i++) {\n    comb[i][0] = comb[i][i] = 1;\n    for (let j = 1; j < i; j++) {\n      comb[i][j] = (comb[i - 1][j - 1] + comb[i - 1][j]) % MOD;\n    }\n  }\n\n  // DP table for paths\n  const dp = Array.from({ length: H + 1 }, () => Array.from({ length: W + 1 }, () => 0));\n  dp[0][1] = 1; // Starting point\n\n  for (let h = 1; h <= H; h++) {\n    for (let w = 1; w <= W; w++) {\n      // No horizontal line at height h between w-1 and w\n      dp[h][w] = dp[h - 1][w];\n      // Consider horizontal lines in previous column levels\n      for (let d = 0; d < w; d++) {\n        dp[h][w] = (dp[h][w] + dp[h - 1][w - d] * comb[W - 1 - d][w - d - 1]) % MOD;\n      }\n    }\n  }\n\n  return dp[H][K];\n}",
+    "timestamp": "2025-08-13 13:20:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countAmidakujiPaths(W, H, K) {\n    const MOD = 1000000007;\n    \n    // Create 2D DP table\n    const dp = Array.from({ length: H + 1 }, () => \n        Array(W).fill(0)\n    );\n    \n    // Starting point at top of leftmost line\n    dp[0][0] = 1;\n    \n    // Iterate through heights\n    for (let h = 1; h <= H; h++) {\n        for (let w = 0; w < W; w++) {\n            // Case 1: No horizontal line\n            dp[h][w] = (dp[h][w] + dp[h-1][w]) % MOD;\n            \n            // Case 2: Horizontal line to the right\n            if (w < W - 1) {\n                dp[h][w] = (dp[h][w] + dp[h-1][w+1]) % MOD;\n            }\n            \n            // Case 3: Horizontal line to the left\n            if (w > 0) {\n                dp[h][w] = (dp[h][w] + dp[h-1][w-1]) % MOD;\n            }\n        }\n    }\n    \n    return dp[H][K-1];\n}",
+    "timestamp": "2025-08-13 13:20:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1000000007;\n\nfunction solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let H, W, K;\n    rl.on('line', (line) => {\n        [H, W, K] = line.split(' ').map(Number);\n        rl.close();\n    });\n\n    rl.on('close', () => {\n        let dp = Array.from({ length: H + 2 }, () => Array(W + 2).fill(0));\n        dp[0][1] = 1;\n\n        for (let h = 1; h <= H + 1; h++) {\n            for (let k = 1; k <= W; k++) {\n                for (let mask = 0; mask < (1 << (W - 1)); mask++) {\n                    let valid = true;\n                    for (let i = 0; i < W - 2; i++) {\n                        if ((mask & (1 << i)) && (mask & (1 << (i + 1)))) {\n                            valid = false;\n                            break;\n                        }\n                    }\n                    if (!valid) continue;\n\n                    let pos = k;\n                    for (let i = 0; i < W - 1; i++) {\n                        if (mask & (1 << i)) {\n                            if (i + 1 === pos - 1) {\n                                pos--;\n                            } else if (i + 1 === pos) {\n                                pos++;\n                            }\n                        }\n                    }\n                    dp[h][pos] = (dp[h][pos] + dp[h - 1][k]) % MOD;\n                }\n            }\n        }\n\n        console.log(dp[H + 1][K]);\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:20:51"
+  }
+]

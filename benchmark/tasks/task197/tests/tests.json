@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\nA sample input\n9\nforward word\ndelete char\nforward word\ndelete char\nforward word\ndelete char\nbackward word\nbackward word\nforward word\nHallow, Word.\n7\nforward char\ndelete word\ninsert \"ello, \"\nforward word\nbackward char\nbackward char\ninsert \"l\"\n\n3\nforward word\nbackward word\ndelete word",
+      "output": "Asampleinput^\nHello,  Worl^d.\n^"
+    }
+  ]
+}

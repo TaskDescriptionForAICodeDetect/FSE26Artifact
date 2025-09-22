@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Position;\n\nint findMinPresses(char** keyboard, int rows, int cols, char current, char target, Position* pos) {\n    Position targetPos;\n    int found = 0;\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            if (keyboard[i][j] == target) {\n                targetPos.x = i;\n                targetPos.y = j;\n                found = 1;\n                break;\n            }\n        }\n        if (found) break;\n    }\n    int dx = abs(pos->x - targetPos.x);\n    int dy = abs(pos->y - targetPos.y);\n    pos->x = targetPos.x;\n    pos->y = targetPos.y;\n    return dx + dy + 1; // moves + OK press\n}\n\nint minButtonPresses(char** keyboard, int rows, int cols, char* word) {\n    Position currentPos = {0, 0};\n    int totalPresses = 0;\n    for (int i = 0; word[i] != '\\0'; i++) {\n        totalPresses += findMinPresses(keyboard, rows, cols, i == 0 ? '\\0' : word[i-1], word[i], &currentPos);\n    }\n    return totalPresses;\n}\n\nint main() {\n    int rows, cols;\n    scanf(\"%d %d\", &rows, &cols);\n    getchar(); // consume newline\n\n    char** keyboard = (char**)malloc(rows * sizeof(char*));\n    for (int i = 0; i < rows; i++) {\n        keyboard[i] = (char*)malloc((cols + 1) * sizeof(char));\n        fgets(keyboard[i], cols + 1, stdin);\n        getchar(); // consume newline\n    }\n\n    char word[101];\n    scanf(\"%100s\", word);\n\n    printf(\"%d\\n\", minButtonPresses(keyboard, rows, cols, word));\n\n    for (int i = 0; i < rows; i++) {\n        free(keyboard[i]);\n    }\n    free(keyboard);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <climits>\n#include <queue>\n\nusing namespace std;\n\nstruct Position {\n    int x, y;\n    Position(int x = 0, int y = 0) : x(x), y(y) {}\n};\n\nint minButtonPresses(const vector<string>& keyboard, const string& word) {\n    if (word.empty()) return 0;\n    \n    map<char, Position> charPos;\n    for (int i = 0; i < keyboard.size(); ++i) {\n        for (int j = 0; j < keyboard[i].size(); ++j) {\n            char c = keyboard[i][j];\n            charPos[c] = Position(i, j);\n        }\n    }\n    \n    Position current = charPos[keyboard[0][0]];\n    int totalPresses = 0;\n    \n    for (char c : word) {\n        Position target = charPos[c];\n        int dx = abs(target.x - current.x);\n        int dy = abs(target.y - current.y);\n        totalPresses += dx + dy + 1; // moves + OK\n        current = target;\n    }\n    \n    return totalPresses;\n}\n\nint main() {\n    vector<string> keyboard = {\n        \"ABCDEF\",\n        \"GHIJKL\",\n        \"MNOPQR\",\n        \"STUVWX\",\n        \"YZ0123\",\n        \"456789\"\n    };\n    \n    string word;\n    cin >> word;\n    \n    cout << minButtonPresses(keyboard, word) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class OSKMinPresses {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String input = scanner.nextLine();\n        char[][] keyboard = {\n            {'A', 'B', 'C', 'D', 'E', 'F'},\n            {'G', 'H', 'I', 'J', 'K', 'L'},\n            {'M', 'N', 'O', 'P', 'Q', 'R'},\n            {'S', 'T', 'U', 'V', 'W', 'X'},\n            {'Y', 'Z', '1', '2', '3', '4'},\n            {'5', '6', '7', '8', '9', '0'}\n        };\n        Map<Character, int[]> charPositions = new HashMap<>();\n        for (int i = 0; i < keyboard.length; i++) {\n            for (int j = 0; j < keyboard[i].length; j++) {\n                charPositions.put(keyboard[i][j], new int[]{i, j});\n            }\n        }\n        int totalPresses = 0;\n        int currentRow = 0, currentCol = 0;\n        for (char c : input.toCharArray()) {\n            int[] target = charPositions.get(c);\n            int targetRow = target[0];\n            int targetCol = target[1];\n            totalPresses += Math.abs(targetRow - currentRow) + Math.abs(targetCol - currentCol) + 1;\n            currentRow = targetRow;\n            currentCol = targetCol;\n        }\n        System.out.println(totalPresses);\n    }\n}",
+    "timestamp": "2025-08-05 21:04:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class OnScreenKeyboard {\n    public static int minimumButtonPresses(String target) {\n        char[][] keyboard = {\n            {'A', 'B', 'C', 'D', 'E'},\n            {'F', 'G', 'H', 'I', 'J'},\n            {'K', 'L', 'M', 'N', 'O'},\n            {'P', 'Q', 'R', 'S', 'T'},\n            {'U', 'V', 'W', 'X', 'Y'},\n            {'Z'}\n        };\n\n        int totalPresses = 0;\n        int currentRow = 0;\n        int currentCol = 0;\n\n        for (char c : target.toCharArray()) {\n            boolean found = false;\n            for (int row = 0; row < keyboard.length; row++) {\n                for (int col = 0; col < keyboard[row].length; col++) {\n                    if (keyboard[row][col] == c) {\n                        totalPresses += Math.abs(row - currentRow) + Math.abs(col - currentCol);\n                        totalPresses++;\n                        currentRow = row;\n                        currentCol = col;\n                        found = true;\n                        break;\n                    }\n                }\n                if (found) break;\n            }\n        }\n\n        return totalPresses;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String input = scanner.nextLine();\n        System.out.println(minimumButtonPresses(input.toUpperCase()));\n    }\n}",
+    "timestamp": "2025-08-05 21:04:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_LENGTH 100\n\nchar keyboard[3][10] = {\n    \"ABCDEFGHIJ\",\n    \"KLMNOPQRST\", \n    \"UVWXYZ    \"\n};\n\nint findCharPosition(char c) {\n    for (int row = 0; row < 3; row++) {\n        for (int col = 0; col < 10; col++) {\n            if (keyboard[row][col] == c) {\n                return row * 10 + col;\n            }\n        }\n    }\n    return -1;\n}\n\nint calculateDistance(int start, int end) {\n    int startRow = start / 10;\n    int startCol = start % 10;\n    int endRow = end / 10;\n    int endCol = end % 10;\n    \n    return abs(startRow - endRow) + abs(startCol - endCol);\n}\n\nint minimumButtonPresses(char* str) {\n    int totalPresses = 0;\n    int currentPos = 0;\n    \n    for (int i = 0; i < strlen(str); i++) {\n        int targetPos = findCharPosition(str[i]);\n        totalPresses += calculateDistance(currentPos, targetPos) + 1;\n        currentPos = targetPos;\n    }\n    \n    return totalPresses;\n}\n\nint main() {\n    char input[MAX_LENGTH];\n    scanf(\"%s\", input);\n    \n    printf(\"%d\\n\", minimumButtonPresses(input));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint minButtonPresses(string keyboard[], string target) {\n    int rows = 3;\n    int cols = 10;\n    int currentRow = 1, currentCol = 0;\n    int totalPresses = 0;\n\n    for (char c : target) {\n        int targetRow = -1, targetCol = -1;\n        \n        for (int r = 0; r < rows; r++) {\n            for (int j = 0; j < cols; j++) {\n                if (keyboard[r][j] == c) {\n                    targetRow = r;\n                    targetCol = j;\n                    break;\n                }\n            }\n            if (targetRow != -1) break;\n        }\n\n        int verticalMoves = abs(targetRow - currentRow);\n        int horizontalMoves = abs(targetCol - currentCol);\n\n        totalPresses += verticalMoves + horizontalMoves + 1;  // +1 for OK button\n        \n        currentRow = targetRow;\n        currentCol = targetCol;\n    }\n\n    return totalPresses;\n}\n\nint main() {\n    string keyboard[] = {\n        \"ABCDEFGHIJ\",\n        \"KLMNOPQRST\",\n        \"UVWXYZ1234\"\n    };\n    \n    string target;\n    cin >> target;\n\n    cout << minButtonPresses(keyboard, target) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_button_presses(screen, target):\n    def get_position(char):\n        for r in range(len(screen)):\n            if char in screen[r]:\n                return r, screen[r].index(char)\n        return None\n\n    current_pos = (0, 0)\n    button_presses = 0\n\n    for char in target:\n        target_pos = get_position(char)\n        if not target_pos:\n            continue\n\n        button_presses += abs(current_pos[0] - target_pos[0])  # vertical moves\n        button_presses += abs(current_pos[1] - target_pos[1])  # horizontal moves\n        button_presses += 1  # OK button press\n\n        current_pos = target_pos\n\n    return button_presses\n\n# Example usage:\nscreen_layout = [\n    \"abcdef\",\n    \"ghijkl\",\n    \"mnopqr\",\n    \"stuvwx\",\n    \"yz\"\n]\n\ntarget_string = \"hello\"\n\nprint(min_button_presses(screen_layout, target_string))",
+    "timestamp": "2025-08-13 04:47:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class OSKInputCalculator {\n\n    static final char[][] KEYBOARD = {\n        {'A', 'B', 'C', 'D', 'E', 'F'},\n        {'G', 'H', 'I', 'J', 'K', 'L'},\n        {'M', 'N', 'O', 'P', 'Q', 'R'},\n        {'S', 'T', 'U', 'V', 'W', 'X'},\n        {'Y', 'Z', ' ', '-', '.', '!'}\n    };\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String input = scanner.nextLine();\n        System.out.println(minimumButtonPresses(input));\n    }\n\n    public static int minimumButtonPresses(String input) {\n        Map<Character, int[]> positionMap = new HashMap<>();\n        for (int i = 0; i < KEYBOARD.length; i++) {\n            for (int j = 0; j < KEYBOARD[i].length; j++) {\n                positionMap.put(KEYBOARD[i][j], new int[]{i, j});\n            }\n        }\n\n        int pressCount = 0;\n        int[] currentPos = {0, 0};\n\n        for (char ch : input.toCharArray()) {\n            int[] targetPos = positionMap.get(ch);\n            pressCount += Math.abs(targetPos[0] - currentPos[0]) + Math.abs(targetPos[1] - currentPos[1]) + 1;\n            currentPos = targetPos;\n        }\n\n        return pressCount;\n    }\n}",
+    "timestamp": "2025-08-13 04:47:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define ROWS 3\n#define COLS 10\n\nchar OSK[ROWS][COLS] = {\n    {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'},\n    {'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'},\n    {'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '!', '?', '.'}\n};\n\ntypedef struct {\n    int row;\n    int col;\n} Position;\n\nPosition findPosition(char ch) {\n    for (int r = 0; r < ROWS; r++) {\n        for (int c = 0; c < COLS; c++) {\n            if (OSK[r][c] == ch) {\n                Position pos = {r, c};\n                return pos;\n            }\n        }\n    }\n    Position pos = {-1, -1};\n    return pos;  // Return invalid position if character not found\n}\n\nint minButtonPresses(char* input) {\n    Position currentPos = {0, 0}; // Assuming start at 'A'\n    int totalPresses = 0;\n\n    for (int i = 0; i < strlen(input); i++) {\n        Position targetPos = findPosition(input[i]);\n        if (targetPos.row == -1 && targetPos.col == -1) {\n            continue; // Skip if character not found\n        }\n        totalPresses += abs(targetPos.row - currentPos.row) + abs(targetPos.col - currentPos.col) + 1; // +1 for OK button\n        currentPos = targetPos;\n    }\n    return totalPresses;\n}\n\nint main() {\n    char input[100];\n    printf(\"Enter the string: \");\n    scanf(\"%99s\", input);\n    \n    int result = minButtonPresses(input);\n    printf(\"Minimum button presses: %d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:47:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minKeyPresses(keyboard, target):\n    rows = len(keyboard)\n    cols = len(keyboard[0])\n    \n    def find_char_position(char):\n        for r in range(rows):\n            for c in range(cols):\n                if keyboard[r][c] == char:\n                    return r, c\n        return -1, -1\n    \n    def calculate_distance(start_r, start_c, end_r, end_c):\n        return abs(start_r - end_r) + abs(start_c - end_c)\n    \n    total_presses = 0\n    curr_r, curr_c = 0, 0\n    \n    for char in target:\n        target_r, target_c = find_char_position(char)\n        \n        if target_r == -1:\n            return -1  # Character not found\n        \n        total_presses += calculate_distance(curr_r, curr_c, target_r, target_c) + 1\n        curr_r, curr_c = target_r, target_c\n    \n    return total_presses",
+    "timestamp": "2025-08-13 04:47:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_distance(pos1, pos2, cols):\n    x1, y1 = pos1\n    x2, y2 = pos2\n    return abs(x1 - x2) + abs(y1 - y2)\n\ndef min_button_presses(keyboard, word):\n    if not word:\n        return 0\n    \n    # Create a dictionary to map each character to its position\n    char_pos = {}\n    for i in range(len(keyboard)):\n        for j in range(len(keyboard[i])):\n            char = keyboard[i][j]\n            char_pos[char] = (i, j)\n    \n    current_pos = (0, 0)\n    total_presses = 0\n    \n    for char in word:\n        if char not in char_pos:\n            return -1  # Character not found in keyboard\n        target_pos = char_pos[char]\n        distance = calculate_distance(current_pos, target_pos, len(keyboard[0]))\n        total_presses += distance + 1  # +1 for OK press\n        current_pos = target_pos\n    \n    return total_presses\n\n# Example usage:\n# keyboard = [\n#     ['A', 'B', 'C', 'D', 'E', 'F'],\n#     ['G', 'H', 'I', 'J', 'K', 'L'],\n#     ['M', 'N', 'O', 'P', 'Q', 'R'],\n#     ['S', 'T', 'U', 'V', 'W', 'X'],\n#     ['Y', 'Z', '1', '2', '3', '4'],\n#     ['5', '6', '7', '8', '9', '0']\n# ]\n# word = \"HELLO\"\n# print(min_button_presses(keyboard, word))  # Output will be the minimum button presses",
+    "timestamp": "2025-08-13 04:47:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <cmath>\n#include <unordered_map>\n#include <vector>\n\nusing namespace std;\n\nint minButtonPresses(const string& target) {\n    // Define the OSK layout arranged by rows\n    vector<string> osk = {\n        \"abcde\",\n        \"fghij\",\n        \"klmno\",\n        \"pqrst\",\n        \"uvwxy\",\n        \"z1234\",\n        \"56789\",\n        \"0\"\n    };\n    \n    // Map each character to its position (row, col) on the OSK layout\n    unordered_map<char, pair<int, int>> oskPosition;\n    for (int i = 0; i < osk.size(); ++i) {\n        for (int j = 0; j < osk[i].length(); ++j) {\n            oskPosition[osk[i][j]] = {i, j};\n        }\n    }\n\n    // Start from the first position 'a' (0, 0)\n    int x = 0, y = 0;\n    int totalPresses = 0;\n    \n    // Loop through each target character to determine the number of moves\n    for (char ch : target) {\n        auto [targetX, targetY] = oskPosition[ch];\n        // Calculate the movements needed\n        totalPresses += abs(targetX - x) + abs(targetY - y) + 1;  // Moves + OK press\n        x = targetX;\n        y = targetY;\n    }\n\n    return totalPresses;\n}\n\nint main() {\n    string input;\n    cout << \"Enter the string to input using OSK: \";\n    cin >> input;\n    \n    int result = minButtonPresses(input);\n    cout << \"Minimum button presses required: \" << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:21:44"
+  }
+]

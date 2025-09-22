@@ -1,0 +1,1 @@
+There is a string s consisting of the characters 'a' and 'b'. Snuke can perform two types of operations any number of times in any order: replace any occurrence of 'aa' with 'b', and replace any occurrence of 'bb' with 'a'. The task is to find how many distinct strings can be obtained by performing these operations, and return the count modulo 10^9 + 7.

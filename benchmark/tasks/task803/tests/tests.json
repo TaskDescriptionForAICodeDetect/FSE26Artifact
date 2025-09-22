@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "axyb\nabyxb",
+      "output": "axb"
+    },
+    {
+      "input": "aa\nxayaz",
+      "output": "aa"
+    },
+    {
+      "input": "a\nz",
+      "output": ""
+    },
+    {
+      "input": "abracadabra\navadakedavra",
+      "output": "aaadara"
+    }
+  ]
+}

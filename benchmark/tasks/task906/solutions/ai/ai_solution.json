@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nchar ask(int n) {\n    printf(\"? %d\\n\", n);\n    fflush(stdout);\n    char response[4];\n    scanf(\"%s\", response);\n    return response[0] == 'Y';\n}\n\nint compare_str(int a, int b) {\n    char str_a[12], str_b[12];\n    sprintf(str_a, \"%d\", a);\n    sprintf(str_b, \"%d\", b);\n    return strcmp(str_a, str_b);\n}\n\nint solve() {\n    int low = 1, high = 1000000000;\n    \n    while (low < high) {\n        int mid = low + (high - low) / 2;\n        \n        if (ask(mid)) {\n            high = mid;\n        } else {\n            low = mid + 1;\n        }\n    }\n    \n    return low;\n}\n\nint main() {\n    int result = solve();\n    printf(\"! %d\\n\", result);\n    fflush(stdout);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\nchar snuke_response[10];\n\nbool query(long long n) {\n    printf(\"? %lld\\n\", n);\n    fflush(stdout);\n    scanf(\"%s\", snuke_response);\n    return strcmp(snuke_response, \"Yes\") == 0;\n}\n\nbool is_less_or_equal(long long a, long long b) {\n    char sa[20], sb[20];\n    sprintf(sa, \"%lld\", a);\n    sprintf(sb, \"%lld\", b);\n    return strcmp(sa, sb) <= 0;\n}\n\nlong long find_N() {\n    long long low = 1, high = 1e9;\n    while (low < high) {\n        long long mid = (low + high) / 2;\n        if (query(mid)) {\n            high = mid;\n        } else {\n            low = mid + 1;\n        }\n    }\n    long long candidate = low;\n    \n    // Verify if candidate is correct by checking adjacent numbers\n    bool is_correct = true;\n    if (candidate > 1) {\n        if (!query(candidate - 1)) {\n            is_correct = false;\n        }\n    }\n    if (candidate < 1e9) {\n        if (!query(candidate + 1)) {\n            is_correct = false;\n        }\n    }\n    \n    if (is_correct) {\n        return candidate;\n    }\n    \n    // If not, perform a linear search around the candidate\n    for (long long i = candidate - 100; i <= candidate + 100; ++i) {\n        if (i < 1 || i > 1e9) continue;\n        bool valid = true;\n        if (i > 1) {\n            if (!query(i - 1)) {\n                valid = false;\n            }\n        }\n        if (i < 1e9) {\n            if (!query(i + 1)) {\n                valid = false;\n            }\n        }\n        if (valid) {\n            return i;\n        }\n    }\n    \n    return candidate; // fallback\n}\n\nint main() {\n    long long N = find_N();\n    printf(\"! %lld\\n\", N);\n    fflush(stdout);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nbool query(long long n) {\n    cout << \"? \" << n << endl;\n    string res;\n    cin >> res;\n    return res == \"Yes\";\n}\n\nlong long find_N() {\n    long long low = 1, high = 1e9;\n    while (low < high) {\n        long long mid = (low + high) / 2;\n        if (query(mid * 10)) {\n            high = mid;\n        } else {\n            low = mid + 1;\n        }\n    }\n    long long k = low;\n    \n    low = 1, high = 9;\n    while (low < high) {\n        long long mid = (low + high) / 2;\n        if (query(mid * 1000000000)) {\n            high = mid;\n        } else {\n            low = mid + 1;\n        }\n    }\n    long long d = low;\n    \n    string s = to_string(d);\n    low = 1, high = 1;\n    for (int i = 0; i < 9; ++i) {\n        low *= 10;\n        high *= 10;\n        high += 9;\n        high = min(high, k);\n        if (low > high) break;\n        long long best = -1;\n        while (low <= high) {\n            long long mid = (low + high) / 2;\n            string t = s + to_string(mid);\n            if (query(stoll(t))) {\n                best = mid;\n                high = mid - 1;\n            } else {\n                low = mid + 1;\n            }\n        }\n        if (best != -1) {\n            return stoll(s + to_string(best));\n        }\n        s += \"0\";\n    }\n    return stoll(s);\n}\n\nint main() {\n    long long N = find_N();\n    cout << \"! \" << N << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        long low = 1;\n        long high = (long) 1e18;\n        \n        while (low <= high) {\n            long mid = (low + high) / 2;\n            System.out.println(\"? \" + mid);\n            System.out.flush();\n            String response = scanner.next();\n            \n            if (response.equals(\"Yes\")) {\n                high = mid - 1;\n            } else {\n                low = mid + 1;\n            }\n        }\n        \n        long candidate = low;\n        String strCandidate = Long.toString(candidate);\n        long left = 1;\n        long right = candidate;\n        long N = candidate;\n        \n        while (left <= right) {\n            long mid = (left + right) / 2;\n            System.out.println(\"? \" + mid * 10);\n            System.out.flush();\n            String response = scanner.next();\n            \n            if (response.equals(\"Yes\")) {\n                N = mid;\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        \n        System.out.println(\"! \" + N);\n    }\n}",
+    "timestamp": "2025-08-05 23:18:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    static int solve() {\n        int left = 1, right = 1_000_000_000;\n        \n        while (left < right) {\n            int mid = left + (right - left) / 2;\n            String midStr = String.valueOf(mid);\n            \n            if (query(mid)) {\n                right = mid;\n            } else {\n                left = mid + 1;\n            }\n        }\n        \n        return left;\n    }\n    \n    static boolean query(int n) {\n        System.out.println(\"? \" + n);\n        String response = new Scanner(System.in).nextLine();\n        return response.equals(\"Yes\");\n    }\n    \n    public static void main(String[] args) {\n        int result = solve();\n        System.out.println(\"! \" + result);\n    }\n}",
+    "timestamp": "2025-08-05 23:18:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nstring toString(int x) {\n    return to_string(x);\n}\n\nbool ask(int n) {\n    cout << \"? \" << n << endl;\n    string response;\n    cin >> response;\n    return response == \"Yes\";\n}\n\nint solve() {\n    int low = 1, high = 1000000000;\n    \n    while (low < high) {\n        int mid = low + (high - low) / 2;\n        \n        if (ask(mid)) {\n            high = mid;\n        } else {\n            low = mid + 1;\n        }\n    }\n    \n    return low;\n}\n\nint main() {\n    int N = solve();\n    cout << \"! \" << N << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_favorite_integer():\n    low, high = 1, 10**9\n\n    while low < high:\n        mid = (low + high + 1) // 2\n        print(mid)\n        response = input().strip()\n        if response == 'Yes':\n            low = mid\n        else:\n            high = mid - 1\n    \n    print(low)\n\nfind_favorite_integer()",
+    "timestamp": "2025-08-13 14:30:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class FavoriteIntegerFinder {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int low = 1;\n        int high = 1000000000;\n\n        while (low < high) {\n            int mid = low + (high - low) / 2;\n            System.out.println(mid);\n            String response = scanner.nextLine();\n\n            if (response.equals(\"Yes\")) {\n                low = mid + 1;\n            } else {\n                high = mid;\n            }\n        }\n\n        System.out.println(low);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 14:30:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool isFavoriteInt(long long n) {\n    printf(\"%lld\\n\", n);\n    fflush(stdout);\n    char response[4];\n    scanf(\"%s\", response);\n    return response[0] == 'Y';\n}\n\nint main() {\n    long long low = 1;\n    long long high = 1000000000;\n\n    while (low < high) {\n        long long mid = (low + high) / 2;\n        if (isFavoriteInt(mid)) {\n            low = mid + 1;\n        } else {\n            high = mid;\n        }\n    }\n\n    printf(\"%lld\\n\", low);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:30:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int low = 1, high = 1000000000;\n\n    for(int i = 0; i < 64; ++i) {\n        int mid = low + (high - low) / 2;\n\n        cout << \"Is \" << mid << \" your favorite integer?\" << endl;\n        string response;\n        cin >> response;\n\n        if (response == \"Yes\") {\n            // If response is Yes, we know n <= N and str(n) <= str(N), so N is not less than n\n            low = mid;\n        } else {\n            // If response is No, N is truly greater than mid\n            high = mid - 1;\n        }\n        \n        if (low == high) {\n            cout << \"Is \" << low << \" your favorite integer?\" << endl;\n            string final_response;\n            cin >> final_response;\n            if (final_response == \"Yes\") {\n                break;\n            }\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:30:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    def query(n):\n        print(f\"? {n}\")\n        return input().strip() == \"Yes\"\n\n    def find_favorite_number():\n        left, right = 1, 10**9\n        while left < right:\n            mid = (left + right) // 2\n            if query(mid):\n                right = mid\n            else:\n                left = mid + 1\n        return left\n\n    N = find_favorite_number()\n    print(f\"! {N}\")\n\nsolve()",
+    "timestamp": "2025-08-13 14:30:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    low = 1\n    high = 10**18  # Upper bound larger than 1e9 to handle string comparison edge cases\n    \n    # First, find the smallest 'n' where the answer is 'Yes' for n > N and str(n) > str(N)\n    # This helps in narrowing down the range for N\n    left = 1\n    right = 10**18\n    pivot = None\n    for _ in range(64):\n        if left >= right:\n            break\n        mid = (left + right) // 2\n        print(f\"? {mid}\", flush=True)\n        res = input().strip()\n        if res == 'Yes':\n            right = mid\n            pivot = mid\n        else:\n            left = mid + 1\n    # Now, pivot is a candidate for the smallest n where n >= N and str(n) >= str(N)\n    # Now, find the largest 'n' where the answer is 'Yes' for n <= N and str(n) <= str(N)\n    left2 = 1\n    right2 = pivot\n    ans = None\n    for _ in range(64):\n        if left2 >= right2:\n            break\n        mid = (left2 + right2 + 1) // 2\n        print(f\"? {mid}\", flush=True)\n        res = input().strip()\n        if res == 'Yes':\n            left2 = mid\n        else:\n            right2 = mid - 1\n    ans_candidate1 = left2\n    \n    # Now, check if ans_candidate1 is the correct N\n    # Verify by checking if for ans_candidate1 + 1, the answer is 'No' for n > N and str(n) > str(N)\n    print(f\"? {ans_candidate1 + 1}\", flush=True)\n    res = input().strip()\n    if res == 'No':\n        ans = ans_candidate1\n    else:\n        # If not, then the answer is pivot\n        ans = pivot\n    \n    print(f\"! {ans}\", flush=True)\n\nsolve()",
+    "timestamp": "2025-08-13 14:30:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "async function identifyFavoriteInteger() {\n  let low = 1;\n  let high = 1e9;\n\n  while (low < high) {\n    const mid = Math.floor((low + high) / 2);\n\n    const response = await askSnuke(mid);\n    if (response === 'Yes') {\n      low = mid + 1;\n    } else {\n      high = mid;\n    }\n  }\n  console.log(low);\n}\n\nfunction askSnuke(n) {\n  return new Promise((resolve) => {\n    // Simulate Snuke's response\n    // For example purposes only; replace with actual interaction code\n    const N = /* Snuke's favorite number */;\n    if ((n <= N && String(n) <= String(N)) || (n > N && String(n) > String(N))) {\n      resolve('Yes');\n    } else {\n      resolve('No');\n    }\n  });\n}\n\nidentifyFavoriteInteger();",
+    "timestamp": "2025-08-13 14:31:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findNumber() {\n    let left = 1;\n    let right = 10 ** 9;\n\n    while (left < right) {\n        let mid = Math.floor((left + right) / 2);\n        let result = query(mid);\n\n        if (result) {\n            left = mid;\n        } else {\n            right = mid - 1;\n        }\n    }\n\n    return left;\n}\n\nfunction query(n) {\n    console.log(`? ${n}`);\n    let response = readline();\n    return response === \"Yes\";\n}\n\nfunction readline() {\n    // In actual implementation, this would interact with standard input\n    // This is a placeholder for the interactive input mechanism\n    return \"\";\n}\n\nconsole.log(`! ${findNumber()}`);",
+    "timestamp": "2025-08-13 14:31:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    let low = 1;\n    let high = 1e9;\n    \n    while (low <= high) {\n        const mid = Math.floor((low + high) / 2);\n        const response = ask(mid);\n        \n        if (response === 'Yes') {\n            return mid;\n        }\n        \n        const strMid = mid.toString();\n        const strLow = low.toString();\n        const strHigh = high.toString();\n        \n        if ((mid <= low && strMid <= strLow) || (mid >= high && strMid >= strHigh)) {\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n    \n    return low;\n}\n\n// Mock ask function for testing; replace with actual interaction in the real problem\nfunction ask(n) {\n    // This is a mock function. In the real problem, this would interact with the judge.\n    const N = 123456789; // Example N for testing\n    const strN = N.toString();\n    const strn = n.toString();\n    \n    if ((n <= N && strn <= strN) || (n > N && strn > strN)) {\n        return 'Yes';\n    } else {\n        return 'No';\n    }\n}\n\n// Example usage\nconsole.log(solve());",
+    "timestamp": "2025-08-13 14:31:28"
+  }
+]

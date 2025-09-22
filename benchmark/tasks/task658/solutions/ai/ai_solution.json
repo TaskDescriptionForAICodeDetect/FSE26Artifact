@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nlong long solve(int N, int K) {\n    const int MOD = 1000000007;\n    long long result = 1;\n    \n    for (int i = 0; i < K; i++) {\n        result = (result * (N + i + 1)) % MOD;\n    }\n    \n    return result;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    printf(\"%lld\\n\", solve(N, K));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_K 10000\n\nlong long power(long long a, long long b) {\n    long long res = 1;\n    a %= MOD;\n    while (b > 0) {\n        if (b % 2 == 1) {\n            res = (res * a) % MOD;\n        }\n        a = (a * a) % MOD;\n        b /= 2;\n    }\n    return res;\n}\n\nlong long comb[MAX_K + 1][MAX_K + 1];\n\nvoid precompute_comb(int max_n) {\n    comb[0][0] = 1;\n    for (int n = 1; n <= max_n; n++) {\n        comb[n][0] = 1;\n        for (int k = 1; k <= n; k++) {\n            comb[n][k] = (comb[n-1][k-1] + comb[n-1][k]) % MOD;\n        }\n    }\n}\n\nint main() {\n    int K;\n    char S[1001];\n    scanf(\"%s %d\", S, &K);\n    int N = strlen(S);\n    int max_n = N + K;\n    precompute_comb(max_n);\n\n    long long result = 0;\n    for (int m = 0; m <= K; m++) {\n        long long c = comb[N + K][m + N];\n        long long pow25 = power(25, K - m);\n        long long pow26 = power(26, m);\n        long long term = (c * pow25) % MOD;\n        term = (term * pow26) % MOD;\n        result = (result + term) % MOD;\n    }\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nlong long modPow(long long a, long long b, long long mod) {\n    long long res = 1;\n    a %= mod;\n    while (b > 0) {\n        if (b & 1) res = (res * a) % mod;\n        a = (a * a) % mod;\n        b >>= 1;\n    }\n    return res;\n}\n\nlong long solve(const string &S, int K) {\n    int n = S.size();\n    long long res = modPow(26, K, MOD);\n    res = res * (n + K) % MOD;\n    return res;\n}\n\nint main() {\n    string S;\n    int K;\n    cin >> S >> K;\n    cout << solve(S, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    private static final long MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.next();\n        int K = scanner.nextInt();\n        int N = S.length();\n        long result = 0;\n\n        long[] pow26 = new long[K + 1];\n        pow26[0] = 1;\n        for (int i = 1; i <= K; i++) {\n            pow26[i] = (pow26[i - 1] * 26) % MOD;\n        }\n\n        long[] comb = new long[N + K];\n        comb[0] = 1;\n        for (int i = 1; i < N + K; i++) {\n            comb[i] = (comb[i - 1] * i) % MOD;\n        }\n\n        long[] invComb = new long[N + K];\n        invComb[N + K - 1] = pow(comb[N + K - 1], MOD - 2);\n        for (int i = N + K - 2; i >= 0; i--) {\n            invComb[i] = (invComb[i + 1] * (i + 1)) % MOD;\n        }\n\n        for (int L = N; L <= N + K; L++) {\n            long c = (comb[L - 1] * invComb[N - 1]) % MOD;\n            c = (c * invComb[L - N]) % MOD;\n            long ways = (c * pow26[N + K - L]) % MOD;\n            result = (result + ways) % MOD;\n        }\n\n        System.out.println(result);\n    }\n\n    private static long pow(long a, long b) {\n        long res = 1;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                res = (res * a) % MOD;\n            }\n            a = (a * a) % MOD;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 22:28:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Solution {\n    private static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.next();\n        int K = scanner.nextInt();\n        scanner.close();\n\n        long result = solve(S, K);\n        System.out.println(result);\n    }\n\n    private static long solve(String S, int K) {\n        int N = S.length();\n        long[][] dp = new long[K + 1][N + K + 1];\n        dp[0][0] = 1;\n\n        for (int k = 0; k < K; k++) {\n            for (int i = 0; i <= N + k; i++) {\n                if (dp[k][i] == 0) continue;\n\n                // Insert at the beginning\n                dp[k + 1][i + 1] = (dp[k + 1][i + 1] + dp[k][i]) % MOD;\n\n                // Insert between existing characters\n                for (int j = 0; j < i; j++) {\n                    dp[k + 1][i + 1] = (dp[k + 1][i + 1] + dp[k][i]) % MOD;\n                }\n\n                // Insert 26 possible letters at each position\n                dp[k + 1][i] = (dp[k + 1][i] + 26L * dp[k][i]) % MOD;\n            }\n        }\n\n        long total = 0;\n        for (int i = 0; i <= N + K; i++) {\n            total = (total + dp[K][i]) % MOD;\n        }\n\n        return total;\n    }\n}",
+    "timestamp": "2025-08-05 22:29:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\nusing namespace std;\ntypedef long long ll;\nconst int MOD = 1e9 + 7;\n\nll countStrings(int N, int K) {\n    vector<vector<ll>> dp(K + 1, vector<ll>(N + 1, 0));\n    \n    for (int k = 0; k <= K; k++) {\n        for (int n = 0; n <= N; n++) {\n            if (k == 0) {\n                dp[k][n] = 1;\n                continue;\n            }\n            \n            // Insert at new position\n            dp[k][n] = (dp[k-1][n] * (n + 1)) % MOD;\n            \n            // Insert new letter\n            dp[k][n] = (dp[k][n] + dp[k-1][n] * 26) % MOD;\n        }\n    }\n    \n    return dp[K][N];\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    cout << countStrings(N, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:29:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def compute_strings(S, K):\n    MOD = 10**9 + 7\n    n = len(S)\n    num_letters = 26\n    \n    # Calculate (n + K)! / n! using multiplicative inverse modulo (10^9 + 7)\n    def mod_inv(x):\n        return pow(x, MOD-2, MOD)\n    \n    # Calculate factorial modulo MOD\n    fact = [1] * (n + K + 1)\n    for i in range(2, n + K + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    # Calculate number of strings\n    result = fact[n + K] * mod_inv(fact[n]) % MOD\n    result = result * pow(num_letters, K, MOD) % MOD\n    return result\n\n# Example usage:\nS = \"abc\"\nK = 2\nprint(compute_strings(S, K))",
+    "timestamp": "2025-08-13 10:56:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class StringInsertion {\n    private static final int MOD = 1000000007;\n\n    private static long modPow(long base, long exp, long mod) {\n        long result = 1;\n        while (exp > 0) {\n            if ((exp & 1) == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp >>= 1;\n        }\n        return result;\n    }\n\n    private static long modInverse(long a, long mod) {\n        return modPow(a, mod - 2, mod);\n    }\n\n    private static long nCrMod(int n, int r, int mod) {\n        if (r > n) return 0;\n        long[] fact = new long[n + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= n; i++) {\n            fact[i] = (fact[i - 1] * i) % mod;\n        }\n        long result = fact[n];\n        result = (result * modInverse(fact[r], mod)) % mod;\n        result = (result * modInverse(fact[n - r], mod)) % mod;\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.next();\n        int K = scanner.nextInt();\n        int N = S.length();\n        long result = 0;\n\n        for (int i = 0; i <= K; i++) {\n            long term = (nCrMod(K, i, MOD) * modPow(26, K - i, MOD)) % MOD;\n            term = (term * nCrMod(N + K - i, N, MOD)) % MOD;\n            result = (result + term) % MOD;\n        }\n\n        System.out.println(result);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 10:56:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nlong long mod_pow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    char S[101];\n    int K;\n    scanf(\"%s %d\", S, &K);\n    \n    int len = 0;\n    while (S[len] != '\\0') len++;\n    \n    long long result = (mod_pow(26, K, MOD) * mod_pow(len + K, K, MOD)) % MOD;\n    printf(\"%lld\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:56:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countStrings(S, K) {\n    const MOD = 1000000007;\n    const n = S.length;\n    let res = 1;\n\n    for (let i = 0; i < K; i++) {\n        res = res * (26 + n + i) % MOD;\n    }\n\n    return res;\n}\n\n// Example usage:\n// const S = \"abc\";\n// const K = 3;\n// console.log(countStrings(S, K));",
+    "timestamp": "2025-08-13 10:56:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_possible_strings(S, K):\n    MOD = 10**9 + 7\n    n = len(S)\n    \n    # Total number of possible insertion points in each operation\n    # Initially n+1 points (before/after each existing character)\n    # In each operation, points increase by 1\n    possible_points = n + 1\n    \n    # 26 possible letters to insert\n    letter_choices = 26\n    \n    # Total possible strings = (possible points * letter choices)^K\n    result = pow(possible_points * letter_choices, K, MOD)\n    \n    return result",
+    "timestamp": "2025-08-13 10:56:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countStrings(S, K) {\n    const MOD = 1e9 + 7;\n    const N = S.length;\n    \n    const dp = new Array(K + 1).fill(0).map(() => new Array(26).fill(0));\n    \n    // Initial state: empty string\n    dp[0][0] = 1;\n    \n    for (let k = 0; k < K; k++) {\n        for (let last = 0; last < 26; last++) {\n            if (dp[k][last] === 0) continue;\n            \n            // Insert letter at the beginning\n            dp[k+1][last] = (dp[k+1][last] + dp[k][last]) % MOD;\n            \n            // Insert letter at each possible position\n            for (let i = 0; i <= N; i++) {\n                for (let newLetter = 0; newLetter < 26; newLetter++) {\n                    dp[k+1][newLetter] = (dp[k+1][newLetter] + dp[k][last]) % MOD;\n                }\n            }\n        }\n    }\n    \n    let result = 0;\n    for (let last = 0; last < 26; last++) {\n        result = (result + dp[K][last]) % MOD;\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 10:56:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    import sys\n    S = sys.stdin.readline().strip()\n    K = int(sys.stdin.readline())\n    N = len(S)\n    \n    # Precompute factorial, inverse factorial up to N+K\n    max_n = N + K\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    # Compute the answer: sum_{m=0 to K} C(N + K, m) * 25^{K - m} * 26^m\n    answer = 0\n    for m in range(K + 1):\n        term = fact[N + K] * inv_fact[m] % MOD\n        term = term * inv_fact[N + K - m] % MOD\n        term = term * pow(25, K - m, MOD) % MOD\n        term = term * pow(26, m, MOD) % MOD\n        answer = (answer + term) % MOD\n    print(answer)\n\nsolve()",
+    "timestamp": "2025-08-13 10:57:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve(S, K) {\n    const n = S.length;\n    const m = n + K;\n    \n    // Precompute factorial, inverse factorial modulo MOD up to m\n    const fact = new Array(m + 1);\n    const invFact = new Array(m + 1);\n    fact[0] = 1;\n    for (let i = 1; i <= m; i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n    invFact[m] = modInverse(fact[m], MOD);\n    for (let i = m - 1; i >= 0; i--) {\n        invFact[i] = (invFact[i + 1] * (i + 1)) % MOD;\n    }\n    \n    function comb(a, b) {\n        if (a < 0 || b < 0 || a < b) return 0;\n        return (fact[a] * invFact[b] % MOD) * invFact[a - b] % MOD;\n    }\n    \n    let res = 0;\n    const pow26 = new Array(m + 1);\n    pow26[0] = 1;\n    for (let i = 1; i <= m; i++) {\n        pow26[i] = (pow26[i - 1] * 26) % MOD;\n    }\n    const pow25 = new Array(m + 1);\n    pow25[0] = 1;\n    for (let i = 1; i <= m; i++) {\n        pow25[i] = (pow25[i - 1] * 25) % MOD;\n    }\n    \n    for (let l = n; l <= m; l++) {\n        const c = comb(l - 1, n - 1);\n        const term = (c * pow25[l - n] % MOD) * pow26[m - l] % MOD;\n        res = (res + term) % MOD;\n    }\n    \n    return res;\n}\n\nfunction modInverse(a, mod) {\n    let m0 = mod;\n    let y = 0, x = 1;\n    if (mod === 1) return 0;\n    while (a > 1) {\n        const q = Math.floor(a / mod);\n        let t = mod;\n        mod = a % mod;\n        a = t;\n        t = y;\n        y = x - q * y;\n        x = t;\n    }\n    if (x < 0) x += m0;\n    return x;\n}\n\n// Example usage:\n// const S = \"abc\";\n// const K = 2;\n// console.log(solve(S, K));",
+    "timestamp": "2025-08-13 10:57:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nconst int MOD = 1000000007;\ntypedef long long ll;\n\n// Function to compute nCr % MOD using dynamic programming\nll nCrMod(ll n, ll r) {\n    std::vector<std::vector<ll>> C(r + 1, std::vector<ll>(r + 1, 0));\n    for (ll i = 0; i <= r; ++i) {\n        C[i][0] = 1;\n        for (ll j = 1; j <= i; ++j) {\n            C[i][j] = (C[i - 1][j - 1] + C[i - 1][j]) % MOD;\n        }\n    }\n    return n < r ? 0 : C[r][r];\n}\n\n// Function to compute x^y % MOD using binary exponentiation\nll power(ll x, ll y) {\n    ll result = 1;\n    x = x % MOD;\n    while (y > 0) {\n        if (y & 1) {\n            result = (result * x) % MOD;\n        }\n        y = y >> 1;\n        x = (x * x) % MOD;\n    }\n    return result;\n}\n\n// Function to compute the number of strings\nll countStrings(ll length, ll k) {\n    ll result = 0;\n\n    for (ll i = 0; i <= k; ++i) {\n        ll sign = (i % 2 == 0) ? 1 : -1;\n        ll ways = nCrMod(k, i) * power(25, i) % MOD;\n        ll positions = nCrMod(length + k - 1 - i, k);\n        result += sign * ways * positions % MOD;\n        result = (result + MOD) % MOD;\n    }\n\n    return result;\n}\n\nint main() {\n    std::string s;\n    ll k;\n    std::cin >> s >> k;\n    ll length = s.size();\n    std::cout << countStrings(length, k) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:01:30"
+  }
+]

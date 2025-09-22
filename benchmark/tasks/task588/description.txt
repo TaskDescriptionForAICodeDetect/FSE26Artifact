@@ -1,0 +1,1 @@
+Given two lines s1 and s2 defined by their crossing points, determine if they are parallel, orthogonal, or neither. Print '2' if they are parallel, '1' if they are orthogonal, or '0' otherwise. Each line is defined by two points: s1 crosses points p0 and p1, and s2 crosses points p2 and p3.

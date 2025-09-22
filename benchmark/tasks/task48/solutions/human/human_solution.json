@@ -1,0 +1,98 @@
+[
+  {
+    "language": "python",
+    "code": "n = int(input())\n\nprint(1 + n // 2)\n"
+  },
+  {
+    "language": "python",
+    "code": "def li():\n    return list(map(int, input().split()))\n\nn = int(input())\nprint(n // 2 + 1)\n"
+  },
+  {
+    "language": "python",
+    "code": "def inpmap():\n    return list(map(int, input().split()))\nn = int(input())\nprint(n // 2 + 1)\n"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\nprint(n//2 + 1)\n"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\na = n // 2 + 1\nprint(a)"
+  },
+  {
+    "language": "python",
+    "code": "print(int(input()) // 2 + 1)"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\n\nprint(n//2 + 1)"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\nprint(n // 2 + 1)"
+  },
+  {
+    "language": "python",
+    "code": "import sys\n\ninput = sys.stdin.readline\n\nn = int(input())\n\nprint(n//2+1)"
+  },
+  {
+    "language": "python",
+    "code": "print(int(input())//2 + 1)\n"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\nprint(n // 2 + 1)"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\nprint(n // 2 + 1)\n\n"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\nif n == 1:\n    print(1)\nelif n == 2:\n    print(2)\nelif n == 3:\n    print(2)\nelse:\n    print(n // 2 + 1)\n"
+  },
+  {
+    "language": "python",
+    "code": "n=int(input())\nprint(n//2+1)"
+  },
+  {
+    "language": "python",
+    "code": "num = int(input())\n\nprint(int(num / 2) + 1)"
+  },
+  {
+    "language": "python",
+    "code": "import atexit\nimport io\nimport sys\n\n# Buffering IO\n_INPUT_LINES = sys.stdin.read().splitlines()\ninput = iter(_INPUT_LINES).__next__\n_OUTPUT_BUFFER = io.StringIO()\nsys.stdout = _OUTPUT_BUFFER\n\n@atexit.register\ndef write():\n    sys.__stdout__.write(_OUTPUT_BUFFER.getvalue())\n    \n\ndef main():\n    n = int(input())\n    print(n//2 + 1)\n        \n        \n\n    \ndef __starting_point():\n    main()\n\n__starting_point()"
+  },
+  {
+    "language": "python",
+    "code": "N = int(input())\nprint(N//2 + 1)\n"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\nprint(n//2 + 1)"
+  },
+  {
+    "language": "python",
+    "code": "n=int(input())\nprint(n//2+1)"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\n\nprint((n//2)+1)"
+  },
+  {
+    "language": "python",
+    "code": "import queue\n\ndef readTuple():\n    return input().split()\ndef readInts():\n    return tuple(map(int, readTuple()))\n\ndef solve():\n    n = int(input().strip())\n    print(n//2+1)\n\n\n\n\n\ndef __starting_point():\n    solve()\n\n__starting_point()"
+  },
+  {
+    "language": "python",
+    "code": "from math import*\nn=int(input())\nprint(int(n//2)+1)\n"
+  },
+  {
+    "language": "python",
+    "code": "n = int(input())\na = n // 2 + 1\nprint(a)"
+  },
+  {
+    "language": "python",
+    "code": "print(int(input()) // 2 + 1)\n"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "1\n0\nicpc\n",
+      "output": "icpc\n"
+    },
+    {
+      "input": "5\n0\nhoge\n1\nfuga\n1\npiyo\n2\nfoobar\n2\njagjag\n",
+      "output": "hoge\n.fuga\n..foobar\n..jagjag\n.piyo\n"
+    },
+    {
+      "input": "8\n0\njagjag\n1\nhogehoge\n1\nbuhihi\n2\nfugafuga\n4\nponyoponyo\n5\nevaeva\n4\nnowawa\n5\npokemon\n",
+      "output": "jagjag\n.hogehoge\n..fugafuga\n...ponyoponyo\n....evaeva\n....pokemon\n...nowawa\n.buhihi\n"
+    },
+    {
+      "input": "6\n0\nnakachan\n1\nfan\n2\nyamemasu\n3\nnennryou2\n4\ndannyaku4\n5\nkouzai11\n",
+      "output": "nakachan\n.fan\n..yamemasu\n...nennryou2\n....dannyaku4\n.....kouzai11\n"
+    },
+    {
+      "input": "34\n0\nLoveLive\n1\nhonoka\n2\nborarara\n2\nsunohare\n2\nmogyu\n1\neri\n6\nkasikoi\n7\nkawaii\n8\neriichika\n1\nkotori\n10\nWR\n10\nhaetekurukotori\n10\nichigo\n1\numi\n14\nlove\n15\narrow\n16\nshoot\n1\nrin\n18\nnyanyanya\n1\nmaki\n20\n6th\n20\nstar\n22\nnishikino\n1\nnozomi\n24\nspiritual\n25\npower\n1\nhanayo\n27\ndarekatasukete\n28\nchottomattete\n1\nniko\n30\nnatsuiro\n30\nnikkonikkoni\n30\nsekaino\n33\nYAZAWA\n",
+      "output": "LoveLive\n.honoka\n..borarara\n..sunohare\n..mogyu\n.eri\n..kasikoi\n...kawaii\n....eriichika\n.kotori\n..WR\n..haetekurukotori\n..ichigo\n.umi\n..love\n...arrow\n....shoot\n.rin\n..nyanyanya\n.maki\n..6th\n..star\n...nishikino\n.nozomi\n..spiritual\n...power\n.hanayo\n..darekatasukete\n...chottomattete\n.niko\n..natsuiro\n..nikkonikkoni\n..sekaino\n...YAZAWA\n"
+    },
+    {
+      "input": "6\n0\n2ch\n1\n1ostu\n1\n2get\n1\n1otsu\n1\n1ostu\n3\npgr\n",
+      "output": "2ch\n.1ostu\n.2get\n..pgr\n.1otsu\n.1ostu\n"
+    }
+  ]
+}

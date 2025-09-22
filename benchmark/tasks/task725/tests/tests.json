@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "issii\n2",
+      "output": "14"
+    },
+    {
+      "input": "qq\n81",
+      "output": "281"
+    },
+    {
+      "input": "cooooooooonteeeeeeeeeest\n999993333",
+      "output": "38999939997"
+    }
+  ]
+}

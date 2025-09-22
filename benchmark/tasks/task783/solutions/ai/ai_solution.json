@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MIN(a, b) ((a) < (b) ? (a) : (b))\n\nint solve(int N, int A, int B, int* p) {\n    int* target = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        target[i] = i + 1;\n    }\n    \n    int minCost = INT_MAX;\n    \n    for (int leftRotate = 0; leftRotate < N; leftRotate++) {\n        for (int rightRotate = 0; rightRotate < N; rightRotate++) {\n            int currentCost = leftRotate * A + rightRotate * B;\n            int* temp = malloc(N * sizeof(int));\n            \n            for (int i = 0; i < N; i++) {\n                temp[i] = p[(i + leftRotate - rightRotate + N) % N];\n            }\n            \n            int isSorted = 1;\n            for (int i = 0; i < N; i++) {\n                if (temp[i] != target[i]) {\n                    isSorted = 0;\n                    break;\n                }\n            }\n            \n            if (isSorted) {\n                minCost = MIN(minCost, currentCost);\n            }\n            \n            free(temp);\n        }\n    }\n    \n    free(target);\n    return minCost;\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    \n    int* p = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    \n    int result = solve(N, A, B, p);\n    printf(\"%d\\n\", result);\n    \n    free(p);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    int *p = (int *)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n\n    int cost = 0;\n    for (int i = 1; i <= N; i++) {\n        if (p[i] != i) {\n            int j;\n            for (j = i + 1; j <= N; j++) {\n                if (p[j] == i) {\n                    break;\n                }\n            }\n            if (j <= N) {\n                int left_cost = A * (j - i);\n                int right_cost = B * (j - i);\n                cost += min(left_cost, right_cost);\n                int temp = p[j];\n                for (int k = j; k > i; k--) {\n                    p[k] = p[k - 1];\n                }\n                p[i] = temp;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", cost);\n    free(p);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    vector<int> p(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> p[i];\n    }\n\n    int cost = 0;\n    for (int i = 0; i < N; ++i) {\n        if (p[i] != i + 1) {\n            int j = i;\n            while (j < N && p[j] != i + 1) {\n                ++j;\n            }\n            int len = j - i + 1;\n            int left_cost = A;\n            int right_cost = B * len;\n            cost += min(left_cost, right_cost);\n            rotate(p.begin() + i, p.begin() + j, p.begin() + j + 1);\n        }\n    }\n\n    cout << cost << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        int[] p = new int[N];\n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n\n        int[] sorted = p.clone();\n        Arrays.sort(sorted);\n\n        int cost = 0;\n        for (int i = 0; i < N; ) {\n            if (p[i] == sorted[i]) {\n                i++;\n                continue;\n            }\n\n            int j = i;\n            while (j < N && p[j] != sorted[i]) {\n                j++;\n            }\n\n            int len = j - i;\n            int leftCost = A * len;\n            int rightCost = B * len;\n\n            if (leftCost <= rightCost) {\n                cost += leftCost;\n                for (int k = j; k > i; k--) {\n                    p[k] = p[k - 1];\n                }\n                p[i] = sorted[i];\n            } else {\n                cost += rightCost;\n                for (int k = i; k < j; k++) {\n                    p[k] = p[k + 1];\n                }\n                p[j] = sorted[i];\n            }\n        }\n\n        System.out.println(cost);\n    }\n}",
+    "timestamp": "2025-08-05 22:54:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PermutationSorting {\n    public static long minimumCost(int[] p, int A, int B) {\n        int n = p.length;\n        int[] target = new int[n];\n        for (int i = 0; i < n; i++) {\n            target[i] = i + 1;\n        }\n\n        long minCost = Long.MAX_VALUE;\n        for (int rotation = 0; rotation < n; rotation++) {\n            long currentCost = 0;\n            int[] rotated = new int[n];\n            System.arraycopy(p, 0, rotated, 0, n);\n\n            // Rotate array\n            for (int i = 0; i < rotation; i++) {\n                int temp = rotated[0];\n                for (int j = 0; j < n - 1; j++) {\n                    rotated[j] = rotated[j + 1];\n                }\n                rotated[n - 1] = temp;\n                currentCost += B;\n            }\n\n            // Count inversions\n            int inversions = 0;\n            for (int i = 0; i < n; i++) {\n                for (int j = i + 1; j < n; j++) {\n                    if (rotated[i] > rotated[j]) {\n                        inversions++;\n                    }\n                }\n            }\n\n            // Calculate left shifts\n            long leftShiftCost = (long) inversions * A;\n            minCost = Math.min(minCost, currentCost + leftShiftCost);\n        }\n\n        return minCost;\n    }\n}",
+    "timestamp": "2025-08-05 22:54:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    long long minimumTotalCost(vector<int>& p, int A, int B) {\n        int n = p.size();\n        vector<int> pos(n + 1);\n        \n        // Track original positions\n        for (int i = 0; i < n; i++) {\n            pos[p[i]] = i;\n        }\n        \n        long long totalCost = 0;\n        \n        // Iterate and calculate minimum cost for each element\n        for (int x = 1; x <= n; x++) {\n            int current = pos[x];\n            int target = x - 1;\n            \n            // Calculate left and right shift costs\n            int leftShift = (current - target + n) % n;\n            int rightShift = (target - current + n) % n;\n            \n            // Choose minimum cost shift\n            totalCost += min(leftShift * A, rightShift * B);\n        }\n        \n        return totalCost;\n    }\n};",
+    "timestamp": "2025-08-05 22:54:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_cost_sort_permutation(n, p, A, B):\n    import numpy as np\n    dp = np.full((n + 1, n + 1), float('inf'))\n    dp[0][0] = 0\n\n    target = list(range(1, n + 1))\n    pos = [0] * (n + 1)\n    for idx, val in enumerate(p):\n        pos[val] = idx\n\n    for length in range(1, n + 1):\n        for i in range(n - length + 1):\n            j = i + length\n            dp[i][j] = min(dp[i][j], dp[i][j - 1] + A)\n            \n            for k in range(i, j):\n                if k == pos[target[k - i]]:\n                    dp[i][j] = min(dp[i][j], dp[i][k] + B)\n                else:\n                    dp[i][j] = min(dp[i][j], dp[i][k] + A)\n\n    return dp[0][n]\n\n# Example usage\nn = 5\np = [5, 2, 3, 1, 4]\nA = 3\nB = 1\nprint(min_cost_sort_permutation(n, p, A, B))",
+    "timestamp": "2025-08-13 12:55:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class PermutationSort {\n    public int minCostToSort(int[] p, int A, int B) {\n        int N = p.length;\n        int[] correctOrder = new int[N];\n        for (int i = 0; i < N; i++) {\n            correctOrder[i] = i + 1;\n        }\n        \n        if (Arrays.equals(p, correctOrder)) {\n            return 0;\n        }\n\n        int shiftCost = Math.min(A, B);\n        int[] position = new int[N + 1];\n        for (int i = 0; i < N; i++) {\n            position[p[i]] = i;\n        }\n\n        boolean[] visited = new boolean[N + 1];\n        int totalCost = 0;\n\n        for (int start = 1; start <= N; start++) {\n            if (!visited[start]) {\n                int length = 0;\n                for (int current = start; !visited[current]; current = p[position[current]]) {\n                    visited[current] = true;\n                    length++;\n                }\n                \n                if (length > 1) {\n                    totalCost += (length - 1) * shiftCost;\n                }\n            }\n        }\n\n        return totalCost;\n    }\n}",
+    "timestamp": "2025-08-13 12:55:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint minCost(int* p, int N, int A, int B) {\n    int dp[N+1], i, j;\n    for (i = 0; i <= N; i++) dp[i] = INT_MAX;\n    dp[0] = 0;\n\n    for (i = 0; i < N; i++) {\n        for (j = i+1; j <= N; j++) {\n            // Check left shift\n            if (p[i] > p[j-1]) {\n                dp[j] = dp[i] + A < dp[j] ? dp[i] + A : dp[j];\n            }\n            // Check right shift\n            if (p[j-1] < p[i]) {\n                dp[j] = dp[i] + B < dp[j] ? dp[i] + B : dp[j];\n            }\n        }\n    }\n\n    return dp[N];\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    int* p = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) scanf(\"%d\", &p[i]);\n\n    int result = minCost(p, N, A, B);\n    printf(\"%d\\n\", result);\n\n    free(p);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:55:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint minCostToSortPermutation(const vector<int>& p, int A, int B) {\n    int N = p.size();\n    vector<int> sortedP = p;\n    sort(sortedP.begin(), sortedP.end());\n\n    vector<vector<int>> dp(N + 1, vector<int>(N + 1, INT_MAX));\n\n    dp[0][0] = 0;\n    for (int i = 0; i <= N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (i > 0) {\n                dp[i][j] = min(dp[i][j], dp[i - 1][j] + A * (sortedP[j] != p[i - 1]));\n            }\n            dp[i][j + 1] = min(dp[i][j + 1], dp[i][j] + B * (i < N && sortedP[j] != p[i]));\n        }\n    }\n\n    int minCost = INT_MAX;\n    for (int j = 0; j <= N; ++j) {\n        minCost = min(minCost, dp[N][j]);\n    }\n\n    return minCost;\n}\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    vector<int> p(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> p[i];\n    }\n\n    cout << minCostToSortPermutation(p, A, B) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:55:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_cost_to_sort(N, p, A, B):\n    def is_sorted(arr):\n        return arr == list(range(1, N + 1))\n    \n    def solve(arr):\n        if is_sorted(arr):\n            return 0\n        \n        min_cost = float('inf')\n        \n        # Try all possible left shifts\n        for l in range(N):\n            for r in range(l + 1, N + 1):\n                # Create a copy of the array and perform left shift\n                shifted = arr[:l] + arr[l:r][::-1] + arr[r:]\n                \n                cost = A\n                sub_cost = solve(shifted)\n                \n                if sub_cost != float('inf'):\n                    min_cost = min(min_cost, cost + sub_cost)\n        \n        # Try all possible right shifts\n        for l in range(N):\n            for r in range(l + 1, N + 1):\n                # Create a copy of the array and perform right shift\n                shifted = arr[:l] + arr[l:r][::-1] + arr[r:]\n                \n                cost = B\n                sub_cost = solve(shifted)\n                \n                if sub_cost != float('inf'):\n                    min_cost = min(min_cost, cost + sub_cost)\n        \n        return min_cost\n    \n    return solve(p)",
+    "timestamp": "2025-08-13 12:55:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, A, B = map(int, sys.stdin.readline().split())\n    p = list(map(int, sys.stdin.readline().split()))\n    \n    cost = 0\n    for i in range(N):\n        if p[i] != i + 1:\n            # Find the position of the correct element\n            for j in range(i + 1, N):\n                if p[j] == i + 1:\n                    break\n            # Determine whether left or right shift is cheaper\n            if (j - i) * A < B:\n                cost += (j - i) * A\n                # Perform left shift\n                temp = p[j]\n                for k in range(j, i, -1):\n                    p[k] = p[k - 1]\n                p[i] = temp\n            else:\n                cost += B\n                # Perform right shift (swap)\n                p[i], p[j] = p[j], p[i]\n    print(cost)\n\nsolve()",
+    "timestamp": "2025-08-13 12:56:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minCostSortPermutation(N, p, A, B) {\n    const dp = Array.from({ length: N + 1 }, () => Array(N + 1).fill(Infinity));\n  \n    dp[0][0] = 0; // Base case\n\n    for (let length = 1; length <= N; length++) {\n        for (let start = 0; start + length <= N; start++) {\n            const end = start + length - 1;\n\n            // Check if current subarray is already sorted\n            let sorted = true;\n            for (let i = start; i < end; i++) {\n                if (p[i] > p[i + 1]) {\n                    sorted = false;\n                    break;\n                }\n            }\n            if (sorted) {\n                dp[start][end] = 0;\n                continue;\n            }\n\n            // Shift current subarray to the left\n            if (end < N - 1) {\n                dp[start][end] = Math.min(dp[start][end], A + dp[start + 1][end + 1]);\n            }\n\n            // Shift current subarray to the right\n            if (start > 0) {\n                dp[start][end] = Math.min(dp[start][end], B + dp[start - 1][end - 1]);\n            }\n        }\n    }\n\n    return dp[0][N - 1];\n}",
+    "timestamp": "2025-08-13 12:56:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimumCost(N, A, B, p) {\n    let dp = new Array(1 << N).fill(Infinity);\n    dp[0] = 0;\n\n    for (let mask = 1; mask < (1 << N); mask++) {\n        for (let i = 0; i < N; i++) {\n            if (!(mask & (1 << i))) continue;\n\n            let prevMask = mask ^ (1 << i);\n            let targetPos = p[i] - 1;\n\n            // Try shifting left\n            let leftPos = i;\n            let leftCost = 0;\n            while (leftPos > targetPos) {\n                leftPos--;\n                leftCost += A;\n            }\n            if (leftPos === targetPos) {\n                dp[mask] = Math.min(dp[mask], dp[prevMask] + leftCost);\n            }\n\n            // Try shifting right\n            let rightPos = i;\n            let rightCost = 0;\n            while (rightPos < targetPos) {\n                rightPos++;\n                rightCost += B;\n            }\n            if (rightPos === targetPos) {\n                dp[mask] = Math.min(dp[mask], dp[prevMask] + rightCost);\n            }\n        }\n    }\n\n    return dp[(1 << N) - 1];\n}",
+    "timestamp": "2025-08-13 12:56:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minCostToSortPermutation(N, p, A, B) {\n    let cost = 0;\n    let sorted = [...p].sort((a, b) => a - b);\n    \n    for (let i = 0; i < N; ) {\n        if (p[i] === sorted[i]) {\n            i++;\n            continue;\n        }\n        \n        let j = i;\n        while (j < N && p[j] !== sorted[i]) {\n            j++;\n        }\n        \n        let subarrayLength = j - i + 1;\n        let leftCost = A;\n        let rightCost = B;\n        \n        if (leftCost <= rightCost) {\n            // Shift left\n            let temp = p[i];\n            for (let k = i; k < j; k++) {\n                p[k] = p[k + 1];\n            }\n            p[j] = temp;\n            cost += leftCost;\n        } else {\n            // Shift right\n            let temp = p[j];\n            for (let k = j; k > i; k--) {\n                p[k] = p[k - 1];\n            }\n            p[i] = temp;\n            cost += rightCost;\n        }\n    }\n    \n    return cost;\n}",
+    "timestamp": "2025-08-13 12:56:28"
+  }
+]

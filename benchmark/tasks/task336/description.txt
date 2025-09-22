@@ -1,0 +1,1 @@
+Help Little Jimmy determine which door leads to the treasure repository by calculating the key numbers of two given integers. The key number of an integer n is defined as the largest prime factor minus the sum of all other prime factors of n. For each pair of integers, output 'a' if the first integer has a larger key number, or 'b' if the second integer has a larger key number.

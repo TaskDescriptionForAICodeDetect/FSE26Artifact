@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "2 2 1\nL\nG.\n#S\n",
+      "output": "Yes"
+    },
+    {
+      "input": "2 2 2\nRR\nG.\n.S\n",
+      "output": "No"
+    },
+    {
+      "input": "3 3 6\nLLLLLL\nG#.\n...\n.#S\n",
+      "output": "Yes"
+    }
+  ]
+}

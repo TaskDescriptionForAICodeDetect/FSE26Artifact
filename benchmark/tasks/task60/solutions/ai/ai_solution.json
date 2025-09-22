@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve_diploma_distribution(n, min_1, max_1, min_2, max_2, min_3, max_3):\n    # First maximize first degree diplomas\n    first_degree = min(max_1, n - min_2 - min_3)\n    first_degree = max(first_degree, min_1)\n\n    # Then maximize second degree diplomas\n    remaining = n - first_degree\n    second_degree = min(max_2, remaining - min_3)\n    second_degree = max(second_degree, min_2)\n\n    # Finally assign third degree diplomas\n    third_degree = n - first_degree - second_degree\n\n    return first_degree, second_degree, third_degree\n\ndef main():\n    n = int(input())\n    min_1, max_1 = map(int, input().split())\n    min_2, max_2 = map(int, input().split())\n    min_3, max_3 = map(int, input().split())\n\n    result = solve_diploma_distribution(n, min_1, max_1, min_2, max_2, min_3, max_3)\n    print(*result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:34:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\nmin1, max1 = map(int, input().split())\nmin2, max2 = map(int, input().split())\nmin3, max3 = map(int, input().split())\n\n# Start by assigning the minimal possible values for all diplomas\na = min1\nb = min2\nc = min3\nremaining = n - (a + b + c)\n\n# Distribute the remaining to maximize a first, then b, then c\n# First, give as much as possible to a without exceeding max1\ngive_to_a = min(remaining, max1 - a)\na += give_to_a\nremaining -= give_to_a\n\n# Then, give to b\ngive_to_b = min(remaining, max2 - b)\nb += give_to_b\nremaining -= give_to_b\n\n# Finally, give to c\ngive_to_c = min(remaining, max3 - c)\nc += give_to_c\n\nprint(a, b, c)",
+    "timestamp": "2025-08-05 17:34:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def distribute_diplomas(n, min_1, max_1, min_2, max_2, min_3, max_3):\n    first_degree = min(max_1, n - min_2 - min_3)\n    second_degree = min(max_2, n - first_degree - min_3)\n    third_degree = n - first_degree - second_degree\n    return first_degree, second_degree, third_degree\n\nn = int(input().strip())\nmin_1, max_1 = map(int, input().strip().split())\nmin_2, max_2 = map(int, input().strip().split())\nmin_3, max_3 = map(int, input().strip().split())\n\nresult = distribute_diplomas(n, min_1, max_1, min_2, max_2, min_3, max_3)\nprint(result[0], result[1], result[2])",
+    "timestamp": "2025-08-12 21:55:49"
+  }
+]

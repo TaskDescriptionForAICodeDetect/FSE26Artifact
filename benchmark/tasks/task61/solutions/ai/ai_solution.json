@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define GRID_SIZE 10\n\nvoid apply_drop(int grid[GRID_SIZE][GRID_SIZE], int x, int y, int size) {\n    int start_x = x - size;\n    int end_x = x + size;\n    int start_y = y - size;\n    int end_y = y + size;\n\n    for (int i = start_x; i <= end_x; i++) {\n        for (int j = start_y; j <= end_y; j++) {\n            if (i >= 0 && i < GRID_SIZE && j >= 0 && j < GRID_SIZE) {\n                grid[i][j]++;\n            }\n        }\n    }\n}\n\nint main() {\n    int grid[GRID_SIZE][GRID_SIZE] = {0};\n    int x, y, size;\n    \n    while (scanf(\"%d %d %d\", &x, &y, &size) == 3) {\n        apply_drop(grid, x, y, size);\n    }\n\n    int zero_count = 0;\n    int max_density = 0;\n\n    for (int i = 0; i < GRID_SIZE; i++) {\n        for (int j = 0; j < GRID_SIZE; j++) {\n            if (grid[i][j] == 0) {\n                zero_count++;\n            }\n            if (grid[i][j] > max_density) {\n                max_density = grid[i][j];\n            }\n        }\n    }\n\n    printf(\"%d\\n%d\\n\", zero_count, max_density);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:25:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class InkDropSimulation {\n    private static final int GRID_SIZE = 10;\n    private int[][] grid = new int[GRID_SIZE][GRID_SIZE];\n\n    public void dropInk(int x, int y, int size) {\n        int[][] directions = {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}, \n                               {-1,-1}, {-1,1}, {1,-1}, {1,1}};\n        \n        for (int[] dir : directions) {\n            int newX = x + dir[0];\n            int newY = y + dir[1];\n            \n            if (newX >= 0 && newX < GRID_SIZE && newY >= 0 && newY < GRID_SIZE) {\n                int increment = calculateIncrement(size, dir);\n                grid[newX][newY] += increment;\n            }\n        }\n    }\n\n    private int calculateIncrement(int size, int[] dir) {\n        if (Arrays.equals(dir, new int[]{0,0})) {\n            return size * 2;\n        }\n        \n        switch(size) {\n            case 1: return 1;\n            case 2: return (Math.abs(dir[0]) + Math.abs(dir[1]) == 2) ? 1 : 2;\n            case 3: return (Math.abs(dir[0]) + Math.abs(dir[1]) == 2) ? 2 : 3;\n            default: return 0;\n        }\n    }\n\n    public void simulate() {\n        Scanner scanner = new Scanner(System.in);\n        int drops = scanner.nextInt();\n\n        for (int i = 0; i < drops; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            int size = scanner.nextInt();\n            dropInk(x, y, size);\n        }\n\n        int zeroCount = 0;\n        int maxDensity = 0;\n\n        for (int[] row : grid) {\n            for (int cell : row) {\n                if (cell == 0) zeroCount++;\n                maxDensity = Math.max(maxDensity, cell);\n            }\n        }\n\n        System.out.println(zeroCount + \" \" + maxDensity);\n        scanner.close();\n    }\n\n    public static void main(String[] args) {\n        InkDropSimulation simulation = new InkDropSimulation();\n        simulation.simulate();\n    }\n}",
+    "timestamp": "2025-08-05 18:25:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    const int SIZE = 10;\n    vector<vector<int>> grid(SIZE, vector<int>(SIZE, 0));\n    int x, y, s;\n    \n    while (cin >> x >> y >> s) {\n        for (int i = max(0, x - s); i <= min(SIZE - 1, x + s); ++i) {\n            for (int j = max(0, y - s); j <= min(SIZE - 1, y + s); ++j) {\n                int distance = max(abs(x - i), abs(y - j));\n                if (distance <= s) {\n                    grid[i][j]++;\n                }\n            }\n        }\n    }\n    \n    int zeroCount = 0;\n    int maxDensity = 0;\n    \n    for (const auto &row : grid) {\n        for (int val : row) {\n            if (val == 0) {\n                zeroCount++;\n            }\n            if (val > maxDensity) {\n                maxDensity = val;\n            }\n        }\n    }\n    \n    cout << zeroCount << endl;\n    cout << maxDensity << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:25:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define GRID_SIZE 10\n\nvoid applyDrop(int grid[GRID_SIZE][GRID_SIZE], int x, int y, int size) {\n    int dx[] = {0, 1, -1, 0, 0, 1, 1, -1, -1};\n    int dy[] = {0, 0, 0, 1, -1, 1, -1, 1, -1};\n    \n    for (int i = 0; i < 9; i++) {\n        int nx = x + dx[i];\n        int ny = y + dy[i];\n        \n        if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {\n            switch(size) {\n                case 1: // Small drop\n                    grid[nx][ny] += 1;\n                    break;\n                case 2: // Medium drop\n                    grid[nx][ny] += 2;\n                    break;\n                case 3: // Large drop\n                    grid[nx][ny] += 3;\n                    break;\n            }\n        }\n    }\n}\n\nint main() {\n    int grid[GRID_SIZE][GRID_SIZE] = {0};\n    int drops, x, y, size;\n    \n    scanf(\"%d\", &drops);\n    \n    for (int i = 0; i < drops; i++) {\n        scanf(\"%d %d %d\", &x, &y, &size);\n        applyDrop(grid, x, y, size);\n    }\n    \n    int zeroCount = 0;\n    int maxDensity = 0;\n    \n    for (int i = 0; i < GRID_SIZE; i++) {\n        for (int j = 0; j < GRID_SIZE; j++) {\n            if (grid[i][j] == 0) {\n                zeroCount++;\n            }\n            if (grid[i][j] > maxDensity) {\n                maxDensity = grid[i][j];\n            }\n        }\n    }\n    \n    printf(\"%d %d\\n\", zeroCount, maxDensity);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:25:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nvoid applyInkDrop(vector<vector<int>>& grid, int row, int col, int size) {\n    int offsets[3][9][2] = {\n        {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}, {0,0}, {0,0}, {0,0}, {0,0}},\n        {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}, {-1,-1}, {-1,1}, {1,-1}, {1,1}},\n        {{0,0}, {-1,0}, {1,0}, {0,-1}, {0,1}, {-1,-1}, {-1,1}, {1,-1}, {1,1}, \n         {-2,0}, {2,0}, {0,-2}, {0,2}, {-2,-1}, {-2,1}, {2,-1}, {2,1}, {-1,-2}, \n         {-1,2}, {1,-2}, {1,2}}\n    };\n\n    int numCells = size == 1 ? 5 : (size == 2 ? 9 : 21);\n\n    for (int i = 0; i < numCells; ++i) {\n        int newRow = row + offsets[size-1][i][0];\n        int newCol = col + offsets[size-1][i][1];\n\n        if (newRow >= 0 && newRow < 10 && newCol >= 0 && newCol < 10) {\n            grid[newRow][newCol] += size;\n        }\n    }\n}\n\nint main() {\n    vector<vector<int>> grid(10, vector<int>(10, 0));\n    int numDrops;\n    cin >> numDrops;\n\n    for (int i = 0; i < numDrops; ++i) {\n        int row, col, size;\n        cin >> row >> col >> size;\n        applyInkDrop(grid, row, col, size);\n    }\n\n    int zeroCount = 0;\n    int maxDensity = 0;\n\n    for (int r = 0; r < 10; ++r) {\n        for (int c = 0; c < 10; ++c) {\n            if (grid[r][c] == 0) {\n                zeroCount++;\n            }\n            maxDensity = max(maxDensity, grid[r][c]);\n        }\n    }\n\n    cout << zeroCount << \" \" << maxDensity << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:25:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class InkSimulation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[][] grid = new int[10][10];\n        \n        while (scanner.hasNext()) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            int size = scanner.nextInt();\n            \n            for (int i = Math.max(0, x - size); i <= Math.min(9, x + size); i++) {\n                for (int j = Math.max(0, y - size); j <= Math.min(9, y + size); j++) {\n                    if (Math.abs(i - x) + Math.abs(j - y) <= size) {\n                        grid[i][j]++;\n                    }\n                }\n            }\n        }\n        \n        int zeroCount = 0;\n        int maxDensity = 0;\n        \n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                if (grid[i][j] == 0) {\n                    zeroCount++;\n                }\n                if (grid[i][j] > maxDensity) {\n                    maxDensity = grid[i][j];\n                }\n            }\n        }\n        \n        System.out.println(zeroCount);\n        System.out.println(maxDensity);\n    }\n}",
+    "timestamp": "2025-08-05 18:26:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def apply_ink_drop(grid, x, y, size):\n    for dx in range(-size, size + 1):\n        for dy in range(-size, size + 1):\n            if 0 <= x + dx < 10 and 0 <= y + dy < 10:\n                grid[x + dx][y + dy] += 1\n                \ndef simulate_ink_drops(drops):\n    grid = [[0] * 10 for _ in range(10)]\n    \n    for drop in drops:\n        x, y, size = drop\n        apply_ink_drop(grid, x, y, size)\n    \n    zero_density_count = sum(row.count(0) for row in grid)\n    highest_density = max(max(row) for row in grid)\n    \n    return zero_density_count, highest_density\n\n# Example usage:\ndrops = [(2, 2, 1), (5, 5, 2), (7, 7, 3)]\nresult = simulate_ink_drops(drops)\nprint(result)",
+    "timestamp": "2025-08-12 23:06:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class InkDropSimulation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[][] grid = new int[10][10];\n\n        while (scanner.hasNext()) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            int size = scanner.nextInt();\n            applyDrop(grid, x, y, size);\n        }\n\n        int zeroDensityCount = 0;\n        int maxDensity = 0;\n\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                if (grid[i][j] == 0) zeroDensityCount++;\n                if (grid[i][j] > maxDensity) maxDensity = grid[i][j];\n            }\n        }\n\n        System.out.println(zeroDensityCount);\n        System.out.println(maxDensity);\n    }\n\n    private static void applyDrop(int[][] grid, int x, int y, int size) {\n        for (int i = -size; i <= size; i++) {\n            for (int j = -size; j <= size; j++) {\n                if (Math.abs(i) + Math.abs(j) <= size) {\n                    int newX = x + i;\n                    int newY = y + j;\n                    if (isWithinBounds(newX, newY)) {\n                        grid[newX][newY]++;\n                    }\n                }\n            }\n        }\n    }\n\n    private static boolean isWithinBounds(int x, int y) {\n        return x >= 0 && x < 10 && y >= 0 && y < 10;\n    }\n}",
+    "timestamp": "2025-08-12 23:06:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define GRID_SIZE 10\n\nvoid applyDrop(int grid[GRID_SIZE][GRID_SIZE], int x, int y, int size) {\n    for (int i = -size + 1; i < size; ++i) {\n        for (int j = -size + 1; j < size; ++j) {\n            int nx = x + i;\n            int ny = y + j;\n            if (nx >= 0 && nx < GRID_SIZE && ny >= 0 && ny < GRID_SIZE) {\n                if (abs(i) + abs(j) < size) {\n                    grid[nx][ny]++;\n                }\n            }\n        }\n    }\n}\n\nint main() {\n    int grid[GRID_SIZE][GRID_SIZE];\n    memset(grid, 0, sizeof(grid));\n    int x, y, size;\n\n    while (scanf(\"%d %d %d\", &x, &y, &size) == 3) {\n        applyDrop(grid, x, y, size);\n    }\n\n    int zeroDensityCount = 0;\n    int maxDensity = 0;\n\n    for (int i = 0; i < GRID_SIZE; i++) {\n        for (int j = 0; j < GRID_SIZE; j++) {\n            if (grid[i][j] == 0) {\n                zeroDensityCount++;\n            }\n            if (grid[i][j] > maxDensity) {\n                maxDensity = grid[i][j];\n            }\n        }\n    }\n\n    printf(\"%d %d\\n\", zeroDensityCount, maxDensity);\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:06:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def simulate_ink_drops(drops):\n    grid = [[0 for _ in range(10)] for _ in range(10)]\n    \n    for x, y, size in drops:\n        grid[y][x] += size\n        \n        if size >= 2:\n            # Add ink to adjacent cells\n            if x > 0:\n                grid[y][x-1] += 1\n            if x < 9:\n                grid[y][x+1] += 1\n            if y > 0:\n                grid[y-1][x] += 1\n            if y < 9:\n                grid[y+1][x] += 1\n        \n        if size == 3:\n            # Add ink to diagonal cells\n            if x > 0 and y > 0:\n                grid[y-1][x-1] += 1\n            if x < 9 and y > 0:\n                grid[y-1][x+1] += 1\n            if x > 0 and y < 9:\n                grid[y+1][x-1] += 1\n            if x < 9 and y < 9:\n                grid[y+1][x+1] += 1\n    \n    zero_cells = sum(cell == 0 for row in grid for cell in row)\n    max_density = max(max(row) for row in grid)\n    \n    return zero_cells, max_density\n\n# Read input\nn = int(input())\ndrops = []\nfor _ in range(n):\n    x, y, size = map(int, input().split())\n    drops.append((x, y, size))\n\n# Simulate and output results\nzero_cells, max_density = simulate_ink_drops(drops)\nprint(zero_cells)\nprint(max_density)",
+    "timestamp": "2025-08-12 23:07:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def simulate_ink_drops():\n    grid = [[0 for _ in range(10)] for _ in range(10)]\n    \n    while True:\n        try:\n            input_line = input().strip()\n            if not input_line:\n                break\n            x, y, size = map(int, input_line.split())\n            \n            for i in range(max(0, x - size), min(10, x + size + 1)):\n                for j in range(max(0, y - size), min(10, y + size + 1)):\n                    distance = max(abs(i - x), abs(j - y))\n                    if distance <= size:\n                        grid[i][j] += 1\n        except EOFError:\n            break\n    \n    zero_count = sum(cell == 0 for row in grid for cell in row)\n    max_density = max(max(row) for row in grid)\n    \n    print(zero_count)\n    print(max_density)\n\nsimulate_ink_drops()",
+    "timestamp": "2025-08-12 23:07:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    const int gridSize = 10;\n    vector<vector<int>> grid(gridSize, vector<int>(gridSize, 0));\n\n    int n; // number of ink drops\n    cin >> n;\n\n    for (int i = 0; i < n; ++i) {\n        int x, y, size;\n        cin >> x >> y >> size;\n\n        // Apply drop effect based on size\n        for (int dx = -size; dx <= size; ++dx) {\n            for (int dy = -size; dy <= size; ++dy) {\n                int nx = x + dx;\n                int ny = y + dy;\n                if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {\n                    ++grid[nx][ny];\n                }\n            }\n        }\n    }\n\n    int zeroDensityCells = 0;\n    int highestDensity = 0;\n\n    for (const auto &row : grid) {\n        for (const auto &cell : row) {\n            if (cell == 0) ++zeroDensityCells;\n            highestDensity = max(highestDensity, cell);\n        }\n    }\n\n    cout << zeroDensityCells << \" \" << highestDensity << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:48:50"
+  }
+]

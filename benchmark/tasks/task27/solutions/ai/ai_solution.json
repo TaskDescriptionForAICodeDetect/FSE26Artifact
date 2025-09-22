@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def can_distribute_grapes(x, y, z, a, b, c):\n    # Check if Andrew can get enough green grapes\n    if a < x:\n        return False\n    \n    # Remaining grapes after Andrew's distribution\n    green_left = a - x\n    purple_left = b\n    black_left = c\n    \n    # Dmitry can use green and purple grapes\n    dmitry_needed = y\n    dmitry_used_green = min(green_left, dmitry_needed)\n    dmitry_needed -= dmitry_used_green\n    green_left -= dmitry_used_green\n    \n    dmitry_used_purple = min(purple_left, dmitry_needed)\n    purple_left -= dmitry_used_purple\n    \n    # Check if Dmitry can get enough grapes \n    if dmitry_needed > dmitry_used_purple:\n        return False\n    \n    # Michal can use purple and black grapes\n    michal_needed = z\n    michal_used_purple = min(purple_left, michal_needed)\n    michal_needed -= michal_used_purple\n    \n    michal_used_black = min(black_left, michal_needed)\n    \n    # Check if Michal can get enough grapes\n    return michal_needed <= michal_used_black\n\ndef main():\n    x, y, z = map(int, input().split())\n    a, b, c = map(int, input().split())\n    \n    print(\"YES\" if can_distribute_grapes(x, y, z, a, b, c) else \"NO\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:32:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "x, y, z = map(int, input().split())\na, b, c = map(int, input().split())\n\nif a >= x:\n    remaining_green = a - x\n    total_non_black = remaining_green + b\n    if total_non_black >= y:\n        remaining_after_dmitry = total_non_black - y\n        total_all = remaining_after_dmitry + c\n        if total_all >= z:\n            print(\"YES\")\n        else:\n            print(\"NO\")\n    else:\n        print(\"NO\")\nelse:\n    print(\"NO\")",
+    "timestamp": "2025-08-05 17:32:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def grape_party(x, y, z, a, b, c):\n    # Check if Andrew can get enough green grapes\n    if a < x:\n        return \"NO\"\n    # Check if Dmitry can get enough grapes among green and purple\n    else:\n        remaining_green = a - x\n        if remaining_green + b < y:\n            return \"NO\"\n        # Check if Michal can get enough grapes among green, purple, and black\n        else:\n            remaining_green_and_purple = remaining_green + b - y\n            if remaining_green_and_purple + c < z:\n                return \"NO\"\n    return \"YES\"\n\n# Example usage:\nx1, y1, z1 = 1, 6, 2\na1, b1, c1 = 4, 3, 3\nprint(grape_party(x1, y1, z1, a1, b1, c1)) # Output: YES\n\nx2, y2, z2 = 5, 1, 1\na2, b2, c2 = 4, 3, 2\nprint(grape_party(x2, y2, z2, a2, b2, c2)) # Output: NO",
+    "timestamp": "2025-08-12 21:53:21"
+  }
+]

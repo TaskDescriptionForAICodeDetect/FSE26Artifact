@@ -1,0 +1,1 @@
+While exploring an abandoned mine, you discovered a long mathematical expression S written in a tunnel. You want to enhance this expression using 'or' to make the result as large as possible, while ensuring it remains a valid expression. Given the rules of the expression defined in BNF, determine the maximum value you can achieve.

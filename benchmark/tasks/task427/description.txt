@@ -1,0 +1,7 @@
+Sashimi
+
+The problem describes a scenario where a fox named Shieru is fishing and catches a long, thin black fish with a total length of N centimeters. The fish has variable density across its body, with each segment, indexed from 1 to N, having a corresponding weight w_i.
+
+Shieru wants to cut the fish into N pieces, each 1 centimeter long, using an acrobatic method as she is outdoors without a cutting board. She takes a segment of the fish, and it must be at least 2 centimeters long to make a cut in mid-air. The cost of cutting a segment from i to j is the sum of weights of that segment (w_i + w_{i+1} + ... + w_j).
+
+Shieru wants to minimize the total cost of making all N cuts.

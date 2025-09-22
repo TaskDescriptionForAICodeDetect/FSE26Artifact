@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int width, height;\n    scanf(\"%d %d\", &width, &height);\n    \n    int x = 1, y = 1;\n    int dx = 0, dy = 1;\n    \n    char command[10];\n    while (1) {\n        scanf(\"%s\", command);\n        if (strcmp(command, \"STOP\") == 0) {\n            break;\n        }\n        \n        if (strcmp(command, \"FORWARD\") == 0) {\n            int steps;\n            scanf(\"%d\", &steps);\n            for (int i = 0; i < steps; i++) {\n                int new_x = x + dx;\n                int new_y = y + dy;\n                if (new_x >= 1 && new_x <= width && new_y >= 1 && new_y <= height) {\n                    x = new_x;\n                    y = new_y;\n                }\n            }\n        } else if (strcmp(command, \"BACKWARD\") == 0) {\n            int steps;\n            scanf(\"%d\", &steps);\n            for (int i = 0; i < steps; i++) {\n                int new_x = x - dx;\n                int new_y = y - dy;\n                if (new_x >= 1 && new_x <= width && new_y >= 1 && new_y <= height) {\n                    x = new_x;\n                    y = new_y;\n                }\n            }\n        } else if (strcmp(command, \"LEFT\") == 0) {\n            int temp = dx;\n            dx = -dy;\n            dy = temp;\n        } else if (strcmp(command, \"RIGHT\") == 0) {\n            int temp = dx;\n            dx = dy;\n            dy = -temp;\n        }\n    }\n    \n    printf(\"%d %d\\n\", x, y);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:02:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RobotMovement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int testCases = scanner.nextInt();\n        \n        for (int t = 0; t < testCases; t++) {\n            int fieldWidth = scanner.nextInt();\n            int fieldHeight = scanner.nextInt();\n            \n            int x = fieldWidth / 2 + 1;\n            int y = fieldHeight / 2 + 1;\n            \n            scanner.nextLine(); // consume newline\n            String commands = scanner.nextLine();\n            \n            for (char command : commands.toCharArray()) {\n                switch (command) {\n                    case 'F':\n                        if (y < fieldHeight) y++;\n                        break;\n                    case 'B':\n                        if (y > 1) y--;\n                        break;\n                    case 'L':\n                        if (x > 1) x--;\n                        break;\n                    case 'R':\n                        if (x < fieldWidth) x++;\n                        break;\n                    case 'S':\n                        break;\n                }\n            }\n            \n            System.out.println(x + \" \" + y);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 19:02:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int width, height;\n    cin >> width >> height;\n\n    int x = 1, y = 1;\n    string command;\n\n    while (cin >> command) {\n        if (command == \"STOP\") {\n            break;\n        }\n\n        if (command == \"FORWARD\") {\n            if (y + 1 <= height) {\n                y++;\n            }\n        } else if (command == \"BACKWARD\") {\n            if (y - 1 >= 1) {\n                y--;\n            }\n        } else if (command == \"LEFT\") {\n            if (x - 1 >= 1) {\n                x--;\n            }\n        } else if (command == \"RIGHT\") {\n            if (x + 1 <= width) {\n                x++;\n            }\n        }\n    }\n\n    cout << x << \" \" << y << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:03:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int rows, cols;\n    scanf(\"%d %d\", &rows, &cols);\n    \n    int x = 1, y = 1;\n    char command[10];\n    \n    while (scanf(\"%s\", command) != EOF) {\n        if (strcmp(command, \"STOP\") == 0) {\n            printf(\"%d %d\\n\", x, y);\n            continue;\n        }\n        \n        if (strcmp(command, \"FORWARD\") == 0) {\n            y = (y < rows) ? y + 1 : rows;\n        }\n        else if (strcmp(command, \"BACKWARD\") == 0) {\n            y = (y > 1) ? y - 1 : 1;\n        }\n        else if (strcmp(command, \"LEFT\") == 0) {\n            x = (x > 1) ? x - 1 : 1;\n        }\n        else if (strcmp(command, \"RIGHT\") == 0) {\n            x = (x < cols) ? x + 1 : cols;\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:03:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nclass RobotField {\nprivate:\n    int width, height;\n    int x, y;\n\npublic:\n    RobotField(int w, int h) : width(w), height(h), x(1), y(1) {}\n\n    void processCommands(const vector<string>& commands) {\n        for (const string& cmd : commands) {\n            if (cmd == \"FORWARD\") {\n                y = min(y + 1, height);\n            } else if (cmd == \"BACKWARD\") {\n                y = max(y - 1, 1);\n            } else if (cmd == \"LEFT\") {\n                x = max(x - 1, 1);\n            } else if (cmd == \"RIGHT\") {\n                x = min(x + 1, width);\n            } else if (cmd == \"STOP\") {\n                break;\n            }\n        }\n        cout << x << \" \" << y << endl;\n    }\n};\n\nint main() {\n    int testCases;\n    cin >> testCases;\n\n    while (testCases--) {\n        int width, height;\n        cin >> width >> height;\n\n        RobotField robot(width, height);\n        vector<string> commands;\n        string cmd;\n\n        while (cin >> cmd && cmd != \"STOP\") {\n            commands.push_back(cmd);\n        }\n        commands.push_back(\"STOP\");\n\n        robot.processCommands(commands);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:03:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class RobotMovement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int width = scanner.nextInt();\n        int height = scanner.nextInt();\n        int x = 1;\n        int y = 1;\n        String command;\n        \n        while (true) {\n            command = scanner.next();\n            if (command.equals(\"STOP\")) {\n                break;\n            }\n            \n            switch (command) {\n                case \"FORWARD\":\n                    if (y < height) {\n                        y++;\n                    }\n                    break;\n                case \"BACKWARD\":\n                    if (y > 1) {\n                        y--;\n                    }\n                    break;\n                case \"LEFT\":\n                    if (x > 1) {\n                        x--;\n                    }\n                    break;\n                case \"RIGHT\":\n                    if (x < width) {\n                        x++;\n                    }\n                    break;\n            }\n        }\n        \n        System.out.println(x + \" \" + y);\n    }\n}",
+    "timestamp": "2025-08-05 19:04:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def final_position(field_size, commands):\n    x, y = 1, 1\n    width, height = field_size\n\n    for command in commands:\n        if command == \"FORWARD\" and y > 1:\n            y -= 1\n        elif command == \"BACKWARD\" and y < height:\n            y += 1\n        elif command == \"LEFT\" and x > 1:\n            x -= 1\n        elif command == \"RIGHT\" and x < width:\n            x += 1\n        elif command == \"STOP\":\n            break\n            \n    return (x, y)\n\n# Example usage:\nsize = (5, 5)\ncmds = [\"FORWARD\", \"RIGHT\", \"BACKWARD\", \"STOP\", \"LEFT\"]\n\nprint(final_position(size, cmds)) # Output: (2, 2)",
+    "timestamp": "2025-08-13 02:12:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class RobotMovement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int width = scanner.nextInt();\n        int height = scanner.nextInt();\n        scanner.nextLine(); // consume rest of the line\n\n        String commands = scanner.nextLine();\n        String[] commandList = commands.split(\" \");\n\n        // Initial position at center (1, 1)\n        int x = 1;\n        int y = 1;\n\n        for (String command : commandList) {\n            switch (command) {\n                case \"FORWARD\":\n                    if (y < height) {\n                        y++;\n                    }\n                    break;\n                case \"BACKWARD\":\n                    if (y > 1) {\n                        y--;\n                    }\n                    break;\n                case \"LEFT\":\n                    if (x > 1) {\n                        x--;\n                    }\n                    break;\n                case \"RIGHT\":\n                    if (x < width) {\n                        x++;\n                    }\n                    break;\n                case \"STOP\":\n                    System.out.println(\"Final Position: (\" + x + \", \" + y + \")\");\n                    return;\n            }\n        }\n        // If STOP not present in command sequence\n        System.out.println(\"Final Position: (\" + x + \", \" + y + \")\");\n    }\n}",
+    "timestamp": "2025-08-13 02:12:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid executeCommands(int width, int height, char commands[], int *finalX, int *finalY) {\n    int x = 1, y = 1;\n    for (int i = 0; commands[i] != '\\0'; i++) {\n        switch (commands[i]) {\n            case 'F':  // FORWARD\n                if (y + 1 <= height)\n                    y++;\n                break;\n            case 'B':  // BACKWARD\n                if (y - 1 >= 1)\n                    y--;\n                break;\n            case 'L':  // LEFT\n                if (x - 1 >= 1)\n                    x--;\n                break;\n            case 'R':  // RIGHT\n                if (x + 1 <= width)\n                    x++;\n                break;\n            case 'S': // STOP\n                // Do nothing\n                break;\n        }\n    }\n    *finalX = x;\n    *finalY = y;\n}\n\nint main() {\n    int n; // number of sequences\n    scanf(\"%d\", &n);\n    \n    for (int i = 0; i < n; i++) {\n        int width, height;\n        scanf(\"%d %d\", &width, &height);\n        \n        char commands[1001];\n        scanf(\"%s\", commands);\n        \n        int finalX, finalY;\n        executeCommands(width, height, commands, &finalX, &finalY);\n        printf(\"Final position: (%d, %d)\\n\", finalX, finalY);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 02:12:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def move_robot(field_width, field_height, commands):\n    # Start at center tile\n    x, y = 1, 1\n    \n    for command in commands:\n        if command == 'FORWARD':\n            y = min(field_height, y + 1)\n        elif command == 'BACKWARD':\n            y = max(1, y - 1)\n        elif command == 'LEFT':\n            x = max(1, x - 1)\n        elif command == 'RIGHT':\n            x = min(field_width, x + 1)\n        elif command == 'STOP':\n            break\n    \n    return f\"{x} {y}\"\n\n# Read input\nfield_width, field_height = map(int, input().split())\nnum_sequences = int(input())\n\n# Process each command sequence\nfor _ in range(num_sequences):\n    commands = input().split()\n    print(move_robot(field_width, field_height, commands))",
+    "timestamp": "2025-08-13 02:12:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def robot_movement():\n    import sys\n    input = sys.stdin.read().split()\n    ptr = 0\n    while ptr < len(input):\n        rows, cols = map(int, input[ptr:ptr+2])\n        ptr += 2\n        x, y = 1, 1\n        direction = 0  # 0: right, 1: down, 2: left, 3: up\n        while True:\n            cmd = input[ptr]\n            ptr += 1\n            if cmd == 'STOP':\n                break\n            elif cmd == 'RIGHT':\n                direction = (direction + 1) % 4\n            elif cmd == 'LEFT':\n                direction = (direction - 1) % 4\n            elif cmd == 'FORWARD':\n                dx, dy = 0, 0\n                if direction == 0:\n                    dx = 1\n                elif direction == 1:\n                    dy = 1\n                elif direction == 2:\n                    dx = -1\n                elif direction == 3:\n                    dy = -1\n                new_x, new_y = x + dx, y + dy\n                if 1 <= new_x <= cols and 1 <= new_y <= rows:\n                    x, y = new_x, new_y\n            elif cmd == 'BACKWARD':\n                dx, dy = 0, 0\n                if direction == 0:\n                    dx = -1\n                elif direction == 1:\n                    dy = -1\n                elif direction == 2:\n                    dx = 1\n                elif direction == 3:\n                    dy = 1\n                new_x, new_y = x + dx, y + dy\n                if 1 <= new_x <= cols and 1 <= new_y <= rows:\n                    x, y = new_x, new_y\n        print(f\"{x} {y}\")\n\nrobot_movement()",
+    "timestamp": "2025-08-13 02:13:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\n// Function to calculate the final position of the robot\npair<int, int> calculateFinalPosition(int n, int m, const vector<string>& commands) {\n    int x = 1, y = 1; // Initial position (center tile)\n\n    for (const string& command : commands) {\n        if (command == \"STOP\") {\n            break;\n        } else if (command == \"FORWARD\") {\n            if (x > 1) x--;\n        } else if (command == \"BACKWARD\") {\n            if (x < n) x++;\n        } else if (command == \"LEFT\") {\n            if (y > 1) y--;\n        } else if (command == \"RIGHT\") {\n            if (y < m) y++;\n        }\n    }\n    \n    return {x, y};\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m; // Input size of field\n    \n    vector<string> commands;\n    string command;\n    \n    while (cin >> command) {\n        commands.push_back(command);\n        if (command == \"STOP\") {\n            break;\n        }\n    }\n\n    pair<int, int> finalPosition = calculateFinalPosition(n, m, commands);\n    cout << finalPosition.first << \" \" << finalPosition.second << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:04:46"
+  }
+]

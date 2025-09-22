@@ -1,0 +1,1 @@
+Takahashi is hosting a sports meet with N participants and M sports options. Each participant has a favorite sport among the options. The goal is to select one or more sports such that the number of participants in the sport with the largest attendance is minimized. You need to calculate the minimum possible number of participants in the sport that attracts the most people.

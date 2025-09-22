@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid shuffle(int *cards, int n, int x, int y) {\n    int *temp = (int *)malloc(n * sizeof(int));\n    int idx = 0;\n    \n    // Copy part C (y+1 to n)\n    for (int i = y; i < n; i++) {\n        temp[idx++] = cards[i];\n    }\n    \n    // Copy part B (x to y-1)\n    for (int i = x; i < y; i++) {\n        temp[idx++] = cards[i];\n    }\n    \n    // Copy part A (0 to x-1)\n    for (int i = 0; i < x; i++) {\n        temp[idx++] = cards[i];\n    }\n    \n    // Copy back to original array\n    for (int i = 0; i < n; i++) {\n        cards[i] = temp[i];\n    }\n    \n    free(temp);\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    \n    int *cards = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        cards[i] = i + 1;\n    }\n    \n    for (int i = 0; i < m; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        shuffle(cards, n, x, y);\n    }\n    \n    int p, q, r;\n    scanf(\"%d %d %d\", &p, &q, &r);\n    \n    int count = 0;\n    for (int i = p - 1; i < q; i++) {\n        if (cards[i] <= r) {\n            count++;\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    \n    free(cards);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ShuffleProblem {\n    public static int countCards(int n, int[][] shuffles, int p, int q, int r) {\n        int[] originalOrder = new int[n];\n        for (int i = 0; i < n; i++) {\n            originalOrder[i] = i + 1;\n        }\n\n        for (int[] shuffle : shuffles) {\n            int x = shuffle[0], y = shuffle[1];\n            originalOrder = performShuffle(originalOrder, x, y);\n        }\n\n        int count = 0;\n        for (int i = p - 1; i < q; i++) {\n            if (originalOrder[i] <= r) {\n                count++;\n            }\n        }\n\n        return count;\n    }\n\n    private static int[] performShuffle(int[] deck, int x, int y) {\n        int n = deck.length;\n        int[] shuffledDeck = new int[n];\n        int index = 0;\n\n        // Part C\n        for (int i = y + 1; i < n; i++) {\n            shuffledDeck[index++] = deck[i];\n        }\n\n        // Part B\n        for (int i = x; i <= y; i++) {\n            shuffledDeck[index++] = deck[i];\n        }\n\n        // Part A\n        for (int i = 0; i < x; i++) {\n            shuffledDeck[index++] = deck[i];\n        }\n\n        return shuffledDeck;\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int n = 9;\n        int[][] shuffles = {{3, 5}};\n        int p = 1, q = 9, r = 5;\n        System.out.println(countCards(n, shuffles, p, q, r));\n    }\n}",
+    "timestamp": "2025-08-05 18:47:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<int> cards(n + 1);\n    for (int i = 1; i <= n; ++i) {\n        cards[i] = i;\n    }\n\n    for (int i = 0; i < m; ++i) {\n        int x, y;\n        cin >> x >> y;\n        vector<int> new_cards;\n        // Part C: cards from y+1 to n\n        for (int j = y + 1; j <= n; ++j) {\n            new_cards.push_back(cards[j]);\n        }\n        // Part B: cards from x+1 to y\n        for (int j = x + 1; j <= y; ++j) {\n            new_cards.push_back(cards[j]);\n        }\n        // Part A: cards from 1 to x\n        for (int j = 1; j <= x; ++j) {\n            new_cards.push_back(cards[j]);\n        }\n        // Update the cards\n        for (int j = 1; j <= n; ++j) {\n            cards[j] = new_cards[j - 1];\n        }\n    }\n\n    int p, q, r;\n    cin >> p >> q >> r;\n    int count = 0;\n    for (int i = p; i <= q; ++i) {\n        if (cards[i] <= r) {\n            count++;\n        }\n    }\n    cout << count << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid shuffle(int* deck, int n, int x, int y) {\n    int* temp = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        temp[i] = deck[i];\n    }\n    \n    int idx = 0;\n    // Move cards after y to the end\n    for (int i = y + 1; i < n; i++) {\n        deck[idx++] = temp[i];\n    }\n    \n    // Move cards from x+1 to y\n    for (int i = x + 1; i <= y; i++) {\n        deck[idx++] = temp[i];\n    }\n    \n    // Move first x cards\n    for (int i = 0; i < x; i++) {\n        deck[idx++] = temp[i];\n    }\n    \n    free(temp);\n}\n\nint count_cards_less_equal(int* deck, int n, int p, int q, int r) {\n    int count = 0;\n    for (int i = p; i <= q; i++) {\n        if (deck[i] <= r) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n, m, p, q, r;\n    scanf(\"%d %d %d %d %d\", &n, &m, &p, &q, &r);\n    \n    int* deck = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        deck[i] = i + 1;\n    }\n    \n    for (int i = 0; i < m; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        shuffle(deck, n, x - 1, y - 1);\n    }\n    \n    printf(\"%d\\n\", count_cards_less_equal(deck, n, p - 1, q - 1, r));\n    \n    free(deck);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:48:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nclass CardShuffle {\nprivate:\n    int n;\n    vector<int> originalPositions;\n    vector<int> currentPositions;\n\npublic:\n    CardShuffle(int cardCount) : n(cardCount) {\n        originalPositions.resize(n + 1);\n        currentPositions.resize(n + 1);\n        \n        for (int i = 1; i <= n; i++) {\n            originalPositions[i] = i;\n            currentPositions[i] = i;\n        }\n    }\n\n    void shuffle(int x, int y) {\n        vector<int> newPositions(n + 1);\n        \n        // Top part A\n        int index = 1;\n        for (int i = x + y - x + 1; i <= y; i++) {\n            newPositions[index++] = currentPositions[i];\n        }\n        \n        // Middle part B\n        for (int i = x + 1; i <= y; i++) {\n            newPositions[index++] = currentPositions[i];\n        }\n        \n        // Bottom part C\n        for (int i = 1; i < x; i++) {\n            newPositions[index++] = currentPositions[i];\n        }\n        \n        for (int i = y + 1; i <= n; i++) {\n            newPositions[index++] = currentPositions[i];\n        }\n        \n        currentPositions = newPositions;\n    }\n\n    int countCardsLessOrEqual(int p, int q, int r) {\n        int count = 0;\n        for (int i = p; i <= q; i++) {\n            if (currentPositions[i] <= r) {\n                count++;\n            }\n        }\n        return count;\n    }\n};\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n\n    CardShuffle cardShuffle(n);\n\n    for (int i = 0; i < m; i++) {\n        int x, y;\n        cin >> x >> y;\n        cardShuffle.shuffle(x, y);\n    }\n\n    int q;\n    cin >> q;\n\n    for (int i = 0; i < q; i++) {\n        int p, r;\n        cin >> p >> r;\n        cout << cardShuffle.countCardsLessOrEqual(p, r, r) << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:48:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ShuffleProblem {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n\n        int[] cards = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            cards[i] = i;\n        }\n\n        for (int i = 0; i < m; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            int[] newCards = new int[n + 1];\n            int pos = 1;\n            for (int j = x + 1; j <= y; j++) {\n                newCards[pos++] = cards[j];\n            }\n            for (int j = y + 1; j <= n; j++) {\n                newCards[pos++] = cards[j];\n            }\n            for (int j = 1; j <= x; j++) {\n                newCards[pos++] = cards[j];\n            }\n            System.arraycopy(newCards, 1, cards, 1, n);\n        }\n\n        int p = scanner.nextInt();\n        int q = scanner.nextInt();\n        int r = scanner.nextInt();\n        int count = 0;\n        for (int i = p; i <= q; i++) {\n            if (cards[i] <= r) {\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 18:49:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def shuffle_and_count(n, shuffles, p, q, r):\n    cards = list(range(1, n + 1))\n\n    def shuffle(cards, x, y):\n        A = cards[:x]\n        B = cards[x:y]\n        C = cards[y:]\n        return A + B + C\n\n    for x, y in shuffles:\n        cards = shuffle(cards, x, y)\n    \n    count = sum(1 for card in cards[p-1:q] if card <= r)\n    return count\n\n# Example usage:\nn = 9\nshuffles = [(3, 5), (2, 7)]\np = 1\nq = 9\nr = 3\nprint(shuffle_and_count(n, shuffles, p, q, r))",
+    "timestamp": "2025-08-13 00:59:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class ShuffleProblem {\n\n    public static int countCards(int n, int[][] shuffles, int p, int q, int r) {\n        int[] cards = new int[n];\n        for (int i = 0; i < n; i++) {\n            cards[i] = i + 1;\n        }\n\n        for (int[] shuffle : shuffles) {\n            shuffleDeck(cards, shuffle[0], shuffle[1]);\n        }\n\n        int count = 0;\n        for (int i = p - 1; i < q; i++) {\n            if (cards[i] <= r) {\n                count++;\n            }\n        }\n        return count;\n    }\n\n    private static void shuffleDeck(int[] cards, int x, int y) {\n        int[] temp = Arrays.copyOf(cards, cards.length);\n        int index = 0;\n\n        for (int i = y; i < cards.length; i++) {\n            cards[index++] = temp[i];\n        }\n        for (int i = x - 1; i < y; i++) {\n            cards[index++] = temp[i];\n        }\n        for (int i = 0; i < x - 1; i++) {\n            cards[index++] = temp[i];\n        }\n    }\n\n    public static void main(String[] args) {\n        int n = 9;\n        int[][] shuffles = {\n            {3, 5}\n            // Add more shuffle pairs as needed\n        };\n        int p = 1, q = 5, r = 4;\n        System.out.println(countCards(n, shuffles, p, q, r));\n    }\n}",
+    "timestamp": "2025-08-13 00:59:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid shuffle(int* cards, int n, int x, int y) {\n    int* temp = (int*)malloc(n * sizeof(int));\n    int index = 0;\n    \n    // Copy the cards from C\n    for (int i = y; i < n; ++i) {\n        temp[index++] = cards[i];\n    }\n    \n    // Copy the cards from A\n    for (int i = 0; i < x; ++i) {\n        temp[index++] = cards[i];\n    }\n    \n    // Copy the cards from B\n    for (int i = x; i < y; ++i) {\n        temp[index++] = cards[i];\n    }\n    \n    // Put all shuffled cards back into the original array\n    for (int i = 0; i < n; ++i) {\n        cards[i] = temp[i];\n    }\n    \n    free(temp);\n}\n\nint main() {\n    int n, m, p, q, r;\n    \n    // Read the number of cards\n    scanf(\"%d\", &n);\n    int* cards = (int*)malloc(n * sizeof(int));\n    \n    // Initialize the cards\n    for (int i = 0; i < n; ++i) {\n        cards[i] = i + 1;\n    }\n    \n    // Read the number of shuffles\n    scanf(\"%d\", &m);\n    \n    // Perform each shuffle\n    for (int i = 0; i < m; ++i) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        shuffle(cards, n, x, y);\n    }\n    \n    // Read the parameters p, q, r\n    scanf(\"%d %d %d\", &p, &q, &r);\n    \n    int count = 0;\n    \n    // Count the cards from position p to q that are less than or equal to r\n    for (int i = p - 1; i < q; ++i) {\n        if (cards[i] <= r) {\n            count++;\n        }\n    }\n    \n    // Output the result\n    printf(\"%d\\n\", count);\n    \n    free(cards);\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:59:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def shuffle(deck, x, y):\n    a = deck[:x]\n    b = deck[x:y+1]\n    c = deck[y+1:]\n    return b + a + c\n\ndef count_cards_less_or_equal(deck, p, q, r):\n    count = 0\n    for i in range(p-1, q):\n        if deck[i] <= r:\n            count += 1\n    return count\n\ndef solve_shuffle_problem(n, shuffles, queries):\n    deck = list(range(1, n+1))\n    \n    for x, y in shuffles:\n        deck = shuffle(deck, x-1, y-1)\n    \n    results = []\n    for p, q, r in queries:\n        result = count_cards_less_or_equal(deck, p, q, r)\n        results.append(result)\n    \n    return results\n\n# Example usage\nn = 9\nshuffles = [(3, 5)]\nqueries = [(1, 9, 5)]\nprint(solve_shuffle_problem(n, shuffles, queries))",
+    "timestamp": "2025-08-13 00:59:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n, m = map(int, input().split())\nshuffles = []\nfor _ in range(m):\n    x, y = map(int, input().split())\n    shuffles.append((x, y))\np, q, r = map(int, input().split())\n\n# Initialize the deck\ndeck = list(range(1, n + 1))\n\nfor x, y in shuffles:\n    # Split into A, B, C\n    A = deck[:x]\n    B = deck[x:y]\n    C = deck[y:]\n    # Reassemble as A + B + C\n    deck = B + A + C\n\n# Count cards from p to q (1-based to 0-based)\ncount = 0\nfor i in range(p - 1, q):\n    if deck[i] <= r:\n        count += 1\n\nprint(count)",
+    "timestamp": "2025-08-13 01:00:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nvoid performShuffle(std::vector<int>& cards, int x, int y) {\n    std::vector<int> temp(cards.size());\n    int k = 0;\n\n    // Copy part C\n    for (int i = y; i < cards.size(); ++i) {\n        temp[k++] = cards[i];\n    }\n\n    // Copy part A\n    for (int i = 0; i < x; ++i) {\n        temp[k++] = cards[i];\n    }\n\n    // Copy part B\n    for (int i = x; i < y; ++i) {\n        temp[k++] = cards[i];\n    }\n\n    // Update the original deck order\n    cards = temp;\n}\n\nint countCardsInRange(std::vector<int>& cards, int p, int q, int r) {\n    int count = 0;\n    for (int i = p - 1; i < q; ++i) {\n        if (cards[i] <= r) {\n            ++count;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n = 9;  // Number of cards\n    std::vector<int> cards(n);\n    for (int i = 0; i < n; ++i) {\n        cards[i] = i + 1;\n    }\n\n    int m = 1; // Number of shuffles\n    std::vector<std::pair<int, int>> shuffles = {{3, 5}};\n\n    for (const auto& shuffle : shuffles) {\n        performShuffle(cards, shuffle.first, shuffle.second);\n    }\n\n    int p = 1; // Starting position (inclusive)\n    int q = 9; // Ending position (inclusive)\n    int r = 5; // Threshold\n    \n    int result = countCardsInRange(cards, p, q, r);\n    std::cout << result << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:57:23"
+  }
+]

@@ -1,0 +1,1 @@
+You are given an integer N. Find the number of strings of length N that satisfy the following conditions, modulo 10^9+7: The string does not contain characters other than A, C, G and T. The string does not contain AGC as a substring. The condition above cannot be violated by swapping two adjacent characters once.

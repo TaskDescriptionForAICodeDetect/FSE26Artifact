@@ -1,0 +1,1 @@
+The Optimal Binary Search Tree is a binary search tree constructed from n keys and n+1 dummy keys to minimize the expected value of cost for a search operation. You are required to write a program that calculates the expected value of a search operation on the optimal binary search tree based on given probabilities for the keys and dummy keys.

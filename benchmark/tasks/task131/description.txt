@@ -1,0 +1,1 @@
+Given a string of numeric characters, write a program to compute the minimum number of years before a wish will be fulfilled. The string must be split into segments such that the difference between the largest and smallest values of these segments is minimized.

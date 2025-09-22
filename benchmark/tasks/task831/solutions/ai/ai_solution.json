@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canReachSortedState(int* p, int N) {\n    for (int i = 0; i < N; i++) {\n        if (p[i] != i + 1) {\n            break;\n        }\n        if (i == N - 1) {\n            return true;\n        }\n    }\n\n    for (int i = 1; i < N - 1; i++) {\n        if (p[i-1] > p[i] && p[i] > p[i+1]) {\n            int temp1 = p[i-1];\n            int temp2 = p[i];\n            int temp3 = p[i+1];\n\n            p[i-1] = temp3;\n            p[i] = temp2;\n            p[i+1] = temp1;\n\n            return canReachSortedState(p, N);\n        }\n    }\n\n    return false;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int p[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n\n    printf(\"%s\\n\", canReachSortedState(p, N) ? \"YES\" : \"NO\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint can_reach_sorted(int n, int p[]) {\n    for (int i = 0; i < n; i++) {\n        if (p[i] != i + 1) {\n            if (i > 0 && i < n - 1 && p[i - 1] == i + 1 && p[i + 1] == i) {\n                int temp = p[i - 1];\n                p[i - 1] = p[i + 1];\n                p[i + 1] = temp;\n            } else if (i > 0 && i < n - 1 && p[i + 1] == i + 1 && p[i - 1] == i + 2) {\n                int temp = p[i - 1];\n                p[i - 1] = p[i + 1];\n                p[i + 1] = temp;\n            } else {\n                return 0;\n            }\n        }\n    }\n    return 1;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int p[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    if (can_reach_sorted(n, p)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nbool canSort(vector<int>& p) {\n    int n = p.size();\n    for (int i = 0; i < n; ++i) {\n        if (p[i] != i + 1) {\n            if (i + 2 < n && p[i] == i + 2 && p[i + 1] == i + 1 && p[i + 2] == i + 3) {\n                swap(p[i], p[i + 2]);\n            } else if (i + 2 < n && p[i] == i + 3 && p[i + 1] == i + 2 && p[i + 2] == i + 1) {\n                swap(p[i], p[i + 2]);\n            } else if (i > 0 && i + 1 < n && p[i - 1] == i + 1 && p[i] == i && p[i + 1] == i - 1) {\n                swap(p[i - 1], p[i + 1]);\n            } else if (i > 0 && i + 1 < n && p[i - 1] == i + 1 && p[i] == i - 1 && p[i + 1] == i) {\n                swap(p[i - 1], p[i + 1]);\n            } else {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> p(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> p[i];\n    }\n    if (canSort(p)) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] p = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            p[i] = scanner.nextInt();\n        }\n        \n        boolean possible = true;\n        for (int i = 1; i <= N; i++) {\n            if (Math.abs(p[i] - i) > 1) {\n                possible = false;\n                break;\n            }\n        }\n        \n        System.out.println(possible ? \"YES\" : \"NO\");\n    }\n}",
+    "timestamp": "2025-08-05 23:04:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PermutationSorting {\n    public static boolean canReachSortedState(int[] p) {\n        int n = p.length;\n        \n        while (true) {\n            boolean modified = false;\n            \n            for (int i = 1; i < n - 1; i++) {\n                if (p[i-1] > p[i] && p[i] > p[i+1]) {\n                    // Reverse 3 elements\n                    int temp = p[i-1];\n                    p[i-1] = p[i+1];\n                    p[i+1] = temp;\n                    modified = true;\n                }\n            }\n            \n            if (!modified) break;\n        }\n        \n        // Check if final state matches indices\n        for (int i = 0; i < n; i++) {\n            if (p[i] != i + 1) return false;\n        }\n        \n        return true;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] p = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            p[i] = scanner.nextInt();\n        }\n        \n        System.out.println(canReachSortedState(p) ? \"YES\" : \"NO\");\n    }\n}",
+    "timestamp": "2025-08-05 23:04:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool canReachSortedState(vector<int>& p) {\n    int n = p.size();\n    \n    while (true) {\n        bool found = false;\n        \n        for (int i = 1; i < n - 1; i++) {\n            if (p[i-1] > p[i] && p[i] > p[i+1]) {\n                swap(p[i-1], p[i+1]);\n                found = true;\n                break;\n            }\n        }\n        \n        if (!found) break;\n    }\n    \n    for (int i = 0; i < n; i++) {\n        if (p[i] != i + 1) return false;\n    }\n    \n    return true;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<int> p(n);\n    for (int i = 0; i < n; i++) {\n        cin >> p[i];\n    }\n    \n    cout << (canReachSortedState(p) ? \"YES\" : \"NO\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_sort_permutation(N, permutation):\n    for i in range(N):\n        if (i + 1) % 2 != permutation[i] % 2:\n            return \"NO\"\n    return \"YES\"\n\n# Example usage:\nN = 5\npermutation = [1, 3, 5, 4, 2]\nprint(can_sort_permutation(N, permutation))",
+    "timestamp": "2025-08-13 13:28:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class PermutationSortability {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int[] p = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n\n        if (canReachSortState(p)) {\n            System.out.println(\"Yes\");\n        } else {\n            System.out.println(\"No\");\n        }\n    }\n\n    private static boolean canReachSortState(int[] p) {\n        int inversions = 0;\n\n        for (int i = 0; i < p.length - 1; i++) {\n            for (int j = i + 1; j < p.length; j++) {\n                if (p[i] > p[j]) {\n                    inversions++;\n                }\n            }\n        }\n\n        return inversions % 2 == 0;\n    }\n}",
+    "timestamp": "2025-08-13 13:28:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint isIdentityPermutation(int *p, int N) {\n    for (int i = 1; i <= N; i++) {\n        if (p[i] != i) {\n            return 0;\n        }\n    }\n    return 1;\n}\n\nint canReachIdentity(int *p, int N) {\n    while (1) {\n        int changed = 0;\n        for (int i = 2; i <= N-1; i++) {\n            if (p[i-1] > p[i] && p[i] > p[i+1]) {\n                int temp = p[i-1];\n                p[i-1] = p[i+1];\n                p[i+1] = temp;\n                changed = 1;\n            }\n        }\n        if (!changed) break;\n    }\n    return isIdentityPermutation(p, N);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int p[N+1];\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    if (canReachIdentity(p, N)) {\n        printf(\"YES\\n\");\n    } else {\n        printf(\"NO\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:28:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nbool canBeSorted(std::vector<int>& p) {\n    int inversions = 0;\n    int n = p.size();\n    for (int i = 0; i < n; ++i) {\n        for (int j = i + 1; j < n; ++j) {\n            if (p[i] > p[j]) {\n                ++inversions;\n            }\n        }\n    }\n    return inversions % 2 == 0;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> p(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> p[i];\n    }\n    \n    if (canBeSorted(p)) {\n        std::cout << \"Yes\\n\";\n    } else {\n        std::cout << \"No\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:28:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_reach_sorted_state(perm):\n    N = len(perm)\n    \n    def can_sort(p):\n        for i in range(1, N-1):\n            if p[i-1] > p[i] > p[i+1]:\n                new_p = p[:i-1] + p[i-1:i+2][::-1] + p[i+2:]\n                if tuple(new_p) == tuple(sorted(new_p)):\n                    return True\n                if can_sort(new_p):\n                    return True\n        return tuple(p) == tuple(sorted(p))\n    \n    return can_sort(perm)\n\ndef main():\n    N = int(input())\n    perm = list(map(int, input().split()))\n    \n    print(\"YES\" if can_reach_sorted_state(perm) else \"NO\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 13:29:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_reach_sorted_state(N, permutation):\n    for i in range(N):\n        if permutation[i] != i + 1:\n            if i == 0 or i == N - 1:\n                return False\n            if not (permutation[i-1] == i + 1 and permutation[i] == i and permutation[i+1] == i - 1):\n                return False\n            permutation[i-1], permutation[i], permutation[i+1] = permutation[i+1], permutation[i], permutation[i-1]\n    return True",
+    "timestamp": "2025-08-13 13:29:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isSortablePermutation(permutation) {\n    let inversions = 0;\n    for (let i = 0; i < permutation.length; i++) {\n        for (let j = i + 1; j < permutation.length; j++) {\n            if (permutation[i] > permutation[j]) {\n                inversions++;\n            }\n        }\n    }\n    return inversions % 2 === 0;\n}",
+    "timestamp": "2025-08-13 13:29:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canReachSortedState(permutation) {\n    const n = permutation.length;\n    const target = Array.from({length: n}, (_, i) => i + 1);\n    \n    function canTransform(arr) {\n        for (let i = 1; i < arr.length - 1; i++) {\n            if (arr[i-1] > arr[i] && arr[i] > arr[i+1]) {\n                const newArr = [...arr];\n                [newArr[i-1], newArr[i], newArr[i+1]] = [newArr[i+1], newArr[i], newArr[i-1]];\n                \n                if (JSON.stringify(newArr) === JSON.stringify(target)) return true;\n                if (canTransform(newArr)) return true;\n            }\n        }\n        return false;\n    }\n    \n    return JSON.stringify(permutation) === JSON.stringify(target) || canTransform(permutation);\n}",
+    "timestamp": "2025-08-13 13:29:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canReachIdentityPermutation(permutation) {\n    for (let i = 0; i < permutation.length; i++) {\n        if (permutation[i] !== i + 1) {\n            return false;\n        }\n    }\n    return true;\n}\n\nfunction canSort(permutation) {\n    const n = permutation.length;\n    for (let i = 0; i < n; i++) {\n        if (permutation[i] === i + 1) continue;\n        let pos = -1;\n        for (let j = i; j < n; j++) {\n            if (permutation[j] === i + 1) {\n                pos = j;\n                break;\n            }\n        }\n        if (pos === -1) return false;\n        while (pos > i) {\n            if (pos < 2) return false;\n            if (permutation[pos - 2] > permutation[pos - 1] && permutation[pos - 1] > permutation[pos]) {\n                [permutation[pos - 2], permutation[pos]] = [permutation[pos], permutation[pos - 2]];\n                pos -= 2;\n            } else if (pos >= i + 1 && permutation[pos - 1] > permutation[pos] && permutation[pos] > permutation[pos + 1]) {\n                [permutation[pos - 1], permutation[pos + 1]] = [permutation[pos + 1], permutation[pos - 1]];\n                pos -= 1;\n            } else {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nfunction solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let input = [];\n    rl.on('line', (line) => {\n        input.push(line);\n    });\n\n    rl.on('close', () => {\n        const T = parseInt(input[0]);\n        let index = 1;\n        for (let t = 0; t < T; t++) {\n            const N = parseInt(input[index++]);\n            const permutation = input[index++].split(' ').map(Number);\n            if (canReachIdentityPermutation(permutation)) {\n                console.log(\"Yes\");\n            } else {\n                const result = canSort([...permutation]) ? \"Yes\" : \"No\";\n                console.log(result);\n            }\n        }\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:29:43"
+  }
+]

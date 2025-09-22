@@ -1,0 +1,1 @@
+In the Takahashi Kingdom, there are N cities connected by bidirectional roads. For given distances between cities represented in a matrix, determine if a road network exists that corresponds to those distances. If it does, find the shortest possible total length of all roads. If no such network exists, return -1.

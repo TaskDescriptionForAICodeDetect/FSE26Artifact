@@ -1,0 +1,1 @@
+Professor Y is decoding ancient messages hidden in stone plates. Each plate has N^2 characters in an N x N matrix, where the goal is to select N characters such that no two characters are in the same row or column. The task is to find the lexicographically smallest string that can be formed from these characters. Write a program to decode the messages represented by the plates.

@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "13 3\n1 2 1\n2 3 1\n1 3 2\n",
+      "output": "Yes"
+    },
+    {
+      "input": "23 3\n1 2 1\n2 3 1\n1 3 5\n",
+      "output": "No"
+    },
+    {
+      "input": "34 3\n2 1 1\n2 3 5\n3 4 2\n",
+      "output": "Yes"
+    },
+    {
+      "input": "410 3\n8 7 100\n7 9 100\n9 8 100\n",
+      "output": "No"
+    },
+    {
+      "input": "5100 0\n",
+      "output": "Yes"
+    }
+  ]
+}

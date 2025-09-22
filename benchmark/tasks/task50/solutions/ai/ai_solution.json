@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def area_of_triangle(x1, y1, x2, y2, x3, y3):\n    return abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2)) / 2\n\ndef solve(n, m, k):\n    target_area = n * m / k\n    \n    # Try different point combinations\n    for x1 in range(n+1):\n        for y1 in range(m+1):\n            for x2 in range(n+1):\n                for y2 in range(m+1):\n                    for x3 in range(n+1):\n                        for y3 in range(m+1):\n                            area = area_of_triangle(x1, y1, x2, y2, x3, y3)\n                            if abs(area - target_area) < 1e-9:\n                                return [x1, y1, x2, y2, x3, y3]\n    return None\n\ndef main():\n    n, m, k = map(int, input().split())\n    \n    result = solve(n, m, k)\n    \n    if result is None:\n        print(\"NO\")\n    else:\n        print(\"YES\")\n        for i in range(0, 6, 2):\n            print(result[i], result[i+1])\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:33:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m, k = map(int, input().split())\n\nif (2 * n * m) % k != 0:\n    print(\"NO\")\nelse:\n    required = (2 * n * m) // k\n    # Find d1 and d2 such that (d1 divides n or m) and (d2 divides the other) and d1*d2 = required\n    # We can try to make the triangle right-angled with legs a and b, a*b = required\n    # So find a <= n, b <= m such that a*b = required\n    # Or find a way to split required into a*b, fitting into n*m\n    # Let's try to find a = gcd(n, required / gcd(m, required)) or something similar\n    # But a simpler approach: try to find a = gcd(n*2, k), then see if (2nm/k) / (n/a) fits into m\n    \n    # Alternative approach: take points (0,0), (a,0), (0,b), area = a*b/2 = nm/k => a*b = 2nm/k\n    # So we need a*b = required, a<=2n, b<=m (or a<=n, b<=2m)\n    # So find a and b such that a*b = required, a <= 2n and b <=m, or a <=n and b <=2m\n    \n    found = False\n    a, b = 0, 0\n    \n    # Try to set a = n, then b = required / a\n    g = (2 * n) \n    # Check if required divides by g and (required // g) <= m\n    if required % g == 0:\n        b_candidate = required // g\n        if b_candidate <= m:\n            a = g\n            b = b_candidate\n            found = True\n    if not found:\n        g = n\n        if required % g == 0:\n            b_candidate = required // g\n            if b_candidate <= 2 * m:\n                a = g\n                b = b_candidate\n                found = True\n    if not found:\n        g = m\n        if required % g == 0:\n            a_candidate = required // g\n            if a_candidate <= 2 * n:\n                a = a_candidate\n                b = g\n                found = True\n    if not found:\n        g = (2 * m)\n        if required % g == 0:\n            a_candidate = required // g\n            if a_candidate <= n:\n                a = a_candidate\n                b = g\n                found = True\n    \n    if found:\n        print(\"YES\")\n        print(0, 0)\n        if a <= n:\n            print(a, 0)\n            print(0, b)\n        else:\n            print(n, 0)\n            print(a - n, b)\n    else:\n        print(\"NO\")",
+    "timestamp": "2025-08-05 17:34:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_points(n, m, k):\n    # Check if the area is integer\n    if n * m % k != 0:\n        print(\"NO\")\n        return\n\n    area = n * m // k\n\n    print(\"YES\")\n    print(f\"0 0\")\n    print(f\"{n} 0\")\n    print(f\"0 {area}\")\n\nn, m, k = map(int, input().split())\nfind_points(n, m, k)",
+    "timestamp": "2025-08-12 21:55:08"
+  }
+]

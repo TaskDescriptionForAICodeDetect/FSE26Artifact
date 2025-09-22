@@ -1,0 +1,1 @@
+Create a program to determine the minimum number of water containers required for a running training session, ensuring all members can hydrate properly based on their individual paces. The session involves members running on a circular track for a set amount of time, and water is replenished every hour.

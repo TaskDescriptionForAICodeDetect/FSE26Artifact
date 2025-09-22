@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_H 1005\n#define MAX_W 1005\n\nint grid[MAX_H][MAX_W];\nint dp[MAX_H][MAX_W];\n\nint solve(int H, int W, int A, int B) {\n    memset(grid, 0, sizeof(grid));\n    memset(dp, 0, sizeof(dp));\n\n    // Mark forbidden cells\n    for (int i = H - A; i < H; i++) {\n        for (int j = 0; j < B; j++) {\n            grid[i][j] = 1;\n        }\n    }\n\n    // Initialize first column\n    for (int i = 0; i < H; i++) {\n        if (grid[i][0]) break;\n        dp[i][0] = 1;\n    }\n\n    // Initialize first row\n    for (int j = 0; j < W; j++) {\n        if (grid[0][j]) break;\n        dp[0][j] = 1;\n    }\n\n    // Dynamic programming to count paths\n    for (int i = 1; i < H; i++) {\n        for (int j = 1; j < W; j++) {\n            if (grid[i][j]) continue;\n            dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % MOD;\n        }\n    }\n\n    return dp[H-1][W-1];\n}",
+    "timestamp": "2025-08-05 23:36:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX 200010\n\nlong long fact[MAX], inv_fact[MAX];\n\nlong long mod_pow(long long a, long long b) {\n    long long res = 1;\n    while (b > 0) {\n        if (b % 2 == 1) {\n            res = (res * a) % MOD;\n        }\n        a = (a * a) % MOD;\n        b /= 2;\n    }\n    return res;\n}\n\nvoid precompute() {\n    fact[0] = 1;\n    for (int i = 1; i < MAX; i++) {\n        fact[i] = (fact[i-1] * i) % MOD;\n    }\n    inv_fact[MAX-1] = mod_pow(fact[MAX-1], MOD-2);\n    for (int i = MAX-2; i >= 0; i--) {\n        inv_fact[i] = (inv_fact[i+1] * (i+1)) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (n < 0 || k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nlong long path_count(int x1, int y1, int x2, int y2) {\n    int dx = x2 - x1;\n    int dy = y2 - y1;\n    return comb(dx + dy, dx);\n}\n\nint main() {\n    precompute();\n    int H, W, A, B;\n    scanf(\"%d %d %d %d\", &H, &W, &A, &B);\n    \n    long long total = path_count(0, 0, H-1, W-1);\n    long long forbidden = 0;\n    \n    for (int i = 0; i < B; i++) {\n        long long p1 = path_count(0, 0, H-A-1, i);\n        long long p2 = path_count(H-A, i, H-1, W-1);\n        forbidden = (forbidden + p1 * p2) % MOD;\n    }\n    \n    long long result = (total - forbidden + MOD) % MOD;\n    printf(\"%lld\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\nconst int MAX = 2e5 + 5;\n\nvector<long long> fact(MAX), inv_fact(MAX);\n\nlong long pow_mod(long long a, long long b) {\n    long long res = 1;\n    while (b > 0) {\n        if (b & 1) res = res * a % MOD;\n        a = a * a % MOD;\n        b >>= 1;\n    }\n    return res;\n}\n\nvoid precompute() {\n    fact[0] = 1;\n    for (int i = 1; i < MAX; i++) {\n        fact[i] = fact[i-1] * i % MOD;\n    }\n    inv_fact[MAX-1] = pow_mod(fact[MAX-1], MOD-2);\n    for (int i = MAX-2; i >= 0; i--) {\n        inv_fact[i] = inv_fact[i+1] * (i+1) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n-k] % MOD;\n}\n\nlong long path_count(int x1, int y1, int x2, int y2) {\n    int dx = x2 - x1;\n    int dy = y2 - y1;\n    return comb(dx + dy, dx);\n}\n\nint main() {\n    precompute();\n    int H, W, A, B;\n    cin >> H >> W >> A >> B;\n    long long total = path_count(0, 0, H-1, W-1);\n    long long forbidden = 0;\n    for (int i = 0; i < B; i++) {\n        int x = H - A - 1;\n        int y = i;\n        long long p1 = path_count(0, 0, x, y);\n        long long p2 = path_count(x+1, y, H-1, W-1);\n        forbidden = (forbidden + p1 * p2) % MOD;\n    }\n    long long ans = (total - forbidden + MOD) % MOD;\n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = (int)1e9 + 7;\n    static long[] fact;\n    static long[] invFact;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        int A = sc.nextInt();\n        int B = sc.nextInt();\n        \n        int maxN = H + W - 2;\n        precomputeFactorials(maxN);\n        \n        long total = comb(H + W - 2, H - 1);\n        long invalid = 0;\n        \n        for (int i = 0; i < B; i++) {\n            int x = H - A + i;\n            int y = B - 1 - i;\n            long ways = comb(H - A - 1 + i, H - A - 1) * comb(A - 1 + W - B - y, A - 1) % MOD;\n            invalid = (invalid + ways) % MOD;\n        }\n        \n        long result = (total - invalid + MOD) % MOD;\n        System.out.println(result);\n    }\n    \n    static void precomputeFactorials(int n) {\n        fact = new long[n + 1];\n        invFact = new long[n + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= n; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        invFact[n] = modInverse(fact[n], MOD);\n        for (int i = n - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n    }\n    \n    static long comb(int n, int k) {\n        if (n < 0 || k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n    \n    static long modInverse(long a, int mod) {\n        return power(a, mod - 2, mod);\n    }\n    \n    static long power(long a, long b, int mod) {\n        long res = 1;\n        a %= mod;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                res = res * a % mod;\n            }\n            a = a * a % mod;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 23:38:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int countPaths(int H, int W, int A, int B) {\n        final int MOD = 1_000_000_007;\n        long[][] dp = new long[H][W];\n        \n        // Mark forbidden cells\n        boolean[][] forbidden = new boolean[H][W];\n        for (int i = H - A; i < H; i++) {\n            for (int j = 0; j < B; j++) {\n                forbidden[i][j] = true;\n            }\n        }\n        \n        // Initialize first row\n        for (int j = 0; j < W; j++) {\n            if (forbidden[0][j]) break;\n            dp[0][j] = 1;\n        }\n        \n        // Initialize first column\n        for (int i = 0; i < H; i++) {\n            if (forbidden[i][0]) break;\n            dp[i][0] = 1;\n        }\n        \n        // Fill DP table\n        for (int i = 1; i < H; i++) {\n            for (int j = 1; j < W; j++) {\n                if (forbidden[i][j]) continue;\n                \n                if (!forbidden[i-1][j]) {\n                    dp[i][j] += dp[i-1][j];\n                }\n                \n                if (!forbidden[i][j-1]) {\n                    dp[i][j] += dp[i][j-1];\n                }\n                \n                dp[i][j] %= MOD;\n            }\n        }\n        \n        return (int)dp[H-1][W-1];\n    }\n}",
+    "timestamp": "2025-08-05 23:38:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int numberOfPaths(int H, int W, vector<vector<int>>& forbidden) {\n        const int MOD = 1e9 + 7;\n        vector<vector<long long>> dp(H + 1, vector<long long>(W + 1, 0));\n        \n        // Create a set of forbidden cells for quick lookup\n        set<pair<int, int>> forbiddenSet;\n        for (auto& cell : forbidden) {\n            forbiddenSet.insert({cell[0], cell[1]});\n        }\n        \n        // Initialize first cell\n        dp[1][1] = 1;\n        \n        // Fill DP table\n        for (int r = 1; r <= H; r++) {\n            for (int c = 1; c <= W; c++) {\n                if (r == 1 && c == 1) continue;\n                \n                // Check if current cell is forbidden\n                if (forbiddenSet.count({r, c})) continue;\n                \n                // Add paths from left and top cells\n                dp[r][c] = (r > 1 && !forbiddenSet.count({r-1, c}) ? dp[r-1][c] : 0) + \n                           (c > 1 && !forbiddenSet.count({r, c-1}) ? dp[r][c-1] : 0);\n                \n                dp[r][c] %= MOD;\n            }\n        }\n        \n        return dp[H][W];\n    }\n};",
+    "timestamp": "2025-08-05 23:38:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef binomial_coeff(n, k, fact, inv_fact):\n    if k > n:\n        return 0\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD\n\ndef factorials_and_inverses(max_n, mod):\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(2, max_n + 1):\n        fact[i] = fact[i-1] * i % mod\n    \n    inv_fact[max_n] = pow(fact[max_n], mod - 2, mod)\n    for i in range(max_n - 1, 0, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % mod\n    \n    return fact, inv_fact\n\ndef number_of_ways(H, W, A, B):\n    fact, inv_fact = factorials_and_inverses(H + W, MOD)\n    \n    result = 0\n    for i in range(B, W):\n        current = binomial_coeff(H - A - 1 + i, i, fact, inv_fact) * binomial_coeff(A - 1 + W - i - 1, A - 1, fact, inv_fact) % MOD\n        result = (result + current) % MOD\n    \n    return result\n\n# Example usage:\n# print(number_of_ways(H, W, A, B))",
+    "timestamp": "2025-08-13 16:27:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class IrohasPath {\n\n    private static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        int A = sc.nextInt();\n        int B = sc.nextInt();\n\n        System.out.println(numberOfWays(H, W, A, B));\n    }\n\n    private static long numberOfWays(int H, int W, int A, int B) {\n        long[] fact = new long[H + W + 1];\n        long[] invFact = new long[H + W + 1];\n        \n        fact[0] = 1;\n        for (int i = 1; i <= H + W; i++) {\n            fact[i] = (fact[i - 1] * i) % MOD;\n        }\n        \n        invFact[H + W] = modInverse(fact[H + W], MOD);\n        for (int i = H + W - 1; i >= 0; i--) {\n            invFact[i] = (invFact[i + 1] * (i + 1)) % MOD;\n        }\n\n        long result = 0;\n        for (int i = 0; i < H - A; i++) {\n            long ways1 = combination(i + B - 1, i, fact, invFact);\n            long ways2 = combination(H - i - 1 + W - B - 1, W - B - 1, fact, invFact);\n            result = (result + ways1 * ways2 % MOD) % MOD;\n        }\n\n        return result;\n    }\n\n    private static long combination(int n, int k, long[] fact, long[] invFact) {\n        if (n < k || k < 0) return 0;\n        return (fact[n] * invFact[k] % MOD) * invFact[n - k] % MOD;\n    }\n\n    private static long modInverse(long a, long mod) {\n        return power(a, mod - 2, mod);\n    }\n    \n    private static long power(long x, long y, long p) {\n        long res = 1;\n        x = x % p;\n        while (y > 0) {\n            if ((y & 1) == 1) {\n                res = (res * x) % p;\n            }\n            y = y >> 1;\n            x = (x * x) % p;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-13 16:27:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nlong long factorial(int n) {\n    long long res = 1;\n    for (int i = 2; i <= n; i++) {\n        res = (res * i) % MOD;\n    }\n    return res;\n}\n\nlong long mod_inverse(long long a, long long m) {\n    long long m0 = m, t, q;\n    long long x0 = 0, x1 = 1;\n    if (m == 1) return 0;\n    while (a > 1) {\n        q = a / m;\n        t = m;\n        m = a % m, a = t;\n        t = x0;\n        x0 = x1 - q * x0;\n        x1 = t;\n    }\n    if (x1 < 0) x1 += m0;\n    return x1;\n}\n\nlong long binomial_coefficient(int n, int k) {\n    if (k > n) return 0;\n    long long num = factorial(n);\n    long long denom = factorial(k) * factorial(n - k) % MOD;\n    return num * mod_inverse(denom, MOD) % MOD;\n}\n\nint main() {\n    int H, W, A, B;\n    scanf(\"%d %d %d %d\", &H, &W, &A, &B);\n\n    long long total_ways = 0;\n    for (int i = 0; i < W - B; i++) {\n        long long ways1 = binomial_coefficient(H - A + B - 1 + i, i);\n        long long ways2 = binomial_coefficient(A + W - B - 1 - 1 - i, A - 1);\n        total_ways = (total_ways + ways1 * ways2 % MOD) % MOD;\n    }\n\n    printf(\"%lld\\n\", total_ways);\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:27:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1000000007;\n\n// Function to compute n choose k modulo MOD\nlong long binomialCoefficient(int n, int k, const std::vector<long long>& fact, const std::vector<long long>& invFact) {\n    if (n < k || k < 0) return 0;\n    return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n}\n\n// Function to compute factorial mod and its inverse mod\nvoid computeFactorials(int size, std::vector<long long>& fact, std::vector<long long>& invFact) {\n    fact[0] = invFact[0] = 1;\n    for (int i = 1; i <= size; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    invFact[size] = 1;\n    for (int i = 0; i < MOD - 2; ++i) {\n        invFact[size] = invFact[size] * fact[size] % MOD;\n    }\n    for (int i = size - 1; i > 0; --i) {\n        invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n    }\n}\n\nint main() {\n    int H, W, A, B;\n    std::cin >> H >> W >> A >> B;\n\n    int size = H + W;\n    std::vector<long long> fact(size + 1), invFact(size + 1);\n    computeFactorials(size, fact, invFact);\n\n    long long result = binomialCoefficient(H + W - 2, H - 1, fact, invFact);\n\n    for (int i = 0; i < B; ++i) {\n        result = (result - binomialCoefficient(H - A - 1 + i, i, fact, invFact) *\n                          binomialCoefficient(W - i - 1 + A - 1, A - 1, fact, invFact) % MOD + MOD) % MOD;\n    }\n\n    std::cout << result << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:27:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_paths(H, W, A, B):\n    MOD = 10**9 + 7\n    dp = [[0] * W for _ in range(H)]\n    \n    # Mark forbidden cells\n    forbidden = [[False] * W for _ in range(H)]\n    for i in range(H - A, H):\n        for j in range(B):\n            forbidden[i][j] = True\n    \n    # Initialize first row\n    dp[0][0] = 1\n    for j in range(1, W):\n        if not forbidden[0][j]:\n            dp[0][j] = dp[0][j-1]\n    \n    # Initialize first column\n    for i in range(1, H):\n        if not forbidden[i][0]:\n            dp[i][0] = dp[i-1][0]\n    \n    # Fill dp table\n    for i in range(1, H):\n        for j in range(1, W):\n            if not forbidden[i][j]:\n                dp[i][j] = (dp[i-1][j] + dp[i][j-1]) % MOD\n    \n    return dp[H-1][W-1]",
+    "timestamp": "2025-08-13 16:27:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    import sys\n    H, W, A, B = map(int, sys.stdin.readline().split())\n    \n    # Precompute factorial, inverse factorial modulo MOD up to H+W\n    max_n = H + W\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    def comb(n, k):\n        if n < 0 or k < 0 or k > n:\n            return 0\n        return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD\n    \n    total = comb(H + W - 2, H - 1)\n    forbidden = 0\n    for i in range(B):\n        x = (H - A - 1) + i\n        y = A + (B - 1 - i)\n        forbidden = (forbidden + comb(x + i, i) * comb((W - 1 - i) + (A - 1), A - 1)) % MOD\n    \n    res = (total - forbidden) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 16:28:05"
+  }
+]

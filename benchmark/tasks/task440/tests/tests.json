@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "3\n-\nU\nD\n",
+      "output": "1"
+    },
+    {
+      "input": "5\nU\nU\n-\nD\nD\n",
+      "output": "5"
+    },
+    {
+      "input": "8\nU\nD\nD\nD\nD\nD\nD\nD\n",
+      "output": "1"
+    },
+    {
+      "input": "10\nU\nD\nU\nD\nU\nD\nU\nD\nU\nD\n",
+      "output": "608"
+    },
+    {
+      "input": "2\nD\nU\n",
+      "output": "0"
+    }
+  ]
+}

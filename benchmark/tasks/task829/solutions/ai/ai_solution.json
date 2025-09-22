@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_H 100\n#define MAX_W 100\n\nint grid[MAX_H][MAX_W];\nint visited[MAX_H][MAX_W];\nint H, W;\n\nint is_valid(int x, int y) {\n    return x >= 0 && x < H && y >= 0 && y < W;\n}\n\nint count_even_cells() {\n    int even_count = 0;\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] % 2 == 0 && grid[i][j] > 0) {\n                even_count++;\n            }\n        }\n    }\n    return even_count;\n}\n\nint dfs(int x, int y) {\n    if (!is_valid(x, y) || visited[x][y] || grid[x][y] == 0) {\n        return 0;\n    }\n\n    visited[x][y] = 1;\n    int max_even = count_even_cells();\n\n    int dx[] = {0, 0, 1, -1};\n    int dy[] = {1, -1, 0, 0};\n\n    for (int k = 0; k < 4; k++) {\n        int nx = x + dx[k];\n        int ny = y + dy[k];\n\n        if (is_valid(nx, ny) && grid[nx][ny] >= 0) {\n            grid[x][y]--;\n            grid[nx][ny]++;\n            max_even = fmax(max_even, count_even_cells());\n            grid[x][y]++;\n            grid[nx][ny]--;\n        }\n    }\n\n    visited[x][y] = 0;\n    return max_even;\n}\n\nint solve() {\n    int max_even = 0;\n    memset(visited, 0, sizeof(visited));\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] > 0) {\n                max_even = fmax(max_even, dfs(i, j));\n            }\n        }\n    }\n\n    return max_even;\n}\n\nint main() {\n    scanf(\"%d %d\", &H, &W);\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n\n    printf(\"%d\\n\", solve());\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:02:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    int grid[H][W];\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n    \n    int count = 0;\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (grid[i][j] % 2 == 0) {\n                count++;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<vector<int>> a(H, vector<int>(W));\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cin >> a[i][j];\n        }\n    }\n\n    int even_count = 0;\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (a[i][j] % 2 == 0) {\n                even_count++;\n            }\n        }\n    }\n\n    cout << even_count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int[][] grid = new int[H][W];\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = scanner.nextInt();\n            }\n        }\n        \n        int evenCount = 0;\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (grid[i][j] % 2 == 0) {\n                    evenCount++;\n                }\n            }\n        }\n        \n        System.out.println(evenCount);\n    }\n}",
+    "timestamp": "2025-08-05 23:03:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoinDistribution {\n    public static int maximizeEvenCells(int[][] grid) {\n        int H = grid.length;\n        int W = grid[0].length;\n        int[][] coins = new int[H][W];\n        \n        // Copy original grid\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                coins[i][j] = grid[i][j];\n            }\n        }\n        \n        // Track visited cells and even cells\n        boolean[][] visited = new boolean[H][W];\n        int evenCells = 0;\n        \n        // Check initial even cells\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (coins[i][j] % 2 == 0) {\n                    evenCells++;\n                }\n            }\n        }\n        \n        // Dynamic solution to maximize even cells\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (coins[i][j] > 0 && !visited[i][j]) {\n                    // Try moving coins to adjacent cells\n                    if (moveCoin(coins, visited, i, j, H, W)) {\n                        evenCells++;\n                    }\n                }\n            }\n        }\n        \n        return evenCells;\n    }\n    \n    private static boolean moveCoin(int[][] coins, boolean[][] visited, int row, int col, int H, int W) {\n        visited[row][col] = true;\n        \n        // Possible directions: up, down, left, right\n        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};\n        \n        for (int[] dir : directions) {\n            int newRow = row + dir[0];\n            int newCol = col + dir[1];\n            \n            // Check if new cell is valid\n            if (newRow >= 0 && newRow < H && newCol >= 0 && newCol < W) {\n                // Move one coin\n                coins[row][col]--;\n                coins[newRow][newCol]++;\n                \n                // Check if both cells now have even coins\n                return coins[row][col] % 2 == 0 && coins[newRow][newCol] % 2 == 0;\n            }\n        }\n        \n        return false;\n    }\n    \n    public static void main(String[] args) {\n        int[][] grid = {\n            {1, 2, 3},\n            {4, 5, 6},\n            {7, 8, 9}\n        };\n        \n        System.out.println(maximizeEvenCells(grid));\n    }\n}",
+    "timestamp": "2025-08-05 23:03:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    \n    vector<vector<int>> grid(H, vector<int>(W));\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    int maxEvenCells = 0;\n    \n    for (int moves = 0; moves < H * W; moves++) {\n        int evenCount = 0;\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (grid[i][j] % 2 == 0) {\n                    evenCount++;\n                }\n            }\n        }\n        \n        maxEvenCells = max(maxEvenCells, evenCount);\n        \n        bool moved = false;\n        for (int i = 0; i < H && !moved; i++) {\n            for (int j = 0; j < W && !moved; j++) {\n                if (grid[i][j] > 0) {\n                    grid[i][j]--;\n                    \n                    vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};\n                    for (auto [di, dj] : directions) {\n                        int ni = i + di, nj = j + dj;\n                        if (ni >= 0 && ni < H && nj >= 0 && nj < W) {\n                            grid[ni][nj]++;\n                            moved = true;\n                            break;\n                        }\n                    }\n                    \n                    if (!moved) {\n                        grid[i][j]++;\n                    }\n                }\n            }\n        }\n        \n        if (!moved) break;\n    }\n    \n    cout << maxEvenCells << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximize_even_cells(H, W, grid):\n    for i in range(H):\n        for j in range(W):\n            if grid[i][j] % 2 != 0:\n                # Try to move a coin right if possible\n                if j + 1 < W:\n                    grid[i][j] -= 1\n                    grid[i][j + 1] += 1\n                # If not possible, try to move a coin down\n                elif i + 1 < H:\n                    grid[i][j] -= 1\n                    grid[i + 1][j] += 1\n    \n    even_cells_count = sum(grid[i][j] % 2 == 0 for i in range(H) for j in range(W))\n    return even_cells_count\n\n# Example usage:\nH = 3\nW = 3\ngrid = [\n    [1, 3, 3],\n    [2, 5, 6],\n    [7, 5, 5]\n]\nprint(maximize_even_cells(H, W, grid))",
+    "timestamp": "2025-08-13 13:27:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class EvenCoinsGrid {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int[][] grid = new int[H][W];\n\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = scanner.nextInt();\n            }\n        }\n\n        boolean[][] visited = new boolean[H][W];\n\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (!visited[i][j] && grid[i][j] % 2 != 0) {\n                    if (canMoveCoin(i, j, grid, visited, H, W)) {\n                        moveCoin(i, j, grid, visited);\n                    }\n                }\n            }\n        }\n\n        int evenCellsCount = countEvenCells(grid, H, W);\n        System.out.println(evenCellsCount);\n    }\n\n    private static boolean canMoveCoin(int i, int j, int[][] grid, boolean[][] visited, int H, int W) {\n        if (i > 0 && !visited[i - 1][j]) return true;\n        if (i < H - 1 && !visited[i + 1][j]) return true;\n        if (j > 0 && !visited[i][j - 1]) return true;\n        if (j < W - 1 && !visited[i][j + 1]) return true;\n        return false;\n    }\n\n    private static void moveCoin(int i, int j, int[][] grid, boolean[][] visited) {\n        if (i > 0 && (!visited[i - 1][j] && grid[i - 1][j] % 2 == 0)) {\n            grid[i][j]--;\n            grid[i - 1][j]++;\n            visited[i][j] = true;\n            return;\n        }\n        if (i < grid.length - 1 && (!visited[i + 1][j] && grid[i + 1][j] % 2 == 0)) {\n            grid[i][j]--;\n            grid[i + 1][j]++;\n            visited[i][j] = true;\n            return;\n        }\n        if (j > 0 && (!visited[i][j - 1] && grid[i][j - 1] % 2 == 0)) {\n            grid[i][j]--;\n            grid[i][j - 1]++;\n            visited[i][j] = true;\n            return;\n        }\n        if (j < grid[0].length - 1 && (!visited[i][j + 1] && grid[i][j + 1] % 2 == 0)) {\n            grid[i][j]--;\n            grid[i][j + 1]++;\n            visited[i][j] = true;\n        }\n    }\n\n    private static int countEvenCells(int[][] grid, int H, int W) {\n        int count = 0;\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (grid[i][j] % 2 == 0) {\n                    count++;\n                }\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-13 13:27:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX 100\n\nint H, W;\nint a[MAX][MAX];\n\n// Function to balance the coin distribution\nvoid balanceCoins() {\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            // Moving coins to the right if current position is odd and not last column\n            if (a[i][j] % 2 != 0 && j < W - 1) {\n                a[i][j]--;\n                a[i][j + 1]++;\n            }\n            // Moving coins down if current position is odd and last column\n            else if (a[i][j] % 2 != 0 && i < H - 1) {\n                a[i][j]--;\n                a[i + 1][j]++;\n            }\n        }\n    }\n}\n\n// Function to count the number of even cells\nint countEvenCells() {\n    int count = 0;\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (a[i][j] % 2 == 0) {\n                count++;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    // Input grid dimensions\n    scanf(\"%d %d\", &H, &W);\n    \n    // Input number of coins in each cell\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            scanf(\"%d\", &a[i][j]);\n        }\n    }\n\n    // Balance the coins to maximize even cells\n    balanceCoins();\n    \n    // Calculate and print the number of even cells\n    int evenCount = countEvenCells();\n    printf(\"%d\\n\", evenCount);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:28:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid maximizeEvenCoins(vector<vector<int>>& grid, int H, int W) {\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] % 2 == 1) { // odd number of coins\n                if (j < W - 1) { // move right\n                    grid[i][j]--;\n                    grid[i][j + 1]++;\n                } else if (i < H - 1) { // move down\n                    grid[i][j]--;\n                    grid[i + 1][j]++;\n                }\n            }\n        }\n    }\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    \n    vector<vector<int>> grid(H, vector<int>(W));\n    \n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    maximizeEvenCoins(grid, H, W);\n    \n    // Output the modified grid\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cout << grid[i][j] << ' ';\n        }\n        cout << '\\n';\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:28:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximize_even_coin_cells(grid):\n    H, W = len(grid), len(grid[0])\n    \n    def is_even(x):\n        return x % 2 == 0\n    \n    def count_even_cells(grid):\n        return sum(is_even(grid[i][j]) for i in range(H) for j in range(W))\n    \n    def valid_move(x, y):\n        return 0 <= x < H and 0 <= y < W\n    \n    moves = [(0, 1), (0, -1), (1, 0), (-1, 0)]\n    max_even_cells = count_even_cells(grid)\n    \n    def backtrack(grid, visited):\n        nonlocal max_even_cells\n        max_even_cells = max(max_even_cells, count_even_cells(grid))\n        \n        for i in range(H):\n            for j in range(W):\n                if grid[i][j] > 0 and (i, j) not in visited:\n                    visited.add((i, j))\n                    for dx, dy in moves:\n                        nx, ny = i + dx, j + dy\n                        if valid_move(nx, ny):\n                            grid[i][j] -= 1\n                            grid[nx][ny] += 1\n                            backtrack(grid, visited)\n                            grid[nx][ny] -= 1\n                            grid[i][j] += 1\n                    visited.remove((i, j))\n        \n        return max_even_cells\n    \n    return backtrack(grid, set())\n\n# Example usage\ngrid = [\n    [1, 2, 3],\n    [4, 5, 6],\n    [7, 8, 9]\n]\nresult = maximize_even_coin_cells(grid)\nprint(result)",
+    "timestamp": "2025-08-13 13:28:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    H, W = map(int, sys.stdin.readline().split())\n    grid = [list(map(int, sys.stdin.readline().split())) for _ in range(H)]\n    \n    operations = []\n    \n    for i in range(H):\n        for j in range(W):\n            if grid[i][j] % 2 == 1:\n                # Try to move right if possible\n                if j + 1 < W:\n                    grid[i][j] -= 1\n                    grid[i][j+1] += 1\n                    operations.append((i+1, j+1, i+1, j+2))\n                elif i + 1 < H:\n                    grid[i][j] -= 1\n                    grid[i+1][j] += 1\n                    operations.append((i+1, j+1, i+2, j+1))\n    \n    print(len(operations))\n    for op in operations:\n        print(' '.join(map(str, op)))\n\nsolve()",
+    "timestamp": "2025-08-13 13:28:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countEvenCells(grid) {\n    let evenCellsCount = 0;\n    for (let row of grid) {\n        for (let coins of row) {\n            if (coins % 2 === 0) {\n                evenCellsCount++;\n            }\n        }\n    }\n    return evenCellsCount;\n}\n\nfunction maximizeEvenCells(H, W, coinsGrid) {\n    // Iterate through each cell\n    for (let i = 0; i < H; i++) {\n        for (let j = 0; j < W; j++) {\n            // If coins present in this cell and the number is odd\n            if (coinsGrid[i][j] > 0 && coinsGrid[i][j] % 2 !== 0) {\n                // Try to move a coin to adjacent cells to make it even\n                if (i + 1 < H) {\n                    coinsGrid[i][j]--;\n                    coinsGrid[i + 1][j]++;\n                } else if (j + 1 < W) {\n                    coinsGrid[i][j]--;\n                    coinsGrid[i][j + 1]++;\n                } else if (i - 1 >= 0) {\n                    coinsGrid[i][j]--;\n                    coinsGrid[i - 1][j]++;\n                } else if (j - 1 >= 0) {\n                    coinsGrid[i][j]--;\n                    coinsGrid[i][j - 1]++;\n                }\n            }\n        }\n    }\n\n    return countEvenCells(coinsGrid);\n}",
+    "timestamp": "2025-08-13 13:28:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maximizeEvenCells(grid) {\n    const H = grid.length;\n    const W = grid[0].length;\n    let operations = 0;\n    \n    // Count initial odd and even cells\n    let oddCells = 0;\n    for (let i = 0; i < H; i++) {\n        for (let j = 0; j < W; j++) {\n            if (grid[i][j] % 2 !== 0) {\n                oddCells++;\n            }\n        }\n    }\n    \n    // Maximum possible even cells is when all cells become even\n    let maxEvenCells = H * W - (oddCells % 2);\n    \n    return maxEvenCells;\n}\n\n// Example usage\nconst grid = [\n    [1, 2, 3],\n    [4, 5, 6],\n    [7, 8, 9]\n];\nconsole.log(maximizeEvenCells(grid));",
+    "timestamp": "2025-08-13 13:28:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const fs = require('fs');\n    const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const [H, W] = input[0].split(' ').map(Number);\n    const grid = input.slice(1, H + 1).map(row => row.split(' ').map(Number));\n    \n    const operations = [];\n    \n    for (let i = 0; i < H; i++) {\n        for (let j = 0; j < W; j++) {\n            if (i === H - 1 && j === W - 1) continue;\n            \n            if (grid[i][j] % 2 !== 0) {\n                let ni, nj;\n                if (j < W - 1) {\n                    ni = i;\n                    nj = j + 1;\n                } else {\n                    ni = i + 1;\n                    nj = j;\n                }\n                grid[i][j]--;\n                grid[ni][nj]++;\n                operations.push(`${i + 1} ${j + 1} ${ni + 1} ${nj + 1}`);\n            }\n        }\n    }\n    \n    console.log(operations.length);\n    operations.forEach(op => console.log(op));\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:28:40"
+  }
+]

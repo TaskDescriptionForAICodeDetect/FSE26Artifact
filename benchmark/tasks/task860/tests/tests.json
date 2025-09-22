@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "abcabcabc\n1",
+      "output": "17"
+    },
+    {
+      "input": "atcodergrandcontest\n3",
+      "output": "215"
+    }
+  ]
+}

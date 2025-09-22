@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\nint min_unbalancedness(char* S) {\n    int n = strlen(S);\n    int zeros[n+1], ones[n+1];\n    zeros[0] = ones[0] = 0;\n\n    for (int i = 0; i < n; i++) {\n        zeros[i+1] = zeros[i] + (S[i] == '0');\n        ones[i+1] = ones[i] + (S[i] == '1');\n    }\n\n    int min_diff = INT_MAX;\n    for (int l = 1; l <= n; l++) {\n        for (int r = l; r <= n; r++) {\n            int zero_count = zeros[r] - zeros[l-1];\n            int one_count = ones[r] - ones[l-1];\n            int curr_mark = abs(zero_count - one_count);\n            min_diff = (curr_mark < min_diff) ? curr_mark : min_diff;\n        }\n    }\n\n    return min_diff;\n}\n\nint main() {\n    char S[1001];\n    scanf(\"%s\", S);\n    printf(\"%d\\n\", min_unbalancedness(S));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:30:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\n#define MIN(a, b) ((a) < (b) ? (a) : (b))\n#define MAX(a, b) ((a) > (b) ? (a) : (b))\n\nint minUnbalancedness(char* S) {\n    int n = strlen(S);\n    int max_diff = 0;\n    int min_0 = 0, max_0 = 0, current_0 = 0;\n    int min_1 = 0, max_1 = 0, current_1 = 0;\n    \n    for (int i = 0; i < n; ++i) {\n        if (S[i] == '0' || S[i] == '1') {\n            // Process as fixed character\n            if (S[i] == '0') {\n                current_0++;\n                current_1--;\n            } else {\n                current_0--;\n                current_1++;\n            }\n        } else {\n            // '?' can be either, so track both possibilities\n            current_0++;\n            current_1++;\n            int new_min_0 = min_0;\n            int new_max_0 = max_0;\n            int new_min_1 = min_1;\n            int new_max_1 = max_1;\n            \n            // For 0 case: current_0 is +1\n            new_min_0 = MIN(new_min_0, current_0);\n            new_max_0 = MAX(new_max_0, current_0);\n            \n            // For 1 case: current_1 is +1\n            new_min_1 = MIN(new_min_1, current_1);\n            new_max_1 = MAX(new_max_1, current_1);\n            \n            // Choose the path with minimal unbalancedness\n            int diff_0 = new_max_0 - new_min_0;\n            int diff_1 = new_max_1 - new_min_1;\n            \n            if (diff_0 < diff_1) {\n                min_0 = new_min_0;\n                max_0 = new_max_0;\n                current_1--; // undo the +1 for current_1\n            } else {\n                min_1 = new_min_1;\n                max_1 = new_max_1;\n                current_0--; // undo the +1 for current_0\n            }\n        }\n        \n        // Update global min and max\n        int global_min = MIN(min_0, min_1);\n        int global_max = MAX(max_0, max_1);\n        max_diff = MAX(max_diff, global_max - global_min);\n    }\n    \n    return max_diff;\n}\n\nint main() {\n    char S[100001];\n    scanf(\"%s\", S);\n    printf(\"%d\\n\", minUnbalancedness(S));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n#include <climits>\nusing namespace std;\n\nint solve(string S) {\n    int n = S.size();\n    int min0 = 0, max0 = 0, current0 = 0;\n    int min1 = 0, max1 = 0, current1 = 0;\n    \n    for (char c : S) {\n        if (c == '0') {\n            current0++;\n            current1--;\n        } else if (c == '1') {\n            current0--;\n            current1++;\n        } else { // '?'\n            current0++;\n            current1++;\n            int temp = current0;\n            current0 = max(current0, current1 - 1);\n            current1 = max(current1, temp - 1);\n        }\n        min0 = min(min0, current0);\n        max0 = max(max0, current0);\n        min1 = min(min1, current1);\n        max1 = max(max1, current1);\n    }\n    \n    return min(max(max0 - min0, max1 - min1), n);\n}\n\nint main() {\n    string S;\n    cin >> S;\n    cout << solve(S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int minUnbalancedness(String S) {\n        int n = S.length();\n        int minUnbalance = Integer.MAX_VALUE;\n        List<Integer> questionIndices = new ArrayList<>();\n        \n        for (int i = 0; i < n; i++) {\n            if (S.charAt(i) == '?') {\n                questionIndices.add(i);\n            }\n        }\n        \n        int m = questionIndices.size();\n        for (int mask = 0; mask < (1 << m); mask++) {\n            char[] sArr = S.toCharArray();\n            for (int i = 0; i < m; i++) {\n                int idx = questionIndices.get(i);\n                sArr[idx] = (mask & (1 << i)) != 0 ? '1' : '0';\n            }\n            String sPrime = new String(sArr);\n            int currentUnbalance = calculateUnbalancedness(sPrime);\n            if (currentUnbalance < minUnbalance) {\n                minUnbalance = currentUnbalance;\n            }\n        }\n        \n        return minUnbalance;\n    }\n    \n    private static int calculateUnbalancedness(String s) {\n        int n = s.length();\n        int maxDiff = 0;\n        for (int l = 0; l < n; l++) {\n            int count0 = 0;\n            int count1 = 0;\n            for (int r = l; r < n; r++) {\n                if (s.charAt(r) == '0') {\n                    count0++;\n                } else {\n                    count1++;\n                }\n                int diff = Math.abs(count0 - count1);\n                if (diff > maxDiff) {\n                    maxDiff = diff;\n                }\n            }\n        }\n        return maxDiff;\n    }\n}",
+    "timestamp": "2025-08-05 22:32:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int minUnbalancedness(String S) {\n        int n = S.length();\n        int[] prefixZeros = new int[n + 1];\n        int[] prefixOnes = new int[n + 1];\n        \n        for (int i = 0; i < n; i++) {\n            prefixZeros[i + 1] = prefixZeros[i] + (S.charAt(i) == '0' || S.charAt(i) == '?' ? 1 : 0);\n            prefixOnes[i + 1] = prefixOnes[i] + (S.charAt(i) == '1' || S.charAt(i) == '?' ? 1 : 0);\n        }\n        \n        int minUnbalance = Integer.MAX_VALUE;\n        \n        for (int l = 1; l <= n; l++) {\n            for (int r = l; r <= n; r++) {\n                int zeros = prefixZeros[r] - prefixZeros[l - 1];\n                int ones = prefixOnes[r] - prefixOnes[l - 1];\n                int questionMarks = r - l + 1 - zeros - ones;\n                \n                for (int mask = 0; mask < (1 << questionMarks); mask++) {\n                    int curZeros = zeros;\n                    int curOnes = ones;\n                    \n                    for (int j = 0; j < questionMarks; j++) {\n                        if ((mask & (1 << j)) > 0) {\n                            curOnes++;\n                        } else {\n                            curZeros++;\n                        }\n                    }\n                    \n                    minUnbalance = Math.min(minUnbalance, Math.abs(curZeros - curOnes));\n                }\n            }\n        }\n        \n        return minUnbalance;\n    }\n}",
+    "timestamp": "2025-08-05 22:32:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint solve(string s) {\n    int n = s.length();\n    int questions = count(s.begin(), s.end(), '?');\n    \n    int best = INT_MAX;\n    for (int mask = 0; mask < (1 << questions); mask++) {\n        string s_prime = s;\n        int q_idx = 0;\n        for (int i = 0; i < n; i++) {\n            if (s_prime[i] == '?') {\n                s_prime[i] = ((mask >> q_idx) & 1) ? '1' : '0';\n                q_idx++;\n            }\n        }\n        \n        vector<int> prefix_0(n + 1, 0);\n        vector<int> prefix_1(n + 1, 0);\n        \n        for (int i = 0; i < n; i++) {\n            prefix_0[i+1] = prefix_0[i] + (s_prime[i] == '0');\n            prefix_1[i+1] = prefix_1[i] + (s_prime[i] == '1');\n        }\n        \n        int curr_unbalance = 0;\n        for (int l = 1; l <= n; l++) {\n            for (int r = l; r <= n; r++) {\n                int zeros = prefix_0[r] - prefix_0[l-1];\n                int ones = prefix_1[r] - prefix_1[l-1];\n                curr_unbalance = max(curr_unbalance, abs(zeros - ones));\n            }\n        }\n        \n        best = min(best, curr_unbalance);\n    }\n    \n    return best;\n}\n\nint main() {\n    string s;\n    cin >> s;\n    cout << solve(s) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_unbalancedness(S):\n    n = len(S)\n    \n    count0, count1 = S.count('0'), S.count('1')\n    count_question = n - count0 - count1\n\n    # Balance target for minimum unbalancedness\n    target0 = target1 = (n - count_question) // 2\n\n    # Adjust target based on difference we have\n    if count0 > count1:\n        target0 += (count0 - count1) // 2\n        target1 -= (count0 - count1) // 2\n    elif count1 > count0:\n        target1 += (count1 - count0) // 2\n        target0 -= (count1 - count0) // 2\n\n    # Replace '?' with '0' or '1' to achieve target0 and target1\n    new_S = list(S)\n    balance = 0\n    for i in range(n):\n        if new_S[i] == '?':\n            if count0 < target0:\n                new_S[i] = '0'\n                count0 += 1\n            else:\n                new_S[i] = '1'\n                count1 += 1\n        balance += 1 if new_S[i] == '1' else -1\n\n    # Avoid absolute computation in your balance check\n    max_unbalancedness = max(abs(balance), abs(count1 - count0))\n    return max_unbalancedness\n\n# Example usage\nS = \"1?0??10?\"\nprint(min_unbalancedness(S))",
+    "timestamp": "2025-08-13 11:07:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class MinimumUnbalancedness {\n    public static int findMinUnbalancedness(String S) {\n        int n = S.length();\n        int unbalance = Integer.MAX_VALUE;\n        \n        // Track balance and minimum/maximum prefix balances.\n        int minPrefixBalance = 0, maxPrefixBalance = 0;\n        int minSuffixBalance = 0, maxSuffixBalance = 0;\n        int balance = 0;\n        \n        // Count number of '?' and compute the balance.\n        int countQuestionMarks = 0;\n        for (int i = 0; i < n; i++) {\n            char ch = S.charAt(i);\n            if (ch == '0') {\n                balance--;\n            } else if (ch == '1') {\n                balance++;\n            } else {\n                countQuestionMarks++;\n            }\n        }\n        \n        // Compute prefix and suffix balances to balance the string.\n        for (int i = 0; i <= countQuestionMarks; i++) {\n            // Balance the '?' by assuming i of them are '1' and rest are '0'\n            int assumedBalance = balance + i - (countQuestionMarks - i);\n            unbalance = Math.min(unbalance, Math.max(\n                    Math.max(Math.abs(minPrefixBalance - assumedBalance), Math.abs(maxPrefixBalance - assumedBalance)),\n                    Math.max(Math.abs(minSuffixBalance - assumedBalance), Math.abs(maxSuffixBalance - assumedBalance))\n            ));\n            \n            if (i < countQuestionMarks) {\n                minSuffixBalance += 1;\n                maxSuffixBalance -= 1;\n            }\n        }\n\n        return unbalance;\n    }\n\n    public static void main(String[] args) {\n        String S = \"110?01?\";\n        int result = findMinUnbalancedness(S);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 11:07:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nint minUnbalancedness(char* s) {\n    int n = strlen(s);\n    char* s_prime = (char*)malloc((n + 1) * sizeof(char));\n    int* balance = (int*)malloc((n + 1) * sizeof(int));\n    balance[0] = 0;\n\n    for (int i = 0; i < n; ++i) {\n        if (s[i] == '?') {\n            s_prime[i] = (balance[i] <= 0) ? '1' : '0';\n        } else {\n            s_prime[i] = s[i];\n        }\n        balance[i + 1] = balance[i] + (s_prime[i] == '1' ? 1 : -1);\n    }\n    s_prime[n] = '\\0';\n\n    int minBalance = 0, maxBalance = 0;\n    for (int i = 1; i <= n; ++i) {\n        if (balance[i] < minBalance) minBalance = balance[i];\n        if (balance[i] > maxBalance) maxBalance = balance[i];\n    }\n\n    free(s_prime);\n    free(balance);\n\n    return maxBalance - minBalance;\n}\n\nint main() {\n    char s[] = \"1??0?\";\n    int result = minUnbalancedness(s);\n    printf(\"Minimum Unbalancedness: %d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:07:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minUnbalancedness(S) {\n    let n = S.length;\n    let balance = 0,\n        totalUnbalancedness = new Array(n + 1).fill(0);\n\n    for (let i = 0; i < n; i++) {\n        balance += S[i] === '0' ? -1 : S[i] === '1' ? 1 : 0;\n        totalUnbalancedness[i + 1] = balance;\n    }\n\n    let minBalance = 0, maxBalance = 0;\n    let minUnbalancedness = Infinity;\n\n    for (let i = 1; i <= n; i++) {\n        minBalance = Math.min(minBalance, totalUnbalancedness[i]);\n        maxBalance = Math.max(maxBalance, totalUnbalancedness[i]);\n        let candidateUnbalancedness = Math.max(Math.abs(totalUnbalancedness[i] - minBalance), Math.abs(totalUnbalancedness[i] - maxBalance));\n        minUnbalancedness = Math.min(minUnbalancedness, candidateUnbalancedness);\n    }\n\n    return minUnbalancedness;\n}",
+    "timestamp": "2025-08-13 11:07:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_unbalancedness(S):\n    n = len(S)\n    def solve(init_zeros, init_ones):\n        dp = [[float('inf')] * (n + 1) for _ in range(n + 1)]\n        dp[0][0] = 0\n        \n        for i in range(n):\n            for j in range(i + 1):\n                if dp[i][j] == float('inf'):\n                    continue\n                \n                if S[i] == '0' or S[i] == '?':\n                    dp[i+1][j+1] = min(dp[i+1][j+1], max(dp[i][j], abs(j+1 - (i+1-j-1))))\n                \n                if S[i] == '1' or S[i] == '?':\n                    dp[i+1][j] = min(dp[i+1][j], max(dp[i][j], abs(j - (i+1-j))))\n        \n        return min(dp[n])\n    \n    return min(solve(0, 0), solve(1, 1))",
+    "timestamp": "2025-08-13 11:07:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimizeUnbalancedness(S) {\n    const n = S.length;\n    const dp = Array(n + 1).fill().map(() => Array(n + 1).fill(Infinity));\n    dp[0][0] = 0;\n\n    for (let i = 1; i <= n; i++) {\n        for (let j = 0; j <= i; j++) {\n            if (S[i - 1] === '0' || S[i - 1] === '?') {\n                if (j > 0) {\n                    dp[i][j] = Math.min(dp[i][j], dp[i - 1][j - 1]);\n                }\n            }\n            if (S[i - 1] === '1' || S[i - 1] === '?') {\n                dp[i][j] = Math.min(dp[i][j], dp[i - 1][j] + (j === 0 ? 1 : 0));\n            }\n        }\n    }\n\n    let minUnbalancedness = Infinity;\n    for (let j = 0; j <= n; j++) {\n        minUnbalancedness = Math.min(minUnbalancedness, Math.max(j, n - j));\n    }\n\n    return minUnbalancedness;\n}",
+    "timestamp": "2025-08-13 11:07:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_unbalancedness(S):\n    n = len(S)\n    min_diff = 0\n    max_diff = 0\n    current = 0\n    \n    for c in S:\n        if c == '0':\n            current -= 1\n        elif c == '1':\n            current += 1\n        else:  # '?'\n            current += 1  # try to maximize (to find max_diff)\n        \n        if current > max_diff:\n            max_diff = current\n        if current < min_diff:\n            min_diff = current\n    \n    unbalancedness1 = max_diff - min_diff\n    \n    min_diff = 0\n    max_diff = 0\n    current = 0\n    \n    for c in S:\n        if c == '0':\n            current -= 1\n        elif c == '1':\n            current += 1\n        else:  # '?'\n            current -= 1  # try to minimize (to find max_diff)\n        \n        if current > max_diff:\n            max_diff = current\n        if current < min_diff:\n            min_diff = current\n    \n    unbalancedness2 = max_diff - min_diff\n    \n    return min(unbalancedness1, unbalancedness2)",
+    "timestamp": "2025-08-13 11:07:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minUnbalancedness(S) {\n    const n = S.length;\n    let minDiff = Infinity;\n    \n    function backtrack(index, current, count0, count1, maxDiff) {\n        if (index === n) {\n            minDiff = Math.min(minDiff, maxDiff);\n            return;\n        }\n        \n        const char = S[index];\n        if (char === '0' || char === '1') {\n            const newCount0 = count0 + (char === '0' ? 1 : 0);\n            const newCount1 = count1 + (char === '1' ? 1 : 0);\n            const newDiff = Math.abs(newCount0 - newCount1);\n            backtrack(index + 1, current + char, newCount0, newCount1, Math.max(maxDiff, newDiff));\n        } else {\n            // Try replacing '?' with '0'\n            const newCount0_0 = count0 + 1;\n            const newCount1_0 = count1;\n            const newDiff0 = Math.abs(newCount0_0 - newCount1_0);\n            backtrack(index + 1, current + '0', newCount0_0, newCount1_0, Math.max(maxDiff, newDiff0));\n            \n            // Try replacing '?' with '1'\n            const newCount0_1 = count0;\n            const newCount1_1 = count1 + 1;\n            const newDiff1 = Math.abs(newCount0_1 - newCount1_1);\n            backtrack(index + 1, current + '1', newCount0_1, newCount1_1, Math.max(maxDiff, newDiff1));\n        }\n    }\n    \n    backtrack(0, '', 0, 0, 0);\n    return minDiff;\n}",
+    "timestamp": "2025-08-13 11:07:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint minUnbalancedness(string S) {\n    int n = S.size();\n    int totalZeroes = 0, totalOnes = 0;\n\n    for (char c : S) {\n        if (c == '0') totalZeroes++;\n        else if (c == '1') totalOnes++;\n    }\n\n    int balance = totalZeroes - totalOnes;\n    int questionMarks = n - totalZeroes - totalOnes;\n    int half = questionMarks / 2;\n\n    return max(abs(balance + questionMarks - half * 2), abs(balance - half * 2));\n}\n\nint main() {\n    string S;\n    cin >> S;\n    cout << minUnbalancedness(S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:27"
+  }
+]

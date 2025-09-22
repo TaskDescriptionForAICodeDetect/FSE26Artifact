@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nlong long pow_mod(long long base, long long exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp & 1) result = (result * base) % MOD;\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return result;\n}\n\nlong long stirling(int n, int k) {\n    if (n < k) return 0;\n    if (k == 0 && n == 0) return 1;\n    if (k == 0 || k > n) return 0;\n\n    long long dp[n+1][k+1];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n\n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= k; j++) {\n            dp[i][j] = (dp[i-1][j-1] + j * dp[i-1][j]) % MOD;\n        }\n    }\n\n    return dp[n][k];\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    long long result = (stirling(n, k) * pow_mod(k, n)) % MOD;\n    printf(\"%lld\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n#define MAX 1000\n\nlong long stirling[MAX + 1][MAX + 1];\nlong long factorial[MAX + 1];\n\nvoid precompute() {\n    // Compute Stirling numbers of the second kind\n    stirling[0][0] = 1;\n    for (int i = 1; i <= MAX; i++) {\n        for (int j = 1; j <= i; j++) {\n            stirling[i][j] = (stirling[i - 1][j - 1] + j * stirling[i - 1][j]) % MOD;\n        }\n    }\n    \n    // Compute factorials\n    factorial[0] = 1;\n    for (int i = 1; i <= MAX; i++) {\n        factorial[i] = (factorial[i - 1] * i) % MOD;\n    }\n}\n\nint main() {\n    precompute();\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    if (k > n) {\n        printf(\"0\\n\");\n    } else {\n        long long ways = (stirling[n][k] * factorial[k]) % MOD;\n        printf(\"%lld\\n\", ways);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nlong long mod_pow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long comb(int n, int k, const vector<long long>& fact, const vector<long long>& inv_fact) {\n    if (k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    \n    if (k > n) {\n        cout << 0 << endl;\n        return 0;\n    }\n    \n    vector<long long> fact(n + 1), inv_fact(n + 1);\n    fact[0] = 1;\n    for (int i = 1; i <= n; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    \n    inv_fact[n] = mod_pow(fact[n], MOD - 2, MOD);\n    for (int i = n - 1; i >= 0; --i) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n    \n    long long res = 0;\n    for (int i = 0; i <= k; ++i) {\n        long long term = comb(k, i, fact, inv_fact) * mod_pow(k - i, n, MOD) % MOD;\n        if (i % 2 == 0) {\n            res = (res + term) % MOD;\n        } else {\n            res = (res - term + MOD) % MOD;\n        }\n    }\n    \n    cout << res << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static final long MOD = 1000000007;\n    static long[] fact;\n    static long[] invFact;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int k = sc.nextInt();\n        \n        if (k > n) {\n            System.out.println(0);\n            return;\n        }\n        \n        precomputeFactorials(n);\n        \n        long res = 0;\n        for (int i = 0; i <= k; i++) {\n            long term = comb(k, i) * pow(k - i, n) % MOD;\n            if (i % 2 == 0) {\n                res = (res + term) % MOD;\n            } else {\n                res = (res - term + MOD) % MOD;\n            }\n        }\n        \n        System.out.println(res);\n    }\n    \n    static void precomputeFactorials(int max) {\n        fact = new long[max + 1];\n        invFact = new long[max + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= max; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        invFact[max] = pow(fact[max], MOD - 2);\n        for (int i = max - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n    }\n    \n    static long comb(int n, int k) {\n        if (k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n    \n    static long pow(long a, long b) {\n        long res = 1;\n        while (b > 0) {\n            if (b % 2 == 1) {\n                res = res * a % MOD;\n            }\n            a = a * a % MOD;\n            b /= 2;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 22:19:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int putBalls(int n, int k) {\n        final int MOD = 1000000007;\n        \n        // If number of boxes is more than number of balls, return 0\n        if (k > n) return 0;\n        \n        // Compute stirling numbers using dynamic programming\n        long[][] dp = new long[n+1][k+1];\n        \n        // Base cases\n        dp[0][0] = 1;\n        \n        // Fill dp table\n        for (int i = 1; i <= n; i++) {\n            for (int j = 1; j <= Math.min(i, k); j++) {\n                dp[i][j] = (dp[i-1][j-1] + j * dp[i-1][j]) % MOD;\n            }\n        }\n        \n        return (int)dp[n][k];\n    }\n}",
+    "timestamp": "2025-08-05 22:19:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    \n    vector<vector<long long>> dp(n + 1, vector<long long>(k + 1, 0));\n    \n    for (int i = 1; i <= k; i++) {\n        dp[i][i] = 1;\n    }\n    \n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= k; j++) {\n            if (i > j) {\n                dp[i][j] = (dp[i-1][j-1] + j * dp[i-1][j]) % MOD;\n            }\n        }\n    }\n    \n    cout << dp[n][k] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:19:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def factorial(n):\n    result = 1\n    for i in range(2, n + 1):\n        result = (result * i) % (10**9 + 7)\n    return result\n\ndef stirling_second_kind(n, k):\n    if n < k:\n        return 0\n    elif n == k:\n        return 1\n    s = [[0 for _ in range(k + 1)] for __ in range(n + 1)]\n    s[0][0] = 1\n    for i in range(1, n + 1):\n        for j in range(1, k + 1):\n            s[i][j] = (j * s[i - 1][j] + s[i - 1][j - 1]) % (10**9 + 7)\n    return s[n][k]\n\ndef calculate_ways(n, k):\n    if n < k:\n        return 0\n    stirling_value = stirling_second_kind(n, k)\n    factorial_k = factorial(k)\n    return (stirling_value * factorial_k) % (10**9 + 7)\n\nn = int(input(\"Enter the number of balls: \"))\nk = int(input(\"Enter the number of boxes: \"))\nprint(calculate_ways(n, k))",
+    "timestamp": "2025-08-13 09:54:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.math.BigInteger;\n\npublic class BallsInBoxes {\n    public static int countWays(int n, int k) {\n        int MOD = 1000000007;\n        if (k > n) return 0;\n        \n        // Calculate Stirling numbers of the second kind S(n, k)\n        int[][] stirling = new int[n + 1][k + 1];\n        stirling[0][0] = 1;\n        for (int i = 1; i <= n; i++) {\n            for (int j = 1; j <= k; j++) {\n                stirling[i][j] = (int) (\n                    (stirling[i - 1][j - 1] + (long) j * stirling[i - 1][j]) % MOD\n                );\n            }\n        }\n        \n        // Calculate k! (factorial of k)\n        long factorialK = 1;\n        for (int i = 2; i <= k; i++) {\n            factorialK = (factorialK * i) % MOD;\n        }\n\n        // Result is S(n, k) * k!\n        return (int) ((stirling[n][k] * factorialK) % MOD);\n    }\n\n    public static void main(String[] args) {\n        int n = 5; // Number of balls\n        int k = 3; // Number of boxes\n        System.out.println(countWays(n, k)); // Output the result\n    }\n}",
+    "timestamp": "2025-08-13 09:54:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n\nlong long factorial(int n) {\n    long long res = 1;\n    for (int i = 2; i <= n; i++) {\n        res = (res * i) % MOD;\n    }\n    return res;\n}\n\nlong long power(long long base, int exp, int mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long stirlingNumbersSecondKind(int n, int k) {\n    if (n < k) return 0;\n    \n    long long stirling = 0;\n    for (int i = 0; i < k; i++) {\n        long long term = (power(-1, i, MOD) + MOD) % MOD;\n        term = (term * factorial(k)) % MOD;\n        term = (term * power(factorial(i), MOD - 2, MOD)) % MOD;\n        term = (term * power(factorial(k - 1 - i), MOD - 2, MOD)) % MOD;\n        term = (term * power(k - i, n, MOD)) % MOD;\n        stirling = (stirling + term) % MOD;\n    }\n    return stirling;\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    long long result = stirlingNumbersSecondKind(n, k);\n    result = (result * factorial(k)) % MOD;\n    \n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:54:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(n, k):\n    MOD = 10**9 + 7\n    \n    # Create a 2D DP table\n    dp = [[0] * (k + 1) for _ in range(n + 1)]\n    \n    # Base case: 1 way to distribute 1 ball into 1 box\n    dp[1][1] = 1\n    \n    # Fill the DP table\n    for i in range(2, n + 1):\n        for j in range(1, min(i, k) + 1):\n            # Either put the new ball in an existing box\n            dp[i][j] = dp[i-1][j-1] * j\n            \n            # Or put the new ball in a box that already has other balls\n            dp[i][j] += dp[i-1][j] * j\n            \n            dp[i][j] %= MOD\n    \n    return dp[n][k]\n\n# Read input\nn, k = map(int, input().split())\n\n# Print the result\nprint(solve(n, k))",
+    "timestamp": "2025-08-13 09:54:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    import sys\n    n, k = map(int, sys.stdin.readline().split())\n    \n    if n < k:\n        print(0)\n        return\n    \n    # Precompute factorial, inverse factorial modulo MOD up to n\n    fact = [1] * (n + 1)\n    inv_fact = [1] * (n + 1)\n    \n    for i in range(1, n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[n] = pow(fact[n], MOD-2, MOD)\n    for i in range(n-1, -1, -1):\n        inv_fact[i] = inv_fact[i+1] * (i+1) % MOD\n    \n    res = 0\n    for i in range(k + 1):\n        term = pow(k - i, n, MOD) * fact[k] % MOD\n        term = term * inv_fact[i] % MOD\n        term = term * inv_fact[k - i] % MOD\n        if i % 2 == 0:\n            res = (res + term) % MOD\n        else:\n            res = (res - term) % MOD\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 09:55:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1000000007;\n\nint factorial(int n) {\n    long long result = 1;\n    for (int i = 2; i <= n; ++i) {\n        result = result * i % MOD;\n    }\n    return result;\n}\n\nint stirling_second_kind(int n, int k, std::vector<std::vector<int>>& dp) {\n    if (dp[n][k] != -1) return dp[n][k];\n    if (n == k) return dp[n][k] = 1;\n    if (k == 0 || n == 0) return dp[n][k] = 0;\n    return dp[n][k] = (stirling_second_kind(n - 1, k - 1, dp) + (long long)k * stirling_second_kind(n - 1, k, dp) % MOD) % MOD;\n}\n\nint main() {\n    int n, k;\n    std::cin >> n >> k;\n\n    std::vector<std::vector<int>> dp(n + 1, std::vector<int>(k + 1, -1));\n    int stirling_number = stirling_second_kind(n, k, dp);\n    int result = (long long)stirling_number * factorial(k) % MOD;\n\n    std::cout << result << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:55:51"
+  }
+]

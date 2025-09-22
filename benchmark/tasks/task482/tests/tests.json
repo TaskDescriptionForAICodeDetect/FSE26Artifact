@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "6\nantbook iwiWataKitamasa 2012/01/28\nhogebook foo 2000/01/01\nhugabook bar 2000/01/01\ncheeterbook chokudai 2012/09/29\naojbook YutakaWatanabe 2014/06/28\npiyobook buz 2000/01/01\n4\na * * *\n* chokudai * *\n* Chokudai * *\n* * 2014/01/01 2014/12/31",
+      "output": "antbook\nhugabook\naojbook\n\ncheeterbook\n\n\naojbook"
+    }
+  ]
+}

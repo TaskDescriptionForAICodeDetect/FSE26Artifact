@@ -1,0 +1,1 @@
+Create a program to count the number of skiing patterns on a ski course represented as a grid. The course has various cells marked as passable (0), obstacles (1), and jump pads (2). Skiers start at the top of the grid and can move down toward the bottom, with specific movement rules based on the cell type they are in.

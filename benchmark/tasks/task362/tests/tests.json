@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "4 6\n1 2\n1 2 N\n2 3 N\n3 4 N\n4 1 N\n1 4 L\n4 0 L\n",
+      "output": "1\n"
+    },
+    {
+      "input": "4 6\n1 2\n1 2 N\n2 3 N\n3 4 N\n4 1 N\n1 4 L\n4 0 N\n",
+      "output": "3\n"
+    }
+  ]
+}

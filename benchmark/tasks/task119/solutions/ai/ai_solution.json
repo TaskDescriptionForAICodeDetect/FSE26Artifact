@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint calculateMinContainers(int *paces, int numMembers, int totalTime) {\n    int totalRounds = 0;\n    for (int i = 0; i < numMembers; i++) {\n        totalRounds += (totalTime / paces[i]);\n    }\n    return (totalRounds + 5) / 6; // Each container serves 6 rounds\n}\n\nint main() {\n    int numMembers, totalTime;\n    scanf(\"%d %d\", &numMembers, &totalTime);\n\n    int *paces = (int *)malloc(numMembers * sizeof(int));\n    for (int i = 0; i < numMembers; i++) {\n        scanf(\"%d\", &paces[i]);\n    }\n\n    int minContainers = calculateMinContainers(paces, numMembers, totalTime);\n    printf(\"%d\\n\", minContainers);\n\n    free(paces);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:42:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class WaterContainerCalculator {\n    public static int calculateMinContainers(int[] memberPaces, int trackLength, int containerCapacity) {\n        int totalRunners = memberPaces.length;\n        double maxWaterConsumption = 0;\n\n        for (int pace : memberPaces) {\n            double roundsPerHour = (double) trackLength / pace;\n            double waterPerHour = roundsPerHour * 0.5;\n            maxWaterConsumption = Math.max(maxWaterConsumption, waterPerHour);\n        }\n\n        return (int) Math.ceil(maxWaterConsumption / containerCapacity);\n    }\n\n    public static void main(String[] args) {\n        int[] memberPaces = {300, 250, 400};\n        int trackLength = 1000;\n        int containerCapacity = 2;\n\n        int minContainers = calculateMinContainers(memberPaces, trackLength, containerCapacity);\n        System.out.println(\"Minimum water containers required: \" + minContainers);\n    }\n}",
+    "timestamp": "2025-08-05 18:42:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint calculateMinContainers(const vector<int>& paces, int time, int refillInterval) {\n    int maxContainers = 0;\n    for (int pace : paces) {\n        int laps = (time * pace) / refillInterval;\n        maxContainers = max(maxContainers, laps);\n    }\n    return maxContainers;\n}\n\nint main() {\n    int n, time, refillInterval;\n    cin >> n >> time >> refillInterval;\n    vector<int> paces(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> paces[i];\n    }\n    cout << calculateMinContainers(paces, time, refillInterval) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:42:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\n#define MAX_RUNNERS 100\n\ntypedef struct {\n    double pace;\n    double water_consumption;\n} Runner;\n\ndouble calculate_track_laps(double pace, double total_time) {\n    return total_time / pace;\n}\n\nint determine_water_containers(Runner* runners, int num_runners, double track_length, double total_time, double container_capacity) {\n    int containers = 0;\n    double total_water_needed = 0;\n\n    for (int i = 0; i < num_runners; i++) {\n        double laps = calculate_track_laps(runners[i].pace, total_time);\n        double water_needed = laps * runners[i].water_consumption;\n        total_water_needed += water_needed;\n    }\n\n    containers = ceil(total_water_needed / container_capacity);\n    return containers;\n}\n\nint main() {\n    Runner runners[MAX_RUNNERS];\n    int num_runners;\n    double track_length, total_time, container_capacity;\n\n    printf(\"Enter number of runners: \");\n    scanf(\"%d\", &num_runners);\n\n    printf(\"Enter track length: \");\n    scanf(\"%lf\", &track_length);\n\n    printf(\"Enter total training time (hours): \");\n    scanf(\"%lf\", &total_time);\n\n    printf(\"Enter water container capacity: \");\n    scanf(\"%lf\", &container_capacity);\n\n    for (int i = 0; i < num_runners; i++) {\n        printf(\"Enter pace for runner %d (hours per lap): \", i+1);\n        scanf(\"%lf\", &runners[i].pace);\n\n        printf(\"Enter water consumption per lap for runner %d: \", i+1);\n        scanf(\"%lf\", &runners[i].water_consumption);\n    }\n\n    int min_containers = determine_water_containers(runners, num_runners, track_length, total_time, container_capacity);\n    printf(\"Minimum water containers required: %d\\n\", min_containers);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:42:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nclass WaterContainerCalculator {\nprivate:\n    int trackLength;\n    int sessionDuration;\n    vector<double> runnerPaces;\n\npublic:\n    WaterContainerCalculator(int length, int duration, const vector<double>& paces) \n        : trackLength(length), sessionDuration(duration), runnerPaces(paces) {}\n\n    int calculateMinContainers() {\n        int containers = 0;\n        double maxDistance = 0;\n\n        for (double pace : runnerPaces) {\n            double distanceCovered = pace * sessionDuration;\n            maxDistance = max(maxDistance, distanceCovered);\n        }\n\n        for (double pace : runnerPaces) {\n            double distanceCovered = pace * sessionDuration;\n            int runnerContainers = ceil(maxDistance / (pace * 60));\n            containers = max(containers, runnerContainers);\n        }\n\n        return containers;\n    }\n};\n\nint main() {\n    int trackLength, sessionDuration;\n    vector<double> runnerPaces;\n\n    cin >> trackLength >> sessionDuration;\n    int numRunners;\n    cin >> numRunners;\n\n    for (int i = 0; i < numRunners; ++i) {\n        double pace;\n        cin >> pace;\n        runnerPaces.push_back(pace);\n    }\n\n    WaterContainerCalculator calculator(trackLength, sessionDuration, runnerPaces);\n    int minContainers = calculator.calculateMinContainers();\n\n    cout << minContainers << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:42:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class WaterContainers {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] paces = new int[n];\n        for (int i = 0; i < n; i++) {\n            paces[i] = scanner.nextInt();\n        }\n        int time = scanner.nextInt();\n        \n        int totalLaps = 0;\n        for (int pace : paces) {\n            totalLaps += time / pace;\n        }\n        \n        int containers = (int) Math.ceil(totalLaps / 10.0);\n        System.out.println(containers);\n    }\n}",
+    "timestamp": "2025-08-05 18:42:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_water_containers(member_paces, hydration_rate, session_duration):\n    members_count = len(member_paces)\n    # Calculate total water needed by each runner\n    total_water_needed = [pace * hydration_rate * (session_duration / 60) for pace in member_paces]\n    # Assume each container has a fixed capacity (e.g., 5 liters)\n    container_capacity = 5\n    # Calculate the minimum number of containers required\n    min_containers = sum([(-(-water/container_capacity)) for water in total_water_needed])\n    return min_containers\n\n# Example usage:\nmember_paces = [6, 8, 5, 7]  # In kilometers per hour\nhydration_rate = 0.5  # Liters of water per kilometer\nsession_duration = 120  # Total duration in minutes\n\nprint(min_water_containers(member_paces, hydration_rate, session_duration))",
+    "timestamp": "2025-08-13 00:36:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class WaterContainerCalculator {\n\n    public static class Runner {\n        int pace; // laps per hour\n\n        public Runner(int pace) {\n            this.pace = pace;\n        }\n    }\n\n    public static int minWaterContainers(List<Runner> runners, int sessionTime) {\n        int maxLaps = 0;\n        \n        for (Runner runner : runners) {\n            int totalLaps = runner.pace * (sessionTime / 60); // convert time to hours for laps calculation\n            if (totalLaps > maxLaps) {\n                maxLaps = totalLaps;\n            }\n        }\n\n        return maxLaps > 0 ? maxLaps : 1; // at least one container needed even for 0 laps\n    }\n\n    public static void main(String[] args) {\n        List<Runner> runners = Arrays.asList(new Runner(10), new Runner(12), new Runner(8), new Runner(15));\n        int sessionTime = 120; // in minutes\n        \n        System.out.println(\"Minimum number of water containers required: \" + minWaterContainers(runners, sessionTime));\n    }\n}",
+    "timestamp": "2025-08-13 00:36:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int num_members, track_length, run_time;\n    printf(\"Enter number of members: \");\n    scanf(\"%d\", &num_members);\n\n    printf(\"Enter track length in meters: \");\n    scanf(\"%d\", &track_length);\n\n    printf(\"Enter run time in minutes: \");\n    scanf(\"%d\", &run_time);\n\n    int paces[num_members];\n    printf(\"Enter the pace (m/min) for each member:\\n\");\n    for (int i = 0; i < num_members; ++i) {\n        scanf(\"%d\", &paces[i]);\n    }\n\n    int water_need_per_hour = 2;  // assuming each member needs 2 containers per hour\n    int total_water_containers = 0;\n\n    for (int i = 0; i < num_members; ++i) {\n        int distance_covered = paces[i] * run_time; // in meters\n        int laps = distance_covered / track_length;\n        int hours = run_time / 60 + (run_time % 60 != 0);\n\n        total_water_containers += water_need_per_hour * hours;\n    }\n\n    printf(\"Minimum number of water containers required: %d\\n\", total_water_containers);\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:37:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_water_containers(track_length, runner_speeds, water_capacity, running_time):\n    # Calculate total runners\n    num_runners = len(runner_speeds)\n    \n    # Calculate max laps completed in running time\n    max_laps = max(track_length * running_time / speed for speed in runner_speeds)\n    \n    # Calculate hydration cycles\n    hydration_cycles = max(1, round(max_laps / water_capacity))\n    \n    # Determine minimum containers needed\n    containers = max(num_runners, hydration_cycles)\n    \n    return containers\n\n# Example usage\ntrack_length = 400  # meters\nrunner_speeds = [4, 5, 6, 7]  # meters per minute\nwater_capacity = 2  # laps per water container\nrunning_time = 60  # minutes\n\nresult = min_water_containers(track_length, runner_speeds, water_capacity, running_time)\nprint(f\"Minimum water containers required: {result}\")",
+    "timestamp": "2025-08-13 00:37:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_water_containers(members, track_length, session_time):\n    if session_time < 60:\n        return 1\n    \n    containers = 0\n    for pace in members:\n        laps = (session_time * pace) // track_length\n        containers_needed = laps // (session_time // 60)\n        containers = max(containers, containers_needed)\n    \n    return containers if containers != 0 else 1\n\n# Example usage:\n# members = [5, 7, 10]  # paces in km/h\n# track_length = 400     # in meters\n# session_time = 120     # in minutes\n# print(min_water_containers(members, track_length, session_time))",
+    "timestamp": "2025-08-13 00:37:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int n, duration;\n    std::cout << \"Enter the number of members and session duration (in minutes): \";\n    std::cin >> n >> duration;\n\n    std::vector<int> pace(n);\n    std::vector<int> waterNeed(n);\n\n    std::cout << \"Enter the pace (minutes per lap) for each member: \";\n    for (int i = 0; i < n; ++i) {\n        std::cin >> pace[i];\n    }\n\n    std::cout << \"Enter the water need (liters per lap) for each member: \";\n    for (int i = 0; i < n; ++i) {\n        std::cin >> waterNeed[i];\n    }\n\n    int totalWater = 0;\n    for (int i = 0; i < n; ++i) {\n        int laps = duration / pace[i];\n        totalWater += laps * waterNeed[i];\n    }\n\n    const int containerCapacity = 5; // Assuming each water container can hold 5 liters\n    int numContainers = (totalWater + containerCapacity - 1) / containerCapacity;\n\n    std::cout << \"Minimum number of water containers required: \" << numContainers << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:55:03"
+  }
+]

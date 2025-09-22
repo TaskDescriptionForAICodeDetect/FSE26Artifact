@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "aabaaa\n4\naa\nba\nbb\nxyz\n",
+      "output": "1\n1\n0\n0\n"
+    }
+  ]
+}

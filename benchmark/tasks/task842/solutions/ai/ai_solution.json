@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, K, A, B;\n    scanf(\"%d %d %d %d\", &N, &K, &A, &B);\n\n    long long dp[N+1][K+1];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j <= K; j++) {\n            if (dp[i][j] == 0) continue;\n\n            // Red layer\n            if (j + A <= K) {\n                dp[i+1][j+A] = (dp[i+1][j+A] + dp[i][j]) % MOD;\n            }\n\n            // Green layer\n            if (j + A + B <= K) {\n                dp[i+1][j+A+B] = (dp[i+1][j+A+B] + dp[i][j]) % MOD;\n            }\n\n            // Blue layer\n            if (j + B <= K) {\n                dp[i+1][j+B] = (dp[i+1][j+B] + dp[i][j]) % MOD;\n            }\n\n            // Uncolored layer\n            dp[i+1][j] = (dp[i+1][j] + dp[i][j]) % MOD;\n        }\n    }\n\n    printf(\"%lld\\n\", dp[N][K]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:05:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#define MOD 998244353\n\nlong long factorial[200010];\nlong long inv_fact[200010];\n\nlong long power(long long x, long long y) {\n    long long res = 1;\n    x = x % MOD;\n    while (y > 0) {\n        if (y & 1) res = (res * x) % MOD;\n        y = y >> 1;\n        x = (x * x) % MOD;\n    }\n    return res;\n}\n\nvoid precompute() {\n    factorial[0] = 1;\n    for (int i = 1; i < 200010; i++) {\n        factorial[i] = (factorial[i-1] * i) % MOD;\n    }\n    inv_fact[200009] = power(factorial[200009], MOD-2);\n    for (int i = 200008; i >= 0; i--) {\n        inv_fact[i] = (inv_fact[i+1] * (i+1)) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (k < 0 || k > n) return 0;\n    return (factorial[n] * inv_fact[k] % MOD) * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int N, A, B;\n    long long K;\n    scanf(\"%d %d %d %lld\", &N, &A, &B, &K);\n    \n    precompute();\n    \n    long long res = 0;\n    for (int x = 0; x <= N; x++) {\n        long long remaining = K - (long long)A * x;\n        if (remaining < 0) continue;\n        if (remaining % B != 0) continue;\n        long long y = remaining / B;\n        if (y < 0 || y > N) continue;\n        long long c1 = comb(N, x);\n        long long c2 = comb(N, y);\n        res = (res + c1 * c2) % MOD;\n    }\n    \n    printf(\"%lld\\n\", res);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:05:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, A, B;\n    long long K;\n    cin >> N >> A >> B >> K;\n\n    vector<long long> fact(N + 1), inv_fact(N + 1);\n    fact[0] = 1;\n    for (int i = 1; i <= N; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    inv_fact[N] = 1;\n    for (int i = N; i > 0; --i) {\n        inv_fact[i - 1] = inv_fact[i] * i % MOD;\n    }\n    for (int i = 0; i <= N; ++i) {\n        long long inv = 1, base = fact[i], exp = MOD - 2;\n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                inv = inv * base % MOD;\n            }\n            base = base * base % MOD;\n            exp /= 2;\n        }\n        inv_fact[i] = inv;\n    }\n\n    long long res = 0;\n    for (int x = 0; x <= N; ++x) {\n        if (A * x > K) continue;\n        long long rem = K - A * x;\n        if (rem % B != 0) continue;\n        long long y = rem / B;\n        if (y < 0 || y > N) continue;\n        if (x + y > N) continue;\n        long long c_x = fact[N] * inv_fact[x] % MOD * inv_fact[N - x] % MOD;\n        long long c_y = fact[N] * inv_fact[y] % MOD * inv_fact[N - y] % MOD;\n        long long c_xy = fact[N] * inv_fact[x] % MOD * inv_fact[y] % MOD * inv_fact[N - x - y] % MOD;\n        res = (res + c_xy) % MOD;\n    }\n    cout << res << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:06:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        long K = scanner.nextLong();\n\n        long[] fact = new long[N + 1];\n        long[] invFact = new long[N + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= N; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        invFact[N] = pow(fact[N], MOD - 2, MOD);\n        for (int i = N - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n\n        long res = 0;\n        for (int x = 0; x <= N; x++) {\n            long remaining = K - (long) x * A;\n            if (remaining < 0) continue;\n            if (remaining % B != 0) continue;\n            long y = remaining / B;\n            if (y < 0 || y > N) continue;\n            int z = N - x - (int) y;\n            if (z < 0) continue;\n            long c1 = comb(N, x, fact, invFact);\n            long c2 = comb(N, (int) y, fact, invFact);\n            res = (res + c1 * c2 % MOD) % MOD;\n        }\n        System.out.println(res);\n    }\n\n    static long comb(int n, int k, long[] fact, long[] invFact) {\n        if (k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n\n    static long pow(long a, long b, long mod) {\n        long res = 1;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                res = res * a % mod;\n            }\n            a = a * a % mod;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 23:06:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    static final int MOD = 998244353;\n    \n    public static int countBeautifulTowers(int N, int A, int B, int K) {\n        long[][] dp = new long[N + 1][K + 1];\n        dp[0][0] = 1;\n        \n        for (int i = 1; i <= N; i++) {\n            for (int j = 0; j <= K; j++) {\n                // Red layer\n                if (j >= A) {\n                    dp[i][j] = (dp[i][j] + dp[i-1][j-A]) % MOD;\n                }\n                \n                // Green layer\n                if (j >= A + B) {\n                    dp[i][j] = (dp[i][j] + dp[i-1][j-(A+B)]) % MOD;\n                }\n                \n                // Blue layer\n                if (j >= B) {\n                    dp[i][j] = (dp[i][j] + dp[i-1][j-B]) % MOD;\n                }\n                \n                // Uncolored layer\n                dp[i][j] = (dp[i][j] + dp[i-1][j]) % MOD;\n            }\n        }\n        \n        return (int)dp[N][K];\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int A = sc.nextInt();\n        int B = sc.nextInt();\n        int K = sc.nextInt();\n        \n        System.out.println(countBeautifulTowers(N, A, B, K));\n    }\n}",
+    "timestamp": "2025-08-05 23:07:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, A, B, K;\n    cin >> N >> A >> B >> K;\n    \n    vector<vector<long long>> dp(N + 1, vector<long long>(K + 1, 0));\n    dp[0][0] = 1;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j <= K; j++) {\n            if (dp[i][j] == 0) continue;\n            \n            // Red layer\n            if (j + A <= K) {\n                dp[i+1][j+A] = (dp[i+1][j+A] + dp[i][j]) % MOD;\n            }\n            \n            // Green layer\n            if (j + A + B <= K) {\n                dp[i+1][j+A+B] = (dp[i+1][j+A+B] + dp[i][j]) % MOD;\n            }\n            \n            // Blue layer\n            if (j + B <= K) {\n                dp[i+1][j+B] = (dp[i+1][j+B] + dp[i][j]) % MOD;\n            }\n        }\n    }\n    \n    cout << dp[N][K] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:07:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_ways_to_paint_tower(N, A, B, K):\n    MOD = 998244353\n    result = 0\n    \n    for red in range(N + 1):\n        for green in range(N - red + 1):\n            blue = N - red - green\n            score = (red * A) + (green * (A + B)) + (blue * B)\n            if score == K:\n                result += 1\n                \n    return result % MOD\n\n# Example usage:\nN = 3\nA = 2\nB = 3\nK = 8\nprint(count_ways_to_paint_tower(N, A, B, K)) # Output: Number of ways to achieve a beauty score of 8",
+    "timestamp": "2025-08-13 13:37:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class TowerBeauty {\n    private static final int MOD = 998244353;\n\n    public static int countWays(int N, int A, int B, int K) {\n        int[] dp = new int[K + 1];\n        dp[0] = 1;\n\n        for (int layer = 0; layer < N; layer++) {\n            int[] newDp = new int[K + 1];\n            for (int score = 0; score <= K; score++) {\n                if (dp[score] == 0) continue;\n                if (score + A <= K) {\n                    newDp[score + A] = (newDp[score + A] + dp[score]) % MOD;\n                }\n                if (score + A + B <= K) {\n                    newDp[score + A + B] = (newDp[score + A + B] + dp[score]) % MOD;\n                }\n                if (score + B <= K) {\n                    newDp[score + B] = (newDp[score + B] + dp[score]) % MOD;\n                }\n            }\n            dp = newDp;\n        }\n\n        return dp[K];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        int K = scanner.nextInt();\n        scanner.close();\n\n        System.out.println(countWays(N, A, B, K));\n    }\n}",
+    "timestamp": "2025-08-13 13:37:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, A, B, K;\n    scanf(\"%d %d %d %d\", &N, &A, &B, &K);\n\n    int count = 0;\n    \n    for (int r = 0; r <= N; ++r) {\n        for (int g = 0; g <= N - r; ++g) {\n            int b = N - r - g;\n            if (A*r + (A+B)*g + B*b == K) {\n                count = (count + 1) % MOD;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:37:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countWaysToPaintTower(N, A, B, K) {\n  const MOD = 998244353;\n  let ways = 0;\n\n  for (let red = 0; red <= N; red++) {\n    for (let green = 0; green <= N - red; green++) {\n      let blue = N - red - green;\n      let score = red * A + green * (A + B) + blue * B;\n      if (score === K) {\n        ways++;\n        ways %= MOD;\n      }\n    }\n  }\n  \n  return ways;\n}",
+    "timestamp": "2025-08-13 13:37:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_tower_painting_ways(N, K, A, B):\n    MOD = 998244353\n    \n    # DP table: dp[i][j] represents number of ways to paint first i layers with beauty j\n    dp = [[0] * (K + 1) for _ in range(N + 1)]\n    dp[0][0] = 1\n    \n    for i in range(N):\n        for j in range(K + 1):\n            if dp[i][j] == 0:\n                continue\n            \n            # Uncolored layer\n            dp[i+1][j] = (dp[i+1][j] + dp[i][j]) % MOD\n            \n            # Red layer\n            if j + A <= K:\n                dp[i+1][j + A] = (dp[i+1][j + A] + dp[i][j]) % MOD\n            \n            # Green layer\n            if j + A + B <= K:\n                dp[i+1][j + A + B] = (dp[i+1][j + A + B] + dp[i][j]) % MOD\n            \n            # Blue layer\n            if j + B <= K:\n                dp[i+1][j + B] = (dp[i+1][j + B] + dp[i][j]) % MOD\n    \n    return dp[N][K]",
+    "timestamp": "2025-08-13 13:37:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countTowerColorings(N, A, B, K) {\n    const MOD = 998244353;\n    const dp = new Array(N + 1).fill().map(() => new Array(K + 1).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j <= K; j++) {\n            if (dp[i][j] === 0) continue;\n            \n            // Red\n            if (j + A <= K) {\n                dp[i + 1][j + A] = (dp[i + 1][j + A] + dp[i][j]) % MOD;\n            }\n            \n            // Green\n            if (j + A + B <= K) {\n                dp[i + 1][j + A + B] = (dp[i + 1][j + A + B] + dp[i][j]) % MOD;\n            }\n            \n            // Blue\n            if (j + B <= K) {\n                dp[i + 1][j + B] = (dp[i + 1][j + B] + dp[i][j]) % MOD;\n            }\n        }\n    }\n\n    return dp[N][K];\n}",
+    "timestamp": "2025-08-13 13:37:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    N, A, B, K = map(int, sys.stdin.readline().split())\n    max_fact = N\n    fact = [1] * (max_fact + 1)\n    inv_fact = [1] * (max_fact + 1)\n    for i in range(1, max_fact + 1):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[max_fact] = pow(fact[max_fact], MOD-2, MOD)\n    for i in range(max_fact - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    res = 0\n    for x in range(0, N + 1):\n        remaining = K - A * x\n        if remaining < 0:\n            continue\n        if remaining % B != 0:\n            continue\n        y = remaining // B\n        if y < 0 or y > N:\n            continue\n        z = N - x - y\n        if z < 0:\n            continue\n        # Compute combination: N! / (x! y! z!)\n        term = fact[N] * inv_fact[x] % MOD\n        term = term * inv_fact[y] % MOD\n        term = term * inv_fact[z] % MOD\n        res = (res + term) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 13:38:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split(/\\s+/);\n    let idx = 0;\n    const N = parseInt(input[idx++], 10);\n    const A = parseInt(input[idx++], 10);\n    const B = parseInt(input[idx++], 10);\n    const K = parseInt(input[idx++], 10);\n\n    // Precompute factorial, inverse factorial modulo MOD\n    const maxN = N;\n    const fact = new Array(maxN + 1).fill(1);\n    const invFact = new Array(maxN + 1).fill(1);\n    for (let i = 1; i <= maxN; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    invFact[maxN] = modInverse(fact[maxN], MOD);\n    for (let i = maxN - 1; i >= 0; i--) {\n        invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n    }\n\n    function comb(n, k) {\n        if (k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n\n    let res = 0;\n    for (let x = 0; x <= N; x++) {\n        const remaining = K - x * A;\n        if (remaining < 0) continue;\n        if (remaining % B !== 0) continue;\n        const y = remaining / B;\n        if (y < 0 || y > N) continue;\n        const z = N - x - y;\n        if (z < 0) continue;\n        const ways = fact[N] * invFact[x] % MOD * invFact[y] % MOD * invFact[z] % MOD;\n        res = (res + ways) % MOD;\n    }\n    console.log(res);\n}\n\nfunction modInverse(a, mod) {\n    let m = mod;\n    let y = 0, x = 1;\n    while (a > 1) {\n        const q = Math.floor(a / mod);\n        let t = mod;\n        mod = a % mod;\n        a = t;\n        t = y;\n        y = x - q * y;\n        x = t;\n    }\n    if (x < 0) x += m;\n    return x;\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:38:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, A, B, K;\n    std::cin >> N >> A >> B >> K;\n\n    std::vector<int> dp(K + 1, 0);\n    dp[0] = 1; // Base case: 1 way to get score 0 (all uncolored)\n\n    for (int i = 0; i < N; ++i) {\n        std::vector<int> new_dp(K + 1, 0);\n        for (int j = 0; j <= K; ++j) {\n            if (dp[j]) {\n                if(j + A <= K) new_dp[j + A] = (new_dp[j + A] + dp[j]) % MOD;\n                if(j + A + B <= K) new_dp[j + A + B] = (new_dp[j + A + B] + dp[j]) % MOD;\n                if(j + B <= K) new_dp[j + B] = (new_dp[j + B] + dp[j]) % MOD;\n            }\n        }\n        dp.swap(new_dp);\n    }\n\n    std::cout << dp[K] << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:40:29"
+  }
+]

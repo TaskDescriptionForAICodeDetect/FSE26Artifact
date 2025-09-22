@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "A 3\n1 3 -1\nB 4\n3 1 5 7\nD 1\n5\nR 0\ncAiBdD",
+      "output": "7"
+    },
+    {
+      "input": "C 3\n1 2 3\nA 4\n2 10 8 3\nB 3\n2 4 8\nR 0\n(As(AiB))uC",
+      "output": "1 2 3 10"
+    }
+  ]
+}

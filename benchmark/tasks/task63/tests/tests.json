@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "1111\n00001\n0110\n01011\n0010\n01111\n0010\n01001\n0111",
+      "output": "RRRRDDDDLLLUUURRDDLURULLDDDRRRUUUULLLL"
+    }
+  ]
+}

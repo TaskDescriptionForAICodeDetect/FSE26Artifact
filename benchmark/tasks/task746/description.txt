@@ -1,0 +1,1 @@
+We have a sequence of N x K integers represented by another sequence of N integers. Snuke performs operations on an initially empty integer sequence where he either adds elements to the sequence or deletes the last element if it already exists in the sequence. Your task is to determine the final sequence after performing all operations.

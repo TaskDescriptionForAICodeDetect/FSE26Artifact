@@ -1,0 +1,1 @@
+Shifting a Matrix: You are given an N x N matrix A initialized with A[i,j] = (i - 1)N + j. You need to perform a series of left, right, up, and down shifts on this matrix as specified by a given operation sequence in a string format. You should output the resulting matrix after applying all operations.

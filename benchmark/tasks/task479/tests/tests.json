@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "4\n0 1\n1 1\n1 2\n2 2\n",
+      "output": "Possible"
+    },
+    {
+      "input": "11\n63 106\n87 143\n102 132\n115 169\n74 145\n41 177\n56 130\n28 141\n19 124\n0 156\n22 183\n",
+      "output": "Impossible"
+    }
+  ]
+}

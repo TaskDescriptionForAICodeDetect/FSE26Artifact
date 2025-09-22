@@ -1,0 +1,1 @@
+Determine if it is possible to place signposts in a cave with N rooms and M passages such that each room (except Room 1) points to another room, leading to Room 1 in the minimum number of passages. If possible, output the configuration of signposts; otherwise, indicate that it is not possible.

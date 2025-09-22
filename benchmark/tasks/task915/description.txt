@@ -1,0 +1,1 @@
+You are given an integer sequence of length N, a = {a_1, a_2, …, a_N}, and an integer K. The sequence has N(N+1)/2 non-empty contiguous subsequences. You need to count how many of these subsequences have an arithmetic mean that is greater than or equal to K.

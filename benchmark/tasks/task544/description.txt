@@ -1,0 +1,38 @@
+Chakkaku evaluation
+
+Problem
+
+Jiodai-kun and Kitadai-kun are playing a game. Kitadai-kun first generates a logical expression represented by the following BNF:
+
+<formula> ::= <or-expr>
+<or-expr> ::= <and-expr>
+           | <or-expr> '|' <and-expr>
+<and-expr> ::= <term>
+           | <and-expr> '&' <term>
+<term>     ::= '(' <or-expr> ')' | '?'
+
+'&' represents logical AND, and '|' represents logical OR, with '&' being evaluated before '|'.
+
+Jiodai-kun reads this logical expression (as a string) from left to right and takes the following actions when encountering a '?':
+
+If it is certain that changing the '?' to either 0 or 1 will not change the evaluation result of the logical expression, he continues reading without doing anything. Otherwise, he pays 1 yen to Kitadai-kun and changes the '?' to either 0 or 1.
+
+The logical expression is evaluated in the usual way:
+
+(0 & ?) == 0
+(1 & 0) == 0
+(1 & 1) == 1
+(0 | 0) == 0
+(0 | 1) == 1
+(1 | ?) == 1
+
+What is the minimum amount of money that Jiodai-kun needs to pay in order to determine the evaluation result of the logical expression? Calculate it for both the scenarios to get the result as 0 and as 1.
+
+Input format
+A logical expression in accordance with the above BNF is given in a single line.
+
+Constraints
+The length of the logical expression does not exceed 2 x 10^5.
+
+Output format
+Output the minimum amounts necessary to achieve results of 0 and 1, separated by a space.

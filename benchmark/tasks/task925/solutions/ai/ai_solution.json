@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\nint solve(int n, int* arr) {\n    long long prefix_sum = 0;\n    int operations = 0;\n    int last_sign = 0;\n\n    for (int i = 0; i < n; i++) {\n        prefix_sum += arr[i];\n\n        if (prefix_sum == 0) {\n            arr[i] += (last_sign > 0 ? -1 : 1);\n            prefix_sum += (last_sign > 0 ? -1 : 1);\n            operations++;\n        }\n\n        int curr_sign = (prefix_sum > 0) - (prefix_sum < 0);\n\n        if (i > 0 && curr_sign * last_sign >= 0) {\n            int adjustment = (last_sign > 0 ? -1 : 1);\n            arr[i] += adjustment;\n            prefix_sum += adjustment;\n            operations++;\n            curr_sign = (prefix_sum > 0) - (prefix_sum < 0);\n        }\n\n        last_sign = curr_sign;\n    }\n\n    return operations;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int* arr = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n\n    printf(\"%d\\n\", solve(n, arr));\n\n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:21:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nlong long min_operations(int N, int* a) {\n    long long operations = 0;\n    long long sum = 0;\n    int desired_sign = 0; // 1 for positive, -1 for negative, 0 not set\n\n    for (int i = 0; i < N; ++i) {\n        sum += a[i];\n        if (i == 0) {\n            if (sum == 0) {\n                operations += 1;\n                if (a[i] >= 0) {\n                    sum = -1;\n                    a[i] -= 1;\n                } else {\n                    sum = 1;\n                    a[i] += 1;\n                }\n            }\n            desired_sign = (sum > 0) ? 1 : -1;\n        } else {\n            if ((sum > 0 && desired_sign == 1) || (sum < 0 && desired_sign == -1)) {\n                // Need to change the sum to have opposite sign\n                long long target;\n                if (desired_sign == 1) {\n                    target = -1;\n                } else {\n                    target = 1;\n                }\n                long long diff = abs(sum - target);\n                operations += diff;\n                sum = target;\n                a[i] += (desired_sign == 1) ? -diff : diff;\n            } else if (sum == 0) {\n                operations += 1;\n                if (desired_sign == 1) {\n                    sum = -1;\n                    a[i] -= 1;\n                } else {\n                    sum = 1;\n                    a[i] += 1;\n                }\n            }\n            desired_sign = (sum > 0) ? -1 : 1;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int* a = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &a[i]);\n    }\n    printf(\"%lld\\n\", min_operations(N, a));\n    free(a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:22:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nlong long solve(int N, vector<long long>& a) {\n    long long res1 = 0;\n    long long sum = 0;\n    for (int i = 0; i < N; ++i) {\n        sum += a[i];\n        if (i % 2 == 0) {\n            if (sum <= 0) {\n                res1 += 1 - sum;\n                sum = 1;\n            }\n        } else {\n            if (sum >= 0) {\n                res1 += sum + 1;\n                sum = -1;\n            }\n        }\n    }\n    \n    long long res2 = 0;\n    sum = 0;\n    for (int i = 0; i < N; ++i) {\n        sum += a[i];\n        if (i % 2 == 1) {\n            if (sum <= 0) {\n                res2 += 1 - sum;\n                sum = 1;\n            }\n        } else {\n            if (sum >= 0) {\n                res2 += sum + 1;\n                sum = -1;\n            }\n        }\n    }\n    \n    return min(res1, res2);\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    cout << solve(N, a) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        long[] a = new long[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextLong();\n        }\n\n        long res1 = 0;\n        long sum = 0;\n        // Case 1: start with positive\n        for (int i = 0; i < N; i++) {\n            sum += a[i];\n            if (i % 2 == 0) {\n                if (sum <= 0) {\n                    res1 += 1 - sum;\n                    sum = 1;\n                }\n            } else {\n                if (sum >= 0) {\n                    res1 += sum + 1;\n                    sum = -1;\n                }\n            }\n        }\n\n        long res2 = 0;\n        sum = 0;\n        // Case 2: start with negative\n        for (int i = 0; i < N; i++) {\n            sum += a[i];\n            if (i % 2 == 1) {\n                if (sum <= 0) {\n                    res2 += 1 - sum;\n                    sum = 1;\n                }\n            } else {\n                if (sum >= 0) {\n                    res2 += sum + 1;\n                    sum = -1;\n                }\n            }\n        }\n\n        System.out.println(Math.min(res1, res2));\n    }\n}",
+    "timestamp": "2025-08-05 23:23:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int minimumOperations(int[] arr) {\n        int n = arr.length;\n        int[] prefixSum = new int[n];\n        prefixSum[0] = arr[0];\n        \n        for (int i = 1; i < n; i++) {\n            prefixSum[i] = prefixSum[i-1] + arr[i];\n        }\n        \n        int operations = 0;\n        boolean lastSumPositive = prefixSum[0] > 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (prefixSum[i] == 0) {\n                arr[i] += (lastSumPositive ? -1 : 1);\n                prefixSum[i] += (lastSumPositive ? -1 : 1);\n                operations++;\n            }\n            \n            if (i > 0 && (prefixSum[i] > 0) == lastSumPositive) {\n                int adjustment = (lastSumPositive ? -1 : 1);\n                arr[i] += adjustment;\n                prefixSum[i] += adjustment;\n                operations++;\n            }\n            \n            lastSumPositive = prefixSum[i] > 0;\n        }\n        \n        return operations;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] arr = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            arr[i] = scanner.nextInt();\n        }\n        \n        System.out.println(minimumOperations(arr));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:23:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nint solve(vector<int>& a) {\n    int n = a.size();\n    vector<int> prefixSum(n + 1, 0);\n    int operations = 0;\n\n    for (int i = 1; i <= n; i++) {\n        prefixSum[i] = prefixSum[i-1] + a[i-1];\n    }\n\n    for (int i = 1; i <= n; i++) {\n        if (prefixSum[i] == 0) {\n            prefixSum[i] += (i % 2 == 1) ? 1 : -1;\n            operations++;\n        }\n\n        if (i > 1 && ((prefixSum[i-1] > 0 && prefixSum[i] > 0) || \n                      (prefixSum[i-1] < 0 && prefixSum[i] < 0))) {\n            int adjustment = (prefixSum[i-1] > 0) ? -1 : 1;\n            prefixSum[i] += adjustment;\n            operations++;\n        }\n    }\n\n    return operations;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> a(n);\n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    cout << solve(a) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations_to_balance(sequence):\n    operations = 0\n    current_sum = 0\n\n    for i, value in enumerate(sequence):\n        current_sum += value\n        \n        if current_sum == 0:\n            operations += 1\n            if i % 2 == 0:\n                current_sum = 1\n            else:\n                current_sum = -1\n        elif i > 0 and (current_sum > 0) == (prev_sum > 0):\n            operations += abs(current_sum) + 1\n            current_sum = -prev_sum - (current_sum - prev_sum)\n\n        prev_sum = current_sum\n\n    return operations\n\n# Sample usage\nsequence = [1, -1, 2, -2, 3]\nprint(min_operations_to_balance(sequence))",
+    "timestamp": "2025-08-13 15:02:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SequenceOperations {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] a = new int[n + 1];\n        for (int i = 1; i <= n; i++) {\n            a[i] = sc.nextInt();\n        }\n        \n        int ops = 0;\n        long currentSum = 0;\n        int expectedSign = 1; // Start with positive expectation\n\n        for (int i = 1; i <= n; i++) {\n            currentSum += a[i];\n\n            if (currentSum * expectedSign <= 0) { // Need correction to satisfy both conditions\n                int correction = Math.abs(currentSum) + 1;\n                ops += correction;\n                currentSum += correction * expectedSign;\n            }\n\n            // Alternate expected sign\n            expectedSign *= -1;\n        }\n\n        System.out.println(ops);\n    }\n}",
+    "timestamp": "2025-08-13 15:02:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint sign(int x) {\n    return (x > 0) - (x < 0);\n}\n\nint minOperations(int *a, int n) {\n    int ops = 0, sum = 0;\n    int prevSign = 0;\n\n    for (int i = 0; i < n; ++i) {\n        sum += a[i];\n        if (sum == 0) {\n            sum = (prevSign >= 0) ? 1 : -1;\n            ops++;\n        }\n\n        int currentSign = sign(sum);\n        if (i > 0 && currentSign == prevSign) {\n            sum += (currentSign >= 0) ? -1 : 1;\n            ops++;\n            currentSign = sign(sum);\n        }\n        prevSign = currentSign;\n    }\n\n    return ops;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int a[n];\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &a[i]);\n    }\n    printf(\"%d\\n\", minOperations(a, n));\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:02:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> a[i];\n    }\n\n    long long sum = 0;\n    long long operations = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        sum += a[i];\n        \n        if (i == 0) {\n            if (sum == 0) {\n                operations++;\n                if (a[i] > 0) sum--;\n                else sum++;\n            }\n        } else {\n            if ((sum > 0 && (i % 2 == 0)) || (sum < 0 && (i % 2 == 1))) {\n                continue;\n            }\n            if (sum == 0) {\n                operations++;\n                if (a[i] > 0) sum--;\n                else sum++;\n            } else {\n                long long adjustment = std::abs(sum) + 1;\n                operations += adjustment;\n                if (sum > 0) sum -= adjustment;\n                else sum += adjustment;\n            }\n        }\n    }\n    \n    std::cout << operations << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:02:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(arr):\n    n = len(arr)\n    prefix_sum = [0] * (n + 1)\n    operations = 0\n\n    for i in range(1, n + 1):\n        prefix_sum[i] = prefix_sum[i-1] + arr[i-1]\n\n    for i in range(1, n + 1):\n        if prefix_sum[i] == 0:\n            operations += 1\n            prefix_sum[i] += 1\n\n    for i in range(1, n):\n        if (prefix_sum[i] > 0 and prefix_sum[i+1] > 0) or \\\n           (prefix_sum[i] < 0 and prefix_sum[i+1] < 0):\n            diff = abs(prefix_sum[i+1] - prefix_sum[i])\n            operations += (diff + 1) // 2\n\n    return operations",
+    "timestamp": "2025-08-13 15:02:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\na = list(map(int, input().split()))\nres1 = 0\nres2 = 0\nsum1 = 0\nsum2 = 0\n\nfor i in range(n):\n    sum1 += a[i]\n    sum2 += a[i]\n    if i % 2 == 0:\n        if sum1 >= 0:\n            res1 += sum1 + 1\n            sum1 = -1\n        if sum2 <= 0:\n            res2 += -sum2 + 1\n            sum2 = 1\n    else:\n        if sum1 <= 0:\n            res1 += -sum1 + 1\n            sum1 = 1\n        if sum2 >= 0:\n            res2 += sum2 + 1\n            sum2 = -1\n\nprint(min(res1, res2))",
+    "timestamp": "2025-08-13 15:02:22"
+  }
+]

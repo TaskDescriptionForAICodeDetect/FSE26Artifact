@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "7\nShijo-Kawaramachi\nKarasuma-Imadegawa\nKawaramachi-Imadegawa\nNishioji-Shijo\nKarasuma-Gojo\nTorimaru-Rokujo\nRokujo-Karasuma\n6\nShijo-Karasuma\nImadegawa-Nishioji\nNishioji-Gojo\nShijo-Torimaru\nTorimaru-Gojo\nShijo-Kawabata\n4\n1jo-Midosuji\nMidosuji-2jo\n2jo-Omotesando\nOmotesando-1jo\n4\nMidosuji-1jo\n1jo-Midosuji\nMidosuji-Omotesando\n1jo-1jo\n0",
+      "output": "8\nYES\nNO\nYES\nNO\nYES\nNO\n4\nYES\nYES\nNO\nNO"
+    }
+  ]
+}

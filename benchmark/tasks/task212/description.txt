@@ -1,0 +1,1 @@
+You are given N points in the xy-plane. You have a circle of radius one and move it on the xy-plane to enclose as many of the points as possible. Find how many points can be simultaneously enclosed at the maximum. A point is considered enclosed by a circle when it is inside or on the circle.

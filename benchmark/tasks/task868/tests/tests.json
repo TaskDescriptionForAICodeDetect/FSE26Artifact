@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "12 2\nrb",
+      "output": "19"
+    },
+    {
+      "input": "25 2\nbr",
+      "output": "216"
+    },
+    {
+      "input": "37 4\nrbrb",
+      "output": "31569"
+    },
+    {
+      "input": "470 70\nbbrbrrbbrrbbbbrbbrbrrbbrrbbrbrrbrbrbbbbrbbrbrrbbrrbbbbrbbrbrrbbrrbbbbr",
+      "output": "4841634130"
+    }
+  ]
+}

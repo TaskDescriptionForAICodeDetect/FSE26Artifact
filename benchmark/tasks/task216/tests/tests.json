@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "6 6\n4 4 X X T T\n4 7 8 2 X 7\n3 X X X 1 8\n1 2 X X X 6\n1 1 2 4 4 7\nS S 2 3 X X\n0 0\n",
+      "output": "12"
+    },
+    {
+      "input": "2 10\nT 1\n1 X\n1 X\n1 X\n1 1\n1 X\n1 X\n1 1\n1 X\nS S\n0 0\n",
+      "output": "5"
+    },
+    {
+      "input": "10 10\nT T T T T T T T T T\nX 2 X X X X X 3 4 X\n9 8 9 X X X 2 9 X 9\n7 7 X 7 3 X X 8 9 X\n8 9 9 9 6 3 X 5 X 5\n8 9 9 9 6 X X 5 X 5\n8 6 5 4 6 8 X 5 X 5\n8 9 3 9 6 8 X 5 X 5\n8 3 9 9 6 X X X 5 X\nS S S S S S S S S S\n0 0\n",
+      "output": "12"
+    }
+  ]
+}

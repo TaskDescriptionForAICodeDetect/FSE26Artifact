@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_LEN 100\n\nvoid solve(char* S) {\n    int n = strlen(S);\n    int positions[MAX_LEN] = {0};\n    \n    // Initial count of children on each square\n    for (int i = 0; i < n; i++) {\n        positions[i] = 1;\n    }\n    \n    // Simple simulation to determine final positions\n    int changed;\n    do {\n        changed = 0;\n        int temp[MAX_LEN] = {0};\n        \n        for (int i = 0; i < n; i++) {\n            if (positions[i] > 0) {\n                if (S[i] == 'L' && i > 0) {\n                    temp[i-1] += positions[i];\n                    changed = 1;\n                }\n                else if (S[i] == 'R' && i < n-1) {\n                    temp[i+1] += positions[i];\n                    changed = 1;\n                }\n                else {\n                    temp[i] += positions[i];\n                }\n            }\n        }\n        \n        memcpy(positions, temp, sizeof(positions));\n    } while (changed);\n    \n    // Print result\n    for (int i = 0; i < n; i++) {\n        if (positions[i] > 0) {\n            printf(\"%d \", positions[i]);\n        }\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    char S[MAX_LEN];\n    scanf(\"%s\", S);\n    solve(S);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 100000\n\nint main() {\n    char S[MAX_N + 1];\n    scanf(\"%s\", S);\n    int n = strlen(S);\n    int res[MAX_N] = {0};\n\n    for (int i = 0; i < n; ) {\n        if (S[i] == 'R') {\n            int cnt = 0;\n            while (i < n && S[i] == 'R') {\n                cnt++;\n                i++;\n            }\n            int R_pos = i - 1;\n            int L_pos = i;\n            res[R_pos] += (cnt + 1) / 2;\n            res[L_pos] += cnt / 2;\n        } else {\n            int cnt = 0;\n            while (i < n && S[i] == 'L') {\n                cnt++;\n                i++;\n            }\n            int L_pos = i - cnt;\n            int R_pos = L_pos - 1;\n            res[L_pos] += (cnt + 1) / 2;\n            res[R_pos] += cnt / 2;\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        printf(\"%d \", res[i]);\n    }\n    printf(\"\\n\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <string>\nusing namespace std;\n\nvector<int> solve(string S) {\n    int n = S.size();\n    vector<int> res(n, 0);\n    \n    for (int i = 0; i < n; ) {\n        if (S[i] == 'R') {\n            int j = i;\n            while (j < n && S[j] == 'R') j++;\n            int R_len = j - i;\n            if (j == n) {\n                for (int k = i; k < j; k++) res[k]++;\n            } else {\n                int half = R_len / 2;\n                res[i + half] += (R_len % 2 == 1) ? 1 : 0;\n                res[i + half] += R_len - half;\n                res[j] += half;\n            }\n            i = j;\n        } else {\n            int j = i;\n            while (j < n && S[j] == 'L') j++;\n            int L_len = j - i;\n            if (i == 0) {\n                for (int k = i; k < j; k++) res[k]++;\n            } else {\n                int half = L_len / 2;\n                res[i - 1] += half;\n                res[i - 1 + (L_len % 2)] += 1;\n                res[i - 1 + (L_len % 2)] += L_len - half - 1;\n            }\n            i = j;\n        }\n    }\n    \n    return res;\n}",
+    "timestamp": "2025-08-05 22:45:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class Solution {\n    public int[] solution(String S) {\n        int n = S.length();\n        int[] res = new int[n];\n        Arrays.fill(res, 1);\n        \n        for (int iter = 0; iter < 100; iter++) {\n            int[] next = new int[n];\n            for (int i = 0; i < n; i++) {\n                if (S.charAt(i) == 'R') {\n                    if (i + 1 < n) {\n                        next[i + 1] += res[i];\n                    } else {\n                        next[i] += res[i];\n                    }\n                } else {\n                    if (i - 1 >= 0) {\n                        next[i - 1] += res[i];\n                    } else {\n                        next[i] += res[i];\n                    }\n                }\n            }\n            boolean changed = false;\n            for (int i = 0; i < n; i++) {\n                if (res[i] != next[i]) {\n                    changed = true;\n                    break;\n                }\n            }\n            if (!changed) {\n                break;\n            }\n            res = next;\n        }\n        \n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 22:45:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int[] numberOfChildren(String S) {\n        int n = S.length();\n        int[] result = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            int position = i;\n            \n            for (int move = 0; move < n - 1; move++) {\n                if (S.charAt(position) == 'R' && position < n - 1) {\n                    position++;\n                } else if (S.charAt(position) == 'L' && position > 0) {\n                    position--;\n                }\n            }\n            \n            result[position]++;\n        }\n        \n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 22:45:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nvector<int> finalPositions(string S) {\n    int n = S.length();\n    vector<int> position(n, 0);\n    vector<bool> occupied(n, false);\n    \n    for (int i = 0; i < n; i++) {\n        if (S[i] == 'R') {\n            int current = i;\n            while (true) {\n                if (S[current] == 'R') {\n                    if (current + 1 < n && !occupied[current + 1]) {\n                        current++;\n                    } else {\n                        position[current]++;\n                        occupied[current] = true;\n                        break;\n                    }\n                } else {\n                    if (current - 1 >= 0 && !occupied[current - 1]) {\n                        current--;\n                    } else {\n                        position[current]++;\n                        occupied[current] = true;\n                        break;\n                    }\n                }\n            }\n        }\n    }\n    \n    for (int i = n - 1; i >= 0; i--) {\n        if (S[i] == 'L') {\n            int current = i;\n            while (true) {\n                if (S[current] == 'L') {\n                    if (current - 1 >= 0 && !occupied[current - 1]) {\n                        current--;\n                    } else {\n                        position[current]++;\n                        occupied[current] = true;\n                        break;\n                    }\n                } else {\n                    if (current + 1 < n && !occupied[current + 1]) {\n                        current++;\n                    } else {\n                        position[current]++;\n                        occupied[current] = true;\n                        break;\n                    }\n                }\n            }\n        }\n    }\n    \n    return position;\n}\n\nint main() {\n    string S;\n    cin >> S;\n    \n    vector<int> result = finalPositions(S);\n    \n    for (int count : result) {\n        cout << count << \" \";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_children_after_moves(S):\n    n = len(S)\n    children = [0] * n\n    counts = [0] * n\n\n    # Initial positions\n    for i, s in enumerate(S):\n        counts[i] += 1\n\n    # Simulate moves until the positions stabilize\n    while True:\n        moved = False\n        new_counts = [0] * n\n        for i, direction in enumerate(S):\n            if direction == 'R' and i < n - 1:\n                new_counts[i + 1] += counts[i]\n                moved = True\n            elif direction == 'L' and i > 0:\n                new_counts[i - 1] += counts[i]\n                moved = True\n        if not moved:\n            break\n        counts = new_counts\n\n    return counts\n\n# Example usage\nS = \"RRLLRLLRRL\"\nresult = count_children_after_moves(S)\nprint(result)",
+    "timestamp": "2025-08-13 12:25:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.math.BigInteger;\n\npublic class ChildrenMovement {\n    public static BigInteger[] countChildrenOnSquares(String S, BigInteger N) {\n        int length = S.length();\n        BigInteger[] squares = new BigInteger[length];\n        \n        for (int i = 0; i < length; i++) {\n            squares[i] = BigInteger.ZERO;\n        }\n        \n        BigInteger remainingChildren = N;\n        for (int i = 0; i < length; i++) {\n            if (i % 2 == 0) {  // 'R'\n                BigInteger moveCount = remainingChildren.divide(BigInteger.valueOf(2));\n                squares[i] = squares[i].add(moveCount);\n                remainingChildren = remainingChildren.subtract(moveCount);\n            } else {  // 'L'\n                BigInteger moveCount = remainingChildren.subtract(remainingChildren.divide(BigInteger.valueOf(2)));\n                squares[i] = squares[i].add(moveCount);\n                remainingChildren = remainingChildren.subtract(moveCount);\n            }\n        }\n        \n        return squares;\n    }\n\n    public static void main(String[] args) {\n        String S = \"RRLLR\";\n        BigInteger N = new BigInteger(\"10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\");\n        BigInteger[] result = countChildrenOnSquares(S, N);\n        \n        for (BigInteger count : result) {\n            System.out.println(count.toString());\n        }\n    }\n}",
+    "timestamp": "2025-08-13 12:25:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_LENGTH 100\n\nvoid countChildren(char* S) {\n    int length = strlen(S);\n    int count[MAX_LENGTH] = {0};\n    long long moves[MAX_LENGTH] = {0};\n\n    // Count R's\n    long long R_count = 0;\n    for (int i = 0; i < length; ++i) {\n        if (S[i] == 'R') {\n            R_count++;\n        } else {  // encountered 'L'\n            moves[i] += R_count / 2;\n            moves[i - 1] += (R_count + 1) / 2;\n            R_count = 0;\n        }\n    }\n\n    // Count L's\n    long long L_count = 0;\n    for (int i = length - 1; i >= 0; --i) {\n        if (S[i] == 'L') {\n            L_count++;\n        } else { // encountered 'R'\n            moves[i] += L_count / 2;\n            moves[i + 1] += (L_count + 1) / 2;\n            L_count = 0;\n        }\n    }\n\n    // Output result\n    for (int i = 0; i < length; ++i) {\n        printf(\"%lld \", moves[i]);\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    char S[MAX_LENGTH + 1];\n    scanf(\"%s\", S);\n    countChildren(S);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:25:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nstd::vector<int> calculateChildrenAfterMoves(const std::string &S) {\n    int n = S.size();\n    std::vector<int> children(n, 0);\n    std::vector<int> finalChildrenCount(n, 0);\n\n    for (int i = 0; i < n; ++i) {\n        ++children[i];\n    }\n    \n    for (int i = 0; i < n; ++i) {\n        if (S[i] == 'R') {\n            int pos = i;\n            while (pos < n && S[pos] == 'R') {\n                pos++;\n            }\n            if (pos < n) {\n                finalChildrenCount[pos]++;\n            }\n        } else if (S[i] == 'L') {\n            int pos = i;\n            while (pos >= 0 && S[pos] == 'L') {\n                pos--;\n            }\n            if (pos >= 0) {\n                finalChildrenCount[pos]++;\n            }\n        }\n    }\n\n    return finalChildrenCount;\n}\n\nint main() {\n    std::string S;\n    std::cin >> S;\n    std::vector<int> result = calculateChildrenAfterMoves(S);\n\n    for (const auto &count : result) {\n        std::cout << count << \" \";\n    }\n    std::cout << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:25:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_children(S):\n    n = len(S)\n    children = [1] * n\n    moved = [False] * n\n\n    while True:\n        new_children = [0] * n\n        new_moved = [False] * n\n\n        for i in range(n):\n            if children[i] == 0:\n                continue\n\n            if S[i] == 'R' and i < n - 1:\n                new_children[i + 1] += children[i]\n                new_moved[i + 1] = True\n            elif S[i] == 'L' and i > 0:\n                new_children[i - 1] += children[i]\n                new_moved[i - 1] = True\n            else:\n                new_children[i] += children[i]\n\n        if all(not moved for moved in new_moved):\n            break\n\n        children = new_children\n        moved = new_moved\n\n    return children",
+    "timestamp": "2025-08-13 12:25:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "S = input().strip()\nn = len(S)\nres = [0] * n\n\n# Process 'R' movements\ncurrent = 0\nwhile current < n:\n    r_count = 0\n    while current < n and S[current] == 'R':\n        r_count += 1\n        current += 1\n    if current >= n:\n        break\n    # The R group ends at current-1, the L starts at current\n    pairs = r_count // 2\n    res[current - 1] += (r_count + 1) // 2\n    res[current] += pairs\n    current += 1\n\n# Process 'L' movements\ncurrent = n - 1\nwhile current >= 0:\n    l_count = 0\n    while current >= 0 and S[current] == 'L':\n        l_count += 1\n        current -= 1\n    if current < 0:\n        break\n    # The L group starts at current+1, the R ends at current\n    pairs = l_count // 2\n    res[current + 1] += (l_count + 1) // 2\n    res[current] += pairs\n    current -= 1\n\nprint(' '.join(map(str, res)))",
+    "timestamp": "2025-08-13 12:26:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countChildren(S) {\n    let n = S.length;\n    let result = Array(n).fill(0);\n\n    let countR = 0;\n    let countL = 0;\n    \n    // Calculate the cumulative 'R' movements from left to right\n    for (let i = 0; i < n; i++) {\n        if (S[i] === 'R') {\n            countR++;\n        } else if (countR > 0) {\n            result[i] += Math.floor(countR / 2);\n            result[i - 1] += (countR + 1) / 2;\n            countR = 0;\n        }\n    }\n    \n    // Calculate the cumulative 'L' movements from right to left\n    for (let i = n - 1; i >= 0; i--) {\n        if (S[i] === 'L') {\n            countL++;\n        } else if (countL > 0) {\n            result[i] += Math.floor(countL / 2);\n            result[i + 1] += (countL + 1) / 2;\n            countL = 0;\n        }\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 12:26:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countRemainingChildren(S) {\n    const n = S.length;\n    const count = new Array(n).fill(1);\n    \n    let changed = true;\n    while (changed) {\n        changed = false;\n        const newCount = new Array(n).fill(0);\n        \n        for (let i = 0; i < n; i++) {\n            if (count[i] === 0) continue;\n            \n            if (S[i] === 'L' && i > 0) {\n                newCount[i-1] += count[i];\n                changed = true;\n            } else if (S[i] === 'R' && i < n-1) {\n                newCount[i+1] += count[i];\n                changed = true;\n            } else {\n                newCount[i] += count[i];\n            }\n        }\n        \n        count.splice(0, n, ...newCount);\n    }\n    \n    return count;\n}",
+    "timestamp": "2025-08-13 12:26:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(S) {\n    const n = S.length;\n    const res = new Array(n).fill(0);\n    \n    for (let i = 0; i < n; i++) {\n        if (S[i] === 'R') {\n            let j = i;\n            while (j < n && S[j] === 'R') {\n                j++;\n            }\n            const dist = j - i;\n            if (dist % 2 === 0) {\n                res[j] += 1;\n            } else {\n                res[j - 1] += 1;\n            }\n            i = j - 1;\n        }\n    }\n    \n    for (let i = n - 1; i >= 0; i--) {\n        if (S[i] === 'L') {\n            let j = i;\n            while (j >= 0 && S[j] === 'L') {\n                j--;\n            }\n            const dist = i - j;\n            if (dist % 2 === 0) {\n                res[j] += 1;\n            } else {\n                res[j + 1] += 1;\n            }\n            i = j + 1;\n        }\n    }\n    \n    return res;\n}",
+    "timestamp": "2025-08-13 12:26:47"
+  }
+]

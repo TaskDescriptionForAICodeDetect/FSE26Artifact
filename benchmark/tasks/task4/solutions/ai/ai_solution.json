@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, a):\n    min_pos = a.index(1)\n    max_pos = a.index(n)\n    max_dist = abs(min_pos - max_pos)\n\n    for i in range(n):\n        for j in range(i+1, n):\n            a[i], a[j] = a[j], a[i]\n            curr_min_pos = a.index(1)\n            curr_max_pos = a.index(n)\n            max_dist = max(max_dist, abs(curr_min_pos - curr_max_pos))\n            a[i], a[j] = a[j], a[i]\n\n    return max_dist\n\ndef main():\n    n = int(input())\n    a = list(map(int, input().split()))\n    print(solve(n, a))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:31:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\na = list(map(int, input().split()))\nmin_val = 1\nmax_val = n\nmin_pos = a.index(min_val)\nmax_pos = a.index(max_val)\n\n# The possible candidates are swapping min to first or last, or max to first or last\ncandidates = [\n    abs(0 - max_pos),\n    abs(n-1 - max_pos),\n    abs(0 - min_pos),\n    abs(n-1 - min_pos)\n]\nmax_distance = max(candidates)\nprint(max_distance)",
+    "timestamp": "2025-08-05 17:31:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_distance(n, a):\n    min_pos = a.index(1)\n    max_pos = a.index(n)\n    return max(abs(max_pos - 0), abs(max_pos - (n-1)), abs(min_pos - 0), abs(min_pos - (n-1)))\n\nn = int(input())\na = list(map(int, input().split()))\nprint(max_distance(n, a))",
+    "timestamp": "2025-08-12 21:40:08"
+  }
+]

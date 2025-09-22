@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    int *a = (int *)malloc(m * sizeof(int));\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int *count = (int *)calloc(n + 1, sizeof(int));\n    for (int i = 0; i < m; i++) {\n        count[a[i]]++;\n    }\n    \n    int min = count[1];\n    for (int i = 2; i <= n; i++) {\n        if (count[i] < min) {\n            min = count[i];\n        }\n    }\n    \n    printf(\"%d\\n\", min);\n    free(a);\n    free(count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Cutting {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter out = new PrintWriter(System.out);\n        \n        int n = Integer.parseInt(br.readLine());\n        int[] lengths = new int[n];\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < n; i++) {\n            lengths[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        Arrays.sort(lengths);\n        int cuts = 0;\n        int currentLength = lengths[0];\n        \n        for (int i = 1; i < n; i++) {\n            if (lengths[i] > currentLength) {\n                cuts++;\n                currentLength = lengths[i];\n            }\n        }\n        \n        out.println(cuts);\n        out.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:50:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    sort(A.begin(), A.end());\n    long long sum = 0;\n    for (int i = 0; i < N - K; ++i) {\n        sum += A[i];\n    }\n    cout << sum << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:51:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    int *a = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int max_sum = 0;\n    for (int i = 0; i <= n - k; i++) {\n        int current_sum = 0;\n        for (int j = i; j < i + k; j++) {\n            current_sum += a[j];\n        }\n        if (current_sum > max_sum) {\n            max_sum = current_sum;\n        }\n    }\n    \n    printf(\"%d\\n\", max_sum);\n    \n    free(a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:51:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    vector<int> sticks(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> sticks[i];\n    }\n    \n    sort(sticks.begin(), sticks.end());\n    \n    int left = 1, right = sticks.back();\n    int maxLen = 0;\n    \n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        long long pieces = 0;\n        \n        for (int stick : sticks) {\n            pieces += stick / mid;\n        }\n        \n        if (pieces >= k) {\n            maxLen = mid;\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    cout << maxLen << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:51:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Cutting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = scanner.nextInt();\n        }\n        int max = 0;\n        for (int i = 0; i < n; i++) {\n            if (a[i] > max) {\n                max = a[i];\n            }\n        }\n        System.out.println(max);\n    }\n}",
+    "timestamp": "2025-08-05 18:51:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def cutting(n, p):\n    pieces = [0] * (n + 1)\n    pieces[0] = 1\n    \n    for i in range(1, n + 1):\n        pieces[i] = pieces[i - 1] * p\n        \n    return pieces[n]\n\n# Example usage\nn = 3\np = 2\nprint(cutting(n, p))",
+    "timestamp": "2025-08-13 01:14:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Cutting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int numberOfPieces = scanner.nextInt();\n        int[] pieceLengths = new int[numberOfPieces];\n        \n        for (int i = 0; i < numberOfPieces; i++) {\n            pieceLengths[i] = scanner.nextInt();\n        }\n        \n        int result = cutPieces(pieceLengths);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n    \n    private static int cutPieces(int[] pieceLengths) {\n        int totalCuts = 0;\n        \n        for (int length : pieceLengths) {\n            if (length > 1) {\n                totalCuts += (length - 1);\n            }\n        }\n        \n        return totalCuts;\n    }\n}",
+    "timestamp": "2025-08-13 01:14:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n\n    if (n == 0 || m == 0) {\n        printf(\"0\\n\");\n    } else {\n        printf(\"%d\\n\", n * m - 1);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:14:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(a, b, k):\n    def count_cuts(x):\n        cuts = 0\n        current = a\n        while current > 0:\n            cuts += current // x\n            current %= x\n        return cuts >= k\n\n    left, right = 1, a\n    while left <= right:\n        mid = (left + right) // 2\n        if count_cuts(mid):\n            right = mid - 1\n        else:\n            left = mid + 1\n    \n    return left\n\nn, k = map(int, input().split())\nprint(solve(n, n, k))",
+    "timestamp": "2025-08-13 01:14:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\nk = int(input())\n\nif k >= n:\n    print(0)\nelse:\n    print(n - k)",
+    "timestamp": "2025-08-13 01:14:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint minCost(std::vector<int>& cuts, int n) {\n    cuts.push_back(0);\n    cuts.push_back(n);\n    std::sort(cuts.begin(), cuts.end());\n    \n    int m = cuts.size();\n    std::vector<std::vector<int>> dp(m, std::vector<int>(m, 0));\n    \n    for (int length = 2; length < m; ++length) {\n        for (int i = 0; i < m - length; ++i) {\n            int j = i + length;\n            dp[i][j] = INT_MAX;\n            for (int k = i + 1; k < j; ++k) {\n                dp[i][j] = std::min(dp[i][j], dp[i][k] + dp[k][j] + cuts[j] - cuts[i]);\n            }\n        }\n    }\n    return dp[0][m - 1];\n}\n\nint main() {\n    int n = 7;\n    std::vector<int> cuts = {1, 3, 4, 5};\n    std::cout << minCost(cuts, n) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:59:01"
+  }
+]

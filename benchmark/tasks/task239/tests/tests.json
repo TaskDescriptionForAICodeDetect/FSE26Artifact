@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "a+b+c\na- (b-c)+2\n.",
+      "output": "yes\nno\n."
+    },
+    {
+      "input": "4ab\n(a - b) (0-b+a) - 1a ^ 2 - b ^ 2\n2 b 2 a\n.",
+      "output": "no\nyes\n."
+    },
+    {
+      "input": "108 a\n2 2 3 3 3 a\n4 a^1 27\n.",
+      "output": "yes\nyes\n."
+    }
+  ]
+}

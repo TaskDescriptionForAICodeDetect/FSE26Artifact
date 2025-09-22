@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int a[N], b[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    for (int j = 0; j < N; j++) {\n        scanf(\"%d\", &b[j]);\n    }\n    \n    int xor_result = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            xor_result ^= (a[i] + b[j]);\n        }\n    }\n    \n    printf(\"%d\\n\", xor_result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N], b[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &b[i]);\n    }\n    int result = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            result ^= (a[i] + b[j]);\n        }\n    }\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N), b(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> b[i];\n    }\n    \n    int result = 0;\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            result ^= (a[i] + b[j]);\n        }\n    }\n    \n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        int[] b = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n        \n        int result = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                result ^= (a[i] + b[j]);\n            }\n        }\n        \n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 23:08:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        int[] b = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n        \n        int result = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                result ^= a[i] + b[j];\n            }\n        }\n        \n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:08:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N), b(N);\n    \n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n    }\n    \n    for (int i = 0; i < N; i++) {\n        cin >> b[i];\n    }\n    \n    int result = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            result ^= (a[i] + b[j]);\n        }\n    }\n    \n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def xor_of_sums(a, b):\n    result = 0\n    for ai in a:\n        for bj in b:\n            result ^= ai + bj\n    return result\n\n# Example usage:\na = [1, 2, 3]\nb = [4, 5, 6]\nprint(xor_of_sums(a, b))  # Output for example list",
+    "timestamp": "2025-08-13 13:48:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class XORComputation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        int[] b = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n\n        int xorResult = 0;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                xorResult ^= (a[i] + b[j]);\n            }\n        }\n\n        System.out.println(xorResult);\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 13:48:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int a[N];\n    int b[N];\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &b[i]);\n    }\n    \n    int result = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            result ^= (a[i] + b[j]);\n        }\n    }\n    \n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:48:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    int N;\n    std::cin >> N;\n    \n    std::vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> a[i];\n    }\n    \n    std::vector<int> b(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> b[i];\n    }\n    \n    int result = 0;\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            result ^= (a[i] + b[j]);\n        }\n    }\n    \n    std::cout << result << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:48:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(a, b):\n    N = len(a)\n    result = 0\n    for i in range(N):\n        for j in range(N):\n            result ^= a[i] + b[j]\n    return result",
+    "timestamp": "2025-08-13 13:48:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\na = list(map(int, input().split()))\nb = list(map(int, input().split()))\n\nxor_result = 0\nfor ai in a:\n    for bj in b:\n        xor_result ^= (ai + bj)\n\nprint(xor_result)",
+    "timestamp": "2025-08-13 13:48:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function computeXOR(N, a, b) {\n    let result = 0;\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < N; j++) {\n            result ^= (a[i] + b[j]);\n        }\n    }\n    return result;\n}\n\n// Example usage:\nconst N = 3;\nconst a = [1, 2, 3];\nconst b = [4, 5, 6];\nconsole.log(computeXOR(N, a, b));  // Output will be the XOR of all a[i] + b[j] pairs.",
+    "timestamp": "2025-08-13 13:48:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(a, b) {\n    const N = a.length;\n    let result = 0;\n    \n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < N; j++) {\n            result ^= a[i] + b[j];\n        }\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 13:48:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function computeXOR(N, a, b) {\n    let xorSum = 0;\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < N; j++) {\n            xorSum ^= (a[i] + b[j]);\n        }\n    }\n    return xorSum;\n}",
+    "timestamp": "2025-08-13 13:48:42"
+  }
+]

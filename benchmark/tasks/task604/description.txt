@@ -1,0 +1,1 @@
+Given a matrix (H x W) which contains only 1s and 0s, find the area of the largest rectangle that only contains 0s.

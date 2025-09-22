@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_N 1000\n\nint lotuses[MAX_N];\nint dp[MAX_N][MAX_N];\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint solve(int n) {\n    memset(dp, 0, sizeof(dp));\n\n    for (int i = 0; i < n; i++) {\n        dp[i][i] = lotuses[i];\n    }\n\n    for (int len = 2; len <= n; len++) {\n        for (int i = 0; i < n - len + 1; i++) {\n            int j = i + len - 1;\n            dp[i][j] = max(lotuses[i] - dp[i+1][j], lotuses[j] - dp[i][j-1]);\n        }\n    }\n\n    return dp[0][n-1];\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &lotuses[i]);\n    }\n\n    printf(\"%d\\n\", solve(n));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint maxScore(int* s, int N) {\n    if (N == 0) return 0;\n    \n    int max_score = INT_MIN;\n    \n    for (int A = 1; A < N; ++A) {\n        for (int B = 1; B < N; ++B) {\n            int current_score = 0;\n            int x = 0;\n            int visited[N];\n            for (int i = 0; i < N; ++i) visited[i] = 0;\n            \n            while (1) {\n                if (x < 0 || x >= N) break;\n                if (visited[x]) break;\n                visited[x] = 1;\n                current_score += s[x];\n                \n                int next1 = x + A;\n                int next2 = x - B;\n                \n                if (next1 >= N || next2 < 0) {\n                    if (next1 < N && next1 >= 0 && !visited[next1]) {\n                        x = next1;\n                    } else if (next2 >= 0 && next2 < N && !visited[next2]) {\n                        x = next2;\n                    } else {\n                        break;\n                    }\n                } else {\n                    if (!visited[next1] && !visited[next2]) {\n                        if (s[next1] >= s[next2]) {\n                            x = next1;\n                        } else {\n                            x = next2;\n                        }\n                    } else if (!visited[next1]) {\n                        x = next1;\n                    } else if (!visited[next2]) {\n                        x = next2;\n                    } else {\n                        break;\n                    }\n                }\n            }\n            \n            if (current_score > max_score) {\n                max_score = current_score;\n            }\n        }\n    }\n    \n    return max_score;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int* s = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &s[i]);\n    }\n    printf(\"%d\\n\", maxScore(s, N));\n    free(s);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> s(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> s[i];\n    }\n\n    unordered_map<int, int> pos_to_value;\n    for (int i = 0; i < N; ++i) {\n        pos_to_value[i] = s[i];\n    }\n\n    int max_score = 0;\n\n    for (int A = 1; A < N; ++A) {\n        for (int B = 1; B < N; ++B) {\n            int current_pos = 0;\n            int score = s[0];\n            unordered_map<int, bool> visited;\n            visited[0] = true;\n\n            while (true) {\n                int next_pos_forward = current_pos + A;\n                int next_pos_backward = current_pos - B;\n\n                bool moved = false;\n\n                if (next_pos_forward < N && !visited[next_pos_forward]) {\n                    current_pos = next_pos_forward;\n                    score += pos_to_value[current_pos];\n                    visited[current_pos] = true;\n                    moved = true;\n                } else if (next_pos_backward >= 0 && !visited[next_pos_backward]) {\n                    current_pos = next_pos_backward;\n                    score += pos_to_value[current_pos];\n                    visited[current_pos] = true;\n                    moved = true;\n                }\n\n                if (!moved) break;\n            }\n\n            max_score = max(max_score, score);\n        }\n    }\n\n    cout << max_score << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LotusPond {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] s = new int[N];\n        for (int i = 0; i < N; i++) {\n            s[i] = scanner.nextInt();\n        }\n        \n        int maxScore = Integer.MIN_VALUE;\n        \n        for (int A = 1; A < N; A++) {\n            for (int B = 1; B < N; B++) {\n                int currentScore = 0;\n                boolean[] visited = new boolean[N];\n                int x = 0;\n                while (true) {\n                    if (visited[x]) {\n                        break;\n                    }\n                    visited[x] = true;\n                    currentScore += s[x];\n                    \n                    int next1 = x + A;\n                    int next2 = x - B;\n                    \n                    boolean canMove = false;\n                    \n                    if (next1 < N) {\n                        canMove = true;\n                        x = next1;\n                    } else if (next2 >= 0) {\n                        canMove = true;\n                        x = next2;\n                    }\n                    \n                    if (!canMove) {\n                        break;\n                    }\n                }\n                if (currentScore > maxScore) {\n                    maxScore = currentScore;\n                }\n            }\n        }\n        \n        System.out.println(maxScore);\n    }\n}",
+    "timestamp": "2025-08-05 22:51:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LotusGame {\n    public static int maxScore(int[] lotuses) {\n        int n = lotuses.length;\n        int[][] dp = new int[n][n];\n        \n        for (int len = 1; len <= n; len++) {\n            for (int start = 0; start + len <= n; start++) {\n                int end = start + len - 1;\n                \n                if (len == 1) {\n                    dp[start][end] = lotuses[start];\n                } else {\n                    int moveA = start + 1 < n ? dp[start + 1][end] + lotuses[start] : 0;\n                    int moveB = end - 1 >= 0 ? dp[start][end - 1] + lotuses[end] : 0;\n                    dp[start][end] = Math.max(moveA, moveB);\n                }\n            }\n        }\n        \n        return dp[0][n - 1];\n    }\n    \n    public static void main(String[] args) {\n        int[] lotuses = {1, 3, 2, 4, 5};\n        System.out.println(maxScore(lotuses));\n    }\n}",
+    "timestamp": "2025-08-05 22:51:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <unordered_set>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxScore(vector<int>& lotuses) {\n        int N = lotuses.size();\n        unordered_set<int> lotusCords;\n        for (int i = 0; i < N; i++) {\n            lotusCords.insert(i);\n        }\n\n        vector<vector<int>> dp(N + 1, vector<int>(N + 1, INT_MIN));\n        dp[0][0] = 0;\n\n        for (int a = 1; a <= N; a++) {\n            for (int b = 1; b <= N; b++) {\n                for (int x = 0; x < N; x++) {\n                    int scoreA = x + a < N && lotusCords.count(x + a) ? lotuses[x + a] : 0;\n                    int scoreB = x - b >= 0 && lotusCords.count(x - b) ? lotuses[x - b] : 0;\n\n                    if (dp[a - 1][b] != INT_MIN) \n                        dp[a][b] = max(dp[a][b], dp[a - 1][b] + scoreA);\n                    \n                    if (dp[a][b - 1] != INT_MIN)\n                        dp[a][b] = max(dp[a][b], dp[a][b - 1] + scoreB);\n                }\n            }\n        }\n\n        int maxScore = INT_MIN;\n        for (int a = 1; a <= N; a++) {\n            for (int b = 1; b <= N; b++) {\n                maxScore = max(maxScore, dp[a][b]);\n            }\n        }\n\n        return maxScore;\n    }\n};",
+    "timestamp": "2025-08-05 22:51:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximize_score(N, lotus_values):\n    from collections import defaultdict, deque\n    \n    def bfs(lotus_values):\n        max_score = 0\n        direction = [1, -1]  # forward (1: x + A), backward (-1: x - B)\n        queue = deque([(0, 0, 0)])  # (current coordinate, current score, steps taken)\n        visited = defaultdict(lambda: float('-inf'))  # visited[i] stores the max score achieved at coordinate i\n        visited[0] = 0\n\n        while queue:\n            current, score, steps = queue.popleft()\n            for dir in direction:\n                for dist in range(1, N):  # Try all possible A or B\n                    next_position = current + dir * dist\n                    if next_position < 0 or next_position >= N:\n                        continue\n                    new_score = score + lotus_values[next_position]\n                    if new_score > visited[next_position]:\n                        visited[next_position] = new_score\n                        queue.append((next_position, new_score, steps + 1))\n                        max_score = max(max_score, new_score)\n                    \n        return max_score\n    \n    return bfs(lotus_values)\n\n# Example usage\nN = 5\nlotus_values = [5, -3, 4, 2, -1]\nprint(maximize_score(N, lotus_values))  # Calculate the maximum score",
+    "timestamp": "2025-08-13 12:44:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LotusGame {\n    private static Map<String, Integer> memo = new HashMap<>();\n\n    public static int maxScore(int[] lotuses) {\n        return dfs(lotuses, 0, new boolean[lotuses.length], 0);\n    }\n\n    private static int dfs(int[] lotuses, int position, boolean[] visited, int score) {\n        String key = position + \",\" + Arrays.hashCode(visited);\n        if (memo.containsKey(key)) {\n            return memo.get(key);\n        }\n\n        int maxScore = score;\n        visited[position] = true;\n\n        // Try moving to all possible positions\n        for (int A = 1; position + A < lotuses.length; A++) {\n            int newPosition = position + A;\n            if (!visited[newPosition]) {\n                maxScore = Math.max(maxScore, dfs(lotuses, newPosition, visited.clone(), score + lotuses[newPosition]));\n            }\n        }\n\n        for (int B = 1; position - B >= 0; B++) {\n            int newPosition = position - B;\n            if (!visited[newPosition]) {\n                maxScore = Math.max(maxScore, dfs(lotuses, newPosition, visited.clone(), score + lotuses[newPosition]));\n            }\n        }\n\n        memo.put(key, maxScore);\n        return maxScore;\n    }\n\n    public static void main(String[] args) {\n        int[] lotuses = {1, 2, 3, 4, 5};\n        System.out.println(\"Max Score: \" + maxScore(lotuses));\n    }\n}",
+    "timestamp": "2025-08-13 12:44:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint maxScore(int lotuses[], int N) {\n    int max_score = INT_MIN;\n\n    for (int A = 1; A < N; ++A) {\n        for (int B = 1; B < N; ++B) {\n            int score = 0;\n            int current = 0;\n\n            while (current >= 0 && current < N) {\n                score += lotuses[current];\n                int nextA = current + A;\n                int nextB = current - B;\n                \n                if (nextA < N && nextB >= 0) {\n                    if (lotuses[nextA] >= lotuses[nextB]) {\n                        current = nextA;\n                    } else {\n                        current = nextB;\n                    }\n                } else if (nextA < N) {\n                    current = nextA;\n                } else if (nextB >= 0) {\n                    current = nextB;\n                } else {\n                    break;\n                }\n            }\n            \n            if (score > max_score) {\n                max_score = score;\n            }\n        }\n    }\n    \n    return max_score;\n}\n\nint main() {\n    int lotuses[] = {10, 5, 20, 25, 15, 30};\n    int N = sizeof(lotuses) / sizeof(lotuses[0]);\n    printf(\"Highest Score: %d\\n\", maxScore(lotuses, N));\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:44:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateMaxScore(lotuses) {\n    const N = lotuses.length;\n    const dp = Array(N).fill(Number.NEGATIVE_INFINITY);\n    dp[0] = lotuses[0];\n    \n    for (let x = 0; x < N; x++) {\n        if (dp[x] === Number.NEGATIVE_INFINITY) continue;\n        \n        for (let A = 1; x + A < N; A++) {\n            dp[x + A] = Math.max(dp[x + A], dp[x] + lotuses[x + A]);\n        }\n        \n        for (let B = 1; x - B >= 0; B++) {\n            dp[x - B] = Math.max(dp[x - B], dp[x] + lotuses[x - B]);\n        }\n    }\n    \n    return Math.max(...dp);\n}",
+    "timestamp": "2025-08-13 12:44:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_lotus_score(lotuses):\n    N = len(lotuses)\n    \n    # Create a set of lotus coordinates for fast lookup\n    lotus_coords = set(range(N))\n    \n    # DP table to store max scores\n    dp = [float('-inf')] * (max(lotuses) + 1)\n    dp[0] = 0\n    \n    # Iterate through possible coordinates\n    for x in range(max(lotuses) + 1):\n        if dp[x] == float('-inf'):\n            continue\n        \n        # Try all possible A and B values\n        for A in range(1, max(lotuses) + 2):\n            for B in range(1, max(lotuses) + 2):\n                # Move forward by A\n                forward = x + A\n                if forward in lotus_coords:\n                    dp[forward] = max(dp[forward], dp[x] + lotuses[forward])\n                \n                # Move backward by B\n                backward = x - B\n                if backward >= 0 and backward in lotus_coords:\n                    dp[backward] = max(dp[backward], dp[x] + lotuses[backward])\n    \n    return max(dp)\n\n# Example usage\nlotuses = [3, 1, 4, 1, 5, 9, 2, 6]\nprint(max_lotus_score(lotuses))",
+    "timestamp": "2025-08-13 12:44:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxLotusScore(lotuses) {\n    const N = lotuses.length;\n    const dp = new Array(N).fill(0);\n    \n    dp[0] = lotuses[0];\n    \n    for (let i = 1; i < N; i++) {\n        dp[i] = lotuses[i];\n        \n        for (let A = 1; A <= i; A++) {\n            if (lotuses[i - A] !== undefined) {\n                dp[i] = Math.max(dp[i], dp[i - A] + lotuses[i]);\n            }\n            \n            for (let B = 1; B <= i; B++) {\n                if (lotuses[i - B] !== undefined) {\n                    dp[i] = Math.max(dp[i], dp[i - B] + lotuses[i]);\n                }\n            }\n        }\n    }\n    \n    return Math.max(...dp);\n}",
+    "timestamp": "2025-08-13 12:45:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    N = int(data[0])\n    s = list(map(int, data[1:N+1]))\n    \n    max_score = -float('inf')\n    \n    for A in range(1, N):\n        current_score = 0\n        visited = set()\n        x = 0\n        while True:\n            x += A\n            if x >= N:\n                break\n            if x in visited:\n                break\n            visited.add(x)\n            current_score += s[x]\n            \n            x -= B\n            if x < 0:\n                break\n            if x in visited:\n                break\n            visited.add(x)\n            current_score += s[x]\n        \n        if current_score > max_score:\n            max_score = current_score\n    \n    print(max_score)\n\nsolve()",
+    "timestamp": "2025-08-13 12:45:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxScore(s) {\n    const N = s.length;\n    let maxScore = -Infinity;\n    \n    for (let A = 1; A <= N; A++) {\n        for (let B = 1; B <= N; B++) {\n            let visited = new Set();\n            let current = 0;\n            let score = s[0];\n            visited.add(current);\n            let next;\n            \n            while (true) {\n                next = current + A;\n                if (next >= N) break;\n                if (visited.has(next)) break;\n                visited.add(next);\n                score += s[next];\n                current = next;\n                \n                next = current - B;\n                if (next < 0) break;\n                if (visited.has(next)) break;\n                visited.add(next);\n                score += s[next];\n                current = next;\n            }\n            \n            if (score > maxScore) {\n                maxScore = score;\n            }\n        }\n    }\n    \n    return maxScore;\n}",
+    "timestamp": "2025-08-13 12:45:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint maxScore(vector<int>& lotuses) {\n    int N = lotuses.size();\n    vector<int> scores(N, INT_MIN);\n    scores[0] = lotuses[0];\n\n    for (int A = 1; A < N; ++A) {\n        for (int B = 1; B < N; ++B) {\n            vector<int> dp(N, INT_MIN);\n            dp[0] = lotuses[0];\n            for (int i = 0; i < N; ++i) {\n                if (dp[i] != INT_MIN) {\n                    if (i + A < N) dp[i + A] = max(dp[i + A], dp[i] + lotuses[i + A]);\n                    if (i - B >= 0) dp[i - B] = max(dp[i - B], dp[i] + lotuses[i - B]);\n                }\n            }\n            scores = max(scores, dp);\n        }\n    }\n    \n    return *max_element(scores.begin(), scores.end());\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> lotuses(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> lotuses[i];\n    }\n    cout << maxScore(lotuses) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:36:07"
+  }
+]

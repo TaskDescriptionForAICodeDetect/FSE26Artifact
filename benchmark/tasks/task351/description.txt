@@ -1,0 +1,1 @@
+Write a program that reports how many possible ways to spread tatami mats of the same size on a floor of given height and width. A tatami mat has a rectangular form with an aspect ratio of 1:2, and it is prohibited to make a cross with the border of the tatami mats.

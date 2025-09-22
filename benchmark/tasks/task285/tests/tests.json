@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "2 10 6\n4 4 E\n6 4 W",
+      "output": "2"
+    },
+    {
+      "input": "2 10 6\n2 4 E\n6 4 W",
+      "output": "1"
+    },
+    {
+      "input": "2 10 6\n3 2 S\n6 4 W",
+      "output": "1"
+    },
+    {
+      "input": "6 10 6\n1 5 N\n7 1 N\n8 2 E\n9 1 S\n4 4 S\n3 3 W",
+      "output": "3"
+    },
+    {
+      "input": "4 10 6\n4 3 W\n2 4 N\n4 4 W\n3 3 S",
+      "output": "2"
+    },
+    {
+      "input": "4 100000 40000\n25000 25000 S\n20000 30000 S\n75000 25000 S\n80000 30000 S",
+      "output": "1"
+    }
+  ]
+}

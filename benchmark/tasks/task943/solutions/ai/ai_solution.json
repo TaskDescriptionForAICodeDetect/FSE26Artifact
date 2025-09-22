@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n\nint N;\nlong long x[MAX_N], y[MAX_N];\n\nint check(long long d) {\n    long long pos[2*MAX_N];\n    int pos_count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        pos[pos_count++] = x[i];\n        pos[pos_count++] = y[i];\n    }\n    \n    for (int i = 0; i < pos_count; i++) {\n        long long first = pos[i];\n        int count = 1;\n        \n        for (int j = 0; j < pos_count; j++) {\n            if (i != j && abs(pos[j] - first) >= d) {\n                count++;\n            }\n        }\n        \n        if (count >= N) return 1;\n    }\n    \n    return 0;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld %lld\", &x[i], &y[i]);\n    }\n    \n    long long left = 0, right = 1e15;\n    \n    while (left < right) {\n        long long mid = left + (right - left + 1) / 2;\n        \n        if (check(mid)) {\n            left = mid;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    printf(\"%lld\\n\", left);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_N 20\n\nint N;\nint x[MAX_N], y[MAX_N];\nint pos[MAX_N];\nint max_d = 0;\n\nbool is_valid(int d) {\n    for (int i = 0; i < N; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            if (abs(pos[i] - pos[j]) < d) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nvoid backtrack(int index, int d) {\n    if (index == N) {\n        if (is_valid(d) && d > max_d) {\n            max_d = d;\n        }\n        return;\n    }\n    pos[index] = x[index];\n    backtrack(index + 1, d);\n    pos[index] = y[index];\n    backtrack(index + 1, d);\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &x[i], &y[i]);\n    }\n    int left = 0, right = 1e9;\n    while (left < right) {\n        int mid = (left + right + 1) / 2;\n        max_d = 0;\n        backtrack(0, mid);\n        if (max_d >= mid) {\n            left = mid;\n        } else {\n            right = mid - 1;\n        }\n    }\n    printf(\"%d\\n\", left);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\nusing namespace std;\n\nbool isPossible(int d, const vector<pair<int, int>>& positions, int N) {\n    int last = INT_MIN;\n    int count = 0;\n    for (const auto& p : positions) {\n        if (p.first >= last + d) {\n            last = p.first;\n            count++;\n        } else if (p.second >= last + d) {\n            last = p.second;\n            count++;\n        }\n        if (count >= N) return true;\n    }\n    return false;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, int>> coords(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> coords[i].first >> coords[i].second;\n        if (coords[i].first > coords[i].second) {\n            swap(coords[i].first, coords[i].second);\n        }\n    }\n    sort(coords.begin(), coords.end());\n\n    int left = 0;\n    int right = coords.back().second - coords.front().first;\n    int answer = 0;\n\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (isPossible(mid, coords, N)) {\n            answer = mid;\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    cout << answer << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static int N;\n    static int[] x, y;\n    static int[] positions;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        N = sc.nextInt();\n        x = new int[N];\n        y = new int[N];\n        for (int i = 0; i < N; i++) {\n            x[i] = sc.nextInt();\n            y[i] = sc.nextInt();\n        }\n        positions = new int[N];\n        System.out.println(binarySearch());\n    }\n\n    static boolean isPossible(int d) {\n        int[] current = new int[N];\n        current[0] = x[0];\n        if (!dfs(1, d, current)) {\n            current[0] = y[0];\n            return dfs(1, d, current);\n        }\n        return true;\n    }\n\n    static boolean dfs(int idx, int d, int[] current) {\n        if (idx == N) {\n            return true;\n        }\n        boolean possible = false;\n        if (Math.abs(x[idx] - current[idx - 1]) >= d) {\n            current[idx] = x[idx];\n            possible = dfs(idx + 1, d, current);\n            if (possible) return true;\n        }\n        if (Math.abs(y[idx] - current[idx - 1]) >= d) {\n            current[idx] = y[idx];\n            possible = dfs(idx + 1, d, current);\n            if (possible) return true;\n        }\n        return false;\n    }\n\n    static int binarySearch() {\n        int left = 0;\n        int right = Integer.MAX_VALUE;\n        int answer = 0;\n        while (left <= right) {\n            int mid = left + (right - left) / 2;\n            if (isPossible(mid)) {\n                answer = mid;\n                left = mid + 1;\n            } else {\n                right = mid - 1;\n            }\n        }\n        return answer;\n    }\n}",
+    "timestamp": "2025-08-05 23:26:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class SnukeFlags {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int[] x = new int[N];\n        int[] y = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            st = new StringTokenizer(br.readLine());\n            x[i] = Integer.parseInt(st.nextToken());\n            y[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        int result = solve(N, x, y);\n        System.out.println(result);\n    }\n    \n    static int solve(int N, int[] x, int[] y) {\n        int left = 0, right = Integer.MAX_VALUE;\n        \n        while (left < right) {\n            int mid = left + (right - left + 1) / 2;\n            if (canPlace(N, x, y, mid)) {\n                left = mid;\n            } else {\n                right = mid - 1;\n            }\n        }\n        \n        return left;\n    }\n    \n    static boolean canPlace(int N, int[] x, int[] y, int distance) {\n        int[] positions = new int[2 * N];\n        for (int i = 0; i < N; i++) {\n            positions[2*i] = x[i];\n            positions[2*i+1] = y[i];\n        }\n        \n        Arrays.sort(positions);\n        \n        for (int i = 0; i < positions.length - 1; i++) {\n            int count = 1;\n            int lastPos = positions[i];\n            \n            for (int j = i + 1; j < positions.length; j++) {\n                if (positions[j] - lastPos >= distance) {\n                    count++;\n                    lastPos = positions[j];\n                }\n                \n                if (count == N) return true;\n            }\n        }\n        \n        return false;\n    }\n}",
+    "timestamp": "2025-08-05 23:26:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <limits>\n\nusing namespace std;\n\nbool canPlaceFlags(vector<int>& points, int d, int n) {\n    int count = 1;\n    int lastPlaced = points[0];\n    \n    for (int i = 1; i < points.size(); i++) {\n        if (points[i] - lastPlaced >= d) {\n            count++;\n            lastPlaced = points[i];\n            \n            if (count == n) {\n                return true;\n            }\n        }\n    }\n    \n    return false;\n}\n\nint maximumFlagDistance(vector<int>& x, vector<int>& y, int n) {\n    vector<int> points;\n    for (int i = 0; i < x.size(); i++) {\n        points.push_back(x[i]);\n        points.push_back(y[i]);\n    }\n    \n    sort(points.begin(), points.end());\n    \n    int left = 0;\n    int right = points.back() - points[0];\n    int result = 0;\n    \n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        \n        if (canPlaceFlags(points, mid, n)) {\n            result = mid;\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    return result;\n}\n\nint main() {\n    int numFlags;\n    cin >> numFlags;\n    \n    vector<int> x(numFlags), y(numFlags);\n    \n    for (int i = 0; i < numFlags; i++) {\n        cin >> x[i] >> y[i];\n    }\n    \n    int maxDistance = maximumFlagDistance(x, y, numFlags);\n    cout << maxDistance << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_possible(d, N, coordinates):\n    last_position = None\n    for x, y in coordinates:\n        if last_position is None:\n            last_position = min(x, y)\n        else:\n            if abs(x - last_position) >= d and abs(y - last_position) >= d:\n                last_position = min(x, y)\n            elif abs(x - last_position) >= d:\n                last_position = x\n            elif abs(y - last_position) >= d:\n                last_position = y\n            else:\n                return False\n    return True\n\ndef max_distance(N, coordinates):\n    left, right = 0, max(max(x, y) for x, y in coordinates) - min(min(x, y) for x, y in coordinates)\n    while left < right:\n        mid = (left + right + 1) // 2\n        if is_possible(mid, N, coordinates):\n            left = mid\n        else:\n            right = mid - 1\n    return left\n\nN = int(input())\ncoordinates = [tuple(map(int, input().split())) for _ in range(N)]\nprint(max_distance(N, coordinates))",
+    "timestamp": "2025-08-13 15:19:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SnukeFlags {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] x = new int[N];\n        int[] y = new int[N];\n        for (int i = 0; i < N; i++) {\n            x[i] = sc.nextInt();\n            y[i] = sc.nextInt();\n        }\n        sc.close();\n\n        Arrays.sort(x);\n        Arrays.sort(y);\n\n        int left = 0, right = (int) 1e9;\n        while (left < right) {\n            int mid = (left + right + 1) / 2;\n            if (canPlace(x, y, mid)) {\n                left = mid;\n            } else {\n                right = mid - 1;\n            }\n        }\n        System.out.println(left);\n    }\n\n    private static boolean canPlace(int[] x, int[] y, int d) {\n        int last = -Integer.MAX_VALUE;\n        for (int i = 0; i < x.length; i++) {\n            if (x[i] >= last + d) {\n                last = x[i];\n            } else if (y[i] >= last + d) {\n                last = y[i];\n            } else {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-13 15:19:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x, y;\n} FlagPosition;\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a) - (*(int*)b);\n}\n\nint isValid(int d, FlagPosition flags[], int N) {\n    int lastPos = flags[0].x;\n    for (int i = 1; i < N; ++i) {\n        if (flags[i].x >= lastPos + d) {\n            lastPos = flags[i].x;\n        } else if (flags[i].y >= lastPos + d) {\n            lastPos = flags[i].y;\n        } else {\n            return 0;\n        }\n    }\n    return 1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    FlagPosition flags[N];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &flags[i].x, &flags[i].y);\n        if (flags[i].x > flags[i].y) {\n            int tmp = flags[i].x;\n            flags[i].x = flags[i].y;\n            flags[i].y = tmp;\n        }\n    }\n    \n    int coords[2*N];\n    for (int i = 0; i < N; ++i) {\n        coords[2*i] = flags[i].x;\n        coords[2*i + 1] = flags[i].y;\n    }\n    \n    qsort(coords, 2*N, sizeof(int), compare);\n    \n    int left = 0, right = coords[2*N - 1] - coords[0];\n    while (left < right) {\n        int mid = (left + right + 1) / 2;\n        if (isValid(mid, flags, N)) {\n            left = mid;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    printf(\"%d\\n\", left);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:19:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nbool check(vector<pair<int, int>>& positions, int d, int N) {\n    int last_pos = -2e9;\n    for (int i = 0; i < N; ++i) {\n        if (positions[i].first - last_pos >= d) last_pos = positions[i].first;\n        else if (positions[i].second - last_pos >= d) last_pos = positions[i].second;\n        else return false;\n    }\n    return true;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<pair<int, int>> positions(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> positions[i].first >> positions[i].second;\n        if (positions[i].first > positions[i].second)\n            swap(positions[i].first, positions[i].second);\n    }\n    \n    int low = 0, high = 1e9;\n    while (low < high) {\n        int mid = (low + high + 1) / 2;\n        if (check(positions, mid, N)) low = mid;\n        else high = mid - 1;\n    }\n    \n    cout << low << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:19:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, x, y):\n    def check(d):\n        placed = []\n        for i in range(N):\n            if not placed:\n                placed.append(x[i])\n                continue\n            \n            can_place_x = True\n            can_place_y = True\n            \n            for p in placed:\n                if abs(p - x[i]) < d:\n                    can_place_x = False\n                if abs(p - y[i]) < d:\n                    can_place_y = False\n            \n            if can_place_x:\n                placed.append(x[i])\n            elif can_place_y:\n                placed.append(y[i])\n            else:\n                return False\n        \n        return True\n\n    left, right = 0, 10**9\n    while left < right:\n        mid = (left + right + 1) // 2\n        if check(mid):\n            left = mid\n        else:\n            right = mid - 1\n    \n    return left\n\n# Input reading\nN = int(input())\nx = []\ny = []\nfor _ in range(N):\n    a, b = map(int, input().split())\n    x.append(a)\n    y.append(b)\n\n# Output result\nprint(solve(N, x, y))",
+    "timestamp": "2025-08-13 15:19:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import bisect\n\ndef solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    N = int(data[0])\n    x = []\n    y = []\n    index = 1\n    for _ in range(N):\n        x.append(int(data[index]))\n        y.append(int(data[index + 1]))\n        index += 2\n    \n    # Collect all candidate positions\n    positions = []\n    for i in range(N):\n        positions.append(x[i])\n        positions.append(y[i])\n    positions.sort()\n    \n    low = 0\n    high = positions[-1] - positions[0]\n    answer = 0\n    \n    def is_possible(d):\n        last = -float('inf')\n        count = 0\n        for pos in positions:\n            if pos >= last + d:\n                last = pos\n                count += 1\n                if count >= N:\n                    return True\n        return False\n    \n    # Binary search to find the maximum d\n    while low <= high:\n        mid = (low + high) // 2\n        if is_possible(mid):\n            answer = mid\n            low = mid + 1\n        else:\n            high = mid - 1\n    print(answer)\n\nsolve()",
+    "timestamp": "2025-08-13 15:19:39"
+  }
+]

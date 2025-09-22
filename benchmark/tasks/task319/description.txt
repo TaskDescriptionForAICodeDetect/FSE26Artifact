@@ -1,0 +1,1 @@
+Write a program that computes the number of win/loss combination patterns of the remaining matches in a single round-robin football tournament that will lead to a full playoff among all teams.

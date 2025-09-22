@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "4\nWBWB\nBWBW\n8\nWWWWBWBB\nWWBBWBWW\n0",
+      "output": "3\n9"
+    }
+  ]
+}

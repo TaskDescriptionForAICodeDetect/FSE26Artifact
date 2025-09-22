@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int read;\n    int write;\n} Book;\n\nint compare(const void *a, const void *b) {\n    Book *bookA = (Book *)a;\n    Book *bookB = (Book *)b;\n    return (bookB->write - bookB->read) - (bookA->write - bookA->read);\n}\n\nint main() {\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) {\n        Book books[n];\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d %d\", &books[i].read, &books[i].write);\n        }\n        \n        qsort(books, n, sizeof(Book), compare);\n        \n        int ami_time = 0, mami_time = 0;\n        for (int i = 0; i < n; i++) {\n            if (ami_time <= mami_time) {\n                ami_time += books[i].read;\n                if (ami_time > mami_time) {\n                    mami_time = ami_time + books[i].write;\n                } else {\n                    mami_time += books[i].write;\n                }\n            } else {\n                mami_time += books[i].read;\n                if (mami_time > ami_time) {\n                    ami_time = mami_time + books[i].write;\n                } else {\n                    ami_time += books[i].write;\n                }\n            }\n        }\n        \n        printf(\"%d\\n\", ami_time > mami_time ? ami_time : mami_time);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:35:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    while (cin >> N) {\n        vector<pair<int, int>> books(N);\n        for (int i = 0; i < N; ++i) {\n            cin >> books[i].first >> books[i].second;\n        }\n        \n        sort(books.begin(), books.end(), [](const pair<int, int>& a, const pair<int, int>& b) {\n            return a.second > b.second;\n        });\n        \n        int ami_time = 0;\n        int mami_time = 0;\n        int total_time = 0;\n        \n        for (const auto& book : books) {\n            ami_time += book.first;\n            mami_time = max(mami_time, ami_time + book.second);\n        }\n        \n        ami_time = 0;\n        for (const auto& book : books) {\n            mami_time += book.first;\n            ami_time = max(ami_time, mami_time + book.second);\n        }\n        \n        total_time = min(max(ami_time, mami_time), max(mami_time, ami_time));\n        \n        cout << total_time << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:35:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class BookReports {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNextInt()) {\n            int N = scanner.nextInt();\n            if (N == 0) break;\n            int[] r = new int[N];\n            int[] w = new int[N];\n            for (int i = 0; i < N; i++) {\n                r[i] = scanner.nextInt();\n                w[i] = scanner.nextInt();\n            }\n            System.out.println(calculateMinTime(N, r, w));\n        }\n        scanner.close();\n    }\n\n    private static int calculateMinTime(int N, int[] r, int[] w) {\n        int totalReadingAmi = 0;\n        int totalReadingMami = 0;\n        int maxWriting = 0;\n        int sumWriting = 0;\n\n        for (int i = 0; i < N; i++) {\n            if (totalReadingAmi <= totalReadingMami) {\n                totalReadingAmi += r[i];\n            } else {\n                totalReadingMami += r[i];\n            }\n            sumWriting += w[i];\n            if (w[i] > maxWriting) {\n                maxWriting = w[i];\n            }\n        }\n        int totalReading = Math.max(totalReadingAmi, totalReadingMami);\n        return Math.max(totalReading + maxWriting, totalReading + sumWriting - maxWriting);\n    }\n}",
+    "timestamp": "2025-08-05 21:36:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TwinsHomework {\n    public static int minimumTimeToFinish(int[][] books) {\n        Arrays.sort(books, (a, b) -> (a[0] + a[1]) - (b[0] + b[1]));\n        \n        int totalTime = 0;\n        int ami = 0, mami = 0;\n        \n        for (int[] book : books) {\n            int readTime = book[0];\n            int writeTime = book[1];\n            \n            if (ami <= mami) {\n                ami += readTime + writeTime;\n                totalTime = Math.max(totalTime, ami);\n            } else {\n                mami += readTime + writeTime;\n                totalTime = Math.max(totalTime, mami);\n            }\n        }\n        \n        return totalTime;\n    }\n    \n    public static void main(String[] args) {\n        int[][] books1 = {{3, 2}, {4, 3}, {2, 1}};\n        System.out.println(minimumTimeToFinish(books1));\n        \n        int[][] books2 = {{1, 2}, {3, 4}, {5, 6}};\n        System.out.println(minimumTimeToFinish(books2));\n    }\n}",
+    "timestamp": "2025-08-05 21:36:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MAX_BOOKS 100\n\ntypedef struct {\n    int read_time;\n    int write_time;\n} Book;\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint solve(Book books[], int n) {\n    int total_read_time = 0;\n    int total_write_time = 0;\n    int max_read_time = 0;\n    int max_write_time = 0;\n\n    for (int i = 0; i < n; i++) {\n        total_read_time += books[i].read_time;\n        total_write_time += books[i].write_time;\n        max_read_time = max(max_read_time, books[i].read_time);\n        max_write_time = max(max_write_time, books[i].write_time);\n    }\n\n    int half_read_time = (total_read_time + 1) / 2;\n    int half_write_time = (total_write_time + 1) / 2;\n\n    int min_time = max(\n        max(max_read_time, half_read_time),\n        max(max_write_time, half_write_time)\n    );\n\n    return min_time * 2;\n}\n\nint main() {\n    int t;\n    scanf(\"%d\", &t);\n\n    while (t--) {\n        int n;\n        scanf(\"%d\", &n);\n\n        Book books[MAX_BOOKS];\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d %d\", &books[i].read_time, &books[i].write_time);\n        }\n\n        int result = solve(books, n);\n        printf(\"%d\\n\", result);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:36:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint minimumTimeToFinish(vector<pair<int, int>>& books) {\n    int n = books.size();\n    sort(books.begin(), books.end(), [](const pair<int, int>& a, const pair<int, int>& b) {\n        return max(a.first, a.second) < max(b.first, b.second);\n    });\n\n    int totalTime = 0;\n    int ami = 0, mami = 0;\n\n    for (const auto& book : books) {\n        int readTime = book.first;\n        int writeTime = book.second;\n\n        if (ami <= mami) {\n            ami += readTime + writeTime;\n            totalTime = max(totalTime, ami);\n        } else {\n            mami += readTime + writeTime;\n            totalTime = max(totalTime, mami);\n        }\n    }\n\n    return totalTime;\n}\n\nint main() {\n    int testCases;\n    cin >> testCases;\n\n    while (testCases--) {\n        int n;\n        cin >> n;\n\n        vector<pair<int, int>> books(n);\n        for (int i = 0; i < n; i++) {\n            cin >> books[i].first >> books[i].second;\n        }\n\n        cout << minimumTimeToFinish(books) << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:36:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_time_to_finish_reports(books):\n    # Sort books based on reading time then writing time\n    books.sort(key=lambda x: (x[0], x[1]))\n    \n    # Initialize the schedules and time trackers for Ami and Mami\n    ami_time = 0\n    mami_time = 0\n    ami_schedule = []\n    mami_schedule = []\n\n    for book in books:\n        reading_time, writing_time = book\n        \n        # Determine who can be scheduled for the book\n        if ami_time <= mami_time:\n            # Ami gets the book\n            ami_schedule.append(book)\n            ami_time += reading_time + writing_time\n        else:\n            # Mami gets the book\n            mami_schedule.append(book)\n            mami_time += reading_time + writing_time\n\n    # Return the maximum of either Ami's or Mami's total time to finish all reports\n    return max(ami_time, mami_time)\n\n# Example dataset format: [(read_time1, write_time1), (read_time2, write_time2), ...]\ndatasets = [\n    [(3, 6), (2, 4), (4, 3), (6, 2)],\n    [(5, 5), (2, 6), (7, 4)],\n    [(1, 8), (2, 3), (3, 2)]\n]\n\nresults = [min_time_to_finish_reports(books) for books in datasets]\nprint(results)",
+    "timestamp": "2025-08-13 07:13:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class HomeworkScheduler {\n\n    private static class Book {\n        int readTime;\n        int writeTime;\n\n        public Book(int readTime, int writeTime) {\n            this.readTime = readTime;\n            this.writeTime = writeTime;\n        }\n    }\n\n    public static int scheduleHomework(List<Book> books) {\n        Collections.sort(books, (b1, b2) -> (b2.writeTime + Math.max(b1.readTime, b2.readTime)) \n                                              - (b1.writeTime + Math.max(b2.readTime, b1.readTime)));\n\n        int amiTime = 0;\n        int mamiTime = 0;\n\n        for (Book book : books) {\n            if (amiTime <= mamiTime) {\n                amiTime += book.readTime + book.writeTime;\n            } else {\n                mamiTime += book.readTime + book.writeTime;\n            }\n        }\n        \n        return Math.max(amiTime, mamiTime);\n    }\n\n    public static void main(String[] args) {\n        // Example usage:\n        List<Book> books = Arrays.asList(\n            new Book(3, 5),\n            new Book(2, 6),\n            new Book(4, 4)\n        );\n        \n        int minTime = scheduleHomework(books);\n        System.out.println(\"Minimum time to finish homework: \" + minTime);\n    }\n}",
+    "timestamp": "2025-08-13 07:13:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_BOOKS 100\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint calculateMinTime(int n, int read_times[], int write_times[]) {\n    int dp[MAX_BOOKS + 1][MAX_BOOKS + 1];\n\n    for (int i = 0; i <= n; ++i) {\n        for (int j = 0; j <= n; ++j) {\n            if (i == 0 && j == 0) {\n                dp[i][j] = 0;\n            } else if (i == 0) {\n                dp[i][j] = dp[i][j-1] + read_times[j-1] + write_times[j-1];\n            } else if (j == 0) {\n                dp[i][j] = dp[i-1][j] + read_times[i-1] + write_times[i-1];\n            } else {\n                int time1 = dp[i-1][j] + read_times[i-1] + write_times[i-1];\n                int time2 = dp[i][j-1] + read_times[j-1] + write_times[j-1];\n                dp[i][j] = min(time1, time2);\n            }\n        }\n    }\n    \n    int min_time = INT_MAX;\n    for (int i = 0; i <= n; ++i) {\n        min_time = min(min_time, max(dp[i][n-i], dp[n-i][i]));\n    }\n    \n    return min_time;\n}\n\nint main() {\n    int n;\n    printf(\"Enter the number of books: \");\n    scanf(\"%d\", &n);\n    \n    int read_times[MAX_BOOKS], write_times[MAX_BOOKS];\n    \n    printf(\"Enter the reading times: \");\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &read_times[i]);\n    }\n    \n    printf(\"Enter the writing times: \");\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &write_times[i]);\n    }\n    \n    int result = calculateMinTime(n, read_times, write_times);\n    printf(\"The minimum time to complete all reports: %d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 07:13:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_total_time(books):\n    books.sort(key=lambda x: x[0] + x[1], reverse=True)\n    time1, time2 = 0, 0\n    for read, write in books:\n        if time1 <= time2:\n            time1 += read + write\n        else:\n            time2 += read + write\n    return max(time1, time2)\n\ndef main():\n    T = int(input())\n    for _ in range(T):\n        N = int(input())\n        books = []\n        for i in range(N):\n            r, w = map(int, input().split())\n            books.append((r, w))\n        print(min_total_time(books))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 07:14:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    T = int(data[idx])\n    idx += 1\n    for _ in range(T):\n        N = int(data[idx])\n        idx += 1\n        books = []\n        for _ in range(N):\n            r, w = map(int, data[idx:idx+2])\n            books.append((r, w))\n            idx += 2\n        \n        # The minimal total time is the maximum between:\n        # 1. The sum of all reading times (since they must read all books sequentially)\n        # 2. The maximum of (reading + writing) for any single book\n        total_read = sum(r for r, w in books)\n        max_rw = max(r + w for r, w in books)\n        print(max(total_read, max_rw))\n\nsolve()",
+    "timestamp": "2025-08-13 07:14:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nstruct Book {\n    int readingTime;\n    int writingTime;\n};\n\nint minCompletionTime(vector<Book> books) {\n    int n = books.size();\n    \n    sort(books.begin(), books.end(), [](const Book& a, const Book& b) {\n        return max(a.readingTime + a.writingTime, b.readingTime + b.writingTime) < \n               max(b.readingTime + b.writingTime, a.readingTime + a.writingTime);\n    });\n    \n    int timeA = 0, timeB = 0;\n    for (const auto& book : books) {\n        if (timeA <= timeB) {\n            timeA += book.readingTime + book.writingTime;\n        } else {\n            timeB += book.readingTime + book.writingTime;\n        }\n    }\n    \n    return max(timeA, timeB);\n}\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        \n        vector<Book> books(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> books[i].readingTime >> books[i].writingTime;\n        }\n        \n        cout << minCompletionTime(books) << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:36:41"
+  }
+]

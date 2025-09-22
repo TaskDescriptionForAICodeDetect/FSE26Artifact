@@ -1,0 +1,7 @@
+Shuffle Problem
+
+You have n cards numbered from 1 to n stacked in order. The top card is number 1, the second card is number 2, and so on, until the bottom card, which is number n. You can perform a shuffle operation called 'shuffle(x, y)', which rearranges the cards. Given multiple shuffles and a range of cards, the task is to count how many of the specified cards have a number less than or equal to r after all shuffles are performed.
+
+The shuffle(x,y) operation involves splitting the deck into three parts: A (top x cards), B (cards from x+1 to y), and C (remaining cards) and then stacking them as A on top of B on top of C. For example, if you have 9 cards and you perform 'shuffle(3,5)', the order becomes 6, 7, 8, 9, 4, 5, 1, 2, 3.
+
+After m shuffles like 'shuffle(x1, y1)', 'shuffle(x2, y2)', ..., 'shuffle(xm, ym)', count how many cards from position p to q have numbers less than or equal to r.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint countJOI(char *S, int N) {\n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        if (S[i] == 'J') {\n            for (int j = i + 1; j < N; j++) {\n                if (S[j] == 'O') {\n                    for (int k = j + 1; k < N; k++) {\n                        if (S[k] == 'I') {\n                            count++;\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    char S[N + 2];\n    scanf(\"%s\", S);\n    \n    int max = 0;\n    for (int pos = 0; pos <= N; pos++) {\n        char newS[N + 2];\n        for (int i = 0; i < pos; i++) {\n            newS[i] = S[i];\n        }\n        newS[pos] = 'J';\n        for (int i = pos; i < N; i++) {\n            newS[i + 1] = S[i];\n        }\n        int cnt = countJOI(newS, N + 1);\n        if (cnt > max) max = cnt;\n        \n        newS[pos] = 'O';\n        cnt = countJOI(newS, N + 1);\n        if (cnt > max) max = cnt;\n        \n        newS[pos] = 'I';\n        cnt = countJOI(newS, N + 1);\n        if (cnt > max) max = cnt;\n    }\n    \n    printf(\"%d\\n\", max);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:51:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class StampCoupons {\n    public static int maxCoupons(int N, String S) {\n        int maxWays = 0;\n        \n        for (int i = 0; i <= N; i++) {\n            for (char newStamp : new char[]{'J', 'O', 'I'}) {\n                String newString = S.substring(0, i) + newStamp + S.substring(i);\n                int currentWays = countCoupons(newString);\n                maxWays = Math.max(maxWays, currentWays);\n            }\n        }\n        \n        return maxWays;\n    }\n    \n    private static int countCoupons(String S) {\n        int coupons = 0;\n        \n        for (int j = 0; j < S.length(); j++) {\n            if (S.charAt(j) == 'J') {\n                for (int o = j + 1; o < S.length(); o++) {\n                    if (S.charAt(o) == 'O') {\n                        for (int i = o + 1; i < S.length(); i++) {\n                            if (S.charAt(i) == 'I') {\n                                coupons++;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n        \n        return coupons;\n    }\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        \n        int N = Integer.parseInt(br.readLine());\n        String S = br.readLine();\n        \n        int result = maxCoupons(N, S);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 18:52:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n\n    int max_coupons = 0;\n\n    for (int pos = 0; pos <= N; ++pos) {\n        for (char c : {'J', 'O', 'I'}) {\n            string new_S = S.substr(0, pos) + c + S.substr(pos);\n            int count = 0;\n            for (int i = 0; i < new_S.size(); ++i) {\n                if (new_S[i] == 'J') {\n                    for (int j = i + 1; j < new_S.size(); ++j) {\n                        if (new_S[j] == 'O') {\n                            for (int k = j + 1; k < new_S.size(); ++k) {\n                                if (new_S[k] == 'I') {\n                                    count++;\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n            if (count > max_coupons) {\n                max_coupons = count;\n            }\n        }\n    }\n\n    cout << max_coupons << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint maxCouponWays(int N, char* S) {\n    int max_ways = 0;\n    \n    for (int i = 0; i <= N; i++) {\n        int current_ways = 0;\n        \n        for (int j = 0; j < N; j++) {\n            if (j < i) {\n                if (j + 2 >= i) continue;\n                \n                if (S[j] == 'J' && S[j+1+1] == 'O' && S[j+2+1] == 'I') {\n                    current_ways++;\n                }\n            } else {\n                if (j + 2 < N) {\n                    if (S[j] == 'J' && S[j+1] == 'O' && S[j+2] == 'I') {\n                        current_ways++;\n                    }\n                }\n            }\n        }\n        \n        max_ways = (current_ways > max_ways) ? current_ways : max_ways;\n    }\n    \n    return max_ways;\n}\n\nint main() {\n    int N;\n    char S[200001];\n    \n    scanf(\"%d %s\", &N, S);\n    \n    printf(\"%d\\n\", maxCouponWays(N, S));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint solve(int N, string S) {\n    int maxCoupons = 0;\n    \n    for (int i = 0; i <= N; i++) {\n        for (char newStamp : {'J', 'O', 'I'}) {\n            string newS = S.substr(0, i) + newStamp + S.substr(i);\n            int coupons = 0;\n            \n            for (int j = 0; j < newS.length() - 2; j++) {\n                for (int k = j + 1; k < newS.length() - 1; k++) {\n                    for (int l = k + 1; l < newS.length(); l++) {\n                        if (newS[j] == 'J' && newS[k] == 'O' && newS[l] == 'I') {\n                            coupons++;\n                        }\n                    }\n                }\n            }\n            \n            maxCoupons = max(maxCoupons, coupons);\n        }\n    }\n    \n    return maxCoupons;\n}\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n    \n    cout << solve(N, S) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String S = scanner.next();\n        int maxCoupons = 0;\n\n        for (int k = 0; k <= N; k++) {\n            for (char c : new char[]{'J', 'O', 'I'}) {\n                String newS = S.substring(0, k) + c + S.substring(k);\n                int count = 0;\n                for (int i = 0; i < newS.length() - 2; i++) {\n                    if (newS.charAt(i) == 'J' && newS.charAt(i + 1) == 'O' && newS.charAt(i + 2) == 'I') {\n                        count++;\n                    }\n                }\n                if (count > maxCoupons) {\n                    maxCoupons = count;\n                }\n            }\n        }\n\n        System.out.println(maxCoupons);\n    }\n}",
+    "timestamp": "2025-08-05 18:52:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_coupon_ways(N, S):\n    def count_joy(s):\n        count_j = [0] * (N + 1)\n        count_jo = [0] * (N + 1)\n        count_joy = 0\n\n        for i in range(N):\n            count_j[i+1] = count_j[i] + (s[i] == 'J')\n            count_jo[i+1] = count_jo[i] + (s[i] == 'O') * count_j[i]\n            count_joy += (s[i] == 'I') * count_jo[i]\n\n        return count_joy\n\n    max_ways = 0\n\n    for i in range(N + 1):\n        if i == 0:\n            new_s = 'J' + S\n        elif i == N:\n            new_s = S + 'I'\n        else:\n            new_s_with_J = S[:i] + 'J' + S[i:]\n            new_s_with_O = S[:i] + 'O' + S[i:]\n            new_s_with_I = S[:i] + 'I' + S[i:]\n            \n            max_ways = max(max_ways, count_joy(new_s_with_J), count_joy(new_s_with_O), count_joy(new_s_with_I))\n            continue\n        \n        max_ways = max(max_ways, count_joy(new_s))\n\n    return max_ways\n\n# Example usage:\nN = 5\nS = \"JOJIO\"\nprint(max_coupon_ways(N, S))",
+    "timestamp": "2025-08-13 01:17:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class StampCollector {\n    \n    public static int countJOIPatterns(String s) {\n        int count = 0;\n        int n = s.length();\n        for (int i = 0; i < n - 2; i++) {\n            if (s.charAt(i) == 'J' && s.charAt(i+1) == 'O' && s.charAt(i+2) == 'I') {\n                count++;\n            }\n        }\n        return count;\n    }\n    \n    public static int maxJOIPatternsWithNewStore(String s) {\n        int maxPatterns = 0;\n        int n = s.length();\n        String stamps = \"JOI\";\n        \n        for (int i = 0; i <= n; i++) {\n            for (char newStamp : stamps.toCharArray()) {\n                StringBuilder newS = new StringBuilder(s);\n                newS.insert(i, newStamp);\n                int currentPatterns = countJOIPatterns(newS.toString());\n                maxPatterns = Math.max(maxPatterns, currentPatterns);\n            }\n        }\n        \n        return maxPatterns;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String S = scanner.next();\n        scanner.close();\n        \n        System.out.println(maxJOIPatternsWithNewStore(S));\n    }\n}",
+    "timestamp": "2025-08-13 01:17:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int N;\n    char S[101];\n    scanf(\"%d\", &N);\n    scanf(\"%s\", S);\n\n    int JOI_count = 0;\n    int JOI_suffix[N + 1];\n    memset(JOI_suffix, 0, sizeof(JOI_suffix));\n\n    // Calculate suffix JOI counts\n    for (int i = N - 1; i >= 0; --i) {\n        JOI_suffix[i] = JOI_suffix[i + 1];\n        if (S[i] == 'I') {\n            int j = i - 1;\n            while (j >= 0 && S[j] != 'O') j--;\n            if (j >= 0) {\n                int k = j - 1;\n                while (k >= 0 && S[k] != 'J') k--;\n                if (k >= 0) {\n                    JOI_suffix[i]++;\n                }\n            }\n        }\n    }\n\n    for (int i = 0; i < N; ++i) {\n        JOI_count += JOI_suffix[i];\n    }\n\n    // Check maximum ways after placing a new store\n    int max_ways = JOI_count;\n\n    for (int i = 0; i <= N; ++i) {\n        char new_char[] = {'J', 'O', 'I'};\n        \n        // Try placing each type of stamp\n        for (int c = 0; c < 3; ++c) {\n            int new_ways = 0;\n            \n            if (new_char[c] == 'J') {\n                int o_pos = i;\n                while (o_pos < N && S[o_pos] != 'O') o_pos++;\n                \n                if (o_pos < N) {\n                    int i_pos = o_pos;\n                    while (i_pos < N && S[i_pos] != 'I') i_pos++;\n                    if (i_pos < N) {\n                        new_ways++;\n                    }\n                }\n            }\n            else if (new_char[c] == 'O') {\n                int j_pos = i - 1;\n                while (j_pos >= 0 && S[j_pos] != 'J') j_pos--;\n                \n                if (j_pos >= 0) {\n                    int i_pos = i;\n                    while (i_pos < N && S[i_pos] != 'I') i_pos++;\n                    if (i_pos < N) {\n                        new_ways++;\n                    }\n                }\n            }\n            else if (new_char[c] == 'I') {\n                int j_pos = i - 1;\n                while (j_pos >= 0 && S[j_pos] != 'J') j_pos--;\n                \n                if (j_pos >= 0) {\n                    int o_pos = j_pos;\n                    while (o_pos < i && S[o_pos] != 'O') o_pos++;\n                    if (o_pos < i) {\n                        new_ways++;\n                    }\n                }\n            }\n            \n            // Add the calculated JOI from this position\n            new_ways += JOI_suffix[i];\n            if (new_ways > max_ways) {\n                max_ways = new_ways;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", max_ways);\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:17:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_joi_stamps(N, S):\n    max_ways = 0\n    \n    for insert_pos in range(N + 1):\n        ways = 0\n        for i in range(N):\n            for j in range(i + 1, N):\n                if (S[i] == 'J' and \n                    (S[j] == 'O' and \n                     (insert_pos == 0 or insert_pos == N or \n                      (i < insert_pos <= j) or \n                      (j < insert_pos <= i)))):\n                    ways += 1\n        max_ways = max(max_ways, ways)\n    \n    return max_ways\n\n# Read input\nN = int(input())\nS = input()\n\n# Output result\nprint(max_joi_stamps(N, S))",
+    "timestamp": "2025-08-13 01:18:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\ns = input().strip()\n\nmax_coupons = 0\n\nfor i in range(n + 1):\n    left = s[:i]\n    right = s[i:]\n    new_s = left + 'J' + right\n    count = 0\n    for a in range(len(new_s)):\n        if new_s[a] == 'J':\n            for b in range(a + 1, len(new_s)):\n                if new_s[b] == 'O':\n                    for c in range(b + 1, len(new_s)):\n                        if new_s[c] == 'I':\n                            count += 1\n    max_coupons = max(max_coupons, count)\n\n    new_s = left + 'O' + right\n    count = 0\n    for a in range(len(new_s)):\n        if new_s[a] == 'J':\n            for b in range(a + 1, len(new_s)):\n                if new_s[b] == 'O':\n                    for c in range(b + 1, len(new_s)):\n                        if new_s[c] == 'I':\n                            count += 1\n    max_coupons = max(max_coupons, count)\n\n    new_s = left + 'I' + right\n    count = 0\n    for a in range(len(new_s)):\n        if new_s[a] == 'J':\n            for b in range(a + 1, len(new_s)):\n                if new_s[b] == 'O':\n                    for c in range(b + 1, len(new_s)):\n                        if new_s[c] == 'I':\n                            count += 1\n    max_coupons = max(max_coupons, count)\n\nprint(max_coupons)",
+    "timestamp": "2025-08-13 01:18:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint countJOI(string &s) {\n    int n = s.size();\n    vector<int> jCount(n, 0), oCount(n, 0), iCount(n, 0);\n    \n    if (s[0] == 'J') jCount[0] = 1;\n    for (int i = 1; i < n; ++i) {\n        jCount[i] = jCount[i - 1] + (s[i] == 'J' ? 1 : 0);\n    }\n    if (s[0] == 'O') oCount[0] = jCount[0];\n    for (int i = 1; i < n; ++i) {\n        oCount[i] = oCount[i - 1];\n        if (s[i] == 'O') oCount[i] += jCount[i];\n    }\n    if (s[0] == 'I') iCount[0] = oCount[0];\n    for (int i = 1; i < n; ++i) {\n        iCount[i] = iCount[i - 1];\n        if (s[i] == 'I') iCount[i] += oCount[i];\n    }\n    return iCount[n - 1];\n}\n\nint maxNewJOICoupons(int N, string S) {\n    int maxJoIs = countJOI(S);\n    for (int i = 0; i <= N; ++i) {\n        for (char type : {'J', 'O', 'I'}) {\n            string newS = S.substr(0, i) + type + S.substr(i);\n            maxJoIs = max(maxJoIs, countJOI(newS));\n        }\n    }\n    return maxJoIs;\n}\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n    cout << maxNewJOICoupons(N, S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:59:19"
+  }
+]

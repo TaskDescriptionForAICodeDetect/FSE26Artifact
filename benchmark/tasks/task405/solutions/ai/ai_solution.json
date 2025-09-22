@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", (n + 1) / 2);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:24:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    unordered_map<string, int> witchCount;\n    priority_queue<int> maxHeap;\n    \n    for (int i = 0; i < N; ++i) {\n        string witch;\n        cin >> witch;\n        witchCount[witch]++;\n    }\n    \n    for (auto& entry : witchCount) {\n        maxHeap.push(entry.second);\n    }\n    \n    while (maxHeap.size() >= 3) {\n        int a = maxHeap.top(); maxHeap.pop();\n        int b = maxHeap.top(); maxHeap.pop();\n        int c = maxHeap.top(); maxHeap.pop();\n        \n        a--; b--; c--;\n        \n        if (a > 0) maxHeap.push(a);\n        if (b > 0) maxHeap.push(b);\n        if (c > 0) maxHeap.push(c);\n    }\n    \n    int totalGriefSeeds = 0;\n    while (!maxHeap.empty()) {\n        totalGriefSeeds += maxHeap.top();\n        maxHeap.pop();\n    }\n    \n    cout << totalGriefSeeds << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:24:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        \n        int[] witches = new int[M];\n        for (int i = 0; i < M; i++) {\n            witches[i] = scanner.nextInt();\n        }\n        \n        int left = 1;\n        int right = Arrays.stream(witches).max().getAsInt();\n        int answer = right;\n        \n        while (left <= right) {\n            int mid = (left + right) / 2;\n            long total = 0;\n            \n            for (int w : witches) {\n                total += (w + mid - 1) / mid;\n            }\n            \n            if (total <= 3L * (N - mid)) {\n                answer = mid;\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        \n        System.out.println(answer);\n    }\n}",
+    "timestamp": "2025-08-05 21:24:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class WitchSynthesis {\n    public static int minimumGriefSeeds(int[] witches, int stageWitch) {\n        Map<Integer, Integer> count = new HashMap<>();\n        for (int witch : witches) {\n            count.put(witch, count.getOrDefault(witch, 0) + 1);\n        }\n        \n        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());\n        pq.addAll(count.values());\n        \n        int seeds = 0;\n        while (!pq.isEmpty()) {\n            int max = pq.poll();\n            if (max > 1) {\n                max -= 3;\n                seeds++;\n                if (max > 0) {\n                    pq.offer(max);\n                }\n            }\n        }\n        \n        return seeds;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int stageWitch = scanner.nextInt();\n        int[] witches = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            witches[i] = scanner.nextInt();\n        }\n        \n        System.out.println(minimumGriefSeeds(witches, stageWitch));\n    }\n}",
+    "timestamp": "2025-08-05 21:24:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <limits.h>\n\n#define MAX_WITCHES 100\n\nint minGriefSeeds(int target, int n, int witches[], int seeds[]) {\n    int dp[MAX_WITCHES + 1][MAX_WITCHES + 1] = {0};\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            dp[i][j] = INT_MAX / 2;\n        }\n    }\n    \n    for (int i = 0; i < n; i++) {\n        dp[i][witches[i]] = 1;\n    }\n    \n    for (int k = 0; k < n; k++) {\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                if (i != j && witches[i] != witches[j]) {\n                    int synthesis = witches[i] + witches[j];\n                    for (int m = 0; m < n; m++) {\n                        if (synthesis == witches[m]) {\n                            dp[i][m] = fmin(dp[i][m], dp[i][witches[i]] + dp[j][witches[j]] + 1);\n                        }\n                    }\n                }\n            }\n        }\n    }\n    \n    int minSeeds = INT_MAX;\n    for (int i = 0; i < n; i++) {\n        if (witches[i] == target) {\n            minSeeds = fmin(minSeeds, dp[i][target]);\n        }\n    }\n    \n    return minSeeds == INT_MAX / 2 ? -1 : minSeeds;\n}\n\nint main() {\n    int n, target;\n    scanf(\"%d %d\", &n, &target);\n    \n    int witches[MAX_WITCHES];\n    int seeds[MAX_WITCHES];\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &witches[i]);\n        seeds[i] = 1;\n    }\n    \n    int result = minGriefSeeds(target, n, witches, seeds);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:24:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <unordered_set>\n#include <unordered_map>\n#include <algorithm>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minGriefSeeds(vector<int>& initialWitches, int targetWitch) {\n        queue<vector<int>> q;\n        unordered_set<string> visited;\n        \n        q.push(initialWitches);\n        int steps = 0;\n        \n        while (!q.empty()) {\n            int size = q.size();\n            \n            for (int i = 0; i < size; i++) {\n                vector<int> current = q.front();\n                q.pop();\n                \n                string state = generateStateKey(current);\n                if (visited.count(state)) continue;\n                visited.insert(state);\n                \n                if (find(current.begin(), current.end(), targetWitch) != current.end()) {\n                    return steps;\n                }\n                \n                for (int x = 0; x < current.size(); x++) {\n                    for (int y = x + 1; y < current.size(); y++) {\n                        for (int z = y + 1; z < current.size(); z++) {\n                            if (current[x] != current[y] && current[y] != current[z] && current[x] != current[z]) {\n                                vector<int> next = current;\n                                next[x] = targetWitch;\n                                next[y] = 0;\n                                next[z] = 0;\n                                \n                                q.push(next);\n                            }\n                        }\n                    }\n                }\n            }\n            \n            steps++;\n        }\n        \n        return -1;\n    }\n    \nprivate:\n    string generateStateKey(vector<int>& state) {\n        string key = \"\";\n        vector<int> sorted = state;\n        sort(sorted.begin(), sorted.end());\n        \n        for (int witch : sorted) {\n            key += to_string(witch) + \",\";\n        }\n        \n        return key;\n    }\n};\n\nint main() {\n    Solution sol;\n    vector<int> initialWitches = {1, 2, 3};\n    int targetWitch = 4;\n    \n    int result = sol.minGriefSeeds(initialWitches, targetWitch);\n    cout << \"Minimum Grief Seeds: \" << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:25:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_grief_seeds(initial_witches, target_stage_witch):\n    seeds_with_witches = len(initial_witches)\n    while target_stage_witch > 1:\n        if seeds_with_witches < 3:\n            return -1  # Not enough seeds to perform synthesis\n        seeds_with_witches = seeds_with_witches - 3 + 1\n        target_stage_witch -= 1\n    return seeds_with_witches\n\n# Example usage:\n# Define the initial witches and the target number for stage witch\ninitial_witches = [1, 2, 3, 4, 5]  # Example: list of IDs of individual witches\ntarget_stage_witch = 3  # The goal is to have one last witch in a special seed\n\n# Calculate minimum grief seeds required\nresult = minimum_grief_seeds(initial_witches, target_stage_witch)\n\nprint(f\"Minimum number of special Grief Seeds needed: {result}\")",
+    "timestamp": "2025-08-13 06:23:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class KyubeyWitchSynthesis {\n    public static int minGriefSeedsNeeded(Map<String, Integer> witchComponents) {\n        int totalSeeds = 0;\n        \n        while (!witchComponents.isEmpty()) {\n            int maxWitches = 0;\n            Map<String, Integer> synthesizedWitches = new HashMap<>();\n            \n            for (Map.Entry<String, Integer> entry : witchComponents.entrySet()) {\n                int count = entry.getValue();\n                if (count >= 3) {\n                    int numNewWitches = count / 3;\n                    String newWitchType = entry.getKey() + \"_synthesized\";\n                    synthesizedWitches.put(newWitchType, numNewWitches);\n                    maxWitches += numNewWitches;\n                    witchComponents.put(entry.getKey(), count % 3);\n                }\n            }\n            \n            witchComponents.putAll(synthesizedWitches);\n            if (maxWitches == 0) break;\n            \n            totalSeeds += maxWitches;\n        }\n        \n        return totalSeeds;\n    }\n\n    public static void main(String[] args) {\n        Map<String, Integer> witchComponents = new HashMap<>();\n        witchComponents.put(\"A\", 9);\n        witchComponents.put(\"B\", 5);\n        witchComponents.put(\"C\", 7);\n\n        int result = minGriefSeedsNeeded(witchComponents);\n        System.out.println(\"Minimum Grief Seeds needed: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 06:23:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define WITCH_TYPES 3\n\nint minSpecialGriefSeeds(int initial[WITCH_TYPES], int target, int n) {\n    int dp[target + 1];\n    for (int i = 0; i <= target; i++) dp[i] = INT_MAX;\n    dp[n] = 0;\n\n    for (int i = n; i <= target; i++) {\n        if (dp[i] != INT_MAX) {\n            for (int j = 0; j < WITCH_TYPES; j++) {\n                if (i + initial[j] <= target) {\n                    dp[i + initial[j]] = dp[i + initial[j]] < dp[i] + 1 ? dp[i + initial[j]] : dp[i] + 1;\n                }\n            }\n        }\n    }\n\n    return dp[target] == INT_MAX ? -1 : dp[target];\n}\n\nint main() {\n    int initial[WITCH_TYPES] = {1, 3, 5}; // Initial available witches per type\n    int target = 10; // Target Total Witches\n    \n    int result = minSpecialGriefSeeds(initial, target, 0);\n    printf(\"Minimum special Grief Seeds needed: %d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:23:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_grief_seeds(witches, target_witch):\n    def dfs(available_witches, empty_seeds, steps):\n        if target_witch in available_witches:\n            return steps\n        \n        best_result = float('inf')\n        \n        for i in range(len(available_witches)):\n            for j in range(i+1, len(available_witches)):\n                for k in range(j+1, len(available_witches)):\n                    if len(set([available_witches[i], available_witches[j], available_witches[k]])) == 3:\n                        new_witches = available_witches.copy()\n                        new_witches.pop(k)\n                        new_witches.pop(j)\n                        new_witches.pop(i)\n                        new_witches.append(available_witches[i] + available_witches[j] + available_witches[k])\n                        \n                        result = dfs(new_witches, empty_seeds + 2, steps + 1)\n                        best_result = min(best_result, result)\n        \n        return best_result\n    \n    return dfs(witches, 0, 0)",
+    "timestamp": "2025-08-13 06:23:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_grief_seeds():\n    return 3",
+    "timestamp": "2025-08-13 06:23:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <unordered_map>\n#include <vector>\n#include <string>\nusing namespace std;\n\n// Function to determine the minimum number of special Grief Seeds needed.\nint minGriefSeeds(vector<string> witches, vector<vector<string>> synthesisRules, string target) {\n    // Map to keep track of the minimum number of seeds needed for each witch.\n    unordered_map<string, int> minSeeds;\n    \n    // Initialize all known witches with 1 seed required each.\n    for (const string& witch : witches) {\n        minSeeds[witch] = 1;\n    }\n    \n    bool progress = true;\n    while (progress) {\n        progress = false;\n        \n        for (const auto& rule : synthesisRules) {\n            string newWitch = rule[0];\n            bool canSynthesize = true;\n            int requiredSeeds = 0;\n            \n            // Check if all component witches are available and count seeds.\n            for (size_t i = 1; i < rule.size(); ++i) {\n                const string& component = rule[i];\n                if (minSeeds.find(component) == minSeeds.end()) {\n                    canSynthesize = false;\n                    break;\n                }\n                requiredSeeds += minSeeds[component];\n            }\n            \n            // If synthesis is possible, calculate seeds for the new witch.\n            if (canSynthesize) {\n                requiredSeeds = (requiredSeeds - rule.size() + 2) / 3 + 1; // Consolidate seeds used\n                if (minSeeds.find(newWitch) == minSeeds.end() || minSeeds[newWitch] > requiredSeeds) {\n                    minSeeds[newWitch] = requiredSeeds;\n                    progress = true;\n                }\n            }\n        }\n    }\n    \n    // Return the minimum seeds needed for target witch if possible, otherwise -1.\n    return minSeeds.find(target) != minSeeds.end() ? minSeeds[target] : -1;\n}\n\nint main() {\n    // Example usage:\n    vector<string> witches = {\"Fire\", \"Water\", \"Earth\"};\n    vector<vector<string>> synthesisRules = {\n        {\"Mud\", \"Water\", \"Earth\"}, \n        {\"Lava\", \"Fire\", \"Earth\"}, \n        {\"Steam\", \"Fire\", \"Water\"}, \n        {\"Storm\", \"Steam\", \"Mud\", \"Lava\"}\n    };\n    string target = \"Storm\";\n\n    int result = minGriefSeeds(witches, synthesisRules, target);\n    \n    cout << \"Minimum number of special Grief Seeds needed: \" << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:31:45"
+  }
+]

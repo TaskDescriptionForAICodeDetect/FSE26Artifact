@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_N 1000\n#define MAX_M 100\n\nint solve(int N, int M, int K) {\n    int dp[MAX_N + 1][MAX_N + 1];\n    memset(dp, 0, sizeof(dp));\n    \n    // Base case: first block can be painted in M ways\n    for (int j = 1; j <= M; j++) {\n        dp[1][0] = M;\n    }\n    \n    // Dynamic programming\n    for (int i = 2; i <= N; i++) {\n        for (int k = 0; k <= K; k++) {\n            for (int j = 1; j <= M; j++) {\n                // Case 1: Different color from previous block\n                dp[i][k] = (dp[i][k] + (long long)dp[i-1][k] * (M-1)) % MOD;\n                \n                // Case 2: Same color as previous block\n                if (k > 0) {\n                    dp[i][k] = (dp[i][k] + (long long)dp[i-1][k-1]) % MOD;\n                }\n            }\n        }\n    }\n    \n    // Sum all possible ways\n    int total = 0;\n    for (int k = 0; k <= K; k++) {\n        total = (total + dp[N][k]) % MOD;\n    }\n    \n    return total;\n}\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n    printf(\"%d\\n\", solve(N, M, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_N 2000\n#define MAX_K 2000\n\nlong long dp[MAX_N + 1][MAX_K + 1];\nlong long comb[MAX_N + 1][MAX_N + 1];\n\nvoid precompute_comb() {\n    for (int i = 0; i <= MAX_N; i++) {\n        comb[i][0] = 1;\n        for (int j = 1; j <= i; j++) {\n            comb[i][j] = (comb[i - 1][j - 1] + comb[i - 1][j]) % MOD;\n        }\n    }\n}\n\nlong long solve(int N, int M, int K) {\n    if (M == 1) {\n        return K >= N - 1 ? 1 : 0;\n    }\n    memset(dp, 0, sizeof(dp));\n    dp[1][0] = M;\n    for (int i = 1; i < N; i++) {\n        for (int j = 0; j <= K; j++) {\n            if (dp[i][j] == 0) continue;\n            // Different color\n            dp[i + 1][j] = (dp[i + 1][j] + dp[i][j] * (M - 1)) % MOD;\n            // Same color\n            if (j + 1 <= K) {\n                dp[i + 1][j + 1] = (dp[i + 1][j + 1] + dp[i][j]) % MOD;\n            }\n        }\n    }\n    long long result = 0;\n    for (int j = 0; j <= K; j++) {\n        result = (result + dp[N][j]) % MOD;\n    }\n    return result;\n}\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n    precompute_comb();\n    printf(\"%lld\\n\", solve(N, M, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, M, K;\n    cin >> N >> M >> K;\n\n    vector<vector<long long>> dp(N + 1, vector<long long>(K + 1, 0));\n    dp[1][0] = M;\n\n    for (int i = 2; i <= N; ++i) {\n        for (int j = 0; j <= K; ++j) {\n            dp[i][j] = dp[i - 1][j] * (M - 1) % MOD;\n            if (j > 0) {\n                dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;\n            }\n        }\n    }\n\n    long long result = 0;\n    for (int j = 0; j <= K; ++j) {\n        result = (result + dp[N][j]) % MOD;\n    }\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:33:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int K = scanner.nextInt();\n\n        long[][] dp = new long[N + 1][K + 1];\n        dp[0][0] = 1;\n\n        for (int i = 1; i <= N; i++) {\n            for (int j = 0; j <= K; j++) {\n                if (i == 1) {\n                    dp[i][j] = (j == 0) ? M : 0;\n                } else {\n                    if (j == 0) {\n                        dp[i][j] = (dp[i - 1][j] * (M - 1)) % MOD;\n                    } else {\n                        dp[i][j] = (dp[i - 1][j] * (M - 1) + dp[i - 1][j - 1]) % MOD;\n                    }\n                }\n            }\n        }\n\n        long result = 0;\n        for (int j = 0; j <= K; j++) {\n            result = (result + dp[N][j]) % MOD;\n        }\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:33:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    private static final int MOD = 998244353;\n\n    public int countPaintings(int N, int M, int K) {\n        long[][][] dp = new long[N + 1][M + 1][K + 1];\n        \n        // Base case: first block can be painted in any color\n        for (int color = 1; color <= M; color++) {\n            dp[1][color][0] = 1;\n        }\n        \n        // Build dynamic programming table\n        for (int block = 2; block <= N; block++) {\n            for (int color = 1; color <= M; color++) {\n                for (int sameAdj = 0; sameAdj <= K; sameAdj++) {\n                    // Different color from previous block\n                    for (int prevColor = 1; prevColor <= M; prevColor++) {\n                        if (color != prevColor) {\n                            dp[block][color][0] += dp[block - 1][prevColor][sameAdj];\n                            dp[block][color][0] %= MOD;\n                        }\n                    }\n                    \n                    // Same color as previous block\n                    if (sameAdj < K) {\n                        dp[block][color][sameAdj + 1] += dp[block - 1][color][sameAdj];\n                        dp[block][color][sameAdj + 1] %= MOD;\n                    }\n                }\n            }\n        }\n        \n        // Sum up all valid colorings\n        long result = 0;\n        for (int color = 1; color <= M; color++) {\n            for (int sameAdj = 0; sameAdj <= K; sameAdj++) {\n                result += dp[N][color][sameAdj];\n                result %= MOD;\n            }\n        }\n        \n        return (int) result;\n    }\n}",
+    "timestamp": "2025-08-05 22:34:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\nconst int MAXN = 1e5 + 5;\n\nint N, M, K;\nlong long dp[MAXN][55][55];\n\nint main() {\n    cin >> N >> M >> K;\n    \n    for (int color = 1; color <= M; color++) {\n        dp[1][color][0] = 1;\n    }\n    \n    for (int i = 2; i <= N; i++) {\n        for (int curr_color = 1; curr_color <= M; curr_color++) {\n            for (int prev_color = 1; prev_color <= M; prev_color++) {\n                for (int same_color_count = 0; same_color_count <= K; same_color_count++) {\n                    if (curr_color == prev_color) {\n                        if (same_color_count + 1 <= K) {\n                            dp[i][curr_color][same_color_count + 1] += dp[i-1][prev_color][same_color_count];\n                            dp[i][curr_color][same_color_count + 1] %= MOD;\n                        }\n                    } else {\n                        dp[i][curr_color][0] += dp[i-1][prev_color][same_color_count];\n                        dp[i][curr_color][0] %= MOD;\n                    }\n                }\n            }\n        }\n    }\n    \n    long long total_ways = 0;\n    for (int color = 1; color <= M; color++) {\n        for (int same_color_count = 0; same_color_count <= K; same_color_count++) {\n            total_ways += dp[N][color][same_color_count];\n            total_ways %= MOD;\n        }\n    }\n    \n    cout << total_ways << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:34:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_ways_to_paint_blocks(N, M, K):\n    MOD = 998244353\n\n    # dp[i][j] means the number of ways to paint i blocks with j pairs having the same color\n    dp = [[0] * (K + 1) for _ in range(N + 1)]\n\n    # Base case\n    dp[0][0] = 1\n\n    for i in range(1, N + 1):\n        for j in range(K + 1):\n            dp[i][j] = dp[i - 1][j] * (M - 1) % MOD\n            if j > 0:\n                dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD\n\n    return dp[N][K]\n\n# Example usage:\nN, M, K = map(int, input().split())\nprint(count_ways_to_paint_blocks(N, M, K))",
+    "timestamp": "2025-08-13 11:20:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class PaintingBlocks {\n    private static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int K = sc.nextInt();\n        sc.close();\n\n        long[][] dp = new long[N + 1][K + 1];\n        dp[0][0] = M;\n\n        for (int i = 1; i < N; i++) {\n            for (int j = 0; j <= K; j++) {\n                // Case when current block is the same color as the previous one\n                dp[i][j] = dp[i - 1][j];\n\n                // Case when current block is a different color\n                if (j > 0) {\n                    dp[i][j] = (dp[i][j] + dp[i - 1][j - 1] * (M - 1)) % MOD;\n                }\n            }\n        }\n\n        long result = 0;\n        for (int j = 0; j <= K; j++) {\n            result = (result + dp[N - 1][j]) % MOD;\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 11:20:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nlong long dp[1001][1001];\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n\n    dp[0][0] = M;\n    for (int i = 1; i < N; i++) {\n        dp[i][0] = dp[i-1][0] * (M - 1) % MOD;\n        for (int j = 1; j <= K; j++) {\n            dp[i][j] = (dp[i-1][j] * (M - 1) + dp[i-1][j-1]) % MOD;\n        }\n    }\n\n    printf(\"%lld\\n\", dp[N-1][K]);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:20:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countWays(N, M, K) {\n  const MOD = 998244353;\n  const dp = Array.from({ length: N + 1 }, () => Array(K + 1).fill(0));\n\n  for (let i = 1; i <= N; i++) {\n    for (let j = 0; j <= Math.min(i, K); j++) {\n      if (i === 1) {\n        dp[i][j] = M;\n      } else {\n        dp[i][j] = dp[i - 1][j] * (M - 1) % MOD;\n        if (j > 0) {\n          dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;\n        }\n      }\n    }\n  }\n\n  return dp[N][K];\n}\n\n// Example usage:\n// const result = countWays(N, M, K);\n// console.log(result);",
+    "timestamp": "2025-08-13 11:20:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_painting_ways(N, M, K):\n    MOD = 998244353\n    \n    # dp[i][j][k] represents the number of ways to paint first i blocks\n    # where the last block is painted with color j\n    # and k adjacent block pairs have the same color\n    dp = [[[0 for _ in range(K+1)] for _ in range(M)] for _ in range(N+1)]\n    \n    # Initialize base case: first block can be painted in M ways\n    for j in range(M):\n        dp[1][j][0] = 1\n    \n    # Dynamic programming\n    for i in range(2, N+1):\n        for j in range(M):  # current block color\n            for prev_j in range(M):  # previous block color\n                for k in range(K+1):  # number of same color adjacent pairs\n                    if j == prev_j:\n                        # Same color, increment same color pairs if k < K\n                        if k < K:\n                            dp[i][j][k+1] = (dp[i][j][k+1] + dp[i-1][prev_j][k]) % MOD\n                    else:\n                        # Different color\n                        dp[i][j][k] = (dp[i][j][k] + dp[i-1][prev_j][k]) % MOD\n    \n    # Sum up all ways across colors and same color pair counts\n    total_ways = 0\n    for j in range(M):\n        for k in range(K+1):\n            total_ways = (total_ways + dp[N][j][k]) % MOD\n    \n    return total_ways\n\n# Example usage\nN, M, K = map(int, input().split())\nresult = count_painting_ways(N, M, K)\nprint(result)",
+    "timestamp": "2025-08-13 11:21:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countPaintings(N, M, K) {\n    const MOD = 998244353;\n    const dp = Array.from({ length: N }, () => \n        Array.from({ length: K + 1 }, () => \n            Array(2).fill(0)\n        )\n    );\n\n    for (let color = 0; color < M; color++) {\n        dp[0][0][0] = (dp[0][0][0] + 1) % MOD;\n    }\n\n    for (let i = 1; i < N; i++) {\n        for (let k = 0; k <= K; k++) {\n            for (let color = 0; color < M; color++) {\n                for (let prevColor = 0; prevColor < M; prevColor++) {\n                    if (color === prevColor) {\n                        if (k > 0) {\n                            dp[i][k][1] = (dp[i][k][1] + dp[i-1][k-1][1]) % MOD;\n                            dp[i][k][1] = (dp[i][k][1] + dp[i-1][k-1][0]) % MOD;\n                        }\n                    } else {\n                        dp[i][k][0] = (dp[i][k][0] + dp[i-1][k][0]) % MOD;\n                        dp[i][k][0] = (dp[i][k][0] + dp[i-1][k][1]) % MOD;\n                    }\n                }\n            }\n        }\n    }\n\n    let result = 0;\n    for (let k = 0; k <= K; k++) {\n        result = (result + dp[N-1][k][0]) % MOD;\n        result = (result + dp[N-1][k][1]) % MOD;\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 11:21:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef solve():\n    import sys\n    N, M, K = map(int, sys.stdin.readline().split())\n    \n    # Precompute factorial, inverse factorial, and powers\n    max_n = N\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    def comb(n, k):\n        if n < 0 or k < 0 or k > n:\n            return 0\n        return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD\n    \n    res = 0\n    for t in range(K + 1):\n        # C(N-1, t) * M * (M-1)^(N-1 - t)\n        term = comb(N - 1, t) * M % MOD\n        term = term * pow(M - 1, N - 1 - t, MOD) % MOD\n        res = (res + term) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 11:21:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split(/\\s+/);\n    let idx = 0;\n    const N = parseInt(input[idx++], 10);\n    const M = parseInt(input[idx++], 10);\n    const K = parseInt(input[idx++], 10);\n\n    // Initialize DP table: dp[i][j] = number of ways for first i blocks with j same pairs\n    let dp = Array.from({ length: N + 1 }, () => new Array(K + 1).fill(0));\n    dp[1][0] = M;\n\n    for (let i = 2; i <= N; i++) {\n        for (let j = 0; j <= K; j++) {\n            // Case 1: current block is different from previous\n            if (j >= 0) {\n                dp[i][j] = (dp[i][j] + dp[i - 1][j] * (M - 1)) % MOD;\n            }\n            // Case 2: current block is same as previous\n            if (j > 0) {\n                dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;\n            }\n        }\n    }\n\n    let result = 0;\n    for (let j = 0; j <= K; j++) {\n        result = (result + dp[N][j]) % MOD;\n    }\n    console.log(result);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 11:21:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, M, K;\n    cin >> N >> M >> K;\n    \n    vector<vector<int>> dp(N, vector<int>(K + 1, 0));\n    dp[0][0] = M;\n\n    for (int i = 1; i < N; ++i) {\n        for (int j = 0; j <= K; ++j) {\n            dp[i][j] = (dp[i - 1][j] * (M - 1)) % MOD;\n            if (j > 0)\n                dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD;\n        }\n    }\n    \n    int result = 0;\n    for (int j = 0; j <= K; ++j) {\n        result = (result + dp[N - 1][j]) % MOD;\n    }\n\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:03:15"
+  }
+]

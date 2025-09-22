@@ -1,0 +1,1 @@
+There are N cells arranged in a row, numbered from 1 to N. Tak starts at Cell 1 and wants to reach Cell N by picking integers from a given set of K non-intersecting segments. Each integer d allows Tak to move from Cell i to Cell i + d, provided he does not move out of the bounds of the cells. The task is to find the number of distinct ways Tak can reach Cell N, modulo 998244353.

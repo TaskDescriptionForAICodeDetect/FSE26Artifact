@@ -1,0 +1,1 @@
+Given n numbers a0, a1, ..., an-1 and q queries, you need to perform appropriate operations for q queries. There are three types of queries: 1) Perform a circular shift of values for a pair of l and r (l < r) between al and ar. 2) Find the minimum value for a given pair of l and r (l ≤ r) between al and ar. 3) Update the value of a specific position pos to val.

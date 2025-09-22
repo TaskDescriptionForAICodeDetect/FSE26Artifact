@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100001\n\nlong long tree[4 * MAX_N];\nlong long lazy[4 * MAX_N];\n\nvoid build(int node, int start, int end) {\n    if (start == end) {\n        tree[node] = 0;\n        return;\n    }\n    int mid = (start + end) / 2;\n    build(2 * node, start, mid);\n    build(2 * node + 1, mid + 1, end);\n    tree[node] = tree[2 * node] + tree[2 * node + 1];\n}\n\nvoid propagate(int node, int start, int end) {\n    if (lazy[node] != 0) {\n        tree[node] += (end - start + 1) * lazy[node];\n        if (start != end) {\n            lazy[2 * node] += lazy[node];\n            lazy[2 * node + 1] += lazy[node];\n        }\n        lazy[node] = 0;\n    }\n}\n\nvoid update(int node, int start, int end, int l, int r, long long val) {\n    propagate(node, start, end);\n    \n    if (start > end || start > r || end < l)\n        return;\n    \n    if (l <= start && end <= r) {\n        lazy[node] += val;\n        propagate(node, start, end);\n        return;\n    }\n    \n    int mid = (start + end) / 2;\n    update(2 * node, start, mid, l, r, val);\n    update(2 * node + 1, mid + 1, end, l, r, val);\n    \n    tree[node] = tree[2 * node] + tree[2 * node + 1];\n}\n\nlong long query(int node, int start, int end, int l, int r) {\n    if (start > end || start > r || end < l)\n        return 0;\n    \n    propagate(node, start, end);\n    \n    if (l <= start && end <= r)\n        return tree[node];\n    \n    int mid = (start + end) / 2;\n    long long left = query(2 * node, start, mid, l, r);\n    long long right = query(2 * node + 1, mid + 1, end, l, r);\n    \n    return left + right;\n}\n\nint main() {\n    int n, q;\n    scanf(\"%d %d\", &n, &q);\n    \n    build(1, 1, n);\n    \n    while (q--) {\n        int type;\n        scanf(\"%d\", &type);\n        \n        if (type == 1) {\n            int i;\n            long long x;\n            scanf(\"%d %lld\", &i, &x);\n            update(1, 1, n, i, i, x);\n        } else {\n            int s, t;\n            scanf(\"%d %d\", &s, &t);\n            printf(\"%lld\\n\", query(1, 1, n, s, t));\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MAX_N 100000\n\nint n;\nint bit[MAX_N + 1];\n\nvoid add(int i, int x) {\n    while (i <= n) {\n        bit[i] += x;\n        i += i & -i;\n    }\n}\n\nint sum(int i) {\n    int s = 0;\n    while (i > 0) {\n        s += bit[i];\n        i -= i & -i;\n    }\n    return s;\n}\n\nint getSum(int s, int t) {\n    return sum(t) - sum(s - 1);\n}\n\nint main() {\n    int q;\n    scanf(\"%d %d\", &n, &q);\n    \n    for (int i = 0; i <= n; i++) {\n        bit[i] = 0;\n    }\n    \n    while (q--) {\n        char op[10];\n        scanf(\"%s\", op);\n        if (op[0] == 'a') {\n            int i, x;\n            scanf(\"%d %d\", &i, &x);\n            add(i, x);\n        } else {\n            int s, t;\n            scanf(\"%d %d\", &s, &t);\n            printf(\"%d\\n\", getSum(s, t));\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nclass FenwickTree {\nprivate:\n    vector<long long> tree;\n    int n;\n\npublic:\n    FenwickTree(int size) : n(size + 1) {\n        tree.assign(n + 1, 0);\n    }\n\n    void update(int idx, long long delta) {\n        while (idx <= n) {\n            tree[idx] += delta;\n            idx += idx & -idx;\n        }\n    }\n\n    long long query(int idx) {\n        long long sum = 0;\n        while (idx > 0) {\n            sum += tree[idx];\n            idx -= idx & -idx;\n        }\n        return sum;\n    }\n\n    long long rangeQuery(int l, int r) {\n        return query(r) - query(l - 1);\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, q;\n    cin >> n >> q;\n\n    FenwickTree ft(n);\n\n    while (q--) {\n        string op;\n        cin >> op;\n        if (op == \"add\") {\n            int i;\n            long long x;\n            cin >> i >> x;\n            ft.update(i, x);\n        } else if (op == \"getSum\") {\n            int s, t;\n            cin >> s >> t;\n            cout << ft.rangeQuery(s, t) << '\\n';\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:19:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\n\npublic class Main {\n    static class FenwickTree {\n        long[] tree;\n        int size;\n\n        FenwickTree(int n) {\n            this.size = n;\n            tree = new long[n + 1];\n        }\n\n        void add(int i, long x) {\n            while (i <= size) {\n                tree[i] += x;\n                i += i & -i;\n            }\n        }\n\n        long sum(int i) {\n            long res = 0;\n            while (i > 0) {\n                res += tree[i];\n                i -= i & -i;\n            }\n            return res;\n        }\n\n        long getSum(int s, int t) {\n            return sum(t) - sum(s - 1);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] firstLine = br.readLine().split(\" \");\n        int n = Integer.parseInt(firstLine[0]);\n        int q = Integer.parseInt(firstLine[1]);\n\n        FenwickTree ft = new FenwickTree(n);\n\n        for (int i = 0; i < q; i++) {\n            String[] query = br.readLine().split(\" \");\n            String op = query[0];\n            if (op.equals(\"add\")) {\n                int idx = Integer.parseInt(query[1]);\n                long x = Long.parseLong(query[2]);\n                ft.add(idx, x);\n            } else if (op.equals(\"getSum\")) {\n                int s = Integer.parseInt(query[1]);\n                int t = Integer.parseInt(query[2]);\n                System.out.println(ft.getSum(s, t));\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:19:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SequenceManipulation {\n    private static long[] tree;\n    private static int n;\n\n    public static void update(int index, long value) {\n        while (index <= n) {\n            tree[index] += value;\n            index += index & (-index);\n        }\n    }\n\n    public static long query(int index) {\n        long sum = 0;\n        while (index > 0) {\n            sum += tree[index];\n            index -= index & (-index);\n        }\n        return sum;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        n = scanner.nextInt();\n        int q = scanner.nextInt();\n\n        tree = new long[n + 1];\n\n        for (int i = 0; i < q; i++) {\n            int type = scanner.nextInt();\n            if (type == 1) {\n                int index = scanner.nextInt();\n                long value = scanner.nextLong();\n                update(index, value);\n            } else {\n                int s = scanner.nextInt();\n                int t = scanner.nextInt();\n                long result = query(t) - query(s - 1);\n                System.out.println(result);\n            }\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:19:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <iostream>\n\nclass FenwickTree {\nprivate:\n    std::vector<long long> tree;\n    int size;\n\npublic:\n    FenwickTree(int n) {\n        size = n;\n        tree.resize(n + 1, 0);\n    }\n\n    void update(int index, long long value) {\n        while (index <= size) {\n            tree[index] += value;\n            index += index & (-index);\n        }\n    }\n\n    long long query(int index) {\n        long long sum = 0;\n        while (index > 0) {\n            sum += tree[index];\n            index -= index & (-index);\n        }\n        return sum;\n    }\n\n    long long rangeSum(int left, int right) {\n        return query(right) - query(left - 1);\n    }\n};\n\nint main() {\n    int n, q;\n    std::cin >> n >> q;\n\n    FenwickTree ft(n);\n\n    while (q--) {\n        int type;\n        std::cin >> type;\n\n        if (type == 1) {\n            int i, x;\n            std::cin >> i >> x;\n            ft.update(i, x);\n        } else {\n            int s, t;\n            std::cin >> s >> t;\n            std::cout << ft.rangeSum(s, t) << std::endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:19:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class SequenceManipulator:\n    def __init__(self, n):\n        self.n = n\n        self.sequence = [0] * (n + 1)\n        self.lazy = [0] * (n + 1)\n\n    # Function to add value\n    def add(self, i, x):\n        self.sequence[i] += x\n\n    # Helper function to calculate prefix sum\n    def prefix_sum(self, idx):\n        total = 0\n        for i in range(1, idx + 1):\n            total += self.sequence[i]\n        return total\n\n    # Function to get sum between indices s and t\n    def getSum(self, s, t):\n        sum_st = self.prefix_sum(t) - self.prefix_sum(s - 1)\n        return sum_st\n\n# Example use case: Testing\ndef process_queries(n, queries):\n    manipulator = SequenceManipulator(n)\n    results = []\n    for query in queries:\n        operation = query[0]\n        if operation == 'add':\n            _, i, x = query\n            manipulator.add(i, x)\n        elif operation == 'getSum':\n            _, s, t = query\n            results.append(manipulator.getSum(s, t))\n    return results\n\n# Example usage\nqueries = [\n    ('add', 1, 5),\n    ('add', 3, 7),\n    ('getSum', 1, 2),\n    ('getSum', 1, 3),\n    ('getSum', 2, 3),\n    ('add', 2, 10),\n    ('getSum', 1, 3),\n]\n\nprint(process_queries(3, queries))",
+    "timestamp": "2025-08-13 09:59:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.io.BufferedReader;\nimport java.io.InputStreamReader;\nimport java.io.IOException;\nimport java.util.StringTokenizer;\n\npublic class SequenceManipulation {\n    private static int[] sequence;\n    private static int[] prefixSum;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer tokenizer = new StringTokenizer(br.readLine());\n        \n        int n = Integer.parseInt(tokenizer.nextToken());\n        int q = Integer.parseInt(tokenizer.nextToken());\n        \n        sequence = new int[n + 1];\n        prefixSum = new int[n + 1];\n        \n        for (int i = 0; i < q; i++) {\n            tokenizer = new StringTokenizer(br.readLine());\n            String operation = tokenizer.nextToken();\n            if (operation.equals(\"add\")) {\n                int index = Integer.parseInt(tokenizer.nextToken());\n                int value = Integer.parseInt(tokenizer.nextToken());\n                add(index, value);\n            } else if (operation.equals(\"getSum\")) {\n                int s = Integer.parseInt(tokenizer.nextToken());\n                int t = Integer.parseInt(tokenizer.nextToken());\n                System.out.println(getSum(s, t));\n            }\n        }\n    }\n\n    private static void add(int i, int x) {\n        sequence[i] += x;\n        for (int j = i; j < prefixSum.length; j++) {\n            prefixSum[j] += x;\n        }\n    }\n\n    private static int getSum(int s, int t) {\n        return prefixSum[t] - prefixSum[s - 1];\n    }\n}",
+    "timestamp": "2025-08-13 09:59:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_N 1000000\n\nlong long bit[MAX_N + 1];\nint n;\n\nvoid update(int index, int value) {\n    for (; index <= n; index += index & -index) {\n        bit[index] += value;\n    }\n}\n\nlong long query(int index) {\n    long long sum = 0;\n    for (; index > 0; index -= index & -index) {\n        sum += bit[index];\n    }\n    return sum;\n}\n\nlong long getSum(int s, int t) {\n    return query(t) - query(s - 1);\n}\n\nint main() {\n    int q;\n    scanf(\"%d %d\", &n, &q);\n    \n    while (q--) {\n        char operation[10];\n        scanf(\"%s\", operation);\n        \n        if (operation[0] == 'a') { // add(i, x)\n            int i, x;\n            scanf(\"%d %d\", &i, &x);\n            update(i, x);\n        } else if (operation[0] == 'g') { // getSum(s, t)\n            int s, t;\n            scanf(\"%d %d\", &s, &t);\n            printf(\"%lld\\n\", getSum(s, t));\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 09:59:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class SegmentTree:\n    def __init__(self, n):\n        self.n = n\n        self.tree = [0] * (4 * n)\n\n    def update(self, node, start, end, index, value):\n        if start == end:\n            self.tree[node] += value\n            return\n\n        mid = (start + end) // 2\n        if index <= mid:\n            self.update(2 * node, start, mid, index, value)\n        else:\n            self.update(2 * node + 1, mid + 1, end, index, value)\n        \n        self.tree[node] = self.tree[2 * node] + self.tree[2 * node + 1]\n\n    def query(self, node, start, end, left, right):\n        if right < start or end < left:\n            return 0\n\n        if left <= start and end <= right:\n            return self.tree[node]\n\n        mid = (start + end) // 2\n        left_sum = self.query(2 * node, start, mid, left, right)\n        right_sum = self.query(2 * node + 1, mid + 1, end, left, right)\n        \n        return left_sum + right_sum\n\ndef main():\n    n, q = map(int, input().split())\n    st = SegmentTree(n)\n\n    for _ in range(q):\n        query = list(map(int, input().split()))\n        \n        if query[0] == 1:\n            # add operation\n            i, x = query[1], query[2]\n            st.update(1, 1, n, i, x)\n        else:\n            # getSum operation\n            s, t = query[1], query[2]\n            print(st.query(1, 1, n, s, t))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:59:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\nclass FenwickTree:\n    def __init__(self, size):\n        self.n = size\n        self.tree = [0] * (self.n + 2)\n    \n    def add(self, index, delta):\n        while index <= self.n:\n            self.tree[index] += delta\n            index += index & -index\n    \n    def query(self, index):\n        res = 0\n        while index > 0:\n            res += self.tree[index]\n            index -= index & -index\n        return res\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    n = int(input[ptr])\n    ptr += 1\n    q = int(input[ptr])\n    ptr += 1\n    \n    ft = FenwickTree(n)\n    \n    for _ in range(q):\n        op = input[ptr]\n        ptr += 1\n        if op == 'add':\n            i = int(input[ptr])\n            ptr += 1\n            x = int(input[ptr])\n            ptr += 1\n            ft.add(i, x)\n        elif op == 'getSum':\n            s = int(input[ptr])\n            ptr += 1\n            t = int(input[ptr])\n            ptr += 1\n            sum_s_minus_1 = ft.query(s - 1)\n            sum_t = ft.query(t)\n            print(sum_t - sum_s_minus_1)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 09:59:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass SequenceManipulation {\n    vector<int> sequence;\n    int n;\n\npublic:\n    SequenceManipulation(int size) : n(size), sequence(size + 1, 0) {}\n\n    void add(int i, int x) {\n        sequence[i] += x;\n    }\n\n    int getSum(int s, int t) {\n        int sum = 0;\n        for (int i = s; i <= t; ++i) {\n            sum += sequence[i];\n        }\n        return sum;\n    }\n};\n\nint main() {\n    int n, q;\n    cin >> n >> q;\n    SequenceManipulation seq(n);\n\n    while (q--) {\n        string query;\n        cin >> query;\n        if (query == \"add\") {\n            int i, x;\n            cin >> i >> x;\n            seq.add(i, x);\n        } else if (query == \"getSum\") {\n            int s, t;\n            cin >> s >> t;\n            cout << seq.getSum(s, t) << endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:56:17"
+  }
+]

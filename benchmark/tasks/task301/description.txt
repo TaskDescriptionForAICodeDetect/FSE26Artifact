@@ -1,0 +1,1 @@
+The Humans Braving the Invaders: Simulate the defense of a base against invading aliens based on a series of queries. You need to record the actions of the invaders and the responses from the base. The simulation includes tracking the position of invaders, responding to movement, and executing attacks with either a sniper rifle or a grenade launcher.

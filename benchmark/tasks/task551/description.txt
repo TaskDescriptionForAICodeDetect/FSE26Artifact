@@ -1,0 +1,1 @@
+Ukuku1333 made a mistake and lost the original linear factors of a polynomial after expanding it. Given an n-degree polynomial in x, factor it back into the form of the product of linear factors of x.

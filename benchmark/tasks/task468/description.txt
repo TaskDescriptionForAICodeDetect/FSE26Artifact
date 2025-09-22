@@ -1,0 +1,16 @@
+Evacuation Route
+
+In this problem, we evaluate the safety of a linear corridor divided into W units, numbered from 0 to W-1. Each unit contains either an entrance door, an exit door, or a fire door. There can be multiple entrance and exit doors within the corridor.
+
+Assume a fire breaks out at time t=0, causing people outside to enter the corridor through entrance doors to escape through the exit doors to safer places. Each person can move to one adjacent unit or stay in their current unit at each time step.
+
+If a person is in unit i at time t, they can move to units i-1, i, or i+1, provided these units are within bounds (0 to W-1). Units with fire doors are completely blocked after a certain time, preventing entry or movement.
+
+The goal of this problem is to calculate the maximum number of people that can reach the exit doors optimally, given the door information. 
+
+Unit information is provided as W integers a_i:
+- If a_i = 0, unit i has an exit door.
+- If a_i < 0, unit i has a fire door that will block access after |a_i| time.
+- If a_i > 0, one person appears in unit i at each time t=0, 1, ..., a_i-1; these people start moving at time t+1.
+
+The task is to determine the maximum number of people that can reach the exit doors.

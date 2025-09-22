@@ -1,0 +1,1 @@
+We have N points in a two-dimensional plane. The coordinates of the i-th point (1 ≤ i ≤ N) are (x_i, y_i). Consider a rectangle whose sides are parallel to the coordinate axes that contains K or more of the N points in its interior. Points on the sides of the rectangle are considered to be in the interior. Find the minimum possible area of such a rectangle.

@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "-(a+b)=(-a*-b)",
+      "output": "YES"
+    },
+    {
+      "input": "(a->b)=(-a+b)",
+      "output": "YES"
+    },
+    {
+      "input": "((a*T)+b)=(-c+(a*-b))",
+      "output": "NO"
+    }
+  ]
+}

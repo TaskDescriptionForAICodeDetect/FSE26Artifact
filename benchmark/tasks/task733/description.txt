@@ -1,0 +1,1 @@
+Find the number of sequences of N non-negative integers A_1, A_2, ..., A_N that satisfy the following conditions: L ≤ A_1 + A_2 + ... + A_N ≤ R, and when the N elements are sorted in non-increasing order, the M-th and (M+1)-th elements are equal. Since the answer can be enormous, print it modulo 10^9 + 7.

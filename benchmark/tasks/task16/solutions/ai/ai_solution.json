@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(seat):\n    n = int(seat[:-1])\n    s = seat[-1]\n    \n    # Determine which attendant serves this row\n    attendant = 1 if n % 2 == 1 else 2\n    \n    # Time to complete previous rows\n    time = ((n - 1) // 2) * 7\n    \n    # Order of seats from right side\n    right_order = ['f', 'e', 'd']\n    # Order of seats from left side\n    left_order = ['c', 'b', 'a']\n    \n    if s in right_order:\n        time += right_order.index(s) + 1\n    else:\n        time += 3 + left_order.index(s) + 1\n    \n    return time\n\n# Read input and solve\nprint(solve(input().strip()))",
+    "timestamp": "2025-08-05 17:31:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "s = input().strip()\nn = int(s[:-1])\nseat = s[-1]\n\n# Determine the serving order for the seat\nseat_order = {'f': 0, 'e': 1, 'd': 2, 'a': 3, 'b': 4, 'c': 5}\n\n# Calculate the block and position\nblock = (n - 1) // 4\npos_in_block = (n - 1) % 4\n\nif pos_in_block == 0 or pos_in_block == 2:\n    # First attendant serves this row\n    time = block * 16 + pos_in_block * 6\nelse:\n    # Second attendant serves this row (2 rows ahead)\n    time = block * 16 + (pos_in_block - 1) * 6 + 12\n\ntime += seat_order[seat] + 1\nprint(time)",
+    "timestamp": "2025-08-05 17:31:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def waiting_time_vasya(seat_code):\n    n, s = int(seat_code[:-1]), seat_code[-1]\n    seat_order = {'f': 0, 'e': 1, 'd': 2, 'c': 3, 'b': 4, 'a': 5}\n    cycles = (n - 1) // 2\n    is_first_attendant = (n % 2) == 1\n    if is_first_attendant:\n        time = 6 * cycles + seat_order[s] + 1\n    else:\n        time = 6 * cycles + 6 + seat_order[s] + 1\n    return time\n\n# Read input and output the result\nseat_code = input().strip()\nprint(waiting_time_vasya(seat_code))",
+    "timestamp": "2025-08-12 21:41:15"
+  }
+]

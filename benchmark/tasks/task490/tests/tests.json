@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "2 2\n..\n..\n",
+      "output": "Second"
+    },
+    {
+      "input": "2 2\nX.\n..\n",
+      "output": "First"
+    },
+    {
+      "input": "4 5\nX....\n...X.\n.....\n.....\n",
+      "output": "First"
+    }
+  ]
+}

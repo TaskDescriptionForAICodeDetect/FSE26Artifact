@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint find_gcd_array(int* arr, int n) {\n    int result = arr[0];\n    for (int i = 1; i < n; i++) {\n        result = gcd(result, arr[i]);\n    }\n    return result;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* A = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int g = find_gcd_array(A, N);\n    if (g != 1) {\n        printf(\"Aoki\\n\");\n        free(A);\n        return 0;\n    }\n    \n    int nim_sum = 0;\n    for (int i = 0; i < N; i++) {\n        nim_sum ^= (A[i] - 1);\n    }\n    \n    printf(nim_sum ? \"Takahashi\" : \"Aoki\");\n    \n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint compute_gcd(int *arr, int n) {\n    int res = arr[0];\n    for (int i = 1; i < n; i++) {\n        res = gcd(res, arr[i]);\n        if (res == 1) {\n            break;\n        }\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *A = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    int total_moves = 0;\n    while (1) {\n        int g = compute_gcd(A, N);\n        if (g != 1) {\n            for (int i = 0; i < N; i++) {\n                A[i] /= g;\n            }\n            continue;\n        }\n\n        int sum = 0;\n        for (int i = 0; i < N; i++) {\n            sum += A[i] - 1;\n        }\n\n        if (sum % 2 == 1) {\n            printf(\"First\\n\");\n            break;\n        } else {\n            printf(\"Second\\n\");\n            break;\n        }\n    }\n\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    int total_moves = 0;\n    for (int num : A) {\n        total_moves += num - 1;\n    }\n\n    if (total_moves % 2 == 1) {\n        cout << \"Takahashi\" << endl;\n    } else {\n        cout << \"Aoki\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        int totalMoves = 0;\n        for (int num : A) {\n            totalMoves += num - 1;\n        }\n\n        if (totalMoves % 2 == 1) {\n            System.out.println(\"Takahashi\");\n        } else {\n            System.out.println(\"Aoki\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:26:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] A = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextInt();\n        }\n        \n        System.out.println(solve(A) ? \"Takahashi\" : \"Aoki\");\n    }\n    \n    static boolean solve(int[] A) {\n        int grundy = 0;\n        \n        for (int num : A) {\n            grundy ^= grundy(num);\n        }\n        \n        return grundy != 0;\n    }\n    \n    static int grundy(int x) {\n        if (x == 1) return 0;\n        return x - 1;\n    }\n}",
+    "timestamp": "2025-08-05 23:26:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b) {\n        a %= b;\n        swap(a, b);\n    }\n    return a;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n    \n    int g = A[0];\n    for (int i = 1; i < N; i++) {\n        g = gcd(g, A[i]);\n    }\n    \n    int sum = 0;\n    for (int num : A) {\n        sum += (num / g) - 1;\n    }\n    \n    cout << (sum % 2 == 1 ? \"Takahashi\" : \"Aoki\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_winner(N, A):\n    def gcd(a, b):\n        while b:\n            a, b = b, a % b\n        return a\n    \n    def gcd_list(numbers):\n        current_gcd = numbers[0]\n        for number in numbers[1:]:\n            current_gcd = gcd(current_gcd, number)\n        return current_gcd\n    \n    def play_game(nums, turn):\n        gcd_value = gcd_list(nums)\n        if gcd_value > 1:\n            nums = [num // gcd_value for num in nums]\n        \n        if all(num == 1 for num in nums):\n            return \"Aoki\" if turn == \"Takahashi\" else \"Takahashi\"\n        \n        for i in range(N):\n            if nums[i] > 1:\n                nums[i] -= 1\n                winner = play_game(nums, \"Aoki\" if turn == \"Takahashi\" else \"Takahashi\")\n                nums[i] += 1\n                if winner == turn:\n                    return turn\n        \n        return \"Aoki\" if turn == \"Takahashi\" else \"Takahashi\"\n    \n    return play_game(A, \"Takahashi\")\n\n# Example usage:\nN = 3\nA = [3, 4, 5]\nprint(find_winner(N, A))  # Output: Takahashi",
+    "timestamp": "2025-08-13 15:21:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class GameWinner {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        int xorSum = 0;\n\n        for (int i = 0; i < N; i++) {\n            xorSum ^= (A[i] > 1 ? (A[i] - 1) : 0);\n        }\n\n        System.out.println(xorSum != 0 ? \"Takahashi\" : \"Aoki\");\n    }\n}",
+    "timestamp": "2025-08-13 15:21:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n// Function to compute gcd\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\n// Function to determine the winner of the game\nconst char* determine_winner(int N, int A[]) {\n    int g = A[0];\n    for (int i = 1; i < N; i++) {\n        g = gcd(g, A[i]);\n    }\n    return N % 2 == 0 ? \"Aoki\" : \"Takahashi\";\n}\n\nint main() {\n    // Example usage\n    int N = 3;\n    int A[] = {1, 3, 5};\n\n    const char* winner = determine_winner(N, A);\n    printf(\"%s\\n\", winner);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:21:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    int xor_sum = 0;\n    for (int i = 0; i < N; ++i) {\n        xor_sum ^= (A[i] - 1); // Subtract 1 from each element and find XOR sum\n    }\n\n    if (xor_sum != 0) {\n        cout << \"Takahashi\" << endl; // If XOR sum isn't zero, Takahashi wins\n    } else {\n        cout << \"Aoki\" << endl; // Otherwise, Aoki wins\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:21:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef solve(A):\n    def gcd_of_list(nums):\n        result = nums[0]\n        for num in nums[1:]:\n            result = gcd(result, num)\n        return result\n\n    def game_outcome(nums):\n        if all(num == 1 for num in nums):\n            return False\n        \n        for i in range(len(nums)):\n            if nums[i] >= 2:\n                new_nums = nums.copy()\n                new_nums[i] -= 1\n                g = gcd_of_list(new_nums)\n                new_nums = [num // g for num in new_nums]\n                \n                if not game_outcome(new_nums):\n                    return True\n        \n        return False\n\n    return \"Takahashi\" if game_outcome(A) else \"Aoki\"\n\n# Input parsing\nN = int(input())\nA = list(map(int, input().split()))\n\n# Output result\nprint(solve(A))",
+    "timestamp": "2025-08-13 15:21:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\n\ndef solve():\n    N, *rest = map(int, sys.stdin.read().split())\n    A = rest[:N]\n    \n    total_moves = 0\n    for num in A:\n        total_moves += num - 1\n    \n    if total_moves % 2 == 1:\n        print(\"Takahashi\")\n    else:\n        print(\"Aoki\")\n\nif __name__ == '__main__':\n    solve()",
+    "timestamp": "2025-08-13 15:21:21"
+  }
+]

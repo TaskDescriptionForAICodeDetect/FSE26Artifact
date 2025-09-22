@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "10 15\n0 0\n",
+      "output": "a\n"
+    },
+    {
+      "input": "30 20\n0 0\n",
+      "output": "b\n"
+    }
+  ]
+}

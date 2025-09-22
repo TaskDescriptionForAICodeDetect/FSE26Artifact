@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def check_win(board, x, y, player):\n    board[x][y] = player\n    \n    # Check horizontal\n    for row in range(4):\n        for col in range(2):\n            if (board[row][col] == board[row][col+1] == board[row][col+2] == player):\n                board[x][y] = '.'\n                return True\n    \n    # Check vertical\n    for col in range(4):\n        for row in range(2):\n            if (board[row][col] == board[row+1][col] == board[row+2][col] == player):\n                board[x][y] = '.'\n                return True\n    \n    # Check diagonals\n    for row in range(2):\n        for col in range(2):\n            # Top-left to bottom-right diagonal\n            if (board[row][col] == board[row+1][col+1] == board[row+2][col+2] == player):\n                board[x][y] = '.'\n                return True\n            \n            # Top-right to bottom-left diagonal\n            if (board[row][col+2] == board[row+1][col+1] == board[row+2][col] == player):\n                board[x][y] = '.'\n                return True\n    \n    board[x][y] = '.'\n    return False\n\ndef solve_tic_tac_toe():\n    board = []\n    for _ in range(4):\n        board.append(list(input().strip()))\n    \n    for x in range(4):\n        for y in range(4):\n            if board[x][y] == '.':\n                if check_win(board, x, y, 'x'):\n                    print(\"YES\")\n                    return\n    \n    print(\"NO\")\n\nsolve_tic_tac_toe()",
+    "timestamp": "2025-08-05 17:32:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def check_win(board):\n    # Check rows\n    for i in range(4):\n        for j in range(2):\n            if board[i][j] == 'x' and board[i][j+1] == 'x' and board[i][j+2] == 'x':\n                return True\n    # Check columns\n    for j in range(4):\n        for i in range(2):\n            if board[i][j] == 'x' and board[i+1][j] == 'x' and board[i+2][j] == 'x':\n                return True\n    # Check diagonals (top-left to bottom-right)\n    for i in range(2):\n        for j in range(2):\n            if board[i][j] == 'x' and board[i+1][j+1] == 'x' and board[i+2][j+2] == 'x':\n                return True\n    # Check diagonals (top-right to bottom-left)\n    for i in range(2):\n        for j in range(2, 4):\n            if board[i][j] == 'x' and board[i+1][j-1] == 'x' and board[i+2][j-2] == 'x':\n                return True\n    return False\n\nboard = [list(input().strip()) for _ in range(4)]\nfound = False\n\nfor i in range(4):\n    for j in range(4):\n        if board[i][j] == '.':\n            board[i][j] = 'x'\n            if check_win(board):\n                found = True\n            board[i][j] = '.'\n            if found:\n                break\n    if found:\n        break\n\nprint(\"YES\" if found else \"NO\")",
+    "timestamp": "2025-08-05 17:32:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_win_by_single_turn(board):\n    def check_winning_line(line):\n        for i in range(len(line) - 2):\n            if line[i] == line[i+2] == 'x' and line[i+1] == '.':\n                return True\n            if line[i] == line[i+1] == 'x' and line[i+2] == '.':\n                return True\n            if line[i+1] == line[i+2] == 'x' and line[i] == '.':\n                return True\n        return False\n\n    def check_winning_position():\n        for row in board:\n            if check_winning_line(row):\n                return True\n\n        for col in zip(*board):\n            if check_winning_line(col):\n                return True\n\n        for d in range(1, -2, -1):\n            if check_winning_line([board[i][i+d] for i in range(4) if 0 <= i+d < 4]):\n                return True\n            if check_winning_line([board[i][3-i+d] for i in range(4) if 0 <= 3-i+d < 4]):\n                return True\n\n        return False\n\n    return \"YES\" if check_winning_position() else \"NO\"\n\n# Read input\nboard = [input().strip() for _ in range(4)]\n\n# Output result\nprint(can_win_by_single_turn(board))",
+    "timestamp": "2025-08-12 21:53:17"
+  }
+]

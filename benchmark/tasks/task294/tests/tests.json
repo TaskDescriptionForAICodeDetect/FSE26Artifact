@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "2\nfile10\nfile20\nfile3\n",
+      "output": "+\n-\n"
+    },
+    {
+      "input": "11\nX52Y\nX\nX5\nX52\nX52Y\nX52Y6\n32\nABC\nXYZ\nx51y\nX8Y\nX222\n",
+      "output": "-\n-\n-\n+\n+\n-\n-\n+\n+\n-\n+\n"
+    }
+  ]
+}

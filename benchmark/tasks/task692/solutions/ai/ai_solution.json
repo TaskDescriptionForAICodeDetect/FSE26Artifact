@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_STORES 100005\n\ntypedef struct {\n    long long opening_time;\n    long long closing_time;\n    long long wait_time_a;\n    long long wait_time_b;\n} Store;\n\nint compare(const void* a, const void* b) {\n    Store* storeA = (Store*)a;\n    Store* storeB = (Store*)b;\n    return storeA->closing_time < storeB->closing_time ? -1 : 1;\n}\n\nint main() {\n    int n;\n    long long t;\n    scanf(\"%d %lld\", &n, &t);\n\n    Store stores[MAX_STORES];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lld %lld %lld %lld\", \n            &stores[i].opening_time, \n            &stores[i].closing_time, \n            &stores[i].wait_time_a, \n            &stores[i].wait_time_b);\n    }\n\n    qsort(stores, n, sizeof(Store), compare);\n\n    long long current_time = 0;\n    int shopping_trips = 0;\n\n    for (int i = 0; i < n; i++) {\n        long long travel_time = 1;\n        long long arrival_time = current_time + travel_time;\n        long long wait_time = 0;\n\n        if (arrival_time < stores[i].opening_time) {\n            arrival_time = stores[i].opening_time;\n        }\n\n        wait_time = stores[i].wait_time_a * arrival_time + stores[i].wait_time_b;\n\n        if (arrival_time + wait_time <= stores[i].closing_time) {\n            shopping_trips++;\n            current_time = arrival_time + wait_time;\n        }\n    }\n\n    printf(\"%d\\n\", shopping_trips);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    long long A;\n    long long B;\n    long long C;\n} Store;\n\nint compare(const void *a, const void *b) {\n    Store *storeA = (Store *)a;\n    Store *storeB = (Store *)b;\n    return (storeA->C > storeB->C) - (storeA->C < storeB->C);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Store *stores = (Store *)malloc(N * sizeof(Store));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld %lld %lld\", &stores[i].A, &stores[i].B, &stores[i].C);\n    }\n    \n    qsort(stores, N, sizeof(Store), compare);\n    \n    long long current_time = 0;\n    int count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        long long A = stores[i].A;\n        long long B = stores[i].B;\n        long long C = stores[i].C;\n        \n        long long arrival_time = current_time + A;\n        if (arrival_time > C) {\n            continue;\n        }\n        \n        long long waiting_time = B * arrival_time;\n        long long departure_time = arrival_time + waiting_time;\n        if (departure_time <= C) {\n            count++;\n            current_time = departure_time;\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    free(stores);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, int>> stores(N);\n    for (int i = 0; i < N; ++i) {\n        int A, B;\n        cin >> A >> B;\n        stores[i] = {B, A};\n    }\n    \n    sort(stores.begin(), stores.end());\n    \n    int current_time = 0;\n    int count = 0;\n    for (const auto &store : stores) {\n        int B = store.first;\n        int A = store.second;\n        if (current_time + A <= B) {\n            current_time += A;\n            count++;\n        }\n    }\n    \n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        long[][] stores = new long[N][3];\n        for (int i = 0; i < N; i++) {\n            stores[i][0] = scanner.nextLong();\n            stores[i][1] = scanner.nextLong();\n            stores[i][2] = scanner.nextLong();\n        }\n\n        Arrays.sort(stores, (a, b) -> Long.compare(a[1] + a[2], b[1] + b[2]));\n\n        long[][] dp = new long[N + 1][N + 1];\n        for (int i = 0; i <= N; i++) {\n            Arrays.fill(dp[i], Long.MAX_VALUE);\n        }\n        dp[0][0] = 0;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j <= i; j++) {\n                if (dp[i][j] == Long.MAX_VALUE) continue;\n                if (dp[i][j] + stores[i][0] + stores[i][1] <= stores[i][2]) {\n                    if (dp[i + 1][j + 1] > dp[i][j] + stores[i][0]) {\n                        dp[i + 1][j + 1] = dp[i][j] + stores[i][0];\n                    }\n                }\n                if (dp[i + 1][j] > dp[i][j]) {\n                    dp[i + 1][j] = dp[i][j];\n                }\n            }\n        }\n\n        int maxTrips = 0;\n        for (int j = N; j >= 0; j--) {\n            if (dp[N][j] != Long.MAX_VALUE) {\n                maxTrips = j;\n                break;\n            }\n        }\n        System.out.println(maxTrips);\n    }\n}",
+    "timestamp": "2025-08-05 22:35:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MaxShoppingTrips {\n    public static int maximizeShoppingTrips(int[] storeCloseTime, int[][] waitTimes) {\n        int n = storeCloseTime.length;\n        int[] dp = new int[n + 1];\n        \n        for (int i = 1; i <= n; i++) {\n            dp[i] = dp[i-1];\n            for (int j = 0; j < i; j++) {\n                int arrivalTime = 0;\n                for (int k = j; k < i; k++) {\n                    arrivalTime += 1; // travel time\n                    int waitTime = calculateWaitTime(arrivalTime, waitTimes[k]);\n                    if (arrivalTime + waitTime <= storeCloseTime[k]) {\n                        dp[i] = Math.max(dp[i], dp[j] + i - j);\n                        break;\n                    }\n                }\n            }\n        }\n        \n        return dp[n];\n    }\n    \n    private static int calculateWaitTime(int arrivalTime, int[] storeParams) {\n        // Hypothetical wait time calculation based on arrival time and store parameters\n        return storeParams[0] * arrivalTime + storeParams[1];\n    }\n    \n    public static void main(String[] args) {\n        int[] storeCloseTime = {10, 15, 20};\n        int[][] waitTimes = {{1, 2}, {2, 1}, {3, 0}};\n        System.out.println(maximizeShoppingTrips(storeCloseTime, waitTimes));\n    }\n}",
+    "timestamp": "2025-08-05 22:36:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxShoppingTrips(int totalTime, vector<pair<int, int>>& stores) {\n    // Sort stores based on closing time\n    sort(stores.begin(), stores.end(), [](const auto& a, const auto& b) {\n        return a.second < b.second;\n    });\n\n    int trips = 0;\n    int currentTime = 0;\n\n    for (const auto& store : stores) {\n        int travelTime = store.first;\n        int closeTime = store.second;\n\n        // Check if we can visit the store\n        if (currentTime + travelTime <= closeTime) {\n            currentTime += travelTime;\n            trips++;\n        }\n    }\n\n    return trips;\n}\n\nint main() {\n    int totalTime, numStores;\n    cin >> totalTime >> numStores;\n\n    vector<pair<int, int>> stores(numStores);\n    for (int i = 0; i < numStores; i++) {\n        cin >> stores[i].first >> stores[i].second;\n    }\n\n    int result = maxShoppingTrips(totalTime, stores);\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:36:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_shopping_trips(stores, closing_time):\n    n = len(stores)\n    max_trips = 0\n    \n    # Sort stores by their effective closing time (arrival time + waiting time)\n    stores.sort(key=lambda x: x[1] + x[2])\n\n    current_time = 0\n    trips = 0\n    for i in range(n):\n        travel_time = 1\n        arrival_time = current_time + travel_time\n        if arrival_time > stores[i][1]:  # If we arrive after the store closed\n            continue\n        waiting_time = stores[i][2]\n        shopping_time = 1  # Let's assume shopping takes one unit of time\n        departure_time = arrival_time + waiting_time + shopping_time\n        if departure_time <= closing_time:\n            trips += 1\n            current_time = departure_time\n            \n    return trips\n\n# Example usage:\n# stores = [(arrival_time, closing_time, waiting_param), ...]\nstores = [(0, 5, 2), (0, 3, 1), (0, 6, 3)]\nclosing_time = 10\nprint(max_shopping_trips(stores, closing_time))",
+    "timestamp": "2025-08-13 11:34:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MaxShoppingTrips {\n\n    static int maxTrips(int closingTime, int[][] stores) {\n        int trips = 0;\n        int time = 0;\n\n        Arrays.sort(stores, Comparator.comparingInt(o -> o[1]));\n\n        for (int[] store : stores) {\n            int a = store[0];\n            int b = store[1];\n            int c = store[2];\n\n            int waitTime = a * time + b;\n            if (time + 1 + waitTime <= closingTime) {\n                trips++;\n                time += 1 + waitTime;\n            } else break;\n        }\n        \n        return trips;\n    }\n    \n    public static void main(String[] args) {\n        int closingTime = 10;\n        int[][] stores = { {1, 2, 1}, {2, 2, 3}, {3, 1, 2} };\n        \n        System.out.println(maxTrips(closingTime, stores));\n    }\n}",
+    "timestamp": "2025-08-13 11:34:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint maxShoppingTrips(int n, int closeTime, int arrival[], int lineParams[]) {\n    int trips = 0, currentTime = 0;\n    for (int i = 0; i < n; i++) {\n        int waitTime = lineParams[i] - (arrival[i] + currentTime);\n        if (waitTime > 0) {\n            currentTime += waitTime; // Wait in line\n        }\n        currentTime += 1; // One unit of time to travel\n        if (currentTime <= closeTime) {\n            trips++;\n        } else {\n            break;\n        }\n    }\n    return trips;\n}\n\nint main() {\n    int n = 5; // Number of stores\n    int closeTime = 10; // Store closing time\n    int arrival[] = {0, 2, 3, 5, 7}; // Arrival times if no waiting\n    int lineParams[] = {0, 2, 2, 3, 5}; // Parameters for line waiting\n    \n    int result = maxShoppingTrips(n, closeTime, arrival, lineParams);\n    printf(\"Maximum shopping trips: %d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:34:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxShoppingTrips(storeData, closingTime) {\n    const calculateWaitingTime = (arrivalTime, a, b) => {\n        return (a * arrivalTime + b) % 10;\n    }\n\n    let currentTime = 0;\n    let trips = 0;\n\n    while (true) {\n        let nextStoreIndex = -1;\n        let minimumWaitingTime = Infinity;\n\n        for (let i = 0; i < storeData.length; i++) {\n            let [a, b] = storeData[i];\n            let waitingTime = calculateWaitingTime(currentTime + 1, a, b);\n            if (currentTime + 1 + waitingTime < closingTime && waitingTime < minimumWaitingTime) {\n                minimumWaitingTime = waitingTime;\n                nextStoreIndex = i;\n            }\n        }\n\n        if (nextStoreIndex === -1) break;\n\n        currentTime += 1 + minimumWaitingTime;\n        trips++;\n    }\n\n    return trips;\n}\n\n// Example usage:\n// const storeData = [[1, 3], [2, 5], [1, 4]];\n// const closingTime = 20;\n// console.log(maxShoppingTrips(storeData, closingTime)); // Outputs the maximum number of trips",
+    "timestamp": "2025-08-13 11:34:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_shopping_trips(stores, close_time):\n    stores.sort(key=lambda x: x[1])  # Sort stores by closing time\n    \n    current_time = 0\n    trips = 0\n    \n    for store_open, store_close, wait_time in stores:\n        # Check if store is open\n        if current_time + 1 > store_close:\n            continue\n        \n        # Travel time\n        current_time += 1\n        \n        # Check waiting time\n        if current_time + wait_time > store_close:\n            continue\n        \n        # Update current time after waiting\n        current_time += wait_time\n        trips += 1\n    \n    return trips\n\n# Example usage\ndef main():\n    N, T = map(int, input().split())  # Number of stores, max time\n    stores = []\n    \n    for _ in range(N):\n        A, B, C = map(int, input().split())\n        stores.append((A, B, C))  # Open time, close time, wait time\n    \n    result = max_shopping_trips(stores, T)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 11:34:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxShoppingTrips(stores, closeTime) {\n    stores.sort((a, b) => a.waitTime - b.waitTime);\n    \n    let currentTime = 0;\n    let trips = 0;\n    \n    for (let store of stores) {\n        let travelTime = store.distance;\n        let waitTime = calculateWaitTime(currentTime, store);\n        let totalTime = travelTime + waitTime;\n        \n        if (currentTime + totalTime <= closeTime) {\n            trips++;\n            currentTime += totalTime;\n        }\n    }\n    \n    return trips;\n}\n\nfunction calculateWaitTime(arrivalTime, store) {\n    return Math.max(0, store.baseWait + store.waitFactor * arrivalTime);\n}",
+    "timestamp": "2025-08-13 11:34:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import heapq\n\ndef solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    N = int(data[idx])\n    idx += 1\n    stores = []\n    for _ in range(N):\n        A, B = map(int, data[idx:idx+2])\n        stores.append((A, B))\n        idx += 2\n    \n    stores.sort()\n    max_heap = []\n    res = 0\n    time = 0\n    i = 0\n    while True:\n        while i < N and stores[i][0] <= time:\n            A, B = stores[i]\n            heapq.heappush(max_heap, -B)\n            i += 1\n        if max_heap:\n            B = -heapq.heappop(max_heap)\n            res += 1\n            time += 1\n        else:\n            if i < N:\n                time = stores[i][0]\n            else:\n                break\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 11:34:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxShoppingTrips(N, T, A, B) {\n    let stores = [];\n    for (let i = 0; i < N; i++) {\n        stores.push({ A: A[i], B: B[i] });\n    }\n    \n    stores.sort((a, b) => {\n        let termA = a.A + a.B;\n        let termB = b.A + b.B;\n        if (termA !== termB) {\n            return termA - termB;\n        } else {\n            return a.A - b.A;\n        }\n    });\n    \n    let dp = new Array(N + 1).fill().map(() => new Array(T + 1).fill(0));\n    \n    for (let i = 1; i <= N; i++) {\n        const a = stores[i - 1].A;\n        const b = stores[i - 1].B;\n        for (let t = 0; t <= T; t++) {\n            if (t < a) {\n                dp[i][t] = dp[i - 1][t];\n            } else {\n                const timeNeeded = a + b;\n                if (t >= timeNeeded) {\n                    dp[i][t] = Math.max(dp[i - 1][t], dp[i - 1][t - timeNeeded] + 1);\n                } else {\n                    dp[i][t] = dp[i - 1][t];\n                }\n            }\n        }\n    }\n    \n    return dp[N][T];\n}",
+    "timestamp": "2025-08-13 11:34:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Store {\n    int closeTime;\n    int a;\n    int b;\n    int c;\n};\n\nint calculateWaitTime(int arrivalTime, int a, int b, int c) {\n    return a*arrivalTime*arrivalTime + b*arrivalTime + c;\n}\n\nint main() {\n    int n; // Number of stores\n    cin >> n;\n    \n    vector<Store> stores(n);\n    for (int i = 0; i < n; i++) {\n        cin >> stores[i].closeTime >> stores[i].a >> stores[i].b >> stores[i].c;\n    }\n    \n    sort(stores.begin(), stores.end(), [](Store s1, Store s2) {\n        return s1.closeTime < s2.closeTime;\n    });\n    \n    int time = 0;\n    int trips = 0;\n    \n    for (int i = 0; i < n; i++) {\n        int arrivalTime = time + 1; // 1 unit of time spent traveling\n        int waitingTime = calculateWaitTime(arrivalTime, stores[i].a, stores[i].b, stores[i].c);\n        int departureTime = arrivalTime + waitingTime;\n        \n        if (departureTime <= stores[i].closeTime) {\n            trips++;\n            time = departureTime;\n        }\n    }\n    \n    cout << trips << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:04:22"
+  }
+]

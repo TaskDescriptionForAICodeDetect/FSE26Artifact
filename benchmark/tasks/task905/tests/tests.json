@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "17\n3 6\n1 2\n3 1\n7 4\n5 7\n1 4",
+      "output": "Fennec"
+    },
+    {
+      "input": "24\n1 4\n4 2\n2 3",
+      "output": "Snuke"
+    }
+  ]
+}

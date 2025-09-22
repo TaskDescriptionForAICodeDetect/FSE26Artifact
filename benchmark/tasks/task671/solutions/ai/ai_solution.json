@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint solve(int X, int Y, int A, int B, int C) {\n    int totalBalls = X + Y;\n    int maxGroups = 0;\n    \n    // Try all possible groupings\n    for (int mask = 1; mask < (1 << totalBalls); mask++) {\n        int currentSum = 0;\n        int groupCount = 0;\n        \n        // Count number of groups and calculate their sums\n        for (int i = 0; i < totalBalls; i++) {\n            if (mask & (1 << i)) {\n                currentSum += (i < X) ? A : B;\n                \n                // Check if current group is good\n                if (currentSum % C == 0) {\n                    groupCount++;\n                    currentSum = 0;\n                }\n            }\n        }\n        \n        // Add any remaining non-zero sum as a group if divisible\n        if (currentSum > 0 && currentSum % C == 0) {\n            groupCount++;\n        }\n        \n        maxGroups = (groupCount > maxGroups) ? groupCount : maxGroups;\n    }\n    \n    return maxGroups;\n}\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    \n    while (T--) {\n        int X, Y, A, B, C;\n        scanf(\"%d %d %d %d %d\", &X, &Y, &A, &B, &C);\n        \n        printf(\"%d\\n\", solve(X, Y, A, B, C));\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint min(int a, int b) {\n    return (a < b) ? a : b;\n}\n\nint solve() {\n    int X, Y, A, B, C;\n    scanf(\"%d %d %d %d %d\", &X, &Y, &A, &B, &C);\n    \n    int max_good = 0;\n    \n    for (int k = 0; k <= X + Y; ++k) {\n        int lower = max(0, k - Y);\n        int upper = min(X, k);\n        \n        int found = 0;\n        for (int x = lower; x <= upper; ++x) {\n            int y = k - x;\n            if ((A * x + B * y) % C == 0) {\n                found = 1;\n                break;\n            }\n        }\n        if (found) {\n            max_good = k;\n        }\n    }\n    \n    return max_good;\n}\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    while (T--) {\n        printf(\"%d\\n\", solve());\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\n\nint solve() {\n    int X, Y, A, B, C;\n    cin >> X >> Y >> A >> B >> C;\n    \n    int max_good = 0;\n    \n    for (int k = 0; k <= min(X, Y); ++k) {\n        int remA = (A % C) * k;\n        int remB = (B % C) * k;\n        int total_rem = (remA + remB) % C;\n        \n        int remainingA = X - k;\n        int remainingB = Y - k;\n        \n        int possible = k;\n        \n        if (total_rem == 0) {\n            possible += remainingA / (C / __gcd(A % C == 0 ? C : A % C, C));\n            possible += remainingB / (C / __gcd(B % C == 0 ? C : B % C, C));\n            max_good = max(max_good, possible);\n        }\n    }\n    \n    return max_good;\n}\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        cout << solve() << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int T = scanner.nextInt();\n        for (int t = 0; t < T; t++) {\n            int X = scanner.nextInt();\n            int Y = scanner.nextInt();\n            int A = scanner.nextInt();\n            int B = scanner.nextInt();\n            int C = scanner.nextInt();\n\n            int maxGoodGroups = 0;\n\n            for (int k = 0; k <= Math.min(X, Y); k++) {\n                int remainingX = X - k;\n                int remainingY = Y - k;\n                int totalGroups = k;\n\n                int xGroups = remainingX / C;\n                totalGroups += xGroups;\n\n                int yGroups = remainingY / C;\n                totalGroups += yGroups;\n\n                if (totalGroups > maxGoodGroups) {\n                    maxGoodGroups = totalGroups;\n                }\n            }\n\n            System.out.println(maxGoodGroups);\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:31:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class SnukeBalls {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter pw = new PrintWriter(System.out);\n        \n        int T = Integer.parseInt(br.readLine());\n        \n        while (T-- > 0) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int X = Integer.parseInt(st.nextToken());\n            int Y = Integer.parseInt(st.nextToken());\n            int A = Integer.parseInt(st.nextToken());\n            int B = Integer.parseInt(st.nextToken());\n            int C = Integer.parseInt(st.nextToken());\n            \n            pw.println(solve(X, Y, A, B, C));\n        }\n        \n        pw.close();\n    }\n    \n    static int solve(int X, int Y, int A, int B, int C) {\n        int goodGroups = 0;\n        \n        for (int i = 1; i <= X + Y; i++) {\n            for (int xCount = 0; xCount <= X; xCount++) {\n                int yCount = i - xCount;\n                \n                if (yCount < 0 || yCount > Y) continue;\n                \n                int groupSum = A * xCount + B * yCount;\n                \n                if (groupSum % C == 0) {\n                    goodGroups++;\n                }\n            }\n        }\n        \n        return goodGroups;\n    }\n}",
+    "timestamp": "2025-08-05 22:31:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint solve(int X, int Y, int A, int B, int C) {\n    vector<int> balls;\n    for (int i = 0; i < X; i++) balls.push_back(A);\n    for (int i = 0; i < Y; i++) balls.push_back(B);\n    \n    int n = balls.size();\n    int max_good_groups = 0;\n    \n    for (int mask = 1; mask < (1 << n); mask++) {\n        int group_sum = 0;\n        int group_count = 0;\n        \n        for (int j = 0; j < n; j++) {\n            if (mask & (1 << j)) {\n                group_sum += balls[j];\n                group_count++;\n            }\n        }\n        \n        if (group_sum % C == 0) {\n            max_good_groups = max(max_good_groups, group_count);\n        }\n    }\n    \n    return max_good_groups;\n}\n\nint main() {\n    int T;\n    cin >> T;\n    \n    while (T--) {\n        int X, Y, A, B, C;\n        cin >> X >> Y >> A >> B >> C;\n        \n        cout << solve(X, Y, A, B, C) << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_good_groups(X, Y, A, B, C):\n    max_groups = 0\n    \n    # Check if A can be made a group\n    if A % C == 0:\n        max_groups += X\n    \n    # Check if B can be made a group\n    if B % C == 0:\n        max_groups += Y\n    \n    # If none are individually multiples, try to combine\n    if max_groups == 0:\n        # Check sum of A and B\n        if (A + B) % C == 0:\n            max_groups = min(X, Y)\n    \n    return max_groups\n\ndef solve():\n    import sys\n    input = sys.stdin.read\n    \n    data = input().split()\n    T = int(data[0])\n    index = 1\n    results = []\n    \n    for _ in range(T):\n        X = int(data[index])\n        Y = int(data[index + 1])\n        A = int(data[index + 2])\n        B = int(data[index + 3])\n        C = int(data[index + 4])\n        index += 5\n        \n        results.append(max_good_groups(X, Y, A, B, C))\n    \n    for res in results:\n        print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 11:09:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SnukeBallGroups {\n    \n    public static int maxGoodGroups(int x, int y, int a, int b, int c) {\n        int maxFromA = (a % c == 0) ? x : x * (c / gcd(a, c));\n        int maxFromB = (b % c == 0) ? y : y * (c / gcd(b, c));\n        return maxFromA + maxFromB;\n    }\n\n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int t = scanner.nextInt();\n        while (t-- > 0) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            int a = scanner.nextInt();\n            int b = scanner.nextInt();\n            int c = scanner.nextInt();\n            \n            System.out.println(maxGoodGroups(x, y, a, b, c));\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 11:09:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint maxGoodGroups(int X, int Y, int A, int B, int C) {\n    int maxGroups = 0;\n\n    for (int i = 0; i <= X; i++) {\n        for (int j = 0; j <= Y; j++) {\n            int sum = i * A + j * B;\n            if (sum % C == 0 && i + j > 0) {\n                int groups = i + j;\n                if (groups > maxGroups) {\n                    maxGroups = groups;\n                }\n            }\n        }\n    }\n\n    return maxGroups;\n}\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n\n    while (T--) {\n        int X, Y, A, B, C;\n        scanf(\"%d %d %d %d %d\", &X, &Y, &A, &B, &C);\n\n        printf(\"%d\\n\", maxGoodGroups(X, Y, A, B, C));\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:09:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxGoodGroups(T, testCases) {\n    const results = [];\n    for (let t = 0; t < T; t++) {\n        const [X, Y, A, B, C] = testCases[t];\n        const balls = Array(X).fill(A).concat(Array(Y).fill(B));\n\n        function getGreedyPartition(sumArray, mod) {\n            const remainderCounts = new Array(mod).fill(0);\n            \n            for (let elem of sumArray) {\n                remainderCounts[elem % mod]++;\n            }\n            \n            let pairs = Math.min(remainderCounts[0], 1);\n            for (let r = 1; r <= mod / 2; r++){\n                if (r === mod - r) {\n                    pairs += Math.floor(remainderCounts[r] / 2);\n                } else {\n                    pairs += Math.min(remainderCounts[r], remainderCounts[mod - r]);\n                }\n            }\n            return pairs;\n        }\n        \n        results.push(getGreedyPartition(balls, C));\n    }\n    return results;\n}\n\n// Example Input usage:\nconst testCases = [\n    [3, 3, 1, 2, 3],\n    [5, 3, 5, 7, 5],\n    [2, 2, 1, 1, 2]\n];\nconsole.log(maxGoodGroups(3, testCases)); // Process 3 test cases",
+    "timestamp": "2025-08-13 11:09:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_test_case():\n    X, Y, A, B, C = map(int, input().split())\n    \n    # Count balls with A and B\n    count_a = X\n    count_b = Y\n    \n    max_good_groups = 0\n    \n    # Try all possible group combinations\n    for a_group in range(count_a + 1):\n        for b_group in range(count_b + 1):\n            # Skip if no groups or exceeds total balls\n            if a_group == 0 and b_group == 0:\n                continue\n            if a_group + b_group > X + Y:\n                continue\n            \n            # Calculate group sum\n            group_sum = a_group * A + b_group * B\n            \n            # Check if group is good\n            if group_sum % C == 0:\n                max_good_groups = max(max_good_groups, 1)\n    \n    return max_good_groups\n\n# Read number of test cases\nT = int(input())\n\n# Process each test case\nfor _ in range(T):\n    result = solve_test_case()\n    print(result)",
+    "timestamp": "2025-08-13 11:09:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(T, testCases) {\n    const result = [];\n    \n    for (let t = 0; t < T; t++) {\n        const [X, Y, A, B, C] = testCases[t];\n        let maxGroups = 0;\n        \n        // Try all possible combinations of grouping\n        for (let mask = 1; mask < (1 << (X + Y)); mask++) {\n            let currentSum = 0;\n            let goodGroups = 0;\n            let ballsUsed = 0;\n            let xBallsUsed = 0;\n            let yBallsUsed = 0;\n            \n            // Check each bit in the mask\n            for (let j = 0; j < X + Y; j++) {\n                if (mask & (1 << j)) {\n                    // If ball is from X type\n                    if (j < X) {\n                        currentSum += A;\n                        xBallsUsed++;\n                    } \n                    // If ball is from Y type\n                    else {\n                        currentSum += B;\n                        yBallsUsed++;\n                    }\n                    ballsUsed++;\n                    \n                    // If current group is complete (check sum and reset)\n                    if (currentSum % C === 0) {\n                        goodGroups++;\n                        currentSum = 0;\n                    }\n                }\n            }\n            \n            // Check if all balls used and update max groups\n            if (xBallsUsed <= X && yBallsUsed <= Y && ballsUsed === X + Y) {\n                maxGroups = Math.max(maxGroups, goodGroups);\n            }\n        }\n        \n        result.push(maxGroups);\n    }\n    \n    return result;\n}\n\n// Example usage:\n// const T = 2;\n// const testCases = [\n//     [2, 2, 3, 4, 5],  // X, Y, A, B, C\n//     [3, 1, 2, 5, 7]\n// ];\n// console.log(solve(T, testCases));",
+    "timestamp": "2025-08-13 11:09:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    T = int(input[ptr])\n    ptr += 1\n    for _ in range(T):\n        X, Y, A, B, C = map(int, input[ptr:ptr+5])\n        ptr +=5\n        \n        max_groups = 0\n        \n        # We can iterate up to min(X, Y, C) for possible k\n        max_possible_k = min(X, Y, C)\n        for k in range(0, max_possible_k + 1):\n            # k is the number of groups with one A and one B\n            remaining_A = X - k\n            remaining_B = Y - k\n            if remaining_A < 0 or remaining_B < 0:\n                continue\n            # The sum for these k groups is k*(A+B), which must be divisible by C\n            if (k * (A + B)) % C != 0:\n                continue\n            # The remaining A's can form groups of size s_A, where s_A * A ≡ 0 mod C\n            # So s_A must be a multiple of C / gcd(A, C)\n            gcd_A = __import__('math').gcd(A, C)\n            s_A = C // gcd_A\n            groups_A = remaining_A // s_A\n            \n            gcd_B = __import__('math').gcd(B, C)\n            s_B = C // gcd_B\n            groups_B = remaining_B // s_B\n            \n            total = k + groups_A + groups_B\n            if total > max_groups:\n                max_groups = total\n        print(max_groups)\n\nsolve()",
+    "timestamp": "2025-08-13 11:10:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const readline = require('readline');\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout\n});\n\nlet input = [];\nlet index = 0;\n\nrl.on('line', (line) => {\n    input.push(line.trim());\n});\n\nrl.on('close', () => {\n    const T = parseInt(input[index++], 10);\n    for (let t = 0; t < T; t++) {\n        const [X, Y, A, B, C] = input[index++].split(' ').map(Number);\n        let maxGoodGroups = 0;\n        \n        for (let k = 0; k <= Math.min(X, Y); k++) {\n            const a = A % C;\n            const b = B % C;\n            const sum = (A * (X - k) + B * (Y - k)) % C;\n            \n            if (sum === 0) {\n                const groups = (X - k) + (Y - k) + k;\n                if (groups > maxGoodGroups) {\n                    maxGoodGroups = groups;\n                }\n            }\n        }\n        \n        console.log(maxGoodGroups);\n    }\n});",
+    "timestamp": "2025-08-13 11:10:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    int T;\n    std::cin >> T;\n    while (T--) {\n        int X, Y, A, B, C;\n        std::cin >> X >> Y >> A >> B >> C;\n\n        int maxGroups = 0;\n        \n        if (A % C == 0) {\n            maxGroups += X;\n        }\n        \n        if (B % C == 0) {\n            maxGroups += Y;\n        }\n        \n        std::cout << maxGroups << std::endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:34"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint solve(int N, int M, int K, int* A, int* B) {\n    int total_books[N + M + 1][K + 1];\n    \n    for (int i = 0; i < N + M + 1; i++) {\n        for (int j = 0; j < K + 1; j++) {\n            total_books[i][j] = 0;\n        }\n    }\n    \n    for (int i = 1; i <= N; i++) {\n        for (int j = 0; j <= K; j++) {\n            total_books[i][j] = total_books[i-1][j];\n            if (j >= A[i-1]) {\n                total_books[i][j] = max(total_books[i][j], total_books[i-1][j-A[i-1]] + 1);\n            }\n        }\n    }\n    \n    for (int i = N + 1; i <= N + M; i++) {\n        for (int j = 0; j <= K; j++) {\n            total_books[i][j] = total_books[i-1][j];\n            if (j >= B[i-N-1]) {\n                total_books[i][j] = max(total_books[i][j], total_books[i-1][j-B[i-N-1]] + 1);\n            }\n        }\n    }\n    \n    return total_books[N+M][K];\n}\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n    \n    int* A = malloc(N * sizeof(int));\n    int* B = malloc(M * sizeof(int));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &B[i]);\n    }\n    \n    int result = solve(N, M, K, A, B);\n    printf(\"%d\\n\", result);\n    \n    free(A);\n    free(B);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, M, K;\n    scanf(\"%d %d %d\", &N, &M, &K);\n    \n    int A[N], B[M];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &B[i]);\n    }\n    \n    int prefixA[N + 1], prefixB[M + 1];\n    prefixA[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        prefixA[i] = prefixA[i - 1] + A[i - 1];\n    }\n    prefixB[0] = 0;\n    for (int i = 1; i <= M; i++) {\n        prefixB[i] = prefixB[i - 1] + B[i - 1];\n    }\n    \n    int max_books = 0;\n    for (int a = 0; a <= N && prefixA[a] <= K; a++) {\n        int remaining_time = K - prefixA[a];\n        int low = 0, high = M;\n        int best_b = 0;\n        while (low <= high) {\n            int mid = (low + high) / 2;\n            if (prefixB[mid] <= remaining_time) {\n                best_b = mid;\n                low = mid + 1;\n            } else {\n                high = mid - 1;\n            }\n        }\n        if (a + best_b > max_books) {\n            max_books = a + best_b;\n        }\n    }\n    \n    printf(\"%d\\n\", max_books);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M, K;\n    cin >> N >> M >> K;\n    vector<int> A(N), B(M);\n    for (int i = 0; i < N; ++i) cin >> A[i];\n    for (int i = 0; i < M; ++i) cin >> B[i];\n\n    vector<long long> prefixA(N + 1, 0), prefixB(M + 1, 0);\n    for (int i = 0; i < N; ++i) prefixA[i + 1] = prefixA[i] + A[i];\n    for (int i = 0; i < M; ++i) prefixB[i + 1] = prefixB[i] + B[i];\n\n    int maxBooks = 0;\n    for (int a = 0; a <= N; ++a) {\n        if (prefixA[a] > K) break;\n        long long remaining = K - prefixA[a];\n        int b = upper_bound(prefixB.begin(), prefixB.end(), remaining) - prefixB.begin() - 1;\n        if (b >= 0) {\n            maxBooks = max(maxBooks, a + b);\n        }\n    }\n\n    cout << maxBooks << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] A = new int[N];\n        int[] B = new int[M];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < M; i++) {\n            B[i] = scanner.nextInt();\n        }\n        \n        long[] prefixA = new long[N + 1];\n        for (int i = 1; i <= N; i++) {\n            prefixA[i] = prefixA[i - 1] + A[i - 1];\n        }\n        \n        long[] prefixB = new long[M + 1];\n        for (int i = 1; i <= M; i++) {\n            prefixB[i] = prefixB[i - 1] + B[i - 1];\n        }\n        \n        int maxBooks = 0;\n        int j = M;\n        for (int i = 0; i <= N; i++) {\n            if (prefixA[i] > K) {\n                break;\n            }\n            while (j >= 0 && prefixA[i] + prefixB[j] > K) {\n                j--;\n            }\n            if (j >= 0) {\n                maxBooks = Math.max(maxBooks, i + j);\n            }\n        }\n        \n        System.out.println(maxBooks);\n    }\n}",
+    "timestamp": "2025-08-05 22:28:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BookReading {\n    public static int maxBooksRead(int[] A, int[] B, int K) {\n        int n = A.length;\n        int m = B.length;\n        \n        List<Integer> totalBooks = new ArrayList<>();\n        for (int book : A) totalBooks.add(book);\n        for (int book : B) totalBooks.add(book);\n        \n        Collections.sort(totalBooks);\n        \n        int maxBooks = 0;\n        int currentTime = 0;\n        int booksRead = 0;\n        \n        for (int time : totalBooks) {\n            if (currentTime + time <= K) {\n                currentTime += time;\n                booksRead++;\n                maxBooks = Math.max(maxBooks, booksRead);\n            } else {\n                break;\n            }\n        }\n        \n        return maxBooks;\n    }\n    \n    public static void main(String[] args) {\n        int[] A = {3, 2, 5};\n        int[] B = {4, 1, 3};\n        int K = 10;\n        System.out.println(maxBooksRead(A, B, K));\n    }\n}",
+    "timestamp": "2025-08-05 22:28:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxBooksRead(vector<int>& A, vector<int>& B, int K) {\n    int N = A.size(), M = B.size();\n    vector<vector<int>> dp(N + 1, vector<int>(M + 1, 0));\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= M; j++) {\n            int timeA = 0, timeB = 0;\n            for (int k = 0; k < i; k++) timeA += A[k];\n            for (int k = 0; k < j; k++) timeB += B[k];\n\n            if (timeA + timeB <= K) {\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + 2;\n            } else {\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1]);\n            }\n        }\n    }\n\n    return dp[N][M];\n}\n\nint main() {\n    int N, M, K;\n    cin >> N >> M >> K;\n    vector<int> A(N), B(M);\n\n    for (int i = 0; i < N; i++) cin >> A[i];\n    for (int i = 0; i < M; i++) cin >> B[i];\n\n    cout << maxBooksRead(A, B, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_books(N, M, K, A, B):\n    # Compute the prefix sums for both desks\n    prefix_A = [0] * (N + 1)\n    prefix_B = [0] * (M + 1)\n    \n    for i in range(1, N + 1):\n        prefix_A[i] = prefix_A[i - 1] + A[i - 1]\n    \n    for i in range(1, M + 1):\n        prefix_B[i] = prefix_B[i - 1] + B[i - 1]\n    \n    # Iterate to find the maximum number of books\n    max_books_read = 0\n    j = M\n    \n    for i in range(N + 1):\n        if prefix_A[i] > K:\n            break\n        \n        while j >= 0 and prefix_A[i] + prefix_B[j] > K:\n            j -= 1\n        \n        max_books_read = max(max_books_read, i + j)\n    \n    return max_books_read\n\n# Example Usage:\n# N, M, K = 5, 4, 10\n# A = [1, 2, 3, 4, 5]\n# B = [2, 3, 4, 5]\n# result = max_books(N, M, K, A, B)\n# print(result)  # Output should be 4",
+    "timestamp": "2025-08-13 10:55:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class ReadingBooks {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int K = scanner.nextInt();\n        \n        int[] A = new int[N];\n        int[] B = new int[M];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < M; i++) {\n            B[i] = scanner.nextInt();\n        }\n        \n        int totalTimeA = 0, totalTimeB = 0;\n        int booksA = 0, booksB = 0;\n        \n        while (booksA < N && totalTimeA + A[booksA] <= K) {\n            totalTimeA += A[booksA++];\n        }\n        \n        int maxBooks = booksA;\n        \n        for (booksB = 0; booksB < M && booksA >= 0; booksB++) {\n            totalTimeB += B[booksB];\n            \n            while (booksA > 0 && totalTimeB + totalTimeA > K) {\n                booksA--;\n                totalTimeA -= A[booksA];\n            }\n            \n            if (totalTimeA + totalTimeB <= K) {\n                maxBooks = Math.max(maxBooks, booksA + booksB + 1);\n            }\n        }\n        \n        System.out.println(maxBooks);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 10:56:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint maxBooks(int* A, int* B, int N, int M, int K) {\n    int sumA = 0, sumB = 0, booksA = 0, booksB = 0;\n    int iA = 0, iB = 0;\n    \n    // Calculate maximum books from Desk A within time K\n    while (iA < N && sumA + A[iA] <= K) {\n        sumA += A[iA];\n        booksA++;\n        iA++;\n    }\n\n    int maxBooks = booksA;\n    \n    // Try to switch to Desk B and optimize book counts\n    while (iB < M && (sumA + sumB + B[iB] <= K)) {\n        sumB += B[iB];\n        booksB++;\n        iB++;\n    }\n\n    maxBooks = booksA + booksB;\n\n    // Try to switch from Desk A to Desk B\n    while (iA > 0) {\n        iA--;\n        sumA -= A[iA];\n        booksA--;\n\n        while (iB < M && (sumA + sumB + B[iB] <= K)) {\n            sumB += B[iB];\n            booksB++;\n            iB++;\n        }\n        \n        if (booksA + booksB > maxBooks) {\n            maxBooks = booksA + booksB;\n        }\n    }\n    \n    return maxBooks;\n}\n\nint main() {\n    int A[] = {2, 3, 5, 1, 4};\n    int B[] = {5, 2, 3, 4};\n    int N = 5;\n    int M = 4;\n    int K = 10;\n    printf(\"%d\\n\", maxBooks(A, B, N, M, K));\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:56:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxBooks(A, B, K) {\n    let maxBooks = 0;\n    let timeA = 0;\n    let timeB = 0;\n    let i = 0, j = 0;\n\n    while (i < A.length && timeA + A[i] <= K) {\n        timeA += A[i];\n        i++;\n    }\n    maxBooks = i;\n\n    while (j < B.length && timeB + B[j] <= K) {\n        timeB += B[j];\n        j++;\n        while (i > 0 && timeA + timeB > K) {\n            i--;\n            timeA -= A[i];\n        }\n        maxBooks = Math.max(maxBooks, i + j);\n    }\n\n    return maxBooks;\n}",
+    "timestamp": "2025-08-13 10:56:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_books_read(N, M, A, B, K):\n    # Create a list of possible moves (books to read from A or B)\n    moves = []\n    for i in range(N):\n        moves.append((A[i], 'A', i))\n    for j in range(M):\n        moves.append((B[j], 'B', j))\n    \n    # Sort moves by reading time\n    moves.sort()\n    \n    # Track books read and time spent\n    read_A = [False] * N\n    read_B = [False] * M\n    total_time = 0\n    books_read = 0\n    \n    # Greedily read books with shortest reading times first\n    for time, desk, index in moves:\n        if total_time + time <= K:\n            if desk == 'A' and not read_A[index]:\n                total_time += time\n                books_read += 1\n                read_A[index] = True\n            elif desk == 'B' and not read_B[index]:\n                total_time += time\n                books_read += 1\n                read_B[index] = True\n    \n    return books_read",
+    "timestamp": "2025-08-13 10:56:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxBooksRead(A, B, K) {\n    const N = A.length;\n    const M = B.length;\n    \n    const dp = new Array(N + 1).fill(0).map(() => new Array(M + 1).fill(0));\n    \n    for (let i = 1; i <= N; i++) {\n        for (let j = 1; j <= M; j++) {\n            let timeA = dp[i-1][j] + A[i-1];\n            let timeB = dp[i][j-1] + B[j-1];\n            \n            if (timeA <= K && timeB <= K) {\n                dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]) + 2;\n            } else if (timeA <= K) {\n                dp[i][j] = dp[i-1][j] + 1;\n            } else if (timeB <= K) {\n                dp[i][j] = dp[i][j-1] + 1;\n            } else {\n                dp[i][j] = dp[i-1][j-1];\n            }\n        }\n    }\n    \n    return dp[N][M];\n}",
+    "timestamp": "2025-08-13 10:56:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_books(N, M, K, A, B):\n    prefix_a = [0] * (N + 1)\n    for i in range(1, N + 1):\n        prefix_a[i] = prefix_a[i - 1] + A[i - 1]\n    \n    prefix_b = [0] * (M + 1)\n    for i in range(1, M + 1):\n        prefix_b[i] = prefix_b[i - 1] + B[i - 1]\n    \n    max_books = 0\n    j = M\n    for i in range(N + 1):\n        if prefix_a[i] > K:\n            break\n        while j >= 0 and prefix_a[i] + prefix_b[j] > K:\n            j -= 1\n        if prefix_a[i] + prefix_b[j] <= K:\n            max_books = max(max_books, i + j)\n    \n    return max_books\n\n# Sample usage:\n# N, M, K = map(int, input().split())\n# A = list(map(int, input().split()))\n# B = list(map(int, input().split()))\n# print(max_books(N, M, K, A, B))",
+    "timestamp": "2025-08-13 10:56:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxBooks(N, M, A, B, K) {\n    let prefixA = [0];\n    for (let i = 0; i < N; i++) {\n        prefixA.push(prefixA[i] + A[i]);\n    }\n    \n    let prefixB = [0];\n    for (let i = 0; i < M; i++) {\n        prefixB.push(prefixB[i] + B[i]);\n    }\n    \n    let maxBooks = 0;\n    for (let a = 0; a <= N && prefixA[a] <= K; a++) {\n        let remaining = K - prefixA[a];\n        let left = 0;\n        let right = M;\n        let b = 0;\n        while (left <= right) {\n            let mid = Math.floor((left + right) / 2);\n            if (prefixB[mid] <= remaining) {\n                b = mid;\n                left = mid + 1;\n            } else {\n                right = mid - 1;\n            }\n        }\n        maxBooks = Math.max(maxBooks, a + b);\n    }\n    \n    return maxBooks;\n}",
+    "timestamp": "2025-08-13 10:56:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint maxBooks(int N, int M, int K, vector<int> A, vector<int> B) {\n    int maxBooksRead = 0;\n    int timeSpent = 0;\n    int i = 0, j = 0;\n    \n    // Step 1: Calculate prefix sums for both desks\n    vector<int> prefixA(N+1, 0);\n    vector<int> prefixB(M+1, 0);\n    \n    for (int x = 1; x <= N; ++x) {\n        prefixA[x] = prefixA[x-1] + A[x-1];\n    }\n    \n    for (int x = 1; x <= M; ++x) {\n        prefixB[x] = prefixB[x-1] + B[x-1];\n    }\n    \n    // Step 2: Iterate over all possible numbers of books from desk A\n    while (i <= N && prefixA[i] <= K) {\n        // Books taken from desk A\n        timeSpent = prefixA[i];\n        // Binary search to find the maximum j such that total time is <= K\n        int low = 0, high = M;\n        while (low <= high) {\n            int mid = (low + high) / 2;\n            if (timeSpent + prefixB[mid] <= K) {\n                j = mid;\n                low = mid + 1;\n            } else {\n                high = mid - 1;\n            }\n        }\n        maxBooksRead = max(maxBooksRead, i + j);\n        i++;\n    }\n    \n    return maxBooksRead;\n}\n\nint main() {\n    int N, M, K;\n    cin >> N >> M >> K;\n    vector<int> A(N), B(M);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    for (int i = 0; i < M; ++i) {\n        cin >> B[i];\n    }\n    cout << maxBooks(N, M, K, A, B) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:01:20"
+  }
+]

@@ -1,0 +1,1 @@
+You are the manager of a chocolate sales team in a rectangular office. Team members take breaks every two hours and want to be able to see a wall clock within a 45-degree field of view from their seats. Write a program that calculates the minimum number of clocks needed to ensure every team member can see at least one clock in their view.

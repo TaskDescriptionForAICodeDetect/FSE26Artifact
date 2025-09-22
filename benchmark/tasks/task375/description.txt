@@ -1,0 +1,17 @@
+Problem F: The Castle
+
+The rabbit that successfully defeated the ambushing enemies has allowed the main character to enter the enemy's castle. When the main character freed the cats that were captured in the castle's dungeon, some of them decided to assist the main character.
+
+According to the cats, to reach the demon lord located deep within the castle, the main character must pass through n rooms numbered from 1 to n, but there is one enemy waiting in each room that must be defeated in order. Each of the m cats that have joined knows the probability of victory against each room's enemy, and the main character will send these cats one by one into the castle.
+
+A sent cat will proceed until it is defeated by an enemy, and the main character will always know which enemy defeated the cat, allowing them to decide which cat to send next. How can it be arranged to maximize the probability that all the enemies waiting for the cats will be defeated?
+
+Input
+
+The first line of input gives m and n separated by a space. 1 ≤ m, n ≤ 16.
+
+The next m lines each give n real numbers representing the probability of each cat defeating the enemies in each respective room. The j-th real number on the i + 1 line indicates the probability that the i-th cat defeats the enemy in the j-th room. The probabilities are given up to three decimal places.
+
+Output
+
+When arranging to maximize the probability that all enemies waiting for the cats are defeated, output that maximum probability. An acceptable output can include errors, but the error from the true value must be within 10^(-9).

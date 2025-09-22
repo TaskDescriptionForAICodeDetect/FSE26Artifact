@@ -1,0 +1,1 @@
+Your task is to simulate flood damage by reporting areas of flooded sections in a given cross-section diagram. The diagram is represented as a string using '/', '\', and '_' characters, where rain causes floods in the specified regions.

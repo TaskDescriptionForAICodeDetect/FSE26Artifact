@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\ntypedef struct {\n    uint64_t flags;\n} FlagManager;\n\nvoid initFlags(FlagManager *manager) {\n    manager->flags = 0;\n}\n\nvoid setFlag(FlagManager *manager, int position) {\n    manager->flags |= (1ULL << position);\n}\n\nvoid clearFlag(FlagManager *manager, int position) {\n    manager->flags &= ~(1ULL << position);\n}\n\nvoid toggleFlag(FlagManager *manager, int position) {\n    manager->flags ^= (1ULL << position);\n}\n\nint testFlag(FlagManager *manager, int position) {\n    return (manager->flags & (1ULL << position)) != 0;\n}\n\nint countSetFlags(FlagManager *manager) {\n    return __builtin_popcountll(manager->flags);\n}\n\nint findFirstSetFlag(FlagManager *manager) {\n    return __builtin_ffsll(manager->flags);\n}\n\nvoid printAllFlags(FlagManager *manager) {\n    for (int i = 0; i < 64; i++) {\n        printf(\"%d\", testFlag(manager, i));\n    }\n    printf(\"\\n\");\n}",
+    "timestamp": "2025-08-05 22:21:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\ntypedef uint64_t flag_set;\n\nvoid set_flag(flag_set *state, int pos) {\n    *state |= (1ULL << pos);\n}\n\nvoid clear_flag(flag_set *state, int pos) {\n    *state &= ~(1ULL << pos);\n}\n\nvoid flip_flag(flag_set *state, int pos) {\n    *state ^= (1ULL << pos);\n}\n\nint test_flag(flag_set state, int pos) {\n    return (state >> pos) & 1;\n}\n\nint count_flags(flag_set state) {\n    return __builtin_popcountll(state);\n}\n\nint is_empty(flag_set state) {\n    return state == 0;\n}\n\nint is_full(flag_set state) {\n    return state == ~0ULL;\n}\n\nint main() {\n    flag_set state = 0;\n    \n    set_flag(&state, 3);\n    set_flag(&state, 5);\n    \n    printf(\"Flag 3: %d\\n\", test_flag(state, 3));\n    printf(\"Flag 4: %d\\n\", test_flag(state, 4));\n    \n    flip_flag(&state, 5);\n    printf(\"Flag 5 after flip: %d\\n\", test_flag(state, 5));\n    \n    clear_flag(&state, 3);\n    printf(\"Flag 3 after clear: %d\\n\", test_flag(state, 3));\n    \n    printf(\"Total set flags: %d\\n\", count_flags(state));\n    printf(\"Is empty: %d\\n\", is_empty(state));\n    printf(\"Is full: %d\\n\", is_full(state));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:22:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <bitset>\n\nclass FlagManager {\nprivate:\n    uint64_t flags;\n\npublic:\n    FlagManager() : flags(0) {}\n\n    bool testFlag(int pos) const {\n        if (pos < 0 || pos >= 64) return false;\n        return (flags & (1ULL << pos)) != 0;\n    }\n\n    void setFlag(int pos) {\n        if (pos < 0 || pos >= 64) return;\n        flags |= (1ULL << pos);\n    }\n\n    void clearFlag(int pos) {\n        if (pos < 0 || pos >= 64) return;\n        flags &= ~(1ULL << pos);\n    }\n\n    void flipFlag(int pos) {\n        if (pos < 0 || pos >= 64) return;\n        flags ^= (1ULL << pos);\n    }\n\n    int countOnFlags() const {\n        return __builtin_popcountll(flags);\n    }\n\n    int countOffFlags() const {\n        return 64 - countOnFlags();\n    }\n\n    bool anyFlagOn() const {\n        return flags != 0;\n    }\n\n    bool allFlagsOn() const {\n        return flags == ~0ULL;\n    }\n\n    bool noFlagsOn() const {\n        return flags == 0;\n    }\n\n    void setAllFlags() {\n        flags = ~0ULL;\n    }\n\n    void clearAllFlags() {\n        flags = 0;\n    }\n\n    void flipAllFlags() {\n        flags = ~flags;\n    }\n\n    uint64_t getFlags() const {\n        return flags;\n    }\n\n    void setFlags(uint64_t newFlags) {\n        flags = newFlags;\n    }\n};",
+    "timestamp": "2025-08-05 22:22:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class FlagManager {\n    private long flags;\n\n    public FlagManager() {\n        this.flags = 0L;\n    }\n\n    public boolean testFlag(int position) {\n        if (position < 0 || position >= 64) {\n            throw new IllegalArgumentException(\"Position must be between 0 and 63\");\n        }\n        return (flags & (1L << position)) != 0;\n    }\n\n    public void setFlag(int position) {\n        if (position < 0 || position >= 64) {\n            throw new IllegalArgumentException(\"Position must be between 0 and 63\");\n        }\n        flags |= (1L << position);\n    }\n\n    public void clearFlag(int position) {\n        if (position < 0 || position >= 64) {\n            throw new IllegalArgumentException(\"Position must be between 0 and 63\");\n        }\n        flags &= ~(1L << position);\n    }\n\n    public void flipFlag(int position) {\n        if (position < 0 || position >= 64) {\n            throw new IllegalArgumentException(\"Position must be between 0 and 63\");\n        }\n        flags ^= (1L << position);\n    }\n\n    public int countFlagsSet() {\n        return Long.bitCount(flags);\n    }\n\n    public boolean allFlagsSet() {\n        return flags == ~0L;\n    }\n\n    public boolean anyFlagSet() {\n        return flags != 0L;\n    }\n\n    public boolean noFlagSet() {\n        return flags == 0L;\n    }\n\n    public long getFlags() {\n        return flags;\n    }\n\n    public void setFlags(long flags) {\n        this.flags = flags;\n    }\n}",
+    "timestamp": "2025-08-05 22:22:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class StateFlagManager {\n    private long flags;\n\n    public StateFlagManager() {\n        flags = 0L;\n    }\n\n    // Test if a specific flag is set\n    public boolean isFlagSet(int position) {\n        return (flags & (1L << position)) != 0;\n    }\n\n    // Set a specific flag to ON\n    public void setFlag(int position) {\n        flags |= (1L << position);\n    }\n\n    // Clear a specific flag to OFF\n    public void clearFlag(int position) {\n        flags &= ~(1L << position);\n    }\n\n    // Flip a specific flag\n    public void toggleFlag(int position) {\n        flags ^= (1L << position);\n    }\n\n    // Count number of flags set to ON\n    public int countSetFlags() {\n        return Long.bitCount(flags);\n    }\n\n    // Get first set flag position\n    public int getFirstSetFlag() {\n        return flags == 0 ? -1 : Long.numberOfTrailingZeros(flags);\n    }\n\n    // Check if all flags are OFF\n    public boolean areAllFlagsCleared() {\n        return flags == 0;\n    }\n\n    // Get current state as long\n    public long getState() {\n        return flags;\n    }\n\n    // Set entire state\n    public void setState(long newState) {\n        flags = newState & 0xFFFFFFFFFFFFFFFFL;\n    }\n}",
+    "timestamp": "2025-08-05 22:22:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <bitset>\n\nclass FlagManager {\nprivate:\n    uint64_t flags;\n\npublic:\n    FlagManager() : flags(0) {}\n\n    // Test if a specific flag is set\n    bool testFlag(int position) const {\n        return (flags & (1ULL << position)) != 0;\n    }\n\n    // Set a specific flag to ON\n    void setFlag(int position) {\n        flags |= (1ULL << position);\n    }\n\n    // Clear a specific flag to OFF\n    void clearFlag(int position) {\n        flags &= ~(1ULL << position);\n    }\n\n    // Flip a specific flag\n    void toggleFlag(int position) {\n        flags ^= (1ULL << position);\n    }\n\n    // Count number of flags set to ON\n    int countSetFlags() const {\n        return __builtin_popcountll(flags);\n    }\n\n    // Find first set flag position\n    int findFirstSetFlag() const {\n        return flags ? __builtin_ctzll(flags) : -1;\n    }\n\n    // Check if all flags are set\n    bool areAllFlagsSet() const {\n        return flags == std::numeric_limits<uint64_t>::max();\n    }\n\n    // Check if no flags are set\n    bool areNoFlagsSet() const {\n        return flags == 0;\n    }\n\n    // Get raw flag state\n    uint64_t getRawState() const {\n        return flags;\n    }\n\n    // Set raw flag state\n    void setRawState(uint64_t state) {\n        flags = state;\n    }\n};",
+    "timestamp": "2025-08-05 22:23:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class FlagManager:\n    def __init__(self):\n        self.flags = 0\n\n    def set_flag(self, position):\n        if 0 <= position < 64:\n            self.flags |= (1 << position)\n\n    def clear_flag(self, position):\n        if 0 <= position < 64:\n            self.flags &= ~(1 << position)\n\n    def test_flag(self, position):\n        if 0 <= position < 64:\n            return (self.flags & (1 << position)) != 0\n        return False\n\n    def flip_flag(self, position):\n        if 0 <= position < 64:\n            self.flags ^= (1 << position)\n    \n    def count_flags_set(self):\n        return bin(self.flags).count('1')\n\n    def get_flags(self):\n        return self.flags\n\n    def get_flags_as_list(self):\n        return [(self.flags >> i) & 1 for i in range(64)]\n\n# Example usage\n# flag_manager = FlagManager()\n# flag_manager.set_flag(3)\n# print(flag_manager.test_flag(3)) # True\n# flag_manager.clear_flag(3)\n# print(flag_manager.test_flag(3)) # False\n# flag_manager.flip_flag(2)\n# print(flag_manager.get_flags_as_list())\n# print(flag_manager.count_flags_set())",
+    "timestamp": "2025-08-13 10:18:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class FlagManager {\n    private long flags;\n\n    public FlagManager() {\n        this.flags = 0L;\n    }\n\n    // Test if a flag is ON (1)\n    public boolean testFlag(int index) {\n        if (index < 0 || index >= 64) throw new IndexOutOfBoundsException(\"Index out of bounds\");\n        return (flags & (1L << index)) != 0;\n    }\n\n    // Set a flag to ON (1)\n    public void setFlag(int index) {\n        if (index < 0 || index >= 64) throw new IndexOutOfBoundsException(\"Index out of bounds\");\n        flags |= (1L << index);\n    }\n\n    // Clear a flag to OFF (0)\n    public void clearFlag(int index) {\n        if (index < 0 || index >= 64) throw new IndexOutOfBoundsException(\"Index out of bounds\");\n        flags &= ~(1L << index);\n    }\n\n    // Flip a flag (toggle its state)\n    public void flipFlag(int index) {\n        if (index < 0 || index >= 64) throw new IndexOutOfBoundsException(\"Index out of bounds\");\n        flags ^= (1L << index);\n    }\n\n    // Count the number of flags that are ON (1)\n    public int countOnFlags() {\n        return Long.bitCount(flags);\n    }\n\n    // Aggregate information: returns the current state of all flags as a long\n    public long getFlagsState() {\n        return flags;\n    }\n}",
+    "timestamp": "2025-08-13 10:18:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\ntypedef uint64_t Flags;\n\nint is_flag_on(Flags flags, int pos) {\n    return (flags >> pos) & 1;\n}\n\nvoid set_flag(Flags *flags, int pos) {\n    *flags |= ((uint64_t)1 << pos);\n}\n\nvoid clear_flag(Flags *flags, int pos) {\n    *flags &= ~((uint64_t)1 << pos);\n}\n\nvoid flip_flag(Flags *flags, int pos) {\n    *flags ^= ((uint64_t)1 << pos);\n}\n\nint count_flags_on(Flags flags) {\n    int count = 0;\n    while (flags) {\n        count += flags & 1;\n        flags >>= 1;\n    }\n    return count;\n}\n\nint main() {\n    Flags flags = 0;\n\n    set_flag(&flags, 5);\n    set_flag(&flags, 10);\n    flip_flag(&flags, 5);\n    clear_flag(&flags, 10);\n\n    printf(\"Flag at position 5: %d\\n\", is_flag_on(flags, 5));\n    printf(\"Flag at position 10: %d\\n\", is_flag_on(flags, 10));\n    printf(\"Total flags ON: %d\\n\", count_flags_on(flags));\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:18:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class FlagManager:\n    def __init__(self):\n        self.flags = 0\n\n    def test_flag(self, position):\n        return bool(self.flags & (1 << position))\n\n    def set_flag(self, position):\n        self.flags |= (1 << position)\n\n    def clear_flag(self, position):\n        self.flags &= ~(1 << position)\n\n    def flip_flag(self, position):\n        self.flags ^= (1 << position)\n\n    def get_flag_count(self):\n        return bin(self.flags).count('1')\n\n    def get_first_set_flag(self):\n        return (self.flags & -self.flags).bit_length() - 1 if self.flags else -1\n\n    def get_last_set_flag(self):\n        return self.flags.bit_length() - 1 if self.flags else -1\n\n    def reset_all_flags(self):\n        self.flags = 0\n\n    def set_all_flags(self):\n        self.flags = (1 << 64) - 1\n\n    def toggle_all_flags(self):\n        self.flags = ~self.flags & ((1 << 64) - 1)\n\n    def get_flags_state(self):\n        return [bool(self.flags & (1 << i)) for i in range(64)]",
+    "timestamp": "2025-08-13 10:18:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class FlagManager:\n    def __init__(self):\n        self.state = 0\n\n    def test_flag(self, pos):\n        if pos < 0 or pos >= 64:\n            raise ValueError(\"Position must be between 0 and 63\")\n        return (self.state >> pos) & 1\n\n    def set_flag(self, pos):\n        if pos < 0 or pos >= 64:\n            raise ValueError(\"Position must be between 0 and 63\")\n        self.state |= 1 << pos\n\n    def clear_flag(self, pos):\n        if pos < 0 or pos >= 64:\n            raise ValueError(\"Position must be between 0 and 63\")\n        self.state &= ~(1 << pos)\n\n    def flip_flag(self, pos):\n        if pos < 0 or pos >= 64:\n            raise ValueError(\"Position must be between 0 and 63\")\n        self.state ^= 1 << pos\n\n    def count_flags_on(self):\n        return bin(self.state).count('1')\n\n    def count_flags_off(self):\n        return 64 - self.count_flags_on()\n\n    def get_all_flags(self):\n        return [(i, (self.state >> i) & 1) for i in range(64)]",
+    "timestamp": "2025-08-13 10:19:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <cstdint>\n#include <iostream>\n\nclass FlagManager {\nprivate:\n    uint64_t flags;\n\npublic:\n    FlagManager() : flags(0) {}\n\n    // Test if a flag at position 'pos' is ON (1)\n    bool testFlag(int pos) const {\n        return (flags & (1ULL << pos)) != 0;\n    }\n\n    // Set a flag at position 'pos' to ON (1)\n    void setFlag(int pos) {\n        flags |= (1ULL << pos);\n    }\n\n    // Clear a flag at position 'pos' to OFF (0)\n    void clearFlag(int pos) {\n        flags &= ~(1ULL << pos);\n    }\n\n    // Flip a flag at position 'pos' (toggle)\n    void flipFlag(int pos) {\n        flags ^= (1ULL << pos);\n    }\n\n    // Retrieve aggregate information (number of flags ON)\n    int countFlagsOn() const {\n        return __builtin_popcountll(flags);\n    }\n\n    // Retrieve all flags as a uint64_t\n    uint64_t getFlags() const {\n        return flags;\n    }\n};\n\nint main() {\n    FlagManager manager;\n    manager.setFlag(2);\n    manager.setFlag(5);\n    manager.flipFlag(2);\n\n    std::cout << \"Flag at position 2: \" << manager.testFlag(2) << \"\\n\"; // 0\n    std::cout << \"Flag at position 5: \" << manager.testFlag(5) << \"\\n\"; // 1\n    std::cout << \"Flags ON count: \" << manager.countFlagsOn() << \"\\n\";  // 1\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:58:23"
+  }
+]

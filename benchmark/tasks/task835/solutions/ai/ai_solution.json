@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nvoid solve(char* S) {\n    int N = strlen(S) / 2;\n    int* chosen = (int*)calloc(2*N, sizeof(int));\n    \n    for (int i = N-1; i >= 0; i--) {\n        int first_a = -1, first_b = -1, last_a = -1, last_b = -1;\n        \n        for (int j = 0; j < 2*N; j++) {\n            if (S[j] == 'a') {\n                if (first_a == -1) first_a = j;\n                last_a = j;\n            } else {\n                if (first_b == -1) first_b = j;\n                last_b = j;\n            }\n        }\n        \n        if (first_a != -1 && first_b != -1) {\n            if (S[first_a] > S[first_b]) {\n                chosen[first_a] = chosen[first_b] = 1;\n            } else if (S[first_a] < S[first_b]) {\n                chosen[last_a] = chosen[last_b] = 1;\n            } else {\n                chosen[first_a] = chosen[first_b] = 1;\n            }\n        }\n    }\n    \n    for (int i = 0; i < 2*N; i++) {\n        if (chosen[i]) printf(\"%c\", S[i]);\n    }\n    printf(\"\\n\");\n    \n    free(chosen);\n}\n\nint main() {\n    char S[201];\n    scanf(\"%s\", S);\n    solve(S);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nvoid solve() {\n    int N;\n    scanf(\"%d\", &N);\n    char S[2 * N + 1];\n    scanf(\"%s\", S);\n    \n    char *result = malloc(2 * N + 1);\n    int res_idx = 0;\n    int a_count = 0, b_count = 0;\n    \n    for (int i = 0; i < 2 * N; i++) {\n        if (S[i] == 'a') {\n            a_count++;\n        } else {\n            b_count++;\n        }\n    }\n    \n    int *stack = malloc(2 * N * sizeof(int));\n    int top = -1;\n    \n    for (int i = 0; i < 2 * N; i++) {\n        if (top >= 0 && ((S[i] == 'a' && S[stack[top]] == 'b') || (S[i] == 'b' && S[stack[top]] == 'a'))) {\n            top--;\n        } else {\n            stack[++top] = i;\n        }\n    }\n    \n    for (int i = 0; i <= top; i += 2) {\n        result[res_idx++] = 'a';\n        result[res_idx++] = 'b';\n    }\n    result[res_idx] = '\\0';\n    \n    printf(\"%s\\n\", result);\n    free(result);\n    free(stack);\n}\n\nint main() {\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\n#include <algorithm>\n\nusing namespace std;\n\nstring solve(string S) {\n    int n = S.size() / 2;\n    vector<int> a_indices, b_indices;\n    for (int i = 0; i < 2 * n; ++i) {\n        if (S[i] == 'a') {\n            a_indices.push_back(i);\n        } else {\n            b_indices.push_back(i);\n        }\n    }\n\n    vector<bool> keep(2 * n, false);\n    for (int i = 0; i < n; ++i) {\n        if (a_indices[i] < b_indices[i]) {\n            keep[a_indices[i]] = true;\n            keep[b_indices[i]] = true;\n        }\n    }\n\n    stack<int> st;\n    for (int i = 0; i < 2 * n; ++i) {\n        if (keep[i]) {\n            if (!st.empty() && S[st.top()] == 'a' && S[i] == 'b') {\n                st.pop();\n            } else {\n                st.push(i);\n            }\n        }\n    }\n\n    string result;\n    while (!st.empty()) {\n        result += S[st.top()];\n        st.pop();\n    }\n    reverse(result.begin(), result.end());\n    return result;\n}\n\nint main() {\n    string S;\n    cin >> S;\n    cout << solve(S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static String findLexLargestString(String S) {\n        int n = S.length() / 2;\n        Stack<Integer> stack = new Stack<>();\n        StringBuilder result = new StringBuilder();\n        boolean[] selected = new boolean[2 * n];\n        \n        for (int i = 0; i < 2 * n; i++) {\n            char c = S.charAt(i);\n            if (c == 'a') {\n                stack.push(i);\n            } else {\n                if (!stack.isEmpty()) {\n                    int aPos = stack.pop();\n                    selected[aPos] = true;\n                    selected[i] = true;\n                }\n            }\n        }\n        \n        for (int i = 0; i < 2 * n; i++) {\n            if (selected[i]) {\n                result.append(S.charAt(i));\n            }\n        }\n        \n        return result.toString();\n    }\n}",
+    "timestamp": "2025-08-05 23:04:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static String getLargestString(String s) {\n        int n = s.length() / 2;\n        List<Integer> aPositions = new ArrayList<>();\n        List<Integer> bPositions = new ArrayList<>();\n        \n        for (int i = 0; i < s.length(); i++) {\n            if (s.charAt(i) == 'a') {\n                aPositions.add(i);\n            } else {\n                bPositions.add(i);\n            }\n        }\n        \n        boolean[] selected = new boolean[s.length()];\n        \n        for (int i = n - 1; i >= 0; i--) {\n            int aPos = aPositions.get(i);\n            int bPos = bPositions.get(i);\n            \n            if (aPos > bPos) {\n                selected[bPos] = true;\n                selected[aPos] = true;\n            } else {\n                selected[aPos] = false;\n                selected[bPos] = false;\n            }\n        }\n        \n        StringBuilder result = new StringBuilder();\n        for (int i = 0; i < s.length(); i++) {\n            if (selected[i]) {\n                result.append(s.charAt(i));\n            }\n        }\n        \n        return result.toString();\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String s = scanner.next();\n        System.out.println(getLargestString(s));\n    }\n}",
+    "timestamp": "2025-08-05 23:04:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n#include <vector>\n\nusing namespace std;\n\nstring solve(string s) {\n    int n = s.length() / 2;\n    vector<int> a_pos, b_pos;\n    \n    for (int i = 0; i < 2*n; i++) {\n        if (s[i] == 'a') a_pos.push_back(i);\n        else b_pos.push_back(i);\n    }\n    \n    vector<bool> chosen(2*n, false);\n    \n    for (int i = 0; i < n; i++) {\n        if (a_pos[i] < b_pos[i]) {\n            chosen[a_pos[i]] = true;\n            chosen[b_pos[i]] = true;\n        }\n    }\n    \n    for (int i = n-1; i >= 0; i--) {\n        if (a_pos[i] > b_pos[i] && !chosen[a_pos[i]] && !chosen[b_pos[i]]) {\n            chosen[a_pos[i]] = true;\n            chosen[b_pos[i]] = true;\n        }\n    }\n    \n    string result;\n    for (int i = 0; i < 2*n; i++) {\n        if (chosen[i]) result += s[i];\n    }\n    \n    return result;\n}\n\nint main() {\n    string s;\n    cin >> s;\n    cout << solve(s) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:05:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def lexicographically_largest_string(S):\n    N = len(S) // 2\n    a_indices = []\n    b_indices = []\n    \n    for i, char in enumerate(S):\n        if char == 'a':\n            a_indices.append(i)\n        else:\n            b_indices.append(i)\n    \n    chosen = [False] * len(S)\n    \n    # Choose characters greedily starting from the last\n    for i in range(N - 1, -1, -1):\n        if S[a_indices[i]] == 'b' or S[b_indices[i]] == 'a':\n            continue\n        chosen[a_indices[i]] = True\n        chosen[b_indices[i]] = True\n    \n    result = ''.join(S[i] if chosen[i] else '' for i in range(len(S)))\n    return result\n\n# Example usage:\n# S = \"aabbabab\"\n# print(lexicographically_largest_string(S))",
+    "timestamp": "2025-08-13 13:30:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class LexicographicallyLargestString {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.next();\n        int N = S.length() / 2;\n        \n        int countA = 0, countB = 0;\n        char[] result = new char[2 * N];\n        int idx = 0;\n        \n        for (int i = 2 * N - 1; i >= 0; i--) {\n            char currentChar = S.charAt(i);\n            if (currentChar == 'a') {\n                countA++;\n            } else {\n                countB++;\n            }\n\n            // Check if we should pick the current pair.\n            if (countA <= N && countB <= N) {\n                result[idx++] = currentChar;\n            } else {\n                if (currentChar == 'a') {\n                    countA--;\n                } else {\n                    countB--;\n                }\n            }\n        }\n\n        // Reverse the result as we've been adding from end to start\n        StringBuilder output = new StringBuilder();\n        for (int i = idx - 1; i >= 0; i--) {\n            output.append(result[i]);\n        }\n\n        System.out.println(output.toString());\n    }\n}",
+    "timestamp": "2025-08-13 13:31:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid findLargestString(char *S, int N) {\n    int aCount = 0, bCount = 0;\n    \n    for (int i = 0; i < 2 * N; i++) {\n        if (S[i] == 'a') aCount++;\n        else bCount++;\n        \n        // When we reach the i-th occurrence of both 'a' and 'b'\n        if (aCount == bCount) {\n            // Copy that section because there are equal numbers of a's and b's\n            for (int j = i - aCount + 1; j <= i; j++) {\n                printf(\"%c\", S[j]);\n            }\n        }\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    char S[201];\n    int N;\n    \n    scanf(\"%s\", S);\n    N = strlen(S) / 2;\n    \n    findLargestString(S, N);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:31:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nstd::string lexicographicallyLargestString(const std::string& S) {\n    int N = S.length() / 2;\n    std::string result;\n    std::vector<int> a_positions;\n    std::vector<int> b_positions;\n\n    // Find positions of 'a' and 'b' in the string\n    for (int i = 0; i < 2 * N; ++i) {\n        if (S[i] == 'a') {\n            a_positions.push_back(i);\n        } else {\n            b_positions.push_back(i);\n        }\n    }\n\n    // Build the result by choosing pairs of 'a' and 'b'\n    for (int i = 0; i < N; ++i) {\n        if (S[a_positions[i]] > S[b_positions[i]]) {\n            result.push_back(S[a_positions[i]]);\n            result.push_back(S[b_positions[i]]);\n        } else {\n            result.push_back(S[b_positions[i]]);\n            result.push_back(S[a_positions[i]]);\n        }\n    }\n\n    return result;\n}\n\nint main() {\n    std::string S;\n    std::cin >> S;\n    std::cout << lexicographicallyLargestString(S) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:31:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(S):\n    N = len(S) // 2\n    first_a = [S.index('a', i) for i in range(N)]\n    first_b = [S.index('b', i) for i in range(N)]\n    \n    # Try to maximize lexicographically\n    result = [''] * (2*N)\n    chosen = [False] * (2*N)\n    \n    for i in range(N-1, -1, -1):\n        # If 'a' appears after 'b', choose both\n        if first_a[i] > first_b[i]:\n            chosen[first_a[i]] = True\n            chosen[first_b[i]] = True\n    \n    # Fill result based on chosen characters\n    for i in range(2*N):\n        if chosen[i]:\n            result[i] = S[i]\n    \n    # Fill remaining slots with lexicographically largest characters\n    for i in range(2*N):\n        if result[i] == '':\n            result[i] = 'b' if result.count('b') < N else 'a'\n    \n    return ''.join(result)\n\ndef main():\n    S = input().strip()\n    print(solve(S))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 13:31:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    S = input().strip()\n    N = len(S) // 2\n    a_indices = []\n    b_indices = []\n    a_pos = 0\n    b_pos = 0\n    # Record the positions of 'a's and 'b's\n    for idx, char in enumerate(S):\n        if char == 'a':\n            a_pos += 1\n            a_indices.append((idx, a_pos))\n        else:\n            b_pos += 1\n            b_indices.append((idx, b_pos))\n    \n    # Pair the i-th 'a' with the i-th 'b'\n    paired = []\n    for a in a_indices:\n        paired.append((a[0], 'a'))\n    for b in b_indices:\n        paired.append((b[0], 'b'))\n    paired.sort()  # Sort by original position\n    \n    # Now, for each i-th pair, decide to take both or none\n    stack = []\n    selected = []\n    a_ptr = 0\n    b_ptr = 0\n    for pos, char in paired:\n        if char == 'a':\n            stack.append((pos, char))\n            a_ptr += 1\n        else:\n            if stack and stack[-1][1] == 'a' and a_ptr == b_ptr + 1:\n                selected.append(stack.pop()[1])\n                selected.append(char)\n                b_ptr += 1\n            else:\n                b_ptr += 1\n    # Construct the result\n    result = []\n    for char in selected:\n        result.append(char)\n    print(''.join(result))\n\nsolve()",
+    "timestamp": "2025-08-13 13:31:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function lexicographicallyLargestString(S) {\n    const N = S.length / 2;\n    let countA = 0, countB = 0;\n    let chosenA = new Array(N).fill(false);\n    let chosenB = new Array(N).fill(false);\n\n    // Count occurrences\n    for (let i = 0; i < S.length; i++) {\n        if (S[i] === 'a') countA++;\n        else countB++;\n\n        if (countA === countB) {\n            for (let j = i; j >= 0; j--) {\n                if (S[j] === 'a' && !chosenA[j - countB + 1]) {\n                    chosenA[j - countB + 1] = true;\n                } else if (S[j] === 'b' && !chosenB[j - countA + 1]) {\n                    chosenB[j - countA + 1] = true;\n                }\n            }\n        }\n    }\n\n    // Construct the result\n    let result = [];\n    for (let i = 0; i < S.length; i++) {\n        if (S[i] === 'a' && chosenA.shift()) {\n            result.push('a');\n        } else if (S[i] === 'b' && chosenB.shift()) {\n            result.push('b');\n        }\n    }\n\n    return result.join('');\n}",
+    "timestamp": "2025-08-13 13:31:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function getLargestString(S) {\n    const N = S.length / 2;\n    const aPositions = [];\n    const bPositions = [];\n\n    for (let i = 0; i < S.length; i++) {\n        if (S[i] === 'a') aPositions.push(i);\n        else bPositions.push(i);\n    }\n\n    const chosen = new Array(S.length).fill(false);\n\n    for (let i = 0; i < N; i++) {\n        if (aPositions[i] !== undefined && bPositions[i] !== undefined) {\n            chosen[aPositions[i]] = true;\n            chosen[bPositions[i]] = true;\n        }\n    }\n\n    let result = '';\n    for (let i = 0; i < S.length; i++) {\n        if (chosen[i]) {\n            result += S[i];\n        }\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 13:31:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findLexLargestString(S) {\n    const n = S.length / 2;\n    let aIndices = [];\n    let bIndices = [];\n    let aCount = 0, bCount = 0;\n    \n    // Record the positions of 'a's and 'b's\n    for (let i = 0; i < S.length; i++) {\n        if (S[i] === 'a') {\n            aCount++;\n            aIndices.push(i);\n        } else {\n            bCount++;\n            bIndices.push(i);\n        }\n    }\n    \n    let selected = new Array(S.length).fill(false);\n    let result = [];\n    \n    // For each pair of a and b at the same occurrence index, decide to take both or none\n    for (let i = 0; i < n; i++) {\n        const aPos = aIndices[i];\n        const bPos = bIndices[i];\n        \n        if (aPos < bPos) {\n            // Take both a and b if it helps in making the string lex larger\n            selected[aPos] = true;\n            selected[bPos] = true;\n        } else {\n            // If b comes before a, taking both might not be optimal for lex order\n            // So we skip this pair\n        }\n    }\n    \n    // Now, we need to ensure that for any a and b pair, if a is before b, we take both\n    // Otherwise, we skip both\n    // But to maximize lex order, we should take as many 'a's as possible first\n    \n    // Reconstruct the result by taking all selected characters\n    for (let i = 0; i < S.length; i++) {\n        if (selected[i]) {\n            result.push(S[i]);\n        }\n    }\n    \n    // Now, we need to ensure that the remaining characters are added in a way that maximizes lex order\n    // But according to the problem, we must choose both or neither in each pair\n    // So the initial approach might not cover all cases\n    \n    // Alternative approach: we can pair the a's and b's and decide to take pairs where a comes before b\n    // Then concatenate all such pairs in order\n    \n    // Reset the approach\n    result = [];\n    let pairs = [];\n    for (let i = 0; i < n; i++) {\n        pairs.push({ a: aIndices[i], b: bIndices[i] });\n    }\n    \n    // Sort pairs based on the position of 'a' to maximize lex order\n    pairs.sort((x, y) => x.a - y.a);\n    \n    for (let pair of pairs) {\n        if (pair.a < pair.b) {\n            result.push('a');\n            result.push('b');\n        }\n    }\n    \n    // The remaining characters are those where b comes before a, which we skip\n    // So the result is composed of all 'a's followed by 'b's from the pairs where a comes before b\n    \n    return result.join('');\n}",
+    "timestamp": "2025-08-13 13:32:02"
+  }
+]

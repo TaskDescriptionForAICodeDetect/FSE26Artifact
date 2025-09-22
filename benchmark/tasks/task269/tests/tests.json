@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "4\nA\nAND\nCAT\nDOG\nZ XUW ZVX Z YZT.\n",
+      "output": "A DOG AND A CAT."
+    },
+    {
+      "input": "2\nAZ\nAY\nZA.\n",
+      "output": "AZ."
+    },
+    {
+      "input": "2\nAA\nBB\nCC.\n",
+      "output": "-."
+    },
+    {
+      "input": "16\nA\nB\nC\nD\nE\nF\nG\nH\nI\nJ\nK\nL\nM\nN\nO\nABCDEFGHIJKLMNO\nA B C D E F G H I J K L M N O ABCDEFGHIJKLMNO.\n",
+      "output": "A B C D E F G H I J K L M N O ABCDEFGHIJKLMNO."
+    }
+  ]
+}

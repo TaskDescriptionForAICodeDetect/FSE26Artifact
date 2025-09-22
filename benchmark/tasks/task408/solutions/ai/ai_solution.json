@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_DIGITS 20\n\nvoid numberToString(int num, char* str) {\n    sprintf(str, \"%d\", num);\n}\n\nint findSequencePosition(const char* sequence) {\n    char buffer[MAX_DIGITS];\n    int position = 0;\n    int currentNumber = 1;\n    int sequenceLen = strlen(sequence);\n\n    while (1) {\n        numberToString(currentNumber, buffer);\n        int numLen = strlen(buffer);\n\n        for (int i = 0; i < numLen; i++) {\n            position++;\n            if (position >= sequenceLen) {\n                int match = 1;\n                for (int j = 0; j < sequenceLen; j++) {\n                    int posInBuffer = position - sequenceLen + j;\n                    int numIndex = 0;\n                    int tempNum = currentNumber;\n                    int tempPos = posInBuffer;\n                    char tempBuffer[MAX_DIGITS];\n                    numberToString(tempNum, tempBuffer);\n                    while (tempPos >= strlen(tempBuffer)) {\n                        tempPos -= strlen(tempBuffer);\n                        tempNum++;\n                        numberToString(tempNum, tempBuffer);\n                    }\n                    if (tempBuffer[tempPos] != sequence[j]) {\n                        match = 0;\n                        break;\n                    }\n                }\n                if (match) {\n                    return position - sequenceLen + 1;\n                }\n            }\n        }\n        currentNumber++;\n    }\n}\n\nint main() {\n    char sequence[MAX_DIGITS];\n    scanf(\"%s\", sequence);\n    int position = findSequencePosition(sequence);\n    printf(\"%d\\n\", position);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:24:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint findSequencePosition(const string& sequence) {\n    string champernowne;\n    int n = 1;\n    while (champernowne.size() < sequence.size() + 1000) {\n        champernowne += to_string(n);\n        n++;\n    }\n    size_t pos = champernowne.find(sequence);\n    return (pos != string::npos) ? pos + 1 : -1;\n}\n\nint main() {\n    string sequence;\n    cin >> sequence;\n    int position = findSequencePosition(sequence);\n    cout << position << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:25:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class ChampernowneSearch {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String sequence = scanner.next();\n        scanner.close();\n\n        StringBuilder champernowne = new StringBuilder();\n        int position = -1;\n        int currentNumber = 1;\n\n        while (position == -1) {\n            champernowne.append(currentNumber);\n            int index = champernowne.indexOf(sequence);\n            if (index != -1) {\n                position = index + 1;\n                break;\n            }\n            currentNumber++;\n        }\n\n        System.out.println(position);\n    }\n}",
+    "timestamp": "2025-08-05 21:25:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.math.BigInteger;\n\npublic class ChampernowneSequence {\n    public static long findFirstOccurrence(String sequence) {\n        if (sequence == null || sequence.isEmpty()) {\n            return -1;\n        }\n\n        StringBuilder champernowne = new StringBuilder(\".\");\n        long position = 0;\n        int currentNum = 1;\n\n        while (true) {\n            champernowne.append(currentNum);\n            int index = champernowne.toString().indexOf(sequence);\n            \n            if (index != -1) {\n                return position + index;\n            }\n\n            position += String.valueOf(currentNum).length();\n            currentNum++;\n        }\n    }\n\n    public static void main(String[] args) {\n        String testSequence = \"123\";\n        long result = findFirstOccurrence(testSequence);\n        System.out.println(\"First occurrence of \" + testSequence + \" is at position: \" + result);\n    }\n}",
+    "timestamp": "2025-08-05 21:25:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nchar* generate_champernowne(int length) {\n    char* champernowne = malloc(length + 1);\n    int pos = 0;\n    for (int i = 1; pos < length; i++) {\n        char temp[20];\n        sprintf(temp, \"%d\", i);\n        int len = strlen(temp);\n        \n        for (int j = 0; j < len && pos < length; j++) {\n            champernowne[pos++] = temp[j];\n        }\n    }\n    champernowne[pos] = '\\0';\n    return champernowne;\n}\n\nint find_sequence_position(const char* sequence) {\n    int seq_len = strlen(sequence);\n    int champ_len = seq_len * 10;  // Initial estimate\n    \n    while (1) {\n        char* champernowne = generate_champernowne(champ_len);\n        char* found = strstr(champernowne, sequence);\n        \n        if (found) {\n            int position = found - champernowne;\n            free(champernowne);\n            return position;\n        }\n        \n        free(champernowne);\n        champ_len *= 2;\n    }\n}\n\nint main(int argc, char* argv[]) {\n    if (argc != 2) {\n        printf(\"Usage: %s <sequence>\\n\", argv[0]);\n        return 1;\n    }\n    \n    int position = find_sequence_position(argv[1]);\n    printf(\"First occurrence at position: %d\\n\", position);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:25:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nlong long findChampernownePosition(const string& sequence) {\n    long long position = 0;\n    int digits = sequence.length();\n    \n    for (int numLen = 1; ; numLen++) {\n        long long startNum = pow(10, numLen - 1);\n        long long endNum = pow(10, numLen) - 1;\n        long long count = endNum - startNum + 1;\n        \n        long long digitCount = count * numLen;\n        \n        if (position + digitCount >= sequence.length()) {\n            for (long long num = startNum; num <= endNum; num++) {\n                string numStr = to_string(num);\n                \n                for (int i = 0; i <= numStr.length() - digits; i++) {\n                    if (numStr.substr(i, digits) == sequence) {\n                        return position + i + 1;\n                    }\n                }\n                \n                position += numLen;\n            }\n        } else {\n            position += digitCount;\n        }\n    }\n}\n\nint main() {\n    string sequence;\n    cin >> sequence;\n    \n    long long result = findChampernownePosition(sequence);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:25:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_position_in_champernowne(target_sequence):\n    target_str = str(target_sequence)\n    current_length = 0\n    n = 1\n    while True:\n        num_str = str(n)\n        num_length = len(num_str)\n        for i in range(num_length):\n            if (i + len(target_str) <= num_length and \n                num_str[i:i+len(target_str)] == target_str):\n                return current_length + i + 1\n        current_length += num_length\n        n += 1\n\n# Example: Find position of '12345'\ntarget_sequence = 12345\nposition = find_position_in_champernowne(target_sequence)\nprint(position)",
+    "timestamp": "2025-08-13 06:25:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class ChampernowneConstant {\n    public static void main(String[] args) {\n        String sequence = \"123\"; // Example sequence, change as needed\n        System.out.println(findFirstOccurrence(sequence));\n    }\n\n    public static int findFirstOccurrence(String sequence) {\n        // Use a StringBuilder to construct the Champernowne constant dynamically\n        StringBuilder champernowne = new StringBuilder();\n        int number = 1;\n        \n        // Find length of sequence to determine when to start checking\n        int sequenceLength = sequence.length();\n\n        // Append numbers to champernowne until the sequence is found\n        while (true) {\n            champernowne.append(number);\n            if (champernowne.length() >= sequenceLength) {\n                int index = champernowne.indexOf(sequence);\n                if (index != -1) {\n                    // Add 1 because positions are typically 1-based\n                    return index + 1;\n                }\n            }\n            number++;\n        }\n    }\n}",
+    "timestamp": "2025-08-13 06:25:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n// Function to compute Champernowne constant up to a certain number of digits\nvoid champernowne(char *constant, int digits) {\n    int pos = 0;\n    for (int i = 1; pos < digits; i++) {\n        pos += snprintf(constant + pos, digits - pos + 1, \"%d\", i);\n    }\n}\n\n// Function to compute the position of the first occurrence of the sequence\nint find_sequence_position(const char *sequence, int digits) {\n    char *constant = malloc((digits + 1) * sizeof(char));\n    champernowne(constant, digits);\n    char *pos = strstr(constant, sequence);\n    int result = (pos != NULL) ? (pos - constant) + 1 : -1;\n    free(constant);\n    return result;\n}\n\nint main() {\n    char sequence[] = \"123\";\n    int digits = 1000000; // Increase if needed for larger sequences\n    int position = find_sequence_position(sequence, digits);\n    printf(\"Position: %d\\n\", position);\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:25:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_champernowne_sequence_position(target_sequence):\n    sequence = \"\"\n    current_number = 1\n    \n    while True:\n        sequence += str(current_number)\n        \n        index = sequence.find(target_sequence)\n        if index != -1:\n            # Calculate total length before the current number started\n            previous_length = len(sequence) - len(str(current_number))\n            return previous_length + index\n        \n        current_number += 1\n\n# Example usage\ntarget = input(\"Enter the sequence to find: \")\nposition = find_champernowne_sequence_position(target)\nprint(f\"First occurrence at position: {position}\")",
+    "timestamp": "2025-08-13 06:25:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_champernowne_position(sequence):\n    champernowne = \"\"\n    n = 1\n    position = -1\n    \n    while True:\n        champernowne += str(n)\n        if sequence in champernowne:\n            position = champernowne.index(sequence) + 1  # +1 for 1-based indexing\n            break\n        n += 1\n        # Prevent infinite loop for sequences not in Champernowne (though theoretically it should be)\n        if n > 1000000:\n            break\n    \n    return position\n\n# Example usage:\n# print(find_champernowne_position(\"12\"))  # Output: 1",
+    "timestamp": "2025-08-13 06:25:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nint main() {\n    std::string target;\n    std::cin >> target;\n\n    std::string champernowne = \"\";\n    int n = 1;\n    \n    while (true) {\n        champernowne += std::to_string(n);\n        size_t pos = champernowne.find(target);\n        if (pos != std::string::npos) {\n            std::cout << pos + 1 << std::endl;\n            break;\n        }\n        ++n;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:31:56"
+  }
+]

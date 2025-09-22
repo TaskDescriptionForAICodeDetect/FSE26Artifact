@@ -1,0 +1,1 @@
+Takahashi and Aoki are playing a game on a tree with N vertices. They start at different vertices and move to adjacent vertices. Takahashi aims to delay the game while Aoki aims to finish it as soon as possible. Your task is to determine the number of moves Aoki will make before the game ends, given that both players know each other's positions and play optimally.

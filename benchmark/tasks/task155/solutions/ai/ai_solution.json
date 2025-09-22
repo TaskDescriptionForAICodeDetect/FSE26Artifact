@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint max_min_segment(int N, int A[]) {\n    int total = 0;\n    for (int i = 0; i < N; i++) {\n        total += A[i];\n    }\n    \n    int left = 0, right = total;\n    int result = 0;\n    \n    while (left <= right) {\n        int mid = (left + right) / 2;\n        int count = 0;\n        int current_sum = 0;\n        int min_segment = total;\n        int temp_sum = 0;\n        \n        for (int i = 0; i < 2 * N; i++) {\n            int idx = i % N;\n            temp_sum += A[idx];\n            if (temp_sum >= mid) {\n                min_segment = min(min_segment, temp_sum);\n                temp_sum = 0;\n                count++;\n                if (count == 3) {\n                    break;\n                }\n            }\n        }\n        \n        if (count >= 3) {\n            result = max(result, min_segment);\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    return result;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *A = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    printf(\"%d\\n\", max_min_segment(N, A));\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BaumkuchenCake {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] segments = new int[N];\n        \n        int totalSize = 0;\n        for (int i = 0; i < N; i++) {\n            segments[i] = scanner.nextInt();\n            totalSize += segments[i];\n        }\n        \n        int maxMinPiece = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                int firstPiece = calculatePieceSize(segments, 0, i);\n                int secondPiece = calculatePieceSize(segments, i, j);\n                int thirdPiece = calculatePieceSize(segments, j, N);\n                \n                int minPiece = Math.min(Math.min(firstPiece, secondPiece), thirdPiece);\n                maxMinPiece = Math.max(maxMinPiece, minPiece);\n            }\n        }\n        \n        System.out.println(maxMinPiece);\n        \n        scanner.close();\n    }\n    \n    private static int calculatePieceSize(int[] segments, int start, int end) {\n        int pieceSize = 0;\n        for (int i = start; i < end; i++) {\n            pieceSize += segments[i];\n        }\n        return pieceSize;\n    }\n}",
+    "timestamp": "2025-08-05 18:50:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nbool isPossible(const vector<int>& A, long long mid, int N) {\n    long long sum = 0;\n    int count = 0;\n    for (int i = 0; i < N; ++i) {\n        sum += A[i];\n        if (sum >= mid) {\n            sum = 0;\n            count++;\n            if (count == 3) return true;\n        }\n    }\n    return false;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    long long total = 0;\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        total += A[i];\n    }\n    \n    long long left = 0;\n    long long right = total;\n    long long answer = 0;\n    while (left <= right) {\n        long long mid = (left + right) / 2;\n        if (isPossible(A, mid, N)) {\n            answer = mid;\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    cout << answer << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int segments[N];\n    int total_size = 0;\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &segments[i]);\n        total_size += segments[i];\n    }\n    \n    int max_min_piece = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            int first_piece = 0;\n            int second_piece = 0;\n            int third_piece = 0;\n            \n            for (int k = 0; k <= i; k++) {\n                first_piece += segments[k];\n            }\n            \n            for (int k = i + 1; k <= j; k++) {\n                second_piece += segments[k];\n            }\n            \n            for (int k = j + 1; k < N; k++) {\n                third_piece += segments[k];\n            }\n            \n            int min_piece = first_piece;\n            if (second_piece < min_piece) min_piece = second_piece;\n            if (third_piece < min_piece) min_piece = third_piece;\n            \n            if (min_piece > max_min_piece) {\n                max_min_piece = min_piece;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", max_min_piece);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> segments(N);\n    int totalSize = 0;\n    \n    for (int i = 0; i < N; i++) {\n        cin >> segments[i];\n        totalSize += segments[i];\n    }\n    \n    int maxMinSize = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            int firstPieceSize = 0;\n            int secondPieceSize = 0;\n            int thirdPieceSize = 0;\n            \n            for (int k = 0; k <= i; k++) {\n                firstPieceSize += segments[k];\n            }\n            \n            for (int k = i + 1; k <= j; k++) {\n                secondPieceSize += segments[k];\n            }\n            \n            for (int k = j + 1; k < N; k++) {\n                thirdPieceSize += segments[k];\n            }\n            \n            int minSize = min({firstPieceSize, secondPieceSize, thirdPieceSize});\n            maxMinSize = max(maxMinSize, minSize);\n        }\n    }\n    \n    cout << maxMinSize << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:51:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Baumkuchen {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        int total = 0;\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n            total += A[i];\n        }\n\n        int left = 0;\n        int right = total / 3;\n        int answer = 0;\n\n        while (left <= right) {\n            int mid = (left + right) / 2;\n            if (isPossible(A, mid, total)) {\n                answer = mid;\n                left = mid + 1;\n            } else {\n                right = mid - 1;\n            }\n        }\n\n        System.out.println(answer);\n    }\n\n    private static boolean isPossible(int[] A, int minSize, int total) {\n        int n = A.length;\n        int[] prefix = new int[2 * n];\n        prefix[0] = A[0];\n        for (int i = 1; i < 2 * n; i++) {\n            prefix[i] = prefix[i - 1] + A[i % n];\n        }\n\n        for (int i = 0; i < n; i++) {\n            int firstCut = findCut(prefix, i, minSize);\n            if (firstCut == -1) continue;\n            int secondCut = findCut(prefix, firstCut, minSize);\n            if (secondCut == -1) continue;\n            if (prefix[secondCut] - prefix[i] >= minSize && prefix[i + n] - prefix[secondCut] >= minSize) {\n                return true;\n            }\n        }\n        return false;\n    }\n\n    private static int findCut(int[] prefix, int start, int minSize) {\n        int left = start + 1;\n        int right = prefix.length - 1;\n        int result = -1;\n\n        while (left <= right) {\n            int mid = (left + right) / 2;\n            if (prefix[mid] - prefix[start] >= minSize) {\n                result = mid;\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 18:51:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_min_piece(N, A):\n    prefix_sum = [0] * (N + 1)\n    for i in range(N):\n        prefix_sum[i + 1] = prefix_sum[i] + A[i]\n\n    total_sum = prefix_sum[-1]\n    max_min_size = 0\n\n    for i in range(1, N - 1):\n        for j in range(i + 1, N):\n            first_piece = prefix_sum[i]\n            second_piece = prefix_sum[j] - prefix_sum[i]\n            third_piece = total_sum - prefix_sum[j]\n\n            min_size = min(first_piece, second_piece, third_piece)\n            max_min_size = max(max_min_size, min_size)\n\n    return max_min_size\n\n# Example usage:\nN = 5\nA = [1, 2, 3, 4, 5]\nprint(max_min_piece(N, A))",
+    "timestamp": "2025-08-13 01:13:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Baumkuchen {\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        int totalSize = 0;\n\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n            totalSize += A[i];\n        }\n\n        // prefix sums for easier segment calculations\n        int[] prefixSums = new int[N + 1];\n        for (int i = 0; i < N; i++) {\n            prefixSums[i + 1] = prefixSums[i] + A[i]; \n        }\n\n        int maxMinSize = 0;\n\n        // Consider every pair (cut1, cut2)\n        for (int cut1 = 1; cut1 < N; cut1++) {\n            for (int cut2 = cut1 + 1; cut2 < N + 1; cut2++) {\n                int piece1 = prefixSums[cut1] - prefixSums[0];\n                int piece2 = prefixSums[cut2] - prefixSums[cut1];\n                int piece3 = totalSize - prefixSums[cut2];\n                int minPieceSize = Math.min(piece1, Math.min(piece2, piece3));\n                maxMinSize = Math.max(maxMinSize, minPieceSize);\n            }\n        }\n\n        System.out.println(maxMinSize);\n    }\n}",
+    "timestamp": "2025-08-13 01:13:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint maxMinPieceSize(int N, int sizes[]) {\n    int prefixSum[N + 1];\n    prefixSum[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        prefixSum[i] = prefixSum[i - 1] + sizes[i - 1];\n    }\n\n    int totalSize = prefixSum[N];\n    int maxMinSize = 0;\n\n    for (int i = 1; i <= N - 2; i++) {\n        for (int j = i + 1; j <= N - 1; j++) {\n            int piece1 = prefixSum[i];\n            int piece2 = prefixSum[j] - prefixSum[i];\n            int piece3 = totalSize - prefixSum[j];\n            int currentMinSize = piece1 < piece2 ? (piece1 < piece3 ? piece1 : piece3) : (piece2 < piece3 ? piece2 : piece3);\n            if (currentMinSize > maxMinSize) {\n                maxMinSize = currentMinSize;\n            }\n        }\n    }\n\n    return maxMinSize;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int sizes[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &sizes[i]);\n    }\n\n    int result = maxMinPieceSize(N, sizes);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:13:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_smallest_piece(N, segments):\n    total_length = sum(segments)\n    left = 0\n    right = total_length\n\n    while right - left > 1e-6:\n        mid = (left + right) / 2\n        if can_cut_cake(N, segments, mid):\n            left = mid\n        else:\n            right = mid\n\n    return left\n\ndef can_cut_cake(N, segments, min_piece_size):\n    current_sum = 0\n    pieces_count = 1\n\n    for segment in segments:\n        current_sum += segment\n        if current_sum >= min_piece_size:\n            current_sum = 0\n            pieces_count += 1\n            if pieces_count > 3:\n                return False\n\n    return pieces_count >= 3\n\ndef main():\n    N = int(input())\n    segments = list(map(int, input().split()))\n    \n    result = max_smallest_piece(N, segments)\n    print(\"{:.6f}\".format(result))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 01:13:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, *rest = map(int, sys.stdin.read().split())\n    A = rest[:N]\n    total = sum(A)\n    prefix = [0] * (2 * N + 1)\n    for i in range(2 * N):\n        prefix[i+1] = prefix[i] + A[i % N]\n    \n    left = 0\n    right = total // 3\n    answer = 0\n    \n    while left <= right:\n        mid = (left + right) // 2\n        found = False\n        j = 0\n        k = 0\n        for i in range(N):\n            while j < i + N and prefix[j] - prefix[i] < mid:\n                j += 1\n            if prefix[j] - prefix[i] < mid:\n                break\n            while k < i + N and prefix[k] - prefix[j] < mid:\n                k += 1\n            if prefix[k] - prefix[j] < mid:\n                break\n            if total - (prefix[k] - prefix[i]) >= mid:\n                found = True\n                break\n        if found:\n            answer = mid\n            left = mid + 1\n        else:\n            right = mid - 1\n    print(answer)\n\nsolve()",
+    "timestamp": "2025-08-13 01:14:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nbool canDivide(const vector<int>& sizes, int maxSize) {\n    int currentSum = 0;\n    int pieceCount = 0;\n    for (int size : sizes) {\n        currentSum += size;\n        if (currentSum >= maxSize) {\n            pieceCount++;\n            currentSum = 0;\n            if (pieceCount == 3) return true;\n        }\n    }\n    return false;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> sizes(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> sizes[i];\n    }\n\n    int totalSize = accumulate(sizes.begin(), sizes.end(), 0);\n    \n    int left = 0, right = totalSize;\n    int result = 0;\n    \n    while (left <= right) {\n        int mid = (left + right) / 2;\n        if (canDivide(sizes, mid)) {\n            result = mid;\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:58:59"
+  }
+]

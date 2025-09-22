@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve_garland_problem(k1, k2, k3):\n    for x1 in range(k1):\n        for x2 in range(k2):\n            for x3 in range(k3):\n                if is_always_lit(x1, x2, x3, k1, k2, k3):\n                    return \"YES\"\n    return \"NO\"\n\ndef is_always_lit(x1, x2, x3, k1, k2, k3):\n    start_time = max(x1, x2, x3)\n    \n    for t in range(start_time, start_time + lcm(k1, k2, k3) * 2):\n        if not is_lit_at_time(t, x1, k1) and \\\n           not is_lit_at_time(t, x2, k2) and \\\n           not is_lit_at_time(t, x3, k3):\n            return False\n    return True\n\ndef is_lit_at_time(t, x, k):\n    return (t - x) % k == 0\n\ndef lcm(a, b, c):\n    def gcd(x, y):\n        while y:\n            x, y = y, x % y\n        return x\n    \n    def lcm_two(x, y):\n        return x * y // gcd(x, y)\n    \n    return lcm_two(lcm_two(a, b), c)\n\ndef main():\n    k1, k2, k3 = map(int, input().split())\n    print(solve_garland_problem(k1, k2, k3))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:32:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "k1, k2, k3 = map(int, input().split())\n\ndef solve():\n    # We need to check for a window of 100 seconds (as per the Chinese Remainder Theorem intuition)\n    for start in range(0, 100):\n        covered = [False] * 1000  # Large enough to cover the period\n        # Check for each garland's pattern starting at 'start' (x1, x2, x3 can be start, start+1, start+2)\n        # Try all possible permutations of start times within a small window\n        for x1 in [start, start+1, start+2]:\n            for x2 in [start, start+1, start+2]:\n                for x3 in [start, start+1, start+2]:\n                    max_x = max(x1, x2, x3)\n                    ok = True\n                    # Check for each second from max_x onwards up to max_x + 100\n                    for t in range(max_x, max_x + 100):\n                        lit = False\n                        if (t - x1) >= 0 and (t - x1) % k1 == 0:\n                            lit = True\n                        if (t - x2) >= 0 and (t - x2) % k2 == 0:\n                            lit = True\n                        if (t - x3) >= 0 and (t - x3) % k3 == 0:\n                            lit = True\n                        if not lit:\n                            ok = False\n                            break\n                    if ok:\n                        return True\n    return False\n\nif solve():\n    print(\"YES\")\nelse:\n    print(\"NO\")",
+    "timestamp": "2025-08-05 17:33:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_mishka_complete_garlands(k1, k2, k3):\n    # Using the maximum of k1, k2, k3 to ensure checking all necessary seconds\n    max_interval = max(k1, k2, k3)\n    for start1 in range(k1):\n        for start2 in range(k2):\n            for start3 in range(k3):\n                covered = set()\n                # Fill in lit times for garland 1\n                for time in range(start1, max_interval * k1, k1):\n                    covered.add(time)\n                # Fill in lit times for garland 2\n                for time in range(start2, max_interval * k2, k2):\n                    covered.add(time)\n                # Fill in lit times for garland 3\n                for time in range(start3, max_interval * k3, k3):\n                    covered.add(time)\n                # Check if all times from 0 to max_interval - 1 are covered\n                if len(covered) == max_interval:\n                    return \"YES\"\n    return \"NO\"\n\n# Example usage:\nk1, k2, k3 = map(int, input().split())\nprint(can_mishka_complete_garlands(k1, k2, k3))",
+    "timestamp": "2025-08-12 21:54:37"
+  }
+]

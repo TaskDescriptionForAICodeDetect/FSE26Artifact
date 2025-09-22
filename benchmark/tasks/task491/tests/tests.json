@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\nhaneda\noookayama\ntsu\n2\nazusa\nazishirabe\n2\nsnuke\nsnake\n4\nhaneda\nhonda\nhanamaki\nhawaii\n0\n",
+      "output": "1\n4\n-1\n3\n"
+    }
+  ]
+}

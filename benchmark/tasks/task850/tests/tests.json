@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "12 3\narc\nrac\n",
+      "output": "YES"
+    },
+    {
+      "input": "23 7\natcoder\nregular\ncontest\n",
+      "output": "NO"
+    },
+    {
+      "input": "312 12\nbimonigaloaf\nfaurwlkbleht\ndexwimqxzxbb\nlxdgyoifcxid\nydxiliocfdgx\nnfoabgilamoi\nibxbdqmzxxwe\npqirylfrcrnf\nwtehfkllbura\nyfrnpflcrirq\nwvcclwgiubrk\nlkbrwgwuiccv\n",
+      "output": "YES"
+    }
+  ]
+}

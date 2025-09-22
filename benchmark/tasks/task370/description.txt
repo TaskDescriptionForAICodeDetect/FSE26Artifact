@@ -1,0 +1,1 @@
+You are given a cubic equation, and you need to find the number of positive real roots and the number of negative real roots, counting multiplicities.

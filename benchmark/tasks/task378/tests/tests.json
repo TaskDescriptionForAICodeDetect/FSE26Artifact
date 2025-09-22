@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "1 10\n3 3\nAAA\nABA\nCCC\n3\nA 0\nB 5\nC 9\n3\nD 2\nR 1\nU 2\n5\n10\n10\n10\n10\n10\n100\n100\n10\n10\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\n8\nT 0\nH 1\nI 2\nS 3\nA 4\nP 5\nE 6\nN 7\n9\nR 1\nD 3\nR 8\nD 2\nL 9\nD 2\nR 9\nD 2\nL 9\n2\n20\n10",
+      "output": "YES"
+    },
+    {
+      "input": "100 100\n10 10\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\nTHISISAPEN\n8\nT 0\nH 1\nI 2\nS 3\nA 4\nP 5\nE 6\nN 7\n9\nR 1\nD 3\nR 8\nD 2\nL 9\nD 2\nR 9\nD 2\nL 9\n2\n20\n10",
+      "output": "NO"
+    }
+  ]
+}

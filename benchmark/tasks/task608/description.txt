@@ -1,0 +1,1 @@
+You have n indistinguishable balls and k distinguishable boxes. Find the number of ways to distribute the balls into the boxes such that each ball goes into only one box, no balls are left outside of the boxes, and each box can contain an arbitrary number of balls, including zero. Return the result modulo 10^9 + 7.

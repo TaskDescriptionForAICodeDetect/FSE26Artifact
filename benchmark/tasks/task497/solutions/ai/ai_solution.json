@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint fastPow(int base, int exp, int mod) {\n    int result = 1;\n    base %= mod;\n    while (exp > 0) {\n        if (exp & 1)\n            result = (result * base) % mod;\n        base = (base * base) % mod;\n        exp >>= 1;\n    }\n    return result;\n}\n\nint solve(int N) {\n    for (int k = 1; k <= N; k++) {\n        int valid = 1;\n        for (int a = 1; a < N; a++) {\n            int current = a;\n            for (int j = 0; j < k; j++) {\n                current = fastPow(current, N, N);\n            }\n            if (current != a) {\n                valid = 0;\n                break;\n            }\n        }\n        if (valid)\n            return k;\n    }\n    return -1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    printf(\"%d\\n\", solve(N));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:54:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <math.h>\n\nlong long power_mod(long long a, long long power, long long mod) {\n    long long result = 1;\n    a = a % mod;\n    while (power > 0) {\n        if (power % 2 == 1) {\n            result = (result * a) % mod;\n        }\n        power = power / 2;\n        a = (a * a) % mod;\n    }\n    return result;\n}\n\nlong long gcd(long long a, long long b) {\n    while (b != 0) {\n        long long temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nlong long lcm(long long a, long long b) {\n    return (a / gcd(a, b)) * b;\n}\n\nlong long carmichael(long long n) {\n    if (n == 1) return 1;\n    long long result = 1;\n    if (n % 2 == 0) {\n        n /= 2;\n        result = 1;\n        while (n % 2 == 0) {\n            n /= 2;\n            result *= 2;\n        }\n        result *= 1;\n    }\n    for (long long p = 3; p * p <= n; p += 2) {\n        if (n % p == 0) {\n            long long temp = p - 1;\n            n /= p;\n            while (n % p == 0) {\n                n /= p;\n                temp *= p;\n            }\n            result = lcm(result, temp);\n        }\n    }\n    if (n > 1) {\n        result = lcm(result, n - 1);\n    }\n    return result;\n}\n\nlong long find_min_k(long long N) {\n    if (N == 2) return 1;\n    long long lambda = carmichael(N);\n    long long k = 1;\n    for (long long a = 2; a < N; a++) {\n        if (gcd(a, N) != 1) continue;\n        long long current_k = 1;\n        long long temp = power_mod(a, N, N);\n        while (temp != a % N && current_k <= lambda) {\n            temp = power_mod(temp, N, N);\n            current_k++;\n        }\n        if (temp != a % N) return -1;\n        k = lcm(k, current_k);\n    }\n    return k;\n}\n\nint main() {\n    long long N;\n    scanf(\"%lld\", &N);\n    printf(\"%lld\\n\", find_min_k(N));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:55:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint lcm(int a, int b) {\n    return a / gcd(a, b) * b;\n}\n\nint computeOrder(int a, int N) {\n    if (gcd(a, N) != 1) return -1;\n    int order = 1;\n    int current = a % N;\n    while (current != 1) {\n        current = (current * a) % N;\n        order++;\n    }\n    return order;\n}\n\nint main() {\n    int N;\n    cin >> N;\n\n    bool isCarmichael = true;\n    for (int a = 2; a < N; ++a) {\n        if (gcd(a, N) == 1) {\n            if (computeOrder(a, N) != -1 && (N - 1) % computeOrder(a, N) != 0) {\n                isCarmichael = false;\n                break;\n            }\n        }\n    }\n\n    if (!isCarmichael) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    vector<int> orders;\n    for (int a = 1; a < N; ++a) {\n        if (gcd(a, N) == 1) {\n            int order = computeOrder(a, N);\n            if (order != -1) {\n                orders.push_back(order);\n            }\n        }\n    }\n\n    if (orders.empty()) {\n        cout << 1 << endl;\n        return 0;\n    }\n\n    int result = orders[0];\n    for (size_t i = 1; i < orders.size(); ++i) {\n        result = lcm(result, orders[i]);\n    }\n\n    bool valid = true;\n    for (int a = 1; a < N; ++a) {\n        if (gcd(a, N) != 1) {\n            int temp = a % N;\n            for (int k = 1; k <= result; ++k) {\n                temp = 1;\n                for (int i = 0; i < N; ++i) {\n                    temp = (temp * a) % N;\n                }\n                if (temp == a % N) {\n                    break;\n                }\n                if (k == result && temp != a % N) {\n                    valid = false;\n                    break;\n                }\n            }\n            if (!valid) break;\n        }\n    }\n\n    if (valid) {\n        cout << result << endl;\n    } else {\n        cout << -1 << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:55:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        System.out.println(findMinK(N));\n    }\n\n    private static int findMinK(int N) {\n        if (!isPrime(N)) {\n            return -1;\n        }\n        int phi = N - 1;\n        int k = phi;\n        for (int i = 2; i * i <= phi; i++) {\n            if (phi % i == 0) {\n                if (isValidK(N, i)) {\n                    k = Math.min(k, i);\n                }\n                if (isValidK(N, phi / i)) {\n                    k = Math.min(k, phi / i);\n                }\n            }\n        }\n        if (isValidK(N, phi)) {\n            k = Math.min(k, phi);\n        }\n        return k;\n    }\n\n    private static boolean isValidK(int N, int k) {\n        for (int a = 2; a < N; a++) {\n            int current = a;\n            for (int i = 0; i < k; i++) {\n                current = powMod(current, N, N);\n                if (current == a && i != k - 1) {\n                    break;\n                }\n            }\n            if (current != a) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    private static boolean isPrime(int n) {\n        if (n <= 1) {\n            return false;\n        }\n        if (n <= 3) {\n            return true;\n        }\n        if (n % 2 == 0 || n % 3 == 0) {\n            return false;\n        }\n        for (int i = 5; i * i <= n; i += 6) {\n            if (n % i == 0 || n % (i + 2) == 0) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    private static int powMod(int base, int exponent, int mod) {\n        int result = 1;\n        base = base % mod;\n        while (exponent > 0) {\n            if ((exponent & 1) == 1) {\n                result = (result * base) % mod;\n            }\n            exponent >>= 1;\n            base = (base * base) % mod;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 21:56:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int solve(int N) {\n        for (int k = 1; k <= N; k++) {\n            boolean allMatch = true;\n            for (int a = 1; a < N; a++) {\n                if (!checkCycle(a, N, k)) {\n                    allMatch = false;\n                    break;\n                }\n            }\n            if (allMatch) {\n                return k;\n            }\n        }\n        return -1;\n    }\n\n    private static boolean checkCycle(int a, int N, int k) {\n        int current = a;\n        for (int i = 0; i < k; i++) {\n            current = fastPow(current, N, N);\n        }\n        return current == a;\n    }\n\n    private static int fastPow(int base, int exp, int mod) {\n        long result = 1;\n        long x = base % mod;\n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                result = (result * x) % mod;\n            }\n            x = (x * x) % mod;\n            exp /= 2;\n        }\n        return (int) result;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        System.out.println(solve(N));\n    }\n}",
+    "timestamp": "2025-08-05 21:56:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint solve(int N) {\n    for (int k = 1; k <= N * N; k++) {\n        bool allSatisfy = true;\n        \n        for (int a = 1; a < N; a++) {\n            long long current = a;\n            for (int j = 0; j < k; j++) {\n                current = (long long)pow(current, N) % N;\n            }\n            \n            if (current != a) {\n                allSatisfy = false;\n                break;\n            }\n        }\n        \n        if (allSatisfy) {\n            return k;\n        }\n    }\n    \n    return -1;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    cout << solve(N) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:56:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_min_k(N):\n    def f(a):\n        return pow(a, N, N)\n\n    def F_k(a, k):\n        for _ in range(k):\n            a = f(a)\n        return a\n\n    for k in range(1, N):\n        if all(F_k(a, k) == a for a in range(1, N)):\n            return k\n    \n    return -1\n\n# Example usage:\nN = 5\nresult = find_min_k(N)\nprint(result)",
+    "timestamp": "2025-08-13 08:07:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Solution {\n\n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    private static int lcm(int a, int b) {\n        return a / gcd(a, b) * b;\n    }\n\n    public static int findMinimumK(int N) {\n        int lcm = 1;\n        for (int a = 1; a < N; a++) {\n            int cycleLength = 1;\n            int x = a;\n            do {\n                x = (int) (Math.pow(x, N) % N);\n                cycleLength++;\n            } while (x != a && cycleLength <= N);\n            \n            if (x != a) return -1;\n            lcm = lcm(lcm, cycleLength - 1);\n        }\n        return lcm;\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        System.out.println(findMinimumK(N));\n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-13 08:07:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint f(int a, int n) {\n    long long result = 1;\n    for (int i = 0; i < n; ++i) {\n        result = (result * a) % n;\n    }\n    return (int)result;\n}\n\nint findK(int n) {\n    int *F = (int *)malloc(n * sizeof(int));\n    for (int k = 1; ; ++k) {\n        int isIdentity = 1;\n        for (int a = 1; a < n; ++a) {\n            F[a] = f(a, n);\n        }\n        \n        for (int a = 1; a < n; ++a) {\n            if (F[a] != a) {\n                isIdentity = 0;\n                break;\n            }\n        }\n\n        if (isIdentity) {\n            free(F);\n            return k;\n        }\n        \n        for (int a = 1; a < n; ++a) {\n            F[a] = F[F[a]];\n        }\n    }\n\n    free(F);\n    return -1; // Should never reach here per problem statement\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int result = findK(N);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 08:07:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N):\n    def f(a):\n        return pow(a, N, N)\n    \n    def check_cycle_length(k):\n        for a in range(1, N):\n            current = a\n            for _ in range(k):\n                current = f(current)\n            if current != a:\n                return False\n        return True\n    \n    for k in range(1, N):\n        if check_cycle_length(k):\n            return k\n    \n    return -1\n\n# Example usage\nN = int(input())\nprint(solve(N))",
+    "timestamp": "2025-08-13 08:07:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef compute_min_k(N):\n    if not is_prime(N):\n        return -1\n    # Now, N is a prime number\n    # We need to find the minimal k such that N^k ≡ 1 mod (N-1)\n    # Since N and N-1 are coprime, by Fermat's little theorem, k = N-1 is a solution\n    # But we need the minimal k that divides N-1\n    # So we factorize N-1 and check the minimal k\n    factors = factorize(N - 1)\n    divisors = generate_divisors(factors)\n    divisors.sort()\n    for d in divisors:\n        if pow(N, d, N - 1) == 1:\n            return d\n    return N - 1\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    for p in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31]:\n        if n % p == 0:\n            return n == p\n    d = n - 1\n    s = 0\n    while d % 2 == 0:\n        d //= 2\n        s += 1\n    for a in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31]:\n        if a >= n:\n            continue\n        x = pow(a, d, n)\n        if x == 1 or x == n - 1:\n            continue\n        for _ in range(s - 1):\n            x = pow(x, 2, n)\n            if x == n - 1:\n                break\n        else:\n            return False\n    return True\n\ndef factorize(n):\n    factors = {}\n    if n == 1:\n        return factors\n    # Check for 2\n    while n % 2 == 0:\n        factors[2] = factors.get(2, 0) + 1\n        n = n // 2\n    # Check for odd divisors up to sqrt(n)\n    i = 3\n    max_factor = math.isqrt(n) + 1\n    while i <= max_factor:\n        while n % i == 0:\n            factors[i] = factors.get(i, 0) + 1\n            n = n // i\n            max_factor = math.isqrt(n) + 1\n        i += 2\n    if n > 1:\n        factors[n] = factors.get(n, 0) + 1\n    return factors\n\ndef generate_divisors(factors):\n    divisors = [1]\n    for p, exp in factors.items():\n        temp = []\n        for d in divisors:\n            for e in range(exp + 1):\n                temp.append(d * (p ** e))\n        divisors = list(set(temp))\n    divisors = list(set(divisors))\n    divisors.sort()\n    return divisors\n\nN = int(input())\nprint(compute_min_k(N))",
+    "timestamp": "2025-08-13 08:08:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint modExp(int base, int exp, int mod) {\n    int result = 1;\n    base = base % mod;\n    while (exp > 0) {\n        if (exp % 2 == 1)\n            result = (result * base) % mod;\n        exp = exp >> 1;\n        base = (base * base) % mod;\n    }\n    return result;\n}\n\nbool isIdentity(int N, int k, vector<int>& memo) {\n    for (int a = 1; a < N; ++a) {\n        int x = a;\n        for (int i = 0; i < k; ++i) {\n            if (memo[x] != -1) {\n                x = memo[x];\n            } else {\n                x = modExp(x, N, N);\n            }\n            if (x == a) break; // Short-circuit if already identity\n        }\n        if (x != a) return false;\n    }\n    return true;\n}\n\nint main() {\n    int N;\n    cin >> N;\n\n    vector<int> memo(N, -1);\n    for (int a = 1; a < N; ++a) {\n        memo[a] = modExp(a, N, N);\n    }\n\n    for (int k = 1; ; ++k) {\n        if (isIdentity(N, k, memo)) {\n            cout << k << endl;\n            break;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:43:24"
+  }
+]

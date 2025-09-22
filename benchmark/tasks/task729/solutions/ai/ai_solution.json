@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int P[N + 1];\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n    \n    long long total_sum = 0;\n    \n    for (int L = 1; L < N; L++) {\n        int max1 = INT_MIN, max2 = INT_MIN;\n        \n        for (int R = L; R <= N; R++) {\n            if (P[R] > max1) {\n                max2 = max1;\n                max1 = P[R];\n            } else if (P[R] > max2) {\n                max2 = P[R];\n            }\n            \n            total_sum += max2;\n        }\n    }\n    \n    printf(\"%lld\\n\", total_sum);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int value;\n    int index;\n} Element;\n\nint compare(const void *a, const void *b) {\n    return ((Element*)b)->value - ((Element*)a)->value;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Element *arr = (Element*)malloc(N * sizeof(Element));\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &arr[i].value);\n        arr[i].index = i + 1;\n    }\n    qsort(arr, N, sizeof(Element), compare);\n\n    long long sum = 0;\n    for (int i = 0; i < N; ++i) {\n        int current_val = arr[i].value;\n        int current_pos = arr[i].index;\n        int left = -1, right = -1;\n        for (int j = i - 1; j >= 0; --j) {\n            if (arr[j].index > current_pos) {\n                right = arr[j].index;\n            } else if (arr[j].index < current_pos) {\n                left = arr[j].index;\n                break;\n            }\n        }\n        if (left == -1 && right == -1) {\n            continue;\n        }\n        if (left == -1) {\n            sum += (long long)current_val * (current_pos) * (N - right + 1);\n        } else if (right == -1) {\n            sum += (long long)current_val * (left) * (N - current_pos + 1);\n        } else {\n            sum += (long long)current_val * (left) * (right - current_pos);\n            sum += (long long)current_val * (current_pos - left) * (N - right + 1);\n        }\n    }\n    printf(\"%lld\\n\", sum);\n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\nusing namespace std;\n\nlong long solve(int N, vector<int>& P) {\n    vector<int> left(N, -1), right(N, N);\n    stack<int> st;\n\n    for (int i = 0; i < N; ++i) {\n        while (!st.empty() && P[st.top()] < P[i]) {\n            st.pop();\n        }\n        if (!st.empty()) {\n            left[i] = st.top();\n        }\n        st.push(i);\n    }\n\n    st = stack<int>();\n    for (int i = N - 1; i >= 0; --i) {\n        while (!st.empty() && P[st.top()] < P[i]) {\n            st.pop();\n        }\n        if (!st.empty()) {\n            right[i] = st.top();\n        }\n        st.push(i);\n    }\n\n    long long res = 0;\n    for (int i = 0; i < N; ++i) {\n        int l = left[i], r = right[i];\n        res += (long long)P[i] * (i - l) * (r - i);\n    }\n\n    long long total = (long long)N * (N + 1) / 2;\n    total = total * (N + 1) - (N * (N + 1) * (2 * N + 1)) / 6;\n\n    for (int i = 0; i < N; ++i) {\n        int l = left[i], r = right[i];\n        long long cnt = (i - l) * (r - i);\n        total -= cnt * P[i];\n    }\n\n    return total;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> P(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> P[i];\n    }\n    cout << solve(N, P) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SecondLargestSum {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] P = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            P[i] = scanner.nextInt();\n        }\n        \n        long sum = 0;\n        for (int L = 1; L <= N; L++) {\n            TreeSet<Integer> set = new TreeSet<>();\n            for (int R = L; R <= N; R++) {\n                set.add(P[R]);\n                if (set.size() >= 2) {\n                    sum += set.lower(set.last());\n                }\n            }\n        }\n        System.out.println(sum);\n    }\n}",
+    "timestamp": "2025-08-05 22:43:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static long sumSecondLargest(int[] P) {\n        int N = P.length;\n        long totalSum = 0;\n\n        for (int L = 0; L < N; L++) {\n            int[] maxes = new int[2];\n            for (int R = L; R < N; R++) {\n                if (P[R] > maxes[0]) {\n                    maxes[1] = maxes[0];\n                    maxes[0] = P[R];\n                } else if (P[R] > maxes[1]) {\n                    maxes[1] = P[R];\n                }\n                \n                if (maxes[1] != 0) {\n                    totalSum += maxes[1];\n                }\n            }\n        }\n        \n        return totalSum;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] P = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            P[i] = scanner.nextInt();\n        }\n        \n        System.out.println(sumSecondLargest(P));\n    }\n}",
+    "timestamp": "2025-08-05 22:43:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> P(N);\n    for (int i = 0; i < N; i++) {\n        cin >> P[i];\n    }\n    \n    long long total_sum = 0;\n    \n    for (int L = 0; L < N; L++) {\n        vector<int> current_subarray;\n        for (int R = L; R < N; R++) {\n            current_subarray.push_back(P[R]);\n            \n            if (current_subarray.size() >= 2) {\n                nth_element(current_subarray.begin(), \n                            current_subarray.begin() + current_subarray.size() - 2, \n                            current_subarray.end());\n                \n                total_sum += current_subarray[current_subarray.size() - 2];\n            }\n        }\n    }\n    \n    cout << total_sum << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:44:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sum_of_second_largest(N, P):\n    total_sum = 0\n    for L in range(N):\n        max_val = -1\n        second_max_val = -1\n        for R in range(L + 1, N):\n            if P[R] > max_val:\n                second_max_val = max_val\n                max_val = P[R]\n            elif P[R] > second_max_val:\n                second_max_val = P[R]\n            total_sum += second_max_val\n    return total_sum\n\n# Example usage\nN = 5\nP = [5, 3, 4, 2, 1]\nprint(sum_of_second_largest(N, P))  # Output: 23",
+    "timestamp": "2025-08-13 12:17:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        int[] P = {3, 1, 4, 2}; // Example permutation\n        int N = P.length;\n        System.out.println(findSumOfSecondLargest(P, N));\n    }\n    \n    public static int findSumOfSecondLargest(int[] P, int N) {\n        int sum = 0;\n\n        for (int L = 0; L < N - 1; L++) {\n            for (int R = L + 1; R < N; R++) {\n                int max1 = Integer.MIN_VALUE, max2 = Integer.MIN_VALUE;\n                for (int i = L; i <= R; i++) {\n                    if (P[i] > max1) {\n                        max2 = max1;\n                        max1 = P[i];\n                    } else if (P[i] > max2) {\n                        max2 = P[i];\n                    }\n                }\n                sum += max2;\n            }\n        }\n        \n        return sum;\n    }\n}",
+    "timestamp": "2025-08-13 12:17:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int P[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n    \n    long long totalSum = 0;\n    \n    for (int L = 0; L < N - 1; L++) {\n        int maxValue = P[L];\n        int secondMax = -1;\n        \n        for (int R = L + 1; R < N; R++) {\n            if (P[R] > maxValue) {\n                secondMax = maxValue;\n                maxValue = P[R];\n            } else if (P[R] > secondMax) {\n                secondMax = P[R];\n            }\n            totalSum += secondMax;\n        }\n    }\n    \n    printf(\"%lld\\n\", totalSum);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:17:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nlong long sumOfSecondLargestValues(const vector<int>& P) {\n    int N = P.size();\n    long long sum = 0;\n    \n    for (int L = 0; L < N - 1; ++L) {\n        int max1 = P[L];\n        int max2 = INT_MIN;\n        for (int R = L + 1; R < N; ++R) {\n            if (P[R] > max1) {\n                max2 = max1;\n                max1 = P[R];\n            } else if (P[R] > max2) {\n                max2 = P[R];\n            }\n            if (L < R && max2 != INT_MIN) {\n                sum += max2;\n            }\n        }\n    }\n    \n    return sum;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> P(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> P[i];\n    }\n\n    cout << sumOfSecondLargestValues(P) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:17:28"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, P):\n    total_sum = 0\n    for L in range(1, N):\n        for R in range(L+1, N+1):\n            subset = P[L-1:R]\n            subset.sort(reverse=True)\n            total_sum += subset[1]\n    return total_sum\n\n# Input reading\nN = int(input())\nP = list(map(int, input().split()))\n\n# Output result\nprint(solve(N, P))",
+    "timestamp": "2025-08-13 12:17:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    N, *rest = map(int, sys.stdin.read().split())\n    P = rest[:N]\n    \n    total = 0\n    \n    for L in range(N):\n        max1 = -1\n        max2 = -1\n        for R in range(L, N):\n            current = P[R]\n            if current > max1:\n                max2 = max1\n                max1 = current\n            elif current > max2:\n                max2 = current\n            total += max2\n    \n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 12:17:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function sumOfSecondLargest(N, permutation) {\n  let sum = 0;\n\n  for (let L = 1; L < N; L++) {\n    for (let R = L + 1; R <= N; R++) {\n      let subArray = permutation.slice(L - 1, R);\n      subArray.sort((a, b) => b - a);\n      sum += subArray[1];\n    }\n  }\n\n  return sum;\n}\n\n// Example usage:\n// const permutation = [3, 1, 4, 2];\n// const N = permutation.length;\n// console.log(sumOfSecondLargest(N, permutation)); // Replace with actual permutation and N",
+    "timestamp": "2025-08-13 12:17:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function sumSecondLargest(N, P) {\n    let totalSum = 0;\n    \n    for (let L = 1; L <= N - 1; L++) {\n        for (let R = L + 1; R <= N; R++) {\n            let subarray = P.slice(L - 1, R);\n            subarray.sort((a, b) => b - a);\n            totalSum += subarray[1];\n        }\n    }\n    \n    return totalSum;\n}",
+    "timestamp": "2025-08-13 12:17:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function sumOfSecondLargestInAllSubarrays(P) {\n    const N = P.length;\n    let total = 0;\n    \n    for (let L = 0; L < N; L++) {\n        let max1 = -Infinity;\n        let max2 = -Infinity;\n        \n        for (let R = L; R < N; R++) {\n            const current = P[R];\n            \n            if (current > max1) {\n                max2 = max1;\n                max1 = current;\n            } else if (current > max2) {\n                max2 = current;\n            }\n            \n            if (R - L + 1 >= 2) {\n                total += max2;\n            }\n        }\n    }\n    \n    return total;\n}",
+    "timestamp": "2025-08-13 12:17:46"
+  }
+]

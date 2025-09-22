@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nint solve(int N, int X) {\n    long long total_sum = 0;\n\n    for (int k = 0; k < X + 1; k++) {\n        int current = k;\n        int steps = 0;\n\n        do {\n            if (current % 2 == 1) {\n                current = (current - 1) / 2;\n            } else {\n                current = current / 2 + (1 << (N - 1));\n            }\n            steps++;\n        } while (current != k);\n\n        total_sum = (total_sum + steps) % MOD;\n    }\n\n    return total_sum;\n}\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n    printf(\"%d\\n\", solve(N, X));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#define MOD 998244353\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n    long long sum = 0;\n    long long power = 1;\n    for (int i = 1; i < N; i++) {\n        power = (power * 2) % MOD;\n    }\n    \n    for (int k = 0; k <= X; k++) {\n        int original = k;\n        int current = k;\n        long long steps = 0;\n        do {\n            if (current % 2 == 1) {\n                current = (current - 1) / 2;\n            } else {\n                current = current / 2 + power;\n            }\n            steps++;\n        } while (current != original);\n        sum = (sum + steps) % MOD;\n    }\n    printf(\"%lld\\n\", sum);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <unordered_map>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint findCycleLength(int k, int N) {\n    unordered_map<int, int> visited;\n    int original = k;\n    int steps = 0;\n    while (true) {\n        if (visited.count(k)) {\n            if (k == original) {\n                return steps - visited[k];\n            } else {\n                return 0; // not a cycle back to original\n            }\n        }\n        visited[k] = steps;\n        steps++;\n        if (k % 2 == 1) {\n            k = (k - 1) / 2;\n        } else {\n            k = k / 2 + (1 << (N - 1));\n        }\n    }\n}\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n    long long sum = 0;\n    for (int k = 0; k <= X; ++k) {\n        sum += findCycleLength(k, N);\n        sum %= MOD;\n    }\n    cout << sum << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int X = scanner.nextInt();\n        long sum = 0;\n        for (int k = 0; k <= X; k++) {\n            int current = k;\n            int steps = 0;\n            do {\n                if (current % 2 != 0) {\n                    current = (current - 1) / 2;\n                } else {\n                    current = current / 2 + (1 << (N - 1));\n                }\n                steps++;\n            } while (current != k);\n            sum = (sum + steps) % MOD;\n        }\n        System.out.println(sum);\n    }\n}",
+    "timestamp": "2025-08-05 22:42:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class Solution {\n    private static final int MOD = 998244353;\n\n    public static int solve(int N, int X) {\n        long totalSum = 0;\n        for (int k = 0; k <= X; k++) {\n            totalSum = (totalSum + findCycles(N, k)) % MOD;\n        }\n        return (int) totalSum;\n    }\n\n    private static int findCycles(int N, int initial) {\n        int k = initial;\n        int steps = 0;\n        do {\n            if (k % 2 == 1) {\n                k = (k - 1) / 2;\n            } else {\n                k = k / 2 + (1 << (N - 1));\n            }\n            steps++;\n        } while (k != initial);\n        return steps;\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int result = solve(3, 5);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:42:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nconst int MOD = 998244353;\n\nll solve(int N, int X) {\n    ll total = 0;\n    for (int k = 0; k <= X; k++) {\n        int orig = k;\n        int curr = k;\n        int steps = 0;\n        \n        while (true) {\n            if (curr % 2 == 1) {\n                curr = (curr - 1) / 2;\n            } else {\n                curr = curr / 2 + (1LL << (N - 1));\n            }\n            \n            steps++;\n            \n            if (curr == orig) break;\n        }\n        \n        total = (total + steps) % MOD;\n    }\n    \n    return total;\n}\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n    cout << solve(N, X) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, X):\n    MOD = 998244353\n    results = 0\n\n    power_of_two_n_minus_1 = 2 ** (N - 1)\n\n    for original_k in range(X + 1):\n        k = original_k\n        sum_steps = 0\n\n        while True:\n            sum_steps += k\n            if k == original_k:\n                break\n            if k % 2 == 1:  # k is odd\n                k = (k - 1) // 2\n            else:  # k is even\n                k = k // 2 + power_of_two_n_minus_1\n\n        results = (results + sum_steps) % MOD\n\n    return results\n\n# Example usage:\nN = 3\nX = 5\nprint(solve(N, X))  # Replace with desired N and X values",
+    "timestamp": "2025-08-13 12:15:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class IntegerOperations {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        final int MODULO = 998244353;\n\n        int N = scanner.nextInt();\n        int X = scanner.nextInt();\n        int twoPowerNMinus1 = 1 << (N - 1);\n\n        long totalSum = 0;\n\n        for (int initialK = 0; initialK <= X; initialK++) {\n            int k = initialK;\n            long cycleSum = 0;\n\n            do {\n                cycleSum += k;\n                cycleSum %= MODULO;\n                if (k % 2 == 0) {\n                    k = k / 2 + twoPowerNMinus1;\n                } else {\n                    k = (k - 1) / 2;\n                }\n            } while (k != initialK);\n\n            totalSum = (totalSum + cycleSum) % MODULO;\n        }\n\n        System.out.println(totalSum);\n    }\n}",
+    "timestamp": "2025-08-13 12:15:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\n#define MOD 998244353\n\nint64_t power(int64_t base, int exp, int64_t mod) {\n    int64_t result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n\n    int64_t offset = power(2, N - 1, MOD);\n    int64_t total_sum = 0;\n\n    for (int initial = 0; initial <= X; ++initial) {\n        int k = initial;\n        int64_t sum_steps = 0;\n\n        do {\n            sum_steps++;\n            if (k % 2 == 0) {\n                k = (k / 2 + offset) % MOD;\n            } else {\n                k = (k - 1) / 2;\n            }\n        } while (k != initial);\n\n        total_sum = (total_sum + sum_steps) % MOD;\n    }\n\n    printf(\"%\" PRId64 \"\\n\", total_sum);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:15:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function computeSum(N, X) {\n    const MOD = 998244353;\n    const pow2Nminus1 = BigInt(2 ** (N - 1));\n    let totalSum = BigInt(0);\n\n    for (let k = 0; k <= X; k++) {\n        let seen = new Set();\n        let current = BigInt(k);\n        let cycleSum = BigInt(0);\n        let count = BigInt(0);\n\n        while (!seen.has(Number(current))) {\n            seen.add(Number(current));\n            cycleSum = (cycleSum + current) % MOD;\n            count++;\n\n            if (current % BigInt(2) === BigInt(0)) {\n                current = (current / BigInt(2) + pow2Nminus1) % MOD;\n            } else {\n                current = ((current - BigInt(1)) / BigInt(2)) % MOD;\n            }\n        }\n\n        totalSum = (totalSum + cycleSum) % MOD;\n    }\n\n    return Number(totalSum);\n}",
+    "timestamp": "2025-08-13 12:15:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, X):\n    MOD = 998244353\n    total_sum = 0\n    \n    for k in range(X + 1):\n        orig_k = k\n        steps = 0\n        \n        while True:\n            if k % 2 == 1:\n                k = (k - 1) // 2\n            else:\n                k = k // 2 + (1 << (N - 1))\n            \n            steps += 1\n            \n            if k == orig_k:\n                total_sum = (total_sum + steps) % MOD\n                break\n    \n    return total_sum\n\n# Read input\nN, X = map(int, input().split())\nprint(solve(N, X))",
+    "timestamp": "2025-08-13 12:15:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, X) {\n    const MOD = 998244353;\n    let totalSum = 0;\n\n    for (let k = 0; k < X + 1; k++) {\n        let current = k;\n        let steps = 0;\n        const seen = new Set();\n\n        while (!seen.has(current)) {\n            seen.add(current);\n            \n            if (current % 2 === 1) {\n                current = (current - 1) / 2;\n            } else {\n                current = current / 2 + (1 << (N - 1));\n            }\n            \n            steps++;\n        }\n\n        totalSum = (totalSum + steps) % MOD;\n    }\n\n    return totalSum;\n}",
+    "timestamp": "2025-08-13 12:15:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef solve():\n    import sys\n    N, X = map(int, sys.stdin.readline().split())\n    res = 0\n    for k in range(X + 1):\n        original = k\n        current = k\n        steps = 0\n        while True:\n            if current % 2 == 1:\n                current = (current - 1) // 2\n            else:\n                current = current // 2 + (1 << (N - 1))\n            steps += 1\n            if current == original:\n                break\n        res = (res + steps) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 12:15:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve(N, X) {\n    let sum = 0;\n    const visited = new Map();\n    \n    for (let k = 0; k <= X; k++) {\n        if (visited.has(k)) {\n            sum = (sum + visited.get(k)) % MOD;\n            continue;\n        }\n        \n        let current = k;\n        const path = [];\n        let cycleFound = false;\n        let cycleStart = -1;\n        \n        while (true) {\n            if (visited.has(current)) {\n                cycleFound = true;\n                cycleStart = current;\n                break;\n            }\n            if (path.includes(current)) {\n                cycleStart = current;\n                break;\n            }\n            path.push(current);\n            \n            if (current % 2 === 1) {\n                current = (current - 1) / 2;\n            } else {\n                current = current / 2 + Math.pow(2, N - 1);\n            }\n        }\n        \n        const cycleIndex = path.indexOf(cycleStart);\n        const cycle = path.slice(cycleIndex);\n        const cycleLength = cycle.length;\n        \n        for (let i = 0; i < cycleIndex; i++) {\n            visited.set(path[i], cycleLength);\n        }\n        for (const num of cycle) {\n            visited.set(num, cycleLength);\n        }\n        \n        sum = (sum + cycleLength) % MOD;\n    }\n    \n    return sum;\n}",
+    "timestamp": "2025-08-13 12:15:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n\n    auto processK = [&](int k) {\n        int original = k;\n        int sum = 0;\n        while (true) {\n            if (k % 2 == 0) {\n                k = (k / 2) + (1 << (N - 1));\n            } else {\n                k = (k - 1) / 2;\n            }\n            sum = (sum + k) % MOD;\n            if (k == original) break;\n        }\n        return sum;\n    };\n\n    long long totalSum = 0;\n    for (int k = 0; k <= X; ++k) {\n        totalSum = (totalSum + processK(k)) % MOD;\n    }\n\n    cout << totalSum << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:33:44"
+  }
+]

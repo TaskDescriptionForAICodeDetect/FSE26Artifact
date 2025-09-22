@@ -1,0 +1,1 @@
+Determine if a given set of words is sorted in lexicographical order based on a language that uses at most 26 letters. A word is considered to precede another word if it is a prefix of that word.

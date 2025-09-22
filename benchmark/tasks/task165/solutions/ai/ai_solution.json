@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    long long *L = (long long *)malloc((N + 1) * sizeof(long long));\n    long long *prefix = (long long *)malloc((N + 1) * sizeof(long long));\n    prefix[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%lld\", &L[i]);\n        prefix[i] = prefix[i - 1] + L[i];\n    }\n\n    long long total = prefix[N];\n    long long min_diff = total;\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = i + 1; j <= N; j++) {\n            long long a = prefix[i];\n            long long b = prefix[j] - prefix[i];\n            long long c = total - prefix[j];\n            long long max = (a > b) ? (a > c ? a : c) : (b > c ? b : c);\n            long long min = (a < b) ? (a < c ? a : c) : (b < c ? b : c);\n            long long diff = max - min;\n            if (diff < min_diff) {\n                min_diff = diff;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", min_diff);\n    free(L);\n    free(prefix);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Mizuyokan {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int N = sc.nextInt();\n        int[] lengths = new int[N];\n        int totalLength = 0;\n        \n        for (int i = 0; i < N; i++) {\n            lengths[i] = sc.nextInt();\n            totalLength += lengths[i];\n        }\n        \n        int result = Integer.MAX_VALUE;\n        \n        for (int mask = 1; mask < (1 << (N - 1)); mask++) {\n            int pieces = 1;\n            int currentLength = 0;\n            int maxLength = 0;\n            int minLength = Integer.MAX_VALUE;\n            \n            for (int i = 0; i < N - 1; i++) {\n                currentLength += lengths[i];\n                \n                if ((mask & (1 << i)) != 0) {\n                    pieces++;\n                    maxLength = Math.max(maxLength, currentLength);\n                    minLength = Math.min(minLength, currentLength);\n                    currentLength = 0;\n                }\n            }\n            \n            currentLength += lengths[N - 1];\n            maxLength = Math.max(maxLength, currentLength);\n            minLength = Math.min(minLength, currentLength);\n            \n            result = Math.min(result, maxLength - minLength);\n        }\n        \n        System.out.println(result);\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:52:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> L(N + 1);\n    vector<int> prefix(N + 1, 0);\n    for (int i = 1; i <= N; ++i) {\n        cin >> L[i];\n        prefix[i] = prefix[i - 1] + L[i];\n    }\n    int total = prefix[N];\n    int min_diff = INT_MAX;\n\n    for (int a = 1; a <= N - 2; ++a) {\n        for (int b = a + 1; b <= N - 1; ++b) {\n            int P = prefix[a];\n            int Q = prefix[b] - prefix[a];\n            int R = prefix[N] - prefix[b];\n            int max_len = max({P, Q, R});\n            int min_len = min({P, Q, R});\n            min_diff = min(min_diff, max_len - min_len);\n        }\n    }\n\n    cout << min_diff << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_N 100000\n\nint main() {\n    int N, L;\n    int cuts[MAX_N + 1];\n    int total_length;\n    \n    scanf(\"%d %d\", &N, &L);\n    \n    cuts[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &cuts[i]);\n    }\n    \n    total_length = cuts[N];\n    \n    int min_diff = INT_MAX;\n    \n    for (int subset = 1; subset < (1 << N); subset++) {\n        int pieces[MAX_N + 1];\n        int piece_count = 0;\n        int last_cut = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (subset & (1 << i)) {\n                pieces[piece_count++] = cuts[i + 1] - last_cut;\n                last_cut = cuts[i + 1];\n            }\n        }\n        \n        pieces[piece_count++] = total_length - last_cut;\n        \n        int max_piece = INT_MIN;\n        int min_piece = INT_MAX;\n        \n        for (int i = 0; i < piece_count; i++) {\n            max_piece = (pieces[i] > max_piece) ? pieces[i] : max_piece;\n            min_piece = (pieces[i] < min_piece) ? pieces[i] : min_piece;\n        }\n        \n        int diff = max_piece - min_piece;\n        min_diff = (diff < min_diff) ? diff : min_diff;\n    }\n    \n    printf(\"%d\\n\", min_diff);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> cuts(N + 1);\n    cuts[0] = 0;\n    \n    for (int i = 1; i <= N; i++) {\n        cin >> cuts[i];\n    }\n    \n    if (K >= N) {\n        cout << 0 << endl;\n        return 0;\n    }\n    \n    int minDiff = INT_MAX;\n    \n    for (int mask = 0; mask < (1 << N); mask++) {\n        if (__builtin_popcount(mask) == K) {\n            vector<int> selectedCuts;\n            for (int i = 0; i < N; i++) {\n                if (mask & (1 << i)) {\n                    selectedCuts.push_back(i + 1);\n                }\n            }\n            \n            vector<int> pieces;\n            int lastCut = 0;\n            \n            for (int cut : selectedCuts) {\n                pieces.push_back(cuts[cut] - cuts[lastCut]);\n                lastCut = cut;\n            }\n            pieces.push_back(cuts[N] - cuts[lastCut]);\n            \n            int maxPiece = *max_element(pieces.begin(), pieces.end());\n            int minPiece = *min_element(pieces.begin(), pieces.end());\n            \n            minDiff = min(minDiff, maxPiece - minPiece);\n        }\n    }\n    \n    cout << minDiff << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] L = new int[N];\n        int[] prefixSum = new int[N + 1];\n        for (int i = 0; i < N; i++) {\n            L[i] = sc.nextInt();\n            prefixSum[i + 1] = prefixSum[i] + L[i];\n        }\n\n        int minDiff = Integer.MAX_VALUE;\n        for (int a = 1; a <= N; a++) {\n            for (int b = a + 1; b <= N; b++) {\n                for (int c = b + 1; c <= N; c++) {\n                    int piece1 = prefixSum[a];\n                    int piece2 = prefixSum[b] - prefixSum[a];\n                    int piece3 = prefixSum[c] - prefixSum[b];\n                    int piece4 = prefixSum[N] - prefixSum[c];\n                    int max = Math.max(Math.max(piece1, piece2), Math.max(piece3, piece4));\n                    int min = Math.min(Math.min(piece1, piece2), Math.min(piece3, piece4));\n                    minDiff = Math.min(minDiff, max - min);\n                }\n            }\n        }\n        System.out.println(minDiff);\n    }\n}",
+    "timestamp": "2025-08-05 18:54:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_length_difference(lengths):\n    def can_divide(diff):\n        current_sum = 0\n        pieces = 1\n        min_val = lengths[0]\n        max_val = lengths[0]\n        \n        for l in lengths:\n            current_sum += l\n            min_val = min(min_val, l)\n            max_val = max(max_val, l)\n            \n            if (max_val - min_val) > diff:\n                current_sum = l\n                min_val = l\n                max_val = l\n                pieces += 1\n                \n                if pieces > N:\n                    return False\n                \n        return True\n\n    N = len(lengths)\n\n    low = 0\n    high = sum(lengths)\n    \n    while low < high:\n        mid = (low + high) // 2\n        \n        if can_divide(mid):\n            high = mid\n        else:\n            low = mid + 1\n            \n    return low\n\nN = int(input())\nlengths = list(map(int, input().split()))\n\nresult = min_length_difference(lengths)\nprint(result)",
+    "timestamp": "2025-08-13 01:23:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Mizuyokan {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();  // number of segments\n        int[] lengths = new int[N];  // lengths of each segment\n        for (int i = 0; i < N; i++) {\n            lengths[i] = sc.nextInt();\n        }\n        int left = 0, right = 0;\n        for (int length : lengths) {\n            right += length;\n        }\n        int result = right;\n\n        while (left <= right) {\n            int mid = (left + right) / 2;\n            if (isPossible(lengths, N, mid)) {\n                result = mid;\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n\n        System.out.println(result);\n    }\n\n    private static boolean isPossible(int[] lengths, int N, int maxPieceSize) {\n        // Attempt to divide the Mizuyokan while maintaining all piece sizes ≤ maxPieceSize\n        int pieceSum = 0;\n        int minPieceSize = 0;\n        for (int i = 0; i < N; i++) {\n            if (lengths[i] > maxPieceSize) {\n                return false;  // single piece is larger than maxPieceSize\n            }\n            pieceSum += lengths[i];\n            if (pieceSum > maxPieceSize) {\n                if (minPieceSize < pieceSum - lengths[i]) {\n                    minPieceSize = pieceSum - lengths[i];\n                }\n                pieceSum = lengths[i];\n            }\n        }\n        return maxPieceSize - minPieceSize >= 0;\n    }\n}",
+    "timestamp": "2025-08-13 01:23:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minimizeDifference(int N, int lengths[]) {\n    int totalLength = 0;\n    for (int i = 0; i < N; ++i) {\n        totalLength += lengths[i];\n    }\n\n    int prefixSum[N+1];\n    prefixSum[0] = 0;\n    for (int i = 1; i <= N; ++i) {\n        prefixSum[i] = prefixSum[i-1] + lengths[i-1];\n    }\n\n    int answer = INT_MAX;\n    for (int k = 1; k <= N; ++k) {\n        for (int i = 0; i + k <= N; ++i) {\n            int minPiece = totalLength, maxPiece = 0;\n            for (int j = i; j <= i + k; ++j) {\n                int pieceLength = prefixSum[j+1] - prefixSum[i];\n                if (pieceLength < minPiece) minPiece = pieceLength;\n                if (pieceLength > maxPiece) maxPiece = pieceLength;\n            }\n            int diff = maxPiece - minPiece;\n            if (diff < answer) {\n                answer = diff;\n            }\n        }\n    }\n    return answer;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int lengths[N];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &lengths[i]);\n    }\n\n    int result = minimizeDifference(N, lengths);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:23:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solution(N, L):\n    total_length = sum(L)\n    min_diff = float('inf')\n    \n    for subset in range(1, 1 << (N-1)):\n        pieces = []\n        current_piece = 0\n        \n        for i in range(N-1):\n            if subset & (1 << i):\n                current_piece += L[i]\n                pieces.append(current_piece)\n                current_piece = 0\n            else:\n                current_piece += L[i]\n        \n        current_piece += L[-1]\n        pieces.append(current_piece)\n        \n        max_piece = max(pieces)\n        min_piece = min(pieces)\n        min_diff = min(min_diff, max_piece - min_piece)\n    \n    return min_diff",
+    "timestamp": "2025-08-13 01:23:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    L = list(map(int, sys.stdin.readline().split()))\n    prefix = [0] * (N + 1)\n    for i in range(N):\n        prefix[i+1] = prefix[i] + L[i]\n    total = prefix[-1]\n    \n    left = 0\n    right = total\n    answer = total\n    \n    for i in range(N):\n        low = i + 1\n        high = N - 1\n        best_j = -1\n        target = (prefix[i+1] + total) // 2\n        \n        # Binary search to find the best j where prefix[j] is closest to target\n        while low <= high:\n            mid = (low + high) // 2\n            if prefix[mid] >= target:\n                high = mid - 1\n            else:\n                low = mid + 1\n        \n        # Check high and low candidates\n        for j in [high, low]:\n            if 1 <= j <= N-1:\n                a = prefix[i+1]\n                b = prefix[j] - a\n                c = total - prefix[j]\n                if b <= 0 or c <= 0:\n                    continue\n                current_max = max(a, b, c)\n                current_min = min(a, b, c)\n                answer = min(answer, current_max - current_min)\n        \n    print(answer)\n\nsolve()",
+    "timestamp": "2025-08-13 01:23:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\n// Function to check if we can have the max-min difference <= d\nbool isFeasible(vector<int>& lengths, int cuts, int d) {\n    int n = lengths.size();\n    int minLen = INT_MAX;\n    int maxLen = 0;\n    int count = 1, sum = 0;\n\n    for (int i = 0; i < n; i++) {\n        sum += lengths[i];\n        minLen = min(minLen, sum);\n        maxLen = max(maxLen, sum);\n\n        if (maxLen - minLen > d) {\n            count++;\n            minLen = INT_MAX;\n            maxLen = 0;\n            sum = lengths[i];\n        }\n    }\n\n    return count <= cuts;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> L(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> L[i];\n    }\n\n    int left = 0, right = 0;\n    for (int length : L) {\n        right += length;\n    }\n\n    int result = right;\n\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (isFeasible(L, N, mid)) {\n            result = mid;\n            right = mid - 1;\n        } else {\n            left = mid + 1;\n        }\n    }\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:59:54"
+  }
+]

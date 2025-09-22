@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *A = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    int count = 0;\n    for (int start = 0; start < N; start++) {\n        int current = start;\n        int visited[N];\n        for (int i = 0; i < N; i++) visited[i] = 0;\n        int steps = 0;\n        int valid = 1;\n\n        while (1) {\n            if (visited[current]) {\n                if (current == start && steps == N) {\n                    break;\n                } else {\n                    valid = 0;\n                    break;\n                }\n            }\n            visited[current] = 1;\n            steps++;\n            current = (current + A[current]) % N;\n        }\n\n        if (valid) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SurroundingSugoroku {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] board = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            board[i] = scanner.nextInt();\n        }\n        \n        int result = 0;\n        \n        for (int start = 0; start < N; start++) {\n            if (canReachStart(start, board)) {\n                result++;\n            }\n        }\n        \n        System.out.println(result);\n        \n        scanner.close();\n    }\n    \n    private static boolean canReachStart(int start, int[] board) {\n        int N = board.length;\n        boolean[] visited = new boolean[N];\n        int current = start;\n        \n        while (!visited[current]) {\n            visited[current] = true;\n            current = (current + board[current]) % N;\n            \n            if (current == start) {\n                return true;\n            }\n        }\n        \n        return false;\n    }\n}",
+    "timestamp": "2025-08-05 18:43:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> squares(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> squares[i];\n    }\n\n    int count = 0;\n    for (int start = 0; start < N; ++start) {\n        unordered_set<int> visited;\n        int current = start;\n        bool agari = false;\n        while (visited.find(current) == visited.end()) {\n            visited.insert(current);\n            current = (current + squares[current]) % N;\n            if (current == start) {\n                agari = true;\n                break;\n            }\n        }\n        if (agari) {\n            count++;\n        }\n    }\n\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_SQUARES 1000\n\nint main() {\n    int N;\n    int squares[MAX_SQUARES];\n    bool canReachAgari[MAX_SQUARES] = {false};\n    \n    scanf(\"%d\", &N);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &squares[i]);\n    }\n    \n    for (int start = 0; start < N; start++) {\n        bool visited[MAX_SQUARES] = {false};\n        int current = start;\n        \n        while (!visited[current]) {\n            visited[current] = true;\n            current = (current + squares[current]) % N;\n            \n            if (current == start) {\n                canReachAgari[start] = true;\n                break;\n            }\n        }\n    }\n    \n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        if (canReachAgari[i]) {\n            count++;\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> board(N);\n    for (int i = 0; i < N; i++) {\n        cin >> board[i];\n    }\n    \n    int agariCount = 0;\n    \n    for (int start = 0; start < N; start++) {\n        unordered_set<int> visited;\n        int current = start;\n        \n        while (true) {\n            if (visited.count(current)) {\n                if (current == start) {\n                    agariCount++;\n                }\n                break;\n            }\n            \n            visited.insert(current);\n            current = (current + board[current]) % N;\n        }\n    }\n    \n    cout << agariCount << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] squares = new int[N];\n        for (int i = 0; i < N; i++) {\n            squares[i] = sc.nextInt();\n        }\n        \n        int count = 0;\n        for (int start = 0; start < N; start++) {\n            boolean[] visited = new boolean[N];\n            int current = start;\n            boolean canAgari = false;\n            while (!visited[current]) {\n                visited[current] = true;\n                current = (current + squares[current]) % N;\n                if (current == start) {\n                    canAgari = true;\n                    break;\n                }\n            }\n            if (canAgari) {\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 18:43:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_agari_squares(squares):\n    def can_reach_agari(start):\n        visited = set()\n        current = start\n        while True:\n            if current in visited:\n                return current == start\n            visited.add(current)\n            current = (current + squares[current]) % len(squares)\n\n    agari_count = sum(1 for i in range(len(squares)) if can_reach_agari(i))\n    return agari_count\n\n# Example usage\nsquares = [3, 5, 1, 4, 2]\nprint(count_agari_squares(squares))",
+    "timestamp": "2025-08-13 00:42:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class SurroundingSugoroku {\n\n    public static int countAgariSquares(int[] board) {\n        int n = board.length;\n        int count = 0;\n        \n        for (int start = 0; start < n; start++) {\n            boolean[] visited = new boolean[n];\n            int current = start;\n            while (!visited[current]) {\n                visited[current] = true;\n                current = (current + board[current]) % n;\n                if (current == start) {\n                    count++;\n                    break;\n                }\n            }\n        }\n        \n        return count;\n    }\n\n    public static void main(String[] args) {\n        int[] board = {2, 1, 1, 3, 2};\n        int count = countAgariSquares(board);\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-13 00:42:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nint findAgari(int squares[], int n) {\n    int count = 0;\n    for (int start = 0; start < n; ++start) {\n        int visited[n];\n        for (int i = 0; i < n; ++i) {\n            visited[i] = 0;\n        }\n        int current = start;\n        while (true) {\n            if (visited[current] == 1) break; // Already visited, stuck in a loop\n            visited[current] = 1;\n            current = (current + squares[current]) % n;\n            if (current == start) {\n                count++;\n                break;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int squares[n];\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &squares[i]);\n    }\n\n    int result = findAgari(squares, n);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:42:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_agari_squares(squares):\n    n = len(squares)\n    agari_count = 0\n\n    for start in range(n):\n        visited = set()\n        current = start\n        \n        while current not in visited:\n            visited.add(current)\n            current = (current + squares[current]) % n\n            \n            if current == start:\n                agari_count += 1\n                break\n    \n    return agari_count\n\n# Read input\nn = int(input())\nsquares = list(map(int, input().split()))\n\n# Output result\nprint(count_agari_squares(squares))",
+    "timestamp": "2025-08-13 00:42:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    A = list(map(int, data[1:N+1]))\n    \n    count = 0\n    \n    for start in range(N):\n        visited = [False] * N\n        current = start\n        while not visited[current]:\n            visited[current] = True\n            current = (current + A[current]) % N\n        if current == start:\n            count += 1\n    \n    print(count)\n\nsolve()",
+    "timestamp": "2025-08-13 00:42:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nint countAgariSquares(const std::vector<int>& squares) {\n    int n = squares.size();\n    int count = 0;\n    \n    for (int start = 0; start < n; ++start) {\n        std::unordered_set<int> visited;\n        int current = start;\n        \n        while (true) {\n            if (visited.count(current)) {\n                break;\n            }\n            \n            visited.insert(current);\n            current = (current + squares[current]) % n;\n            \n            if (current == start) {\n                ++count;\n                break;\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    std::vector<int> squares(n);\n    for (int i = 0; i < n; ++i) {\n        std::cin >> squares[i];\n    }\n    \n    std::cout << countAgariSquares(squares) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:55:25"
+  }
+]

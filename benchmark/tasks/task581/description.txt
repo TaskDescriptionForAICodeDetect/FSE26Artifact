@@ -1,0 +1,1 @@
+You are given n integers to be sorted in ascending order. You can swap two integers, and the cost of each swap is the sum of the two integers being swapped. Write a program that reports the minimal total cost to sort the given integers.

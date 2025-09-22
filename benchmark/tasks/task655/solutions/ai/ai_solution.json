@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_H 50\n#define MAX_W 50\n\nint H, W, K;\nchar grid[MAX_H][MAX_W + 1];\n\nint count_black_squares(int row_mask, int col_mask) {\n    int black_count = 0;\n    for (int i = 0; i < H; i++) {\n        if (row_mask & (1 << i)) continue;\n        for (int j = 0; j < W; j++) {\n            if (col_mask & (1 << j)) continue;\n            if (grid[i][j] == '#') black_count++;\n        }\n    }\n    return black_count;\n}\n\nint solve() {\n    int total_combinations = 0;\n    \n    // Try all possible row and column painting combinations\n    for (int row_mask = 0; row_mask < (1 << H); row_mask++) {\n        for (int col_mask = 0; col_mask < (1 << W); col_mask++) {\n            if (count_black_squares(row_mask, col_mask) == K) {\n                total_combinations++;\n            }\n        }\n    }\n    \n    return total_combinations;\n}\n\nint main() {\n    scanf(\"%d %d %d\", &H, &W, &K);\n    \n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n    \n    printf(\"%d\\n\", solve());\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:26:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int H, W, K;\n    scanf(\"%d %d %d\", &H, &W, &K);\n    char grid[H][W+1]; // +1 for null terminator\n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    int count = 0;\n\n    for (int mask_rows = 0; mask_rows < (1 << H); mask_rows++) {\n        for (int mask_cols = 0; mask_cols < (1 << W); mask_cols++) {\n            int black = 0;\n            for (int i = 0; i < H; i++) {\n                if (mask_rows & (1 << i)) continue; // row is painted\n                for (int j = 0; j < W; j++) {\n                    if (mask_cols & (1 << j)) continue; // column is painted\n                    if (grid[i][j] == '#') black++;\n                }\n            }\n            if (black == K) count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <bitset>\n\nusing namespace std;\n\nint main() {\n    int H, W, K;\n    cin >> H >> W >> K;\n    vector<string> grid(H);\n    for (int i = 0; i < H; ++i) {\n        cin >> grid[i];\n    }\n\n    int ans = 0;\n    for (int maskR = 0; maskR < (1 << H); ++maskR) {\n        for (int maskC = 0; maskC < (1 << W); ++maskC) {\n            int cnt = 0;\n            for (int i = 0; i < H; ++i) {\n                if (maskR & (1 << i)) continue;\n                for (int j = 0; j < W; ++j) {\n                    if (maskC & (1 << j)) continue;\n                    if (grid[i][j] == '#') cnt++;\n                }\n            }\n            if (cnt == K) ans++;\n        }\n    }\n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        int K = sc.nextInt();\n        sc.nextLine();\n        \n        char[][] grid = new char[H][W];\n        for (int i = 0; i < H; i++) {\n            String line = sc.nextLine();\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = line.charAt(j);\n            }\n        }\n        \n        int count = 0;\n        \n        for (int maskRows = 0; maskRows < (1 << H); maskRows++) {\n            for (int maskCols = 0; maskCols < (1 << W); maskCols++) {\n                int black = 0;\n                for (int i = 0; i < H; i++) {\n                    if ((maskRows & (1 << i)) != 0) continue;\n                    for (int j = 0; j < W; j++) {\n                        if ((maskCols & (1 << j)) != 0) continue;\n                        if (grid[i][j] == '#') black++;\n                    }\n                }\n                if (black == K) count++;\n            }\n        }\n        \n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:28:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int paintedSquares(int H, int W, char[][] grid, int K) {\n        int[][] countBlack = new int[H][W];\n        \n        // Precompute black square counts\n        for (int r = 0; r < H; r++) {\n            for (int c = 0; c < W; c++) {\n                countBlack[r][c] = (grid[r][c] == '#') ? 1 : 0;\n                if (r > 0) countBlack[r][c] += countBlack[r-1][c];\n                if (c > 0) countBlack[r][c] += countBlack[r][c-1];\n                if (r > 0 && c > 0) countBlack[r][c] -= countBlack[r-1][c-1];\n            }\n        }\n        \n        int result = 0;\n        \n        // Try all possible row and column combinations\n        for (int rowMask = 0; rowMask < (1 << H); rowMask++) {\n            for (int colMask = 0; colMask < (1 << W); colMask++) {\n                int remainingBlack = countBlackSquares(H, W, countBlack, rowMask, colMask);\n                if (remainingBlack == K) {\n                    result++;\n                }\n            }\n        }\n        \n        return result;\n    }\n    \n    private int countBlackSquares(int H, int W, int[][] countBlack, int rowMask, int colMask) {\n        int remainingBlack = 0;\n        \n        for (int r = 0; r < H; r++) {\n            for (int c = 0; c < W; c++) {\n                // Skip if row or column is painted\n                if ((rowMask & (1 << r)) != 0 || (colMask & (1 << c)) != 0) {\n                    continue;\n                }\n                \n                // Count black squares\n                int blackCount = getBlackCount(r, c, countBlack);\n                if (blackCount > 0) {\n                    remainingBlack++;\n                }\n            }\n        }\n        \n        return remainingBlack;\n    }\n    \n    private int getBlackCount(int r, int c, int[][] countBlack) {\n        return countBlack[r][c];\n    }\n}",
+    "timestamp": "2025-08-05 22:28:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int colorGrid(int H, int W, int K) {\n        vector<vector<char>> grid(H, vector<char>(W));\n        int totalBlack = 0;\n        \n        // Count initial black squares\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                cin >> grid[i][j];\n                if (grid[i][j] == '#') totalBlack++;\n            }\n        }\n        \n        int ans = 0;\n        \n        // Try all possible row and column painting combinations\n        for (int rowMask = 0; rowMask < (1 << H); rowMask++) {\n            for (int colMask = 0; colMask < (1 << W); colMask++) {\n                int remainingBlack = totalBlack;\n                \n                // Remove black squares in painted rows\n                for (int r = 0; r < H; r++) {\n                    if (rowMask & (1 << r)) {\n                        for (int c = 0; c < W; c++) {\n                            if (grid[r][c] == '#') remainingBlack--;\n                        }\n                    }\n                }\n                \n                // Remove black squares in painted columns\n                for (int c = 0; c < W; c++) {\n                    if (colMask & (1 << c)) {\n                        for (int r = 0; r < H; r++) {\n                            if (grid[r][c] == '#' && !(rowMask & (1 << r))) {\n                                remainingBlack--;\n                            }\n                        }\n                    }\n                }\n                \n                // Check if remaining black squares matches K\n                if (remainingBlack == K) ans++;\n            }\n        }\n        \n        return ans;\n    }\n};",
+    "timestamp": "2025-08-05 22:29:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import combinations\n\ndef count_combinations(H, W, K, grid):\n    def count_remaining_black_squares(selected_rows, selected_columns):\n        remaining_black_squares = 0\n        for r in range(H):\n            if r in selected_rows:\n                continue\n            for c in range(W):\n                if c in selected_columns:\n                    continue\n                if grid[r][c] == '#':\n                    remaining_black_squares += 1\n        return remaining_black_squares\n\n    total_combinations = 0\n    for r_mask in range(1 << H):\n        selected_rows = [i for i in range(H) if r_mask & (1 << i)]\n        for c_mask in range(1 << W):\n            selected_columns = [j for j in range(W) if c_mask & (1 << j)]\n            if count_remaining_black_squares(selected_rows, selected_columns) == K:\n                total_combinations += 1\n\n    return total_combinations\n\n# Example usage:\nH = 3\nW = 3\nK = 2\ngrid = [\n    ['#', '.', '#'],\n    ['.', '#', '.'],\n    ['#', '#', '.']\n]\n\nprint(count_combinations(H, W, K, grid))",
+    "timestamp": "2025-08-13 10:54:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int K = scanner.nextInt();\n        char[][] grid = new char[H][W];\n        \n        for (int i = 0; i < H; i++) {\n            grid[i] = scanner.next().toCharArray();\n        }\n        \n        int result = 0;\n        \n        for (int rowMask = 0; rowMask < (1 << H); rowMask++) {\n            for (int colMask = 0; colMask < (1 << W); colMask++) {\n                int blackCount = 0;\n\n                for (int i = 0; i < H; i++) {\n                    if ((rowMask & (1 << i)) != 0) continue;\n                    for (int j = 0; j < W; j++) {\n                        if ((colMask & (1 << j)) != 0) continue;\n                        \n                        if (grid[i][j] == '#') {\n                            blackCount++;\n                        }\n                    }\n                }\n\n                if (blackCount == K) {\n                    result++;\n                }\n            }\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 10:54:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nchar grid[6][6];  // Adjust these constants according to the maximum problem size\nint H, W, K;\n\nint main() {\n    int total_combinations = 0;\n\n    scanf(\"%d %d %d\", &H, &W, &K);\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            scanf(\" %c\", &grid[i][j]);\n        }\n    }\n\n    // Iterate over all combinations of row selections\n    for (int row_mask = 0; row_mask < (1 << H); row_mask++) {\n        // Iterate over all combinations of column selections\n        for (int col_mask = 0; col_mask < (1 << W); col_mask++) {\n            int black_count = 0;\n            \n            // Check remaining black squares\n            for (int i = 0; i < H; i++) {\n                for (int j = 0; j < W; j++) {\n                    if (!((row_mask & (1 << i)) || (col_mask & (1 << j))) && grid[i][j] == '#') {\n                        black_count++;\n                    }\n                }\n            }\n\n            if (black_count == K) {\n                total_combinations++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", total_combinations);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:54:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countCombinations(H, W, K, grid) {\n    let totalCombinations = 0;\n\n    for (let rows = 0; rows < (1 << H); rows++) {\n        for (let cols = 0; cols < (1 << W); cols++) {\n            let blackCount = 0;\n            for (let r = 0; r < H; r++) {\n                for (let c = 0; c < W; c++) {\n                    if ((rows & (1 << r)) === 0 && (cols & (1 << c)) === 0) {\n                        if (grid[r][c] === '#') {\n                            blackCount++;\n                        }\n                    }\n                }\n            }\n            if (blackCount === K) {\n                totalCombinations++;\n            }\n        }\n    }\n    \n    return totalCombinations;\n}",
+    "timestamp": "2025-08-13 10:54:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_black_squares(H, W, K):\n    def count_black(mask_rows, mask_cols):\n        black_count = 0\n        for r in range(H):\n            for c in range(W):\n                if grid[r][c] == '#' and not (mask_rows & (1 << r) or mask_cols & (1 << c)):\n                    black_count += 1\n        return black_count\n\n    def solve():\n        total_combinations = 0\n        for row_mask in range(1 << H):\n            for col_mask in range(1 << W):\n                if count_black(row_mask, col_mask) == K:\n                    total_combinations += 1\n        return total_combinations\n\n    grid = []\n    for _ in range(H):\n        grid.append(input().strip())\n    \n    return solve()\n\n# Example usage\nH, W, K = map(int, input().split())\nresult = count_black_squares(H, W, K)\nprint(result)",
+    "timestamp": "2025-08-13 10:54:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countRemainingBlackSquares(H, W, K) {\n    let result = 0;\n    \n    for (let rowMask = 0; rowMask < (1 << H); rowMask++) {\n        for (let colMask = 0; colMask < (1 << W); colMask++) {\n            let blackCount = 0;\n            \n            for (let r = 0; r < H; r++) {\n                for (let c = 0; c < W; c++) {\n                    if ((rowMask & (1 << r)) === 0 && (colMask & (1 << c)) === 0) {\n                        blackCount++;\n                    }\n                }\n            }\n            \n            if (blackCount === K) {\n                result++;\n            }\n        }\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 10:55:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom itertools import combinations\n\ndef solve():\n    H, W, K = map(int, sys.stdin.readline().split())\n    grid = [sys.stdin.readline().strip() for _ in range(H)]\n    count = 0\n    \n    for mask_row in range(0, 1 << H):\n        for mask_col in range(0, 1 << W):\n            black = 0\n            for i in range(H):\n                if (mask_row >> i) & 1:\n                    continue\n                for j in range(W):\n                    if (mask_col >> j) & 1:\n                        continue\n                    if grid[i][j] == '#':\n                        black += 1\n            if black == K:\n                count += 1\n    print(count)\n\nsolve()",
+    "timestamp": "2025-08-13 10:55:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(H, W, grid, K) {\n    let count = 0;\n    \n    for (let maskRow = 0; maskRow < (1 << H); maskRow++) {\n        for (let maskCol = 0; maskCol < (1 << W); maskCol++) {\n            let blackCount = 0;\n            \n            for (let i = 0; i < H; i++) {\n                if (maskRow & (1 << i)) continue;\n                for (let j = 0; j < W; j++) {\n                    if (maskCol & (1 << j)) continue;\n                    if (grid[i][j] === '#') {\n                        blackCount++;\n                    }\n                }\n            }\n            \n            if (blackCount === K) {\n                count++;\n            }\n        }\n    }\n    \n    return count;\n}",
+    "timestamp": "2025-08-13 10:55:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint countCombinations(vector<string> &grid, int H, int W, int K) {\n    int totalCount = 0;\n    \n    for(int rowMask = 0; rowMask < (1 << H); ++rowMask) {\n        for(int colMask = 0; colMask < (1 << W); ++colMask) {\n            int blackCount = 0;\n            \n            for(int i = 0; i < H; ++i) {\n                if((rowMask & (1 << i)) != 0) continue;\n                for(int j = 0; j < W; ++j) {\n                    if((colMask & (1 << j)) != 0) continue;\n                    if(grid[i][j] == '#') ++blackCount;\n                }\n            }\n            \n            if(blackCount == K) {\n                ++totalCount;\n            }\n        }\n    }\n    \n    return totalCount;\n}\n\nint main() {\n    int H, W, K;\n    cin >> H >> W >> K;\n    vector<string> grid(H);\n    \n    for(int i = 0; i < H; ++i) {\n        cin >> grid[i];\n    }\n    \n    cout << countCombinations(grid, H, W, K) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:01:07"
+  }
+]

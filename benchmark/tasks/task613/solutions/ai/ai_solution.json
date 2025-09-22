@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\ntypedef struct {\n    double x;\n    double y;\n} Point;\n\ntypedef struct {\n    Point* points;\n    int size;\n    int capacity;\n} PointSet;\n\nPointSet* createPointSet(int initialCapacity) {\n    PointSet* set = malloc(sizeof(PointSet));\n    set->points = malloc(initialCapacity * sizeof(Point));\n    set->size = 0;\n    set->capacity = initialCapacity;\n    return set;\n}\n\nvoid addPoint(PointSet* set, double x, double y) {\n    if (set->size == set->capacity) {\n        set->capacity *= 2;\n        set->points = realloc(set->points, set->capacity * sizeof(Point));\n    }\n    set->points[set->size].x = x;\n    set->points[set->size].y = y;\n    set->size++;\n}\n\nPointSet* rangeSearch(PointSet* set, double minX, double maxX, double minY, double maxY) {\n    PointSet* result = createPointSet(10);\n    \n    for (int i = 0; i < set->size; i++) {\n        Point p = set->points[i];\n        if (p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) {\n            addPoint(result, p.x, p.y);\n        }\n    }\n    \n    return result;\n}\n\nvoid printPointSet(PointSet* set) {\n    for (int i = 0; i < set->size; i++) {\n        printf(\"(%.2f, %.2f) \", set->points[i].x, set->points[i].y);\n    }\n    printf(\"\\n\");\n}\n\nvoid freePointSet(PointSet* set) {\n    free(set->points);\n    free(set);\n}\n\nint main() {\n    PointSet* set = createPointSet(10);\n    \n    addPoint(set, 1.0, 2.0);\n    addPoint(set, 3.5, 4.2);\n    addPoint(set, 2.1, 5.7);\n    addPoint(set, 6.0, 1.3);\n    \n    PointSet* result = rangeSearch(set, 1.0, 4.0, 2.0, 5.0);\n    \n    printPointSet(result);\n    \n    freePointSet(set);\n    freePointSet(result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\nvoid range_search(Point points[], int n, int min_x, int max_x, int min_y, int max_y) {\n    for (int i = 0; i < n; i++) {\n        if (points[i].x >= min_x && points[i].x <= max_x &&\n            points[i].y >= min_y && points[i].y <= max_y) {\n            printf(\"(%d, %d)\\n\", points[i].x, points[i].y);\n        }\n    }\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    Point *points = (Point *)malloc(n * sizeof(Point));\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &points[i].x, &points[i].y);\n    }\n    \n    int min_x, max_x, min_y, max_y;\n    scanf(\"%d %d %d %d\", &min_x, &max_x, &min_y, &max_y);\n    \n    range_search(points, n, min_x, max_x, min_y, max_y);\n    \n    free(points);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:19:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Point {\n    int x, y;\n};\n\nvector<Point> range_search(const vector<Point>& points, int x1, int y1, int x2, int y2) {\n    vector<Point> result;\n    int min_x = min(x1, x2);\n    int max_x = max(x1, x2);\n    int min_y = min(y1, y2);\n    int max_y = max(y1, y2);\n\n    for (const auto& p : points) {\n        if (p.x >= min_x && p.x <= max_x && p.y >= min_y && p.y <= max_y) {\n            result.push_back(p);\n        }\n    }\n    return result;\n}",
+    "timestamp": "2025-08-05 22:19:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\nclass Point {\n    int x, y;\n\n    public Point(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n}\n\npublic class RangeSearch {\n    public static List<Point> rangeQuery(List<Point> points, int x1, int y1, int x2, int y2) {\n        List<Point> result = new ArrayList<>();\n        for (Point p : points) {\n            if (p.x >= x1 && p.x <= x2 && p.y >= y1 && p.y <= y2) {\n                result.add(p);\n            }\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        List<Point> points = new ArrayList<>();\n        points.add(new Point(1, 2));\n        points.add(new Point(3, 4));\n        points.add(new Point(5, 6));\n        points.add(new Point(7, 8));\n\n        List<Point> result = rangeQuery(points, 2, 3, 6, 7);\n        for (Point p : result) {\n            System.out.println(\"(\" + p.x + \", \" + p.y + \")\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:19:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Point {\n    double x, y;\n    \n    Point(double x, double y) {\n        this.x = x;\n        this.y = y;\n    }\n}\n\nclass KDNode {\n    Point point;\n    KDNode left, right;\n    boolean isVertical;\n    \n    KDNode(Point p, boolean isVertical) {\n        this.point = p;\n        this.isVertical = isVertical;\n        this.left = null;\n        this.right = null;\n    }\n}\n\nclass RangeSearch {\n    private KDNode root;\n    \n    public RangeSearch(List<Point> points) {\n        root = buildKDTree(points, true);\n    }\n    \n    private KDNode buildKDTree(List<Point> points, boolean isVertical) {\n        if (points.isEmpty()) {\n            return null;\n        }\n        \n        // Sort points based on x or y coordinate\n        points.sort((a, b) -> Double.compare(\n            isVertical ? a.x : a.y, \n            isVertical ? b.x : b.y\n        ));\n        \n        int medianIndex = points.size() / 2;\n        Point medianPoint = points.get(medianIndex);\n        \n        KDNode node = new KDNode(medianPoint, isVertical);\n        \n        // Recursively build left and right subtrees\n        node.left = buildKDTree(\n            points.subList(0, medianIndex), \n            !isVertical\n        );\n        \n        node.right = buildKDTree(\n            points.subList(medianIndex + 1, points.size()), \n            !isVertical\n        );\n        \n        return node;\n    }\n    \n    public List<Point> rangeSearch(double x1, double y1, double x2, double y2) {\n        List<Point> result = new ArrayList<>();\n        rangeSearchRecursive(root, x1, y1, x2, y2, result);\n        return result;\n    }\n    \n    private void rangeSearchRecursive(KDNode node, \n                                      double x1, double y1, \n                                      double x2, double y2, \n                                      List<Point> result) {\n        if (node == null) {\n            return;\n        }\n        \n        // Check if current point is in range\n        if (node.point.x >= x1 && node.point.x <= x2 &&\n            node.point.y >= y1 && node.point.y <= y2) {\n            result.add(node.point);\n        }\n        \n        // Decide which subtrees to explore\n        if (node.isVertical) {\n            if (x1 <= node.point.x) {\n                rangeSearchRecursive(node.left, x1, y1, x2, y2, result);\n            }\n            if (x2 > node.point.x) {\n                rangeSearchRecursive(node.right, x1, y1, x2, y2, result);\n            }\n        } else {\n            if (y1 <= node.point.y) {\n                rangeSearchRecursive(node.left, x1, y1, x2, y2, result);\n            }\n            if (y2 > node.point.y) {\n                rangeSearchRecursive(node.right, x1, y1, x2, y2, result);\n            }\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Point> points = Arrays.asList(\n            new Point(2, 3),\n            new Point(5, 4),\n            new Point(9, 6),\n            new Point(4, 7),\n            new Point(8, 1)\n        );\n        \n        RangeSearch rangeSearch = new RangeSearch(points);\n        List<Point> result = rangeSearch.rangeSearch(3, 2, 7, 6);\n        \n        for (Point p : result) {\n            System.out.println(\"(\" + p.x + \", \" + p.y + \")\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:19:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n\nclass RangeSearch {\nprivate:\n    std::vector<std::pair<int, int>> points;\n\npublic:\n    RangeSearch(const std::vector<std::pair<int, int>>& inputPoints) : points(inputPoints) {\n        // Sort points by x-coordinate\n        std::sort(points.begin(), points.end());\n    }\n\n    std::vector<std::pair<int, int>> rangeQuery(int xLow, int xHigh, int yLow, int yHigh) {\n        std::vector<std::pair<int, int>> result;\n\n        // Binary search to find lower and upper x bounds\n        auto xLowIt = std::lower_bound(points.begin(), points.end(), \n            std::make_pair(xLow, INT_MIN));\n        auto xHighIt = std::upper_bound(points.begin(), points.end(), \n            std::make_pair(xHigh, INT_MAX));\n\n        // Filter points within y range\n        for (auto it = xLowIt; it != xHighIt; ++it) {\n            if (it->second >= yLow && it->second <= yHigh) {\n                result.push_back(*it);\n            }\n        }\n\n        return result;\n    }\n};",
+    "timestamp": "2025-08-05 22:19:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class RangeSearch:\n    def __init__(self, points):\n        self.points = points\n\n    def search(self, x_range, y_range):\n        x_min, x_max = x_range\n        y_min, y_max = y_range\n        result = []\n        for (x, y) in self.points:\n            if x_min <= x <= x_max and y_min <= y <= y_max:\n                result.append((x, y))\n        return result\n\n# Example usage\nif __name__ == \"__main__\":\n    points = [(1, 5), (3, 7), (4, 9), (6, 2), (7, 3)]\n    range_search = RangeSearch(points)\n    x_range = (2, 6)\n    y_range = (1, 8)\n    print(range_search.search(x_range, y_range))",
+    "timestamp": "2025-08-13 09:59:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\nclass Point {\n    int x, y;\n\n    Point(int x, int y) {\n        this.x = x;\n        this.y = y;\n    }\n}\n\nclass Range {\n    int x1, y1, x2, y2;\n\n    Range(int x1, int y1, int x2, int y2) {\n        this.x1 = x1;\n        this.y1 = y1;\n        this.x2 = x2;\n        this.y2 = y2;\n    }\n\n    boolean contains(Point p) {\n        return p.x >= x1 && p.x <= x2 && p.y >= y1 && p.y <= y2;\n    }\n}\n\npublic class RangeSearch {\n\n    public static List<Point> rangeSearch(List<Point> points, Range range) {\n        List<Point> result = new ArrayList<>();\n        for (Point p : points) {\n            if (range.contains(p)) {\n                result.add(p);\n            }\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        List<Point> points = List.of(new Point(1, 2), new Point(2, 3), new Point(3, 4), new Point(5, 6), new Point(7, 8));\n        Range range = new Range(2, 3, 6, 7);\n        List<Point> result = rangeSearch(points, range);\n        for (Point p : result) {\n            System.out.println(\"(\" + p.x + \", \" + p.y + \")\");\n        }\n    }\n}",
+    "timestamp": "2025-08-13 09:59:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n// Structure to represent a point in 2D space\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\n// Function to check if a point is within the given range\nint isPointInRange(Point point, int xMin, int xMax, int yMin, int yMax) {\n    return point.x >= xMin && point.x <= xMax && point.y >= yMin && point.y <= yMax;\n}\n\n// Function to find and report points within the given range\nvoid reportPointsInRange(Point* points, int n, int xMin, int xMax, int yMin, int yMax) {\n    for(int i = 0; i < n; i++) {\n        if (isPointInRange(points[i], xMin, xMax, yMin, yMax)) {\n            printf(\"Point (%d, %d) is within range\\n\", points[i].x, points[i].y);\n        }\n    }\n}\n\nint main() {\n    int n = 5; // Number of points\n    Point points[] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}, {9, 10}};\n    \n    int xMin = 2, xMax = 8, yMin = 3, yMax = 9; // Range bounds\n    \n    reportPointsInRange(points, n, xMin, xMax, yMin, yMax);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 09:59:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class RangeSearch:\n    def __init__(self, points):\n        self.points = sorted(points, key=lambda p: p[0])\n    \n    def range_search(self, x_min, x_max, y_min, y_max):\n        results = []\n        \n        # Binary search for lower x bound\n        left = 0\n        right = len(self.points) - 1\n        while left <= right:\n            mid = (left + right) // 2\n            if self.points[mid][0] < x_min:\n                left = mid + 1\n            else:\n                right = mid - 1\n        \n        # Start from lower bound and collect points in range\n        for i in range(left, len(self.points)):\n            if self.points[i][0] > x_max:\n                break\n            \n            x, y = self.points[i]\n            if y_min <= y <= y_max:\n                results.append(self.points[i])\n        \n        return results",
+    "timestamp": "2025-08-13 10:00:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n\nclass RangeSearch:\n    def __init__(self, points):\n        self.points = points\n\n    def query(self, x_range, y_range):\n        result = []\n        x_min, x_max = x_range\n        y_min, y_max = y_range\n        for point in self.points:\n            if x_min <= point.x <= x_max and y_min <= point.y <= y_max:\n                result.append(point)\n        return result\n\n# Example usage:\n# points = [Point(1, 2), Point(3, 4), Point(5, 6)]\n# rs = RangeSearch(points)\n# result = rs.query((2, 4), (3, 5))\n# for point in result:\n#     print(point.x, point.y)",
+    "timestamp": "2025-08-13 10:00:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nstruct Point {\n    int x, y;\n};\n\nstd::vector<Point> rangeSearch(const std::vector<Point>& points, int x1, int y1, int x2, int y2) {\n    std::vector<Point> result;\n    for (const auto& point : points) {\n        if (point.x >= x1 && point.x <= x2 && point.y >= y1 && point.y <= y2) {\n            result.push_back(point);\n        }\n    }\n    return result;\n}\n\nint main() {\n    std::vector<Point> points = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};\n    int x1 = 2, y1 = 3, x2 = 6, y2 = 7;\n    std::vector<Point> result = rangeSearch(points, x1, y1, x2, y2);\n    \n    for (const auto& point : result) {\n        std::cout << \"(\" << point.x << \", \" << point.y << \")\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:56:20"
+  }
+]

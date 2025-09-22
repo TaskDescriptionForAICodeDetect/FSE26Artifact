@@ -1,0 +1,1 @@
+Find the diameter of a convex polygon. In other words, find a pair of points that have the maximum distance between them.

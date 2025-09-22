@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "2 2\nQE\nEA\n",
+      "output": "Queen can not escape and Army can not catch Queen."
+    },
+    {
+      "input": "3 1\nQAE\n",
+      "output": "Army can catch Queen."
+    },
+    {
+      "input": "3 1\nAQE\n",
+      "output": "Queen can escape."
+    },
+    {
+      "input": "5 5\n..E..\n.###.\nA###Q\n.###.\n..E..\n",
+      "output": "Queen can not escape and Army can not catch Queen."
+    },
+    {
+      "input": "5 1\nA.E.Q\n",
+      "output": "Army can catch Queen."
+    },
+    {
+      "input": "5 5\nA....\n####.\n..E..\n.####\n....Q\n",
+      "output": "Army can catch Queen."
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "15\n1 2 1 1 2\n2 4\n5 2\n3 2\n1 3\n",
+      "output": "YES"
+    },
+    {
+      "input": "23\n1 2 1\n1 2\n2 3\n",
+      "output": "NO"
+    },
+    {
+      "input": "36\n3 2 2 2 2 2\n1 2\n2 3\n1 4\n1 5\n4 6\n",
+      "output": "YES"
+    }
+  ]
+}

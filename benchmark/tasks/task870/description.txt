@@ -1,0 +1,1 @@
+We say that an odd number N is similar to 2017 when both N and (N+1)/2 are prime. You are given Q queries. In the i-th query, given two odd numbers l_i and r_i, find the number of odd numbers x similar to 2017 such that l_i ≤ x ≤ r_i.

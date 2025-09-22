@@ -1,0 +1,1 @@
+Are Cards Snacks? You have N cards. Each card has an integer A_i written on it. Your goal is to choose some cards such that their sum equals K. However, another character wants to prevent you from achieving this by eating a minimum number of cards beforehand. Determine the minimum number of cards that need to be eaten to ensure that the remaining total cannot equal K.

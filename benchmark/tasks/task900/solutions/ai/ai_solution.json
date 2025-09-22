@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 200000\n\nint main() {\n    int N, p[MAX_N], q[MAX_N];\n    int p_size, q_size;\n    int i, j, min_idx, temp;\n\n    scanf(\"%d\", &N);\n    for (i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n\n    p_size = N;\n    q_size = 0;\n\n    while (p_size > 0) {\n        min_idx = 0;\n        for (i = 0; i < p_size - 1; i++) {\n            if (p[i] > p[i+1]) {\n                min_idx = i;\n                break;\n            }\n        }\n\n        q[q_size++] = p[min_idx];\n        q[q_size++] = p[min_idx+1];\n\n        for (i = min_idx; i < p_size - 2; i++) {\n            p[i] = p[i+2];\n        }\n        p_size -= 2;\n    }\n\n    for (i = 0; i < N; i++) {\n        printf(\"%d \", q[i]);\n    }\n    printf(\"\\n\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:16:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *p = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n\n    int *q = (int *)malloc(N * sizeof(int));\n    int q_index = 0;\n\n    while (N > 0) {\n        int min_pos = 0;\n        for (int i = 0; i < N - 1; i++) {\n            if (p[i] < p[min_pos] || p[i+1] < p[min_pos+1]) {\n                if (p[i] < p[min_pos] || (p[i] == p[min_pos] && p[i+1] < p[min_pos+1])) {\n                    min_pos = i;\n                }\n            }\n        }\n        q[q_index++] = p[min_pos];\n        q[q_index++] = p[min_pos + 1];\n        for (int i = min_pos; i < N - 2; i++) {\n            p[i] = p[i + 2];\n        }\n        N -= 2;\n    }\n\n    for (int i = 0; i < q_index; i++) {\n        printf(\"%d \", q[i]);\n    }\n    printf(\"\\n\");\n\n    free(p);\n    free(q);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> p(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> p[i];\n    }\n    \n    vector<int> q;\n    while (!p.empty()) {\n        int best_i = 0;\n        for (int i = 0; i < p.size() - 1; ++i) {\n            if (p[i] < p[best_i] || (p[i] == p[best_i] && p[i+1] < p[best_i+1])) {\n                best_i = i;\n            }\n        }\n        q.insert(q.begin(), p[best_i + 1]);\n        q.insert(q.begin(), p[best_i]);\n        p.erase(p.begin() + best_i, p.begin() + best_i + 2);\n    }\n    \n    for (int i = 0; i < N; ++i) {\n        cout << q[i] << (i == N - 1 ? \"\\n\" : \" \");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] p = new int[N];\n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n        \n        List<Integer> q = new ArrayList<>();\n        for (int i = N - 2; i >= 0; i -= 2) {\n            q.add(0, p[i]);\n            q.add(0, p[i + 1]);\n        }\n        \n        for (int i = 0; i < N; i++) {\n            System.out.print(q.get(i) + (i == N - 1 ? \"\\n\" : \" \"));\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:17:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int[] constructLexSmallestPermutation(int[] p) {\n        int N = p.length;\n        int[] q = new int[N];\n        List<Integer> remainingP = new ArrayList<>();\n        \n        for (int num : p) {\n            remainingP.add(num);\n        }\n        \n        int qIndex = 0;\n        \n        while (!remainingP.isEmpty()) {\n            int minPairIndex = findMinPairIndex(remainingP);\n            \n            int x = remainingP.get(minPairIndex);\n            int y = remainingP.get(minPairIndex + 1);\n            \n            q[qIndex] = x;\n            q[qIndex + 1] = y;\n            \n            remainingP.remove(minPairIndex + 1);\n            remainingP.remove(minPairIndex);\n            \n            qIndex += 2;\n        }\n        \n        return q;\n    }\n    \n    private static int findMinPairIndex(List<Integer> p) {\n        int minPairIndex = 0;\n        for (int i = 0; i < p.size() - 1; i++) {\n            int currentX = p.get(i);\n            int currentY = p.get(i + 1);\n            int minX = p.get(minPairIndex);\n            int minY = p.get(minPairIndex + 1);\n            \n            if (currentX < minX || (currentX == minX && currentY < minY)) {\n                minPairIndex = i;\n            }\n        }\n        return minPairIndex;\n    }\n}",
+    "timestamp": "2025-08-05 23:17:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> p(N);\n    for (int i = 0; i < N; i++) {\n        cin >> p[i];\n    }\n    \n    vector<int> q;\n    while (!p.empty()) {\n        int minPos = 0;\n        for (int i = 0; i + 1 < p.size(); i++) {\n            if (p[i] > p[i+1]) {\n                minPos = i;\n                break;\n            }\n        }\n        \n        q.push_back(p[minPos]);\n        q.push_back(p[minPos+1]);\n        \n        p.erase(p.begin() + minPos, p.begin() + minPos + 2);\n    }\n    \n    for (int x : q) {\n        cout << x << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def lexicographically_smallest_q(N, p):\n    q = []\n    while p:\n        min_index = min(range(len(p)-1), key=lambda i: (p[i], p[i+1]))\n        x, y = p[min_index], p[min_index + 1]\n        q = [x, y] + q\n        p = p[:min_index] + p[min_index+2:]\n    return q\n\n# Example usage:\nN = 4\np = [4, 3, 2, 1]\nresult = lexicographically_smallest_q(N, p)\nprint(result)",
+    "timestamp": "2025-08-13 14:25:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class LexicographicallySmallestPermutation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] p = new int[N];\n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n\n        // To store the result\n        int[] q = new int[N];\n        int qIndex = N - 1;\n\n        System.out.println(Arrays.toString(p));\n\n        int left = 0, right = N - 1;\n        while (left <= right) {\n            if (p[left] < p[right]) {\n                q[qIndex--] = p[right--];\n                q[qIndex--] = p[right--];\n            } else {\n                q[qIndex--] = p[left];\n                q[qIndex--] = p[++left];\n                left++;\n            }\n        }\n\n        System.out.print(Arrays.toString(q));\n    }\n}",
+    "timestamp": "2025-08-13 14:25:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid find_lexicographically_smallest_permutation(int N) {\n    int *p = (int *)malloc(N * sizeof(int));\n    int *q = (int *)malloc(N * sizeof(int));\n    int qIndex = 0;\n\n    for (int i = 0; i < N; i++) {\n        p[i] = i + 1;\n    }\n\n    // Start filling q from the end, selecting adjacent elements in pairs\n    for (int i = N - 2; i >= 0; i -= 2) {\n        q[qIndex++] = p[i];\n        q[qIndex++] = p[i + 1];\n    }\n\n    // Print the resulting permutation q\n    for (int i = qIndex - 1; i >= 0; --i) {\n        printf(\"%d \", q[i]);\n    }\n    printf(\"\\n\");\n\n    free(p);\n    free(q);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    find_lexicographically_smallest_permutation(N);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:25:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> p(N);\n    for(int i = 0; i < N; ++i) {\n        cin >> p[i];\n    }\n    vector<int> q;\n    for(int i = N-2; i >= 0; i -= 2) {\n        q.push_back(p[i]);\n        q.push_back(p[i+1]);\n    }\n    for(int i = 0; i < N; ++i) {\n        cout << q[i] << \" \";\n    }\n    cout << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:25:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, p):\n    p = list(p)\n    q = []\n    \n    while p:\n        best_choice = None\n        best_pair = None\n        \n        for i in range(len(p) - 1):\n            current_pair = p[i:i+2]\n            current_q = current_pair + q\n            \n            if best_choice is None or current_q < best_choice:\n                best_choice = current_q\n                best_pair = i\n        \n        pair = p.pop(best_pair, None)\n        pair = p.pop(best_pair, None)\n        q = list(pair) + q\n    \n    return q\n\n# Example usage\nN = 4\np = [3, 4, 1, 2]\nresult = solve(N, p)\nprint(result)",
+    "timestamp": "2025-08-13 14:25:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    p = list(map(int, sys.stdin.readline().split()))\n    q = []\n    while p:\n        # Find the minimal pair (x, y) where x and y are adjacent\n        min_val = float('inf')\n        min_index = -1\n        for i in range(len(p) - 1):\n            if p[i] < min_val or (p[i] == min_val and p[i+1] < p[min_index + 1]):\n                min_val = p[i]\n                min_index = i\n        x, y = p[min_index], p[min_index + 1]\n        del p[min_index:min_index + 2]\n        q.insert(0, x)\n        q.insert(1, y)\n    print(' '.join(map(str, q)))\n\nsolve()",
+    "timestamp": "2025-08-13 14:25:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function lexicographicallySmallestPermutation(N, p) {\n    let q = [];\n    for (let i = 0; i < N; i += 2) {\n        q.unshift(p[i + 1], p[i]);\n    }\n    return q;\n}\n\n// Example usage:\nlet N = 4;\nlet p = [1, 3, 2, 4];\nconsole.log(lexicographicallySmallestPermutation(N, p)); // Output: [2, 4, 1, 3]",
+    "timestamp": "2025-08-13 14:26:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, p) {\n    let q = [];\n    \n    while (p.length > 0) {\n        let minPair = null;\n        let minIndex = -1;\n        \n        for (let i = 0; i < p.length - 1; i++) {\n            let currPair = [p[i], p[i+1]];\n            \n            if (minPair === null || \n                currPair[0] < minPair[0] || \n                (currPair[0] === minPair[0] && currPair[1] < minPair[1])) {\n                minPair = currPair;\n                minIndex = i;\n            }\n        }\n        \n        q.unshift(minPair[0], minPair[1]);\n        p.splice(minIndex, 2);\n    }\n    \n    return q;\n}",
+    "timestamp": "2025-08-13 14:26:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const N = parseInt(readline());\n    const p = readline().split(' ').map(Number);\n    const q = [];\n    const temp = [...p];\n    \n    while (temp.length > 0) {\n        let minPos = 0;\n        for (let i = 0; i < temp.length - 1; i++) {\n            if (temp[i] < temp[minPos] || temp[i+1] < temp[minPos + 1]) {\n                if (temp[i] < temp[minPos] || (temp[i] === temp[minPos] && temp[i+1] < temp[minPos+1])) {\n                    minPos = i;\n                }\n            }\n        }\n        const x = temp[minPos];\n        const y = temp[minPos + 1];\n        q.unshift(x, y);\n        temp.splice(minPos, 2);\n    }\n    \n    console.log(q.join(' '));\n}\n\n// Assuming input is read via readline() function\n// For actual usage, you might need to adjust the input reading part based on the environment\nsolve();",
+    "timestamp": "2025-08-13 14:27:06"
+  }
+]

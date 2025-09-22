@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_N 100005\n\nint parent[2 * MAX_N];\nint weight[2 * MAX_N];\nint path[2 * MAX_N];\n\nint find(int x) {\n    if (parent[x] != x) {\n        parent[x] = find(parent[x]);\n    }\n    return parent[x];\n}\n\nvoid unite(int x, int y) {\n    parent[find(x)] = find(y);\n}\n\nint main() {\n    int N, i, j;\n    scanf(\"%d\", &N);\n\n    for (i = 1; i <= 2 * N; i++) {\n        parent[i] = i;\n    }\n\n    for (i = 1; i <= N; i++) {\n        weight[i] = weight[N + i] = i;\n    }\n\n    for (i = 1; i <= N; i++) {\n        int pathLen = 0;\n        int curr = i;\n        int xorVal = 0;\n\n        path[pathLen++] = curr;\n        xorVal ^= weight[curr];\n\n        while (curr != N + i) {\n            bool found = false;\n            for (j = 1; j <= 2 * N; j++) {\n                if (find(curr) != find(j) && find(j) != find(N + i)) {\n                    unite(curr, j);\n                    curr = j;\n                    path[pathLen++] = curr;\n                    xorVal ^= weight[curr];\n                    found = true;\n                    break;\n                }\n            }\n\n            if (!found) {\n                unite(curr, N + i);\n                curr = N + i;\n                path[pathLen++] = curr;\n                xorVal ^= weight[curr];\n            }\n        }\n\n        if (xorVal != i) {\n            printf(\"No\\n\");\n            return 0;\n        }\n    }\n\n    printf(\"Yes\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid solve(int N) {\n    printf(\"Yes\\n\");\n    for (int i = 2; i <= N; i++) {\n        printf(\"1 %d\\n\", i);\n    }\n    for (int i = 2; i <= N; i++) {\n        printf(\"%d %d\\n\", i, N + 1);\n    }\n    printf(\"%d %d\\n\", N + 1, N + N);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    solve(N);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    if (N % 2 != 0) {\n        cout << \"No\" << endl;\n        return 0;\n    }\n    \n    cout << \"Yes\" << endl;\n    for (int i = 1; i <= N; ++i) {\n        if (i == 1) {\n            cout << 1 << \" \" << 2 << endl;\n        } else {\n            if (i % 2 == 0) {\n                cout << i << \" \" << i + 2 << endl;\n            } else {\n                cout << i - 2 << \" \" << i << endl;\n            }\n        }\n    }\n    for (int i = 1; i <= N; ++i) {\n        if (i == 1) {\n            cout << 1 << \" \" << N + 1 << endl;\n        } else {\n            if (i % 2 == 0) {\n                cout << i << \" \" << N + i << endl;\n            } else {\n                cout << i - 1 << \" \" << N + i << endl;\n            }\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TreeWithXOR {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        \n        if (N == 1) {\n            System.out.println(\"Yes\");\n            System.out.println(\"2\");\n            System.out.println(\"1 2\");\n            return;\n        }\n        \n        if ((N & (N - 1)) == 0) {\n            System.out.println(\"No\");\n            return;\n        }\n        \n        System.out.println(\"Yes\");\n        StringBuilder sb = new StringBuilder();\n        \n        for (int i = 1; i <= N - 1; i++) {\n            sb.append(i).append(\" \").append(i + 1).append(\"\\n\");\n        }\n        sb.append(N).append(\" \").append(N + 1).append(\"\\n\");\n        \n        for (int i = 2; i <= N - 1; i++) {\n            sb.append(1).append(\" \").append(N + i).append(\"\\n\");\n        }\n        sb.append(2).append(\" \").append(2 * N).append(\"\\n\");\n        \n        System.out.println(2 * N - 1);\n        System.out.print(sb.toString());\n    }\n}",
+    "timestamp": "2025-08-05 22:47:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    static int[] parent;\n    static int[] weight;\n    static ArrayList<ArrayList<Integer>> graph;\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        \n        if (solve(N)) {\n            System.out.println(\"YES\");\n            for (int i = 1; i < 2 * N; i++) {\n                for (int j = i + 1; j <= 2 * N; j++) {\n                    if (findPath(i, j) != null) {\n                        System.out.println(i + \" \" + j);\n                        break;\n                    }\n                }\n            }\n        } else {\n            System.out.println(\"NO\");\n        }\n    }\n    \n    static boolean solve(int N) {\n        parent = new int[2 * N + 1];\n        weight = new int[2 * N + 1];\n        graph = new ArrayList<>(2 * N + 1);\n        \n        for (int i = 0; i <= 2 * N; i++) {\n            graph.add(new ArrayList<>());\n        }\n        \n        for (int i = 1; i <= N; i++) {\n            weight[i] = i;\n            weight[N + i] = i;\n        }\n        \n        for (int i = 1; i <= N; i++) {\n            graph.get(i).add(N + i);\n            graph.get(N + i).add(i);\n        }\n        \n        for (int i = 1; i <= N; i++) {\n            List<Integer> path = findPath(i, N + i);\n            if (path == null || calculateXOR(path) != i) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n    \n    static List<Integer> findPath(int start, int end) {\n        for (int i = 0; i < parent.length; i++) {\n            parent[i] = 0;\n        }\n        \n        Queue<Integer> queue = new LinkedList<>();\n        queue.offer(start);\n        parent[start] = start;\n        \n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            \n            if (current == end) {\n                List<Integer> path = new ArrayList<>();\n                while (current != start) {\n                    path.add(current);\n                    current = parent[current];\n                }\n                path.add(start);\n                Collections.reverse(path);\n                return path;\n            }\n            \n            for (int neighbor : graph.get(current)) {\n                if (parent[neighbor] == 0) {\n                    queue.offer(neighbor);\n                    parent[neighbor] = current;\n                }\n            }\n        }\n        \n        return null;\n    }\n    \n    static int calculateXOR(List<Integer> path) {\n        int xor = 0;\n        for (int vertex : path) {\n            xor ^= weight[vertex];\n        }\n        return xor;\n    }\n}",
+    "timestamp": "2025-08-05 22:47:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n\n    if (N == 1) {\n        cout << \"YES\\n1 2\\n1 2\" << endl;\n        return 0;\n    }\n\n    if (N > 20) {\n        cout << \"NO\" << endl;\n        return 0;\n    }\n\n    vector<vector<int>> tree(2 * N + 1);\n    vector<int> parent(2 * N + 1, 0);\n    vector<int> weight(2 * N + 1, 0);\n\n    for (int i = 1; i <= N; i++) {\n        weight[i] = weight[N + i] = i;\n    }\n\n    int last = 1;\n    for (int i = 2; i <= N; i++) {\n        tree[last].push_back(i);\n        tree[i].push_back(last);\n        parent[i] = last;\n        last = i;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        int u = i, v = N + i;\n        int lca = u;\n        while (u != v) {\n            if (u > v) swap(u, v);\n            v = parent[v];\n            lca = v;\n        }\n\n        int xorPath = 0;\n        u = i;\n        while (u != lca) {\n            xorPath ^= weight[u];\n            u = parent[u];\n        }\n        xorPath ^= weight[lca];\n\n        u = N + i;\n        while (u != lca) {\n            xorPath ^= weight[u];\n            u = parent[u];\n        }\n\n        if (xorPath != i) {\n            cout << \"NO\" << endl;\n            return 0;\n        }\n    }\n\n    cout << \"YES\" << endl;\n    for (int i = 1; i < 2 * N; i++) {\n        for (int j : tree[i]) {\n            if (j > i) {\n                cout << i << \" \" << j << endl;\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_tree(N):\n    if N == 1:\n        # Special case for N = 1\n        return [(1, 2)]\n    \n    result = []\n    # Create two tails first, using (1, N+1) and (2, N+2) as initial nodes\n    for i in range(1, N):\n        # Chain them separately\n        result.append((i, i + 1))\n        result.append((N + i, N + i + 1))\n    \n    # Connect the 1-st chain to the 2-nd chain at the last node of each chain\n    result.append((N, 2 * N))\n    \n    return result\n\ndef main():\n    import sys\n    \n    input = sys.stdin.readline\n    N = int(input().strip())\n    \n    # Check if we can construct such a tree\n    if N % 2 == 1:\n        print(\"Yes\")\n        tree = construct_tree(N)\n        for edge in tree:\n            print(edge[0], edge[1])\n    else:\n        print(\"No\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 12:32:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class WeightedTree {\n\n    static class Edge {\n        int from;\n        int to;\n\n        Edge(int from, int to) {\n            this.from = from;\n            this.to = to;\n        }\n    }\n\n    public static void main(String[] args) {\n        int N = 3; // Example value for N\n        List<Edge> edges = findTreeEdges(N);\n        if (edges != null) {\n            for (Edge edge : edges) {\n                System.out.println(edge.from + \" \" + edge.to);\n            }\n        } else {\n            System.out.println(\"No such tree exists\");\n        }\n    }\n    \n    public static List<Edge> findTreeEdges(int N) {\n        if (N <= 0) return null;\n\n        List<Edge> edges = new ArrayList<>();\n\n        for (int i = 2; i <= N; i++) {\n            edges.add(new Edge(N + 1, i));\n            edges.add(new Edge(i, N + i));\n        }\n        \n        edges.add(new Edge(N + 1, 1));\n        edges.add(new Edge(1, 2 * N));\n\n        return edges;\n    }\n}",
+    "timestamp": "2025-08-13 12:32:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    if (N == 1) {\n        printf(\"Yes\\n\");\n        printf(\"1 2\\n\");\n        return 0;\n    }\n\n    if (N % 2 == 0) {\n        printf(\"No\\n\");\n        return 0;\n    }\n\n    printf(\"Yes\\n\");\n\n    for (int i = 1; i <= N; i++) {\n        printf(\"%d %d\\n\", i, N + i);\n    }\n\n    for (int i = 2; i <= N; i++) {\n        printf(\"1 %d\\n\", i);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:32:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n\n    // We need to construct the edges for the tree\n    vector<pair<int, int>> edges;\n\n    // Connect the first N nodes in a linear chain\n    for (int i = 1; i < N; ++i) {\n        edges.emplace_back(i, i + 1);\n    }\n\n    // Connect the second set of nodes in a linear chain with the last node of the previous chain\n    for (int i = N + 1; i < 2 * N; ++i) {\n        edges.emplace_back(i, i + 1);\n    }\n    edges.emplace_back(1, N + 1);\n\n    // Output the edges\n    cout << \"YES\" << endl;\n    for (auto edge : edges) {\n        cout << edge.first << \" \" << edge.second << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:32:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N):\n    # Create adjacency list to represent the tree\n    graph = [[] for _ in range(2*N+1)]\n    \n    # Connect corresponding vertices from first N and last N vertices\n    for i in range(1, N+1):\n        graph[i].append(N+i)\n        graph[N+i].append(i)\n    \n    # Add additional edges to satisfy XOR condition\n    for i in range(1, N):\n        graph[i].append(i+1)\n        graph[i+1].append(i)\n    \n    # Depths of vertices for DFS\n    depth = [0] * (2*N+1)\n    \n    # DFS to find path between two vertices\n    def find_path(u, target, parent):\n        if u == target:\n            return [u]\n        \n        for v in graph[u]:\n            if v != parent:\n                path = find_path(v, target, u)\n                if path:\n                    return [u] + path\n        \n        return []\n    \n    # Check XOR condition\n    for i in range(1, N+1):\n        path = find_path(i, N+i, 0)\n        xor_val = 0\n        for vertex in path:\n            if vertex <= N:\n                xor_val ^= vertex\n            else:\n                xor_val ^= vertex - N\n        \n        if xor_val != i:\n            return []\n    \n    return graph[1:]\n\n# Example usage\nN = int(input())\nresult = solve(N)\nif result:\n    print(\"YES\")\n    for i, edges in enumerate(result, 1):\n        print(f\"{i}: {edges}\")\nelse:\n    print(\"NO\")",
+    "timestamp": "2025-08-13 12:32:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    if N % 2 != 0:\n        print(\"No\")\n        return\n    print(\"Yes\")\n    for i in range(1, N+1):\n        if i == 1:\n            print(1, 2)\n        else:\n            if i % 2 == 0:\n                print(1, i+1)\n            else:\n                print(i, i+1)\n    for i in range(1, N+1):\n        if i == 1:\n            print(N+1, N+2)\n        else:\n            if i % 2 == 0:\n                print(N+1, N+i+1)\n            else:\n                print(N+i, N+i+1)\n\nsolve()",
+    "timestamp": "2025-08-13 12:32:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructTree(N) {\n    if (N === 1) {\n        return [[1, 2]];\n    } else if (N % 2 === 0) {\n        return null;\n    }\n\n    const edges = [];\n    for (let i = 1; i < N; i++) {\n        edges.push([i, i + 1]);\n    }\n\n    edges.push([N, 2 * N]);\n    \n    for (let i = 1; i <= N; i++) {\n        if (i !== 1 && i !== N) {\n            edges.push([i, N + i]);\n        }\n    }\n    \n    return edges;\n}\n\nconst N = 5;  // Example input, can change to any integer N\nconst tree = constructTree(N);\nconsole.log(tree);",
+    "timestamp": "2025-08-13 12:33:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructTree(N) {\n    if (N === 1) return [1, 2, 1];\n    \n    const edges = [];\n    const parent = new Array(2 * N + 1).fill(0);\n    const depth = new Array(2 * N + 1).fill(0);\n    \n    // Create a line graph first\n    for (let i = 1; i < 2 * N; i++) {\n        edges.push([i, i + 1]);\n        parent[i + 1] = i;\n        depth[i + 1] = depth[i] + 1;\n    }\n    \n    // Add additional edges to satisfy XOR condition\n    for (let i = 1; i <= N; i++) {\n        let u = i, v = N + i;\n        let uPath = [], vPath = [];\n        \n        // Trace paths to LCA\n        while (u !== v) {\n            if (depth[u] > depth[v]) {\n                uPath.push(u);\n                u = parent[u];\n            } else {\n                vPath.push(v);\n                v = parent[v];\n            }\n        }\n        \n        // Add path vertices\n        uPath.push(u);\n        for (let j = vPath.length - 1; j >= 0; j--) {\n            uPath.push(vPath[j]);\n        }\n        \n        // Check if current path satisfies XOR condition\n        let xorWeight = uPath[0];\n        for (let j = 1; j < uPath.length; j++) {\n            xorWeight ^= uPath[j];\n        }\n        \n        // If XOR doesn't match, add a direct edge\n        if (xorWeight !== i) {\n            edges.push([i, N + i]);\n        }\n    }\n    \n    return edges;\n}",
+    "timestamp": "2025-08-13 12:33:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructTree(N) {\n    if (N === 1) {\n        return [[1, 2]];\n    }\n    if ((N & (N - 1)) === 0) {\n        // N is a power of 2\n        const tree = [];\n        for (let i = 1; i < N; i++) {\n            tree.push([i, i + 1]);\n            tree.push([N + i, N + i + 1]);\n        }\n        tree.push([N, 2 * N]);\n        return tree;\n    } else {\n        // General case: star graph with center 1\n        const tree = [];\n        for (let i = 2; i <= N; i++) {\n            tree.push([1, i]);\n            tree.push([1, N + i]);\n        }\n        tree.push([1, N + 1]);\n        return tree;\n    }\n}\n\nfunction solve() {\n    const N = parseInt(readline());\n    const tree = constructTree(N);\n    console.log(\"Yes\");\n    for (const edge of tree) {\n        console.log(edge[0] + \" \" + edge[1]);\n    }\n}\n\n// For testing purposes, you can replace readline with actual input\nfunction readline() {\n    // Mock readline function for testing\n    return \"3\"; // Example input\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:33:22"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_H 50\n#define MAX_W 50\n#define COLORS 4\n\nint grid[MAX_H][MAX_W];\nint H, W, D;\n\nint is_valid_color(int row, int col, int color) {\n    for (int r = 0; r < H; r++) {\n        for (int c = 0; c < W; c++) {\n            if (r == row && c == col) continue;\n            \n            int dist = abs(row - r) + abs(col - c);\n            if (dist == D && grid[r][c] == color) {\n                return 0;\n            }\n        }\n    }\n    return 1;\n}\n\nint solve(int row, int col) {\n    if (row == H) return 1;\n    if (col == W) return solve(row + 1, 0);\n\n    for (int color = 0; color < COLORS; color++) {\n        if (is_valid_color(row, col, color)) {\n            grid[row][col] = color;\n            \n            if (solve(row, col + 1)) {\n                return 1;\n            }\n            \n            grid[row][col] = -1;\n        }\n    }\n    \n    return 0;\n}\n\nint main() {\n    scanf(\"%d %d %d\", &H, &W, &D);\n    \n    for (int r = 0; r < H; r++) {\n        for (int c = 0; c < W; c++) {\n            grid[r][c] = -1;\n        }\n    }\n    \n    solve(0, 0);\n    \n    for (int r = 0; r < H; r++) {\n        for (int c = 0; c < W; c++) {\n            printf(\"%d \", grid[r][c]);\n        }\n        printf(\"\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int H, W, d;\n    scanf(\"%d %d %d\", &H, &W, &d);\n    \n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            int x = (i + j) / d;\n            int y = (i - j) / d;\n            int color = (x % 2) * 2 + (y % 2);\n            \n            switch (color) {\n                case 0: putchar('R'); break;\n                case 1: putchar('Y'); break;\n                case 2: putchar('G'); break;\n                case 3: putchar('B'); break;\n            }\n        }\n        putchar('\\n');\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int H, W, d;\n    cin >> H >> W >> d;\n    \n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            int x = (i + j) / d;\n            int y = (i - j) / d;\n            if (x % 2 == 0) {\n                if (y % 2 == 0) {\n                    cout << 'R';\n                } else {\n                    cout << 'Y';\n                }\n            } else {\n                if (y % 2 == 0) {\n                    cout << 'G';\n                } else {\n                    cout << 'B';\n                }\n            }\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:14:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        int d = sc.nextInt();\n        \n        char[][] color = new char[H][W];\n        char[] colors = {'R', 'Y', 'G', 'B'};\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                int x = i + j;\n                int y = i - j;\n                int colorIndex = ((x / d) % 2) * 2 + ((y / d) % 2);\n                color[i][j] = colors[colorIndex];\n            }\n        }\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                System.out.print(color[i][j]);\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:14:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SquareColoring {\n    public static int[][] paintGrid(int H, int W, int d) {\n        int[][] colors = new int[H][W];\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                colors[i][j] = (i + j) % 4;\n            }\n        }\n        \n        return colors;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int d = scanner.nextInt();\n        \n        int[][] result = paintGrid(H, W, d);\n        \n        for (int[] row : result) {\n            for (int color : row) {\n                System.out.print(color + \" \");\n            }\n            System.out.println();\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:14:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int H, W, D;\n    cin >> H >> W >> D;\n\n    vector<vector<int>> colors(H, vector<int>(W));\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            colors[i][j] = ((i + j) / D) % 4;\n        }\n    }\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cout << colors[i][j] << \" \";\n        }\n        cout << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:14:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def color_grid(H, W, d):\n    # Initialize a color grid\n    grid = [[None for _ in range(W)] for _ in range(H)]\n    colors = ['R', 'Y', 'G', 'B']\n\n    # Paint the squares\n    for i in range(H):\n        for j in range(W):\n            # Determine the color index based on parity\n            grid[i][j] = colors[(i + j) % 4]\n\n    return grid\n\n# Example usage:\nH, W, d = 5, 5, 2\ngrid = color_grid(H, W, d)\nfor row in grid:\n    print(' '.join(row))",
+    "timestamp": "2025-08-13 14:15:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class GridColoring {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        \n        // Colors: 0 = Red, 1 = Yellow, 2 = Green, 3 = Blue\n        String[] colorNames = {\"Red\", \"Yellow\", \"Green\", \"Blue\"};\n        int[][] grid = new int[H][W];\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                // Calculate the color index based on the sum of indices\n                // Sum of indices modulo 4 gives a pattern ensuring a solution\n                grid[i][j] = (i + j) % 4;\n            }\n        }\n\n        // Print the grid with color names\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                System.out.print(colorNames[grid[i][j]] + \" \");\n            }\n            System.out.println();\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 14:15:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nvoid paintGrid(int H, int W, int d) {\n    char colors[] = {'R', 'Y', 'G', 'B'};\n    char grid[H][W];\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            grid[i][j] = colors[((i + j) % d) % 4];\n        }\n    }\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            printf(\"%c \", grid[i][j]);\n        }\n        printf(\"\\n\");\n    }\n}\n\nint main() {\n    int H, W, d;\n    scanf(\"%d %d %d\", &H, &W, &d);\n    paintGrid(H, W, d);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:15:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    int H, W, d;\n    std::cin >> H >> W >> d;\n    std::vector<std::vector<char>> grid(H, std::vector<char>(W));\n    char colors[4] = {'R', 'Y', 'G', 'B'};\n    \n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            grid[i][j] = colors[(i + j) % 4];\n        }\n    }\n    \n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            std::cout << grid[i][j];\n            if (j != W - 1) std::cout << \" \";\n        }\n        std::cout << \"\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:15:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_grid_coloring(H, W, d):\n    colors = ['red', 'yellow', 'green', 'blue']\n    grid = [[None for _ in range(W)] for _ in range(H)]\n    \n    def can_place_color(row, col, color):\n        for r in range(H):\n            for c in range(W):\n                if grid[r][c] == color and abs(r - row) + abs(c - col) == d:\n                    return False\n        return True\n    \n    def backtrack(row, col):\n        if row == H:\n            return True\n        \n        next_row = row\n        next_col = col + 1\n        if next_col == W:\n            next_row += 1\n            next_col = 0\n        \n        for color in colors:\n            if can_place_color(row, col, color):\n                grid[row][col] = color\n                if backtrack(next_row, next_col):\n                    return True\n                grid[row][col] = None\n        \n        return False\n    \n    backtrack(0, 0)\n    return grid\n\n# Example usage\nH, W, d = 3, 4, 2\nresult = solve_grid_coloring(H, W, d)\nfor row in result:\n    print(row)",
+    "timestamp": "2025-08-13 14:15:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "h, w, d = map(int, input().split())\n\ncolor_map = [[0] * w for _ in range(h)]\n\nfor i in range(h):\n    for j in range(w):\n        x = (i + j) // d\n        y = (i - j) // d\n        if x % 2 == 0 and y % 2 == 0:\n            color_map[i][j] = 0\n        elif x % 2 == 0 and y % 2 == 1:\n            color_map[i][j] = 1\n        elif x % 2 == 1 and y % 2 == 0:\n            color_map[i][j] = 2\n        else:\n            color_map[i][j] = 3\n\ncolor_chars = ['R', 'Y', 'G', 'B']\n\nfor row in color_map:\n    print(''.join([color_chars[c] for c in row]))",
+    "timestamp": "2025-08-13 14:15:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function paintGrid(H, W, d) {\n    const colors = ['red', 'yellow', 'green', 'blue'];\n    const grid = Array.from({ length: H }, () => Array(W).fill(''));\n\n    for (let i = 0; i < H; i++) {\n        for (let j = 0; j < W; j++) {\n            // Calculate the \"color index\" based on the distance from the origin (i.e., (0, 0))\n            const colorIndex = ((i + j) % colors.length);\n            grid[i][j] = colors[colorIndex];\n        }\n    }\n\n    return grid;\n}\n\n// Example usage:\nconsole.log(paintGrid(4, 4, 2)); // This line is just an example to show how to use the function",
+    "timestamp": "2025-08-13 14:15:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function paintGrid(H, W, d) {\n    const colors = ['red', 'yellow', 'green', 'blue'];\n    const grid = Array.from({ length: H }, () => Array(W).fill(null));\n\n    function canPaintColor(row, col, color) {\n        for (let i = 0; i < H; i++) {\n            for (let j = 0; j < W; j++) {\n                if (grid[i][j] === color && \n                    Math.abs(row - i) + Math.abs(col - j) === d) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }\n\n    for (let i = 0; i < H; i++) {\n        for (let j = 0; j < W; j++) {\n            for (const color of colors) {\n                if (canPaintColor(i, j, color)) {\n                    grid[i][j] = color;\n                    break;\n                }\n            }\n        }\n    }\n\n    return grid;\n}",
+    "timestamp": "2025-08-13 14:15:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    rl.on('line', (input) => {\n        const [H, W, d] = input.split(' ').map(Number);\n        const grid = new Array(H);\n        for (let i = 0; i < H; i++) {\n            grid[i] = new Array(W);\n        }\n\n        const colors = ['R', 'Y', 'G', 'B'];\n        for (let i = 0; i < H; i++) {\n            for (let j = 0; j < W; j++) {\n                const x = i + j;\n                const y = i - j;\n                const colorIndex = Math.floor(x / d) % 2 + (Math.floor(y / d) % 2) * 2;\n                grid[i][j] = colors[colorIndex];\n            }\n        }\n\n        for (let i = 0; i < H; i++) {\n            console.log(grid[i].join(''));\n        }\n\n        rl.close();\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:15:50"
+  }
+]

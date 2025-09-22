@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nlong long power(long long base, long long exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp & 1) result = (result * base) % MOD;\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return result;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    if (N == 1) {\n        printf(\"%lld\\n\", power(2, M));\n        return 0;\n    }\n\n    long long result = power(2, M * (N - 2));\n    result = (result * (N * (N - 1) / 2)) % MOD;\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAXN 2000\n\nlong long dp[MAXN + 1][MAXN + 1];\n\nvoid precompute() {\n    dp[0][0] = 1;\n    for (int i = 0; i <= MAXN; ++i) {\n        for (int j = 0; j <= MAXN; ++j) {\n            if (i == 0 && j == 0) continue;\n            dp[i][j] = 0;\n            if (i > 0) {\n                dp[i][j] += dp[i - 1][j];\n            }\n            if (j > 0) {\n                dp[i][j] += dp[i][j - 1];\n                if (i + 1 <= MAXN) {\n                    dp[i][j] += dp[i + 1][j - 1];\n                }\n            }\n            dp[i][j] %= MOD;\n        }\n    }\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    precompute();\n    long long result = 0;\n    for (int k = 0; k <= N; ++k) {\n        if (3 * k <= M + N && (M + N - 3 * k) % 2 == 0) {\n            int t = (M + N - 3 * k) / 2;\n            if (t >= 0 && t <= M) {\n                result = (result + dp[N - k][t]) % MOD;\n            }\n        }\n    }\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nlong long mod_pow(long long base, long long exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long mod_inv(long long a) {\n    return mod_pow(a, MOD - 2);\n}\n\nlong long comb(long long n, long long k, vector<long long>& fact, vector<long long>& inv_fact) {\n    if (k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n\n    vector<long long> fact(3 * M + 1, 1);\n    vector<long long> inv_fact(3 * M + 1, 1);\n\n    for (int i = 1; i <= 3 * M; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    inv_fact[3 * M] = mod_inv(fact[3 * M]);\n    for (int i = 3 * M - 1; i >= 0; --i) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n\n    long long total = 0;\n    for (int k = 0; k <= M; ++k) {\n        long long c = comb(N, k, fact, inv_fact);\n        long long m = M - k;\n        if (m < 0 || m > 2 * (N - k)) continue;\n        long long ways = comb(N - k + m - 1, m, fact, inv_fact);\n        total = (total + c * ways) % MOD;\n    }\n\n    cout << total << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n    static long[] fact;\n    static long[] invFact;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        \n        if (M == 0) {\n            System.out.println(1);\n            return;\n        }\n        \n        precomputeFactorials(N + 2 * M);\n        \n        long result = 0;\n        for (int k = 0; k <= Math.min(N, M); k++) {\n            long term = comb(N, k);\n            term = term * comb(M - k + N - 1, N - 1) % MOD;\n            result = (result + term) % MOD;\n        }\n        \n        System.out.println(result);\n    }\n    \n    static void precomputeFactorials(int max) {\n        fact = new long[max + 1];\n        invFact = new long[max + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= max; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        invFact[max] = modInverse(fact[max], MOD);\n        for (int i = max - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n    }\n    \n    static long comb(int n, int k) {\n        if (k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n    \n    static long modInverse(long a, int mod) {\n        return power(a, mod - 2, mod);\n    }\n    \n    static long power(long a, long b, int mod) {\n        long res = 1;\n        a = a % mod;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                res = res * a % mod;\n            }\n            a = a * a % mod;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 22:47:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    static final int MOD = 998244353;\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        long[][] dp = new long[M + 1][N + 1];\n        dp[0][0] = 1;\n        \n        for (int m = 1; m <= M; m++) {\n            for (int x = 0; x <= N; x++) {\n                for (int y = 0; y < x; y++) {\n                    dp[m][x] = (dp[m][x] + dp[m-1][y]) % MOD;\n                    dp[m][y] = (dp[m][y] + dp[m-1][x]) % MOD;\n                }\n            }\n        }\n        \n        long result = 0;\n        for (int x = 0; x <= N; x++) {\n            result = (result + dp[M][x]) % MOD;\n        }\n        \n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:47:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nconst int MOD = 998244353;\nconst int MAXN = 1e5 + 5;\n\nll power(ll base, ll exp) {\n    ll res = 1;\n    while (exp > 0) {\n        if (exp & 1) res = (res * base) % MOD;\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return res;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<int> maxInc(N);\n    for (int i = 0; i < M; ++i) {\n        int x, y;\n        cin >> x >> y;\n        x--; y--;\n        maxInc[x] += 2;\n        maxInc[y] += 1;\n    }\n    \n    ll ways = 1;\n    for (int i = 0; i < N; ++i) {\n        ways = (ways * (maxInc[i] + 1)) % MOD;\n    }\n    \n    cout << ways << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef mod_inv(a, mod):\n    return pow(a, mod - 2, mod)\n\ndef count_sequences(N, M):\n    # Using the formula for counting the number of sequences\n    result = pow(3, M, MOD) * pow(2, M, MOD) % MOD\n    result = result * mod_inv(pow(2, M, MOD), MOD) % MOD\n    if N >= 2:\n        result = result * pow(2, N * (N - 1) // 2, MOD) % MOD\n    return result\n\n# Example usage\nN = 5  # Example number of integers in the sequence\nM = 3  # Example number of operations\nprint(count_sequences(N, M))",
+    "timestamp": "2025-08-13 12:29:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SequenceCombinations {\n\n    private static final int MOD = 998244353;\n\n    private static long modPow(long base, long exp, long mod) {\n        long result = 1;\n        while (exp > 0) {\n            if ((exp & 1) == 1) {\n                result = result * base % mod;\n            }\n            base = base * base % mod;\n            exp >>= 1;\n        }\n        return result;\n    }\n\n    private static long modInverse(long a, long mod) {\n        return modPow(a, mod - 2, mod);\n    }\n\n    private static long nCrMod(long n, long r, long mod) {\n        if (r > n) return 0;\n        long numerator = 1;\n        long denominator = 1;\n        for (long i = 0; i < r; i++) {\n            numerator = numerator * (n - i) % mod;\n            denominator = denominator * (i + 1) % mod;\n        }\n        return numerator * modInverse(denominator, mod) % mod;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        scanner.close();\n\n        long result = 0;\n        for (int x = 0; x <= M; x++) {\n            if (2 * x <= M) {\n                long waysToChooseX = nCrMod(N, x, MOD);\n                long waysToChooseY = nCrMod(N - x, M - 2 * x, MOD);\n                long ways = waysToChooseX * waysToChooseY % MOD;\n                result = (result + ways) % MOD;\n            }\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 12:29:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nlong long modExp(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp) {\n        if (exp % 2) result = (result * base) % mod;\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    long long numSequences = modExp(N * (N - 1), M, MOD);\n    printf(\"%lld\\n\", numSequences);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:29:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countSequences(N, M) {\n    const MOD = 998244353;\n\n    function modInv(a, mod) {\n        let m = mod;\n        let x0 = 0;\n        let x1 = 1;\n        while (a > 1) {\n            let q = Math.floor(a / m);\n            let t = m;\n            m = a % m;\n            a = t;\n            t = x0;\n            x0 = x1 - q * x0;\n            x1 = t;\n        }\n        if (x1 < 0) x1 += mod;\n        return x1;\n    }\n\n    function factorial(n) {\n        let result = 1;\n        for (let i = 2; i <= n; i++) {\n            result = (result * i) % MOD;\n        }\n        return result;\n    }\n\n    function binomialCoeff(n, k) {\n        if (k > n) return 0;\n        let num = factorial(n);\n        let denom = factorial(k) * factorial(n - k) % MOD;\n        return num * modInv(denom, MOD) % MOD;\n    }\n\n    return binomialCoeff(N + M - 1, M);\n}\n\n// Example usage:\nconsole.log(countSequences(2, 3)); // Output should be the number of sequences modulo 998244353",
+    "timestamp": "2025-08-13 12:29:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_sequences(N, M):\n    MOD = 998244353\n    \n    # Dynamic programming to count possible sequences\n    dp = [[0] * (M + 1) for _ in range(N)]\n    dp[0][0] = 1\n    \n    for m in range(M):\n        for i in range(N):\n            if dp[i][m] == 0:\n                continue\n            \n            for j in range(N):\n                if i == j:\n                    continue\n                \n                # Increment x[i] by 2 and x[j] by 1\n                dp[i][m + 1] = (dp[i][m + 1] + dp[i][m]) % MOD\n                dp[j][m + 1] = (dp[j][m + 1] + dp[i][m]) % MOD\n    \n    # Sum up all possible sequences after M operations\n    result = sum(dp[i][M] for i in range(N)) % MOD\n    \n    return result\n\n# Example usage\nN, M = map(int, input().split())\nprint(count_sequences(N, M))",
+    "timestamp": "2025-08-13 12:29:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, M) {\n    const MOD = 998244353n;\n    \n    function modPow(base, exp) {\n        let result = 1n;\n        base = BigInt(base);\n        while (exp > 0) {\n            if (exp & 1) result = (result * base) % MOD;\n            base = (base * base) % MOD;\n            exp >>= 1;\n        }\n        return result;\n    }\n    \n    const factorial = new Array(M + 1).fill(0n);\n    factorial[0] = 1n;\n    for (let i = 1; i <= M; i++) {\n        factorial[i] = (factorial[i-1] * BigInt(i)) % MOD;\n    }\n    \n    const ways = modPow(N * (N - 1) / 2, M);\n    \n    return Number(ways);\n}",
+    "timestamp": "2025-08-13 12:29:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    N, M = map(int, sys.stdin.readline().split())\n    \n    # Precompute factorial, inverse factorial up to M + 2*N\n    max_n = M + 2 * N\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    def comb(a, b):\n        if a < 0 or b < 0 or a < b:\n            return 0\n        return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD\n    \n    total = 0\n    for k in range(0, N + 1):\n        c = comb(N, k)\n        s = M + 2 * k\n        if s < 3 * k:\n            continue\n        m = M\n        term = comb(m + N - 1, N - 1)\n        term = term * c % MOD\n        sign = (-1) ** k\n        total = (total + sign * term) % MOD\n    \n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 12:30:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const input = require('fs').readFileSync(0, 'utf-8').trim().split(/\\s+/);\n    let ptr = 0;\n    const N = parseInt(input[ptr++], 10);\n    const M = parseInt(input[ptr++], 10);\n\n    if (M === 0) {\n        console.log(1);\n        return;\n    }\n\n    // Precompute factorial, inverse factorial modulo MOD up to M + 2*N\n    const maxF = M + 2 * N;\n    const fact = new Array(maxF + 1).fill(1);\n    const invFact = new Array(maxF + 1).fill(1);\n    for (let i = 1; i <= maxF; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    invFact[maxF] = modInverse(fact[maxF], MOD);\n    for (let i = maxF - 1; i >= 0; i--) {\n        invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n    }\n\n    function comb(a, b) {\n        if (a < 0 || b < 0 || a < b) return 0;\n        return fact[a] * invFact[b] % MOD * invFact[a - b] % MOD;\n    }\n\n    let res = 0;\n    for (let k = 0; k <= N; k++) {\n        const c = comb(N, k);\n        const m = M + k;\n        if (m % 3 !== 0) continue;\n        const t = m / 3;\n        const term = c * comb(N + t - 1, N - 1) % MOD;\n        res = (res + term) % MOD;\n    }\n\n    console.log(res);\n}\n\nfunction modInverse(a, mod) {\n    let b = mod, u = 1, v = 0;\n    while (b) {\n        const t = Math.floor(a / b);\n        a -= t * b; [a, b] = [b, a];\n        u -= t * v; [u, v] = [v, u];\n    }\n    u %= mod;\n    if (u < 0) u += mod;\n    return u;\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:30:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n\n    std::vector<std::vector<int>> dp(N + 1, std::vector<int>(M + 1, 0));\n    dp[0][0] = 1;\n\n    for (int i = 1; i <= N; ++i) {\n        for (int j = 0; j <= M; ++j) {\n            dp[i][j] = dp[i - 1][j]; // no operation on i-th element\n            if (j >= 1) {\n                dp[i][j] = (dp[i][j] + dp[i - 1][j - 1] * i) % MOD; // select one index as j\n            }\n            if (j >= 2) {\n                dp[i][j] = (dp[i][j] + dp[i - 1][j - 2] * i * (i - 1) / 2) % MOD; // select two indices i and j\n            }\n        }\n    }\n\n    std::cout << dp[N][M] << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:34:44"
+  }
+]

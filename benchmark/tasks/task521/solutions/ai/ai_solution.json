@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    int x, y, z;\n} Doll;\n\nint compare(const void* a, const void* b) {\n    Doll* d1 = (Doll*)a;\n    Doll* d2 = (Doll*)b;\n    if (d1->x == d2->x) {\n        if (d1->y == d2->y)\n            return d1->z - d2->z;\n        return d1->y - d2->y;\n    }\n    return d1->x - d2->x;\n}\n\nint can_nest(Doll* outer, Doll* inner) {\n    return (outer->x > inner->x && outer->y > inner->y && outer->z > inner->z);\n}\n\nint solve(Doll* dolls, int n) {\n    qsort(dolls, n, sizeof(Doll), compare);\n    int* dp = calloc(n, sizeof(int));\n    int* nested = calloc(n, sizeof(int));\n    int total_volume = 0;\n\n    for (int i = 0; i < n; i++) {\n        dp[i] = dolls[i].x * dolls[i].y * dolls[i].z;\n        \n        for (int j = 0; j < i; j++) {\n            if (can_nest(&dolls[j], &dolls[i]) && !nested[j]) {\n                dp[i] = 0;\n                nested[i] = 1;\n                break;\n            }\n        }\n        \n        if (!nested[i]) {\n            total_volume += dp[i];\n        }\n    }\n\n    free(dp);\n    free(nested);\n    return total_volume;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    Doll* dolls = malloc(n * sizeof(Doll));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d %d\", &dolls[i].x, &dolls[i].y, &dolls[i].z);\n    }\n    \n    int result = solve(dolls, n);\n    printf(\"%d\\n\", result);\n    \n    free(dolls);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:00:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x, y, z;\n} Doll;\n\nint compare(const void *a, const void *b) {\n    Doll *dollA = (Doll *)a;\n    Doll *dollB = (Doll *)b;\n    int volumeA = dollA->x * dollA->y * dollA->z;\n    int volumeB = dollB->x * dollB->y * dollB->z;\n    return volumeB - volumeA;\n}\n\nint canNest(Doll outer, Doll inner) {\n    return (outer.x > inner.x && outer.y > inner.y && outer.z > inner.z);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Doll dolls[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d %d\", &dolls[i].x, &dolls[i].y, &dolls[i].z);\n    }\n\n    qsort(dolls, N, sizeof(Doll), compare);\n\n    int totalVolume = 0;\n    int used[N];\n    for (int i = 0; i < N; i++) {\n        used[i] = 0;\n    }\n\n    for (int i = 0; i < N; i++) {\n        if (!used[i]) {\n            totalVolume += dolls[i].x * dolls[i].y * dolls[i].z;\n            used[i] = 1;\n            Doll current = dolls[i];\n            for (int j = i + 1; j < N; j++) {\n                if (!used[j] && canNest(current, dolls[j])) {\n                    used[j] = 1;\n                    current = dolls[j];\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", totalVolume);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Doll {\n    int x, y, z;\n    Doll(int x, int y, int z) : x(x), y(y), z(z) {}\n    bool operator<(const Doll& other) const {\n        if (x != other.x) return x > other.x;\n        if (y != other.y) return y > other.y;\n        return z > other.z;\n    }\n};\n\nbool canNest(const Doll& outer, const Doll& inner) {\n    return outer.x > inner.x && outer.y > inner.y && outer.z > inner.z;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<Doll> dolls;\n    for (int i = 0; i < N; ++i) {\n        int x, y, z;\n        cin >> x >> y >> z;\n        dolls.emplace_back(x, y, z);\n    }\n\n    sort(dolls.begin(), dolls.end());\n\n    vector<int> dp(N, 0);\n    int total = 0;\n\n    for (int i = 0; i < N; ++i) {\n        dp[i] = dolls[i].x * dolls[i].y * dolls[i].z;\n        for (int j = 0; j < i; ++j) {\n            if (canNest(dolls[j], dolls[i])) {\n                dp[i] = min(dp[i], dp[j] - (dolls[j].x * dolls[j].y * dolls[j].z) + (dolls[i].x * dolls[i].y * dolls[i].z));\n            }\n        }\n        total += dolls[i].x * dolls[i].y * dolls[i].z;\n    }\n\n    int min_volume = *min_element(dp.begin(), dp.end());\n    cout << min_volume << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class NestingDolls {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[][] dolls = new int[N][3];\n        for (int i = 0; i < N; i++) {\n            dolls[i][0] = scanner.nextInt();\n            dolls[i][1] = scanner.nextInt();\n            dolls[i][2] = scanner.nextInt();\n            Arrays.sort(dolls[i]);\n        }\n\n        Arrays.sort(dolls, (a, b) -> {\n            if (a[0] != b[0]) return a[0] - b[0];\n            if (a[1] != b[1]) return a[1] - b[1];\n            return a[2] - b[2];\n        });\n\n        int totalVolume = 0;\n        boolean[] used = new boolean[N];\n        for (int i = 0; i < N; i++) {\n            if (!used[i]) {\n                totalVolume += dolls[i][0] * dolls[i][1] * dolls[i][2];\n                int last = i;\n                for (int j = i + 1; j < N; j++) {\n                    if (!used[j] && dolls[j][0] > dolls[last][0] && dolls[j][1] > dolls[last][1] && dolls[j][2] > dolls[last][2]) {\n                        used[j] = true;\n                        last = j;\n                    }\n                }\n            }\n        }\n        System.out.println(totalVolume);\n    }\n}",
+    "timestamp": "2025-08-05 22:02:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class NestingDolls {\n    static class Doll implements Comparable<Doll> {\n        int x, y, z;\n        \n        Doll(int x, int y, int z) {\n            int[] dims = new int[]{x, y, z};\n            Arrays.sort(dims);\n            this.x = dims[0];\n            this.y = dims[1];\n            this.z = dims[2];\n        }\n        \n        boolean canNestInside(Doll other) {\n            return this.x < other.x && this.y < other.y && this.z < other.z;\n        }\n        \n        int volume() {\n            return x * y * z;\n        }\n        \n        @Override\n        public int compareTo(Doll other) {\n            if (this.x != other.x) return Integer.compare(this.x, other.x);\n            if (this.y != other.y) return Integer.compare(this.y, other.y);\n            return Integer.compare(this.z, other.z);\n        }\n    }\n    \n    public static int minimumVisibleVolume(int[][] dolls) {\n        int n = dolls.length;\n        Doll[] sortedDolls = new Doll[n];\n        \n        for (int i = 0; i < n; i++) {\n            sortedDolls[i] = new Doll(dolls[i][0], dolls[i][1], dolls[i][2]);\n        }\n        \n        Arrays.sort(sortedDolls);\n        \n        int[] dp = new int[n];\n        int totalVolume = 0;\n        \n        for (int i = 0; i < n; i++) {\n            dp[i] = dolls[i][0] * dolls[i][1] * dolls[i][2];\n            for (int j = 0; j < i; j++) {\n                if (sortedDolls[j].canNestInside(sortedDolls[i])) {\n                    dp[i] = Math.min(dp[i], dolls[i][0] * dolls[i][1] * dolls[i][2] - dolls[j][0] * dolls[j][1] * dolls[j][2]);\n                }\n            }\n            totalVolume += dp[i];\n        }\n        \n        return totalVolume;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[][] dolls = new int[n][3];\n        \n        for (int i = 0; i < n; i++) {\n            dolls[i][0] = scanner.nextInt();\n            dolls[i][1] = scanner.nextInt();\n            dolls[i][2] = scanner.nextInt();\n        }\n        \n        System.out.println(minimumVisibleVolume(dolls));\n    }\n}",
+    "timestamp": "2025-08-05 22:02:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Doll {\n    int x, y, z;\n};\n\nbool canNest(const Doll& outer, const Doll& inner) {\n    return outer.x > inner.x && outer.y > inner.y && outer.z > inner.z;\n}\n\nint minimumVisibleVolume(vector<Doll>& dolls) {\n    int n = dolls.size();\n    vector<bool> nested(n, false);\n    \n    // Sort dolls by volume in descending order\n    sort(dolls.begin(), dolls.end(), [](const Doll& a, const Doll& b) {\n        return a.x * a.y * a.z > b.x * b.y * b.z;\n    });\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < i; j++) {\n            if (!nested[j] && canNest(dolls[j], dolls[i])) {\n                nested[i] = true;\n                break;\n            }\n        }\n    }\n    \n    int visibleVolume = 0;\n    for (int i = 0; i < n; i++) {\n        if (!nested[i]) {\n            visibleVolume += dolls[i].x * dolls[i].y * dolls[i].z;\n        }\n    }\n    \n    return visibleVolume;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<Doll> dolls(n);\n    for (int i = 0; i < n; i++) {\n        cin >> dolls[i].x >> dolls[i].y >> dolls[i].z;\n    }\n    \n    cout << minimumVisibleVolume(dolls) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from functools import lru_cache\n\ndef min_visible_volume(dolls):\n    # Sort the dolls by dimensions to try nesting smaller inside larger ones\n    dolls.sort(key=lambda d: (d[0], d[1], d[2]))\n\n    @lru_cache(None)\n    def dfs(i):\n        visible_volume = dolls[i][0] * dolls[i][1] * dolls[i][2]\n        max_nest_volume = 0\n        for j in range(i):\n            if dolls[j][0] < dolls[i][0] and dolls[j][1] < dolls[i][1] and dolls[j][2] < dolls[i][2]:\n                max_nest_volume = max(max_nest_volume, dfs(j))\n        \n        return visible_volume - max_nest_volume\n\n    return sum(dfs(i) for i in range(len(dolls)))\n\n# Example usage:\n# dolls = [(2, 3, 4), (5, 6, 7), (1, 2, 2), (3, 4, 5)]\n# print(min_visible_volume(dolls))",
+    "timestamp": "2025-08-13 08:33:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class NestingDolls {\n\n    static class Doll {\n        int x, y, z;\n\n        public Doll(int x, int y, int z) {\n            this.x = x;\n            this.y = y;\n            this.z = z;\n        }\n    }\n\n    public static int minVisibleVolume(List<Doll> dolls) {\n        // Sort the dolls by volume in descending order\n        dolls.sort((d1, d2) -> Integer.compare(d2.x * d2.y * d2.z, d1.x * d1.y * d1.z));\n\n        int n = dolls.size();\n        int[] dp = new int[n];\n        dp[0] = dolls.get(0).x * dolls.get(0).y * dolls.get(0).z;\n        int minVisibleVolume = dp[0];\n\n        for (int i = 1; i < n; i++) {\n            Doll current = dolls.get(i);\n            dp[i] = current.x * current.y * current.z;\n            for (int j = 0; j < i; j++) {\n                Doll previous = dolls.get(j);\n                if (previous.x > current.x && previous.y > current.y && previous.z > current.z) {\n                    dp[i] = Math.min(dp[i], dp[j]);\n                }\n            }\n            minVisibleVolume += dp[i];\n        }\n\n        return minVisibleVolume;\n    }\n\n    public static void main(String[] args) {\n        List<Doll> dolls = Arrays.asList(\n            new Doll(3, 4, 5),\n            new Doll(2, 3, 4),\n            new Doll(1, 2, 3)\n        );\n        System.out.println(minVisibleVolume(dolls));\n    }\n}",
+    "timestamp": "2025-08-13 08:33:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x, y, z;\n    int volume;\n} Doll;\n\nint compareDolls(const void *a, const void *b) {\n    const Doll* dollA = (const Doll*)a;\n    const Doll* dollB = (const Doll*)b;\n    if (dollA->x != dollB->x) return dollA->x - dollB->x;\n    if (dollA->y != dollB->y) return dollA->y - dollB->y;\n    return dollA->z - dollB->z;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Doll dolls[N];\n\n    for (int i = 0; i < N; i++) {\n        int x, y, z;\n        scanf(\"%d %d %d\", &x, &y, &z);\n        dolls[i].x = x;\n        dolls[i].y = y;\n        dolls[i].z = z;\n        dolls[i].volume = x * y * z;\n    }\n\n    qsort(dolls, N, sizeof(Doll), compareDolls);\n\n    int dp[N];\n    int result = 0;\n\n    for (int i = 0; i < N; i++) {\n        dp[i] = dolls[i].volume;\n        for (int j = 0; j < i; j++) {\n            if (dolls[j].x < dolls[i].x && dolls[j].y < dolls[i].y && dolls[j].z < dolls[i].z) {\n                dp[i] = max(dp[i], dp[j] + dolls[i].volume);\n            }\n        }\n        result = max(result, dp[i]);\n    }\n\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:33:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_visible_volume(dolls):\n    dolls.sort(key=lambda x: (-x[0], -x[1], -x[2]))\n    nested = [False] * len(dolls)\n    total_volume = 0\n\n    for i in range(len(dolls)):\n        if not nested[i]:\n            total_volume += dolls[i][0] * dolls[i][1] * dolls[i][2]\n            for j in range(i+1, len(dolls)):\n                if not nested[j] and all(dolls[j][k] < dolls[i][k] for k in range(3)):\n                    nested[j] = True\n\n    return total_volume\n\ndef solve():\n    N = int(input())\n    dolls = []\n    for _ in range(N):\n        x, y, z = map(int, input().split())\n        dolls.append(sorted([x, y, z]))\n    \n    print(min_visible_volume(dolls))\n\nsolve()",
+    "timestamp": "2025-08-13 08:33:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    dolls = []\n    index = 1\n    for _ in range(N):\n        x, y, z = map(int, data[index:index+3])\n        dolls.append((x, y, z))\n        index += 3\n    \n    # Sort dolls in descending order of volume (or any dimension)\n    dolls.sort(key=lambda doll: (doll[0], doll[1], doll[2]), reverse=True)\n    \n    used = [False] * N\n    total_volume = 0\n    \n    for i in range(N):\n        if not used[i]:\n            total_volume += dolls[i][0] * dolls[i][1] * dolls[i][2]\n            current_x, current_y, current_z = dolls[i]\n            for j in range(i + 1, N):\n                if not used[j]:\n                    x, y, z = dolls[j]\n                    if x < current_x and y < current_y and z < current_z:\n                        used[j] = True\n    \n    print(total_volume)\n\nsolve()",
+    "timestamp": "2025-08-13 08:33:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Doll {\n    int x, y, z, volume;\n    Doll(int x, int y, int z) : x(x), y(y), z(z), volume(x * y * z) {}\n};\n\nbool canNest(const Doll &inner, const Doll &outer) {\n    return inner.x < outer.x && inner.y < outer.y && inner.z < outer.z;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<Doll> dolls;\n    \n    for (int i = 0; i < N; ++i) {\n        int x, y, z;\n        std::cin >> x >> y >> z;\n        dolls.emplace_back(x, y, z);\n    }\n\n    std::sort(dolls.begin(), dolls.end(), [](const Doll &a, const Doll &b) {\n        if (a.x != b.x) return a.x > b.x;\n        if (a.y != b.y) return a.y > b.y;\n        return a.z > b.z;\n    });\n\n    std::vector<int> dp(N, 0);\n    int minVisibleVolume = 0;\n\n    for (int i = 0; i < N; ++i) {\n        dp[i] = dolls[i].volume;\n        for (int j = 0; j < i; ++j) {\n            if (canNest(dolls[j], dolls[i])) {\n                dp[i] = std::max(dp[i], dp[j] + dolls[i].volume);\n            }\n        }\n        minVisibleVolume = std::max(minVisibleVolume, dp[i]);\n    }\n\n    int totalVolume = 0;\n    for (const Doll &doll : dolls) {\n        totalVolume += doll.volume;\n    }\n\n    std::cout << totalVolume - minVisibleVolume << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:46:45"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3 3\noo.\noXX\n.XX\n3 3\nXXo\nXX.\no.o\n3 5\n.o*XX\noooXX\noooo.\n7 12\noooooooooooo\nooooo*****oo\noooooo****oo\no**ooo***ooo\no***ooooo..o\no**ooooooXXo\nooooo****XXo\n5 30\nooooooooooooooooooooooooooooooo\nooooooooooooooooooooooooooooooo\no***************************oo\nXX.ooooooooooooooooooooooooooo\nXX.ooooooooooooooooooooooooooo\n0 0",
+      "output": "11\n0\n-1\n382\n6807"
+    }
+  ]
+}

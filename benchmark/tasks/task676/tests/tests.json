@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "1\nSRS\n",
+      "output": "12 0 1\n"
+    },
+    {
+      "input": "2\nRRSRSSSSR\n",
+      "output": "23 8 1 0 5 7 6 2 4\n"
+    },
+    {
+      "input": "3\nSRSRRSRRRSRRRR\n",
+      "output": "323 9 22 8 3 7 20 24 19 5 18 4 17 12 16 2 6 1 14 0 13 26 21 25 11 15 10\n"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+Tiles are Colorful
+
+To achieve good results in the ICPC, training is essential. A rabbit wants to win at the ICPC, so today it decided to train.
+
+Today's training involves quickly solving a trendy puzzle to enhance reflexes. The puzzle consists of colorful tiles arranged in a grid, and the player aims to remove them effectively.
+
+Initially, some cells on the grid have tiles placed on them. Each tile has a color. After the game starts, the player can repeatedly perform the following operation:
+
+1. Select an empty cell and hit it.
+2. From the hit cell, trace upwards to the nearest cell with a tile. If you reach the edge of the board without encountering any tiles, ignore it.
+3. Perform the same operation tracing downwards, left, and right. A maximum of 4 tiles will be focused on.
+4. Remove tiles of the same color that have been focused on. If two pairs of tiles of the same color are focused on, remove both pairs.
+5. The score is equal to the number of tiles removed.
+6. Stop focusing on the tiles.
+
+For example, consider the following situation where empty cells are denoted by periods and tiles' colors by uppercase letters:
+
+..A.......
+.......B..
+..........
+..B.......
+..A.CC....
+
+If the operation is to hit the cell at row 2, column 3, the focused tiles will be A, B, and B, resulting in removing 2 B tiles and earning a score of 2.
+
+This puzzle has a time limit, and if you take too long, part of the board will become hidden, making it hard to gauge how much training you lack. Each color of tile is placed twice, but it is not guaranteed that all can be removed, so you want your program to calculate the maximum possible score in advance.
+
+Input
+
+M N
+C1,1C1,2...C1,N
+C2,1C2,2...C2,N
+...
+CM,1CM,2...CM,N
+
+The integers M and N represent the dimensions of the grid (M rows and N columns). Ci,j can be an uppercase letter representing a tile's color or a period (.) indicating no tile present. 
+
+1 ≤ M ≤ 500, 1 ≤ N ≤ 500. Each uppercase letter appears either 0 or 2 times in the input.
+
+Output
+
+Output the maximum score on one line.

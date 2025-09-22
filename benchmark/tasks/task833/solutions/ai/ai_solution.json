@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nlong long pow_mod(long long base, long long exp) {\n    long long result = 1;\n    base %= MOD;\n    while (exp > 0) {\n        if (exp & 1) result = (result * base) % MOD;\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return result;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    long long result = pow_mod(M, N);\n    printf(\"%lld\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n\ntypedef struct {\n    int pos;\n    int index;\n} RobotOrExit;\n\nint compare(const void *a, const void *b) {\n    return ((RobotOrExit*)a)->pos - ((RobotOrExit*)b)->pos;\n}\n\nlong long factorial(int n, long long fact[]) {\n    if (fact[n] != -1) return fact[n];\n    fact[n] = (n * factorial(n - 1, fact)) % MOD;\n    return fact[n];\n}\n\nlong long mod_pow(long long base, int exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long mod_inverse(long long a) {\n    return mod_pow(a, MOD - 2);\n}\n\nlong long comb(int n, int k, long long fact[]) {\n    if (k < 0 || k > n) return 0;\n    long long res = fact[n];\n    res = (res * mod_inverse(fact[k])) % MOD;\n    res = (res * mod_inverse(fact[n - k])) % MOD;\n    return res;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    RobotOrExit *robots = (RobotOrExit*)malloc(N * sizeof(RobotOrExit));\n    RobotOrExit *exits = (RobotOrExit*)malloc(M * sizeof(RobotOrExit));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &robots[i].pos);\n        robots[i].index = i;\n    }\n    \n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &exits[i].pos);\n        exits[i].index = i;\n    }\n    \n    qsort(robots, N, sizeof(RobotOrExit), compare);\n    qsort(exits, M, sizeof(RobotOrExit), compare);\n    \n    long long *fact = (long long*)malloc((N + 1) * sizeof(long long));\n    for (int i = 0; i <= N; i++) fact[i] = -1;\n    fact[0] = 1;\n    for (int i = 1; i <= N; i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n    \n    int *left = (int*)malloc(N * sizeof(int));\n    int *right = (int*)malloc(N * sizeof(int));\n    memset(left, -1, N * sizeof(int));\n    memset(right, -1, N * sizeof(int));\n    \n    int i = 0, j = 0;\n    while (i < N && j < M) {\n        if (robots[i].pos == exits[j].pos) {\n            left[i] = j;\n            right[i] = j;\n            i++;\n            j++;\n        } else if (robots[i].pos < exits[j].pos) {\n            if (j > 0) {\n                left[i] = j - 1;\n            }\n            i++;\n        } else {\n            j++;\n        }\n    }\n    \n    while (i < N) {\n        if (j > 0) {\n            left[i] = j - 1;\n        }\n        i++;\n    }\n    \n    i = N - 1, j = M - 1;\n    while (i >= 0 && j >= 0) {\n        if (robots[i].pos == exits[j].pos) {\n            right[i] = j;\n            i--;\n            j--;\n        } else if (robots[i].pos > exits[j].pos) {\n            if (j < M - 1) {\n                right[i] = j + 1;\n            }\n            i--;\n        } else {\n            j--;\n        }\n    }\n    \n    while (i >= 0) {\n        if (j < M - 1) {\n            right[i] = j + 1;\n        }\n        i--;\n    }\n    \n    long long result = 1;\n    for (i = 0; i < N; i++) {\n        int l = left[i];\n        int r = right[i];\n        if (l == -1 && r == -1) {\n            result = 0;\n            break;\n        } else if (l == -1) {\n            // Only right exit is possible\n            // No choice, multiply by 1\n        } else if (r == -1) {\n            // Only left exit is possible\n            // No choice, multiply by 1\n        } else {\n            int dist_left = abs(robots[i].pos - exits[l].pos);\n            int dist_right = abs(robots[i].pos - exits[r].pos);\n            if (dist_left < dist_right) {\n                // Only left exit is possible\n                // No choice, multiply by 1\n            } else if (dist_right < dist_left) {\n                // Only right exit is possible\n                // No choice, multiply by 1\n            } else {\n                // Both exits are possible\n                // Multiply by 2\n                result = (result * 2) % MOD;\n            }\n        }\n    }\n    \n    printf(\"%lld\\n\", result);\n    \n    free(robots);\n    free(exits);\n    free(fact);\n    free(left);\n    free(right);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <map>\n#include <set>\n#include <climits>\n#include <numeric>\n#include <queue>\n#include <stack>\n#include <cmath>\n#include <iomanip>\n#include <bitset>\n#include <unordered_map>\n\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<long long> robots(N);\n    vector<long long> exits(M);\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> robots[i];\n    }\n    for (int i = 0; i < M; ++i) {\n        cin >> exits[i];\n    }\n    \n    sort(robots.begin(), robots.end());\n    sort(exits.begin(), exits.end());\n    \n    vector<int> left(N), right(N);\n    for (int i = 0, j = 0; i < N; ++i) {\n        while (j < M && exits[j] <= robots[i]) {\n            ++j;\n        }\n        left[i] = j - 1;\n    }\n    for (int i = N - 1, j = M - 1; i >= 0; --i) {\n        while (j >= 0 && exits[j] >= robots[i]) {\n            --j;\n        }\n        right[i] = j + 1;\n    }\n    \n    long long result = 1;\n    for (int i = 0; i < N; ++i) {\n        int options = 0;\n        if (left[i] >= 0 && right[i] < M) {\n            if (exits[left[i]] == robots[i]) {\n                options = 1;\n            } else if (exits[right[i]] == robots[i]) {\n                options = 1;\n            } else {\n                options = (right[i] - left[i]);\n            }\n        } else if (left[i] >= 0) {\n            if (exits[left[i]] == robots[i]) {\n                options = 1;\n            } else {\n                options = (M - left[i]);\n            }\n        } else if (right[i] < M) {\n            if (exits[right[i]] == robots[i]) {\n                options = 1;\n            } else {\n                options = right[i] + 1;\n            }\n        } else {\n            options = 0;\n        }\n        \n        if (options == 0) {\n            result = 0;\n            break;\n        }\n        result = (result * options) % MOD;\n    }\n    \n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:05:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class RobotExits {\n    static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        int[] robots = new int[N];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < N; i++) {\n            robots[i] = Integer.parseInt(st.nextToken());\n        }\n\n        int[] exits = new int[M];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < M; i++) {\n            exits[i] = Integer.parseInt(st.nextToken());\n        }\n\n        Arrays.sort(robots);\n        Arrays.sort(exits);\n\n        long result = 1;\n        int left = 0, right = 0;\n\n        while (left < N && right < M) {\n            if (robots[left] < exits[right]) {\n                left++;\n            } else if (robots[left] > exits[right]) {\n                right++;\n            } else {\n                int cnt = 0;\n                int currentExit = exits[right];\n                while (right < M && exits[right] == currentExit) {\n                    right++;\n                    cnt++;\n                }\n                while (left < N && robots[left] == currentExit) {\n                    left++;\n                    result = (result * cnt) % MOD;\n                }\n            }\n        }\n\n        if (left < N) {\n            result = 0;\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 23:05:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RobotExitsCombinations {\n    public static int countExitCombinations(int N, int M, int[] robotPositions, int[] exitPositions) {\n        final int MOD = 1_000_000_007;\n        \n        // Sort robot and exit positions\n        Arrays.sort(robotPositions);\n        Arrays.sort(exitPositions);\n        \n        // Dynamic programming to track possible combinations\n        long[][] dp = new long[N + 1][M + 1];\n        dp[0][0] = 1;\n        \n        // Iterate through robots and exits\n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j <= M; j++) {\n                // Check if current robot can use current exit\n                if (Math.abs(robotPositions[i-1] - exitPositions[j-1]) <= Math.abs(i - j)) {\n                    // Add combinations from previous state\n                    dp[i][j] = (dp[i-1][j-1] + dp[i][j-1]) % MOD;\n                } else {\n                    // Copy previous combination count\n                    dp[i][j] = dp[i][j-1];\n                }\n            }\n        }\n        \n        return (int)dp[N][M];\n    }\n    \n    public static void main(String[] args) {\n        // Example usage\n        int N = 3;\n        int M = 4;\n        int[] robotPositions = {1, 2, 3};\n        int[] exitPositions = {2, 3, 4, 5};\n        \n        System.out.println(countExitCombinations(N, M, robotPositions, exitPositions));\n    }\n}",
+    "timestamp": "2025-08-05 23:05:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nclass Solution {\npublic:\n    int countCombinations(vector<int>& robotPositions, vector<int>& exitPositions) {\n        int N = robotPositions.size();\n        int M = exitPositions.size();\n        vector<vector<int>> dp(N + 1, vector<int>(1 << M, 0));\n        \n        dp[0][0] = 1;\n        \n        for (int i = 1; i <= N; i++) {\n            for (int mask = 0; mask < (1 << M); mask++) {\n                dp[i][mask] = dp[i-1][mask];\n                \n                for (int j = 0; j < M; j++) {\n                    if (!(mask & (1 << j)) && abs(robotPositions[i-1] - exitPositions[j]) == 0) {\n                        dp[i][mask | (1 << j)] = (dp[i][mask | (1 << j)] + dp[i-1][mask]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        int totalCombinations = 0;\n        for (int mask = 0; mask < (1 << M); mask++) {\n            if (__builtin_popcount(mask) == N) {\n                totalCombinations = (totalCombinations + dp[N][mask]) % MOD;\n            }\n        }\n        \n        return totalCombinations;\n    }\n};",
+    "timestamp": "2025-08-05 23:05:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_exit_combinations(N, M):\n    MOD = 10**9 + 7\n    \n    def factorial(n):\n        result = 1\n        for i in range(2, n + 1):\n            result = result * i % MOD\n        return result\n    \n    def modular_inverse(x):\n        return pow(x, MOD - 2, MOD)\n    \n    def binomial_coefficient(n, k):\n        if k > n:\n            return 0\n        return factorial(n) * modular_inverse(factorial(k)) % MOD * modular_inverse(factorial(n - k)) % MOD\n    \n    return binomial_coefficient(M, N)\n\n# Example usage:\nN = 3\nM = 5\nprint(count_exit_combinations(N, M))",
+    "timestamp": "2025-08-13 13:30:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class RobotExitsCombinations {\n    private static final int MOD = 1000000007;\n\n    public static int countExitCombinations(int[] robots, int[] exits) {\n        int N = robots.length;\n        int M = exits.length;\n        long result = 1;\n        Arrays.sort(robots);\n        Arrays.sort(exits);\n\n        int j = 0;\n        for (int i = 0; i < N; i++) {\n            while (j < M && exits[j] < robots[i]) {\n                j++;\n            }\n            result = result * (M - j) % MOD;\n        }\n        return (int) result;\n    }\n\n    public static void main(String[] args) {\n        int[] robots = {1, 3, 5};\n        int[] exits = {3, 5, 7};\n        System.out.println(countExitCombinations(robots, exits)); // Example usage\n    }\n}",
+    "timestamp": "2025-08-13 13:30:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n\nint cmp(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int robots[N], exits[M];\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &robots[i]);\n    }\n    \n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &exits[i]);\n    }\n\n    qsort(robots, N, sizeof(int), cmp);\n    qsort(exits, M, sizeof(int), cmp);\n\n    long long dp[N+1][M+1];\n    for (int i = 0; i <= N; i++) {\n        for (int j = 0; j <= M; j++) {\n            dp[i][j] = 0;\n        }\n    }\n    \n    for (int j = 0; j <= M; j++) {\n        dp[0][j] = 1;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= M; j++) {\n            dp[i][j] = dp[i][j-1];\n            if (robots[i-1] <= exits[j-1]) {\n                dp[i][j] = (dp[i][j] + dp[i-1][j-1]) % MOD;\n            }\n        }\n    }\n    \n    printf(\"%lld\\n\", dp[N][M]);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:30:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function robotExitCombinations(N, M, robots, exits) {\n    const MOD = 10**9 + 7;\n\n    robots.sort((a, b) => a - b);\n    exits.sort((a, b) => a - b);\n    \n    let dp = Array(N + 1).fill().map(() => Array(M + 1).fill(0));\n    dp[0][0] = 1;\n    \n    for (let i = 1; i <= N; i++) {\n        for (let j = i; j <= M; j++) {\n            dp[i][j] = (dp[i][j - 1] + dp[i - 1][j - 1] * (robots[i - 1] <= exits[j - 1])) % MOD;\n        }\n    }\n    \n    return dp[N][M];\n}",
+    "timestamp": "2025-08-13 13:30:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_robot_exits(N, robots, exits):\n    MOD = 10**9 + 7\n    \n    # Sort robots and exits in ascending order\n    robots.sort()\n    exits.sort()\n    \n    # Initialize dynamic programming table\n    dp = [[0] * (M + 1) for _ in range(N + 1)]\n    dp[0][0] = 1\n    \n    # Fill dynamic programming table\n    for i in range(1, N + 1):\n        for j in range(1, M + 1):\n            # Option 1: Current exit not used\n            dp[i][j] = dp[i][j-1]\n            \n            # Option 2: Current exit used by current robot\n            if abs(robots[i-1] - exits[j-1]) <= 1:\n                dp[i][j] = (dp[i][j] + dp[i-1][j-1]) % MOD\n    \n    return dp[N][M]\n\n# Input handling\nN, M = map(int, input().split())\nrobots = list(map(int, input().split()))\nexits = list(map(int, input().split()))\n\n# Output result\nprint(solve_robot_exits(N, robots, exits))",
+    "timestamp": "2025-08-13 13:30:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, M, positions) {\n    const MOD = 1e9 + 7;\n    \n    // Sort robot and exit positions\n    positions.sort((a, b) => a - b);\n    \n    // Dynamic programming to track possible exit assignments\n    const dp = new Array(N + 1).fill(0);\n    dp[0] = 1;\n    \n    for (let i = 1; i <= N; i++) {\n        for (let j = 1; j <= Math.min(i, M); j++) {\n            // Try to match current robot with different exits\n            if (Math.abs(positions[i-1] - positions[j-1]) >= Math.abs(positions[i-1] - positions[M-j])) {\n                dp[i] = (dp[i] + dp[i-1]) % MOD;\n            }\n        }\n    }\n    \n    return dp[N];\n}",
+    "timestamp": "2025-08-13 13:30:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef solve():\n    N, M = map(int, sys.stdin.readline().split())\n    robots = list(map(int, sys.stdin.readline().split()))\n    exits = list(map(int, sys.stdin.readline().split()))\n    \n    robots.sort()\n    exits.sort()\n    \n    res = 1\n    i = 0\n    j = 0\n    \n    while i < N and j < M:\n        if robots[i] <= exits[j]:\n            i += 1\n        else:\n            j += 1\n    \n    if i < N:\n        print(0)\n        return\n    \n    i = 0\n    j = 0\n    while i < N and j < M:\n        cnt = 0\n        while j < M and (i >= N or exits[j] <= robots[i]):\n            j += 1\n            cnt += 1\n        if cnt > 0:\n            res = res * cnt % MOD\n            i += 1\n        else:\n            i += 1\n    \n    print(res % MOD)\n\nsolve()",
+    "timestamp": "2025-08-13 13:30:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve(N, M, robots, exits) {\n    robots.sort((a, b) => a - b);\n    exits.sort((a, b) => a - b);\n\n    let result = 1;\n    let j = 0;\n\n    for (let i = 0; i < N; i++) {\n        while (j < M && exits[j] < robots[i]) {\n            j++;\n        }\n        if (j >= M) {\n            return 0;\n        }\n        let count = 0;\n        let k = j;\n        while (k < M && exits[k] === exits[j]) {\n            k++;\n        }\n        count = k - j;\n        result = (result * count) % MOD;\n        j = k;\n    }\n\n    return result;\n}\n\n// Example usage:\n// const N = 3, M = 4;\n// const robots = [1, 2, 3];\n// const exits = [2, 2, 4, 4];\n// console.log(solve(N, M, robots, exits)); // Output: 4",
+    "timestamp": "2025-08-13 13:30:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nconst int MOD = 1000000007;\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n    std::vector<int> robots(N), exits(M);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> robots[i];\n    }\n    for (int j = 0; j < M; ++j) {\n        std::cin >> exits[j];\n    }\n\n    std::sort(robots.begin(), robots.end());\n    std::sort(exits.begin(), exits.end());\n\n    std::vector<std::vector<int>> dp(N + 1, std::vector<int>(M + 1, 0));\n    dp[0][0] = 1;\n\n    for (int i = 0; i <= N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            if (i > 0 && j >= i && robots[i - 1] <= exits[j])\n                dp[i][j + 1] = (dp[i][j + 1] + dp[i - 1][j]) % MOD;\n            dp[i][j + 1] = (dp[i][j + 1] + dp[i][j]) % MOD;\n        }\n    }\n\n    std::cout << dp[N][M] << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:39:57"
+  }
+]

@@ -1,0 +1,1 @@
+Rabbit Hanako and Fox Jiro are playing a game with N heaps of stones. Hanako can take between 1 to A stones, and Jiro can take between 1 to B stones in their respective turns. The goal is to determine the winner when both players play optimally.

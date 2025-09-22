@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_VERTICES 1001\n#define INF 0x3f3f3f3f\n\nint main() {\n    int n, m;\n    int graph[MAX_VERTICES][MAX_VERTICES];\n    int dist[MAX_VERTICES];\n    bool visited[MAX_VERTICES];\n\n    scanf(\"%d %d\", &n, &m);\n\n    memset(graph, 0, sizeof(graph));\n    memset(dist, 0x3f, sizeof(dist));\n    memset(visited, false, sizeof(visited));\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        graph[u][v] = 1;\n    }\n\n    int queue[MAX_VERTICES];\n    int front = 0, rear = 0;\n\n    dist[1] = 0;\n    queue[rear++] = 1;\n    visited[1] = true;\n\n    while (front < rear) {\n        int curr = queue[front++];\n\n        for (int next = 1; next <= n; next++) {\n            if (graph[curr][next] && !visited[next]) {\n                queue[rear++] = next;\n                visited[next] = true;\n                dist[next] = dist[curr] + 1;\n            }\n        }\n    }\n\n    for (int i = 1; i <= n; i++) {\n        if (dist[i] == INF) {\n            printf(\"-1 \");\n        } else {\n            printf(\"%d \", dist[i]);\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct Node {\n    int vertex;\n    struct Node* next;\n} Node;\n\ntypedef struct Graph {\n    int numVertices;\n    Node** adjLists;\n} Graph;\n\nNode* createNode(int v) {\n    Node* newNode = malloc(sizeof(Node));\n    newNode->vertex = v;\n    newNode->next = NULL;\n    return newNode;\n}\n\nGraph* createGraph(int vertices) {\n    Graph* graph = malloc(sizeof(Graph));\n    graph->numVertices = vertices;\n    graph->adjLists = malloc(vertices * sizeof(Node*));\n\n    for (int i = 0; i < vertices; i++) {\n        graph->adjLists[i] = NULL;\n    }\n    return graph;\n}\n\nvoid addEdge(Graph* graph, int src, int dest) {\n    Node* newNode = createNode(dest);\n    newNode->next = graph->adjLists[src - 1];\n    graph->adjLists[src - 1] = newNode;\n}\n\nvoid BFS(Graph* graph, int startVertex, int* distances) {\n    int* visited = calloc(graph->numVertices, sizeof(int));\n    int* queue = malloc(graph->numVertices * sizeof(int));\n    int front = 0, rear = 0;\n\n    for (int i = 0; i < graph->numVertices; i++) {\n        distances[i] = -1;\n    }\n\n    distances[startVertex - 1] = 0;\n    visited[startVertex - 1] = 1;\n    queue[rear++] = startVertex;\n\n    while (front < rear) {\n        int currentVertex = queue[front++];\n        Node* temp = graph->adjLists[currentVertex - 1];\n\n        while (temp) {\n            int adjVertex = temp->vertex;\n\n            if (!visited[adjVertex - 1]) {\n                visited[adjVertex - 1] = 1;\n                distances[adjVertex - 1] = distances[currentVertex - 1] + 1;\n                queue[rear++] = adjVertex;\n            }\n            temp = temp->next;\n        }\n    }\n\n    free(visited);\n    free(queue);\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n\n    Graph* graph = createGraph(n);\n\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        addEdge(graph, u, v);\n    }\n\n    int* distances = malloc(n * sizeof(int));\n    BFS(graph, 1, distances);\n\n    for (int i = 0; i < n; i++) {\n        printf(\"%d\\n\", distances[i]);\n    }\n\n    free(distances);\n    for (int i = 0; i < n; i++) {\n        Node* temp = graph->adjLists[i];\n        while (temp) {\n            Node* next = temp->next;\n            free(temp);\n            temp = next;\n        }\n    }\n    free(graph->adjLists);\n    free(graph);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<vector<int>> adj(n + 1);\n    for (int i = 0; i < m; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n    }\n\n    vector<int> dist(n + 1, -1);\n    queue<int> q;\n    dist[1] = 0;\n    q.push(1);\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : adj[u]) {\n            if (dist[v] == -1) {\n                dist[v] = dist[u] + 1;\n                q.push(v);\n            }\n        }\n    }\n\n    for (int i = 1; i <= n; ++i) {\n        cout << dist[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ShortestPathBFS {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        \n        List<List<Integer>> adj = new ArrayList<>();\n        for (int i = 0; i <= n; i++) {\n            adj.add(new ArrayList<>());\n        }\n        \n        for (int i = 0; i < m; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n            adj.get(u).add(v);\n        }\n        \n        int[] dist = new int[n + 1];\n        Arrays.fill(dist, -1);\n        dist[1] = 0;\n        \n        Queue<Integer> queue = new LinkedList<>();\n        queue.add(1);\n        \n        while (!queue.isEmpty()) {\n            int u = queue.poll();\n            for (int v : adj.get(u)) {\n                if (dist[v] == -1) {\n                    dist[v] = dist[u] + 1;\n                    queue.add(v);\n                }\n            }\n        }\n        \n        for (int i = 1; i <= n; i++) {\n            System.out.print(dist[i] + \" \");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:09:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ShortestDistances {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        \n        List<List<Integer>> graph = new ArrayList<>();\n        for (int i = 0; i < n + 1; i++) {\n            graph.add(new ArrayList<>());\n        }\n        \n        for (int i = 0; i < m; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n            graph.get(u).add(v);\n        }\n        \n        int[] distances = findShortestDistances(n, graph);\n        \n        for (int i = 1; i <= n; i++) {\n            System.out.print(distances[i] + \" \");\n        }\n    }\n    \n    private static int[] findShortestDistances(int n, List<List<Integer>> graph) {\n        int[] distances = new int[n + 1];\n        Arrays.fill(distances, -1);\n        \n        Queue<Integer> queue = new LinkedList<>();\n        queue.offer(1);\n        distances[1] = 0;\n        \n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            \n            for (int neighbor : graph.get(current)) {\n                if (distances[neighbor] == -1) {\n                    distances[neighbor] = distances[current] + 1;\n                    queue.offer(neighbor);\n                }\n            }\n        }\n        \n        return distances;\n    }\n}",
+    "timestamp": "2025-08-05 22:09:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <limits>\n\nusing namespace std;\n\nconst int INF = numeric_limits<int>::max();\n\nvoid bfs_shortest_paths(int n, vector<vector<int>>& graph, vector<int>& distances) {\n    distances.assign(n + 1, INF);\n    distances[1] = 0;\n    \n    queue<int> q;\n    q.push(1);\n    \n    while (!q.empty()) {\n        int current = q.front();\n        q.pop();\n        \n        for (int neighbor : graph[current]) {\n            if (distances[neighbor] == INF) {\n                distances[neighbor] = distances[current] + 1;\n                q.push(neighbor);\n            }\n        }\n    }\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    vector<vector<int>> graph(n + 1);\n    \n    for (int i = 0; i < m; i++) {\n        int u, v;\n        cin >> u >> v;\n        graph[u].push_back(v);\n    }\n    \n    vector<int> distances;\n    bfs_shortest_paths(n, graph, distances);\n    \n    for (int i = 1; i <= n; i++) {\n        if (distances[i] == INF) {\n            cout << -1 << \" \";\n        } else {\n            cout << distances[i] << \" \";\n        }\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import deque, defaultdict\n\ndef shortest_path(num_vertices, edges):\n    graph = defaultdict(list)\n    for u, v in edges:\n        graph[u].append(v)\n    \n    # Initializing distance dictionary with infinity\n    distances = {v: float('inf') for v in range(1, num_vertices + 1)}\n    distances[1] = 0\n    \n    # BFS initialization\n    queue = deque([1])\n    \n    # BFS to calculate shortest path using edge count\n    while queue:\n        current = queue.popleft()\n        for neighbor in graph[current]:\n            if distances[neighbor] > distances[current] + 1:\n                distances[neighbor] = distances[current] + 1\n                queue.append(neighbor)\n    \n    return distances\n\n# Example usage:\nnum_vertices = 5\nedges = [(1, 2), (1, 3), (2, 4), (3, 4), (4, 5)]\ndistances = shortest_path(num_vertices, edges)\nprint(distances)  # Output shortest distances from vertex 1 to others",
+    "timestamp": "2025-08-13 09:15:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class ShortestPathInDirectedGraph {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt(); // number of vertices\n        int m = scanner.nextInt(); // number of edges\n        \n        List<List<Integer>> adjList = new ArrayList<>();\n        \n        for (int i = 0; i <= n; i++) {\n            adjList.add(new ArrayList<>());\n        }\n        \n        for (int i = 0; i < m; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n            adjList.get(u).add(v);\n        }\n        \n        int[] distances = new int[n + 1];\n        Arrays.fill(distances, Integer.MAX_VALUE);\n        distances[1] = 0;\n        \n        Queue<Integer> queue = new LinkedList<>();\n        queue.add(1);\n        \n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            for (int neighbor : adjList.get(current)) {\n                if (distances[current] + 1 < distances[neighbor]) {\n                    distances[neighbor] = distances[current] + 1;\n                    queue.add(neighbor);\n                }\n            }\n        }\n        \n        for (int i = 1; i <= n; i++) {\n            int distance = distances[i];\n            System.out.println(distance == Integer.MAX_VALUE ? -1 : distance);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 09:15:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define INF INT_MAX\n\ntypedef struct {\n    int **edges;\n    int n;\n} Graph;\n\nGraph *createGraph(int n) {\n    Graph *graph = (Graph *)malloc(sizeof(Graph));\n    graph->n = n;\n    graph->edges = (int **)malloc(n * sizeof(int *));\n    for (int i = 0; i < n; i++) {\n        graph->edges[i] = (int *)malloc(n * sizeof(int));\n        for (int j = 0; j < n; j++) {\n            graph->edges[i][j] = INF;\n        }\n    }\n    return graph;\n}\n\nvoid addEdge(Graph *graph, int u, int v) {\n    graph->edges[u][v] = 1;\n}\n\nvoid freeGraph(Graph *graph) {\n    for (int i = 0; i < graph->n; i++) {\n        free(graph->edges[i]);\n    }\n    free(graph->edges);\n    free(graph);\n}\n\nvoid bfs(Graph *graph, int start, int *distances) {\n    int *queue = (int *)malloc(graph->n * sizeof(int));\n    int front = 0, back = 0;\n    distances[start] = 0;\n    queue[back++] = start;\n\n    while (front != back) {\n        int u = queue[front++];\n        for (int v = 0; v < graph->n; v++) {\n            if (graph->edges[u][v] != INF && distances[v] == INF) {\n                distances[v] = distances[u] + 1;\n                queue[back++] = v;\n            }\n        }\n    }\n\n    free(queue);\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    \n    Graph *graph = createGraph(n);\n    for (int i = 0; i < m; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        addEdge(graph, u - 1, v - 1);\n    }\n\n    int *distances = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        distances[i] = INF;\n    }\n\n    bfs(graph, 0, distances);\n\n    for (int i = 0; i < n; i++) {\n        if (distances[i] == INF) {\n            printf(\"INF\\n\");\n        } else {\n            printf(\"%d\\n\", distances[i]);\n        }\n    }\n\n    free(distances);\n    freeGraph(graph);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 09:15:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import defaultdict, deque\n\ndef shortest_distances(n, edges):\n    # Create adjacency list representation of graph\n    graph = defaultdict(list)\n    for u, v in edges:\n        graph[u].append(v)\n\n    # Initialize distances array\n    distances = [float('inf')] * (n + 1)\n    distances[1] = 0\n\n    # BFS to find shortest paths\n    queue = deque([1])\n    visited = set([1])\n\n    while queue:\n        current = queue.popleft()\n        for neighbor in graph[current]:\n            if neighbor not in visited:\n                distances[neighbor] = distances[current] + 1\n                queue.append(neighbor)\n                visited.add(neighbor)\n\n    # Return distances, skipping index 0\n    return [dist if dist != float('inf') else -1 for dist in distances[1:]]\n\n# Read input\nn, m = map(int, input().split())\nedges = [tuple(map(int, input().split())) for _ in range(m)]\n\n# Solve and print result\nresult = shortest_distances(n, edges)\nprint(*result)",
+    "timestamp": "2025-08-13 09:15:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    n = int(input[ptr])\n    ptr += 1\n    m = int(input[ptr])\n    ptr += 1\n    \n    adj = [[] for _ in range(n + 1)]\n    for _ in range(m):\n        u = int(input[ptr])\n        ptr += 1\n        v = int(input[ptr])\n        ptr += 1\n        adj[u].append(v)\n    \n    dist = [-1] * (n + 1)\n    q = deque()\n    dist[1] = 0\n    q.append(1)\n    \n    while q:\n        u = q.popleft()\n        for v in adj[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                q.append(v)\n    \n    for i in range(1, n + 1):\n        print(dist[i])\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:16:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <limits>\n\nint main() {\n    int n, m;\n    std::cin >> n >> m;\n    \n    std::vector<std::vector<int>> adj(n + 1);\n    \n    for (int i = 0; i < m; ++i) {\n        int u, v;\n        std::cin >> u >> v;\n        adj[u].push_back(v);\n    }\n    \n    std::vector<int> distance(n + 1, std::numeric_limits<int>::max());\n    std::queue<int> q;\n    \n    distance[1] = 0;\n    q.push(1);\n    \n    while (!q.empty()) {\n        int cur = q.front();\n        q.pop();\n        \n        for (int neighbor : adj[cur]) {\n            if (distance[neighbor] == std::numeric_limits<int>::max()) {\n                distance[neighbor] = distance[cur] + 1;\n                q.push(neighbor);\n            }\n        }\n    }\n    \n    for (int i = 1; i <= n; ++i) {\n        if (distance[i] == std::numeric_limits<int>::max()) {\n            std::cout << -1 << \" \";\n        } else {\n            std::cout << distance[i] << \" \";\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:50:27"
+  }
+]

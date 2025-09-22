@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canMakeMonotonic(int* P, int N, int K) {\n    int temp[N];\n    for (int i = 0; i < N; i++) {\n        temp[i] = P[i];\n    }\n    \n    for (int x = 0; x <= N - K; x++) {\n        // Try cyclic right shift for each possible subsequence\n        for (int r = 1; r < K; r++) {\n            // Perform right shift r times\n            int first = temp[x + K];\n            for (int j = x + K; j > x + 1; j--) {\n                temp[j] = temp[j-1];\n            }\n            temp[x + 1] = first;\n            \n            // Check if permutation is monotonically increasing\n            bool isMonotonic = true;\n            for (int i = 1; i < N; i++) {\n                if (temp[i] <= temp[i-1]) {\n                    isMonotonic = false;\n                    break;\n                }\n            }\n            \n            if (isMonotonic) return true;\n            \n            // Restore original array\n            for (int i = 0; i < N; i++) {\n                temp[i] = P[i];\n            }\n        }\n    }\n    \n    // Check if original array is monotonically increasing\n    for (int i = 1; i < N; i++) {\n        if (P[i] <= P[i-1]) {\n            return false;\n        }\n    }\n    \n    return true;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int P[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n    \n    printf(\"%s\\n\", canMakeMonotonic(P, N, K) ? \"YES\" : \"NO\");\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:07:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canSort(int N, int K, int P[]) {\n    for (int i = 0; i < N; i++) {\n        if (P[i] != i + 1) {\n            if (i + K > N) {\n                return false;\n            }\n            int pos = -1;\n            for (int j = i; j < i + K; j++) {\n                if (P[j] == i + 1) {\n                    pos = j;\n                    break;\n                }\n            }\n            if (pos == -1) {\n                return false;\n            }\n            while (pos > i) {\n                int temp = P[pos];\n                P[pos] = P[pos - 1];\n                P[pos - 1] = temp;\n                pos--;\n            }\n        }\n    }\n    return true;\n}\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    while (T--) {\n        int N, K;\n        scanf(\"%d %d\", &N, &K);\n        int P[N];\n        for (int i = 0; i < N; i++) {\n            scanf(\"%d\", &P[i]);\n        }\n        if (canSort(N, K, P)) {\n            printf(\"Yes\\n\");\n        } else {\n            printf(\"No\\n\");\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:08:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool canSort(vector<int>& P, int K) {\n    int N = P.size();\n    for (int i = 0; i < N; ++i) {\n        if (P[i] != i + 1) {\n            int pos = -1;\n            for (int j = i; j < N && j < i + K; ++j) {\n                if (P[j] == i + 1) {\n                    pos = j;\n                    break;\n                }\n            }\n            if (pos == -1) return false;\n            if (pos - i + 1 > K) return false;\n            int len = pos - i + 1;\n            rotate(P.begin() + i, P.begin() + pos, P.begin() + pos + 1);\n        }\n    }\n    return true;\n}\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int N, K;\n        cin >> N >> K;\n        vector<int> P(N);\n        for (int i = 0; i < N; ++i) {\n            cin >> P[i];\n        }\n        if (canSort(P, K)) {\n            cout << \"YES\" << endl;\n        } else {\n            cout << \"NO\" << endl;\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:08:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] P = new int[N];\n        for (int i = 0; i < N; i++) {\n            P[i] = scanner.nextInt();\n        }\n        \n        boolean possible = true;\n        for (int i = 0; i < N; i++) {\n            if (P[i] != i + 1) {\n                if (i + K > N) {\n                    possible = false;\n                    break;\n                }\n                int pos = -1;\n                for (int j = i; j < i + K; j++) {\n                    if (P[j] == i + 1) {\n                        pos = j;\n                        break;\n                    }\n                }\n                if (pos == -1) {\n                    possible = false;\n                    break;\n                }\n                while (pos > i) {\n                    if (pos + K - 1 > N) {\n                        possible = false;\n                        break;\n                    }\n                    // Perform cyclic right shift from pos to pos+K-1\n                    int temp = P[pos + K - 1];\n                    for (int j = pos + K - 1; j > pos; j--) {\n                        P[j] = P[j - 1];\n                    }\n                    P[pos] = temp;\n                    pos--;\n                }\n                if (!possible) {\n                    break;\n                }\n            }\n        }\n        System.out.println(possible ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 22:08:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static boolean canMakeMonotonic(int[] P, int K) {\n        int N = P.length;\n        int[] sorted = Arrays.copyOf(P, N);\n        Arrays.sort(sorted);\n        \n        for (int mask = 0; mask < (1 << (N / K)); mask++) {\n            int[] temp = Arrays.copyOf(P, N);\n            \n            for (int i = 0; i < N / K; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    cycleShift(temp, i * K, (i + 1) * K);\n                }\n            }\n            \n            if (isMonotonic(temp)) {\n                return true;\n            }\n        }\n        \n        return false;\n    }\n    \n    private static void cycleShift(int[] arr, int start, int end) {\n        int last = arr[end - 1];\n        for (int i = end - 1; i > start; i--) {\n            arr[i] = arr[i - 1];\n        }\n        arr[start] = last;\n    }\n    \n    private static boolean isMonotonic(int[] arr) {\n        for (int i = 1; i < arr.length; i++) {\n            if (arr[i] < arr[i - 1]) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 22:08:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canMakeIncreasing(vector<int>& P, int K) {\n        int N = P.size();\n        vector<int> curr = P;\n        \n        for (int x = 0; x < N - K + 1; x++) {\n            vector<int> candidate = curr;\n            \n            // Perform cyclic right shift on subarray\n            rotate(candidate.begin() + x, candidate.begin() + x + K - 1, candidate.begin() + x + K);\n            \n            // Check if result is monotonically increasing\n            if (is_sorted(candidate.begin(), candidate.end())) {\n                return true;\n            }\n        }\n        \n        return is_sorted(curr.begin(), curr.end());\n    }\n};",
+    "timestamp": "2025-08-05 22:08:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_monotonically_increasing_possible(P, N, K):\n    def can_sort_with_shifts(P):\n        return all(P[i] <= P[i + K] for i in range(N - K))\n    \n    sorted_P = sorted(P)\n    target_positions = {value: i for i, value in enumerate(sorted_P)}\n    \n    for i in range(N):\n        target_pos = target_positions[P[i]]\n        if (target_pos - i) % K != 0:\n            return False\n    \n    return can_sort_with_shifts(P) or P == sorted_P\n\n# Example usage:\nP = [2, 3, 1, 5, 4]\nN = len(P)\nK = 2\nprint(is_monotonically_increasing_possible(P, N, K))  # Output: True or False",
+    "timestamp": "2025-08-13 09:08:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MonotonicPermutation {\n\n    public static boolean isPossible(int[] P, int K) {\n        int N = P.length;\n\n        if (K == 1) return true; // Any permutation is already monotonic with K = 1\n\n        int[] sortedP = P.clone();\n        Arrays.sort(sortedP);\n\n        for (int i = 0; i < K; i++) {\n            List<Integer> sequence = new ArrayList<>();\n            for (int j = i; j < N; j += K) {\n                sequence.add(P[j]);\n            }\n            Collections.sort(sequence);\n\n            int index = 0;\n            for (int j = i; j < N; j += K) {\n                P[j] = sequence.get(index++);\n            }\n        }\n\n        return Arrays.equals(P, sortedP);\n    }\n\n    public static void main(String[] args) {\n        int[] P = {3, 1, 2, 4}; // Example permutation\n        int K = 2; // Example K\n        System.out.println(isPossible(P, K)); // Output: true/false based on possibility\n    }\n}",
+    "timestamp": "2025-08-13 09:08:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canBeSorted(int *P, int N, int K) {\n    for (int start = 0; start < K; start++) {\n        for (int i = start; i < N - K; i += K) {\n            if (P[i] > P[i + K]) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nint main() {\n    // Example inputs\n    int P[] = {3, 1, 2, 4};\n    int N = sizeof(P) / sizeof(P[0]);\n    int K = 2;\n\n    if (canBeSorted(P, N, K)) {\n        printf(\"YES\\n\");\n    } else {\n        printf(\"NO\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:08:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, K, P):\n    def is_monotonic(arr):\n        return all(arr[i] <= arr[i+1] for i in range(len(arr)-1))\n\n    def can_make_monotonic(arr):\n        for x in range(N - K + 1):\n            subsequence = arr[x:x+K]\n            for rotations in range(K):\n                rotated = subsequence[-rotations:] + subsequence[:-rotations]\n                test_arr = arr.copy()\n                test_arr[x:x+K] = rotated\n                if is_monotonic(test_arr):\n                    return True\n        return is_monotonic(arr)\n\n    return \"YES\" if can_make_monotonic(P) else \"NO\"\n\n# Example usage\ndef main():\n    T = int(input())\n    for _ in range(T):\n        N, K = map(int, input().split())\n        P = list(map(int, input().split()))\n        print(solve(N, K, P))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:08:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    T = int(data[idx])\n    idx += 1\n    for _ in range(T):\n        N, K = map(int, data[idx:idx+2])\n        idx +=2\n        P = list(map(int, data[idx:idx+N]))\n        idx +=N\n        possible = True\n        for i in range(N):\n            if P[i] != i + 1:\n                if i + K > N:\n                    possible = False\n                    break\n                # Find the position of i+1 in the current window\n                pos = -1\n                for j in range(i, min(i+K, N)):\n                    if P[j] == i + 1:\n                        pos = j\n                        break\n                if pos == -1:\n                    possible = False\n                    break\n                # Perform cyclic shifts to bring i+1 to position i\n                # The window is from i to i+K-1 (0-based)\n                while pos > i:\n                    # The rightmost possible shift is min(pos, i+K-1 - (K-1)) = pos - (K-1) >= i\n                    if pos - (K -1) >= i:\n                        l = pos - (K -1)\n                        r = pos\n                    else:\n                        l = i\n                        r = i + K -1\n                    # Perform a right cyclic shift on P[l+1 ... r] (1-based to 0-based)\n                    # 0-based: l to r-1\n                    temp = P[r]\n                    for j in range(r, l, -1):\n                        P[j] = P[j-1]\n                    P[l] = temp\n                    pos -= 1\n        print(\"YES\" if possible else \"NO\")\n\nsolve()",
+    "timestamp": "2025-08-13 09:09:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <deque>\n\nbool canMakeMonotonic(const std::vector<int>& P, int K) {\n    int N = P.size();\n    std::vector<std::deque<int>> buckets(K);\n    \n    for (int i = 0; i < N; ++i) {\n        buckets[i % K].push_back(P[i]);\n    }\n    \n    for (auto& bucket : buckets) {\n        std::sort(bucket.begin(), bucket.end());\n    }\n    \n    std::vector<int> sortedP;\n    \n    for (int i = 0; i < N; ++i) {\n        sortedP.push_back(buckets[i % K].front());\n        buckets[i % K].pop_front();\n    }\n    \n    for (int i = 1; i < N; ++i) {\n        if (sortedP[i] < sortedP[i - 1]) return false;\n    }\n    \n    return true;\n}\n\nint main() {\n    int N, K;\n    std::cin >> N >> K;\n    std::vector<int> P(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> P[i];\n    }\n    \n    if (canMakeMonotonic(P, K)) {\n        std::cout << \"Yes\\n\";\n    } else {\n        std::cout << \"No\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:49:46"
+  }
+]

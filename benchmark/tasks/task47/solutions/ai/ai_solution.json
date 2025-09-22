@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solution(first_name, last_name):\n    # Generate all possible login prefixes\n    logins = []\n    for i in range(1, len(first_name) + 1):\n        for j in range(1, len(last_name) + 1):\n            login = first_name[:i] + last_name[:j]\n            logins.append(login)\n    \n    # Return the alphabetically earliest login\n    return min(logins)\n\n# Read input\nfirst_name, last_name = input().split()\n\n# Print output\nprint(solution(first_name, last_name))",
+    "timestamp": "2025-08-05 17:33:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "first, last = input().split()\nmin_login = None\n\nfor i in range(1, len(first)+1):\n    for j in range(1, len(last)+1):\n        login = first[:i] + last[:j]\n        if min_login is None or login < min_login:\n            min_login = login\n\nprint(min_login)",
+    "timestamp": "2025-08-05 17:33:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def earliest_login(first_name, last_name):\n    earliest = first_name[0] + last_name[0]\n    for i in range(1, len(first_name)):\n        for j in range(1, len(last_name)):\n            candidate = first_name[:i] + last_name[:j]\n            if candidate < earliest:\n                earliest = candidate\n    return earliest\n\nfirst_last_names = input().strip().split()\nprint(earliest_login(first_last_names[0], first_last_names[1]))",
+    "timestamp": "2025-08-12 21:54:59"
+  }
+]

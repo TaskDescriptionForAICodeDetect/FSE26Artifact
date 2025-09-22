@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "16\ninsert 35 99\ninsert 3 80\ninsert 1 53\ninsert 14 25\ninsert 80 76\ninsert 42 3\ninsert 86 47\ninsert 21 12\ninsert 7 10\ninsert 6 90\nprint\nfind 21\nfind 22\ndelete 35\ndelete 99\nprint",
+      "output": " 1 3 6 7 14 21 35 42 80 86\n 35 6 3 1 14 7 21 80 42 86\nyes\nno\n 1 3 6 7 14 21 42 80 86\n 6 3 1 80 14 7 21 42 86"
+    }
+  ]
+}

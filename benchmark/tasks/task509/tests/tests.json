@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "3\ntameru\ntameru\ntameru\ntameru\nkougekida\ntameru\n",
+      "output": "Nakajima-kun"
+    },
+    {
+      "input": "3\nmamoru\nmamoru\nmamoru\ntameru\ntameru\ntameru\n",
+      "output": "Hikiwake-kun"
+    },
+    {
+      "input": "5\ntameru\ntameru\nmamoru\nmamoru\nkougekida\ntameru\ntameru\nkougekida\ntameru\nkougekida\n",
+      "output": "Isono-kun"
+    },
+    {
+      "input": "3\nkougekida\nkougekida\ntameru\nkougekida\nmamoru\nkougekida\n",
+      "output": "Nakajima-kun"
+    },
+    {
+      "input": "8\ntameru\nmamoru\ntameru\ntameru\ntameru\ntameru\ntameru\nkougekida\ntameru\nkougekida\nmamoru\nmamoru\nmamoru\nmamoru\nmamoru\nmamoru\n",
+      "output": "Isono-kun"
+    }
+  ]
+}

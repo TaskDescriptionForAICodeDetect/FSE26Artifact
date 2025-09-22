@@ -1,0 +1,1 @@
+For a given weighted directed graph G(V, E), find the distance of the shortest route that forms a closed cycle, starting and ending at the same vertex while visiting each vertex exactly once. If no such route exists, return -1.

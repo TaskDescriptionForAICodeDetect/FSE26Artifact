@@ -1,0 +1,260 @@
+{
+  "examples": [
+    {
+      "input": "harry potter\n",
+      "output": "hap\n"
+    },
+    {
+      "input": "tom riddle\n",
+      "output": "tomr\n"
+    },
+    {
+      "input": "a qdpinbmcrf\n",
+      "output": "aq\n"
+    },
+    {
+      "input": "wixjzniiub ssdfodfgap\n",
+      "output": "wis\n"
+    },
+    {
+      "input": "z z\n",
+      "output": "zz\n"
+    },
+    {
+      "input": "ertuyivhfg v\n",
+      "output": "ertuv\n"
+    },
+    {
+      "input": "asdfghjkli ware\n",
+      "output": "asdfghjkliw\n"
+    },
+    {
+      "input": "udggmyop ze\n",
+      "output": "udggmyopz\n"
+    },
+    {
+      "input": "fapkdme rtzxovx\n",
+      "output": "fapkdmer\n"
+    },
+    {
+      "input": "mybiqxmnqq l\n",
+      "output": "ml\n"
+    },
+    {
+      "input": "dtbqya fyyymv\n",
+      "output": "df\n"
+    },
+    {
+      "input": "fyclu zokbxiahao\n",
+      "output": "fycluz\n"
+    },
+    {
+      "input": "qngatnviv rdych\n",
+      "output": "qngar\n"
+    },
+    {
+      "input": "ttvnhrnng lqkfulhrn\n",
+      "output": "tl\n"
+    },
+    {
+      "input": "fya fgx\n",
+      "output": "ff\n"
+    },
+    {
+      "input": "nuis zvjjqlre\n",
+      "output": "nuisz\n"
+    },
+    {
+      "input": "ly qtsmze\n",
+      "output": "lq\n"
+    },
+    {
+      "input": "d kgfpjsurfw\n",
+      "output": "dk\n"
+    },
+    {
+      "input": "lwli ewrpu\n",
+      "output": "le\n"
+    },
+    {
+      "input": "rr wldsfubcs\n",
+      "output": "rrw\n"
+    },
+    {
+      "input": "h qart\n",
+      "output": "hq\n"
+    },
+    {
+      "input": "vugvblnzx kqdwdulm\n",
+      "output": "vk\n"
+    },
+    {
+      "input": "xohesmku ef\n",
+      "output": "xe\n"
+    },
+    {
+      "input": "twvvsl wtcyawv\n",
+      "output": "tw\n"
+    },
+    {
+      "input": "obljndajv q\n",
+      "output": "obljndajq\n"
+    },
+    {
+      "input": "jjxwj kxccwx\n",
+      "output": "jjk\n"
+    },
+    {
+      "input": "sk fftzmv\n",
+      "output": "sf\n"
+    },
+    {
+      "input": "cgpegngs aufzxkyyrw\n",
+      "output": "ca\n"
+    },
+    {
+      "input": "reyjzjdvq skuch\n",
+      "output": "res\n"
+    },
+    {
+      "input": "ardaae mxgdulijf\n",
+      "output": "am\n"
+    },
+    {
+      "input": "bgopsdfji uaps\n",
+      "output": "bgopsdfjiu\n"
+    },
+    {
+      "input": "amolfed pun\n",
+      "output": "amolfedp\n"
+    },
+    {
+      "input": "badkiln yort\n",
+      "output": "badkilny\n"
+    },
+    {
+      "input": "aaaaaaaaaz york\n",
+      "output": "aaaaaaaaay\n"
+    },
+    {
+      "input": "bbbbcbbbbd c\n",
+      "output": "bbbbc\n"
+    },
+    {
+      "input": "aa ab\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "ab b\n",
+      "output": "ab\n"
+    },
+    {
+      "input": "aaaaa ab\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "aa a\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "aba b\n",
+      "output": "ab\n"
+    },
+    {
+      "input": "aaaaaaa aaaaaa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "a a\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "a aa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "a b\n",
+      "output": "ab\n"
+    },
+    {
+      "input": "b a\n",
+      "output": "ba\n"
+    },
+    {
+      "input": "z a\n",
+      "output": "za\n"
+    },
+    {
+      "input": "aaa a\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "aa aa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "a aaa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "aaaaaaaaaa aaaaaaaaaa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "aaaaaaaaaa a\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "a aaaaaaaaaa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "zzaa b\n",
+      "output": "zb\n"
+    },
+    {
+      "input": "ca cf\n",
+      "output": "cac\n"
+    },
+    {
+      "input": "abhi ia\n",
+      "output": "abhi\n"
+    },
+    {
+      "input": "aaaa aaaab\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "aar raa\n",
+      "output": "aar\n"
+    },
+    {
+      "input": "harry hotter\n",
+      "output": "hah\n"
+    },
+    {
+      "input": "aaaaaaa a\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "apple pie\n",
+      "output": "ap\n"
+    },
+    {
+      "input": "aaa aaa\n",
+      "output": "aa\n"
+    },
+    {
+      "input": "kabc buba\n",
+      "output": "kab\n"
+    },
+    {
+      "input": "asd ss\n",
+      "output": "as\n"
+    },
+    {
+      "input": "bbb b\n",
+      "output": "bb\n"
+    }
+  ]
+}

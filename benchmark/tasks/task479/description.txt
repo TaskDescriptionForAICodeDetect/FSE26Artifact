@@ -1,0 +1,1 @@
+Determining whether a non-self-intersecting polyline with n vertices can pass through a small hole located at (0, 0) and move entirely into the region where y < 0. The polyline is defined by its vertices given in the format (xi, yi), and it cannot be deformed but can be translated and rotated.

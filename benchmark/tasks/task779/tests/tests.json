@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13 4\nABC\nA L\nB L\nB R\nA R\n",
+      "output": "12"
+    },
+    {
+      "input": "28 3\nAABCBDBA\nA L\nB R\nA R\n",
+      "output": "25"
+    },
+    {
+      "input": "310 15\nSNCZWRCEWB\nB R\nR R\nE R\nW R\nZ L\nS R\nQ L\nW L\nB R\nC L\nA L\nN L\nE R\nZ L\nS L\n",
+      "output": "33"
+    }
+  ]
+}

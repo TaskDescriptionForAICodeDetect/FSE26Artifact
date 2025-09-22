@@ -1,0 +1,1 @@
+You are given an integer sequence of length n+1, which includes all integers from 1 to n at least once. For each integer k ranging from 1 to n+1, find the number of different subsequences of the given sequence with length k, modulo 10^9+7.

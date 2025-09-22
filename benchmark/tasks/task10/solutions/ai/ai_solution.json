@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def find_kth_digit(k):\n    length = 0\n    num = 1\n    \n    while length < k:\n        num_str = str(num)\n        length += len(num_str)\n        num += 1\n    \n    num -= 1\n    num_str = str(num)\n    \n    offset = length - len(num_str)\n    index_in_num = k - offset - 1\n    \n    return int(num_str[index_in_num])\n\nk = int(input())\nprint(find_kth_digit(k))",
+    "timestamp": "2025-08-05 17:31:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "k = int(input())\n\nlength = 1\ncount = 9\nstart = 1\n\nwhile k > length * count:\n    k -= length * count\n    length += 1\n    count *= 10\n    start *= 10\n\nstart += (k - 1) // length\ndigit = str(start)[(k - 1) % length]\nprint(digit)",
+    "timestamp": "2025-08-05 17:31:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_kth_digit(k):\n    # Initialize the digit length\n    length = 1\n    # Initialize range of current block of numbers with 'length' digits\n    count = 9\n    # Determine block where k-th digit is situated\n    while k > length * count:\n        k -= length * count\n        length += 1\n        count *= 10\n    # Find the exact number in the current block\n    number = (k - 1) // length + 10 ** (length - 1)\n    # Find the exact digit within the number\n    digit_index = (k - 1) % length\n    return str(number)[digit_index]\n\nk = int(input().strip())\nprint(find_kth_digit(k))",
+    "timestamp": "2025-08-12 21:40:45"
+  }
+]

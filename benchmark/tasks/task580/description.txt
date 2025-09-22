@@ -1,0 +1,1 @@
+Sort a deck of cards represented by a suit (S, H, C, D) and a number. Implement a sorting algorithm that arranges n cards based on their numerical values, and report whether the sorting process is stable (cards with the same number appear in the same order in the output as they do in the input).

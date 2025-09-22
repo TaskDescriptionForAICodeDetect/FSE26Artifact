@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint is_lex_numeric(int *arr, int size) {\n    for (int i = 0; i < size - 1; i++) {\n        char s1[12], s2[12];\n        sprintf(s1, \"%d\", arr[i]);\n        sprintf(s2, \"%d\", arr[i+1]);\n        if (strcmp(s1, s2) > 0) {\n            return 0;\n        }\n    }\n    return 1;\n}\n\nvoid generate_subsets(int A, int B, int *count, int P) {\n    int n = B - A + 1;\n    int *elements = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        elements[i] = A + i;\n    }\n\n    for (int mask = 1; mask < (1 << n); mask++) {\n        int subset_size = 0;\n        for (int i = 0; i < n; i++) {\n            if (mask & (1 << i)) {\n                subset_size++;\n            }\n        }\n        int *subset = (int *)malloc(subset_size * sizeof(int));\n        int index = 0;\n        for (int i = 0; i < n; i++) {\n            if (mask & (1 << i)) {\n                subset[index++] = elements[i];\n            }\n        }\n        qsort(subset, subset_size, sizeof(int), compare);\n        if (is_lex_numeric(subset, subset_size)) {\n            *count = (*count + 1) % P;\n        }\n        free(subset);\n    }\n    free(elements);\n}\n\nint main() {\n    int A, B, P;\n    while (1) {\n        scanf(\"%d %d %d\", &A, &B, &P);\n        if (A == 0 && B == 0 && P == 0) {\n            break;\n        }\n        int count = 0;\n        generate_subsets(A, B, &count, P);\n        printf(\"%d\\n\", count);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:25:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nbool isLexAndNumOrdered(const vector<int>& subset) {\n    vector<int> lexOrdered = subset;\n    sort(lexOrdered.begin(), lexOrdered.end(), [](int a, int b) {\n        return to_string(a) < to_string(b);\n    });\n    vector<int> numOrdered = subset;\n    sort(numOrdered.begin(), numOrdered.end());\n    return lexOrdered == numOrdered;\n}\n\nint solve(int A, int B, int P) {\n    vector<int> numbers;\n    for (int i = A; i <= B; ++i) {\n        numbers.push_back(i);\n    }\n    int n = numbers.size();\n    int total = 0;\n    for (int mask = 1; mask < (1 << n); ++mask) {\n        vector<int> subset;\n        for (int i = 0; i < n; ++i) {\n            if (mask & (1 << i)) {\n                subset.push_back(numbers[i]);\n            }\n        }\n        if (isLexAndNumOrdered(subset)) {\n            total++;\n            if (total >= P) total -= P;\n        }\n    }\n    return total % P;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int A, B, P;\n    while (cin >> A >> B >> P) {\n        if (A == 0 && B == 0 && P == 0) break;\n        cout << solve(A, B, P) << '\\n';\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:25:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static int MOD;\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        while (true) {\n            int A = sc.nextInt();\n            int B = sc.nextInt();\n            MOD = sc.nextInt();\n            if (A == 0 && B == 0 && MOD == 0) break;\n            System.out.println(solve(A, B));\n        }\n    }\n    \n    static int solve(int A, int B) {\n        int n = B - A + 1;\n        int[] nums = new int[n];\n        for (int i = 0; i < n; i++) {\n            nums[i] = A + i;\n        }\n        \n        Arrays.sort(nums);\n        List<Integer> groups = new ArrayList<>();\n        int i = 0;\n        while (i < n) {\n            int j = i;\n            String s = Integer.toString(nums[i]);\n            while (j + 1 < n) {\n                String next = Integer.toString(nums[j + 1]);\n                if (next.startsWith(s)) {\n                    j++;\n                    s = next;\n                } else {\n                    break;\n                }\n            }\n            groups.add(j - i + 1);\n            i = j + 1;\n        }\n        \n        long res = 1;\n        for (int size : groups) {\n            res = res * (size + 1) % MOD;\n        }\n        res = (res - 1 + MOD) % MOD;\n        return (int) res;\n    }\n}",
+    "timestamp": "2025-08-05 21:25:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SetSorting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        while (true) {\n            int A = scanner.nextInt();\n            int B = scanner.nextInt();\n            int P = scanner.nextInt();\n\n            if (A == 0 && B == 0 && P == 0) {\n                break;\n            }\n\n            long result = countSubsets(A, B, P);\n            System.out.println(result);\n        }\n\n        scanner.close();\n    }\n\n    private static long countSubsets(int A, int B, int P) {\n        List<Integer> nums = new ArrayList<>();\n        for (int i = A; i <= B; i++) {\n            nums.add(i);\n        }\n\n        long count = 0;\n        int n = nums.size();\n\n        for (int mask = 1; mask < (1 << n); mask++) {\n            List<Integer> subset = new ArrayList<>();\n            for (int j = 0; j < n; j++) {\n                if ((mask & (1 << j)) != 0) {\n                    subset.add(nums.get(j));\n                }\n            }\n\n            List<Integer> sortedNumerically = new ArrayList<>(subset);\n            Collections.sort(sortedNumerically);\n\n            List<Integer> sortedLexicographically = new ArrayList<>(subset);\n            Collections.sort(sortedLexicographically, (a, b) -> a.toString().compareTo(b.toString()));\n\n            if (sortedNumerically.equals(sortedLexicographically)) {\n                count++;\n            }\n        }\n\n        return count % P;\n    }\n}",
+    "timestamp": "2025-08-05 21:26:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool check_order(int subset[], int size) {\n    int numeric[100];\n    int lexicographic[100];\n    \n    for (int i = 0; i < size; i++) {\n        numeric[i] = subset[i];\n        lexicographic[i] = subset[i];\n    }\n    \n    for (int i = 0; i < size - 1; i++) {\n        for (int j = 0; j < size - i - 1; j++) {\n            if (numeric[j] > numeric[j + 1]) {\n                int temp = numeric[j];\n                numeric[j] = numeric[j + 1];\n                numeric[j + 1] = temp;\n            }\n            \n            if (lexicographic[j] > lexicographic[j + 1]) {\n                int temp = lexicographic[j];\n                lexicographic[j] = lexicographic[j + 1];\n                lexicographic[j + 1] = temp;\n            }\n        }\n    }\n    \n    for (int i = 0; i < size; i++) {\n        if (numeric[i] != lexicographic[i]) {\n            return false;\n        }\n    }\n    \n    return true;\n}\n\nint main() {\n    int A, B, P;\n    \n    while (1) {\n        scanf(\"%d %d %d\", &A, &B, &P);\n        \n        if (A == 0 && B == 0 && P == 0) {\n            break;\n        }\n        \n        int count = 0;\n        \n        for (int mask = 1; mask < (1 << (B - A + 1)); mask++) {\n            int subset[100];\n            int subset_size = 0;\n            \n            for (int j = 0; j < B - A + 1; j++) {\n                if (mask & (1 << j)) {\n                    subset[subset_size++] = A + j;\n                }\n            }\n            \n            if (check_order(subset, subset_size)) {\n                count++;\n            }\n        }\n        \n        printf(\"%d\\n\", count % P);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:26:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isSpecialSubset(const vector<int>& subset) {\n    vector<int> sorted = subset;\n    sort(sorted.begin(), sorted.end());\n    \n    for (int i = 0; i < subset.size(); ++i) {\n        if (subset[i] != sorted[i]) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint countSpecialSubsets(int A, int B) {\n    vector<int> range;\n    for (int i = A; i <= B; ++i) {\n        range.push_back(i);\n    }\n    \n    int count = 0;\n    int n = range.size();\n    \n    for (int mask = 1; mask < (1 << n); ++mask) {\n        vector<int> subset;\n        for (int j = 0; j < n; ++j) {\n            if (mask & (1 << j)) {\n                subset.push_back(range[j]);\n            }\n        }\n        \n        if (isSpecialSubset(subset)) {\n            count++;\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int A, B, P;\n    \n    while (true) {\n        cin >> A >> B >> P;\n        \n        if (A == 0 && B == 0 && P == 0) {\n            break;\n        }\n        \n        int result = countSpecialSubsets(A, B) % P;\n        cout << result << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:26:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_subsets(A, B, P):\n    nums = list(range(A, B+1))\n    count = 0\n    n = len(nums)\n    \n    for i in range(1, 2**n):\n        subset = [nums[j] for j in range(n) if (i & (1 << j))]\n        if subset == sorted(subset):\n            count += 1\n    \n    return count % P\n\ndef main():\n    import sys\n    input = sys.stdin.read\n    data = input().strip().split('\\n')\n    \n    for line in data:\n        A, B, P = map(int, line.split())\n        if A == 0 and B == 0 and P == 0:\n            break\n        result = count_subsets(A, B, P)\n        print(result)\n\nmain()",
+    "timestamp": "2025-08-13 06:26:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class NaturalNumberSets {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        while (true) {\n            int A = scanner.nextInt();\n            int B = scanner.nextInt();\n            int P = scanner.nextInt();\n\n            if (A == 0 && B == 0 && P == 0) {\n                break;\n            }\n\n            int count = countSubsets(A, B, P);\n            System.out.println(count);\n        }\n\n        scanner.close();\n    }\n\n    private static int countSubsets(int A, int B, int P) {\n        int range = B - A + 1;\n        int totalSubsets = (1 << range) - 1; // Total non-empty subsets in range [A, B]\n        return totalSubsets % P;\n    }\n}",
+    "timestamp": "2025-08-13 06:26:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n// Function to count the eligible subsets\nint countEligibleSubsets(int A, int B, int P) {\n    int count = 0;\n    // For each number in range [A, B]\n    for (int i = A; i <= B; i++) {\n        int isDescending = 1;\n        int lastDigit = i % 10;\n        int temp = i / 10;\n        // Check if the number is sorted numerically and lexicographically\n        while (temp > 0) {\n            int currentDigit = temp % 10;\n            if (currentDigit > lastDigit) {\n                isDescending = 0;\n                break;\n            }\n            lastDigit = currentDigit;\n            temp /= 10;\n        }\n        if (isDescending) {\n            count++;\n        }\n    }\n    // Calculate the number of subsets\n    int totalSubsets = 1 << count;\n    \n    // Return result modulo P\n    return (totalSubsets - 1) % P;\n}\n\nint main() {\n    int A, B, P;\n    // Read input until \"0 0 0\"\n    while (scanf(\"%d %d %d\", &A, &B, &P) == 3 && (A != 0 || B != 0 || P != 0)) {\n        printf(\"%d\\n\", countEligibleSubsets(A, B, P));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:26:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(A, B, P):\n    count = 0\n    for subset_size in range(1, B - A + 2):\n        for subset in itertools.combinations(range(A, B+1), subset_size):\n            numeric_sorted = sorted(subset)\n            lexo_sorted = sorted(subset, key=str)\n            if numeric_sorted == lexo_sorted:\n                count += 1\n    return count % P\n\nimport itertools\n\nwhile True:\n    A, B, P = map(int, input().split())\n    if A == 0 and B == 0 and P == 0:\n        break\n    print(solve(A, B, P))",
+    "timestamp": "2025-08-13 06:26:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    input_lines = sys.stdin.read().splitlines()\n    for line in input_lines:\n        A, B, P = map(int, line.strip().split())\n        if A == 0 and B == 0 and P == 0:\n            break\n        n = B - A + 1\n        total = 0\n        for mask in range(1, 1 << n):\n            subset = []\n            for i in range(n):\n                if mask & (1 << i):\n                    subset.append(A + i)\n            sorted_num = sorted(subset)\n            sorted_lex = sorted(subset, key=lambda x: str(x))\n            if sorted_num == sorted_lex:\n                total += 1\n        print(total % P)\n\nsolve()",
+    "timestamp": "2025-08-13 06:26:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\n// Function to count subsets\nunsigned long long countSortedSubsets(int A, int B) {\n    int range = B - A + 1;\n    unsigned long long totalSubsets = (1ULL << range) - 1;\n    return totalSubsets;\n}\n\nint main() {\n    int A, B, P;\n    while (cin >> A >> B >> P) {\n        if (A == 0 && B == 0 && P == 0) break;\n        if (A > B) {\n            cout << 0 << endl;\n            continue;\n        }\n\n        unsigned long long result = countSortedSubsets(A, B);\n        cout << result % P << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:32:05"
+  }
+]

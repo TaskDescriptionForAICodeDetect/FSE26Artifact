@@ -1,0 +1,1 @@
+You are given two integer sequences, each of length N: a_1, ..., a_N and b_1, ..., b_N. There are N^2 ways to choose two integers i and j such that 1 ≤ i, j ≤ N. For each of these N^2 pairs, compute a_i + b_j and write it down. Compute the XOR of these N^2 integers.

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_BOXES 1000\n\nint main() {\n    int R, B, K;\n    scanf(\"%d %d\", &R, &B);\n    \n    K = 0;\n    for (int r = 0; r <= R; r++) {\n        for (int b = 0; b <= B; b++) {\n            if (r == 0 && b == 0) continue;\n            \n            int remainR = R - r;\n            int remainB = B - b;\n            \n            if (remainR < 0 || remainB < 0) continue;\n            \n            int currentK = 1;\n            \n            for (int nextR = 0; nextR <= remainR; nextR++) {\n                for (int nextB = 0; nextB <= remainB; nextB++) {\n                    if (nextR == r && nextB == b) continue;\n                    if (nextR == 0 && nextB == 0) continue;\n                    \n                    if (remainR - nextR >= 0 && remainB - nextB >= 0) {\n                        currentK++;\n                        remainR -= nextR;\n                        remainB -= nextB;\n                        r = nextR;\n                        b = nextB;\n                    }\n                    \n                    if (remainR == 0 && remainB == 0) break;\n                }\n                \n                if (remainR == 0 && remainB == 0) break;\n            }\n            \n            if (remainR == 0 && remainB == 0) {\n                K = (currentK > K) ? currentK : K;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", K);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint main() {\n    int R, B;\n    scanf(\"%d %d\", &R, &B);\n    \n    int K = 0;\n    while (1) {\n        if (K + 1 > R || K + 1 > B) break;\n        if ((long long)(K + 1) * (K + 2) / 2 > R + B) break;\n        K++;\n    }\n    \n    printf(\"%d\\n\", K);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int R, B;\n    cin >> R >> B;\n    \n    int K = 0;\n    while (true) {\n        K++;\n        if (K * (K + 1) / 2 > R + B) {\n            K--;\n            break;\n        }\n    }\n    \n    int max_K = 0;\n    for (int k = 1; k <= K; ++k) {\n        if (k * (k + 1) / 2 <= R + B && k * (k + 1) / 2 <= R + B) {\n            max_K = k;\n        }\n    }\n    \n    cout << max_K << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int R = sc.nextInt();\n        int B = sc.nextInt();\n        \n        int K = 0;\n        while (true) {\n            long total = (long) (K + 1) * (K + 2) / 2;\n            if (total > R + B) {\n                break;\n            }\n            K++;\n        }\n        \n        System.out.println(K);\n    }\n}",
+    "timestamp": "2025-08-05 22:56:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SnukeBallDistribution {\n    public static int maxBoxDistribution(int R, int B) {\n        Set<List<Integer>> uniqueBoxes = new HashSet<>();\n        \n        for (int redBalls = 1; redBalls <= R; redBalls++) {\n            for (int blueBalls = 1; blueBalls <= B; blueBalls++) {\n                int remainingRed = R - redBalls;\n                int remainingBlue = B - blueBalls;\n                \n                if (remainingRed >= 0 && remainingBlue >= 0) {\n                    List<Integer> box = Arrays.asList(redBalls, blueBalls);\n                    uniqueBoxes.add(box);\n                }\n            }\n        }\n        \n        return uniqueBoxes.size();\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int R = scanner.nextInt();\n        int B = scanner.nextInt();\n        \n        System.out.println(maxBoxDistribution(R, B));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:56:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int R, B;\n    cin >> R >> B;\n\n    set<pair<int, int>> unique_boxes;\n    int k = 0;\n\n    for (int r = 1; r <= R; r++) {\n        for (int b = 1; b <= B; b++) {\n            if (unique_boxes.count({r, b}) == 0) {\n                unique_boxes.insert({r, b});\n                k++;\n                R -= r;\n                B -= b;\n            }\n\n            if (R == 0 && B == 0) break;\n        }\n\n        if (R == 0 && B == 0) break;\n    }\n\n    cout << k << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_boxes(R, B):\n    # Generate all possible (non-empty) combinations of red and blue balls in boxes\n    combinations = set()\n    \n    def distribute(r, b, k, current_comb):\n        if r == 0 and b == 0 and k == 0:\n            combinations.add(frozenset(current_comb))\n            return\n        if k < 0 or r < 0 or b < 0:\n            return\n        \n        # Try to put at least one red or one blue in the current box\n        for i in range(r + 1):\n            for j in range(b + 1):\n                if i + j > 0:\n                    new_comb = current_comb.copy()\n                    new_comb.add((i, j))\n                    distribute(r - i, b - j, k - 1, new_comb)\n    \n    # Start distribution with all balls and K boxes\n    distribute(R, B, R + B, set())\n    \n    # The maximum number of unique boxes\n    return len(combinations)\n\n# Example usage\nR = 2\nB = 2\nprint(max_boxes(R, B))  # Example invocation, replace R and B with desired values",
+    "timestamp": "2025-08-13 12:59:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Scanner;\nimport java.util.Set;\n\npublic class SnukeBalls {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int R = scanner.nextInt();\n        int B = scanner.nextInt();\n        int maxK = findMaxK(R, B);\n        System.out.println(maxK);\n        scanner.close();\n    }\n\n    private static int findMaxK(int R, int B) {\n        Set<String> uniqueCombinations = new HashSet<>();\n        for (int r = 1; r <= R; r++) {\n            for (int b = 1; b <= B; b++) {\n                int countR = r;\n                int countB = b;\n                while (countR <= R && countB <= B) {\n                    if (countR + countB > 0) {\n                        uniqueCombinations.add(countR + \",\" + countB);\n                    }\n                    countR += r;\n                    countB += b;\n                }\n            }\n        }\n        return uniqueCombinations.size();\n    }\n}",
+    "timestamp": "2025-08-13 12:59:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int R, B;\n    scanf(\"%d %d\", &R, &B);\n    \n    int K = 0;\n    for (int r = 1; r <= R; ++r) {\n        for (int b = 1; b <= B; ++b) {\n            if (r + b <= (R + B)) {\n                ++K;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", K);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:59:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint calculateMaxK(int R, int B) {\n    int maxK = 0;\n    for (int r = 1; r <= R; ++r) {\n        for (int b = 1; b <= B; ++b) {\n            if (r + b <= R + B && r <= R && b <= B) {\n                maxK++;\n            }\n        }\n    }\n    return maxK;\n}\n\nint main() {\n    int R, B;\n    cin >> R >> B;\n    int maxK = calculateMaxK(R, B);\n    cout << maxK << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:59:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_boxes(R, B):\n    def can_distribute(K):\n        if K * (K + 1) // 2 > R + B:\n            return False\n        \n        boxes = set()\n        for red in range(K + 1):\n            for blue in range(K + 1):\n                if red + blue == 0 or red + blue > K:\n                    continue\n                if red > R or blue > B:\n                    continue\n                \n                box = (red, blue)\n                if box in boxes:\n                    continue\n                \n                boxes.add(box)\n                if len(boxes) == K:\n                    return True\n        \n        return False\n\n    for K in range(R + B + 1, 0, -1):\n        if can_distribute(K):\n            return K\n    \n    return 0\n\n# Read input\nR, B = map(int, input().split())\n\n# Print result\nprint(max_boxes(R, B))",
+    "timestamp": "2025-08-13 13:00:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "R, B = map(int, input().split())\n\nmax_k = 0\nfor k in range(1, 1000):  # Assuming a reasonable upper limit for K\n    if k * (k + 1) // 2 > R + B:\n        break\n    # Check if R and B can be split into k distinct pairs (r_i, b_i) where r_i + b_i > 0\n    # The minimal sum is k*(k+1)/2 since (1,0), (2,0), ..., (k,0) sums to k*(k+1)/2\n    if k * (k + 1) // 2 <= R + B:\n        # Now, check if we can distribute R and B into these k boxes\n        # The minimal R is sum_{i=1 to k} r_i where r_i are distinct and >=0, sum r_i = R\n        # Similarly for B\n        # The minimal R is sum_{i=0 to k-1} i = k*(k-1)/2\n        min_r = k * (k - 1) // 2\n        min_b = k * (k - 1) // 2\n        if R >= min_r and B >= min_b and (R - min_r) + (B - min_b) >= k:\n            max_k = k\n\nprint(max_k)",
+    "timestamp": "2025-08-13 13:00:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxK(R, B) {\n  let K = 0;\n  for (let i = 1; i <= R; i++) {\n    for (let j = 1; j <= B; j++) {\n      if (i + j - 1 > K && i + j <= R + B) {\n        const redBalls = R - i;\n        const blueBalls = B - j;\n        if (redBalls >= 0 && blueBalls >= 0) {\n          K = i + j - 1;\n        }\n      }\n    }\n  }\n  return K;\n}\n\nconsole.log(maxK(5, 4)); // Example usage: change R and B according to the test case",
+    "timestamp": "2025-08-13 13:00:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(R, B) {\n    let k = 0;\n    let redLeft = R;\n    let blueLeft = B;\n\n    for (let redInBox = 0; redInBox <= redLeft; redInBox++) {\n        for (let blueInBox = 0; blueInBox <= blueLeft; blueInBox++) {\n            if (redInBox === 0 && blueInBox === 0) continue;\n            \n            if (redInBox + blueInBox > 0 && \n                redInBox <= redLeft && \n                blueInBox <= blueLeft) {\n                k++;\n                redLeft -= redInBox;\n                blueLeft -= blueInBox;\n            }\n            \n            if (redLeft === 0 && blueLeft === 0) break;\n        }\n        \n        if (redLeft === 0 && blueLeft === 0) break;\n    }\n\n    return k;\n}",
+    "timestamp": "2025-08-13 13:00:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxK(R, B) {\n    let k = 0;\n    let sumR = 0;\n    let sumB = 0;\n    \n    while (true) {\n        k++;\n        sumR += k;\n        sumB += k;\n        \n        if (sumR > R || sumB > B) {\n            k--;\n            break;\n        }\n    }\n    \n    return k;\n}\n\nconst readline = require('readline');\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout\n});\n\nrl.on('line', (line) => {\n    const [R, B] = line.trim().split(' ').map(Number);\n    console.log(maxK(R, B));\n    rl.close();\n});",
+    "timestamp": "2025-08-13 13:00:36"
+  }
+]

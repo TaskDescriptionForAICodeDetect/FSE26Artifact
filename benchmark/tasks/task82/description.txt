@@ -1,0 +1,1 @@
+As a recreational activity in class, we decided to play bowling. Create a program that takes the scoring information of each participant as input and outputs the results sorted by score in descending order. In case of a tie, output should be ordered by student ID in ascending order. The number of participants must be between 3 and 40, with each participant bowling one game.

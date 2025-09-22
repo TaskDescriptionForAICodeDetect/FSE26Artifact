@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int64_t matrix[N][N];\n    int64_t start = 1;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            matrix[i][j] = start;\n            start += N;\n        }\n    }\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            printf(\"%lld \", matrix[i][j]);\n        }\n        printf(\"\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:02:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    long long m = 1;\n    long long matrix[N][N];\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            if (i == 0 && j == 0) {\n                matrix[i][j] = 1;\n            } else if (j == 0) {\n                matrix[i][j] = matrix[i-1][j] + m + 1;\n            } else {\n                matrix[i][j] = matrix[i][j-1] + m + 1;\n            }\n        }\n    }\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            printf(\"%lld \", matrix[i][j]);\n        }\n        printf(\"\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:02:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<vector<long long>> matrix(N, vector<long long>(N));\n    \n    long long m = 1;\n    long long current = 1;\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if ((i + j) % 2 == 0) {\n                matrix[i][j] = current * (m + 1);\n            } else {\n                matrix[i][j] = current;\n            }\n            current += 1;\n        }\n    }\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            cout << matrix[i][j] << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:02:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class MatrixConstruction {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        scanner.close();\n\n        long[][] matrix = new long[N][N];\n        long m = 1;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                if (i == 0 && j == 0) {\n                    matrix[i][j] = 1;\n                } else if (i == 0) {\n                    matrix[i][j] = matrix[i][j - 1] + m + 1;\n                } else if (j == 0) {\n                    matrix[i][j] = matrix[i - 1][j] + m + 1;\n                } else {\n                    matrix[i][j] = matrix[i - 1][j] + matrix[i][j - 1] - matrix[i - 1][j - 1] + m;\n                }\n            }\n        }\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                System.out.print(matrix[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:02:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static long[][] constructMatrix(int N) {\n        long[][] matrix = new long[N][N];\n        long currentValue = 1;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                matrix[i][j] = currentValue;\n                currentValue += 2;\n            }\n        }\n\n        return matrix;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        long[][] result = constructMatrix(N);\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                System.out.print(result[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:02:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\nusing ll = long long;\n\nvector<vector<ll>> constructMatrix(int N) {\n    vector<vector<ll>> a(N, vector<ll>(N));\n    set<ll> used;\n    ll current = 1;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            while (used.count(current)) current++;\n            a[i][j] = current;\n            used.insert(current);\n            current++;\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            if (j + 1 < N) {\n                ll x = a[i][j], y = a[i][j+1];\n                ll m = max(x, y) % min(x, y);\n                if (i > 0 && j > 0) {\n                    assert(max(a[i-1][j], a[i][j-1]) % min(a[i-1][j], a[i][j-1]) == m);\n                }\n            }\n            if (i + 1 < N) {\n                ll x = a[i][j], y = a[i+1][j];\n                ll m = max(x, y) % min(x, y);\n                if (i > 0 && j > 0) {\n                    assert(max(a[i-1][j], a[i][j-1]) % min(a[i-1][j], a[i][j-1]) == m);\n                }\n            }\n        }\n    }\n\n    return a;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<vector<ll>> result = constructMatrix(N);\n    \n    for (const auto& row : result) {\n        for (ll val : row) {\n            cout << val << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_matrix(N):\n    matrix = [[0] * N for _ in range(N)]\n    m = 1  # We choose m = 1 for simplicity\n    current_val = 1\n\n    for i in range(N):\n        for j in range(N):\n            matrix[i][j] = current_val\n            current_val += 1\n\n    if N > 1:\n        for i in range(N):\n            for j in range(N - 1):\n                matrix[i][j + 1], matrix[i][j] = matrix[i][j], matrix[i][j + 1]\n\n    return matrix\n\n\n# Example use\nN = 3\nresult_matrix = construct_matrix(N)\n\nfor row in result_matrix:\n    print(' '.join(map(str, row)))",
+    "timestamp": "2025-08-13 13:26:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MatrixConstruction {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        long[][] matrix = constructMatrix(n);\n        \n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                System.out.print(matrix[i][j] + \" \");\n            }\n            System.out.println();\n        }\n        \n        scanner.close();\n    }\n\n    private static long[][] constructMatrix(int n) {\n        long[][] matrix = new long[n][n];\n        long base = 1000L; // Choose a base value m that is comfortable, e.g., 1000\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                matrix[i][j] = base * (i * n + j + 1);\n            }\n        }\n\n        return matrix;\n    }\n}",
+    "timestamp": "2025-08-13 13:26:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n// Function to create the required matrix\nvoid createMatrix(long long n, long long a[n][n]) {\n    long long baseValue = 1;\n    long long increment = n;\n\n    for (long long i = 0; i < n; i++) {\n        for (long long j = 0; j < n; j++) {\n            a[i][j] = baseValue + increment * i + j;\n        }\n    }\n}\n\nint main() {\n    long long n;\n\n    // Input the size of the matrix\n    printf(\"Enter the size of N: \");\n    scanf(\"%lld\", &n);\n\n    // Check if N is valid\n    if (n <= 0) {\n        printf(\"N must be a positive integer.\\n\");\n        return 1;\n    }\n\n    // Create an N-by-N matrix\n    long long matrix[n][n];\n    createMatrix(n, matrix);\n\n    // Output the matrix\n    printf(\"The generated matrix is:\\n\");\n    for (long long i = 0; i < n; i++) {\n        for (long long j = 0; j < n; j++) {\n            printf(\"%lld \", matrix[i][j]);\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:26:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    long long N;\n    cin >> N;\n\n    vector<vector<long long>> matrix(N, vector<long long>(N));\n\n    long long base = 1;\n    for (long long i = 0; i < N; ++i) {\n        for (long long j = 0; j < N; ++j) {\n            matrix[i][j] = base * (i * N + j + 1);\n        }\n    }\n\n    for (long long i = 0; i < N; ++i) {\n        for (long long j = 0; j < N; ++j) {\n            cout << matrix[i][j] << \" \";\n        }\n        cout << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:27:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_matrix(N):\n    def generate_matrix(N):\n        base_value = 10**15\n        matrix = [[0 for _ in range(N)] for _ in range(N)]\n        \n        # Fill first row\n        for j in range(N):\n            matrix[0][j] = base_value + j + 1\n        \n        # Fill subsequent rows with specific pattern\n        for i in range(1, N):\n            for j in range(N):\n                matrix[i][j] = matrix[0][j] + i * base_value\n        \n        return matrix\n\n    return generate_matrix(N)\n\ndef print_matrix(matrix):\n    for row in matrix:\n        print(' '.join(map(str, row)))\n\n# Example usage\nN = int(input())\nresult_matrix = construct_matrix(N)\nprint_matrix(result_matrix)",
+    "timestamp": "2025-08-13 13:27:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "N = int(input())\nm = 1\nmatrix = [[0]*N for _ in range(N)]\nfor i in range(N):\n    for j in range(N):\n        if (i + j) % 2 == 0:\n            matrix[i][j] = (i + j) * 2 + 2\n        else:\n            matrix[i][j] = (i + j) * 2 + 1\nfor row in matrix:\n    print(' '.join(map(str, row)))",
+    "timestamp": "2025-08-13 13:27:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructMatrix(N) {\n    const matrix = Array.from({ length: N }, () => Array(N).fill(0));\n    let current = 1;\n    const m = 1; // Let's pick m as 1, satisfying max(x, y) mod min(x, y) == 1\n\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < N; j++) {\n            matrix[i][j] = current;\n            current += 1;\n            // To satisfy the max(x, y) mod min(x, y) == 1 condition\n            if (j > 0) {\n                // Ensure this element is paired with its left adjacent\n                current += (m - 1);\n            }\n        }\n    }\n\n    return matrix;\n}\n\n// Example usage\nconst N = 3;\nconst matrix = constructMatrix(N);\nconsole.log(matrix);",
+    "timestamp": "2025-08-13 13:27:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructMatrix(N) {\n    const matrix = Array.from({ length: N }, () => Array(N).fill(0));\n    const usedNumbers = new Set();\n\n    function generateUniqueNumber() {\n        let num;\n        do {\n            num = BigInt(Math.floor(Math.random() * 1e15) + 1);\n        } while (usedNumbers.has(num));\n        usedNumbers.add(num);\n        return num;\n    }\n\n    // Start with a base number\n    matrix[0][0] = generateUniqueNumber();\n\n    // Fill the first row\n    for (let j = 1; j < N; j++) {\n        let prevNum = matrix[0][j-1];\n        matrix[0][j] = generateUniqueNumber();\n        while ((Math.max(prevNum, matrix[0][j]) % Math.min(prevNum, matrix[0][j])) !== 1) {\n            matrix[0][j] = generateUniqueNumber();\n        }\n    }\n\n    // Fill the rest of the matrix\n    for (let i = 1; i < N; i++) {\n        for (let j = 0; j < N; j++) {\n            let prevNum = matrix[i-1][j];\n            matrix[i][j] = generateUniqueNumber();\n            while ((Math.max(prevNum, matrix[i][j]) % Math.min(prevNum, matrix[i][j])) !== 1) {\n                matrix[i][j] = generateUniqueNumber();\n            }\n        }\n    }\n\n    return matrix;\n}",
+    "timestamp": "2025-08-13 13:28:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructMatrix(N) {\n    let matrix = new Array(N);\n    for (let i = 0; i < N; i++) {\n        matrix[i] = new Array(N);\n    }\n    \n    let m = 1;\n    let current = 1;\n    \n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < N; j++) {\n            if (i % 2 === 0) {\n                matrix[i][j] = current;\n                current += m;\n            } else {\n                matrix[i][N - 1 - j] = current;\n                current += m;\n            }\n        }\n    }\n    \n    return matrix;\n}",
+    "timestamp": "2025-08-13 13:28:08"
+  }
+]

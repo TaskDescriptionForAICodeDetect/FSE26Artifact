@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_N 100005\n\ntypedef struct Node {\n    int vertex;\n    struct Node* next;\n} Node;\n\nNode* graph[MAX_N];\nbool visited[MAX_N];\nint max_depth;\n\nvoid add_edge(int u, int v) {\n    Node* new_node = (Node*)malloc(sizeof(Node));\n    new_node->vertex = v;\n    new_node->next = graph[u];\n    graph[u] = new_node;\n}\n\nvoid dfs(int vertex, int depth) {\n    visited[vertex] = true;\n    max_depth = (depth > max_depth) ? depth : max_depth;\n\n    for (Node* curr = graph[vertex]; curr != NULL; curr = curr->next) {\n        if (!visited[curr->vertex]) {\n            dfs(curr->vertex, depth + 1);\n        }\n    }\n}\n\nint find_uninity(int N) {\n    int k = 0;\n    max_depth = 0;\n\n    for (int i = 1; i <= N; i++) visited[i] = false;\n\n    for (int i = 1; i <= N; i++) {\n        if (!visited[i]) {\n            dfs(i, 0);\n            k = (max_depth > k) ? max_depth : k;\n        }\n    }\n\n    return k;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 1; i <= M; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        add_edge(u, v);\n        add_edge(v, u);\n    }\n\n    printf(\"%d\\n\", find_uninity(N));\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAXN 100000\n\ntypedef struct Node {\n    int vertex;\n    struct Node* next;\n} Node;\n\nNode* adj[MAXN + 1];\nint uninity[MAXN + 1];\n\nvoid addEdge(int u, int v) {\n    Node* newNode = (Node*)malloc(sizeof(Node));\n    newNode->vertex = v;\n    newNode->next = adj[u];\n    adj[u] = newNode;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nvoid dfs(int u, int parent) {\n    int maxUninity = 0;\n    Node* child = adj[u];\n    while (child != NULL) {\n        int v = child->vertex;\n        if (v != parent) {\n            dfs(v, u);\n            maxUninity = max(maxUninity, uninity[v]);\n        }\n        child = child->next;\n    }\n    uninity[u] = maxUninity + 1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N - 1; i++) {\n        int u, v;\n        scanf(\"%d %d\", &u, &v);\n        addEdge(u, v);\n        addEdge(v, u);\n    }\n    dfs(1, -1);\n    printf(\"%d\\n\", uninity[1] - 1);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\nusing namespace std;\n\nvector<vector<int>> adj;\nunordered_map<int, int> uninity;\n\nint dfs(int u, int parent) {\n    vector<int> children_uninity;\n    for (int v : adj[u]) {\n        if (v != parent) {\n            children_uninity.push_back(dfs(v, u));\n        }\n    }\n    \n    int k = 0;\n    while (true) {\n        int count = 0;\n        for (int uni : children_uninity) {\n            if (uni == k) {\n                count++;\n            }\n        }\n        if (count == 0 || (count == 1 && k != 0)) {\n            break;\n        }\n        k++;\n    }\n    uninity[u] = k;\n    return k;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    adj.resize(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int u, v;\n        cin >> u >> v;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n    \n    int root = 1;\n    int result = dfs(root, -1);\n    \n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Uninity {\n    static List<Integer>[] adj;\n    static int[] color;\n    static int k;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        adj = new ArrayList[N + 1];\n        for (int i = 1; i <= N; i++) {\n            adj[i] = new ArrayList<>();\n        }\n        for (int i = 0; i < N - 1; i++) {\n            int u = sc.nextInt();\n            int v = sc.nextInt();\n            adj[u].add(v);\n            adj[v].add(u);\n        }\n        color = new int[N + 1];\n        k = 0;\n        dfs(1, 0);\n        System.out.println(k);\n    }\n\n    static int dfs(int u, int parent) {\n        int mask = 0;\n        for (int v : adj[u]) {\n            if (v != parent) {\n                int childMask = dfs(v, u);\n                mask |= childMask;\n            }\n        }\n        int newMask = 0;\n        for (int i = 0; i < 30; i++) {\n            if ((mask & (1 << i)) != 0) {\n                k = Math.max(k, i);\n                newMask |= (1 << i);\n            }\n        }\n        for (int i = 0; i < 30; i++) {\n            if ((newMask & (1 << i)) == 0) {\n                newMask |= (1 << i);\n                k = Math.max(k, i);\n                break;\n            }\n        }\n        return newMask;\n    }\n}",
+    "timestamp": "2025-08-05 23:27:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class UnivityTree {\n    static List<List<Integer>> graph;\n    static int[] depth;\n    static int N;\n\n    public static int findUnivity(int[][] edges) {\n        N = edges.length + 1;\n        graph = new ArrayList<>(N + 1);\n        for (int i = 0; i < N + 1; i++) {\n            graph.add(new ArrayList<>());\n        }\n\n        for (int[] edge : edges) {\n            graph.get(edge[0]).add(edge[1]);\n            graph.get(edge[1]).add(edge[0]);\n        }\n\n        depth = new int[N + 1];\n        dfs(1, 0, 0);\n\n        int maxDepth = 0;\n        for (int i = 1; i <= N; i++) {\n            maxDepth = Math.max(maxDepth, depth[i]);\n        }\n\n        return maxDepth;\n    }\n\n    static void dfs(int node, int parent, int currentDepth) {\n        depth[node] = currentDepth;\n        for (int child : graph.get(node)) {\n            if (child != parent) {\n                dfs(child, node, currentDepth + 1);\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int[][] edges = {{1, 2}, {1, 3}, {2, 4}, {2, 5}};\n        System.out.println(findUnivity(edges));\n    }\n}",
+    "timestamp": "2025-08-05 23:27:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint calculateUninity(const vector<vector<int>>& graph) {\n    int n = graph.size();\n    vector<int> depth(n, 0);\n    \n    function<int(int, int)> dfs = [&](int node, int parent) {\n        int maxDepth = 0;\n        for (int child : graph[node]) {\n            if (child != parent) {\n                int childDepth = dfs(child, node) + 1;\n                maxDepth = max(maxDepth, childDepth);\n            }\n        }\n        depth[node] = maxDepth;\n        return maxDepth;\n    };\n    \n    dfs(0, -1);\n    \n    return *max_element(depth.begin(), depth.end());\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<vector<int>> graph(n);\n    \n    for (int i = 0; i < n - 1; i++) {\n        int u, v;\n        cin >> u >> v;\n        u--; v--;\n        graph[u].push_back(v);\n        graph[v].push_back(u);\n    }\n    \n    cout << calculateUninity(graph) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:27:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_uninity(tree, node, parent):\n    child_uninities = []\n    for neighbor in tree[node]:\n        if neighbor != parent:\n            child_uninities.append(find_uninity(tree, neighbor, node))\n    if not child_uninities:\n        return 0\n    return max(child_uninities) + 1\n\ndef minimum_uninity(n, edges):\n    if n == 1:\n        return 0\n    tree = {i: [] for i in range(1, n + 1)}\n    for u, v in edges:\n        tree[u].append(v)\n        tree[v].append(u)\n    return find_uninity(tree, 1, -1) - 1\n\n# Example usage:\nn = 5\nedges = [(1, 2), (1, 3), (3, 4), (3, 5)]\nprint(minimum_uninity(n, edges))",
+    "timestamp": "2025-08-13 15:22:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class TreeUninity {\n\n    private static List<Integer>[] tree;\n    private static int[] subtreeSize;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n\n        tree = new ArrayList[n + 1];\n        subtreeSize = new int[n + 1];\n\n        for (int i = 1; i <= n; i++) {\n            tree[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < n - 1; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n            tree[u].add(v);\n            tree[v].add(u);\n        }\n\n        dfs(1, -1);\n\n        int minUninity = 0;\n        for (int i = 1; i <= n; i++) {\n            minUninity = Math.max(minUninity, subtreeSize[i] - 1);\n        }\n\n        System.out.println(minUninity);\n    }\n\n    private static void dfs(int node, int parent) {\n        subtreeSize[node] = 1;\n\n        for (int adjacent : tree[node]) {\n            if (adjacent != parent) {\n                dfs(adjacent, node);\n                subtreeSize[node] += subtreeSize[adjacent];\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-13 15:22:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100000\n\nint N, edges;\nint tree[MAXN];\nint uninity[MAXN];\nint visited[MAXN];\nint children[MAXN];\nint max1[MAXN];\nint max2[MAXN];\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nvoid dfs(int node) {\n    visited[node] = 1;\n    max1[node] = max2[node] = -1;\n    children[node] = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (tree[i] == node && !visited[i]) {\n            dfs(i);\n            children[node]++;\n            \n            if (uninity[i] > max1[node]) {\n                max2[node] = max1[node];\n                max1[node] = uninity[i];\n            } else if (uninity[i] > max2[node]) {\n                max2[node] = uninity[i];\n            }\n        }\n    }\n\n    if (children[node] == 0) {\n        uninity[node] = 0;\n    } else {\n        uninity[node] = 1 + max1[node];\n    }\n}\n\nvoid find_uninity(int root) {\n    dfs(root);\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    int u, v;\n    edges = N - 1;\n\n    for (int i = 0; i < edges; i++) {\n        scanf(\"%d %d\", &u, &v);\n        tree[v - 1] = u - 1; // parent pointer, zero-indexed\n    }\n\n    // Assume node 0 is the root for this problem\n    find_uninity(0);\n\n    printf(\"%d\\n\", uninity[0]);\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:22:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst int MAX_N = 100005;\n\nvector<int> tree[MAX_N];\nint depth[MAX_N];\n\nint dfs(int node, int parent) {\n    vector<int> depths;\n    for (int neighbor : tree[node]) {\n        if (neighbor != parent) {\n            depths.push_back(dfs(neighbor, node));\n        }\n    }\n    \n    if (depths.empty()) return 0;\n    \n    sort(depths.begin(), depths.end(), greater<int>());\n    \n    for (int i = 0; i < depths.size(); i++) {\n        depths[i]++;\n    }\n    \n    return *max_element(depths.begin(), depths.end());\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    for (int i = 0; i < N - 1; i++) {\n        int u, v;\n        cin >> u >> v;\n        tree[u].push_back(v);\n        tree[v].push_back(u);\n    }\n    \n    cout << dfs(1, -1) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:22:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import defaultdict\n\ndef solve_uninity(N, edges):\n    # Create adjacency list representation of the tree\n    graph = defaultdict(list)\n    for u, v in edges:\n        graph[u].append(v)\n        graph[v].append(u)\n    \n    # Track visited vertices during DFS\n    visited = [False] * (N + 1)\n    \n    def dfs(node):\n        visited[node] = True\n        max_uninity = 0\n        \n        # Explore all adjacent unvisited nodes\n        for neighbor in graph[node]:\n            if not visited[neighbor]:\n                child_uninity = dfs(neighbor)\n                max_uninity = max(max_uninity, child_uninity + 1)\n        \n        return max_uninity\n    \n    # Find max uninity by running DFS from an arbitrary node\n    max_tree_uninity = dfs(1)\n    \n    return max_tree_uninity\n\n# Read input\nN = int(input())\nedges = []\nfor _ in range(N-1):\n    u, v = map(int, input().split())\n    edges.append((u, v))\n\n# Print result\nprint(solve_uninity(N, edges))",
+    "timestamp": "2025-08-13 15:22:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef solve():\n    sys.setrecursionlimit(1 << 25)\n    N = int(sys.stdin.readline())\n    adj = [[] for _ in range(N+1)]\n    for _ in range(N-1):\n        u, v = map(int, sys.stdin.readline().split())\n        adj[u].append(v)\n        adj[v].append(u)\n    \n    parent = [0]*(N+1)\n    children = [[] for _ in range(N+1)]\n    root = 1\n    q = deque([root])\n    parent[root] = 0\n    while q:\n        u = q.popleft()\n        for v in adj[u]:\n            if v != parent[u]:\n                parent[v] = u\n                children[u].append(v)\n                q.append(v)\n    \n    k_dict = {}\n    \n    stack = [(root, False)]\n    while stack:\n        node, processed = stack.pop()\n        if not processed:\n            stack.append((node, True))\n            for child in reversed(children[node]):\n                stack.append((child, False))\n        else:\n            if not children[node]:\n                k_dict[node] = 0\n            else:\n                child_ks = [k_dict[child] for child in children[node]]\n                freq = {}\n                for k in child_ks:\n                    freq[k] = freq.get(k, 0) + 1\n                current_k = 0\n                while freq.get(current_k, 0) > 0:\n                    count = freq[current_k]\n                    if count > 1:\n                        freq[current_k + 1] = freq.get(current_k + 1, 0) + (count - 1)\n                    current_k += 1\n                k_dict[node] = current_k\n    print(k_dict[root])\n\nsolve()",
+    "timestamp": "2025-08-13 15:23:01"
+  }
+]

@@ -1,0 +1,1 @@
+Given two circles c1 and c2, determine their intersections and print the number of common tangent lines. The outputs are as follows: print '4' if they do not cross, '3' if they are circumscribed, '2' if they intersect, '1' if a circle is inscribed in another, and '0' if one circle includes the other.

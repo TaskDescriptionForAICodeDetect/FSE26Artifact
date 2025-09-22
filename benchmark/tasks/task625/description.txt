@@ -1,0 +1,1 @@
+Write a program that manipulates a weighted rooted tree T with the following operations: add(v, w) to add w to the edge connecting node v and its parent, and getSum(u) to report the sum of weights of all edges from the root to node u. The tree consists of n nodes with unique IDs from 0 to n-1, and all weights are initialized to zero.

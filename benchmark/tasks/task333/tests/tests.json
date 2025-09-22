@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "3\ngu 20 pa 10\nci 20 gu 10\npa 20 ci 10\n0\n",
+      "output": "40"
+    },
+    {
+      "input": "2\ntool 20 tool 10\nproduct 1000 tool 10\n0\n",
+      "output": "30"
+    },
+    {
+      "input": "8\nfishhook  21 disk     3\nmill      14 axe      7\nboomerang 56 sundial 28\nflint     35 fishhook 5\naxe       35 flint   14\ndisk      42 disk     2\nsundial   14 disk     7\nhammer    28 mill     7\n0\n",
+      "output": "113"
+    }
+  ]
+}

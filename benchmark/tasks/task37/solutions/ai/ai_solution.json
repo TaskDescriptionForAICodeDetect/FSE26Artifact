@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(a, b, c, d):\n    det_a = a * d - b * c\n    \n    if det_a == 0:\n        return 0.0\n    \n    norm_diff = min(\n        abs(a - b * c / d),\n        abs(b - a * d / c),\n        abs(c - a * d / b),\n        abs(d - b * c / a)\n    )\n    \n    return norm_diff\n\na, b = map(int, input().split())\nc, d = map(int, input().split())\n\nprint(\"{:.10f}\".format(solve(a, b, c, d)))",
+    "timestamp": "2025-08-05 17:32:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import math\n\na, b = map(int, input().split())\nc, d = map(int, input().split())\n\ndet = a * d - b * c\n\nif det == 0:\n    print(0.0)\nelse:\n    # The minimal norm is |det| / (2 * max_denominator), where max_denominator is the maximum of the row and column sums\n    # The denominator is max(|a| + |d|, |b| + |c|, |a| + |b| + |c| + |d|) / 2, but simplified to max(|a + d|, |b + c|, ...)\n    # However, more accurately, it's the maximum of the four possible denominators\n    # We need to find the minimal t such that |(a ± t)(d ± t) - (b ± t)(c ± t)| = 0\n    # The equation simplifies to |ad - bc ± t(a + d - b - c)| = 0\n    # So t = |det| / |a + d - b - c|, but we have to consider all possible sign combinations\n    \n    # The minimal t is |det| / (max possible denominator)\n    # The denominator can be |a + d - b - c|, |a - d + b - c|, etc., but in practice, the maximum is the maximum of:\n    # |a| + |d| + |b| + |c|, but more accurately, the maximum of the four possible combinations:\n    # |a + d - b - c|, |a + d + b + c|, |a - d + b - c|, |a - d - b + c|\n    # But for minimal t, we take the maximum of these as the denominator\n    \n    denom1 = abs(a + d - b - c)\n    denom2 = abs(a + d + b + c)\n    denom3 = abs(a - d + b - c)\n    denom4 = abs(a - d - b + c)\n    max_denom = max(denom1, denom2, denom3, denom4)\n    \n    if max_denom == 0:\n        # All denominators are zero, which means the original matrix is already degenerate\n        print(0.0)\n    else:\n        min_t = abs(det) / max_denom\n        print(\"{0:.10f}\".format(min_t))",
+    "timestamp": "2025-08-05 17:32:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_norm(a, b, c, d):\n    det = a * d - b * c\n    if det == 0:\n        return 0.0\n    # Solve for x, y such that (a + x, b + y, c + x, d + y) gives det = 0\n    # i.e., (a + x)(d + y) - (b + y)(c + x) = 0\n    # Let dx = x - y, then solve: dx * det = bc - ad\n    dx = (b * c - a * d) / det\n    # Determine min norm ||(x, y)||\n    norm = min(abs(dx / 2), abs(dx + a), abs(dx + b), abs(dx + c), abs(dx + d))\n    return norm\n\n# Input reading\nimport sys\ninput = sys.stdin.read\ndata = input().split()\na, b = int(data[0]), int(data[1])\nc, d = int(data[2]), int(data[3])\nresult = min_norm(a, b, c, d)\nprint(f\"{result:.10f}\")",
+    "timestamp": "2025-08-12 21:54:02"
+  }
+]

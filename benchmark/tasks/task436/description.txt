@@ -1,0 +1,8 @@
+Zero division checker
+Morioka is in trouble... The program that was written by Anahara crashes. The program written by Anahara reads an expression in reverse Polish notation and outputs its calculation result. According to the crash log, the problem seems to be due to division by zero. This may be because Morioka inputted the wrong expression, or perhaps there is a bug in Anahara's program.
+
+Morioka thought about reading Anahara's code, but it seems that it is written in assembly, a language that he doesn't understand, and just looking at it gives him a headache. Therefore, Morioka asked you to write a program to check if the expression is incorrect. An expression is considered incorrect if there is a possibility of division by zero when calculated.
+
+Additionally, Anahara's code runs on an old computer and performs addition, subtraction, multiplication, and division using integers, with the results stored as 8-bit unsigned integers. For example, 255 + 1 results in 0, and 3 / 2 results in 1.
+
+Oh, and this is a secret from Anahara.

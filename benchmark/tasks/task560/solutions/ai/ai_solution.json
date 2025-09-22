@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int N, north = 0, south = 0, east = 0, west = 0;\n    char S[100001];\n    \n    scanf(\"%d %s\", &N, S);\n    \n    for (int i = 0; i < N; i++) {\n        switch (S[i]) {\n            case 'A' ... 'M': north++; break;\n            case 'N' ... 'Z': south++; break;\n            case 'a' ... 'm': east++; break;\n            case 'n' ... 'z': west++; break;\n        }\n    }\n    \n    int net_north = north - south;\n    int net_east = east - west;\n    \n    char simplified[100001] = {0};\n    int simplified_len = 0;\n    \n    for (int i = 0; i < abs(net_north); i++) {\n        simplified[simplified_len++] = net_north > 0 ? 'A' : 'N';\n    }\n    \n    for (int i = 0; i < abs(net_east); i++) {\n        simplified[simplified_len++] = net_east > 0 ? 'a' : 'n';\n    }\n    \n    printf(\"%d\\n\", simplified_len);\n    printf(\"%s\\n\", simplified);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:08:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Position;\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    char S[N+1];\n    scanf(\"%s\", S);\n\n    Position pos = {0, 0};\n    for (int i = 0; i < N; i++) {\n        char c = S[i];\n        if (c >= 'A' && c <= 'M') {\n            pos.y++;\n        } else if (c >= 'N' && c <= 'Z') {\n            pos.y--;\n        } else if (c >= 'a' && c <= 'm') {\n            pos.x++;\n        } else if (c >= 'n' && c <= 'z') {\n            pos.x--;\n        }\n    }\n\n    char *simplified = (char *)malloc(N + 1);\n    int len = 0;\n\n    int x = pos.x;\n    int y = pos.y;\n\n    // Handle East/West\n    if (x > 0) {\n        for (int i = 0; i < x; i++) {\n            simplified[len++] = 'a';\n        }\n    } else if (x < 0) {\n        for (int i = 0; i < -x; i++) {\n            simplified[len++] = 'n';\n        }\n    }\n\n    // Handle North/South\n    if (y > 0) {\n        for (int i = 0; i < y; i++) {\n            simplified[len++] = 'A';\n        }\n    } else if (y < 0) {\n        for (int i = 0; i < -y; i++) {\n            simplified[len++] = 'N';\n        }\n    }\n\n    simplified[len] = '\\0';\n\n    printf(\"%d\\n\", len);\n    if (len > 0) {\n        printf(\"%s\\n\", simplified);\n    } else {\n        printf(\"\\n\");\n    }\n\n    free(simplified);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:08:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n    \n    int north_south = 0;\n    int east_west = 0;\n    vector<char> simplified;\n    \n    for (char c : S) {\n        if (c >= 'A' && c <= 'M') {\n            north_south++;\n            simplified.push_back(c);\n        } else if (c >= 'N' && c <= 'Z') {\n            north_south--;\n            simplified.push_back(c);\n        } else if (c >= 'a' && c <= 'm') {\n            east_west++;\n            simplified.push_back(c);\n        } else if (c >= 'n' && c <= 'z') {\n            east_west--;\n            simplified.push_back(c);\n        }\n    }\n    \n    vector<char> result;\n    for (char c : simplified) {\n        if (c >= 'A' && c <= 'M' && north_south > 0) {\n            result.push_back(c);\n            north_south--;\n        } else if (c >= 'N' && c <= 'Z' && north_south < 0) {\n            result.push_back(c);\n            north_south++;\n        } else if (c >= 'a' && c <= 'm' && east_west > 0) {\n            result.push_back(c);\n            east_west--;\n        } else if (c >= 'n' && c <= 'z' && east_west < 0) {\n            result.push_back(c);\n            east_west++;\n        }\n    }\n    \n    cout << result.size() << endl;\n    for (char c : result) {\n        cout << c;\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String S = scanner.next();\n        scanner.close();\n\n        int northSouth = 0;\n        int eastWest = 0;\n\n        for (int i = 0; i < N; i++) {\n            char c = S.charAt(i);\n            if (c >= 'A' && c <= 'M') {\n                northSouth++;\n            } else if (c >= 'N' && c <= 'Z') {\n                northSouth--;\n            } else if (c >= 'a' && c <= 'm') {\n                eastWest++;\n            } else if (c >= 'n' && c <= 'z') {\n                eastWest--;\n            }\n        }\n\n        StringBuilder result = new StringBuilder();\n        if (northSouth > 0) {\n            for (int i = 0; i < northSouth; i++) {\n                result.append('A');\n            }\n        } else if (northSouth < 0) {\n            for (int i = 0; i < -northSouth; i++) {\n                result.append('N');\n            }\n        }\n\n        if (eastWest > 0) {\n            for (int i = 0; i < eastWest; i++) {\n                result.append('a');\n            }\n        } else if (eastWest < 0) {\n            for (int i = 0; i < -eastWest; i++) {\n                result.append('n');\n            }\n        }\n\n        System.out.println(result.length());\n        System.out.println(result.toString());\n    }\n}",
+    "timestamp": "2025-08-05 22:09:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CodeSimplifier {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String S = scanner.next();\n        \n        String simplified = simplifyCode(S);\n        \n        System.out.println(simplified.length());\n        System.out.println(simplified);\n        \n        scanner.close();\n    }\n    \n    public static String simplifyCode(String S) {\n        int northSouth = 0;\n        int eastWest = 0;\n        \n        for (char c : S.toCharArray()) {\n            switch (c) {\n                case 'A': case 'B': case 'C': case 'D': case 'E': \n                case 'F': case 'G': case 'H': case 'I': case 'J': \n                case 'K': case 'L': case 'M':\n                    northSouth++;\n                    break;\n                case 'N': case 'O': case 'P': case 'Q': case 'R': \n                case 'S': case 'T': case 'U': case 'V': case 'W': \n                case 'X': case 'Y': case 'Z':\n                    northSouth--;\n                    break;\n                case 'a': case 'b': case 'c': case 'd': case 'e': \n                case 'f': case 'g': case 'h': case 'i': case 'j': \n                case 'k': case 'l': case 'm':\n                    eastWest++;\n                    break;\n                case 'n': case 'o': case 'p': case 'q': case 'r': \n                case 's': case 't': case 'u': case 'v': case 'w': \n                case 'x': case 'y': case 'z':\n                    eastWest--;\n                    break;\n            }\n        }\n        \n        StringBuilder result = new StringBuilder();\n        \n        if (northSouth > 0) {\n            for (int i = 0; i < northSouth; i++) {\n                result.append('A');\n            }\n        } else if (northSouth < 0) {\n            for (int i = 0; i < -northSouth; i++) {\n                result.append('N');\n            }\n        }\n        \n        if (eastWest > 0) {\n            for (int i = 0; i < eastWest; i++) {\n                result.append('a');\n            }\n        } else if (eastWest < 0) {\n            for (int i = 0; i < -eastWest; i++) {\n                result.append('n');\n            }\n        }\n        \n        return result.toString();\n    }\n}",
+    "timestamp": "2025-08-05 22:09:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <unordered_map>\n\nusing namespace std;\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n    \n    unordered_map<char, int> moves;\n    \n    for (char c : S) {\n        if (c >= 'A' && c <= 'M') {\n            moves['N'] += 1;\n        } else if (c >= 'N' && c <= 'Z') {\n            moves['S'] += 1;\n        } else if (c >= 'a' && c <= 'm') {\n            moves['E'] += 1;\n        } else if (c >= 'n' && c <= 'z') {\n            moves['W'] += 1;\n        }\n    }\n    \n    string simplified;\n    \n    while (moves['N'] > moves['S']) {\n        simplified += 'A';\n        moves['N']--;\n    }\n    while (moves['N'] < moves['S']) {\n        simplified += 'N';\n        moves['S']--;\n    }\n    \n    while (moves['E'] > moves['W']) {\n        simplified += 'a';\n        moves['E']--;\n    }\n    while (moves['E'] < moves['W']) {\n        simplified += 'n';\n        moves['W']--;\n    }\n    \n    cout << simplified.length() << endl;\n    cout << simplified << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def simplify_code(N, S):\n    # Initialize counter for movements\n    north_south = 0\n    east_west = 0\n    \n    # Calculate resultant position\n    for char in S:\n        if 'A' <= char <= 'M':\n            north_south += 1\n        elif 'N' <= char <= 'Z':\n            north_south -= 1\n        elif 'a' <= char <= 'm':\n            east_west += 1\n        elif 'n' <= char <= 'z':\n            east_west -= 1\n\n    # Construct simplified code\n    simplified_code = 'A' * north_south if north_south > 0 else 'N' * -north_south\n    simplified_code += 'a' * east_west if east_west > 0 else 'n' * -east_west\n\n    # Output the result\n    print(len(simplified_code))\n    print(simplified_code)\n\n# Example usage:\nN = int(input().strip())\nS = input().strip()\nsimplify_code(N, S)",
+    "timestamp": "2025-08-13 09:09:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class ShortestCode {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String S = scanner.next();\n        scanner.close();\n\n        int northCount = 0;\n        int southCount = 0;\n        int eastCount = 0;\n        int westCount = 0;\n\n        for (char c : S.toCharArray()) {\n            if (c >= 'A' && c <= 'M') {\n                northCount++;\n            } else if (c >= 'N' && c <= 'Z') {\n                southCount++;\n            } else if (c >= 'a' && c <= 'm') {\n                eastCount++;\n            } else if (c >= 'n' && c <= 'z') {\n                westCount++;\n            }\n        }\n\n        StringBuilder result = new StringBuilder();\n        int northSteps = northCount - southCount;\n        int eastSteps = eastCount - westCount;\n\n        for (int i = 0; i < northSteps; i++) {\n            result.append('A');\n        }\n        for (int i = 0; i < -northSteps; i++) {\n            result.append('N');\n        }\n        for (int i = 0; i < eastSteps; i++) {\n            result.append('a');\n        }\n        for (int i = 0; i < -eastSteps; i++) {\n            result.append('n');\n        }\n\n        System.out.println(result.length());\n        System.out.println(result.toString());\n    }\n}",
+    "timestamp": "2025-08-13 09:09:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main(void) {\n    int N;\n    scanf(\"%d\", &N);\n    char S[N + 1];\n    scanf(\"%s\", S);\n\n    int north_south = 0, east_west = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (S[i] >= 'A' && S[i] <= 'M') {\n            north_south++;\n        } else if (S[i] >= 'N' && S[i] <= 'Z') {\n            north_south--;\n        } else if (S[i] >= 'a' && S[i] <= 'm') {\n            east_west++;\n        } else if (S[i] >= 'n' && S[i] <= 'z') {\n            east_west--;\n        }\n    }\n\n    char *result = (char *)malloc((abs(north_south) + abs(east_west) + 1) * sizeof(char));\n    int idx = 0;\n\n    if (north_south > 0) {\n        for (int i = 0; i < north_south; i++) {\n            result[idx++] = 'A';\n        }\n    } else {\n        for (int i = 0; i < -north_south; i++) {\n            result[idx++] = 'N';\n        }\n    }\n\n    if (east_west > 0) {\n        for (int i = 0; i < east_west; i++) {\n            result[idx++] = 'a';\n        }\n    } else {\n        for (int i = 0; i < -east_west; i++) {\n            result[idx++] = 'n';\n        }\n    }\n\n    result[idx] = '\\0';\n    printf(\"%d\\n\", idx);\n    printf(\"%s\\n\", result);\n\n    free(result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:09:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def simplify_code(N, S):\n    # Track net movement in each direction\n    north_south = 0\n    east_west = 0\n    \n    # Calculate net movement\n    for char in S:\n        if char in 'ABCDEFGHIJKLM':\n            north_south += 1\n        elif char in 'NOPQRSTUVWXYZ':\n            north_south -= 1\n        elif char in 'abcdefghijklm':\n            east_west += 1\n        elif char in 'nopqrstuvwxyz':\n            east_west -= 1\n    \n    # Generate simplified code\n    simplified = []\n    \n    # Add North/South moves\n    if north_south > 0:\n        simplified.extend(['A'] * north_south)\n    elif north_south < 0:\n        simplified.extend(['N'] * abs(north_south))\n    \n    # Add East/West moves\n    if east_west > 0:\n        simplified.extend(['a'] * east_west)\n    elif east_west < 0:\n        simplified.extend(['n'] * abs(east_west))\n    \n    # Convert simplified list to string\n    simplified_code = ''.join(simplified)\n    \n    # Output simplified code length and code itself\n    print(len(simplified_code))\n    print(simplified_code)\n\n# Read input\nN = int(input())\nS = input()\n\n# Call simplification function\nsimplify_code(N, S)",
+    "timestamp": "2025-08-13 09:09:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\ns = input().strip()\n\nnorth_south = 0\neast_west = 0\n\n# Calculate the net movement in each direction\nfor c in s:\n    if 'A' <= c <= 'M':\n        north_south += 1\n    elif 'N' <= c <= 'Z':\n        north_south -= 1\n    elif 'a' <= c <= 'm':\n        east_west += 1\n    elif 'n' <= c <= 'z':\n        east_west -= 1\n\n# Generate the simplified code\nsimplified = []\n# North or South\nif north_south > 0:\n    simplified.append('A' * north_south)\nelif north_south < 0:\n    simplified.append('N' * (-north_south))\n# East or West\nif east_west > 0:\n    simplified.append('a' * east_west)\nelif east_west < 0:\n    simplified.append('n' * (-east_west))\n\nsimplified_str = ''.join(simplified)\nlength = len(simplified_str)\n\nprint(length)\nprint(simplified_str)",
+    "timestamp": "2025-08-13 09:10:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n    \n    int north = 0, south = 0, east = 0, west = 0;\n    for (char c : S) {\n        if ('A' <= c && c <= 'M') north++;\n        else if ('N' <= c && c <= 'Z') south++;\n        else if ('a' <= c && c <= 'm') east++;\n        else if ('n' <= c && c <= 'z') west++;\n    }\n    \n    int netNorth = north - south;\n    int netEast = east - west;\n    \n    string result;\n    if (netNorth > 0) result.append(netNorth, 'A');\n    else if (netNorth < 0) result.append(-netNorth, 'N');\n    \n    if (netEast > 0) result.append(netEast, 'a');\n    else if (netEast < 0) result.append(-netEast, 'n');\n    \n    cout << result.size() << endl;\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:49:48"
+  }
+]

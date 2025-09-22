@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(N, M, K, L):\n    if M > N:\n        return -1\n    \n    needed_new_coins = max(0, L - (N - K))\n    coins_per_friend = max(1, needed_new_coins // M + (1 if needed_new_coins % M != 0 else 0))\n    \n    if coins_per_friend * M < needed_new_coins:\n        return -1\n    \n    return coins_per_friend\n\n# Read input\nN, M, K, L = map(int, input().split())\n\n# Print output\nprint(solve(N, M, K, L))",
+    "timestamp": "2025-08-05 17:32:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "N, M, K, L = map(int, input().split())\n\nmin_coins_per_friend = (L + K + M - 1) // M\n\nif min_coins_per_friend * M > N:\n    print(-1)\nelse:\n    print(min_coins_per_friend)",
+    "timestamp": "2025-08-05 17:32:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_gifts(N, M, K, L):\n    if L > N - K:\n        return -1\n    if M > N:\n        return -1\n    return (L + M - 1) // M\n\n# Example usage:\nprint(min_gifts(20, 15, 2, 3))\nprint(min_gifts(10, 11, 2, 4))",
+    "timestamp": "2025-08-12 21:53:33"
+  }
+]

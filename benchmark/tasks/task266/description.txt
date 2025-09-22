@@ -1,0 +1,1 @@
+Calculate the volume of the intersection of two infinite-height prisms defined by their cross-sectional polygons. The first prism P1 is defined by polygon C1 on the xy-plane, and the second prism P2 is defined by polygon C2 on the xz-plane. Each dataset consists of two convex polygons, and the volume of their intersection must be computed.

@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "1+2*3+4\n11",
+      "output": "M"
+    },
+    {
+      "input": "1+2*3+4\n13",
+      "output": "L"
+    },
+    {
+      "input": "3\n3",
+      "output": "U"
+    },
+    {
+      "input": "1+2*3+4\n9",
+      "output": "I"
+    }
+  ]
+}

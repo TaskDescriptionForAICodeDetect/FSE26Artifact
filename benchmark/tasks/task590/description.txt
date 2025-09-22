@@ -1,0 +1,1 @@
+Given two line segments s1 and s2, find and print the coordinates of their intersection point. The segment s1 is defined by its endpoints p0 (xp0, yp0) and p1 (xp1, yp1), while segment s2 is defined by its endpoints p2 (xp2, yp2) and p3 (xp3, yp3).

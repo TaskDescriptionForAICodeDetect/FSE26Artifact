@@ -1,0 +1,1 @@
+You are given a tree T and an integer K. You can choose arbitrary distinct two vertices u and v on T. Let P be the simple path between u and v. Then, remove vertices in P, and edges such that one or both of its end vertices is in P from T. Your task is to choose u and v to maximize the number of connected components with K or more vertices of T after that operation.

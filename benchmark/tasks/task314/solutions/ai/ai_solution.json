@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint maxRemovals(int* blocks, int n) {\n    if (n <= 1) return 0;\n    \n    int* dp = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) dp[i] = 0;\n    \n    for (int i = 1; i < n; i++) {\n        if (abs(blocks[i] - blocks[i-1]) <= 1) {\n            if (i >= 2) dp[i] = dp[i-2] + 2;\n            else dp[i] = 2;\n        }\n        if (dp[i-1] > dp[i]) dp[i] = dp[i-1];\n    }\n    \n    int result = dp[n-1];\n    free(dp);\n    return result;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int* blocks = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &blocks[i]);\n    }\n    printf(\"%d\\n\", maxRemovals(blocks, n));\n    free(blocks);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> blocks(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> blocks[i];\n    }\n\n    vector<vector<int>> dp(N, vector<int>(N, 0));\n\n    for (int len = 2; len <= N; ++len) {\n        for (int i = 0; i + len - 1 < N; ++i) {\n            int j = i + len - 1;\n            if (len == 2) {\n                if (abs(blocks[i] - blocks[j]) <= 1) {\n                    dp[i][j] = 2;\n                } else {\n                    dp[i][j] = 0;\n                }\n            } else {\n                if (abs(blocks[i] - blocks[j]) <= 1 && dp[i + 1][j - 1] == len - 2) {\n                    dp[i][j] = len;\n                } else {\n                    for (int k = i; k < j; ++k) {\n                        dp[i][j] = max(dp[i][j], dp[i][k] + dp[k + 1][j]);\n                    }\n                }\n            }\n        }\n    }\n\n    cout << dp[0][N - 1] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DarumaOtoshi {\n    public static int maxBlocksRemoved(int[] blocks) {\n        int n = blocks.length;\n        if (n <= 1) return 0;\n        \n        int[][] dp = new int[n][n];\n        \n        for (int len = 2; len <= n; len++) {\n            for (int i = 0; i <= n - len; i++) {\n                int j = i + len - 1;\n                if (len == 2) {\n                    if (Math.abs(blocks[i] - blocks[j]) <= 1) {\n                        dp[i][j] = 2;\n                    } else {\n                        dp[i][j] = 0;\n                    }\n                } else {\n                    if (Math.abs(blocks[i] - blocks[j]) <= 1 && dp[i + 1][j - 1] == len - 2) {\n                        dp[i][j] = len;\n                    } else {\n                        for (int k = i; k < j; k++) {\n                            dp[i][j] = Math.max(dp[i][j], dp[i][k] + dp[k + 1][j]);\n                        }\n                    }\n                }\n            }\n        }\n        \n        return dp[0][n - 1];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] blocks = new int[n];\n        for (int i = 0; i < n; i++) {\n            blocks[i] = scanner.nextInt();\n        }\n        System.out.println(maxBlocksRemoved(blocks));\n    }\n}",
+    "timestamp": "2025-08-05 21:02:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Solution {\n    public int maxBlocksRemoved(int[] blocks) {\n        int n = blocks.length;\n        return dfs(blocks, new boolean[n], 0);\n    }\n\n    private int dfs(int[] blocks, boolean[] removed, int removedCount) {\n        if (allBlocksRemoved(blocks, removed)) {\n            return removedCount;\n        }\n\n        int maxRemoved = removedCount;\n        for (int i = 0; i < blocks.length - 1; i++) {\n            if (!removed[i] && !removed[i + 1]) {\n                if (Math.abs(blocks[i] - blocks[i + 1]) <= 1) {\n                    removed[i] = true;\n                    removed[i + 1] = true;\n                    maxRemoved = Math.max(maxRemoved, dfs(blocks, removed, removedCount + 2));\n                    removed[i] = false;\n                    removed[i + 1] = false;\n                }\n            }\n        }\n\n        return maxRemoved;\n    }\n\n    private boolean allBlocksRemoved(int[] blocks, boolean[] removed) {\n        for (int i = 0; i < blocks.length; i++) {\n            if (!removed[i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 21:03:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_BLOCKS 50\n\nint solve(int blocks[], int n) {\n    int dp[MAX_BLOCKS][MAX_BLOCKS];\n    memset(dp, 0, sizeof(dp));\n\n    for (int len = 2; len <= n; len++) {\n        for (int start = 0; start + len <= n; start++) {\n            int end = start + len - 1;\n            dp[start][end] = len;\n\n            for (int mid = start; mid < end; mid++) {\n                int left = mid - start + 1;\n                int right = end - mid;\n                \n                if (abs(blocks[start] - blocks[mid + 1]) <= 1) {\n                    int possible = dp[start][mid] + dp[mid + 1][end] - 2;\n                    dp[start][end] = (dp[start][end] > possible) ? dp[start][end] : possible;\n                }\n            }\n        }\n    }\n\n    return dp[0][n - 1];\n}\n\nint main() {\n    int n;\n    int blocks[MAX_BLOCKS];\n    \n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &blocks[i]);\n    }\n    \n    printf(\"%d\\n\", solve(blocks, n));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:03:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n#include <cmath>\n#include <climits>\n\nclass Solution {\npublic:\n    int removeBlocks(std::vector<int>& blocks) {\n        int n = blocks.size();\n        std::vector<std::vector<int>> dp(n, std::vector<int>(n, 0));\n        \n        for (int len = 2; len <= n; len++) {\n            for (int left = 0; left + len <= n; left++) {\n                int right = left + len - 1;\n                \n                dp[left][right] = dp[left + 1][right] + 1;\n                \n                for (int k = left + 1; k <= right; k++) {\n                    if (std::abs(blocks[left] - blocks[k]) <= 1) {\n                        int curr = (left + 1 <= k - 1 ? dp[left + 1][k - 1] : 0) +\n                                   (k + 1 <= right ? dp[k + 1][right] : 0) + 1;\n                        dp[left][right] = std::max(dp[left][right], curr);\n                    }\n                }\n            }\n        }\n        \n        return dp[0][n - 1];\n    }\n};",
+    "timestamp": "2025-08-05 21:03:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_blocks_removed(weights):\n    n = len(weights)\n    dp = [[0] * n for _ in range(n)]\n\n    for length in range(2, n + 1):\n        for i in range(n - length + 1):\n            j = i + length - 1\n            if abs(weights[j] - weights[j-1]) <= 1:\n                dp[i][j] = dp[i][j-2] + 2\n            for k in range(i, j):\n                dp[i][j] = max(dp[i][j], dp[i][k] + dp[k+1][j])\n\n    return max(dp[i][j] for i in range(n) for j in range(i+1, n))\n\n# Example usage:\n# weights = [5, 3, 4, 3, 5]\n# print(max_blocks_removed(weights))  # Output: Maximum number of blocks removed",
+    "timestamp": "2025-08-13 04:41:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class DarumaOtoshi {\n    public int maxBlocksRemoved(int[] blocks) {\n        int n = blocks.length;\n        int[][] dp = new int[n][n];\n        \n        for (int len = 2; len < n; len++) {\n            for (int i = 0; i + len < n; i++) {\n                int j = i + len;\n                dp[i][j] = Math.max(dp[i][j - 1], dp[i + 1][j]);\n                if (Math.abs(blocks[i] - blocks[j]) <= 1) {\n                    dp[i][j] = Math.max(dp[i][j], j - i - 1 + dp[i + 1][j - 1]);\n                }\n            }\n        }\n        \n        return dp[0][n - 1];\n    }\n\n    public static void main(String[] args) {\n        DarumaOtoshi game = new DarumaOtoshi();\n        int[] blocks = {1, 2, 3, 2, 1};\n        System.out.println(game.maxBlocksRemoved(blocks)); // Example usage\n    }\n}",
+    "timestamp": "2025-08-13 04:41:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint maxBlocksRemoved(int weights[], int n) {\n    int dp[n][n];\n\n    memset(dp, 0, sizeof(dp));\n\n    for (int length = 2; length <= n; ++length) {\n        for (int i = 0; i <= n - length; ++i) {\n            int j = i + length - 1;\n            if (abs(weights[j] - weights[i]) <= 1) {\n                dp[i][j] = dp[i + 1][j - 1] + 2;\n            }\n            for (int k = i; k < j; ++k) {\n                if (dp[i][j] < dp[i][k] + dp[k + 1][j]) {\n                    dp[i][j] = dp[i][k] + dp[k + 1][j];\n                }\n            }\n        }\n    }\n\n    return dp[0][n - 1];\n}\n\nint main() {\n    int weights[] = {3, 2, 1, 2, 3};\n    int n = sizeof(weights) / sizeof(weights[0]);\n\n    int result = maxBlocksRemoved(weights, n);\n    printf(\"Maximum blocks removed: %d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:41:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_blocks_removed(weights):\n    n = len(weights)\n    dp = [[0] * n for _ in range(n)]\n    \n    for length in range(2, n + 1):\n        for start in range(n - length + 1):\n            end = start + length - 1\n            \n            for k in range(start, end):\n                # Try removing blocks between start and k, and between k+1 and end\n                left = dp[start][k] if start <= k else 0\n                right = dp[k+1][end] if k+1 < end else 0\n                \n                # Check if we can remove the blocks between start and end\n                can_remove = 1\n                for i in range(start, k):\n                    for j in range(k+1, end+1):\n                        if abs(weights[i] - weights[j]) > 1:\n                            can_remove = 0\n                            break\n                    if not can_remove:\n                        break\n                \n                dp[start][end] = max(dp[start][end], left + right + can_remove * (end - start + 1 - length))\n    \n    return dp[0][n-1]",
+    "timestamp": "2025-08-13 04:42:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_blocks_removed(blocks):\n    n = len(blocks)\n    if n <= 1:\n        return 0\n    \n    dp = [[0] * n for _ in range(n)]\n    \n    for length in range(2, n + 1):\n        for i in range(n - length + 1):\n            j = i + length - 1\n            if abs(blocks[i] - blocks[j]) <= 1 and dp[i + 1][j - 1] == j - i - 1:\n                dp[i][j] = j - i + 1\n            else:\n                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])\n    \n    return dp[0][n - 1]",
+    "timestamp": "2025-08-13 04:42:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxBlocksRemoved(const vector<int>& blocks) {\n    int n = blocks.size();\n    if (n < 2) return 0;\n    \n    vector<vector<int>> dp(n, vector<int>(n, 0));\n    \n    for (int len = 2; len <= n; ++len) {\n        for (int i = 0; i <= n - len; ++i) {\n            int j = i + len - 1;\n            if (abs(blocks[i] - blocks[j]) <= 1) {\n                dp[i][j] = (len == 2 ? 2 : dp[i + 1][j - 1] + 2);\n            }\n            for (int k = i; k < j; ++k) {\n                dp[i][j] = max(dp[i][j], dp[i][k] + dp[k + 1][j]);\n            }\n        }\n    }\n    \n    return dp[0][n - 1];\n}\n\nint main() {\n    vector<int> blocks = {4, 5, 6, 5, 4, 3, 4};\n    cout << \"Maximum blocks removed: \" << maxBlocksRemoved(blocks) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:21:01"
+  }
+]

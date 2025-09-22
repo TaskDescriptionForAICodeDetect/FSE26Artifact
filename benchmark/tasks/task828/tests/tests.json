@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "aaaa",
+      "output": 16
+    },
+    {
+      "input": "aabb",
+      "output": 25
+    },
+    {
+      "input": "ababababa",
+      "output": 31
+    },
+    {
+      "input": "babbabaaba",
+      "output": 435
+    }
+  ]
+}

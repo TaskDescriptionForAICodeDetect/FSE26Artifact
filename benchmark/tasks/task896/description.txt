@@ -1,0 +1,1 @@
+We have a 2 x N grid covered with N dominoes, where each domino can cover a 1 x 2 or 2 x 1 square. The goal is to paint these dominoes using three colors: red, cyan, and green, ensuring that adjacent dominoes are painted different colors. Calculate the number of ways to paint the dominoes modulo 1000000007, based on the arrangement given by two strings S1 and S2.

@@ -1,0 +1,1 @@
+The task is to calculate the maximal bandwidth between the first and the N-th base stations in a wireless network, given the network structure and the bandwidths represented as polynomials based on the year.

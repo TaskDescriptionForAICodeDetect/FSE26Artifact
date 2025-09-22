@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint minViolations(char* sequence) {\n    int violations = 0;\n    int left_pos = 0;  // 0: left, 1: right\n    int right_pos = 1;  // 0: left, 1: right\n    \n    for (int i = 0; sequence[i] != '\\0'; i++) {\n        char arrow = sequence[i];\n        if (arrow == 'L') {\n            if (left_pos != 0) {\n                violations++;\n                left_pos = 0;\n                right_pos = 1;\n            } else {\n                right_pos = 1;\n            }\n        } else if (arrow == 'R') {\n            if (right_pos != 1) {\n                violations++;\n                right_pos = 1;\n                left_pos = 0;\n            } else {\n                left_pos = 0;\n            }\n        } else if (arrow == 'U') {\n            if (i == 0) {\n                left_pos = 0;\n                right_pos = 1;\n            } else {\n                if (left_pos == 0 && right_pos == 1) {\n                    // Need to violate\n                    violations++;\n                    left_pos = 1;\n                    right_pos = 0;\n                } else {\n                    left_pos = 0;\n                    right_pos = 1;\n                }\n            }\n        } else if (arrow == 'D') {\n            if (i == 0) {\n                left_pos = 1;\n                right_pos = 0;\n            } else {\n                if (left_pos == 1 && right_pos == 0) {\n                    // Need to violate\n                    violations++;\n                    left_pos = 0;\n                    right_pos = 1;\n                } else {\n                    left_pos = 1;\n                    right_pos = 0;\n                }\n            }\n        }\n    }\n    return violations;\n}\n\nint main() {\n    char sequence[1001];\n    scanf(\"%1000s\", sequence);\n    printf(\"%d\\n\", minViolations(sequence));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:16:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string sequence;\n    cin >> sequence;\n    \n    int violations = 0;\n    char lastFoot = ' '; // 'L' for left, 'R' for right\n    \n    for (char arrow : sequence) {\n        if (lastFoot == ' ') {\n            // First step, assign left foot for 'L' or 'D', right for 'R' or 'U'\n            if (arrow == 'L' || arrow == 'D') {\n                lastFoot = 'L';\n            } else {\n                lastFoot = 'R';\n            }\n        } else {\n            if ((arrow == 'L' || arrow == 'D') && lastFoot == 'L') {\n                violations++;\n                lastFoot = 'R';\n            } else if ((arrow == 'R' || arrow == 'U') && lastFoot == 'R') {\n                violations++;\n                lastFoot = 'L';\n            } else {\n                if (arrow == 'L' || arrow == 'D') {\n                    lastFoot = 'L';\n                } else {\n                    lastFoot = 'R';\n                }\n            }\n        }\n    }\n    \n    cout << violations << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String sequence = scanner.nextLine().trim();\n        int violations = 0;\n        int leftFootPos = 0; // 0: left, 1: right\n        int rightFootPos = 1; // 0: left, 1: right\n        \n        for (char arrow : sequence.toCharArray()) {\n            if (arrow == 'L') {\n                if (leftFootPos != 0) {\n                    violations++;\n                    leftFootPos = 0;\n                    rightFootPos = 1;\n                } else {\n                    rightFootPos = 1;\n                }\n            } else if (arrow == 'R') {\n                if (rightFootPos != 1) {\n                    violations++;\n                    rightFootPos = 1;\n                    leftFootPos = 0;\n                } else {\n                    leftFootPos = 0;\n                }\n            } else if (arrow == 'U') {\n                if (leftFootPos == 0 && rightFootPos == 1) {\n                    // Need to choose which foot to move\n                    // Moving left foot up is optimal (no violation)\n                    leftFootPos = 1;\n                    rightFootPos = 0;\n                } else if (leftFootPos == 1) {\n                    // Left foot is already up, move right foot (violation)\n                    violations++;\n                    rightFootPos = 0;\n                    leftFootPos = 1;\n                } else if (rightFootPos == 0) {\n                    // Right foot is already up, move left foot (violation)\n                    violations++;\n                    leftFootPos = 1;\n                    rightFootPos = 0;\n                }\n            } else if (arrow == 'D') {\n                if (leftFootPos == 1 && rightFootPos == 0) {\n                    // Need to choose which foot to move\n                    // Moving left foot down is optimal (no violation)\n                    leftFootPos = 0;\n                    rightFootPos = 1;\n                } else if (leftFootPos == 0) {\n                    // Left foot is already down, move right foot (violation)\n                    violations++;\n                    rightFootPos = 1;\n                    leftFootPos = 0;\n                } else if (rightFootPos == 1) {\n                    // Right foot is already down, move left foot (violation)\n                    violations++;\n                    leftFootPos = 0;\n                    rightFootPos = 1;\n                }\n            }\n        }\n        System.out.println(violations);\n    }\n}",
+    "timestamp": "2025-08-05 21:17:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass StepStepEvolution {\n    public static int minViolations(String arrows) {\n        int n = arrows.length();\n        int[][] dp = new int[n][2];\n        \n        // Initialize first step\n        dp[0][0] = 0;  // No violation\n        dp[0][1] = 1;  // Violation\n        \n        for (int i = 1; i < n; i++) {\n            // Case 1: No violation\n            if (canStepNaturally(arrows.charAt(i-1), arrows.charAt(i))) {\n                dp[i][0] = dp[i-1][0];\n                dp[i][1] = Math.min(dp[i-1][0] + 1, dp[i-1][1] + 1);\n            } \n            // Case 2: Must violate\n            else {\n                dp[i][0] = dp[i-1][1];\n                dp[i][1] = dp[i-1][0] + 1;\n            }\n        }\n        \n        return Math.min(dp[n-1][0], dp[n-1][1]);\n    }\n    \n    private static boolean canStepNaturally(char prev, char curr) {\n        return (prev == 'L' && curr == 'R') || \n               (prev == 'R' && curr == 'L');\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String arrows = scanner.nextLine();\n        System.out.println(minViolations(arrows));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:17:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_ARROWS 1000\n\nint min_violations(char* arrows) {\n    int n = strlen(arrows);\n    int dp[MAX_ARROWS][4] = {0};\n    \n    // Initialize first row\n    for (int j = 0; j < 4; j++) {\n        dp[0][j] = (arrows[0] - '0' != j);\n    }\n    \n    for (int i = 1; i < n; i++) {\n        int curr = arrows[i] - '0';\n        \n        for (int j = 0; j < 4; j++) {\n            dp[i][j] = INT_MAX;\n            \n            for (int k = 0; k < 4; k++) {\n                int violation = (curr != j);\n                int prev_violation = dp[i-1][k];\n                \n                if (abs(j - k) == 1) {\n                    violation += 1;\n                }\n                \n                dp[i][j] = fmin(dp[i][j], prev_violation + violation);\n            }\n        }\n    }\n    \n    int min_viol = INT_MAX;\n    for (int j = 0; j < 4; j++) {\n        min_viol = fmin(min_viol, dp[n-1][j]);\n    }\n    \n    return min_viol;\n}\n\nint main() {\n    char arrows[MAX_ARROWS + 1];\n    scanf(\"%s\", arrows);\n    printf(\"%d\\n\", min_violations(arrows));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint minViolations(vector<int>& arrows) {\n    int n = arrows.size();\n    vector<vector<int>> dp(n, vector<int>(4, INT_MAX));\n    \n    for (int j = 0; j < 4; j++) {\n        dp[0][j] = (j != arrows[0]);\n    }\n    \n    for (int i = 1; i < n; i++) {\n        for (int j = 0; j < 4; j++) {\n            for (int k = 0; k < 4; k++) {\n                if (abs(j - k) != 1) {\n                    dp[i][j] = min(dp[i][j], dp[i-1][k] + (j != arrows[i]));\n                }\n            }\n        }\n    }\n    \n    return *min_element(dp[n-1].begin(), dp[n-1].end());\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> arrows(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> arrows[i];\n    }\n    \n    cout << minViolations(arrows) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_violations(directions):\n    left_foot, right_foot = 0, 0\n    violations = 0\n    \n    for step in directions:\n        if step == 'L':\n            if left_foot == 0:\n                left_foot = 1\n            elif right_foot == 1:\n                right_foot = 0\n                violations += 1\n            left_foot = 1\n        elif step == 'R':\n            if right_foot == 0:\n                right_foot = 1\n            elif left_foot == 1:\n                left_foot = 0\n                violations += 1\n            right_foot = 1\n                \n    return violations\n\n# Example usage:\ndirection_sequence = \"LRLRLRLLRL\"\nprint(min_violations(direction_sequence))",
+    "timestamp": "2025-08-13 05:49:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class StepStepEvolution {\n\n    public static int minViolations(String directions) {\n        int violations = 0;\n        char currentFoot = 'L';\n        \n        for (char direction : directions.toCharArray()) {\n            if ((currentFoot == 'L' && direction == 'R') || (currentFoot == 'R' && direction == 'L')) {\n                violations++;\n                currentFoot = (currentFoot == 'L' ? 'R' : 'L');\n            }\n            currentFoot = (currentFoot == 'L' ? 'R' : 'L');\n        }\n        \n        return violations;\n    }\n    \n    public static void main(String[] args) {\n        String directions = \"LLRRLR\"; // Example input\n        System.out.println(minViolations(directions));\n    }\n}",
+    "timestamp": "2025-08-13 05:49:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint minViolations(char* directions) {\n    int violations = 0;\n    char lastStep = 'R'; // Assuming the player starts with the right foot\n    \n    for (int i = 0; directions[i] != '\\0'; i++) {\n        if (directions[i] == 'L' && lastStep == 'L') {\n            violations++;\n            lastStep = 'R';\n        } else if (directions[i] == 'R' && lastStep == 'R') {\n            violations++;\n            lastStep = 'L';\n        } else {\n            lastStep = directions[i];\n        }\n    }\n    \n    return violations;\n}\n\nint main() {\n    char sequence[] = \"LRLRRLLRLR\"; // Example sequence\n    int result = minViolations(sequence);\n    printf(\"Minimum Violations: %d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:49:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_violations(arrows):\n    n = len(arrows)\n    dp = [[float('inf')] * 2 for _ in range(n)]\n    \n    # Initialize first step\n    dp[0][0] = 0  # start on left foot\n    dp[0][1] = 1  # start on right foot with first violation\n    \n    for i in range(1, n):\n        # Left arrow\n        if arrows[i] == 'L':\n            # Can step with left foot without violation\n            dp[i][0] = min(dp[i-1][0], dp[i-1][1])\n            # Must step with right foot (violation)\n            dp[i][1] = min(dp[i-1][0], dp[i-1][1]) + 1\n        \n        # Right arrow\n        else:\n            # Can step with right foot without violation\n            dp[i][1] = min(dp[i-1][0], dp[i-1][1])\n            # Must step with left foot (violation)\n            dp[i][0] = min(dp[i-1][0], dp[i-1][1]) + 1\n    \n    return min(dp[n-1][0], dp[n-1][1])",
+    "timestamp": "2025-08-13 05:49:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_violations(arrows):\n    left_foot = {'up', 'left'}\n    right_foot = {'down', 'right'}\n    violations = 0\n    last_left = False\n    last_right = False\n    \n    for arrow in arrows:\n        if arrow in left_foot:\n            if last_left:\n                violations += 1\n                last_left = False\n                last_right = True\n            else:\n                last_left = True\n                last_right = False\n        elif arrow in right_foot:\n            if last_right:\n                violations += 1\n                last_right = False\n                last_left = True\n            else:\n                last_right = True\n                last_left = False\n    return violations",
+    "timestamp": "2025-08-13 05:50:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nint minViolations(const string& directions) {\n    unordered_map<char, char> naturalFootstep = {\n        {'L', 'R'},\n        {'R', 'L'},\n        {'U', 'D'},\n        {'D', 'U'}\n    };\n    \n    int violations = 0;\n    char currentFoot = 'R'; // Start with the right foot on the first step\n\n    for (char arrow : directions) {\n        if (naturalFootstep[arrow] != currentFoot) {\n            violations++;\n        }\n        currentFoot = naturalFootstep[arrow];\n    }\n\n    return violations;\n}\n\nint main() {\n    string arrows;\n    cin >> arrows;\n    cout << minViolations(arrows) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:28:26"
+  }
+]

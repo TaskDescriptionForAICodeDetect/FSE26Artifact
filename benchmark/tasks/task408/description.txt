@@ -1,0 +1,1 @@
+You need to write a program that computes the position of the first occurrence of a given sequence of decimal digits in the Champernowne constant, which is formed by concatenating all positive integers in increasing order after the decimal point.

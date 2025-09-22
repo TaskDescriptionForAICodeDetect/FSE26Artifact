@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "5 10\n..A.......\n.......B..\n..........\n..B.......\n..A.CC....\n",
+      "output": "4"
+    },
+    {
+      "input": "3 3\nABC\nD.D\nCBA\n",
+      "output": "4"
+    },
+    {
+      "input": "5 7\nNUTUBOR\nQT.SZRQ\nSANAGIP\nLMDGZBM\nKLKIODP\n",
+      "output": "34"
+    }
+  ]
+}

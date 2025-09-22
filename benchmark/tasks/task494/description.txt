@@ -1,0 +1,1 @@
+Given a string S, respond to Q queries. For each i-th query, determine if it's possible to change at most one character in the substring S[l_i, r_i] to make it a periodic string with period t_i. A string W is considered periodic with period t if for all i from 1 to |W| - t, W[i] = W[i+t].

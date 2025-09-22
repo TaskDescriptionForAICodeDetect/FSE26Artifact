@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\nbool isSorted(char **words, int wordsSize, char *order) {\n    int orderMap[26];\n    for (int i = 0; i < 26; i++) {\n        orderMap[order[i] - 'a'] = i;\n    }\n\n    for (int i = 0; i < wordsSize - 1; i++) {\n        char *word1 = words[i];\n        char *word2 = words[i + 1];\n        int j = 0;\n        while (word1[j] != '\\0' && word2[j] != '\\0') {\n            if (word1[j] != word2[j]) {\n                if (orderMap[word1[j] - 'a'] > orderMap[word2[j] - 'a']) {\n                    return false;\n                }\n                break;\n            }\n            j++;\n        }\n        if (word1[j] == '\\0' && word2[j] != '\\0') {\n            continue;\n        }\n        if (word1[j] != '\\0' && word2[j] == '\\0') {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    // Example usage\n    char *words[] = {\"hello\", \"leetcode\"};\n    char order[] = \"hlabcdefgijkmnopqrstuvwxyz\";\n    int wordsSize = sizeof(words) / sizeof(words[0]);\n    if (isSorted(words, wordsSize, order)) {\n        printf(\"true\\n\");\n    } else {\n        printf(\"false\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:36:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <string>\n#include <unordered_map>\n\nusing namespace std;\n\nbool isSorted(const vector<string>& words, const string& order) {\n    unordered_map<char, int> orderMap;\n    for (int i = 0; i < order.size(); ++i) {\n        orderMap[order[i]] = i;\n    }\n\n    for (int i = 0; i < words.size() - 1; ++i) {\n        const string& word1 = words[i];\n        const string& word2 = words[i + 1];\n\n        int minLen = min(word1.size(), word2.size());\n        bool isPrefix = true;\n        for (int j = 0; j < minLen; ++j) {\n            if (orderMap[word1[j]] < orderMap[word2[j]]) {\n                isPrefix = false;\n                break;\n            } else if (orderMap[word1[j]] > orderMap[word2[j]]) {\n                return false;\n            }\n        }\n        if (isPrefix && word1.size() > word2.size()) {\n            return false;\n        }\n    }\n    return true;\n}",
+    "timestamp": "2025-08-05 21:36:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public boolean isAlienSorted(String[] words, String order) {\n        int[] orderMap = new int[26];\n        for (int i = 0; i < order.length(); i++) {\n            orderMap[order.charAt(i) - 'a'] = i;\n        }\n        \n        for (int i = 0; i < words.length - 1; i++) {\n            if (!isSorted(words[i], words[i + 1], orderMap)) {\n                return false;\n            }\n        }\n        return true;\n    }\n    \n    private boolean isSorted(String word1, String word2, int[] orderMap) {\n        int len1 = word1.length();\n        int len2 = word2.length();\n        int minLen = Math.min(len1, len2);\n        \n        for (int i = 0; i < minLen; i++) {\n            char c1 = word1.charAt(i);\n            char c2 = word2.charAt(i);\n            if (c1 != c2) {\n                return orderMap[c1 - 'a'] < orderMap[c2 - 'a'];\n            }\n        }\n        return len1 <= len2;\n    }\n}",
+    "timestamp": "2025-08-05 21:37:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class Solution {\n    public boolean isAlienSorted(String[] words, String order) {\n        int[] charOrder = new int[26];\n        \n        for (int i = 0; i < order.length(); i++) {\n            charOrder[order.charAt(i) - 'a'] = i;\n        }\n        \n        for (int i = 0; i < words.length - 1; i++) {\n            if (!compareWords(words[i], words[i+1], charOrder)) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n    \n    private boolean compareWords(String word1, String word2, int[] charOrder) {\n        int minLength = Math.min(word1.length(), word2.length());\n        \n        for (int i = 0; i < minLength; i++) {\n            if (word1.charAt(i) != word2.charAt(i)) {\n                return charOrder[word1.charAt(i) - 'a'] <= charOrder[word2.charAt(i) - 'a'];\n            }\n        }\n        \n        return word1.length() <= word2.length();\n    }\n}",
+    "timestamp": "2025-08-05 21:37:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdbool.h>\n#include <string.h>\n\nbool is_lexicographically_sorted(char** words, int num_words, char* alphabet) {\n    // Create a mapping of characters to their order in the language\n    int char_order[26] = {0};\n    for (int i = 0; i < strlen(alphabet); i++) {\n        char_order[alphabet[i] - 'a'] = i + 1;\n    }\n\n    // Compare adjacent words\n    for (int i = 0; i < num_words - 1; i++) {\n        char* word1 = words[i];\n        char* word2 = words[i + 1];\n        int len1 = strlen(word1);\n        int len2 = strlen(word2);\n        int min_len = (len1 < len2) ? len1 : len2;\n\n        // Compare characters\n        bool is_ordered = false;\n        for (int j = 0; j < min_len; j++) {\n            int order1 = char_order[word1[j] - 'a'];\n            int order2 = char_order[word2[j] - 'a'];\n\n            if (order1 < order2) {\n                is_ordered = true;\n                break;\n            } else if (order1 > order2) {\n                return false;\n            }\n        }\n\n        // If all characters are equal, check word lengths\n        if (!is_ordered) {\n            if (len1 > len2) {\n                return false;\n            }\n        }\n    }\n\n    return true;\n}",
+    "timestamp": "2025-08-05 21:37:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    bool isAlienSorted(vector<string>& words, string order) {\n        // Create a mapping of characters to their order\n        vector<int> charOrder(26);\n        for (int i = 0; i < order.length(); i++) {\n            charOrder[order[i] - 'a'] = i;\n        }\n        \n        // Compare adjacent words\n        for (int i = 1; i < words.size(); i++) {\n            if (!compareTwoWords(words[i-1], words[i], charOrder)) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n    \nprivate:\n    bool compareTwoWords(string& word1, string& word2, vector<int>& charOrder) {\n        int len1 = word1.length(), len2 = word2.length();\n        int minLen = min(len1, len2);\n        \n        // Compare characters\n        for (int i = 0; i < minLen; i++) {\n            if (word1[i] != word2[i]) {\n                return charOrder[word1[i] - 'a'] <= charOrder[word2[i] - 'a'];\n            }\n        }\n        \n        // If one word is prefix of another, shorter word should come first\n        return len1 <= len2;\n    }\n};",
+    "timestamp": "2025-08-05 21:37:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_sorted_lexicographically(words, alphabet):\n    # Create a mapping from character to its rank based on the given alphabet\n    char_rank = {char: rank for rank, char in enumerate(alphabet)}\n    \n    # A helper function to compare two words using the custom alphabet\n    def compare(word1, word2):\n        min_length = min(len(word1), len(word2))\n        \n        for i in range(min_length):\n            if char_rank[word1[i]] < char_rank[word2[i]]:\n                return -1\n            elif char_rank[word1[i]] > char_rank[word2[i]]:\n                return 1\n        \n        # If all characters are equal, compare by length (prefix rule)\n        if len(word1) < len(word2):\n            return -1\n        elif len(word1) > len(word2):\n            return 1\n        else:\n            return 0\n        \n    # Check if the words list is sorted\n    for i in range(len(words) - 1):\n        if compare(words[i], words[i + 1]) > 0:\n            return False\n    \n    return True",
+    "timestamp": "2025-08-13 07:17:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LexicographicalOrderChecker {\n\n    public static boolean isSorted(String[] words, String order) {\n        Map<Character, Integer> charOrder = new HashMap<>();\n        for (int i = 0; i < order.length(); i++) {\n            charOrder.put(order.charAt(i), i);\n        }\n        \n        for (int i = 0; i < words.length - 1; i++) {\n            if (!isLexicographicallyOrdered(words[i], words[i + 1], charOrder)) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n\n    private static boolean isLexicographicallyOrdered(String word1, String word2, Map<Character, Integer> charOrder) {\n        int len = Math.min(word1.length(), word2.length());\n        \n        for (int i = 0; i < len; i++) {\n            char c1 = word1.charAt(i);\n            char c2 = word2.charAt(i);\n            if (charOrder.get(c1) < charOrder.get(c2)) {\n                return true;\n            } else if (charOrder.get(c1) > charOrder.get(c2)) {\n                return false;\n            }\n        }\n        \n        // If we reach here, one word is a prefix of another\n        return word1.length() <= word2.length();\n    }\n\n    public static void main(String[] args) {\n        String[] words = {\"apple\", \"app\"};\n        String order = \"abcdefghijklmnopqrstuvwxyz\";\n        System.out.println(isSorted(words, order));  // Output: true\n    }\n}",
+    "timestamp": "2025-08-13 07:17:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint isSorted(char* words[], int count, char* order) {\n    int index[26] = {0};\n    for (int i = 0; order[i] != '\\0'; i++) {\n        index[order[i] - 'a'] = i;\n    }\n\n    for (int i = 1; i < count; i++) {\n        char *word1 = words[i - 1];\n        char *word2 = words[i];\n        int len1 = strlen(word1);\n        int len2 = strlen(word2);\n        int j = 0;\n\n        // Compare each character of both words based on given order\n        while (j < len1 && j < len2 && word1[j] == word2[j]) {\n            j++;\n        }\n\n        // If word1 is a prefix of word2, word1 precedes word2, continue checking\n        if (j == len1 || (j < len1 && j < len2 && index[word1[j] - 'a'] < index[word2[j] - 'a'])) {\n            continue;\n        }\n        \n        // If word1 is not preceding word2 return false\n        if (j == len2 || (j < len1 && j < len2 && index[word1[j] - 'a'] > index[word2[j] - 'a'])) {\n            return 0;\n        }\n    }\n    return 1;\n}\n\nint main() {\n    char* words[] = {\"apple\", \"app\", \"banana\", \"band\", \"bandana\"};\n    char* order = \"abcdefghijklmnopqrstuvwxyz\";\n    int count = sizeof(words) / sizeof(words[0]);\n\n    if (isSorted(words, count, order)) {\n        printf(\"Words are sorted.\\n\");\n    } else {\n        printf(\"Words are not sorted.\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:17:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_lexicographically_sorted(words, order):\n    # Create a mapping of characters to their order\n    char_order = {char: idx for idx, char in enumerate(order)}\n    \n    # Compare adjacent words\n    for i in range(len(words) - 1):\n        word1, word2 = words[i], words[i+1]\n        \n        # Find the minimum length between two words\n        min_length = min(len(word1), len(word2))\n        \n        # Compare characters\n        for j in range(min_length):\n            if char_order[word1[j]] < char_order[word2[j]]:\n                break\n            elif char_order[word1[j]] > char_order[word2[j]]:\n                return False\n            \n        # Check for prefix case\n        if j == min_length - 1 and len(word1) > len(word2):\n            return False\n    \n    return True",
+    "timestamp": "2025-08-13 07:17:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_sorted(words, order):\n    order_map = {c: i for i, c in enumerate(order)}\n    \n    for i in range(len(words) - 1):\n        word1 = words[i]\n        word2 = words[i + 1]\n        \n        for j in range(min(len(word1), len(word2))):\n            if word1[j] != word2[j]:\n                if order_map[word1[j]] > order_map[word2[j]]:\n                    return False\n                break\n        else:\n            if len(word1) > len(word2):\n                return False\n    return True",
+    "timestamp": "2025-08-13 07:17:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_map>\n\nbool isSorted(const std::vector<std::string>& words, const std::string& order) {\n    std::unordered_map<char, int> orderMap;\n    for (int i = 0; i < order.size(); ++i) {\n        orderMap[order[i]] = i;\n    }\n    \n    for (int i = 1; i < words.size(); ++i) {\n        const std::string& word1 = words[i-1];\n        const std::string& word2 = words[i];\n        int minLength = std::min(word1.length(), word2.length());\n        \n        bool isSmaller = false;\n        for (int j = 0; j < minLength; ++j) {\n            char char1 = word1[j];\n            char char2 = word2[j];\n            if (orderMap[char1] < orderMap[char2]) {\n                isSmaller = true;\n                break;\n            } else if (orderMap[char1] > orderMap[char2]) {\n                return false;\n            }\n        }\n        \n        if (!isSmaller && word1.length() > word2.length()) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    std::vector<std::string> words = {\"apple\", \"app\"};\n    std::string order = \"abcdefghijklmnopqrstuvwxyz\";\n    std::cout << (isSorted(words, order) ? \"Sorted\" : \"Not Sorted\") << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:37:04"
+  }
+]

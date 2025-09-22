@@ -1,0 +1,1 @@
+There is a grid with H horizontal rows and W vertical columns. Given N wall squares (r_1, c_1), (r_2, c_2), ..., (r_N, c_N), the goal is to find the number of paths Taro can take from the top-left corner (1, 1) to the bottom-right corner (H, W) moving only right or down, avoiding the wall squares. The answer should be given modulo 10^9 + 7.

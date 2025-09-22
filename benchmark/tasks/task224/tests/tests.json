@@ -1,0 +1,36 @@
+{
+  "examples": [
+    {
+      "input": "40",
+      "output": "2 6"
+    },
+    {
+      "input": "14",
+      "output": "2 14"
+    },
+    {
+      "input": "5",
+      "output": "2 5"
+    },
+    {
+      "input": "165",
+      "output": "1 1"
+    },
+    {
+      "input": "120",
+      "output": "1 18"
+    },
+    {
+      "input": "103",
+      "output": "5 35"
+    },
+    {
+      "input": "106",
+      "output": "4 4"
+    },
+    {
+      "input": "139",
+      "output": "3 37"
+    }
+  ]
+}

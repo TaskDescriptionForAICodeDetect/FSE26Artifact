@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(a, b, c, d, e, f):\n    # Optimize for max value suits\n    type1_suits = min(a, d)  # tie and jacket\n    type2_suits = min(b, c, d - type1_suits)  # scarf, vest, jacket\n    \n    return type1_suits * e + type2_suits * f\n\n# Read input\na = int(input())\nb = int(input())\nc = int(input())\nd = int(input())\ne = int(input())\nf = int(input())\n\n# Print result\nprint(solve(a, b, c, d, e, f))",
+    "timestamp": "2025-08-05 17:33:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "a = int(input())\nb = int(input())\nc = int(input())\nd = int(input())\ne = int(input())\nf = int(input())\n\nmax_cost = 0\n\nmax_suit1 = min(a, d)\nfor suit1 in range(0, max_suit1 + 1):\n    remaining_jackets = d - suit1\n    suit2 = min(b, c, remaining_jackets)\n    current_cost = suit1 * e + suit2 * f\n    if current_cost > max_cost:\n        max_cost = current_cost\n\nprint(max_cost)",
+    "timestamp": "2025-08-05 17:33:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_suit_cost(a, b, c, d, e, f):\n    if e > f:\n        first_type_suits = min(a, d)\n        d -= first_type_suits\n        second_type_suits = min(b, c, d)\n    else:\n        second_type_suits = min(b, c, d)\n        d -= second_type_suits\n        first_type_suits = min(a, d)\n    \n    return first_type_suits * e + second_type_suits * f\n\na = int(input().strip())\nb = int(input().strip())\nc = int(input().strip())\nd = int(input().strip())\ne = int(input().strip())\nf = int(input().strip())\n\nprint(max_suit_cost(a, b, c, d, e, f))",
+    "timestamp": "2025-08-12 21:55:13"
+  }
+]

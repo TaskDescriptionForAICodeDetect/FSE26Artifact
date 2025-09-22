@@ -1,0 +1,1 @@
+Chokudai has a slimming plan to reduce his weight from S to T over a D-day cycle defined by D integers. Each day, his weight changes based on the integer at his current day modulus D. Determine if his weight can be reduced to T or below, and if so, find out how many days it takes. If it is impossible to reach T, return -1.

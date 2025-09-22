@@ -1,0 +1,1 @@
+Given a rooted tree T with N nodes, where nodes are numbered from 1 to N and node 1 is the root, write a program that calculates the number of pairs (i, j) such that the subtrees Ti and Tj are similar. Two trees are similar if their count of nodes at each depth is the same.

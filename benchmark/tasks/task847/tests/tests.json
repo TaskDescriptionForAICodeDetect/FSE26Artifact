@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13\nB 1\nW 2\nB 3\nW 1\nW 3\nB 2\n",
+      "output": "14"
+    },
+    {
+      "input": "24\nB 4\nW 4\nB 3\nW 3\nB 2\nW 2\nB 1\nW 1\n",
+      "output": "218"
+    },
+    {
+      "input": "39\nW 3\nB 1\nB 4\nW 1\nB 5\nW 9\nW 2\nB 6\nW 5\nB 3\nW 8\nB 9\nW 7\nB 2\nB 8\nW 4\nW 6\nB 7\n",
+      "output": "341"
+    }
+  ]
+}

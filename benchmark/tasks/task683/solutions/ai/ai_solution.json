@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 100005\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint solve(int A[], int N) {\n    if (N == 0) return 0;\n    if (N == 1) return A[0];\n    \n    int dp[MAX_N][2];\n    memset(dp, 0, sizeof(dp));\n    \n    dp[0][0] = 0;\n    dp[0][1] = A[0];\n    \n    for (int i = 1; i < N; i++) {\n        dp[i][0] = max(dp[i-1][0], dp[i-1][1]);\n        dp[i][1] = dp[i-1][0] + A[i];\n    }\n    \n    return max(dp[N-1][0], dp[N-1][1]);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int A[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    printf(\"%d\\n\", solve(A, N));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:33:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define max(a, b) ((a) > (b) ? (a) : (b))\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *A = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    int K = N / 2;\n    long long **dp = malloc((N + 1) * sizeof(long long *));\n    for (int i = 0; i <= N; i++) {\n        dp[i] = malloc((K + 1) * sizeof(long long));\n        for (int j = 0; j <= K; j++) {\n            dp[i][j] = -1e18;\n        }\n    }\n\n    dp[0][0] = 0;\n    for (int i = 1; i <= N; i++) {\n        for (int j = 0; j <= K; j++) {\n            dp[i][j] = dp[i - 1][j];\n            if (j > 0 && i >= 2) {\n                dp[i][j] = max(dp[i][j], dp[i - 2][j - 1] + A[i - 1]);\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", dp[N][K]);\n\n    for (int i = 0; i <= N; i++) {\n        free(dp[i]);\n    }\n    free(dp);\n    free(A);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:34:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    if (N == 1) {\n        cout << A[0] << endl;\n        return 0;\n    }\n\n    vector<long long> dp(N, 0);\n    dp[0] = A[0];\n    dp[1] = max(A[0], A[1]);\n\n    for (int i = 2; i < N; ++i) {\n        dp[i] = max(dp[i-1], dp[i-2] + A[i]);\n    }\n\n    cout << dp[N-1] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:34:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        if (N == 1) {\n            System.out.println(0);\n            return;\n        }\n\n        long[][] dp = new long[N][2];\n        dp[0][0] = 0;\n        dp[0][1] = A[0];\n        dp[1][0] = A[0];\n        dp[1][1] = A[1];\n\n        for (int i = 2; i < N; i++) {\n            dp[i][0] = Math.max(dp[i - 1][1], dp[i - 1][0]);\n            dp[i][1] = dp[i - 1][0] + A[i];\n        }\n\n        long maxSum = Math.max(dp[N - 1][0], dp[N - 1][1]);\n        System.out.println(maxSum);\n    }\n}",
+    "timestamp": "2025-08-05 22:34:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int maxNonAdjacentSum(int[] arr) {\n        int n = arr.length;\n        if (n == 0) return 0;\n        if (n == 1) return arr[0];\n        \n        int[] dp = new int[n];\n        dp[0] = arr[0];\n        dp[1] = Math.max(arr[0], arr[1]);\n        \n        for (int i = 2; i < n; i++) {\n            dp[i] = Math.max(dp[i-1], dp[i-2] + arr[i]);\n        }\n        \n        return dp[n-1];\n    }\n}",
+    "timestamp": "2025-08-05 22:34:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n\nclass Solution {\npublic:\n    int maxSelectedElements(std::vector<int>& nums) {\n        int n = nums.size();\n        std::vector<std::vector<int>> dp(n, std::vector<int>(2, 0));\n        \n        std::sort(nums.begin(), nums.end());\n        \n        dp[0][0] = 0;\n        dp[0][1] = nums[0];\n        \n        for (int i = 1; i < n; i++) {\n            // Not selecting current element \n            dp[i][0] = std::max(dp[i-1][0], dp[i-1][1]);\n            \n            // Selecting current element\n            dp[i][1] = dp[i-1][0] + nums[i];\n        }\n        \n        return std::max(dp[n-1][0], dp[n-1][1]);\n    }\n};",
+    "timestamp": "2025-08-05 22:34:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_non_adjacent_sum(A):\n    N = len(A)\n    if N == 0:\n        return 0\n\n    # Dynamic programming array\n    dp = [0] * N\n\n    # Maximum sum including the first element\n    dp[0] = A[0]\n\n    # Maximum sum including the second element\n    if N > 1:\n        dp[1] = max(A[0], A[1])\n\n    # Fill the dp array\n    for i in range(2, N):\n        dp[i] = max(dp[i-1], dp[i-2] + A[i])\n\n    return dp[N-1]\n\ndef max_sum_adjacent_sequence(A):\n    N = len(A)\n    if N < 1:\n        return 0\n\n    half_N = N // 2\n\n    # Two-pass strategy: pick max between two possible subsequences\n    even_index_sum = max_non_adjacent_sum(A[::2])  # Picks starting from index 0\n    odd_index_sum = max_non_adjacent_sum(A[1::2])  # Picks starting from index 1\n\n    # Return the maximum sum of the subsequences\n    return max(even_index_sum, odd_index_sum)\n\n# Example Usage\nA = [3, 2, 7, 10]\nprint(max_sum_adjacent_sequence(A))  # Output: 13",
+    "timestamp": "2025-08-13 11:23:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MaxNonAdjacentSum {\n    public static int maxSum(int[] A) {\n        int N = A.length;\n        int half = N / 2;\n        int[][] dp = new int[N + 1][half + 1];\n\n        for (int i = 1; i <= N; i++) {\n            for (int k = 0; k <= half; k++) {\n                dp[i][k] = dp[i - 1][k];\n                if (k > 0 && i > 1) {\n                    dp[i][k] = Math.max(dp[i][k], dp[i - 2][k - 1] + A[i - 1]);\n                }\n            }\n        }\n\n        return dp[N][half];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        scanner.close();\n\n        System.out.println(maxSum(A));\n    }\n}",
+    "timestamp": "2025-08-13 11:24:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint maxSum(int* A, int N) {\n    int dp[N];\n    int half = N / 2;\n    \n    dp[0] = A[0];\n    if (N > 1) dp[1] = A[1];\n    \n    for (int i = 2; i < N; i++) {\n        dp[i] = dp[i - 2] + A[i];\n        if (i > 2) {\n            dp[i] = (dp[i] > dp[i - 3] + A[i]) ? dp[i] : dp[i - 3] + A[i];\n        }\n    }\n\n    int maxSum = 0;\n    for (int i = N - 1; i >= N - half; i--) {\n        if (dp[i] > maxSum) maxSum = dp[i];\n    }\n\n    return maxSum;\n}\n\nint main() {\n    int A[] = {1, 2, 3, 4, 5, 6, 7};\n    int N = sizeof(A)/sizeof(A[0]);\n    \n    int result = maxSum(A, N);\n    printf(\"Maximum sum: %d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:24:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxNonAdjacentSum(arr) {\n    const n = arr.length;\n    const halfN = Math.floor(n / 2);\n\n    if (n === 0) return 0;\n\n    let dpPrev = new Array(halfN + 1).fill(0); // dp for i-2\n    let dpCurr = new Array(halfN + 1).fill(0); // dp for i\n\n    for (let i = 0; i < n; i++) {\n        let dpNext = new Array(halfN + 1).fill(0); // dp for i+1\n        for (let j = 0; j <= halfN; j++) {\n            if (j > 0) {\n                dpNext[j] = Math.max(dpCurr[j], dpPrev[j - 1] + arr[i]);\n            } else {\n                dpNext[j] = dpCurr[j];\n            }\n        }\n        dpPrev = dpCurr;\n        dpCurr = dpNext;\n    }\n\n    return dpCurr[halfN];\n}",
+    "timestamp": "2025-08-13 11:24:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_non_adjacent_sum(A):\n    N = len(A)\n    if N == 0:\n        return 0\n    if N == 1:\n        return A[0]\n    \n    # Initialize dp array\n    dp = [0] * N\n    \n    # Base cases\n    dp[0] = A[0]\n    dp[1] = max(A[0], A[1])\n    \n    # Dynamic programming \n    for i in range(2, N):\n        # Either don't take current element or take it\n        # skipping the previous element \n        dp[i] = max(dp[i-1], dp[i-2] + A[i])\n    \n    # Keep track of chosen elements\n    chosen = []\n    i = N - 1\n    while i >= 0:\n        if i == 0 and dp[i] > 0:\n            chosen.append(A[i])\n            break\n        \n        if i > 0 and dp[i] != dp[i-1]:\n            chosen.append(A[i])\n            i -= 2\n        else:\n            i -= 1\n    \n    # Ensure exactly floor(N/2) elements are chosen\n    while len(chosen) > N // 2:\n        chosen.remove(min(chosen))\n    \n    while len(chosen) < N // 2:\n        remaining = set(A) - set(chosen)\n        chosen.append(max(remaining))\n    \n    return sum(chosen)",
+    "timestamp": "2025-08-13 11:24:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxNonAdjacentSum(arr) {\n    const n = arr.length;\n    const k = Math.floor(n / 2);\n    \n    const dp = new Array(n + 1).fill(0).map(() => new Array(k + 1).fill(-Infinity));\n    dp[0][0] = 0;\n    \n    for (let i = 1; i <= n; i++) {\n        for (let j = 0; j <= k; j++) {\n            // Skip current element\n            dp[i][j] = Math.max(dp[i][j], dp[i-1][j]);\n            \n            // Take current element if possible\n            if (j > 0 && i > 1) {\n                dp[i][j] = Math.max(dp[i][j], dp[i-2][j-1] + arr[i-1]);\n            }\n        }\n    }\n    \n    return dp[n][k];\n}",
+    "timestamp": "2025-08-13 11:24:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    N = int(data[0])\n    A = list(map(int, data[1:N+1]))\n    \n    if N == 1:\n        print(A[0])\n        return\n    \n    # dp[i][j] where j is 0 or 1, indicating whether the i-th element is chosen or not\n    dp = [[0] * 2 for _ in range(N)]\n    dp[0][1] = A[0]\n    \n    for i in range(1, N):\n        dp[i][0] = max(dp[i-1][0], dp[i-1][1])\n        if i >= 1:\n            dp[i][1] = A[i] + dp[i-1][0]\n    \n    if N % 2 == 0:\n        print(max(dp[N-1][0], dp[N-1][1]))\n    else:\n        # Need to ensure exactly floor(N/2) elements are chosen\n        # Recompute with additional constraint\n        dp2 = [[-float('inf')] * 2 for _ in range(N)]\n        dp2[0][0] = 0\n        dp2[0][1] = A[0]\n        \n        for i in range(1, N):\n            dp2[i][0] = max(dp2[i-1][0], dp2[i-1][1])\n            if i >= 1:\n                dp2[i][1] = A[i] + dp2[i-1][0]\n        \n        required = N // 2\n        # Check if the optimal solution already has exactly required elements\n        # Otherwise, need to adjust\n        # We can track the count of chosen elements in the DP\n        # So, we need a DP that also tracks the count of chosen elements\n        # Re-defining DP to include count\n        # dp[i][j][k], where j is 0 or 1 (not taken or taken), k is the count of taken elements\n        K = N // 2\n        dp3 = [[[-float('inf')] * (K + 1) for _ in range(2)] for __ in range(N)]\n        dp3[0][0][0] = 0\n        dp3[0][1][1] = A[0]\n        \n        for i in range(1, N):\n            for k in range(K + 1):\n                # Not taking current element\n                if k <= K:\n                    dp3[i][0][k] = max(dp3[i-1][0][k], dp3[i-1][1][k])\n                # Taking current element\n                if k >= 1:\n                    if i == 0:\n                        if k == 1:\n                            dp3[i][1][k] = A[i]\n                    else:\n                        dp3[i][1][k] = A[i] + dp3[i-1][0][k-1]\n        \n        res = max(dp3[N-1][0][K], dp3[N-1][1][K])\n        print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 11:24:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxSumNonAdjacent(nums) {\n    const n = nums.length;\n    const k = Math.floor(n / 2);\n    \n    if (n === 0) return 0;\n    if (n === 1) return nums[0];\n    \n    const dp = Array.from({ length: n + 1 }, () => Array(k + 1).fill(-Infinity));\n    dp[0][0] = 0;\n    dp[1][0] = 0;\n    dp[1][1] = nums[0];\n    \n    for (let i = 2; i <= n; i++) {\n        for (let j = 0; j <= k; j++) {\n            dp[i][j] = dp[i - 1][j];\n            if (j > 0) {\n                dp[i][j] = Math.max(dp[i][j], dp[i - 2][j - 1] + nums[i - 1]);\n            }\n        }\n    }\n    \n    return dp[n][k];\n}",
+    "timestamp": "2025-08-13 11:24:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint findMaxSum(const std::vector<int>& A, int N) {\n    int limit = N / 2;\n    std::vector<int> dp(N + 1, 0), prev_dp(N + 1, 0); \n    for (int i = 1; i <= limit; ++i) {\n        for (int j = 1; j <= N; ++j) {\n            if (j >= 2 * i) {\n                dp[j] = std::max(prev_dp[j - 2] + A[j - 1], dp[j - 1]);\n            } else {\n                dp[j] = dp[j - 1];\n            }\n        }\n        std::swap(dp, prev_dp);\n    }\n    return prev_dp[N];\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> A[i];\n    }\n    \n    int result = findMaxSum(A, N);\n    std::cout << result << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:03:29"
+  }
+]

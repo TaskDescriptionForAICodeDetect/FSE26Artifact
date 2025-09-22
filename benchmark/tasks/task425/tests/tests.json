@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "7\nINTERCAL 10 3 Chef Piet COW\nChef 7 3 INTERCAL Piet COW\nPiet 6 2 INTERCAL Chef\nCOW 7 2 INTERCAL Chef\nJ 6 1 A\nA 12 1 J\nGrass 0 0\n0",
+      "output": "22"
+    },
+    {
+      "input": "7\nQin 105 4 Zhao Wei Han Chu\nZhao 81 4 Qin Wei Qi Yan\nWei 70 5 Qin Zhao Han Qi Chu\nHan 45 3 Qin Wei Chu\nQi 79 4 Zhao Wei Chu Yan\nChu 102 4 Qin Wei Han Qi\nYan 53 2 Zhao Qi\n0",
+      "output": "184"
+    },
+    {
+      "input": "14\nMagadha 98 8 Macedonia Kalinga Surashtra Ashmaka Kantala Andhra Gangaridai Kamapura\nMacedonia 79 2 Magadha Surashtra\nKalinga 51 2 Magadha Andhra\nSurashtra 13 3 Magadha Macedonia Ashmaka\nAshmaka 11 3 Magadha Surashtra Kantala\nKantala 12 3 Magadha Ashmaka Andhra\nAndhra 14 3 Magadha Kantala Kalinga\nCholas 15 3 Cheras Pandyas Anuradhapuras\nCheras 8 2 Cholas Pandyas\nPandyas 10 3 Cholas Cheras Anuradhapuras\nAnuradhapuras 7 2 Cholas Pandyas\nGangaridai 20 3 Magadha Kamapura Arakan\nKamapura 18 2 Magadha Gangaridai\nArakan 7 1 Gangaridai\n0",
+      "output": "120"
+    }
+  ]
+}

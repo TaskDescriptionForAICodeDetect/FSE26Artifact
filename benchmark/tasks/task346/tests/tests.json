@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\n8000 15000 30000\n3\nFlare 45 Single 8000\nMeteor 62 All 6000\nUltimate 80 All 9999\n0",
+      "output": "232"
+    }
+  ]
+}

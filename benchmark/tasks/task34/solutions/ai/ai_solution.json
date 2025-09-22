@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def is_phone_number(s):\n    return len(s) == 11 and s[0] == '8'\n\ndef solve(n, s):\n    if n == 11:\n        return 'YES' if is_phone_number(s) else 'NO'\n    \n    # If Vasya plays optimally\n    for i in range(len(s)):\n        # Try deleting each character and check if Petya has no winning move\n        new_s = s[:i] + s[i+1:]\n        \n        # Check if Petya can prevent Vasya from winning\n        petya_loses = True\n        for j in range(len(new_s)):\n            candidate = new_s[:j] + new_s[j+1:]\n            if len(candidate) == 11 and not is_phone_number(candidate):\n                petya_loses = False\n                break\n        \n        if petya_loses:\n            return 'YES'\n    \n    return 'NO'\n\n# Read input\nn = int(input())\ns = input()\n\n# Print result\nprint(solve(n, s))",
+    "timestamp": "2025-08-05 17:32:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\ns = input().strip()\n\ncount_8 = s.count('8')\ntotal_possible = (n - 11) // 2\n\nif count_8 > total_possible:\n    print(\"YES\")\nelse:\n    print(\"NO\")",
+    "timestamp": "2025-08-05 17:32:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def vasya_wins(n, s):\n    # Count occurrences of digit '8'\n    count_8 = s.count('8')\n    # Calculate moves each player can make\n    total_moves = (n - 11) // 2\n    # Vasya wins if he can leave enough '8's after Petya's moves\n    return \"YES\" if count_8 - total_moves > total_moves else \"NO\"\n\n# Read input values\nn = int(input().strip())\ns = input().strip()\n\n# Output the result\nprint(vasya_wins(n, s))",
+    "timestamp": "2025-08-12 21:53:49"
+  }
+]

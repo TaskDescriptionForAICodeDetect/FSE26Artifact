@@ -1,0 +1,1 @@
+Write a program that reads a directed graph G = (V, E) and finds the shortest distance from vertex 1 to each vertex (the number of edges in the shortest path). Vertices are identified by IDs 1, 2, ... n.

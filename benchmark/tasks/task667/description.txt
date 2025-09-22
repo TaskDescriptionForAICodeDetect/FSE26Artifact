@@ -1,0 +1,1 @@
+There are two persons, numbered 0 and 1, and a variable x whose initial value is 0. They play a game in N rounds where in the i-th round, Person S_i can either replace x with x XOR A_i or do nothing. Person 0 aims to have x=0 at the end, while Person 1 aims for x to be non-zero. Determine if x ends up being 0 after each game when both play optimally. Solve T test cases.

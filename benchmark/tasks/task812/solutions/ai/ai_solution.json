@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint min_operations(char* s, char* t, int N) {\n    int operations = 0;\n    \n    for (int i = 0; i < N; i++) {\n        if (s[i] != t[i]) {\n            // Check if flipping will create three consecutive same characters\n            if (i >= 2 && s[i-1] == s[i-2] && s[i-1] == (t[i] ^ '0' ^ '1')) {\n                continue;  // Cannot flip\n            }\n            \n            s[i] = t[i];\n            operations++;\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    char s[N+1], t[N+1];\n    scanf(\"%s %s\", s, t);\n    \n    printf(\"%d\\n\", min_operations(s, t, N));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint minOperations(char* s, char* t, int N) {\n    int operations = 0;\n    for (int i = 0; i < N; ) {\n        if (s[i] != t[i]) {\n            operations++;\n            s[i] = t[i];\n            if (i + 1 < N && s[i + 1] == s[i]) {\n                i += 2;\n            } else {\n                i++;\n            }\n        } else {\n            i++;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    char s[N + 1], t[N + 1];\n    scanf(\"%s\", s);\n    scanf(\"%s\", t);\n    printf(\"%d\\n\", minOperations(s, t, N));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    string s, t;\n    cin >> s >> t;\n    \n    int operations = 0;\n    for (int i = 0; i < N; ++i) {\n        if (s[i] != t[i]) {\n            if (i + 1 < N && s[i] == s[i+1] && s[i+1] != t[i+1]) {\n                operations++;\n                s[i] = t[i];\n                s[i+1] = t[i+1];\n                i++; // Skip the next character as it's already processed\n            } else {\n                operations++;\n                s[i] = t[i];\n            }\n        }\n    }\n    cout << operations << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String s = scanner.next();\n        String t = scanner.next();\n        \n        int operations = 0;\n        char[] sArray = s.toCharArray();\n        \n        for (int i = 0; i < N; i++) {\n            if (sArray[i] != t.charAt(i)) {\n                if (i + 1 < N && sArray[i] == sArray[i + 1] && sArray[i + 1] != t.charAt(i + 1)) {\n                    sArray[i] = t.charAt(i);\n                    sArray[i + 1] = t.charAt(i + 1);\n                    operations++;\n                } else {\n                    sArray[i] = t.charAt(i);\n                    operations++;\n                }\n            }\n        }\n        \n        System.out.println(operations);\n    }\n}",
+    "timestamp": "2025-08-05 22:59:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int minOperations(String s, String t) {\n        int n = s.length();\n        int operations = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (s.charAt(i) != t.charAt(i)) {\n                // Check if inverting would create 3 consecutive same characters\n                if (i > 1 && s.charAt(i-1) == s.charAt(i-2) && s.charAt(i-1) == (t.charAt(i) ^ '0' ^ '1')) {\n                    return -1;\n                }\n                \n                operations++;\n            }\n        }\n        \n        return operations;\n    }\n}",
+    "timestamp": "2025-08-05 23:00:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int minOperations(string s, string t) {\n        int n = s.length();\n        int operations = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (s[i] != t[i]) {\n                // Check if inverting would create 3 consecutive same characters\n                if (i >= 2 && s[i-1] == s[i-2] && s[i-1] == (t[i] == '0' ? '1' : '0')) {\n                    return -1;\n                }\n                \n                s[i] = t[i];\n                operations++;\n            }\n        }\n        \n        return operations;\n    }\n};",
+    "timestamp": "2025-08-05 23:00:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations_to_equal(s, t):\n    n = len(s)\n    operations = 0\n\n    for i in range(n):\n        if s[i] != t[i]:\n            if i >= 2 and s[i-1] == s[i-2] and s[i-1] == t[i]:  # Invert current\n                s = s[:i] + t[i] + s[i+1:]\n                operations += 1\n            elif i <= n - 3 and s[i] == s[i+1] and s[i+1] == t[i+2]:  # Invert two ahead\n                s = s[:i+2] + t[i+2] + s[i+3:]\n                operations += 1\n            else:  # Invert current\n                s = s[:i] + t[i] + s[i+1:]\n                operations += 1\n\n    return operations\n\n# Example usage:\ns = \"0110\"\nt = \"1001\"\nprint(min_operations_to_equal(s, t))  # Output: 2",
+    "timestamp": "2025-08-13 13:15:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class Solution {\n    public int minOperations(String s, String t) {\n        int n = s.length();\n        int operations = 0;\n        for (int i = 0; i < n; i++) {\n            if (s.charAt(i) != t.charAt(i)) {\n                operations++;\n                if (i + 1 < n && s.charAt(i) != s.charAt(i + 1)) {\n                    i++;\n                }\n            }\n        }\n        return operations;\n    }\n\n    public static void main(String[] args) {\n        Solution solution = new Solution();\n        // Test cases\n        System.out.println(solution.minOperations(\"0101\", \"1010\")); // 2\n        System.out.println(solution.minOperations(\"1100\", \"0011\")); // 2\n    }\n}",
+    "timestamp": "2025-08-13 13:16:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#define min(a, b) ((a) < (b) ? (a) : (b))\n\nint minOperations(char s[], char t[], int N) {\n    int operations = 0;\n    int i = 0;\n\n    while (i < N) {\n        if (s[i] != t[i]) {\n            // Try to flip the current character\n            int j = i;\n            while (j < N && s[j] != t[j] && j - i < 2) {\n                j++;\n            }\n            operations++;\n            i = j;\n        } else {\n            i++;\n        }\n    }\n\n    return operations;\n}\n\nint main() {\n    char s[] = \"0110\";\n    char t[] = \"1001\";\n    int N = strlen(s); // Assuming s and t have the same length\n\n    printf(\"%d\\n\", minOperations(s, t, N));\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:16:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint minOperationsToConvert(string s, string t) {\n    int N = s.length();\n    vector<int> diff(N, 0);\n    for (int i = 0; i < N; ++i) {\n        diff[i] = (s[i] != t[i]);\n    }\n    \n    int operations = 0;\n    for (int i = 0; i < N; ++i) {\n        if (diff[i] == 1) {\n            if (i + 1 < N && diff[i + 1] == 1 && !(s[i] == s[i + 1] && (i + 2 < N && s[i] == s[i + 2]))) {\n                // Swap two consecutive differences as one operation\n                diff[i] = diff[i + 1] = 0;\n                operations++;\n                i++; // Skip next position as it's resolved\n            } else {\n                // Single inversion operation\n                diff[i] = 0;\n                operations++;\n            }\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    string s, t;\n    cin >> s >> t;\n    \n    int result = minOperationsToConvert(s, t);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:16:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(s, t):\n    N = len(s)\n    dp = [[float('inf')] * 2 for _ in range(N + 1)]\n    dp[0][0] = 0\n\n    for i in range(1, N + 1):\n        for j in range(2):\n            # Don't change current bit\n            if s[i-1] == t[i-1]:\n                if i >= 2 and s[i-2] == s[i-1] == t[i-1]:\n                    continue\n                dp[i][j] = min(dp[i][j], dp[i-1][j])\n\n            # Change current bit\n            if s[i-1] != t[i-1]:\n                if i >= 2 and s[i-2] == t[i-1]:\n                    continue\n                dp[i][j] = min(dp[i][j], dp[i-1][1-j] + 1)\n\n    return min(dp[N])",
+    "timestamp": "2025-08-13 13:16:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(s, t):\n    n = len(s)\n    res = 0\n    i = 0\n    while i < n:\n        if s[i] != t[i]:\n            res += 1\n            # Check if flipping would create a triplet in s\n            # We need to ensure that flipping s[i] doesn't cause a triplet in s\n            # Also, after flipping, s[i] should match t[i]\n            # So, we flip s[i] to t[i], and then check the neighbors\n            # If flipping causes a triplet, we might need to flip adjacent characters as well\n            # But since the problem allows only flips that don't create triplets, we proceed\n            # under the assumption that such a flip is possible\n            # So, we just count the flip and move on\n            # The problem states that the same character does not occur three or more times in a row in s and t\n            # So, flipping a single character won't create a triplet if the original string doesn't have triplets\n            # and the flip is to match t, which also doesn't have triplets\n            # Hence, we can safely flip and increment the count\n            i += 1  # move to next character\n        else:\n            i += 1\n    return res",
+    "timestamp": "2025-08-13 13:16:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperationsToTransform(s, t) {\n    let n = s.length;\n    let operations = 0;\n    \n    for (let i = 0; i < n; i++) {\n        if (s[i] !== t[i]) {\n            if (i < n - 1 && s[i + 1] !== t[i + 1] && s[i] !== s[i + 1]) {\n                // If the next character can be flipped without violating the rule\n                i++; // skip the next because they will both be flipped together\n            }\n            operations++;\n        }\n    }\n    \n    return operations;\n}\n\n// Example usage:\n// const s = \"010\";\n// const t = \"100\";\n// console.log(minOperationsToTransform(s, t)); // Output: 1",
+    "timestamp": "2025-08-13 13:17:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperations(s, t) {\n    const N = s.length;\n    let operations = 0;\n\n    for (let i = 0; i < N; i++) {\n        if (s[i] !== t[i]) {\n            s = s.slice(0, i) + (s[i] === '0' ? '1' : '0') + s.slice(i + 1);\n            operations++;\n        }\n\n        if (i >= 2 && s[i] === s[i-1] && s[i] === s[i-2]) {\n            return -1;\n        }\n    }\n\n    return operations;\n}",
+    "timestamp": "2025-08-13 13:17:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperations(s, t) {\n    let operations = 0;\n    let n = s.length;\n    let sArr = s.split('');\n    \n    for (let i = 0; i < n; i++) {\n        if (sArr[i] !== t[i]) {\n            // Check if flipping would cause three consecutive same characters\n            if (i > 0 && i < n - 1 && sArr[i-1] === t[i] && sArr[i+1] === t[i]) {\n                // Find the next possible position to flip\n                let j = i + 1;\n                while (j < n && sArr[j] === t[i] && t[j] !== t[i]) {\n                    j++;\n                }\n                if (j < n && sArr[j] !== t[i]) {\n                    sArr[j] = t[i];\n                    operations++;\n                } else {\n                    // No choice but to flip current\n                    sArr[i] = t[i];\n                    operations++;\n                }\n            } else {\n                sArr[i] = t[i];\n                operations++;\n            }\n        }\n        \n        // Check for three consecutive same characters after flip\n        if (i >= 2 && sArr[i] === sArr[i-1] && sArr[i] === sArr[i-2]) {\n            // Revert the last operation and find another way\n            return -1; // Not possible under constraints\n        }\n    }\n    \n    return operations;\n}",
+    "timestamp": "2025-08-13 13:17:24"
+  }
+]

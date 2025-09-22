@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n\nlong long binomialCoeff(int n, int k) {\n    long long C[k + 1];\n    memset(C, 0, sizeof(C));\n    C[0] = 1;\n    \n    for (int i = 1; i <= n; i++) {\n        for (int j = (i < k ? i : k); j > 0; j--) {\n            C[j] = (C[j] + C[j - 1]) % MOD;\n        }\n    }\n    \n    return C[k];\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    long long result = binomialCoeff(n + k - 1, k);\n    printf(\"%lld\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:36:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n\ntypedef long long ll;\n\nll mod_pow(ll base, ll exp, ll mod) {\n    ll result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp = exp / 2;\n    }\n    return result;\n}\n\nll comb(ll n, ll k, ll fact[], ll inv_fact[]) {\n    if (k > n || k < 0) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    ll *fact = (ll *)malloc((n + 1) * sizeof(ll));\n    ll *inv_fact = (ll *)malloc((n + 1) * sizeof(ll));\n    \n    fact[0] = 1;\n    for (int i = 1; i <= n; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    \n    inv_fact[n] = mod_pow(fact[n], MOD - 2, MOD);\n    for (int i = n - 1; i >= 0; i--) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n    \n    ll result = 0;\n    for (int m = 0; m <= n && m <= k; m++) {\n        ll c = comb(n, m, fact, inv_fact);\n        ll c2 = comb(n - 1, n - m - 1, fact, inv_fact);\n        result = (result + c * c2 % MOD) % MOD;\n    }\n    \n    printf(\"%lld\\n\", result);\n    \n    free(fact);\n    free(inv_fact);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nvector<vector<long long>> multiply(vector<vector<long long>>& a, vector<vector<long long>>& b) {\n    int n = a.size();\n    vector<vector<long long>> res(n, vector<long long>(n, 0));\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < n; ++j) {\n            for (int k = 0; k < n; ++k) {\n                res[i][j] = (res[i][j] + a[i][k] * b[k][j]) % MOD;\n            }\n        }\n    }\n    return res;\n}\n\nvector<vector<long long>> matrix_pow(vector<vector<long long>>& mat, long long power) {\n    int n = mat.size();\n    vector<vector<long long>> res(n, vector<long long>(n, 0));\n    for (int i = 0; i < n; ++i) {\n        res[i][i] = 1;\n    }\n    while (power > 0) {\n        if (power % 2 == 1) {\n            res = multiply(res, mat);\n        }\n        mat = multiply(mat, mat);\n        power /= 2;\n    }\n    return res;\n}\n\nint main() {\n    int n;\n    long long k;\n    cin >> n >> k;\n    \n    vector<vector<long long>> transition(n, vector<long long>(n));\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < n; ++j) {\n            if (i == j) {\n                transition[i][j] = (n - 1) % MOD;\n            } else {\n                transition[i][j] = 1;\n            }\n        }\n    }\n    \n    vector<vector<long long>> mat_pow = matrix_pow(transition, k);\n    \n    long long result = 0;\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < n; ++j) {\n            result = (result + mat_pow[i][j]) % MOD;\n        }\n    }\n    \n    long long inv_n = 1;\n    long long base = n;\n    long long power = MOD - 2;\n    while (power > 0) {\n        if (power % 2 == 1) {\n            inv_n = (inv_n * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        power /= 2;\n    }\n    \n    result = (result * inv_n) % MOD;\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RoomCombinations {\n    private static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        scanner.close();\n\n        long[][] dp = new long[k + 1][n + 1];\n        dp[0][0] = 1;\n\n        for (int move = 1; move <= k; move++) {\n            for (int people = 0; people <= n; people++) {\n                if (people > 0) {\n                    dp[move][people] = (dp[move][people] + dp[move - 1][people - 1] * (n - (people - 1))) % MOD;\n                }\n                if (people < n) {\n                    dp[move][people] = (dp[move][people] + dp[move - 1][people + 1] * (people + 1)) % MOD;\n                }\n                if (people >= 0 && people <= n) {\n                    dp[move][people] = (dp[move][people] + dp[move - 1][people] * people) % MOD;\n                    dp[move][people] = (dp[move][people] + dp[move - 1][people] * (n - people)) % MOD;\n                }\n            }\n        }\n\n        System.out.println(dp[k][n]);\n    }\n}",
+    "timestamp": "2025-08-05 22:38:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int movesToDistributeRooms(int n, int k) {\n        final int MOD = 1_000_000_007;\n        long[][] dp = new long[k + 1][n + 1];\n        \n        // Initial state: 1 person in each room\n        dp[0][1] = 1;\n        \n        for (int moves = 1; moves <= k; moves++) {\n            for (int currRoom = 1; currRoom <= n; currRoom++) {\n                for (int prevRoom = 1; prevRoom <= n; prevRoom++) {\n                    if (currRoom != prevRoom) {\n                        dp[moves][currRoom] = (dp[moves][currRoom] + dp[moves - 1][prevRoom]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        long totalCombinations = 0;\n        for (int room = 1; room <= n; room++) {\n            totalCombinations = (totalCombinations + dp[k][room]) % MOD;\n        }\n        \n        return (int) totalCombinations;\n    }\n}",
+    "timestamp": "2025-08-05 22:38:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nclass Solution {\npublic:\n    int movesToDistributeRooms(int n, int k) {\n        vector<vector<long long>> dp(k + 1, vector<long long>(n + 1, 0));\n        \n        // Initial state: 1 person in each room\n        dp[0][1] = 1;\n        \n        for (int moves = 1; moves <= k; moves++) {\n            for (int rooms = 1; rooms <= n; rooms++) {\n                // Option 1: Person moves into current room\n                dp[moves][rooms] = (dp[moves][rooms] + (rooms - 1) * dp[moves - 1][rooms]) % MOD;\n                \n                // Option 2: Person moves out of current room\n                if (rooms < n) {\n                    dp[moves][rooms] = (dp[moves][rooms] + (n - rooms) * dp[moves - 1][rooms]) % MOD;\n                }\n            }\n        }\n        \n        return dp[k][1];\n    }\n};\n\nint main() {\n    Solution sol;\n    int n, k;\n    cin >> n >> k;\n    cout << sol.movesToDistributeRooms(n, k) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:38:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_combinations(n, k):\n    MOD = 10**9 + 7\n\n    # DP to calculate combinations\n    dp = [[0] * (k + 1) for _ in range(n + 1)]\n    dp[0][0] = 1\n\n    for i in range(1, n + 1):\n        for j in range(k + 1):\n            dp[i][j] = dp[i - 1][j]\n            if j > 0:\n                dp[i][j] = (dp[i][j] + dp[i][j - 1]) % MOD\n\n    return dp[n][k]\n\n# Example usage\nn = 5 # number of rooms\nk = 3 # number of moves\nprint(count_combinations(n, k))",
+    "timestamp": "2025-08-13 11:48:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class RoomCombinations {\n    private static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        scanner.close();\n\n        System.out.println(countCombinations(n, k));\n    }\n\n    private static long countCombinations(int n, int k) {\n        long[][] dp = new long[n + 1][k + 1];\n        dp[1][0] = 1;\n\n        for (int room = 1; room <= n; room++) {\n            for (int move = 0; move <= k; move++) {\n                if (dp[room][move] == 0) continue;\n                for (int nextRoom = 1; nextRoom <= n; nextRoom++) {\n                    if (nextRoom != room && move + 1 <= k) {\n                        dp[nextRoom][move + 1] = (dp[nextRoom][move + 1] + dp[room][move]) % MOD;\n                    }\n                }\n            }\n        }\n\n        long result = 0;\n        for (int room = 1; room <= n; room++) {\n            for (int move = 0; move <= k; move++) {\n                result = (result + dp[room][move]) % MOD;\n            }\n        }\n\n        return result;\n    }\n}",
+    "timestamp": "2025-08-13 11:48:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n\n    // dp[i][j] means the number of ways to distribute i people into j rooms\n    long long dp[k+1][n+1];\n\n    // Initialize the dp array\n    for (int i = 0; i <= k; i++) {\n        for (int j = 0; j <= n; j++) {\n            if (i == 0) {\n                dp[i][j] = (j == n) ? 1 : 0; // initially, in n moves and n rooms, there's one combination\n            } else {\n                dp[i][j] = 0; // no ways initially\n            }\n        }\n    }\n\n    // Fill the dp array\n    for (int i = 1; i <= k; i++) {\n        for (int j = 1; j <= n; j++) {\n            dp[i][j] = (dp[i-1][j] * j % MOD + dp[i-1][j-1] * (n - j + 1) % MOD) % MOD;\n        }\n    }\n\n    printf(\"%lld\\n\", dp[k][n]);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function roomCombinations(n, k) {\n    const MOD = 1000000007;\n    const dp = Array.from(Array(k + 1), () => Array(n + 1).fill(0));\n    dp[0][n] = 1;\n\n    for (let i = 0; i < k; i++) {\n        for (let j = 0; j <= n; j++) {\n            if (dp[i][j] !== 0) {\n                for (let move = 0; move <= j; move++) {\n                    dp[i + 1][j - move] = (dp[i + 1][j - move] + dp[i][j]) % MOD;\n                }\n            }\n        }\n    }\n\n    return dp[k][0];\n}",
+    "timestamp": "2025-08-13 11:48:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_room_combinations(n, k):\n    MOD = 10**9 + 7\n    dp = [[0] * (n + 1) for _ in range(k + 1)]\n    dp[0][1] = 1\n\n    for moves in range(1, k + 1):\n        for curr_rooms in range(1, n + 1):\n            for prev_rooms in range(1, n + 1):\n                if curr_rooms != prev_rooms:\n                    dp[moves][curr_rooms] += dp[moves-1][prev_rooms]\n                    dp[moves][curr_rooms] %= MOD\n\n    return sum(dp[k]) % MOD",
+    "timestamp": "2025-08-13 11:48:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countRoomCombinations(n, k) {\n    const MOD = 1000000007;\n    \n    let dp = new Array(k + 1).fill(0).map(() => new Array(n + 1).fill(0));\n    dp[0][1] = 1;\n    \n    for (let moves = 1; moves <= k; moves++) {\n        for (let room = 1; room <= n; room++) {\n            for (let prevRoom = 1; prevRoom <= n; prevRoom++) {\n                if (prevRoom !== room) {\n                    dp[moves][room] = (dp[moves][room] + dp[moves - 1][prevRoom]) % MOD;\n                }\n            }\n        }\n    }\n    \n    let totalCombinations = 0;\n    for (let room = 1; room <= n; room++) {\n        totalCombinations = (totalCombinations + dp[k][room]) % MOD;\n    }\n    \n    return totalCombinations;\n}",
+    "timestamp": "2025-08-13 11:48:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    import sys\n    n, k = map(int, sys.stdin.readline().split())\n    \n    # We can model this as a graph where each room is a node, and edges represent possible moves.\n    # The problem reduces to counting the number of possible ways to assign people to rooms after k moves,\n    # which is equivalent to counting the number of possible functions from n elements to n elements after k steps.\n    # The answer is n^k, since each person has n choices at each step, and there are k steps.\n    # But since people are indistinct in terms of movement (each can move independently), the answer is n^k.\n    # However, since initially each room has exactly one person, the problem is more about permutations.\n    # Actually, the answer is the number of possible mappings after k moves, which is n^k mod MOD.\n    # But since people are distinct, it's more like counting the number of possible distributions of n distinct people into n rooms.\n    # The answer is n^(n) for k >= n-1, because after n-1 moves, any permutation is possible.\n    # But for k < n-1, it's more complicated.\n    # However, the problem simplifies to: the number of possible mappings of n people to n rooms after k moves.\n    # Each move is a transition in the Markov chain, and the answer is the number of possible states after k steps.\n    # The initial state is the identity permutation, and each step is multiplying by any transposition (since a move is a person moving from one room to another, which can be seen as a transposition).\n    # The number of possible states after k moves is the number of permutations reachable with k transpositions.\n    # For k >= n-1, it's n! (all permutations are reachable).\n    # For k < n-1, it's the number of permutations with at most k transpositions (which is complicated).\n    # But the problem might be expecting n^k, as each person has n choices per move, and there are k moves.\n    # So the answer is n^k mod MOD.\n    \n    ans = pow(n, k, MOD)\n    print(ans)\n\nsolve()",
+    "timestamp": "2025-08-13 11:49:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve(n, k) {\n    let dp = Array.from({ length: k + 1 }, () => new Array(n + 1).fill(0));\n    dp[0][1] = 1;\n    \n    for (let move = 1; move <= k; move++) {\n        for (let rooms = 1; rooms <= n; rooms++) {\n            dp[move][rooms] = (dp[move - 1][rooms - 1] * (n - (rooms - 1))) % MOD;\n            dp[move][rooms] = (dp[move][rooms] + dp[move - 1][rooms] * (rooms - 1)) % MOD;\n            dp[move][rooms] = (dp[move][rooms] + dp[move - 1][rooms + 1] * 1) % MOD;\n        }\n    }\n    \n    let result = 0;\n    for (let rooms = 1; rooms <= n; rooms++) {\n        result = (result + dp[k][rooms]) % MOD;\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 11:49:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1000000007;\n\n// Helper function to calculate nCr % MOD\nint binomialCoefficient(int n, int r, const std::vector<int>& factorial, const std::vector<int>& invFactorial) {\n    if (r > n) return 0;\n    return ((long long)factorial[n] * invFactorial[r] % MOD) * invFactorial[n - r] % MOD;\n}\n\n// Function to calculate x^y % MOD\nint power(int x, int y, int mod) {\n    int result = 1;\n    x = x % mod;\n    while (y > 0) {\n        if (y & 1)\n            result = (result * (long long)x) % mod;\n        y >>= 1;\n        x = (x * (long long)x) % mod;\n    }\n    return result;\n}\n\nint main() {\n    int n, k;\n    std::cin >> n >> k;\n\n    // Calculate factorials and inverse factorials up to n + k\n    std::vector<int> factorial(n + k + 1, 1);\n    std::vector<int> invFactorial(n + k + 1, 1);\n\n    for (int i = 2; i <= n + k; ++i)\n        factorial[i] = (factorial[i - 1] * (long long)i) % MOD;\n\n    invFactorial[n + k] = power(factorial[n + k], MOD - 2, MOD);\n    for (int i = n + k - 1; i >= 2; --i)\n        invFactorial[i] = (invFactorial[i + 1] * (long long)(i + 1)) % MOD;\n\n    // The number of combinations of people in rooms can be represented by the\n    // partitions of k moves among n rooms. This is a binomial coefficient C(n + k - 1, n - 1).\n    int result = binomialCoefficient(n + k - 1, n - 1, factorial, invFactorial);\n    std::cout << result << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:05:27"
+  }
+]

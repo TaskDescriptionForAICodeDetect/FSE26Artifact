@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid solve(int N, int M) {\n    int* grid = (int*)malloc(N * M * sizeof(int));\n    int* target = (int*)malloc(N * M * sizeof(int));\n    \n    // Initialize original grid\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            grid[i*M + j] = i*M + j + 1;\n        }\n    }\n    \n    // Initialize target grid\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            target[i*M + j] = M * i + j + 1;\n        }\n    }\n    \n    // First row rearrangement\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            for (int k = j + 1; k < M; k++) {\n                if (grid[i*M + j] > grid[i*M + k]) {\n                    int temp = grid[i*M + j];\n                    grid[i*M + j] = grid[i*M + k];\n                    grid[i*M + k] = temp;\n                }\n            }\n        }\n    }\n    \n    // First column rearrangement\n    for (int j = 0; j < M; j++) {\n        for (int i = 0; i < N; i++) {\n            for (int k = i + 1; k < N; k++) {\n                if (grid[i*M + j] > grid[k*M + j]) {\n                    int temp = grid[i*M + j];\n                    grid[i*M + j] = grid[k*M + j];\n                    grid[k*M + j] = temp;\n                }\n            }\n        }\n    }\n    \n    // Final row rearrangement\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            for (int k = j + 1; k < M; k++) {\n                if (grid[i*M + j] > grid[i*M + k]) {\n                    int temp = grid[i*M + j];\n                    grid[i*M + j] = grid[i*M + k];\n                    grid[i*M + k] = temp;\n                }\n            }\n        }\n    }\n    \n    // Print result\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            printf(\"%d \", grid[i*M + j]);\n        }\n        printf(\"\\n\");\n    }\n    \n    free(grid);\n    free(target);\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    solve(N, M);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:44:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid rearrange_rows(int **grid, int N, int M) {\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            grid[i][j] = i * M + j + 1;\n        }\n    }\n}\n\nvoid rearrange_columns(int **grid, int N, int M) {\n    for (int j = 0; j < M; j++) {\n        for (int i = 0; i < N; i++) {\n            grid[i][j] = i * M + j + 1;\n        }\n    }\n}\n\nvoid final_rearrange_rows(int **grid, int N, int M) {\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            grid[i][j] = i * M + j + 1;\n        }\n    }\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int **grid = (int **)malloc(N * sizeof(int *));\n    for (int i = 0; i < N; i++) {\n        grid[i] = (int *)malloc(M * sizeof(int));\n        for (int j = 0; j < M; j++) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n    \n    rearrange_rows(grid, N, M);\n    rearrange_columns(grid, N, M);\n    final_rearrange_rows(grid, N, M);\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            printf(\"%d \", grid[i][j]);\n        }\n        printf(\"\\n\");\n    }\n    \n    for (int i = 0; i < N; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<vector<int>> grid(N, vector<int>(M));\n    \n    // Initial filling\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            grid[i][j] = i * M + j + 1;\n        }\n    }\n    \n    // First step: Rearrange each row as desired (identity here)\n    // No action needed since initial is already row-wise sorted\n    \n    // Second step: Rearrange columns to have numbers in order per column\n    for (int j = 0; j < M; ++j) {\n        vector<int> column(N);\n        for (int i = 0; i < N; ++i) {\n            column[i] = grid[i][j];\n        }\n        sort(column.begin(), column.end());\n        for (int i = 0; i < N; ++i) {\n            grid[i][j] = column[i];\n        }\n    }\n    \n    // Third step: Rearrange each row to match the target\n    for (int i = 0; i < N; ++i) {\n        sort(grid[i].begin(), grid[i].end());\n        for (int j = 0; j < M; ++j) {\n            grid[i][j] = i * M + j + 1;\n        }\n    }\n    \n    // Output the grid\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            cout << grid[i][j] << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GridRearrangement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int[][] grid = new int[N][M];\n        \n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                grid[i][j] = M * i + j + 1;\n            }\n        }\n        \n        // First rearrange rows: sort each row in ascending order (already sorted)\n        \n        // Rearrange columns: transpose the grid\n        int[][] transposed = new int[M][N];\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                transposed[j][i] = grid[i][j];\n            }\n        }\n        \n        // Sort each column (now rows of transposed) in ascending order\n        for (int j = 0; j < M; j++) {\n            Arrays.sort(transposed[j]);\n        }\n        \n        // Transpose back to original grid\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                grid[i][j] = transposed[j][i];\n            }\n        }\n        \n        // Final rearrange rows: sort each row in ascending order (already sorted)\n        \n        // Output the grid\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                System.out.print(grid[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:45:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GridRearrangement {\n    public static void rearrangeGrid(int N, int M) {\n        int[][] grid = new int[N][M];\n        \n        // Initial fill of grid with numbers 1 to N*M\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                grid[i][j] = i * M + j + 1;\n            }\n        }\n        \n        // First row rearrangement\n        for (int i = 0; i < N; i++) {\n            Arrays.sort(grid[i]);\n        }\n        \n        // Column rearrangement\n        for (int j = 0; j < M; j++) {\n            int[] column = new int[N];\n            for (int i = 0; i < N; i++) {\n                column[i] = grid[i][j];\n            }\n            Arrays.sort(column);\n            for (int i = 0; i < N; i++) {\n                grid[i][j] = column[i];\n            }\n        }\n        \n        // Second row rearrangement\n        for (int i = 0; i < N; i++) {\n            Arrays.sort(grid[i]);\n        }\n        \n        // Print the final grid\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                System.out.print(grid[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        rearrangeGrid(N, M);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:45:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<vector<int>> grid(N, vector<int>(M));\n    \n    // Initial grid fill\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            grid[i][j] = i * M + j + 1;\n        }\n    }\n    \n    // First row rearrangement\n    for (int i = 0; i < N; i++) {\n        vector<int> row = grid[i];\n        sort(row.begin(), row.end());\n        grid[i] = row;\n    }\n    \n    // Column rearrangement\n    for (int j = 0; j < M; j++) {\n        vector<int> column(N);\n        for (int i = 0; i < N; i++) {\n            column[i] = grid[i][j];\n        }\n        sort(column.begin(), column.end());\n        for (int i = 0; i < N; i++) {\n            grid[i][j] = column[i];\n        }\n    }\n    \n    // Second row rearrangement\n    for (int i = 0; i < N; i++) {\n        vector<int> row = grid[i];\n        sort(row.begin(), row.end());\n        grid[i] = row;\n    }\n    \n    // Output grid\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            cout << grid[i][j] << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def rearrange_grid(N, M, grid):\n    def desired_row(i):\n        return [(i * M) + j + 1 for j in range(M)]\n\n    def transpose(mat):\n        return list(map(list, zip(*mat)))\n\n    # Step 1: Rearrange each row\n    for i in range(N):\n        grid[i] = desired_row(i)\n\n    # Step 2: Transpose to work on columns\n    grid = transpose(grid)\n\n    # Step 3: Rearrange each \"column\" (now as rows) based on transposed view\n    for j in range(M):\n        grid[j].sort()\n\n    # Step 4: Transpose back to get the final solution\n    grid = transpose(grid)\n\n    return grid\n\n# Example usage:\nN, M = 3, 3\ngrid = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\nresult = rearrange_grid(N, M, grid)\nfor row in result:\n    print(row)",
+    "timestamp": "2025-08-13 12:24:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class GridRearrangement {\n\n    public static int[][] rearrangeGrid(int N, int M) {\n        int[][] grid = new int[N][M];\n        int num = 1;\n\n        // Initial fill of the grid with numbers from 1 to NM\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                grid[i][j] = num++;\n            }\n        }\n\n        // Step 1: Rearrange each row to be from 1 to M\n        for (int i = 0; i < N; i++) {\n            Arrays.sort(grid[i]);\n        }\n\n        // Step 2: Rearrange each column to place each number into its correct row number\n        for (int j = 0; j < M; j++) {\n            int[] tempColumn = new int[N];\n            for (int i = 0; i < N; i++) {\n                tempColumn[i] = grid[i][j];\n            }\n\n            Arrays.sort(tempColumn);\n            for (int i = 0; i < N; i++) {\n                grid[i][j] = tempColumn[i];\n            }\n        }\n\n        // Step 3: Finally sort each row again to achieve the required arrangement\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                grid[i][j] = M * i + (j + 1);\n            }\n        }\n\n        return grid;\n    }\n\n    public static void main(String[] args) {\n        int N = 3;\n        int M = 3;\n        int[][] result = rearrangeGrid(N, M);\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                System.out.print(result[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-13 12:24:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid rearrangeGrid(int** grid, int N, int M);\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int **grid = (int **)malloc(N * sizeof(int *));\n    for (int i = 0; i < N; i++)\n        grid[i] = (int *)malloc(M * sizeof(int));\n    \n    rearrangeGrid(grid, N, M);\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            printf(\"%d \", grid[i][j]);\n        }\n        printf(\"\\n\");\n    }\n    \n    for (int i = 0; i < N; i++)\n        free(grid[i]);\n    free(grid);\n    \n    return 0;\n}\n\nvoid rearrangeGrid(int** grid, int N, int M) {\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            grid[i][j] = M * i + j + 1;\n        }\n    }\n}",
+    "timestamp": "2025-08-13 12:24:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nvoid rearrangeGrid(std::vector<std::vector<int>>& grid, int N, int M) {\n    // Step 1: Rearrange numbers in each row\n    for (int i = 0; i < N; ++i) {\n        std::sort(grid[i].begin(), grid[i].end());\n    }\n\n    // Step 2: Rearrange numbers in each column\n    for (int j = 0; j < M; ++j) {\n        std::vector<int> column(N);\n        for (int i = 0; i < N; ++i) {\n            column[i] = grid[i][j];\n        }\n        std::sort(column.begin(), column.end());\n        for (int i = 0; i < N; ++i) {\n            grid[i][j] = column[i];\n        }\n    }\n\n    // Step 3: Rearrange numbers in each row again\n    for (int i = 0; i < N; ++i) {\n        std::sort(grid[i].begin(), grid[i].end());\n    }\n}\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n    std::vector<std::vector<int>> grid(N, std::vector<int>(M));\n\n    for (int i = 0; i < N; ++i)\n        for (int j = 0; j < M; ++j)\n            std::cin >> grid[i][j];\n\n    rearrangeGrid(grid, N, M);\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            std::cout << grid[i][j] << ' ';\n        }\n        std::cout << '\\n';\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:24:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def rearrange_grid(N, M):\n    # Initialize the grid with numbers from 1 to N*M\n    grid = [[0 for _ in range(M)] for _ in range(N)]\n    current = 1\n    for i in range(N):\n        for j in range(M):\n            grid[i][j] = current\n            current += 1\n    \n    # First row rearrangement\n    for i in range(N):\n        row = grid[i].copy()\n        row.sort()\n        grid[i] = row\n    \n    # Column rearrangement\n    for j in range(M):\n        column = [grid[i][j] for i in range(N)]\n        column.sort()\n        for i in range(N):\n            grid[i][j] = column[i]\n    \n    # Final row rearrangement\n    for i in range(N):\n        row = grid[i].copy()\n        expected_row = [M * (i) + j + 1 for j in range(M)]\n        row.sort(key=lambda x: expected_row.index(x))\n        grid[i] = row\n    \n    return grid\n\n# Example usage\nN, M = 3, 4\nresult = rearrange_grid(N, M)\nfor row in result:\n    print(row)",
+    "timestamp": "2025-08-13 12:24:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "N, M = map(int, input().split())\n\n# Step 1: Rearrange each row to have numbers in order 1..NM, row-wise\ngrid = []\nfor i in range(1, N+1):\n    row = list(range(M*(i-1)+1, M*i +1))\n    grid.append(row)\n\n# Step 2: Rearrange columns (transpose and sort each column)\n# Transpose the grid to work on columns as rows\ntransposed = list(zip(*grid))\n# Sort each transposed row (original column) in increasing order\nsorted_transposed = [sorted(col) for col in transposed]\n# Transpose back to original orientation\ngrid = list(zip(*sorted_transposed))\n\n# Step 3: Rearrange each row again to match the target\n# The target is M*(i-1)+j for (i,j) (1-based)\nfor i in range(N):\n    target_row = [M*i + j + 1 for j in range(M)]\n    grid[i] = target_row\n\n# Output the grid\nfor row in grid:\n    print(' '.join(map(str, row)))",
+    "timestamp": "2025-08-13 12:24:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function rearrangeGrid(N, M, grid) {\n    let flattened = [];\n  \n    // Step 1: Flatten the grid array\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < M; j++) {\n            flattened.push(grid[i][j]);\n        }\n    }\n\n    // Step 2: Sort the flattened array\n    flattened.sort((a, b) => a - b);\n\n    // Step 3: Fill the grid\n    let index = 0;\n    let result = Array.from(Array(N), () => Array(M).fill(0));\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j < M; j++) {\n            result[i][j] = M * i + j + 1;\n        }\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 12:25:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function rearrangeGrid(N, M) {\n    // Initial grid with numbers from 1 to N*M\n    let grid = Array.from({length: N}, (_, i) => \n        Array.from({length: M}, (_, j) => i * M + j + 1)\n    );\n\n    // First row-wise rearrangement\n    for (let i = 0; i < N; i++) {\n        grid[i].sort((a, b) => a - b);\n    }\n\n    // Column-wise rearrangement\n    for (let j = 0; j < M; j++) {\n        let column = grid.map(row => row[j]).sort((a, b) => a - b);\n        for (let i = 0; i < N; i++) {\n            grid[i][j] = column[i];\n        }\n    }\n\n    // Final row-wise rearrangement\n    for (let i = 0; i < N; i++) {\n        grid[i].sort((a, b) => a - b);\n    }\n\n    return grid;\n}",
+    "timestamp": "2025-08-13 12:25:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function rearrangeGrid(N, M) {\n    let grid = new Array(N);\n    for (let i = 0; i < N; i++) {\n        grid[i] = new Array(M);\n        for (let j = 0; j < M; j++) {\n            grid[i][j] = M * i + j + 1;\n        }\n    }\n    return grid;\n}",
+    "timestamp": "2025-08-13 12:25:30"
+  }
+]

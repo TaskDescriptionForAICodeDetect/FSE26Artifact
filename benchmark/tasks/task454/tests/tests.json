@@ -1,0 +1,36 @@
+{
+  "examples": [
+    {
+      "input": "3 3\rac#\nb#C\n.BA\n",
+      "output": "2"
+    },
+    {
+      "input": "3 3\naaZ\na#Z\naZZ\n",
+      "output": "0"
+    },
+    {
+      "input": "3 3\n..#\n.#.\n#..\n",
+      "output": "-1"
+    },
+    {
+      "input": "1 50\nabcdefghijklmnopqrstuvwxyYXWVUTSRQPONMLKJIHGFEDCBA\n",
+      "output": "25"
+    },
+    {
+      "input": "1 50\naAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyY\n",
+      "output": "25"
+    },
+    {
+      "input": "1 50\nabcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXY\n",
+      "output": "1"
+    },
+    {
+      "input": "1 50\naaaaaaaaaabbbbbbbbbbcccccCCCCCBBBBBBBBBBAAAAAAAAAA\n",
+      "output": "25"
+    },
+    {
+      "input": "10 10\n...#......\na###.#####\n.bc...A...\n##.#C#d.#\n.#B#.#.###\n.#...#e.D.\n.#A..###.#\n..e.c#..E.\n####d###.#\n##E...D.C.\n",
+      "output": "4"
+    }
+  ]
+}

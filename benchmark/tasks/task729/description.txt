@@ -1,0 +1,1 @@
+Given a permutation P of {1, 2, ..., N}, for a pair (L, R) where (1 ≤ L < R ≤ N), let X_{L, R} be the second largest value among P_L, P_{L+1}, ..., P_R. The task is to find the sum of all X_{L,R} for all possible pairs (L, R).

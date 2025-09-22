@@ -1,0 +1,1 @@
+Snuke loves flags. Snuke is placing N flags on a line. The i-th flag can be placed at either coordinate x_i or coordinate y_i. Snuke thinks that the flags look nicer when the smallest distance between two of them, d, is larger. Find the maximum possible value of d.

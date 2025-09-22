@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <math.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\nPoint project_point_to_line(Point p1, Point p2, Point p) {\n    double line_length_squared = pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2);\n    \n    if (line_length_squared == 0) {\n        return p1;\n    }\n    \n    double t = ((p.x - p1.x) * (p2.x - p1.x) + (p.y - p1.y) * (p2.y - p1.y)) / line_length_squared;\n    \n    Point projection = {\n        p1.x + t * (p2.x - p1.x),\n        p1.y + t * (p2.y - p1.y)\n    };\n    \n    return projection;\n}",
+    "timestamp": "2025-08-05 22:13:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ntypedef struct {\n    double x;\n    double y;\n} Point;\n\nPoint project_point(Point p1, Point p2, Point p) {\n    Point v = {p2.x - p1.x, p2.y - p1.y};\n    Point w = {p.x - p1.x, p.y - p1.y};\n    double c1 = w.x * v.x + w.y * v.y;\n    double c2 = v.x * v.x + v.y * v.y;\n    double b = c1 / c2;\n    Point x = {p1.x + b * v.x, p1.y + b * v.y};\n    return x;\n}\n\nint main() {\n    Point p1, p2, p, x;\n    scanf(\"%lf %lf\", &p1.x, &p1.y);\n    scanf(\"%lf %lf\", &p2.x, &p2.y);\n    scanf(\"%lf %lf\", &p.x, &p.y);\n    \n    x = project_point(p1, p2, p);\n    printf(\"%.6lf %.6lf\\n\", x.x, x.y);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:13:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n\nstruct Point {\n    double x, y;\n};\n\nPoint projectPointOntoLine(Point p1, Point p2, Point p) {\n    Point vec_p1p2 = {p2.x - p1.x, p2.y - p1.y};\n    Point vec_p1p = {p.x - p1.x, p.y - p1.y};\n    \n    double dot = vec_p1p2.x * vec_p1p.x + vec_p1p2.y * vec_p1p.y;\n    double len_sq = vec_p1p2.x * vec_p1p2.x + vec_p1p2.y * vec_p1p2.y;\n    double param = len_sq != 0 ? dot / len_sq : -1;\n    \n    Point x;\n    x.x = p1.x + param * vec_p1p2.x;\n    x.y = p1.y + param * vec_p1p2.y;\n    \n    return x;\n}",
+    "timestamp": "2025-08-05 22:13:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class PointProjection {\n    public static double[] projectPoint(double[] p1, double[] p2, double[] p) {\n        double[] p1p2 = {p2[0] - p1[0], p2[1] - p1[1]};\n        double[] p1p = {p[0] - p1[0], p[1] - p1[1]};\n        double lenSquared = p1p2[0] * p1p2[0] + p1p2[1] * p1p2[1];\n        double dot = p1p[0] * p1p2[0] + p1p[1] * p1p2[1];\n        double t = lenSquared != 0 ? dot / lenSquared : 0;\n        double[] x = {p1[0] + p1p2[0] * t, p1[1] + p1p2[1] * t};\n        return x;\n    }\n}",
+    "timestamp": "2025-08-05 22:14:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class PointProjection {\n    public static double[] projectPointOntoLine(double[] p1, double[] p2, double[] p) {\n        // Vector from p1 to p2\n        double[] lineVector = new double[] {\n            p2[0] - p1[0],\n            p2[1] - p1[1]\n        };\n\n        // Vector from p1 to p\n        double[] pointVector = new double[] {\n            p[0] - p1[0],\n            p[1] - p1[1]\n        };\n\n        // Dot product\n        double dotProduct = pointVector[0] * lineVector[0] + pointVector[1] * lineVector[1];\n        double lineVectorLengthSquared = lineVector[0] * lineVector[0] + lineVector[1] * lineVector[1];\n\n        // Projection ratio\n        double t = dotProduct / lineVectorLengthSquared;\n\n        // Projection point\n        return new double[] {\n            p1[0] + t * lineVector[0],\n            p1[1] + t * lineVector[1]\n        };\n    }\n}",
+    "timestamp": "2025-08-05 22:14:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <cmath>\n#include <vector>\n\nstruct Point {\n    double x, y;\n    \n    Point() : x(0), y(0) {}\n    Point(double _x, double _y) : x(_x), y(_y) {}\n};\n\nPoint projectPointOnLine(const Point& p1, const Point& p2, const Point& p) {\n    // Vector from p1 to p2\n    double line_vec_x = p2.x - p1.x;\n    double line_vec_y = p2.y - p1.y;\n    \n    // Vector from p1 to p\n    double point_vec_x = p.x - p1.x;\n    double point_vec_y = p.y - p1.y;\n    \n    // Calculate projection scalar\n    double line_length_sq = line_vec_x * line_vec_x + line_vec_y * line_vec_y;\n    double projection_scalar = (point_vec_x * line_vec_x + point_vec_y * line_vec_y) / line_length_sq;\n    \n    // Calculate projection point\n    Point projection;\n    projection.x = p1.x + projection_scalar * line_vec_x;\n    projection.y = p1.y + projection_scalar * line_vec_y;\n    \n    return projection;\n}",
+    "timestamp": "2025-08-05 22:14:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def project_point_onto_line(p1, p2, p):\n    import numpy as np\n    \n    # Convert points to numpy arrays\n    p1 = np.array(p1)\n    p2 = np.array(p2)\n    p = np.array(p)\n    \n    # Calculate the vector from p1 to p2\n    line_vec = p2 - p1\n    \n    # Calculate the vector from p1 to p\n    p_vec = p - p1\n    \n    # Project p_vec onto line_vec\n    line_vec_norm = np.dot(line_vec, line_vec)\n    projection_scaling_factor = np.dot(p_vec, line_vec) / line_vec_norm\n    projection = p1 + projection_scaling_factor * line_vec\n    \n    return tuple(projection)\n\n# Example usage\np1 = (0, 0)\np2 = (2, 2)\np = (1, 0)\nx = project_point_onto_line(p1, p2, p)\nprint(x)",
+    "timestamp": "2025-08-13 09:35:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class Projection {\n\n    public static void main(String[] args) {\n        Point p1 = new Point(1, 2);\n        Point p2 = new Point(4, 6);\n        Point p = new Point(3, 5);\n\n        Point projection = projectOntoLine(p1, p2, p);\n        System.out.println(\"Projection: (\" + projection.x + \", \" + projection.y + \")\");\n    }\n\n    public static Point projectOntoLine(Point p1, Point p2, Point p) {\n        double dx = p2.x - p1.x;\n        double dy = p2.y - p1.y;\n        \n        double scale = ((p.x - p1.x) * dx + (p.y - p1.y) * dy) / (dx * dx + dy * dy);\n        \n        double projX = p1.x + scale * dx;\n        double projY = p1.y + scale * dy;\n        \n        return new Point(projX, projY);\n    }\n\n    static class Point {\n        double x, y;\n\n        Point(double x, double y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n}",
+    "timestamp": "2025-08-13 09:35:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\nPoint vectorSubtract(Point a, Point b) {\n    Point result;\n    result.x = a.x - b.x;\n    result.y = a.y - b.y;\n    return result;\n}\n\ndouble dotProduct(Point a, Point b) {\n    return a.x * b.x + a.y * b.y;\n}\n\nPoint scalarMultiply(Point a, double scalar) {\n    Point result;\n    result.x = a.x * scalar;\n    result.y = a.y * scalar;\n    return result;\n}\n\nPoint vectorAdd(Point a, Point b) {\n    Point result;\n    result.x = a.x + b.x;\n    result.y = a.y + b.y;\n    return result;\n}\n\nPoint projectPointOntoLine(Point p1, Point p2, Point p) {\n    Point lineVec = vectorSubtract(p2, p1);\n    Point pVec = vectorSubtract(p, p1);\n    double lineLengthSquared = dotProduct(lineVec, lineVec);\n    double projectionFactor = dotProduct(pVec, lineVec) / lineLengthSquared;\n    Point projection = scalarMultiply(lineVec, projectionFactor);\n    return vectorAdd(p1, projection);\n}\n\nint main() {\n    Point p1 = {1, 1};\n    Point p2 = {4, 4};\n    Point p = {2, 3};\n\n    Point projection = projectPointOntoLine(p1, p2, p);\n    printf(\"Projection point: (%.2f, %.2f)\\n\", projection.x, projection.y);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:35:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def projection_point(p1, p2, p):\n    # Calculate the vector from p1 to p2\n    line_vector = [p2[0] - p1[0], p2[1] - p1[1]]\n    \n    # Calculate the vector from p1 to p\n    point_vector = [p[0] - p1[0], p[1] - p1[1]]\n    \n    # Calculate the length of the line vector squared\n    line_length_squared = line_vector[0]**2 + line_vector[1]**2\n    \n    # Calculate the dot product of line_vector and point_vector\n    dot_product = line_vector[0] * point_vector[0] + line_vector[1] * point_vector[1]\n    \n    # Calculate the projection scalar\n    projection_scalar = dot_product / line_length_squared\n    \n    # Calculate the projection point\n    x = [\n        p1[0] + projection_scalar * line_vector[0],\n        p1[1] + projection_scalar * line_vector[1]\n    ]\n    \n    return x",
+    "timestamp": "2025-08-13 09:35:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import numpy as np\n\ndef find_projection_point(p1, p2, p):\n    p1 = np.array(p1)\n    p2 = np.array(p2)\n    p = np.array(p)\n    \n    direction = p2 - p1\n    t = np.dot(p - p1, direction) / np.dot(direction, direction)\n    projection = p1 + t * direction\n    \n    return projection.tolist()",
+    "timestamp": "2025-08-13 09:35:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n\nstruct Point {\n    double x, y;\n};\n\nPoint vectorSubtract(const Point& a, const Point& b) {\n    return {a.x - b.x, a.y - b.y};\n}\n\ndouble dotProduct(const Point& a, const Point& b) {\n    return a.x * b.x + a.y * b.y;\n}\n\nPoint scalarMultiply(const Point& a, double scalar) {\n    return {a.x * scalar, a.y * scalar};\n}\n\nPoint findProjection(const Point& p1, const Point& p2, const Point& p) {\n    Point lineVec = vectorSubtract(p2, p1);\n    Point pVec = vectorSubtract(p, p1);\n    double t = dotProduct(pVec, lineVec) / dotProduct(lineVec, lineVec);\n    return {p1.x + lineVec.x * t, p1.y + lineVec.y * t};\n}\n\nint main() {\n    Point p1 = {0.0, 0.0};\n    Point p2 = {1.0, 1.0};\n    Point p = {1.0, 0.0};\n    Point projection = findProjection(p1, p2, p);\n    std::cout << \"Projection of p onto line p1p2: (\" << projection.x << \", \" << projection.y << \")\\n\";\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:52:44"
+  }
+]

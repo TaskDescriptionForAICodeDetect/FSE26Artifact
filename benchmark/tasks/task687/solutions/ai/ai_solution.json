@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_N 2005\n\nlong long dp[MAX_N][MAX_N];\nint arr[MAX_N];\n\nint main() {\n    int N, S;\n    scanf(\"%d %d\", &N, &S);\n    \n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    \n    long long total = 0;\n    \n    for (int L = 1; L <= N; L++) {\n        memset(dp, 0, sizeof(dp));\n        dp[L][0] = 1;\n        \n        for (int R = L; R <= N; R++) {\n            for (int k = 0; k <= R - L + 1; k++) {\n                dp[L][k] += dp[L][k];\n                dp[L][k] %= MOD;\n                \n                dp[L][k + 1] += dp[L][k];\n                dp[L][k + 1] %= MOD;\n                \n                if (k < R - L + 1) {\n                    if (dp[L][k] > 0 && arr[R] <= S) {\n                        total += dp[L][k];\n                        total %= MOD;\n                    }\n                }\n            }\n        }\n    }\n    \n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:34:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, S;\n    scanf(\"%d %d\", &N, &S);\n    int *A = (int *)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    long long **dp = (long long **)malloc((N + 2) * sizeof(long long *));\n    for (int i = 0; i <= N + 1; i++) {\n        dp[i] = (long long *)malloc((S + 2) * sizeof(long long));\n        memset(dp[i], 0, (S + 2) * sizeof(long long));\n    }\n\n    long long total = 0;\n\n    for (int R = 1; R <= N; R++) {\n        for (int L = R; L >= 1; L--) {\n            if (A[L] > S) continue;\n            if (A[L] == S) {\n                dp[L][S] = (dp[L][S] + 1) % MOD;\n            } else {\n                for (int s = S; s >= A[L]; s--) {\n                    dp[L][s] = (dp[L][s] + dp[L + 1][s - A[L]]) % MOD;\n                }\n            }\n            total = (total + dp[L][S]) % MOD;\n        }\n    }\n\n    printf(\"%lld\\n\", total);\n\n    for (int i = 0; i <= N + 1; i++) {\n        free(dp[i]);\n    }\n    free(dp);\n    free(A);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:34:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, S;\n    cin >> N >> S;\n    vector<int> A(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> A[i];\n    }\n\n    vector<vector<int>> dp(N + 2, vector<int>(S + 1, 0));\n    vector<vector<int>> sum_dp(N + 2, vector<int>(S + 1, 0));\n    long long total = 0;\n\n    for (int R = 1; R <= N; ++R) {\n        int a = A[R];\n        if (a <= S) {\n            dp[R][a] = (dp[R][a] + 1) % MOD;\n            for (int s = a + 1; s <= S; ++s) {\n                dp[R][s] = (dp[R][s] + sum_dp[R - 1][s - a]) % MOD;\n            }\n        }\n        for (int s = 0; s <= S; ++s) {\n            sum_dp[R][s] = (sum_dp[R - 1][s] + dp[R][s]) % MOD;\n        }\n        total = (total + sum_dp[R][S]) % MOD;\n    }\n\n    cout << total << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:34:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int S = sc.nextInt();\n        int[] A = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            A[i] = sc.nextInt();\n        }\n\n        long[][] dp = new long[S + 1][N + 2];\n        long[] sum = new long[S + 1];\n        long total = 0;\n\n        for (int R = 1; R <= N; R++) {\n            int a = A[R];\n            if (a > S) continue;\n            dp[a][R] = (dp[a][R] + R) % MOD;\n            for (int s = S; s >= a + 1; s--) {\n                dp[s][R] = (dp[s][R] + sum[s - a]) % MOD;\n            }\n            for (int s = 1; s <= S; s++) {\n                sum[s] = (sum[s] + dp[s][R]) % MOD;\n            }\n            total = (total + sum[S]) % MOD;\n        }\n\n        System.out.println(total);\n    }\n}",
+    "timestamp": "2025-08-05 22:34:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    private static final int MOD = 998244353;\n\n    public int countSubsequences(int[] A, int S) {\n        int N = A.length;\n        long totalCount = 0;\n\n        for (int L = 0; L < N; L++) {\n            int[] dp = new int[S + 1];\n            dp[0] = 1;\n\n            for (int R = L; R < N; R++) {\n                for (int sum = S; sum >= A[R]; sum--) {\n                    dp[sum] = (dp[sum] + dp[sum - A[R]]) % MOD;\n                }\n                totalCount = (totalCount + dp[S]) % MOD;\n            }\n        }\n\n        return (int) totalCount;\n    }\n}",
+    "timestamp": "2025-08-05 22:35:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nconst int MOD = 998244353;\nconst int MAXN = 5005;\n\nint N, arr[MAXN];\nll dp[MAXN][MAXN];\n\nint main() {\n    cin >> N;\n    for (int i = 1; i <= N; i++) {\n        cin >> arr[i];\n    }\n\n    ll total = 0;\n    for (int L = 1; L <= N; L++) {\n        memset(dp, 0, sizeof(dp));\n        dp[L][0] = 1;\n\n        for (int R = L; R <= N; R++) {\n            for (int sum = 0; sum <= 5000; sum++) {\n                dp[R][sum] += dp[R - 1][sum];\n                if (sum >= arr[R]) {\n                    dp[R][sum] += dp[R - 1][sum - arr[R]];\n                }\n                dp[R][sum] %= MOD;\n            }\n        }\n\n        for (int R = L; R <= N; R++) {\n            total = (total + dp[R][S]) % MOD;\n        }\n    }\n\n    cout << total << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def subsequence_count(A, L, R, S):\n    import itertools\n\n    count = 0\n    n = R - L + 1\n    sub_array = [A[i] for i in range(L, R + 1)]\n    \n    for k in range(1, n + 1):\n        for combo in itertools.combinations(sub_array, k):\n            if sum(combo) == S:\n                count += 1\n                \n    return count\n\ndef total_subsequence_count(A, S):\n    MOD = 998244353\n    N = len(A)\n    total_count = 0\n    \n    for L in range(N):\n        for R in range(L, N):\n            total_count += subsequence_count(A, L, R, S)\n            total_count %= MOD\n    \n    return total_count\n\n# Example Usage\nA = [1, 2, 3, 4]\nS = 5\nresult = total_subsequence_count(A, S)\nprint(result)",
+    "timestamp": "2025-08-13 11:27:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SequenceFinder {\n    static final int MOD = 998244353;\n\n    public static long sumOfAllF(int[] A, int N, int S) {\n        long result = 0;\n\n        for (int L = 1; L <= N; L++) {\n            result = (result + countSequences(A, L, N, S, new HashMap<>())) % MOD;\n        }\n\n        return result;\n    }\n\n    private static long countSequences(int[] A, int start, int end, int sum, HashMap<String, Long> memo) {\n        return countRec(A, start, end, sum, 0, memo);\n    }\n\n    private static long countRec(int[] A, int pos, int end, int sum, int currentSum, HashMap<String, Long> memo) {\n        if (currentSum > sum) return 0;\n        if (currentSum == sum) return 1;\n\n        String key = pos + \"-\" + currentSum;\n        if (memo.containsKey(key)) {\n            return memo.get(key);\n        }\n\n        long count = 0;\n        for (int i = pos; i <= end; i++) {\n            count = (count + countRec(A, i + 1, end, sum, currentSum + A[i - 1], memo)) % MOD;\n        }\n\n        memo.put(key, count);\n        return count;\n    }\n\n    public static void main(String[] args) {\n        int[] A = {5, 1, 2, 1, 5};\n        int N = A.length;\n        int S = 7;\n\n        System.out.println(sumOfAllF(A, N, S));\n    }\n}",
+    "timestamp": "2025-08-13 11:27:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nint countSubsequences(int A[], int L, int R, int S, int N) {\n    int dp[R + 1][S + 1];\n    memset(dp, 0, sizeof(dp));\n    dp[L - 1][0] = 1;  // Base case: One way to sum to 0 (choosing empty subsequence)\n\n    for (int i = L; i <= R; i++) {\n        for (int j = S; j >= A[i - 1]; j--) {\n            dp[i][j] = (dp[i - 1][j] + dp[i - 1][j - A[i - 1]]) % MOD;\n        }\n        for (int j = 0; j < A[i - 1]; j++) {  // Just copy the previous row for remaining j < A[i-1]\n            dp[i][j] = dp[i - 1][j];\n        }\n    }\n    return dp[R][S];  // We are interested in number of ways to achieve sum S using elements from L to R\n}\n\nint main() {\n    int N, S;\n    scanf(\"%d %d\", &N, &S);\n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    long long result = 0;\n    for (int L = 1; L <= N; L++) {\n        for (int R = L; R <= N; R++) {\n            result = (result + countSubsequences(A, L, R, S, N)) % MOD;\n        }\n    }\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:27:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(A, N, S) {\n    const MOD = 998244353;\n    let dp = Array.from({length: N + 1}, () => Array(S + 1).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 1; i <= N; i++) {\n        for (let sum = 0; sum <= S; sum++) {\n            dp[i][sum] = dp[i - 1][sum];\n            if (sum >= A[i - 1]) {\n                dp[i][sum] = (dp[i][sum] + dp[i - 1][sum - A[i - 1]]) % MOD;\n            }\n        }\n    }\n\n    let result = 0;\n    for (let L = 1; L <= N; L++) {\n        for (let R = L; R <= N; R++) {\n            result = (result + dp[R][S] - dp[L - 1][S] + MOD) % MOD;\n        }\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 11:27:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, A, S):\n    MOD = 998244353\n    \n    # Precompute prefix sums\n    prefix_sum = [0] * (N + 1)\n    for i in range(1, N + 1):\n        prefix_sum[i] = prefix_sum[i-1] + A[i-1]\n    \n    total_count = 0\n    \n    # Iterate through all possible (L, R) pairs\n    for L in range(1, N + 1):\n        for R in range(L, N + 1):\n            # Store subset sums for the current (L, R) range\n            subset_sums = {0: 1}\n            \n            # Compute all subset sums and count sequences\n            for i in range(L, R + 1):\n                new_subset_sums = subset_sums.copy()\n                for curr_sum, count in subset_sums.items():\n                    new_sum = curr_sum + A[i-1]\n                    if new_sum == S:\n                        total_count = (total_count + count) % MOD\n                    new_subset_sums[new_sum] = new_subset_sums.get(new_sum, 0) + count\n                subset_sums = new_subset_sums\n    \n    return total_count\n\n# Input parsing and function call\ndef main():\n    N, S = map(int, input().split())\n    A = list(map(int, input().split()))\n    print(solve(N, A, S))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 11:27:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countSubsequences(A, N) {\n    const MOD = 998244353;\n    let totalCount = 0;\n\n    for (let L = 1; L <= N; L++) {\n        for (let R = L; R <= N; R++) {\n            totalCount = (totalCount + countSubsequencesWithSum(A, L, R)) % MOD;\n        }\n    }\n\n    return totalCount;\n}\n\nfunction countSubsequencesWithSum(A, L, R) {\n    const MOD = 998244353;\n    const dp = new Array(R - L + 2).fill(0).map(() => new Array(R - L + 2).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = L - 1; i < R; i++) {\n        for (let j = 0; j <= i - L + 1; j++) {\n            dp[i - L + 1][j] = (dp[i - L + 1][j] + dp[i - L][j]) % MOD;\n            dp[i - L + 1][j + 1] = (dp[i - L + 1][j + 1] + dp[i - L][j] * A[i]) % MOD;\n        }\n    }\n\n    return dp[R - L + 1][0];\n}",
+    "timestamp": "2025-08-13 11:27:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    N, S = map(int, sys.stdin.readline().split())\n    A = list(map(int, sys.stdin.readline().split()))\n    \n    total = 0\n    # We'll process each element and keep track of the number of subsets ending at each position\n    # dp[i][s] = number of subsets ending at i with sum s\n    dp = [{} for _ in range(N)]\n    \n    for i in range(N):\n        ai = A[i]\n        # Single element subset {i}\n        if ai <= S:\n            if ai in dp[i]:\n                dp[i][ai] += 1\n            else:\n                dp[i][ai] = 1\n        # Combine with previous subsets\n        for j in range(i):\n            for s in dp[j]:\n                new_s = s + ai\n                if new_s <= S:\n                    if new_s in dp[i]:\n                        dp[i][new_s] += dp[j][s]\n                    else:\n                        dp[i][new_s] = dp[j][s]\n        # Sum all subsets ending at i that sum to S\n        if S in dp[i]:\n            total += dp[i][S] * (i + 1) * (N - i)\n            total %= MOD\n    \n    print(total % MOD)\n\nsolve()",
+    "timestamp": "2025-08-13 11:27:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve(N, S, A) {\n    let total = 0;\n    for (let L = 0; L < N; L++) {\n        let dp = new Map();\n        dp.set(0, 1);\n        for (let R = L; R < N; R++) {\n            const newDp = new Map();\n            for (const [sum, cnt] of dp) {\n                newDp.set(sum, (newDp.get(sum) || 0) + cnt);\n                const newSum = sum + A[R];\n                if (newSum <= S) {\n                    newDp.set(newSum, (newDp.get(newSum) || 0) + cnt);\n                }\n            }\n            dp = newDp;\n            total = (total + (dp.get(S) || 0)) % MOD;\n        }\n    }\n    return total;\n}\n\n// Example usage:\n// const N = 3;\n// const S = 2;\n// const A = [1, 1, 1];\n// console.log(solve(N, S, A));",
+    "timestamp": "2025-08-13 11:27:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cstring>\n\nconst int MOD = 998244353;\n\nint countSubsequences(std::vector<int>& A, int N, int S) {\n    int sum = 0;\n    for (int L = 1; L <= N; ++L) {\n        std::vector<int> dp(S + 1, 0);\n        dp[0] = 1;\n        for (int R = L; R <= N; ++R) {\n            for (int s = S; s >= A[R - 1]; --s) {\n                dp[s] = (dp[s] + dp[s - A[R - 1]]) % MOD;\n            }\n            sum = (sum + dp[S]) % MOD;\n        }\n    }\n    return sum;\n}\n\nint main() {\n    int N, S;\n    std::cin >> N >> S;\n    std::vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> A[i];\n    }\n    std::cout << countSubsequences(A, N, S) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:03:52"
+  }
+]

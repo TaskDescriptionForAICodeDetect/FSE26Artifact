@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "YMAOKDOAMIMHAADAMMA",
+      "output": "MADAMIMADAM"
+    },
+    {
+      "input": "LELVEEL",
+      "output": "LEVEL"
+    }
+  ]
+}

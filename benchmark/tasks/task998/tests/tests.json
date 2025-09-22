@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13 7\nat\ncoder\ncodar",
+      "output": "atcodar"
+    },
+    {
+      "input": "23 7\ncoder\ncodar\nat",
+      "output": "codarat"
+    },
+    {
+      "input": "34 13\nkyuri\nnamida\nzzzzzzz\naaaaaa",
+      "output": "namidazzzzzzz"
+    }
+  ]
+}

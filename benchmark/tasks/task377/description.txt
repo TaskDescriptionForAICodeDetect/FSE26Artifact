@@ -1,0 +1,1 @@
+Determine the minimum number of times a player needs to violate the 'Natural footstep style' in the game Step Step Evolution while playing optimally given a sequence of direction arrows.

@@ -1,0 +1,1 @@
+There are N arrays, each of length M, initially containing integers from 1 to M in order. Mr. Takahashi will perform Q operations on these arrays, where in the i-th operation, he moves an integer a_i (1≤a_i≤M) to the front of an arbitrary array. The goal is to determine if it's possible to make all N arrays identical after performing the Q operations.

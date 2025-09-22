@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "6 5\nJohn\n Robert\n  Frank\n  Andrew\n Nancy\n  David\nRobert is a child of John.\nRobert is an ancestor of Andrew.\nRobert is a sibling of Nancy.\nNancy is the parent of Frank.\nJohn is a descendant of Andrew.\n0 0",
+      "output": "True\nTrue\nTrue\nFalse\nFalse\n\n"
+    },
+    {
+      "input": "2 1\nabc\n xyz\nxyz is a child of abc.\n0 0",
+      "output": "True\n\n"
+    }
+  ]
+}

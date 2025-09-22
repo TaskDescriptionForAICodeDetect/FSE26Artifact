@@ -1,0 +1,1 @@
+Find the number of sequences of length K consisting of positive integers such that the product of any two adjacent elements is at most N, modulo 10^9+7.

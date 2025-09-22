@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nint findPosition(int H, int W, int value) {\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (value == i * W + j + 1) {\n                return i * W + j;\n            }\n        }\n    }\n    return -1;\n}\n\nint manhattanDistance(int H, int W, int pos1, int pos2) {\n    int row1 = pos1 / W;\n    int col1 = pos1 % W;\n    int row2 = pos2 / W;\n    int col2 = pos2 % W;\n    \n    return abs(row1 - row2) + abs(col1 - col2);\n}\n\nint main() {\n    int H, W, Q;\n    scanf(\"%d %d %d\", &H, &W, &Q);\n    \n    int *magicGrid = malloc(H * W * sizeof(int));\n    for (int i = 0; i < H * W; i++) {\n        scanf(\"%d\", &magicGrid[i]);\n    }\n    \n    for (int q = 0; q < Q; q++) {\n        int L, R, D;\n        scanf(\"%d %d %d\", &L, &R, &D);\n        \n        int currentPos = findPosition(H, W, L);\n        int targetPos = findPosition(H, W, R);\n        int totalMagicPoints = 0;\n        \n        while (currentPos != targetPos) {\n            int nextValue = magicGrid[currentPos] + D;\n            int nextPos = findPosition(H, W, nextValue);\n            \n            totalMagicPoints += manhattanDistance(H, W, currentPos, nextPos);\n            currentPos = nextPos;\n        }\n        \n        printf(\"%d\\n\", totalMagicPoints);\n    }\n    \n    free(magicGrid);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Position;\n\nint main() {\n    int H, W, Q;\n    scanf(\"%d %d\", &H, &W);\n    \n    Position *pos = (Position *)malloc((H * W + 1) * sizeof(Position));\n    for (int i = 1; i <= H; i++) {\n        for (int j = 1; j <= W; j++) {\n            int num;\n            scanf(\"%d\", &num);\n            pos[num].x = i;\n            pos[num].y = j;\n        }\n    }\n    \n    scanf(\"%d\", &Q);\n    while (Q--) {\n        int L, R, D;\n        scanf(\"%d %d %d\", &L, &R, &D);\n        \n        int total = 0;\n        int current = L;\n        while (current + D <= R) {\n            int next = current + D;\n            total += abs(pos[next].x - pos[current].x) + abs(pos[next].y - pos[current].y);\n            current = next;\n        }\n        printf(\"%d\\n\", total);\n    }\n    \n    free(pos);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:09:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int H, W, D;\n    cin >> H >> W >> D;\n    \n    map<int, pair<int, int>> pos;\n    for (int i = 1; i <= H; ++i) {\n        for (int j = 1; j <= W; ++j) {\n            int num;\n            cin >> num;\n            pos[num] = make_pair(i, j);\n        }\n    }\n    \n    int max_num = H * W;\n    vector<int> dp(max_num + 1, 0);\n    for (int x = 1; x <= max_num; ++x) {\n        if (x - D >= 1) {\n            auto prev_pos = pos[x - D];\n            auto curr_pos = pos[x];\n            int cost = abs(curr_pos.first - prev_pos.first) + abs(curr_pos.second - prev_pos.second);\n            dp[x] = dp[x - D] + cost;\n        }\n    }\n    \n    int Q;\n    cin >> Q;\n    for (int i = 0; i < Q; ++i) {\n        int L, R;\n        cin >> L >> R;\n        cout << dp[R] - dp[L] << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:09:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] hw = br.readLine().split(\" \");\n        int H = Integer.parseInt(hw[0]);\n        int W = Integer.parseInt(hw[1]);\n        int total = H * W;\n        int[] posX = new int[total + 1];\n        int[] posY = new int[total + 1];\n\n        for (int i = 0; i < H; i++) {\n            String[] row = br.readLine().split(\" \");\n            for (int j = 0; j < W; j++) {\n                int num = Integer.parseInt(row[j]);\n                posX[num] = i + 1;\n                posY[num] = j + 1;\n            }\n        }\n\n        int Q = Integer.parseInt(br.readLine());\n        StringBuilder sb = new StringBuilder();\n        for (int q = 0; q < Q; q++) {\n            String[] query = br.readLine().split(\" \");\n            int L = Integer.parseInt(query[0]);\n            int R = Integer.parseInt(query[1]);\n            int D = Integer.parseInt(query[2]);\n            int current = L;\n            long magic = 0;\n            while (current != R) {\n                int next = current + D;\n                magic += Math.abs(posX[next] - posX[current]) + Math.abs(posY[next] - posY[current]);\n                current = next;\n            }\n            sb.append(magic).append(\"\\n\");\n        }\n        System.out.print(sb.toString());\n    }\n}",
+    "timestamp": "2025-08-05 23:09:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class MagicalTeleportation {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int H = Integer.parseInt(st.nextToken());\n        int W = Integer.parseInt(st.nextToken());\n        \n        int[][] grid = new int[H][W];\n        Map<Integer, int[]> positions = new HashMap<>();\n        \n        for (int i = 0; i < H; i++) {\n            st = new StringTokenizer(br.readLine());\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = Integer.parseInt(st.nextToken());\n                positions.put(grid[i][j], new int[]{i, j});\n            }\n        }\n        \n        int Q = Integer.parseInt(br.readLine());\n        \n        for (int q = 0; q < Q; q++) {\n            st = new StringTokenizer(br.readLine());\n            int L = Integer.parseInt(st.nextToken());\n            int R = Integer.parseInt(st.nextToken());\n            int D = Integer.parseInt(st.nextToken());\n            \n            int totalMagicPoints = 0;\n            int current = L;\n            \n            while (current != R) {\n                int[] currentPos = positions.get(current);\n                int[] nextPos = positions.get(current + D);\n                \n                totalMagicPoints += Math.abs(currentPos[0] - nextPos[0]) + \n                                    Math.abs(currentPos[1] - nextPos[1]);\n                \n                current += D;\n            }\n            \n            System.out.println(totalMagicPoints);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:09:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nint findLocation(const vector<vector<int>>& grid, int value) {\n    for (int r = 0; r < grid.size(); r++) {\n        for (int c = 0; c < grid[0].size(); c++) {\n            if (grid[r][c] == value) {\n                return r * grid[0].size() + c;\n            }\n        }\n    }\n    return -1;\n}\n\nint calculateManhattanDistance(int pos1, int pos2, int width) {\n    int r1 = pos1 / width, c1 = pos1 % width;\n    int r2 = pos2 / width, c2 = pos2 % width;\n    return abs(r1 - r2) + abs(c1 - c2);\n}\n\nint main() {\n    int H, W, Q;\n    cin >> H >> W >> Q;\n\n    vector<vector<int>> grid(H, vector<int>(W));\n    for (int r = 0; r < H; r++) {\n        for (int c = 0; c < W; c++) {\n            cin >> grid[r][c];\n        }\n    }\n\n    vector<int> results;\n    for (int q = 0; q < Q; q++) {\n        int L, R, D;\n        cin >> L >> R >> D;\n\n        int currentPos = findLocation(grid, L);\n        int targetPos = findLocation(grid, R);\n        int totalMagic = 0;\n\n        while (currentPos != targetPos) {\n            int nextValue = (grid[currentPos / W][currentPos % W] + D);\n            int nextPos = findLocation(grid, nextValue);\n            \n            totalMagic += calculateManhattanDistance(currentPos, nextPos, W);\n            currentPos = nextPos;\n        }\n\n        results.push_back(totalMagic);\n    }\n\n    for (int result : results) {\n        cout << result << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:09:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_magic_points(H, W, grid, queries):\n    # Create a dictionary to store positions of numbers on the grid\n    positions = {}\n    for r in range(H):\n        for c in range(W):\n            positions[grid[r][c]] = (r, c)\n\n    results = []\n\n    # Process each query\n    for query in queries:\n        L, R, D = query\n        total_magic_points = 0\n        current = L\n\n        # Move through each step from L to R\n        while current < R:\n            next_number = current + D\n            if next_number > R:\n                break\n            \n            # Calculate the magic points for the current move\n            r1, c1 = positions[current]\n            r2, c2 = positions[next_number]\n            total_magic_points += abs(r1 - r2) + abs(c1 - c2)\n            \n            current = next_number\n        \n        results.append(total_magic_points)\n    \n    return results\n\n# Example Usage:\n# H, W = 3, 3\n# grid = [\n#     [1, 2, 3],\n#     [4, 5, 6],\n#     [7, 8, 9]\n# ]\n# queries = [\n#     (1, 9, 1),\n#     (1, 5, 2)\n# ]\n# print(calculate_magic_points(H, W, grid, queries))",
+    "timestamp": "2025-08-13 13:51:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MagicGrid {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int Q = scanner.nextInt();\n        \n        int[] posX = new int[H * W + 1];\n        int[] posY = new int[H * W + 1];\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                int number = scanner.nextInt();\n                posX[number] = i;\n                posY[number] = j;\n            }\n        }\n        \n        while (Q-- > 0) {\n            int L = scanner.nextInt();\n            int R = scanner.nextInt();\n            int D = scanner.nextInt();\n            \n            long totalMagicPoints = 0;\n            \n            for (int x = L; x + D <= R; x += D) {\n                int startX = posX[x];\n                int startY = posY[x];\n                int endX = posX[x + D];\n                int endY = posY[x + D];\n                \n                totalMagicPoints += Math.abs(startX - endX) + Math.abs(startY - endY);\n            }\n            \n            System.out.println(totalMagicPoints);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 13:51:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n// Function to calculate the Manhattan distance\nint manhattanDistance(int r1, int c1, int r2, int c2) {\n    return abs(r1 - r2) + abs(c1 - c2);\n}\n\nint main() {\n    int H, W, D, Q;\n    scanf(\"%d %d %d\", &H, &W, &D);\n\n    // Position array\n    int pos[H * W + 1][2];\n    \n    // Reading grid and storing positions\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            int value;\n            scanf(\"%d\", &value);\n            pos[value][0] = i; // row\n            pos[value][1] = j; // column\n        }\n    }\n\n    // Precomputing total magic points required from x to x+D\n    int maxValue = H * W;\n    int* magicPoints = (int*)malloc((maxValue + 1) * sizeof(int));\n    \n    for (int x = 1; x <= maxValue; x++) {\n        if (x + D <= maxValue) {\n            magicPoints[x + D] = magicPoints[x] + manhattanDistance(pos[x][0], pos[x][1], pos[x + D][0], pos[x + D][1]);\n        }\n    }\n\n    scanf(\"%d\", &Q);\n    for (int q = 0; q < Q; q++) {\n        int L, R;\n        scanf(\"%d %d\", &L, &R);\n        printf(\"%d\\n\", magicPoints[R] - magicPoints[L]);\n    }\n\n    free(magicPoints);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:52:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateMagicPoints(H, W, Q, tests) {\n    const positions = Array(H * W + 1);\n\n    for (let r = 0; r < H; r++) {\n        for (let c = 0; c < W; c++) {\n            const value = r * W + c + 1;\n            positions[value] = [r, c];\n        }\n    }\n\n    const result = [];\n    \n    for (const [L, R, D] of tests) {\n        let totalMagicPoints = 0;\n        \n        for (let x = L; x <= R - D; x += D) {\n            const [startR, startC] = positions[x];\n            const [endR, endC] = positions[x + D];\n            totalMagicPoints += Math.abs(startR - endR) + Math.abs(startC - endC);\n        }\n\n        result.push(totalMagicPoints);\n    }\n\n    return result;\n}\n\n// Example usage: \n// const H = 3, W = 3;\n// const Q = 2;\n// const tests = [\n//     [1, 9, 1], // Move from 1 to 2, 2 to 3, ..., 8 to 9\n//     [5, 9, 2]  // Move from 5 to 7, 7 to 9\n// ];\n// console.log(calculateMagicPoints(H, W, Q, tests)); // Output magic points consumed for each test",
+    "timestamp": "2025-08-13 13:52:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_magical_teleportation(H, W, grid, Q, tests):\n    # Create a mapping of number to its (row, col) position\n    positions = {}\n    for r in range(H):\n        for c in range(W):\n            positions[grid[r][c]] = (r, c)\n    \n    results = []\n    for L, R, D in tests:\n        current = L\n        magic_points = 0\n        \n        while current != R:\n            next_num = current + D\n            \n            # Calculate Manhattan distance between current and next positions\n            curr_row, curr_col = positions[current]\n            next_row, next_col = positions[next_num]\n            \n            magic_points += abs(curr_row - next_row) + abs(curr_col - next_col)\n            \n            current = next_num\n        \n        results.append(magic_points)\n    \n    return results\n\ndef main():\n    H, W = map(int, input().split())\n    grid = [list(map(int, input().split())) for _ in range(H)]\n    Q = int(input())\n    tests = []\n    \n    for _ in range(Q):\n        L, R, D = map(int, input().split())\n        tests.append((L, R, D))\n    \n    results = solve_magical_teleportation(H, W, grid, Q, tests)\n    \n    for result in results:\n        print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 13:52:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateMagicPoints(H, W, grid, Q, tests) {\n    const findCoordinates = (value) => {\n        for (let r = 0; r < H; r++) {\n            for (let c = 0; c < W; c++) {\n                if (grid[r][c] === value) {\n                    return [r, c];\n                }\n            }\n        }\n    };\n\n    const manhattanDistance = (x1, y1, x2, y2) => {\n        return Math.abs(x1 - x2) + Math.abs(y1 - y2);\n    };\n\n    const results = [];\n\n    for (const [L, D, R] of tests) {\n        let current = L;\n        let totalMagicPoints = 0;\n        let currentCoords = findCoordinates(current);\n\n        while (current !== R) {\n            current += D;\n            let nextCoords = findCoordinates(current);\n            totalMagicPoints += manhattanDistance(\n                currentCoords[0], \n                currentCoords[1], \n                nextCoords[0], \n                nextCoords[1]\n            );\n            currentCoords = nextCoords;\n        }\n\n        results.push(totalMagicPoints);\n    }\n\n    return results;\n}",
+    "timestamp": "2025-08-13 13:52:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    H = int(input[ptr])\n    ptr += 1\n    W = int(input[ptr])\n    ptr += 1\n    Q = int(input[ptr])\n    ptr += 1\n\n    pos = {}\n    grid = []\n    for i in range(H):\n        row = list(map(int, input[ptr:ptr+W]))\n        ptr += W\n        grid.append(row)\n        for j in range(W):\n            num = row[j]\n            pos[num] = (i, j)\n\n    for _ in range(Q):\n        L = int(input[ptr])\n        ptr += 1\n        R = int(input[ptr])\n        ptr += 1\n        D = int(input[ptr])\n        ptr += 1\n\n        total = 0\n        current = L\n        while current + D <= R:\n            x1, y1 = pos[current]\n            x2, y2 = pos[current + D]\n            total += abs(x1 - x2) + abs(y1 - y2)\n            current += D\n        print(total)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 13:52:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf-8').trim().split('\\n');\n\nfunction main() {\n    let ptr = 0;\n    const [H, W] = input[ptr++].split(' ').map(Number);\n    const grid = [];\n    const pos = new Map();\n    \n    for (let i = 0; i < H; i++) {\n        const row = input[ptr++].split(' ').map(Number);\n        grid.push(row);\n        for (let j = 0; j < W; j++) {\n            pos.set(row[j], [i, j]);\n        }\n    }\n    \n    const Q = parseInt(input[ptr++]);\n    const queries = [];\n    for (let i = 0; i < Q; i++) {\n        const [L, R, D] = input[ptr++].split(' ').map(Number);\n        queries.push([L, R, D]);\n    }\n    \n    const results = [];\n    for (const [L, R, D] of queries) {\n        let current = L;\n        let total = 0;\n        let [x1, y1] = pos.get(current);\n        \n        while (current + D <= R) {\n            current += D;\n            const [x2, y2] = pos.get(current);\n            total += Math.abs(x2 - x1) + Math.abs(y2 - y1);\n            x1 = x2;\n            y1 = y2;\n        }\n        results.push(total);\n    }\n    \n    console.log(results.join('\\n'));\n}\n\nmain();",
+    "timestamp": "2025-08-13 13:52:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <cmath>\n\nusing namespace std;\n\nint manhattanDistance(pair<int, int> a, pair<int, int> b) {\n    return abs(a.first - b.first) + abs(a.second - b.second);\n}\n\nint main() {\n    int H, W, Q;\n    cin >> H >> W >> Q;\n\n    vector<vector<int>> grid(H, vector<int>(W));\n    unordered_map<int, pair<int, int>> position;\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cin >> grid[i][j];\n            position[grid[i][j]] = {i, j};\n        }\n    }\n\n    while (Q--) {\n        int L, R, D;\n        cin >> L >> R >> D;\n        \n        int totalMagicPoints = 0;\n        for (int current = L; current < R; current += D) {\n            auto start = position[current];\n            auto next = position[current + D];\n            totalMagicPoints += manhattanDistance(start, next);\n        }\n\n        cout << totalMagicPoints << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:41:07"
+  }
+]

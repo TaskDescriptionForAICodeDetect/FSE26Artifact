@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ndouble triangle_area(double a, double b, double c) {\n    double s = (a + b + c) / 2.0;\n    return sqrt(s * (s - a) * (s - b) * (s - c));\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    double areas[N * (N - 1) * (N - 2) / 6];\n    int index = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            for (int k = j + 1; k < N; k++) {\n                double angle_a = 2 * M_PI * i / N;\n                double angle_b = 2 * M_PI * j / N;\n                double angle_c = 2 * M_PI * k / N;\n                \n                double side_a = sqrt(2 - 2 * cos(angle_b - angle_a));\n                double side_b = sqrt(2 - 2 * cos(angle_c - angle_b));\n                double side_c = sqrt(2 - 2 * cos(angle_a - angle_c));\n                \n                areas[index++] = triangle_area(side_a, side_b, side_c);\n            }\n        }\n    }\n    \n    for (int i = 0; i < index - 1; i++) {\n        for (int j = 0; j < index - i - 1; j++) {\n            if (areas[j] > areas[j + 1]) {\n                double temp = areas[j];\n                areas[j] = areas[j + 1];\n                areas[j + 1] = temp;\n            }\n        }\n    }\n    \n    printf(\"%.10f\\n\", areas[K - 1]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\ntypedef struct {\n    double area;\n} Triangle;\n\nint compare(const void *a, const void *b) {\n    Triangle *ta = (Triangle *)a;\n    Triangle *tb = (Triangle *)b;\n    if (ta->area < tb->area) return -1;\n    if (ta->area > tb->area) return 1;\n    return 0;\n}\n\ndouble compute_area(int i, int j, int k, int N) {\n    double angle1 = 2 * M_PI * i / N;\n    double angle2 = 2 * M_PI * j / N;\n    double angle3 = 2 * M_PI * k / N;\n    double x1 = cos(angle1), y1 = sin(angle1);\n    double x2 = cos(angle2), y2 = sin(angle2);\n    double x3 = cos(angle3), y3 = sin(angle3);\n    return 0.5 * fabs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1));\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int total = N * (N - 1) * (N - 2) / 6;\n    Triangle *triangles = (Triangle *)malloc(total * sizeof(Triangle));\n    int idx = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            for (int k = j + 1; k < N; k++) {\n                triangles[idx++].area = compute_area(i, j, k, N);\n            }\n        }\n    }\n    \n    qsort(triangles, total, sizeof(Triangle), compare);\n    printf(\"%.15f\\n\", triangles[K - 1].area);\n    \n    free(triangles);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n#include <iomanip>\n\nusing namespace std;\n\nconst double PI = acos(-1.0);\n\ndouble computeArea(int a, int b, int c, int N) {\n    double angle1 = 2.0 * PI * a / N;\n    double angle2 = 2.0 * PI * b / N;\n    double angle3 = 2.0 * PI * c / N;\n    \n    double x1 = cos(angle1);\n    double y1 = sin(angle1);\n    double x2 = cos(angle2);\n    double y2 = sin(angle2);\n    double x3 = cos(angle3);\n    double y3 = sin(angle3);\n    \n    double area = 0.5 * fabs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1));\n    return area;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<double> areas;\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            for (int k = j + 1; k < N; ++k) {\n                double area = computeArea(i, j, k, N);\n                areas.push_back(area);\n            }\n        }\n    }\n    \n    sort(areas.begin(), areas.end());\n    \n    cout << fixed << setprecision(15) << areas[K - 1] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class KthSmallestTriangleArea {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        \n        List<Double> areas = new ArrayList<>();\n        \n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                for (int k = j + 1; k < N; k++) {\n                    double angle1 = 2 * Math.PI * i / N;\n                    double angle2 = 2 * Math.PI * j / N;\n                    double angle3 = 2 * Math.PI * k / N;\n                    \n                    double area = Math.abs(\n                        Math.sin(angle2 - angle1) + \n                        Math.sin(angle3 - angle2) + \n                        Math.sin(angle1 - angle3)\n                    ) / 2.0;\n                    \n                    areas.add(area);\n                }\n            }\n        }\n        \n        Collections.sort(areas);\n        \n        System.out.printf(\"%.11f\\n\", areas.get(K - 1));\n    }\n}",
+    "timestamp": "2025-08-05 23:32:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class TriangleArea {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter pw = new PrintWriter(System.out);\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        \n        double[] areas = new double[N * (N-1) * (N-2) / 6];\n        int index = 0;\n        \n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                for (int k = j + 1; k < N; k++) {\n                    double x1 = Math.cos(2 * Math.PI * i / N);\n                    double y1 = Math.sin(2 * Math.PI * i / N);\n                    double x2 = Math.cos(2 * Math.PI * j / N);\n                    double y2 = Math.sin(2 * Math.PI * j / N);\n                    double x3 = Math.cos(2 * Math.PI * k / N);\n                    double y3 = Math.sin(2 * Math.PI * k / N);\n                    \n                    double area = Math.abs(0.5 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)));\n                    areas[index++] = area;\n                }\n            }\n        }\n        \n        Arrays.sort(areas);\n        \n        pw.printf(\"%.10f\\n\", areas[K-1]);\n        pw.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:32:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n#include <iomanip>\n\nconst double PI = 3.14159265358979323846;\n\ndouble triangleArea(double a, double b, double c) {\n    double s = (a + b + c) / 2.0;\n    return sqrt(s * (s - a) * (s - b) * (s - c));\n}\n\nint main() {\n    int N, K;\n    std::cin >> N >> K;\n\n    std::vector<double> angles(N);\n    for (int i = 0; i < N; ++i) {\n        angles[i] = 2 * PI * i / N;\n    }\n\n    std::vector<double> areas;\n    for (int i = 0; i < N; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            for (int k = j + 1; k < N; ++k) {\n                double a = sqrt(2 - 2 * cos(angles[j] - angles[i]));\n                double b = sqrt(2 - 2 * cos(angles[k] - angles[j]));\n                double c = sqrt(2 - 2 * cos(angles[i] - angles[k]));\n                areas.push_back(triangleArea(a, b, c));\n            }\n        }\n    }\n\n    std::sort(areas.begin(), areas.end());\n    \n    std::cout << std::fixed << std::setprecision(10) << areas[K - 1] << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\nfrom itertools import combinations\n\ndef find_Kth_smallest_triangle(N, K):\n    # Function to calculate the area of a triangle given the indices of its vertices\n    def triangle_area(i, j, k):\n        # Coordinates of points on the unit circle\n        x_i, y_i = math.cos(i * 2 * math.pi / N), math.sin(i * 2 * math.pi / N)\n        x_j, y_j = math.cos(j * 2 * math.pi / N), math.sin(j * 2 * math.pi / N)\n        x_k, y_k = math.cos(k * 2 * math.pi / N), math.sin(k * 2 * math.pi / N)\n        \n        # Calculate the area using the determinant formula\n        area = abs(x_i * (y_j - y_k) + x_j * (y_k - y_i) + x_k * (y_i - y_j)) / 2\n        return area\n    \n    areas = []\n    \n    # Generate all combinations of three vertices\n    for i, j, k in combinations(range(N), 3):\n        areas.append(triangle_area(i, j, k))\n    \n    # Sort areas and return the K-th smallest\n    areas.sort()\n    return areas[K-1]\n\n# Example of usage:\nN = 5\nK = 1\nprint(f\"{find_Kth_smallest_triangle(N, K):.9f}\")",
+    "timestamp": "2025-08-13 15:48:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class CircleTriangles {\n\n    static class Triangle implements Comparable<Triangle> {\n        double area;\n        int a, b, c;\n\n        Triangle(double area, int a, int b, int c) {\n            this.area = area;\n            this.a = a;\n            this.b = b;\n            this.c = c;\n        }\n\n        @Override\n        public int compareTo(Triangle other) {\n            return Double.compare(this.area, other.area);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] input = br.readLine().trim().split(\"\\\\s+\");\n        int N = Integer.parseInt(input[0]);\n        int K = Integer.parseInt(input[1]);\n        List<Triangle> triangles = new ArrayList<>();\n\n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                for (int k = j + 1; k < N; k++) {\n                    double area = triangleArea(i, j, k, N);\n                    triangles.add(new Triangle(area, i, j, k));\n                }\n            }\n        }\n\n        Collections.sort(triangles);\n        System.out.printf(\"%.9f%n\", triangles.get(K - 1).area);\n    }\n\n    private static double triangleArea(int i, int j, int k, int N) {\n        double angleA = Math.abs(i - j) * 2 * Math.PI / N;\n        double angleB = Math.abs(j - k) * 2 * Math.PI / N;\n        double angleC = Math.abs(k - i) * 2 * Math.PI / N;\n        double semiPerimeter = (angleA + angleB + angleC) / 2;\n        return Math.abs(0.5 * Math.sin(angleA) * Math.sin(angleB) * Math.sin(angleC) /\n                        Math.sqrt((1 - Math.cos(angleA)) * (1 - Math.cos(angleB)) * (1 - Math.cos(angleC))));\n    }\n}",
+    "timestamp": "2025-08-13 15:48:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\n#define PI 3.14159265358979323846\n\ntypedef struct {\n    double area;\n    int a, b, c;\n} Triangle;\n\nint cmp(const void* a, const void* b) {\n   double areaA = ((Triangle*)a)->area;\n   double areaB = ((Triangle*)b)->area;\n   if (areaA < areaB) return -1;\n   if (areaA > areaB) return 1;\n   return 0;\n}\n\ndouble triangleArea(int i, int j, int k, int N) {\n    double angle1 = 2 * PI * i / N;\n    double angle2 = 2 * PI * j / N;\n    double angle3 = 2 * PI * k / N;\n\n    double x1 = cos(angle1), y1 = sin(angle1);\n    double x2 = cos(angle2), y2 = sin(angle2);\n    double x3 = cos(angle3), y3 = sin(angle3);\n\n    double area = fabs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;\n    return area;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int totalTriangles = N * (N - 1) * (N - 2) / 6;\n    Triangle* triangles = malloc(totalTriangles * sizeof(Triangle));\n    int index = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            for (int k = j + 1; k < N; ++k) {\n                triangles[index].a = i;\n                triangles[index].b = j;\n                triangles[index].c = k;\n                triangles[index].area = triangleArea(i, j, k, N);\n                index++;\n            }\n        }\n    }\n    \n    qsort(triangles, totalTriangles, sizeof(Triangle), cmp);\n    printf(\"%.9f\\n\", triangles[K - 1].area);\n    \n    free(triangles);\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:48:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Triangle {\n    double area;\n    int i, j, k;\n    Triangle(double area, int i, int j, int k) : area(area), i(i), j(j), k(k) {}\n};\n\nbool compare(const Triangle &a, const Triangle &b) {\n    return a.area < b.area;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n\n    vector<Triangle> triangles;\n\n    for (int i = 0; i < N - 2; ++i) {\n        for (int j = i + 1; j < N - 1; ++j) {\n            for (int k = j + 1; k < N; ++k) {\n                double angle1 = 2 * M_PI * i / N;\n                double angle2 = 2 * M_PI * j / N;\n                double angle3 = 2 * M_PI * k / N;\n\n                double x1 = cos(angle1), y1 = sin(angle1);\n                double x2 = cos(angle2), y2 = sin(angle2);\n                double x3 = cos(angle3), y3 = sin(angle3);\n\n                double area = abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;\n                triangles.push_back(Triangle(area, i, j, k));\n            }\n        }\n    }\n\n    sort(triangles.begin(), triangles.end(), compare);\n\n    cout.precision(10);\n    cout << fixed << triangles[K - 1].area << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:49:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef triangle_area(x1, y1, x2, y2, x3, y3):\n    return abs(0.5 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)))\n\ndef solve(n, k):\n    areas = []\n    for i in range(n):\n        for j in range(i+1, n):\n            for l in range(j+1, n):\n                angle1 = 2 * math.pi * i / n\n                angle2 = 2 * math.pi * j / n\n                angle3 = 2 * math.pi * l / n\n                \n                x1, y1 = math.cos(angle1), math.sin(angle1)\n                x2, y2 = math.cos(angle2), math.sin(angle2)\n                x3, y3 = math.cos(angle3), math.sin(angle3)\n                \n                area = triangle_area(x1, y1, x2, y2, x3, y3)\n                areas.append(area)\n    \n    areas.sort()\n    return areas[k-1]\n\ndef main():\n    n, k = map(int, input().split())\n    result = solve(n, k)\n    print(\"{:.10f}\".format(result))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 15:49:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef compute_kth_smallest_area(N, K):\n    vertices = []\n    for i in range(N):\n        angle = 2 * math.pi * i / N\n        x = math.cos(angle)\n        y = math.sin(angle)\n        vertices.append((x, y))\n    \n    areas = []\n    for i in range(N):\n        for j in range(i + 1, N):\n            for k in range(j + 1, N):\n                x1, y1 = vertices[i]\n                x2, y2 = vertices[j]\n                x3, y3 = vertices[k]\n                area = 0.5 * abs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1))\n                areas.append(area)\n    \n    areas.sort()\n    return areas[K - 1]\n\nN, K = map(int, input().split())\nresult = compute_kth_smallest_area(N, K)\nprint(\"{0:.11f}\".format(result))",
+    "timestamp": "2025-08-13 15:49:15"
+  }
+]

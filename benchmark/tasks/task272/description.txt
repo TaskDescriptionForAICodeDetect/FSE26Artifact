@@ -1,0 +1,1 @@
+Check if a given Ginkgo number is a prime or not. A Ginkgo number is defined as a pair <m, n> of integers. The Ginkgo number <m, n> is considered prime if m^2 + n^2 > 1 and it has exactly eight divisors. You need to determine the primality of provided Ginkgo numbers based on the described properties and rules.

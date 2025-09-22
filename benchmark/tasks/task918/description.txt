@@ -1,0 +1,1 @@
+Given a directed graph with N vertices and M edges, you start at vertex 1 with a score of 0. The edges define how you can move from one vertex to another and the score increases by the weight of the edge. You have to determine the maximum score possible when reaching vertex N, or if it's possible to increase the score indefinitely.

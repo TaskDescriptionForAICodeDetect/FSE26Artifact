@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "blue blue blue blue blue blue blue blue",
+      "output": "1"
+    },
+    {
+      "input": "red blue blue blue blue blue blue blue",
+      "output": "1"
+    },
+    {
+      "input": "red red blue blue blue blue blue blue",
+      "output": "3"
+    }
+  ]
+}

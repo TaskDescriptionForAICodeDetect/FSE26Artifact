@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct Node {\n    int room;\n    struct Node* next;\n} Node;\n\ntypedef struct Graph {\n    int numRooms;\n    Node** adjList;\n} Graph;\n\nNode* createNode(int room) {\n    Node* newNode = (Node*)malloc(sizeof(Node));\n    newNode->room = room;\n    newNode->next = NULL;\n    return newNode;\n}\n\nGraph* createGraph(int numRooms) {\n    Graph* graph = (Graph*)malloc(sizeof(Graph));\n    graph->numRooms = numRooms;\n    graph->adjList = (Node**)malloc(numRooms * sizeof(Node*));\n    for (int i = 0; i < numRooms; i++) {\n        graph->adjList[i] = NULL;\n    }\n    return graph;\n}\n\nvoid addEdge(Graph* graph, int src, int dest) {\n    Node* newNode = createNode(dest);\n    newNode->next = graph->adjList[src];\n    graph->adjList[src] = newNode;\n\n    newNode = createNode(src);\n    newNode->next = graph->adjList[dest];\n    graph->adjList[dest] = newNode;\n}\n\nvoid sortAdjList(Graph* graph, int room) {\n    Node* current = graph->adjList[room];\n    Node* index = NULL;\n    int temp;\n\n    if (current == NULL) {\n        return;\n    }\n\n    while (current != NULL) {\n        index = current->next;\n        while (index != NULL) {\n            if (current->room > index->room) {\n                temp = current->room;\n                current->room = index->room;\n                index->room = temp;\n            }\n            index = index->next;\n        }\n        current = current->next;\n    }\n}\n\nvoid printGraph(Graph* graph) {\n    for (int i = 0; i < graph->numRooms; i++) {\n        printf(\"%d \", i);\n        Node* temp = graph->adjList[i];\n        while (temp) {\n            printf(\"%d \", temp->room);\n            temp = temp->next;\n        }\n        printf(\"\\n\");\n    }\n}\n\nint main() {\n    int maxRoom = 0;\n    int records[1000];\n    int count = 0;\n\n    while (1) {\n        scanf(\"%d\", &records[count]);\n        if (records[count] == 0) {\n            break;\n        }\n        if (records[count] > maxRoom) {\n            maxRoom = records[count];\n        }\n        count++;\n    }\n\n    Graph* graph = createGraph(maxRoom + 1);\n\n    for (int i = 0; i < count - 1; i++) {\n        addEdge(graph, records[i], records[i + 1]);\n    }\n\n    for (int i = 0; i <= maxRoom; i++) {\n        sortAdjList(graph, i);\n    }\n\n    printGraph(graph);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class NinjaHouseGraph {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        Map<Integer, Set<Integer>> graph = new TreeMap<>();\n\n        while (true) {\n            int room = scanner.nextInt();\n            if (room == 0) break;\n\n            int connectedRoom;\n            while ((connectedRoom = scanner.nextInt()) != 0) {\n                graph.putIfAbsent(room, new TreeSet<>());\n                graph.putIfAbsent(connectedRoom, new TreeSet<>());\n                graph.get(room).add(connectedRoom);\n                graph.get(connectedRoom).add(room);\n            }\n        }\n\n        for (Map.Entry<Integer, Set<Integer>> entry : graph.entrySet()) {\n            System.out.print(entry.getKey() + \" -> \");\n            for (Integer adjacent : entry.getValue()) {\n                System.out.print(adjacent + \" \");\n            }\n            System.out.println();\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 19:14:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    map<int, set<int>> graph;\n    int current_room, next_room;\n    \n    while (cin >> current_room && current_room != 0) {\n        while (cin >> next_room && next_room != 0) {\n            graph[current_room].insert(next_room);\n            graph[next_room].insert(current_room);\n        }\n    }\n    \n    for (const auto& entry : graph) {\n        cout << entry.first << \": \";\n        for (auto it = entry.second.begin(); it != entry.second.end(); ++it) {\n            if (it != entry.second.begin()) {\n                cout << \" \";\n            }\n            cout << *it;\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ROOMS 1000\n\nint graph[MAX_ROOMS][MAX_ROOMS];\nint visited[MAX_ROOMS];\n\nvoid addEdge(int from, int to) {\n    if (from != to && graph[from][to] == 0 && graph[to][from] == 0) {\n        graph[from][to] = 1;\n        graph[to][from] = 1;\n    }\n}\n\nvoid printGraph(int n) {\n    for (int i = 1; i <= n; i++) {\n        printf(\"%d:\", i);\n        int first = 1;\n        for (int j = 1; j <= n; j++) {\n            if (graph[i][j]) {\n                if (!first) printf(\",\");\n                printf(\"%d\", j);\n                first = 0;\n            }\n        }\n        printf(\"\\n\");\n    }\n}\n\nint main() {\n    int current, prev = 0;\n    memset(graph, 0, sizeof(graph));\n    memset(visited, 0, sizeof(visited));\n    int maxRoom = 0;\n\n    while (1) {\n        scanf(\"%d\", &current);\n        if (current == 0) break;\n\n        maxRoom = (current > maxRoom) ? current : maxRoom;\n\n        if (prev != 0) {\n            addEdge(prev, current);\n        }\n        prev = current;\n    }\n\n    printGraph(maxRoom);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    map<int, set<int>> graph;\n    int current_room = 0, previous_room = 0;\n\n    while (true) {\n        int room;\n        cin >> room;\n\n        if (room == 0) break;\n\n        if (current_room != 0) {\n            graph[current_room].insert(room);\n            graph[room].insert(current_room);\n        }\n\n        previous_room = current_room;\n        current_room = room;\n    }\n\n    for (auto& entry : graph) {\n        cout << entry.first << \":\";\n        for (int adjacent : entry.second) {\n            cout << \" \" << adjacent;\n        }\n        cout << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class NinjaHouseGraph {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        Map<Integer, Set<Integer>> graph = new TreeMap<>();\n\n        while (scanner.hasNextLine()) {\n            String line = scanner.nextLine().trim();\n            if (line.isEmpty()) continue;\n\n            String[] parts = line.split(\" \");\n            List<Integer> sequence = new ArrayList<>();\n            for (String part : parts) {\n                int num = Integer.parseInt(part);\n                if (num == 0) break;\n                sequence.add(num);\n            }\n\n            for (int i = 0; i < sequence.size(); i++) {\n                int currentRoom = sequence.get(i);\n                graph.putIfAbsent(currentRoom, new TreeSet<>());\n\n                if (i > 0) {\n                    int prevRoom = sequence.get(i - 1);\n                    graph.get(currentRoom).add(prevRoom);\n                    graph.get(prevRoom).add(currentRoom);\n                }\n            }\n        }\n\n        for (Map.Entry<Integer, Set<Integer>> entry : graph.entrySet()) {\n            System.out.print(entry.getKey() + \" -> \");\n            List<Integer> adjacentRooms = new ArrayList<>(entry.getValue());\n            Collections.sort(adjacentRooms);\n            for (int i = 0; i < adjacentRooms.size(); i++) {\n                System.out.print(adjacentRooms.get(i));\n                if (i < adjacentRooms.size() - 1) {\n                    System.out.print(\", \");\n                }\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 19:15:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def ninja_house_graph(records):\n    from collections import defaultdict\n\n    room_graph = defaultdict(set)\n    \n    for record in records:\n        rooms = [n for n in record if n != 0]\n        for i in range(len(rooms) - 1):\n            room_graph[rooms[i]].add(rooms[i + 1])\n            room_graph[rooms[i + 1]].add(rooms[i])\n    \n    result = {}\n    for room in sorted(room_graph.keys()):\n        result[room] = sorted(room_graph[room])\n    \n    return result\n\n# Example usage\nrecords = [\n    [1, 2, 0], \n    [2, 3, 0], \n    [3, 4, 0], \n    [4, 5, 0], \n    [5, 1, 0]\n]\nprint(ninja_house_graph(records))",
+    "timestamp": "2025-08-13 03:08:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class NinjaHouseGraph {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        Map<Integer, Set<Integer>> graph = new HashMap<>();\n        \n        while (scanner.hasNext()) {\n            int startRoom = scanner.nextInt();\n            if (startRoom == 0) break;\n            \n            int adjacentRoom;\n            while ((adjacentRoom = scanner.nextInt()) != 0) {\n                graph.computeIfAbsent(startRoom, k -> new TreeSet<>()).add(adjacentRoom);\n                graph.computeIfAbsent(adjacentRoom, k -> new TreeSet<>()).add(startRoom);\n            }\n        }\n        \n        scanner.close();\n        \n        for (Map.Entry<Integer, Set<Integer>> entry : graph.entrySet()) {\n            System.out.print(entry.getKey() + \":\");\n            for (Integer adjacent : entry.getValue()) {\n                System.out.print(\" \" + adjacent);\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-13 03:08:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_ROOMS 1000\n\ntypedef struct {\n    int room_number;\n    int adjacent[MAX_ROOMS];\n    int adj_count;\n} Room;\n\nRoom rooms[MAX_ROOMS];\nint room_count = 0;\n\nvoid add_room(int room_number) {\n    for (int i = 0; i < room_count; ++i) {\n        if (rooms[i].room_number == room_number) {\n            return;\n        }\n    }\n    rooms[room_count].room_number = room_number;\n    rooms[room_count].adj_count = 0;\n    room_count++;\n}\n\nvoid add_connection(int from, int to) {\n    int from_idx = -1, to_idx = -1;\n    for (int i = 0; i < room_count; ++i) {\n        if (rooms[i].room_number == from) {\n            from_idx = i;\n        }\n        if (rooms[i].room_number == to) {\n            to_idx = i;\n        }\n    }\n    if (from_idx != -1 && to_idx != -1) {\n        rooms[from_idx].adjacent[rooms[from_idx].adj_count++] = to;\n        rooms[to_idx].adjacent[rooms[to_idx].adj_count++] = from;\n    }\n}\n\nint cmp(const void* a, const void* b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint cmp_rooms(const void* a, const void* b) {\n    return ((Room*)a)->room_number - ((Room*)b)->room_number;\n}\n\nvoid print_graph() {\n    qsort(rooms, room_count, sizeof(Room), cmp_rooms);\n\n    for (int i = 0; i < room_count; ++i) {\n        qsort(rooms[i].adjacent, rooms[i].adj_count, sizeof(int), cmp);\n        printf(\"Room %d: \", rooms[i].room_number);\n        for (int j = 0; j < rooms[i].adj_count; ++j) {\n            printf(\"%d \", rooms[i].adjacent[j]);\n        }\n        printf(\"\\n\");\n    }\n}\n\nint main() {\n    int record[MAX_ROOMS], n, i;\n    \n    while (1) {\n        i = 0;\n        while (scanf(\"%d\", &n), n != 0) {\n            record[i++] = n;\n        }\n        \n        if (i == 0) break;\n        \n        for (int j = 0; j < i - 1; ++j) {\n            add_room(record[j]);\n            add_connection(record[j], record[j + 1]);\n        }\n    }\n    \n    print_graph();\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 03:08:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def create_ninja_house_graph(records):\n    graph = {}\n    current_room = None\n\n    for record in records:\n        if current_room is None:\n            current_room = record\n            graph[current_room] = set()\n        elif record != 0:\n            graph[current_room].add(record)\n            if record not in graph:\n                graph[record] = set()\n            graph[record].add(current_room)\n            current_room = record\n        else:\n            current_room = None\n\n    sorted_graph = {room: sorted(connections) for room, connections in graph.items()}\n    return sorted_graph\n\ndef print_ninja_house_graph(graph):\n    for room in sorted(graph.keys()):\n        print(f\"{room}: {graph[room]}\")\n\n# Example usage\nrecords1 = [1, 2, 3, 4, 0]\nresult1 = create_ninja_house_graph(records1)\nprint_ninja_house_graph(result1)",
+    "timestamp": "2025-08-13 03:08:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def build_ninja_house_graph(records):\n    graph = {}\n    for record in records:\n        if not record or record == [0]:\n            continue\n        for i in range(len(record) - 1):\n            room = record[i]\n            next_room = record[i+1]\n            if room == 0:\n                break\n            if room not in graph:\n                graph[room] = set()\n            if next_room != 0:\n                graph[room].add(next_room)\n                if next_room not in graph:\n                    graph[next_room] = set()\n                graph[next_room].add(room)\n    \n    # Sort the adjacent rooms and convert to list\n    for room in graph:\n        graph[room] = sorted(graph[room])\n    \n    # Sort the graph by room number\n    sorted_graph = {k: graph[k] for k in sorted(graph)}\n    return sorted_graph\n\n# Example usage:\n# records = [[1, 2, 0], [2, 3, 4, 0], [3, 1, 0]]\n# print(build_ninja_house_graph(records))",
+    "timestamp": "2025-08-13 03:13:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\n#include <sstream>\n#include <algorithm>\n\nint main() {\n    std::map<int, std::set<int>> graph;\n    std::string line;\n    \n    while (std::getline(std::cin, line)) {\n        std::stringstream ss(line);\n        int from, to;\n        ss >> from;\n        while (ss >> to && to != 0) {\n            graph[from].insert(to);\n            graph[to].insert(from);\n        }\n    }\n    \n    for (const auto& [room, adjacent_rooms] : graph) {\n        std::cout << room << \": \";\n        for (int adj_room : adjacent_rooms) {\n            std::cout << adj_room << \" \";\n        }\n        std::cout << std::endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:10:15"
+  }
+]

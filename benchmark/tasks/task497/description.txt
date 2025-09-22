@@ -1,0 +1,1 @@
+You are given an integer N, which is greater than 1. Consider the following functions: f(a) = a^N mod N, F1(a) = f(a), F_{k+1}(a) = F_k(f(a)) (k = 1,2,3,...). Your goal is to output the minimum positive integer k such that F_k(a) = a for all positive integers a less than N. If no such k exists, output -1.

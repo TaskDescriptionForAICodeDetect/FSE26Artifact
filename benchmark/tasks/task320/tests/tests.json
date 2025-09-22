@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3 9\nABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ_\nICPC\n5 11\n___________\n____A______.__\n________M__\n___________\n_C_________\nACM\n4 21\n1_2_3_4_5_6_7_8_9_0_-\nQqWwEeRrTtYyUuIiOoPp@\nAaSsDdFfGgHhJjKkLl;_:\nZzXxCcVvBbNnMm,_._/__\nICPC2019,AsiaYokohamaRegional,QualificationRound\n0 0",
+      "output": "28\n23\n493"
+    }
+  ]
+}

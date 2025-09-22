@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int n;\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n        int *weights = (int *)malloc(n * sizeof(int));\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &weights[i]);\n        }\n        qsort(weights, n, sizeof(int), compare);\n        int left = 0, right = n - 1;\n        int count = 0;\n        while (left <= right) {\n            if (weights[left] + weights[right] == 10) {\n                count++;\n                left++;\n                right--;\n            } else if (weights[left] + weights[right] < 10) {\n                left++;\n            } else {\n                right--;\n            }\n        }\n        printf(\"%d\\n\", count);\n        free(weights);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:37:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DumplingBundles {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            \n            int[] weights = new int[n];\n            for (int i = 0; i < n; i++) {\n                weights[i] = scanner.nextInt();\n            }\n            \n            System.out.println(findMaxBundles(weights));\n        }\n        \n        scanner.close();\n    }\n    \n    static int findMaxBundles(int[] weights) {\n        int maxBundles = 0;\n        int totalWeight = 0;\n        \n        Arrays.sort(weights);\n        \n        for (int i = 0; i < weights.length; i++) {\n            totalWeight += weights[i];\n            \n            for (int j = i + 1; j < weights.length; j++) {\n                int bundleWeight = weights[i] + weights[j];\n                \n                if (bundleWeight == 10) {\n                    maxBundles++;\n                    totalWeight -= (weights[i] + weights[j]);\n                    weights[i] = weights[j] = 0;\n                    break;\n                }\n            }\n        }\n        \n        return maxBundles;\n    }\n}",
+    "timestamp": "2025-08-05 18:37:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint countBundles(vector<int>& weights) {\n    sort(weights.begin(), weights.end());\n    int left = 0;\n    int right = weights.size() - 1;\n    int bundles = 0;\n\n    while (left <= right) {\n        if (weights[left] + weights[right] == 10) {\n            bundles++;\n            left++;\n            right--;\n        } else if (weights[left] + weights[right] < 10) {\n            left++;\n        } else {\n            right--;\n        }\n    }\n\n    return bundles;\n}\n\nint main() {\n    int n;\n    while (cin >> n, n != 0) {\n        vector<int> weights(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> weights[i];\n        }\n        cout << countBundles(weights) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:37:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_DUMPLINGS 20\n#define TARGET_WEIGHT 10\n\nint max_bundles(int n, int weights[]) {\n    int dp[TARGET_WEIGHT + 1];\n    memset(dp, 0, sizeof(dp));\n    dp[0] = 1;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = TARGET_WEIGHT; j >= weights[i]; j--) {\n            dp[j] += dp[j - weights[i]];\n        }\n    }\n\n    return dp[TARGET_WEIGHT];\n}\n\nint main() {\n    int n;\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n\n        int weights[MAX_DUMPLINGS];\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &weights[i]);\n        }\n\n        printf(\"%d\\n\", max_bundles(n, weights));\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:37:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    while (cin >> n && n != 0) {\n        vector<int> weights(n);\n        for (int i = 0; i < n; i++) {\n            cin >> weights[i];\n        }\n        \n        int max_bundles = 0;\n        vector<bool> used(n, false);\n        \n        for (int i = 0; i < n; i++) {\n            if (used[i]) continue;\n            \n            for (int j = i + 1; j < n; j++) {\n                if (used[j]) continue;\n                \n                if (weights[i] + weights[j] == 10) {\n                    max_bundles++;\n                    used[i] = true;\n                    used[j] = true;\n                    break;\n                }\n            }\n        }\n        \n        cout << max_bundles << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            int[] weights = new int[n];\n            for (int i = 0; i < n; i++) {\n                weights[i] = scanner.nextInt();\n            }\n            System.out.println(maxBundles(weights));\n        }\n    }\n\n    private static int maxBundles(int[] weights) {\n        Arrays.sort(weights);\n        int left = 0;\n        int right = weights.length - 1;\n        int count = 0;\n        while (left <= right) {\n            if (weights[left] + weights[right] == 10) {\n                count++;\n                left++;\n                right--;\n            } else if (weights[left] + weights[right] < 10) {\n                left++;\n            } else {\n                right--;\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 18:38:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_bundles(datasets):\n    results = []\n    for dataset in datasets:\n        n, weights = dataset\n        weights.sort(reverse=True)\n        used = [False] * n\n        count = 0\n        for i in range(n):\n            if not used[i]:\n                sum_weight = weights[i]\n                used[i] = True\n                for j in range(i+1, n):\n                    if not used[j] and sum_weight + weights[j] <= 10:\n                        sum_weight += weights[j]\n                        used[j] = True\n                if sum_weight == 10:\n                    count += 1\n        results.append(count)\n    return results\n\ndef main():\n    import sys\n    datasets = []\n    for line in sys.stdin:\n        data = list(map(int, line.split()))\n        n = data[0]\n        if n == 0:\n            break\n        weights = data[1:n+1]\n        datasets.append((n, weights))\n    \n    results = max_bundles(datasets)\n    for result in results:\n        print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 00:16:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class DumplingBundles {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            \n            int[] dumplings = new int[n];\n            for (int i = 0; i < n; i++) {\n                dumplings[i] = scanner.nextInt();\n            }\n            \n            System.out.println(maxBundles(dumplings));\n        }\n\n        scanner.close();\n    }\n\n    private static int maxBundles(int[] dumplings) {\n        int n = dumplings.length;\n        boolean[] dp = new boolean[11];\n        dp[0] = true;\n\n        int count = 0;\n        for (int dumpling : dumplings) {\n            for (int j = 10; j >= dumpling; j--) {\n                if (dp[j - dumpling]) {\n                    dp[j] = true;\n                }\n            }\n            if (dp[10]) {\n                count++;\n                dp = new boolean[11];\n                dp[0] = true;\n            }\n        }\n\n        return count;\n    }\n}",
+    "timestamp": "2025-08-13 00:16:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_DUMPLINGS 100\n\nint main() {\n    int n, weights[MAX_DUMPLINGS];\n    \n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &weights[i]);\n        }\n\n        int dp[1001] = {0};\n        dp[0] = 1;\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 1000; j >= weights[i]; j--) {\n                if (dp[j - weights[i]] > 0) {\n                    dp[j] = dp[j] > dp[j - weights[i]] + 1 ? dp[j] : dp[j - weights[i]] + 1;\n                }\n            }\n        }\n\n        int max_bundles = 0;\n        for (int i = 10; i <= 1000; i++) {\n            if (i % 10 == 0 && dp[i] > max_bundles) {\n                max_bundles = dp[i];\n            }\n        }\n\n        printf(\"%d\\n\", max_bundles - 1);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 00:16:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_dumpling_bundles(n, weights):\n    dp = [0] * 11\n    dp[0] = 1\n    \n    for weight in weights:\n        for j in range(10, weight - 1, -1):\n            dp[j] += dp[j - weight]\n    \n    return dp[10]\n\ndef main():\n    while True:\n        n = int(input())\n        if n == 0:\n            break\n        \n        weights = list(map(int, input().split()))\n        print(max_dumpling_bundles(n, weights))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 00:16:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read().split()\n    ptr = 0\n    while True:\n        n = int(input[ptr])\n        ptr += 1\n        if n == 0:\n            break\n        weights = list(map(int, input[ptr:ptr + n]))\n        ptr += n\n        count = 0\n        used = [False] * n\n        weights.sort()\n        for i in range(n - 1, -1, -1):\n            if used[i]:\n                continue\n            current = weights[i]\n            if current == 10:\n                count += 1\n                used[i] = True\n            else:\n                for j in range(i - 1, -1, -1):\n                    if not used[j] and current + weights[j] <= 10:\n                        current += weights[j]\n                        used[j] = True\n                        if current == 10:\n                            break\n                if current == 10:\n                    count += 1\n                    used[i] = True\n        print(count)\n\nsolve()",
+    "timestamp": "2025-08-13 00:17:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nbool canFormWeight(int weight, const std::vector<int>& dumplings) {\n    int n = dumplings.size();\n    std::vector<bool> dp(weight + 1, false);\n    dp[0] = true;\n\n    for (int i = 0; i < n; ++i) {\n        for (int w = weight; w >= dumplings[i]; --w) {\n            if (dp[w - dumplings[i]]) {\n                dp[w] = true;\n            }\n        }\n    }\n\n    return dp[weight];\n}\n\nint countMaxCombinations(std::vector<int> dumplings, int targetWeight) {\n    std::sort(dumplings.begin(), dumplings.end(), std::greater<int>());\n    int bundles = 0;\n\n    while (canFormWeight(targetWeight, dumplings)) {\n        int currentWeight = targetWeight;\n        \n        for (auto it = dumplings.begin(); it != dumplings.end();) {\n            if (*it <= currentWeight) {\n                currentWeight -= *it;\n                it = dumplings.erase(it);\n            } else {\n                ++it;\n            }\n            if (currentWeight == 0) break;\n        }\n        \n        bundles++;\n    }\n\n    return bundles;\n}\n\nint main() {\n    int n;\n    while (std::cin >> n && n != 0) {\n        std::vector<int> dumplings(n);\n        for (int i = 0; i < n; ++i) {\n            std::cin >> dumplings[i];\n        }\n        \n        std::cout << countMaxCombinations(dumplings, 10) << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:53:15"
+  }
+]

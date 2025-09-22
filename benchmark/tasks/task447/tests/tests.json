@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "R",
+      "output": "..ry....\n..ry....\nggyobbrw\nngyobbrw\n..ow....\n..ow...."
+    },
+    {
+      "input": "UFRDBL",
+      "output": "..go....\n..yb....\nrbrwrwby\nwogoygwo\n..yb....\n..gr...."
+    }
+  ]
+}

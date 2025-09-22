@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint calculateFee(int distance, int hour, int minute) {\n    int fee = distance * 15;\n    if ((hour == 17 && minute >= 30) || (hour == 18) || (hour == 19 && minute < 30)) {\n        if (distance <= 40) {\n            fee = (fee + 1) / 2;\n        }\n    }\n    fee = ((fee + 24) / 50) * 50;\n    return fee;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        int s_h, s_m, e_h, e_m, distance;\n        char c;\n        scanf(\"%d%c%d %d%c%d %d\", &s_h, &c, &s_m, &e_h, &c, &e_m, &distance);\n        int fee = calculateFee(distance, s_h, s_m);\n        printf(\"%d\\n\", fee);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:32:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TollCalculator {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (scanner.hasNext()) {\n            int startInterchange = scanner.nextInt();\n            int endInterchange = scanner.nextInt();\n            int hour = scanner.nextInt();\n            int minute = scanner.nextInt();\n            \n            int distance = Math.abs(endInterchange - startInterchange);\n            int baseFee = distance * 100;\n            \n            boolean isDiscountTime = (hour == 17 && minute >= 30) || \n                                     (hour == 18) || \n                                     (hour == 19 && minute <= 30);\n            \n            boolean isShortTrip = distance <= 40;\n            \n            int finalFee = baseFee;\n            if (isDiscountTime && isShortTrip) {\n                finalFee /= 2;\n            }\n            \n            finalFee = (int) Math.ceil(finalFee / 50.0) * 50;\n            \n            System.out.println(finalFee);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:32:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <iomanip>\nusing namespace std;\n\nstruct Time {\n    int hour, minute;\n};\n\nstruct Dataset {\n    Time time;\n    int start, end;\n};\n\nint calculateDistance(int start, int end) {\n    return abs(end - start);\n}\n\nbool isDiscountTime(Time t) {\n    if (t.hour == 17 && t.minute >= 30) return true;\n    if (t.hour == 18) return true;\n    if (t.hour == 19 && t.minute < 30) return true;\n    return false;\n}\n\nint calculateToll(int distance, bool discount) {\n    int fee = distance * 20;\n    if (discount && distance <= 40) {\n        fee = (fee + 1) / 2;\n    }\n    int remainder = fee % 50;\n    if (remainder != 0) {\n        fee += 50 - remainder;\n    }\n    return fee;\n}\n\nint main() {\n    vector<Dataset> datasets;\n    int n;\n    cin >> n;\n    for (int i = 0; i < n; ++i) {\n        Dataset ds;\n        char colon;\n        cin >> ds.time.hour >> colon >> ds.time.minute >> ds.start >> ds.end;\n        datasets.push_back(ds);\n    }\n\n    for (const auto& ds : datasets) {\n        int distance = calculateDistance(ds.start, ds.end);\n        bool discount = isDiscountTime(ds.time);\n        int toll = calculateToll(distance, discount);\n        cout << toll << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:33:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nint calculate_toll(int start, int end, int start_hour, int start_min) {\n    int distance = abs(end - start);\n    int base_fee;\n\n    if (distance <= 10) base_fee = 300;\n    else if (distance <= 20) base_fee = 450;\n    else if (distance <= 40) base_fee = 750;\n    else if (distance <= 60) base_fee = 1000;\n    else if (distance <= 80) base_fee = 1250;\n    else base_fee = 1500;\n\n    // Check for half price time period\n    if (distance <= 40 && \n        ((start_hour == 17 && start_min >= 30) || \n         (start_hour == 18) || \n         (start_hour == 19 && start_min <= 30))) {\n        base_fee /= 2;\n    }\n\n    // Round up to nearest 50 yen\n    return (int)ceil(base_fee / 50.0) * 50;\n}\n\nint main() {\n    int num_datasets;\n    scanf(\"%d\", &num_datasets);\n\n    for (int i = 0; i < num_datasets; i++) {\n        int start, end, hour, min;\n        scanf(\"%d %d %d:%d\", &start, &end, &hour, &min);\n        \n        int toll = calculate_toll(start, end, hour, min);\n        printf(\"%d\\n\", toll);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:33:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <iomanip>\n#include <cmath>\n#include <string>\n#include <sstream>\n\nusing namespace std;\n\nint calculateTollFee(int startInterchange, int endInterchange, string time) {\n    int distance = abs(endInterchange - startInterchange);\n    int hours, minutes;\n    char delimiter;\n    \n    istringstream timeStream(time);\n    timeStream >> hours >> delimiter >> minutes;\n    \n    int baseRate = distance * 20;\n    \n    bool isDiscountPeriod = (hours == 17 && minutes >= 30) || \n                             (hours == 18) || \n                             (hours == 19 && minutes <= 30);\n    \n    bool isShortTrip = distance <= 40;\n    \n    if (isDiscountPeriod && isShortTrip) {\n        baseRate /= 2;\n    }\n    \n    int roundedFee = ceil(baseRate / 50.0) * 50;\n    \n    return roundedFee;\n}\n\nint main() {\n    int datasets;\n    cin >> datasets;\n    \n    for (int i = 0; i < datasets; i++) {\n        int start, end;\n        string time;\n        \n        cin >> start >> end >> time;\n        \n        int tollFee = calculateTollFee(start, end, time);\n        \n        cout << tollFee << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:33:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\nimport java.time.LocalTime;\n\npublic class TollCalculator {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNext()) {\n            String start = scanner.next();\n            if (start.equals(\"0\")) break;\n            String end = scanner.next();\n            int distance = getDistance(start, end);\n            String timeStr = scanner.next();\n            LocalTime time = LocalTime.parse(timeStr);\n            boolean isDiscountTime = !time.isBefore(LocalTime.of(17, 30)) && !time.isAfter(LocalTime.of(19, 30));\n            int fee = calculateFee(distance, isDiscountTime);\n            System.out.println(fee);\n        }\n        scanner.close();\n    }\n\n    private static int getDistance(String start, String end) {\n        int[] distances = {0, 6, 11, 16, 22, 27, 33, 38, 42, 48, 55, 61, 68, 76, 84, 92, 100};\n        int startIdx = Integer.parseInt(start.substring(1)) - 1;\n        int endIdx = Integer.parseInt(end.substring(1)) - 1;\n        return Math.abs(distances[endIdx] - distances[startIdx]);\n    }\n\n    private static int calculateFee(int distance, boolean isDiscountTime) {\n        int baseFee = 0;\n        if (distance <= 20) {\n            baseFee = 610;\n        } else if (distance <= 40) {\n            baseFee = 850;\n        } else if (distance <= 70) {\n            baseFee = 1270;\n        } else if (distance <= 100) {\n            baseFee = 1480;\n        } else if (distance <= 120) {\n            baseFee = 1830;\n        } else if (distance <= 150) {\n            baseFee = 2080;\n        } else {\n            baseFee = 2440;\n        }\n\n        if (isDiscountTime && distance <= 40) {\n            baseFee = (int) Math.ceil(baseFee / 2.0 / 50) * 50;\n        } else {\n            baseFee = (int) Math.ceil(baseFee / 50.0) * 50;\n        }\n        return baseFee;\n    }\n}",
+    "timestamp": "2025-08-05 18:34:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\nimport sys\nfrom datetime import datetime\n\ndef calculate_fare(distance, time_of_passage):\n    # Define fixed rate per km\n    rate_per_km = 100 \n    basic_fare = distance * rate_per_km\n\n    # Convert string time to time object\n    passage_time = datetime.strptime(time_of_passage, \"%H:%M\").time()\n    discount_start_time = datetime.strptime(\"17:30\", \"%H:%M\").time()\n    discount_end_time = datetime.strptime(\"19:30\", \"%H:%M\").time()\n\n    # Check for discount eligibility\n    if discount_start_time <= passage_time <= discount_end_time and distance <= 40:\n        basic_fare /= 2\n\n    # Round up to the nearest 50 yen\n    return math.ceil(basic_fare / 50) * 50\n\ndef main():\n    datasets = sys.stdin.readlines()\n    \n    results = []\n    for data in datasets:\n        start_ichange, end_ichange, time_of_passage = data.strip().split()\n        distance = abs(int(end_ichange) - int(start_ichange))\n        fare = calculate_fare(distance, time_of_passage)\n        results.append(fare)\n    \n    for result in results:\n        print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:45:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        while (scanner.hasNext()) {\n            int startInterchange = scanner.nextInt();\n            int endInterchange = scanner.nextInt();\n            int transitHour = scanner.nextInt();\n            int transitMinute = scanner.nextInt();\n            \n            int distance = Math.abs(endInterchange - startInterchange); // calculate the travel distance\n            \n            boolean discountPeriod = (transitHour == 17 && transitMinute >= 30) || \n                                     (transitHour == 18) ||\n                                     (transitHour == 19 && transitMinute <= 30);\n            \n            int baseFee = distance * 100; // assume 100 yen per km\n            if (discountPeriod && distance <= 40) {\n                baseFee /= 2; // apply discount\n            }\n            \n            int finalFee = ((baseFee + 49) / 50) * 50; // round up to the nearest 50 yen\n            \n            System.out.println(finalFee);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-12 23:45:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define BASE_RATE 50\n\nint ceil50(int x) {\n    return ((x + BASE_RATE - 1) / BASE_RATE) * BASE_RATE;\n}\n\nint inDiscountPeriod(int hour, int minute) {\n    return (hour > 17 || (hour == 17 && minute >= 30)) &&\n           (hour < 19 || (hour == 19 && minute <= 30));\n}\n\nint main() {\n    int start, end, hour, minute;\n    \n    while (scanf(\"%d %d %d:%d\", &start, &end, &hour, &minute) == 4) {\n        int distance = end - start;\n        int fee = distance * BASE_RATE;\n\n        if (distance <= 40 && inDiscountPeriod(hour, minute)) {\n            fee /= 2;\n        }\n\n        fee = ceil50(fee);\n\n        printf(\"%d\\n\", fee);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-12 23:46:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_toll_fee(start_interchange, end_interchange, time):\n    distance = abs(end_interchange - start_interchange)\n    base_fee = distance * 100\n\n    # Check for discount time period\n    hour, minute = map(int, time.split(':'))\n    is_discount_time = (17 * 60 + 30 <= hour * 60 + minute <= 19 * 60 + 30)\n    \n    if is_discount_time and distance <= 40:\n        base_fee /= 2\n    \n    # Round up to nearest 50 yen\n    toll_fee = int((base_fee + 49) // 50 * 50)\n    \n    return toll_fee\n\n# Input and processing\nn = int(input())\nfor _ in range(n):\n    start, end, time = input().split()\n    start = int(start)\n    end = int(end)\n    \n    toll = calculate_toll_fee(start, end, time)\n    print(toll)",
+    "timestamp": "2025-08-12 23:46:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\nfrom datetime import datetime\n\ndef calculate_toll(start, end, distance, time_str):\n    time = datetime.strptime(time_str, \"%H:%M\").time()\n    start_time = datetime.strptime(\"17:30\", \"%H:%M\").time()\n    end_time = datetime.strptime(\"19:30\", \"%H:%M\").time()\n    \n    base_fee = distance * 15\n    if (start_time <= time <= end_time) and distance <= 40:\n        base_fee *= 0.5\n    \n    rounded_fee = math.ceil(base_fee / 50) * 50\n    return rounded_fee\n\ndef main():\n    import sys\n    input_lines = sys.stdin.read().splitlines()\n    for line in input_lines:\n        if line.strip() == '0':\n            break\n        parts = line.split()\n        start = parts[0]\n        end = parts[1]\n        distance = int(parts[2])\n        time_str = parts[3]\n        toll = calculate_toll(start, end, distance, time_str)\n        print(toll)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:46:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <string>\n#include <vector>\n\nint getIndex(const std::string& interchange, const std::vector<std::string>& interchangeList) {\n    for (int i = 0; i < interchangeList.size(); ++i) {\n        if (interchangeList[i] == interchange) return i;\n    }\n    return -1;\n}\n\nint roundUpToNearest50(int fee) {\n    return ((fee + 49) / 50) * 50;\n}\n\nint main() {\n    std::vector<std::string> interchangeList = { \"A\", \"B\", \"C\", \"D\", \"E\", \"F\" };\n    std::vector<int> distanceMatrix = { 0, 10, 25, 40, 55, 70 };\n\n    int tollRate = 100; // yen per km\n    std::string startInterchange, endInterchange, time;\n    \n    while (std::cin >> startInterchange >> endInterchange >> time) {\n        int startIndex = getIndex(startInterchange, interchangeList);\n        int endIndex = getIndex(endInterchange, interchangeList);\n\n        if (startIndex == -1 || endIndex == -1) {\n            std::cout << \"Invalid interchange\\n\";\n            continue;\n        }\n\n        int distance = std::abs(distanceMatrix[endIndex] - distanceMatrix[startIndex]);\n        int baseFee = distance * tollRate;\n\n        int hour = std::stoi(time.substr(0, 2));\n        int minute = std::stoi(time.substr(3, 2));\n\n        if (hour >= 17 && (hour < 19 || (hour == 19 && minute <= 30)) && distance <= 40) {\n            baseFee /= 2;\n        }\n\n        int finalFee = roundUpToNearest50(baseFee);\n        std::cout << finalFee << \" yen\\n\";\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:51:17"
+  }
+]

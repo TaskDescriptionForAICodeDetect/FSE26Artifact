@@ -1,0 +1,1 @@
+For given two line segments s1 and s2, print the distance between them. s1 is formed by endpoints p0 and p1, and s2 is formed by endpoints p2 and p3.

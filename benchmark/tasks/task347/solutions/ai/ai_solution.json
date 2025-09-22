@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main() {\n    int n;\n    char initial[1005], target[1005];\n    \n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n        scanf(\"%s %s\", initial, target);\n        \n        int rotations = 0;\n        for (int i = 0; i < n; i++) {\n            int a = initial[i] - '0';\n            int b = target[i] - '0';\n            int diff = abs(a - b);\n            rotations += (diff < 10 - diff) ? diff : (10 - diff);\n        }\n        \n        printf(\"%d\\n\", rotations);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:10:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint calculateRotations(const vector<int>& initial, const vector<int>& target) {\n    int n = initial.size();\n    int rotations = 0;\n    int prev_diff = 0;\n\n    for (int i = 0; i < n; ++i) {\n        int diff = (target[i] - initial[i] + 10) % 10;\n        int current_diff = diff - prev_diff;\n        rotations += abs(current_diff);\n        prev_diff = diff;\n    }\n\n    return rotations;\n}\n\nint main() {\n    while (true) {\n        int n;\n        cin >> n;\n        if (n == 0) break;\n\n        vector<int> initial(n), target(n);\n        for (int i = 0; i < n; ++i) {\n            char c;\n            cin >> c;\n            initial[i] = c - '0';\n        }\n        for (int i = 0; i < n; ++i) {\n            char c;\n            cin >> c;\n            target[i] = c - '0';\n        }\n\n        cout << calculateRotations(initial, target) << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:10:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class DialLock {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (true) {\n            int N = scanner.nextInt();\n            if (N == 0) break;\n            String initial = scanner.next();\n            String target = scanner.next();\n            int totalRotations = 0;\n            for (int i = 0; i < N; i++) {\n                int a = initial.charAt(i) - '0';\n                int b = target.charAt(i) - '0';\n                int diff = Math.abs(a - b);\n                totalRotations += Math.min(diff, 10 - diff);\n            }\n            System.out.println(totalRotations);\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:10:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DialLock {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            \n            int[] current = new int[n];\n            int[] target = new int[n];\n            \n            for (int i = 0; i < n; i++) {\n                current[i] = scanner.nextInt();\n            }\n            \n            for (int i = 0; i < n; i++) {\n                target[i] = scanner.nextInt();\n            }\n            \n            System.out.println(minimumRotations(current, target));\n        }\n        \n        scanner.close();\n    }\n    \n    private static int minimumRotations(int[] current, int[] target) {\n        int rotations = 0;\n        \n        for (int i = 0; i < current.length; i++) {\n            int diff = Math.abs(current[i] - target[i]);\n            rotations = Math.max(rotations, Math.min(diff, 10 - diff));\n        }\n        \n        return rotations;\n    }\n}",
+    "timestamp": "2025-08-05 21:10:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_DIALS 10\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint calculate_rotations(int* current, int* target, int n) {\n    int rotations = 0;\n    int dial_states[MAX_DIALS];\n    memcpy(dial_states, current, n * sizeof(int));\n    \n    for (int i = 0; i < n; i++) {\n        int diff = abs(target[i] - dial_states[i]);\n        int min_rotations = min(diff, 10 - diff);\n        \n        if (min_rotations > 0) {\n            rotations = max(rotations, min_rotations);\n            \n            for (int j = i; j < n; j++) {\n                if (target[j] > dial_states[j]) {\n                    dial_states[j] = (dial_states[j] + min_rotations) % 10;\n                } else {\n                    dial_states[j] = (dial_states[j] - min_rotations + 10) % 10;\n                }\n            }\n        }\n    }\n    \n    return rotations;\n}\n\nint main() {\n    int n;\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n        \n        int current[MAX_DIALS], target[MAX_DIALS];\n        \n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &current[i]);\n        }\n        \n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &target[i]);\n        }\n        \n        int result = calculate_rotations(current, target, n);\n        printf(\"%d\\n\", result);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:10:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <climits>\nusing namespace std;\n\nint minRotations(vector<int>& start, vector<int>& target) {\n    int n = start.size();\n    int maxRotation = 0;\n    \n    for (int i = 0; i < n; i++) {\n        int diff = abs(start[i] - target[i]);\n        maxRotation = max(maxRotation, min(diff, 10 - diff));\n    }\n    \n    return maxRotation;\n}\n\nint main() {\n    int m, n;\n    while (true) {\n        cin >> m;\n        if (m == 0) break;\n        \n        vector<int> start(m), target(m);\n        \n        for (int i = 0; i < m; i++) {\n            cin >> start[i];\n        }\n        \n        for (int i = 0; i < m; i++) {\n            cin >> target[i];\n        }\n        \n        cout << minRotations(start, target) << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:10:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_rotations(start, unlock):\n    def rotation_cost(s, u):\n        forward = (int(u) - int(s)) % 10\n        backward = (int(s) - int(u)) % 10\n        return min(forward, backward)\n\n    total_rotations = 0\n    for i in range(len(start)):\n        total_rotations += rotation_cost(start[i], unlock[i])\n    return total_rotations\n\ndef main():\n    import sys\n    input = sys.stdin.read\n    data = input().strip().split('\\n')\n    \n    index = 0\n    while index < len(data):\n        line = data[index].strip()\n        if line == '0':\n            break\n        start, unlock = line.split()\n        print(min_rotations(start, unlock))\n        index += 1\n\nmain()",
+    "timestamp": "2025-08-13 05:18:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class DialLockSolver {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        while (true) {\n            int n = scanner.nextInt(); // number of dials\n            if (n == 0) break; // terminating condition\n\n            int[] current = new int[n];\n            int[] target = new int[n];\n\n            for (int i = 0; i < n; i++) {\n                current[i] = scanner.nextInt();\n            }\n            for (int i = 0; i < n; i++) {\n                target[i] = scanner.nextInt();\n            }\n\n            int totalRotations = calculateMinimumRotations(current, target, n);\n            System.out.println(totalRotations);\n        }\n\n        scanner.close();\n    }\n\n    private static int calculateMinimumRotations(int[] current, int[] target, int n) {\n        int totalRotations = 0;\n\n        for (int i = 0; i < n; i++) {\n            int rotation = Math.abs(target[i] - current[i]);\n            rotation = Math.min(rotation, 10 - rotation); // Minimum rotations clockwise or anti-clockwise\n            totalRotations += rotation;\n        }\n\n        return totalRotations;\n    }\n}",
+    "timestamp": "2025-08-13 05:18:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_DIALS 1000\n\nint min_rotations_to_unlock(int *current, int *target, int n) {\n    int total_rotations = 0;\n    for (int i = 0; i < n; i++) {\n        int clockwise_rotations = (target[i] - current[i] + 10) % 10;\n        int counter_clockwise_rotations = (current[i] - target[i] + 10) % 10;\n        total_rotations += clockwise_rotations < counter_clockwise_rotations ? clockwise_rotations : counter_clockwise_rotations;\n    }\n    return total_rotations;\n}\n\nint main() {\n    int current[MAX_DIALS];\n    int target[MAX_DIALS];\n    int n;\n\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &current[i]);\n        }\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &target[i]);\n        }\n\n        int rotations = min_rotations_to_unlock(current, target, n);\n        printf(\"%d\\n\", rotations);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:18:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_lock_problem():\n    while True:\n        n = int(input())\n        if n == 0:\n            break\n        \n        sequence = list(map(int, input().split()))\n        current = list(map(int, input().split()))\n        \n        total_rotations = 0\n        \n        for i in range(n):\n            min_rotations = float('inf')\n            \n            for direction in [-1, 1]:\n                clockwise = (sequence[i] - current[i] + 10) % 10 if direction == 1 else 0\n                counterclockwise = (current[i] - sequence[i] + 10) % 10 if direction == -1 else 0\n                \n                min_rotations = min(min_rotations, clockwise, counterclockwise)\n            \n            total_rotations += min_rotations\n            \n            # Update current state for next iteration\n            if total_rotations % 10 > 0:\n                for j in range(i+1, n):\n                    current[j] = (current[j] + total_rotations) % 10\n        \n        print(total_rotations)\n\nsolve_lock_problem()",
+    "timestamp": "2025-08-13 05:19:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef min_rotations():\n    while True:\n        line = sys.stdin.readline().strip()\n        if line == '0':\n            break\n        n = int(line)\n        original = sys.stdin.readline().strip()\n        target = sys.stdin.readline().strip()\n        \n        total_rotations = 0\n        prev_diff = 0\n        \n        for i in range(n):\n            current_original = int(original[i])\n            current_target = int(target[i])\n            diff = (current_target - current_original) % 10\n            if i == 0:\n                total_rotations += diff\n                prev_diff = diff\n            else:\n                effective_diff = (diff - prev_diff) % 10\n                total_rotations += effective_diff\n                prev_diff = diff\n        \n        print(total_rotations)\n\nmin_rotations()",
+    "timestamp": "2025-08-13 05:19:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <string>\n#include <cmath>\n\nusing namespace std;\n\n// Function to calculate minimum rotations\nint minimumRotations(const string& start, const string& unlock) {\n    int num_dials = start.size();\n    int total_rotations = 0;\n    for (int i = 0; i < num_dials; ++i) {\n        int start_digit = start[i] - '0';\n        int unlock_digit = unlock[i] - '0';\n        int clockwise_steps = (unlock_digit - start_digit + 10) % 10;\n        int counter_clockwise_steps = (start_digit - unlock_digit + 10) % 10;\n        total_rotations += min(clockwise_steps, counter_clockwise_steps);\n    }\n    return total_rotations;\n}\n\nint main() {\n    string start, unlock;\n    \n    while (true) {\n        // Read current state and unlocking sequence\n        cin >> start;\n        if (start == \"0\") break; // Termination condition\n        cin >> unlock;\n        \n        // Compute and output the minimum rotations for the current dataset\n        cout << minimumRotations(start, unlock) << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:24:24"
+  }
+]

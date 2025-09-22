@@ -1,0 +1,1 @@
+Write a computer program to count the number of holes in a folded rectangular piece of paper based on specific folding and punching instructions.

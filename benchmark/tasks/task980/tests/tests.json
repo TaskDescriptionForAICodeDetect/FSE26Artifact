@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "12 2\n3\n5\n2\n7\n",
+      "output": "129"
+    },
+    {
+      "input": "24 3\n2\n4\n8\n1\n2\n9\n3\n",
+      "output": "260"
+    }
+  ]
+}

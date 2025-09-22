@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_STRINGS 100\n#define MAX_LENGTH 100\n\nbool can_transform(char* s1, char* s2) {\n    int len1 = strlen(s1);\n    int len2 = strlen(s2);\n    \n    if (len1 != len2) return false;\n    \n    for (int i = 0; i < len1; i++) {\n        bool possible = true;\n        \n        for (int j = 0; j < len1; j++) {\n            if (s1[(j + i) % len1] != s2[j]) {\n                possible = false;\n                break;\n            }\n        }\n        \n        if (possible) return true;\n    }\n    \n    return false;\n}\n\nbool can_convert(char* s1, char* s2) {\n    int len1 = strlen(s1);\n    int len2 = strlen(s2);\n    \n    while (len1 > 0 && len2 > 0) {\n        if (strcmp(s1, s2) == 0) return true;\n        \n        if (s1[0] <= s1[1]) {\n            memmove(s1, s1 + 1, len1);\n            len1--;\n        } else {\n            char temp = s1[0];\n            memmove(s1 + 0, s1 + 1, len1 - 1);\n            s1[len1 - 1] = temp;\n        }\n    }\n    \n    return false;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    char strings[MAX_STRINGS][MAX_LENGTH];\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", strings[i]);\n    }\n    \n    int count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            char temp1[MAX_LENGTH];\n            char temp2[MAX_LENGTH];\n            \n            strcpy(temp1, strings[i]);\n            strcpy(temp2, strings[j]);\n            \n            if (can_convert(temp1, temp2) || can_convert(temp2, temp1)) {\n                count++;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:26:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_LEN 1005\n\nint can_obtain(char *a, char *b) {\n    int len_a = strlen(a);\n    int len_b = strlen(b);\n    if (len_a < len_b) return 0;\n    int i = 0, j = 0;\n    while (i < len_a && j < len_b) {\n        if (a[i] == b[j]) {\n            j++;\n        }\n        i++;\n    }\n    return j == len_b;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    char strings[N][MAX_LEN];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", strings[i]);\n    }\n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            if (strlen(strings[i]) == strlen(strings[j])) {\n                if (strcmp(strings[i], strings[j]) == 0) {\n                    count++;\n                }\n            } else if (strlen(strings[i]) > strlen(strings[j])) {\n                if (can_obtain(strings[i], strings[j])) {\n                    count++;\n                }\n            } else {\n                if (can_obtain(strings[j], strings[i])) {\n                    count++;\n                }\n            }\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:26:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nunordered_set<string> generatePossible(const string &s) {\n    unordered_set<string> possible;\n    possible.insert(s);\n    vector<string> current;\n    current.push_back(s);\n    while (!current.empty()) {\n        vector<string> next;\n        for (const string &str : current) {\n            if (str.size() >= 1) {\n                string newStr = str.substr(1);\n                if (possible.find(newStr) == possible.end()) {\n                    possible.insert(newStr);\n                    next.push_back(newStr);\n                }\n            }\n            if (str.size() >= 2) {\n                string newStr = str.substr(0, 1) + str.substr(2);\n                if (possible.find(newStr) == possible.end()) {\n                    possible.insert(newStr);\n                    next.push_back(newStr);\n                }\n            }\n        }\n        current = next;\n    }\n    return possible;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<string> strings(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> strings[i];\n    }\n\n    vector<unordered_set<string>> possibleStrings(N);\n    for (int i = 0; i < N; ++i) {\n        possibleStrings[i] = generatePossible(strings[i]);\n    }\n\n    int count = 0;\n    for (int i = 0; i < N; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            if (possibleStrings[i].count(strings[j]) || possibleStrings[j].count(strings[i])) {\n                count++;\n            }\n        }\n    }\n\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:26:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        scanner.nextLine(); // Consume newline\n        String[] strings = new String[N];\n        for (int i = 0; i < N; i++) {\n            strings[i] = scanner.nextLine();\n        }\n        \n        Map<String, Integer> patternCount = new HashMap<>();\n        for (String s : strings) {\n            String pattern = getPattern(s);\n            patternCount.put(pattern, patternCount.getOrDefault(pattern, 0) + 1);\n        }\n        \n        long result = 0;\n        for (int count : patternCount.values()) {\n            result += (long) count * (count - 1) / 2;\n        }\n        \n        System.out.println(result);\n    }\n    \n    private static String getPattern(String s) {\n        StringBuilder pattern = new StringBuilder();\n        for (int i = s.length() - 1; i >= 0; i--) {\n            char c = s.charAt(i);\n            if (pattern.length() == 0 || c <= pattern.charAt(0)) {\n                pattern.insert(0, c);\n            } else {\n                pattern.insert(0, pattern.charAt(0));\n            }\n        }\n        return pattern.toString();\n    }\n}",
+    "timestamp": "2025-08-05 22:27:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        String[] strings = new String[N];\n        \n        for (int i = 0; i < N; i++) {\n            strings[i] = scanner.next();\n        }\n        \n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                if (canTransform(strings[i], strings[j]) || canTransform(strings[j], strings[i])) {\n                    count++;\n                }\n            }\n        }\n        \n        System.out.println(count);\n    }\n    \n    private static boolean canTransform(String s1, String s2) {\n        if (s1.length() < s2.length()) return false;\n        \n        while (s1.length() > s2.length()) {\n            s1 = s1.substring(1);\n        }\n        \n        return s1.equals(s2);\n    }\n}",
+    "timestamp": "2025-08-05 22:27:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nbool canTransform(string a, string b) {\n    while (!a.empty() && !b.empty()) {\n        if (a == b) return true;\n        \n        if (a[0] == b[0]) {\n            a.erase(0, 1);\n        } else if (a[1] == b[0]) {\n            a.erase(1, 1);\n        } else {\n            break;\n        }\n    }\n    \n    return a == b;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<string> strings(N);\n    for (int i = 0; i < N; i++) {\n        cin >> strings[i];\n    }\n    \n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            if (canTransform(strings[i], strings[j]) || canTransform(strings[j], strings[i])) {\n                count++;\n            }\n        }\n    }\n    \n    cout << count << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_obtain(s1, s2):\n    i, j = 0, 0\n    while i < len(s1) and j < len(s2):\n        if s1[i] == s2[j]:\n            j += 1\n        i += 1\n    return j == len(s2)\n\ndef count_obtainable_pairs(strings):\n    count = 0\n    n = len(strings)\n    for i in range(n):\n        for j in range(i + 1, n):\n            if can_obtain(strings[i], strings[j]) or can_obtain(strings[j], strings[i]):\n                count += 1\n    return count\n\n# Example usage:\nstrings = [\"abc\", \"bc\", \"cab\"]\nprint(count_obtainable_pairs(strings))",
+    "timestamp": "2025-08-13 10:48:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LimakStringPairs {\n    public static void main(String[] args) {\n        int N = 4;\n        String[] strings = {\"abc\", \"bc\", \"ac\", \"c\"};\n        System.out.println(countValidPairs(strings, N));\n    }\n\n    public static int countValidPairs(String[] strings, int N) {\n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                if (canTransform(strings[i], strings[j])) {\n                    count++;\n                }\n                if (canTransform(strings[j], strings[i])) {\n                    count++;\n                }\n            }\n        }\n        return count;\n    }\n\n    private static boolean canTransform(String from, String to) {\n        int i = 0, j = 0;\n        while (i < from.length() && j < to.length()) {\n            if (from.charAt(i) == to.charAt(j)) {\n                j++;\n            }\n            i++;\n        }\n        return j == to.length();\n    }\n}",
+    "timestamp": "2025-08-13 10:48:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint canObtain(char *s1, char *s2) {\n    int len1 = strlen(s1);\n    int len2 = strlen(s2);\n    if (len1 > len2) return 0;\n\n    int i = 0, j = 0;\n    while (i < len1 && j < len2) {\n        if (s1[i] == s2[j]) {\n            i++;\n        }\n        j++;\n    }\n    return i == len1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    char strings[N][101];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", strings[i]);\n    }\n    \n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = i + 1; j < N; j++) {\n            if (canObtain(strings[i], strings[j]) || canObtain(strings[j], strings[i])) {\n                count++;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:48:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canConvert(s1, s2) {\n  let i = 0, j = 0;\n  while (i < s1.length && j < s2.length) {\n    if (s1[i] === s2[j]) i++;\n    j++;\n  }\n  return i === s1.length;\n}\n\nfunction countPairs(strings) {\n  let count = 0;\n  const n = strings.length;\n  \n  for (let i = 0; i < n; i++) {\n    for (let j = i + 1; j < n; j++) {\n      if (canConvert(strings[i], strings[j]) || canConvert(strings[j], strings[i])) {\n        count++;\n      }\n    }\n  }\n  \n  return count;\n}\n\n// Example usage:\n// const strings = ['abc', 'ac', 'bc', 'a'];\n// console.log(countPairs(strings));  // Output the result",
+    "timestamp": "2025-08-13 10:48:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_transform(s1, s2):\n    def is_transformable(a, b):\n        while a and b:\n            if a == b:\n                return True\n            if len(a) < len(b):\n                a, b = b, a\n            if a[:2] == b[0]:\n                a = a[1:]\n            else:\n                a = a[1:]\n        return a == b\n\n    return is_transformable(s1, s2) or is_transformable(s2, s1)\n\ndef solve(strings):\n    n = len(strings)\n    transformable_pairs = 0\n    \n    for i in range(n):\n        for j in range(i+1, n):\n            if can_transform(strings[i], strings[j]):\n                transformable_pairs += 1\n    \n    return transformable_pairs\n\n# Read input\nn = int(input())\nstrings = [input().strip() for _ in range(n)]\n\n# Print output\nprint(solve(strings))",
+    "timestamp": "2025-08-13 10:48:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canTransform(s1, s2) {\n    if (s1.length !== s2.length) return false;\n    \n    while (s1.length > 0 && s2.length > 0) {\n        if (s1 === s2) return true;\n        \n        s1 = s1.length > 1 ? \n            (s1[1] <= s1[0] ? s1.slice(1) : s1.slice(0, 0) + s1.slice(1)) \n            : '';\n        \n        s2 = s2.length > 1 ? \n            (s2[1] <= s2[0] ? s2.slice(1) : s2.slice(0, 0) + s2.slice(1)) \n            : '';\n    }\n    \n    return s1 === s2;\n}\n\nfunction solution(arr) {\n    let count = 0;\n    \n    for (let i = 0; i < arr.length; i++) {\n        for (let j = i + 1; j < arr.length; j++) {\n            if (canTransform(arr[i], arr[j])) {\n                count++;\n            }\n        }\n    }\n    \n    return count;\n}",
+    "timestamp": "2025-08-13 10:48:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    strings = data[1:N+1]\n    \n    # Preprocess each string to its canonical form (the minimal string obtainable by removing first or second characters)\n    canonical = []\n    for s in strings:\n        stack = []\n        for c in s:\n            stack.append(c)\n            while len(stack) >= 2 and stack[-2] < stack[-1]:\n                stack.pop()\n        canonical.append(''.join(stack))\n    \n    from collections import defaultdict\n    freq = defaultdict(int)\n    for s in canonical:\n        freq[s] += 1\n    \n    # To count pairs where s_i can be obtained from s_j or vice versa, we need to count pairs with the same canonical form\n    res = 0\n    for cnt in freq.values():\n        res += cnt * (cnt - 1) // 2\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 10:49:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N = 0;\n    let strings = [];\n    let count = 0;\n\n    rl.on('line', (line) => {\n        if (N === 0) {\n            N = parseInt(line.trim(), 10);\n        } else {\n            strings.push(line.trim());\n            if (strings.length === N) {\n                rl.close();\n            }\n        }\n    });\n\n    rl.on('close', () => {\n        const map = new Map();\n        for (const s of strings) {\n            const key = generateKey(s);\n            map.set(key, (map.get(key) || 0) + 1);\n        }\n\n        let result = 0;\n        const keys = Array.from(map.keys());\n        for (let i = 0; i < keys.length; i++) {\n            const cnt = map.get(keys[i]);\n            result += cnt * (cnt - 1) / 2;\n        }\n\n        console.log(result);\n    });\n\n    function generateKey(s) {\n        const stack = [];\n        for (const c of s) {\n            while (stack.length >= 2) {\n                const last = stack.pop();\n                const secondLast = stack.pop();\n                if (secondLast < last) {\n                    stack.push(secondLast);\n                    stack.push(last);\n                    break;\n                } else {\n                    stack.push(secondLast);\n                }\n            }\n            stack.push(c);\n        }\n        return stack.join('');\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 10:49:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nbool canObtainFrom(const std::string& source, const std::string& target) {\n    size_t targetIndex = 0;\n    for (char c : source) {\n        if (c == target[targetIndex]) {\n            ++targetIndex;\n            if (targetIndex == target.size()) {\n                return true;\n            }\n        }\n    }\n    return targetIndex == target.size();\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    std::vector<std::string> strings(n);\n\n    for (int i = 0; i < n; ++i) {\n        std::cin >> strings[i];\n    }\n\n    int count = 0;\n    \n    for (int i = 0; i < n; ++i) {\n        for (int j = i + 1; j < n; ++j) {\n            if (canObtainFrom(strings[i], strings[j]) || canObtainFrom(strings[j], strings[i])) {\n                count++;\n            }\n        }\n    }\n\n    std::cout << count << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:00:50"
+  }
+]

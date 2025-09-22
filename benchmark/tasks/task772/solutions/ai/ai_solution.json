@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint solve(int N, int* A) {\n    int* prefixXOR = malloc(N * sizeof(int));\n    prefixXOR[0] = A[0];\n    for (int i = 1; i < N; i++) {\n        prefixXOR[i] = prefixXOR[i-1] ^ A[i];\n    }\n\n    long long result = 0;\n    \n    for (int mask = 0; mask < (1 << (N-1)); mask++) {\n        int partitions = 1;\n        int lastXOR = prefixXOR[0];\n        int valid = 1;\n        \n        for (int i = 0; i < N-1; i++) {\n            if (mask & (1 << i)) {\n                partitions++;\n                int currentXOR = prefixXOR[i+1] ^ prefixXOR[0];\n                if (currentXOR != lastXOR) {\n                    valid = 0;\n                    break;\n                }\n                lastXOR = currentXOR;\n            }\n        }\n        \n        if (valid) {\n            int lastPartitionXOR = prefixXOR[N-1] ^ prefixXOR[0];\n            if (lastPartitionXOR == lastXOR) {\n                result++;\n            }\n        }\n    }\n    \n    free(prefixXOR);\n    return result % MOD;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* A = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int answer = solve(N, A);\n    printf(\"%d\\n\", answer);\n    \n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:51:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *A = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    int total_xor = 0;\n    for (int i = 0; i < N; i++) {\n        total_xor ^= A[i];\n    }\n\n    if (total_xor == 0) {\n        int *dp = (int *)calloc(N, sizeof(int));\n        dp[0] = 1;\n        int *prefix = (int *)calloc(N, sizeof(int));\n        prefix[0] = 1;\n        int current_xor = A[0];\n        for (int i = 1; i < N; i++) {\n            current_xor ^= A[i];\n            if (current_xor == 0) {\n                dp[i] = prefix[i-1];\n            } else {\n                dp[i] = 0;\n            }\n            prefix[i] = (prefix[i-1] + dp[i]) % MOD;\n        }\n        printf(\"%d\\n\", dp[N-1]);\n        free(dp);\n        free(prefix);\n    } else {\n        int current_xor = 0;\n        int count = 0;\n        int result = 1;\n        for (int i = 0; i < N; i++) {\n            current_xor ^= A[i];\n            if (current_xor == total_xor) {\n                count++;\n                current_xor = 0;\n            }\n        }\n        if (current_xor != 0) {\n            printf(\"0\\n\");\n        } else {\n            for (int i = 1; i < count; i++) {\n                result = (result * 2) % MOD;\n            }\n            printf(\"%d\\n\", result);\n        }\n    }\n\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    \n    vector<int> prefix_xor(N + 1, 0);\n    for (int i = 0; i < N; ++i) {\n        prefix_xor[i + 1] = prefix_xor[i] ^ A[i];\n    }\n    \n    if (prefix_xor[N] != 0) {\n        int target = prefix_xor[N];\n        int count = 0;\n        int ways = 1;\n        unordered_map<int, int> dp;\n        dp[0] = 1;\n        for (int i = 1; i < N; ++i) {\n            int current = prefix_xor[i];\n            if (current == target) {\n                ways = (ways + dp[0]) % MOD;\n            }\n            dp[current] = (dp[current] + ways) % MOD;\n        }\n        cout << ways << endl;\n    } else {\n        unordered_map<int, int> dp;\n        dp[0] = 1;\n        int total = 1;\n        for (int i = 1; i < N; ++i) {\n            int current = prefix_xor[i];\n            total = (total + dp[current]) % MOD;\n            dp[current] = (dp[current] + total) % MOD;\n        }\n        cout << total << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextInt();\n        }\n\n        int[] prefix = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            prefix[i] = prefix[i - 1] ^ A[i - 1];\n        }\n\n        int totalXOR = prefix[N];\n        if (totalXOR != 0) {\n            int cnt = 0;\n            int currentXOR = 0;\n            for (int i = 0; i < N - 1; i++) {\n                currentXOR ^= A[i];\n                if (currentXOR == totalXOR) {\n                    cnt++;\n                }\n            }\n            System.out.println(cnt);\n        } else {\n            int[] dp = new int[N + 1];\n            dp[0] = 1;\n            Map<Integer, Integer> map = new HashMap<>();\n            map.put(0, 1);\n            int sum = 1;\n            int currentXOR = 0;\n            for (int i = 1; i <= N; i++) {\n                currentXOR ^= A[i - 1];\n                dp[i] = sum;\n                if (map.containsKey(currentXOR)) {\n                    dp[i] = (dp[i] - map.get(currentXOR) + MOD) % MOD;\n                }\n                sum = (sum + dp[i]) % MOD;\n                map.put(currentXOR, (map.getOrDefault(currentXOR, 0) + dp[i]) % MOD);\n            }\n            System.out.println(dp[N]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:52:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Solution {\n    private static final int MOD = 1_000_000_007;\n\n    public int countPartitions(int[] A) {\n        int N = A.length;\n        long[] dp = new long[N + 1];\n        dp[0] = 1;\n\n        for (int i = 1; i <= N; i++) {\n            int xor = 0;\n            for (int j = i; j >= 1; j--) {\n                xor ^= A[j - 1];\n                dp[i] += dp[j - 1];\n                dp[i] %= MOD;\n            }\n        }\n\n        return (int) dp[N];\n    }\n}",
+    "timestamp": "2025-08-05 22:52:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countPartitions(vector<int>& A) {\n        int N = A.size();\n        const int MOD = 1e9 + 7;\n        \n        vector<int> prefix_xor(N + 1, 0);\n        for (int i = 0; i < N; i++) {\n            prefix_xor[i + 1] = prefix_xor[i] ^ A[i];\n        }\n        \n        vector<vector<int>> dp(N + 1, vector<int>(N + 1, 0));\n        dp[0][0] = 1;\n        \n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j <= i; j++) {\n                for (int k = 0; k < i; k++) {\n                    int xor_val = prefix_xor[i] ^ prefix_xor[k];\n                    if (dp[k][j - 1] > 0 && xor_val == prefix_xor[k]) {\n                        dp[i][j] = (dp[i][j] + dp[k][j - 1]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        int result = 0;\n        for (int j = 1; j <= N; j++) {\n            result = (result + dp[N][j]) % MOD;\n        }\n        \n        return result;\n    }\n};",
+    "timestamp": "2025-08-05 22:52:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_beauty_partitions(A):\n    MOD = 10**9 + 7\n    N = len(A)\n    \n    # Precompute XOR of prefixes\n    prefix_xor = [0] * (N + 1)\n    for i in range(N):\n        prefix_xor[i + 1] = prefix_xor[i] ^ A[i]\n    \n    # Dictionary to store number of ways to partition with same beauty \n    beauty_count = {0: 1}\n    current_xor = 0\n    total_count = 0\n\n    for i in range(1, N + 1):\n        current_xor ^= A[i - 1]\n        \n        if current_xor in beauty_count:\n            total_count += beauty_count[current_xor]\n            total_count %= MOD\n        \n        if prefix_xor[i] in beauty_count:\n            beauty_count[prefix_xor[i]] += 1\n        else:\n            beauty_count[prefix_xor[i]] = 1\n    \n    return total_count\n\n# Example usage: \n# A = [a1, a2, ..., aN]\n# print(count_beauty_partitions(A))",
+    "timestamp": "2025-08-13 12:47:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n\n    private static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] A = new int[n];\n        for (int i = 0; i < n; i++) {\n            A[i] = scanner.nextInt();\n        }\n        scanner.close();\n\n        int[][] dp = new int[n+1][1024];\n        dp[0][0] = 1;\n\n        for (int i = 0; i < n; i++) {\n            int xorAccum = 0;\n            for (int j = i; j < n; j++) {\n                xorAccum ^= A[j];\n                for (int k = 0; k < 1024; k++) {\n                    dp[j + 1][xorAccum] = (dp[j + 1][xorAccum] + dp[i][k]) % MOD;\n                }\n            }\n        }\n\n        int answer = 0;\n        for (int k = 0; k < 1024; k++) {\n            answer = (answer + dp[n][k]) % MOD;\n        }\n\n        System.out.println(answer);\n    }\n}",
+    "timestamp": "2025-08-13 12:48:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nint countWaysToPartition(int* A, int N) {\n    int totalXor = 0;\n    for (int i = 0; i < N; i++) {\n        totalXor ^= A[i];\n    }\n\n    if (totalXor == 0) {\n        long long result = 1;\n        int prefixXor = 0;\n        int groupCount = 0;\n\n        for (int i = 0; i < N - 1; i++) {\n            prefixXor ^= A[i];\n            if (prefixXor == 0) {\n                groupCount++;\n                result = (result * 2) % MOD;\n            }\n        }\n\n        return result;\n    }\n    \n    return 0;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int result = countWaysToPartition(A, N);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:48:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MOD = 1000000007;\n\nint countWays(vector<int>& A) {\n    int N = A.size();\n    int totalXor = 0;\n\n    for (int num : A) {\n        totalXor ^= num;\n    }\n    \n    if (totalXor == 0) {\n        long long ways = 1;\n        int currentXor = 0;\n\n        for (int i = 0; i < N - 1; ++i) {\n            currentXor ^= A[i];\n            if (currentXor == 0) {\n                ways = (ways * 2) % MOD;\n            }\n        }\n        return ways;\n    } else {\n        int currentXor = 0;\n        int countSplits = 0;\n\n        for (int i = 0; i < N - 1; ++i) {\n            currentXor ^= A[i];\n            if (currentXor == totalXor) {\n                ++countSplits;\n                currentXor = 0;\n            }\n        }\n        return countSplits > 0 ? 1 : 0;\n    }\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    cout << countWays(A) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:48:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_beautiful_partitions(A):\n    N = len(A)\n    MOD = 10**9 + 7\n    \n    # Calculate XOR of entire array\n    total_xor = 0\n    for num in A:\n        total_xor ^= num\n    \n    # Dynamic programming to count valid partitions\n    dp = [0] * (N + 1)\n    dp[0] = 1\n    \n    current_xor = 0\n    for i in range(N):\n        current_xor ^= A[i]\n        \n        if current_xor == total_xor:\n            for j in range(i + 1):\n                sub_xor = 0\n                for k in range(j, i + 1):\n                    sub_xor ^= A[k]\n                    \n                    if sub_xor == total_xor:\n                        dp[i + 1] = (dp[i + 1] + dp[j]) % MOD\n    \n    return dp[N]",
+    "timestamp": "2025-08-13 12:48:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    import sys\n    N, *rest = map(int, sys.stdin.read().split())\n    A = rest[:N]\n    \n    total_xor = 0\n    for num in A:\n        total_xor ^= num\n    \n    if total_xor == 0:\n        # The answer is 2^{k-1}, where k is the number of ways to split into parts with XOR 0\n        # We can model this with DP where dp[i] is the number of ways up to i\n        dp = [0] * (N + 1)\n        dp[0] = 1\n        prefix_xor = 0\n        from collections import defaultdict\n        xor_counts = defaultdict(int)\n        xor_counts[0] = 1\n        res = 0\n        for i in range(1, N+1):\n            prefix_xor ^= A[i-1]\n            dp[i] = xor_counts[prefix_xor]\n            xor_counts[prefix_xor] = (xor_counts[prefix_xor] + dp[i-1]) % MOD\n        res = dp[N] % MOD\n        print(res)\n    else:\n        # The target is to split into parts each with XOR total_xor\n        # We can model this with DP where we track the number of ways ending with XOR 0 or total_xor\n        dp0 = 1  # ending with XOR 0\n        dp1 = 0  # ending with XOR total_xor\n        prefix_xor = 0\n        for num in A:\n            prefix_xor ^= num\n            if prefix_xor == 0:\n                dp0 = (dp0 + dp1) % MOD\n            elif prefix_xor == total_xor:\n                dp1 = (dp1 + dp0) % MOD\n        res = dp0 % MOD\n        print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 12:48:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countBeautifulWays(A) {\n    const MOD = 1000000007;\n    const N = A.length;\n    let totalWays = 0;\n    \n    const xorPrefixes = new Array(N + 1).fill(0);\n    for (let i = 0; i < N; i++) {\n        xorPrefixes[i + 1] = xorPrefixes[i] ^ A[i];\n    }\n    \n    const countMap = new Map();\n    for (let i = 0; i <= N; i++) {\n        const currentXor = xorPrefixes[i];\n        totalWays = (totalWays + (countMap.get(currentXor) || 0)) % MOD;\n        countMap.set(currentXor, (countMap.get(currentXor) || 0) + 1);\n    }\n    \n    return totalWays;\n}",
+    "timestamp": "2025-08-13 12:48:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(A) {\n    const N = A.length;\n    const MOD = 1e9 + 7;\n    \n    function getBeauty(start, end) {\n        let beauty = 0;\n        for (let i = start; i <= end; i++) {\n            beauty ^= A[i];\n        }\n        return beauty;\n    }\n    \n    let count = 0;\n    \n    for (let mask = 0; mask < (1 << (N - 1)); mask++) {\n        let partitions = [0];\n        \n        for (let j = 0; j < N - 1; j++) {\n            if (mask & (1 << j)) {\n                partitions.push(j + 1);\n            }\n        }\n        \n        partitions.push(N);\n        \n        let beauties = [];\n        let valid = true;\n        \n        for (let k = 0; k < partitions.length - 1; k++) {\n            let beauty = getBeauty(partitions[k], partitions[k + 1] - 1);\n            beauties.push(beauty);\n        }\n        \n        if (new Set(beauties).size === 1) {\n            count++;\n        }\n    }\n    \n    return count % MOD;\n}",
+    "timestamp": "2025-08-13 12:48:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve() {\n    const N = parseInt(readline());\n    const A = readline().split(' ').map(x => parseInt(x));\n    \n    let totalXOR = 0;\n    for (const num of A) {\n        totalXOR ^= num;\n    }\n    \n    if (totalXOR === 0) {\n        let res = 1;\n        let currentXOR = 0;\n        for (let i = 0; i < N - 1; i++) {\n            currentXOR ^= A[i];\n            if (currentXOR === 0) {\n                res = (res * 2) % MOD;\n            }\n        }\n        return res;\n    } else {\n        let res = 0;\n        let currentXOR = 0;\n        let count = 1;\n        for (let i = 0; i < N - 1; i++) {\n            currentXOR ^= A[i];\n            if (currentXOR === totalXOR) {\n                res = (res + count) % MOD;\n            }\n            if (currentXOR === 0) {\n                count = (count + res) % MOD;\n            }\n        }\n        return res;\n    }\n}\n\nconsole.log(solve());",
+    "timestamp": "2025-08-13 12:49:40"
+  }
+]

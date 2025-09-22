@@ -1,0 +1,1 @@
+Given the positions of three vertices of a triangle, and the positions of two characters, determine if one character is inside the triangle and the other is outside. If this condition is satisfied, output 'OK'; otherwise, output 'NG'. The characters are not positioned on the vertices or edges of the triangle.

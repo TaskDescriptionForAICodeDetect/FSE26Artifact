@@ -1,0 +1,1 @@
+Given two integer sequences of N elements each, determine if it is possible to perform a swap operation on the first sequence such that for every integer i from 1 to N, A_i is less than or equal to B_i. You can perform this swap operation at most N-2 times. Each swap involves choosing two distinct integers x and y between 1 and N (inclusive) and swapping the values A_x and A_y.

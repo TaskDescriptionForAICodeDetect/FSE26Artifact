@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int day_length;\n    int current_time;\n    int *access_volumes;\n} Planet;\n\nint max_access_volume(Planet *planets, int num_planets) {\n    int max_volume = 0;\n    for (int i = 0; i < num_planets; i++) {\n        Planet p = planets[i];\n        int hour = p.current_time % p.day_length;\n        if (p.access_volumes[hour] > max_volume) {\n            max_volume = p.access_volumes[hour];\n        }\n    }\n    return max_volume;\n}\n\nint main() {\n    int num_datasets;\n    scanf(\"%d\", &num_datasets);\n\n    for (int d = 0; d < num_datasets; d++) {\n        int num_planets;\n        scanf(\"%d\", &num_planets);\n\n        Planet *planets = malloc(num_planets * sizeof(Planet));\n        for (int i = 0; i < num_planets; i++) {\n            scanf(\"%d %d\", &planets[i].day_length, &planets[i].current_time);\n            planets[i].access_volumes = malloc(planets[i].day_length * sizeof(int));\n            for (int j = 0; j < planets[i].day_length; j++) {\n                scanf(\"%d\", &planets[i].access_volumes[j]);\n            }\n        }\n\n        printf(\"%d\\n\", max_access_volume(planets, num_planets));\n\n        for (int i = 0; i < num_planets; i++) {\n            free(planets[i].access_volumes);\n        }\n        free(planets);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int datasets;\n    cin >> datasets;\n\n    for (int d = 0; d < datasets; ++d) {\n        int planets;\n        cin >> planets;\n\n        int max_volume = 0;\n\n        for (int p = 0; p < planets; ++p) {\n            int day_length, current_time;\n            cin >> day_length >> current_time;\n\n            vector<int> volumes(day_length);\n            for (int i = 0; i < day_length; ++i) {\n                cin >> volumes[i];\n            }\n\n            for (int h = 0; h < 24; ++h) {\n                int time = (current_time + h) % day_length;\n                if (volumes[time] > max_volume) {\n                    max_volume = volumes[time];\n                }\n            }\n        }\n\n        cout << max_volume << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class HighestAccessVolume {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n        \n        for (int d = 0; d < datasets; d++) {\n            int planets = scanner.nextInt();\n            int maxVolume = 0;\n            \n            for (int p = 0; p < planets; p++) {\n                int dayLength = scanner.nextInt();\n                int currentTime = scanner.nextInt();\n                int[] volumes = new int[dayLength];\n                \n                for (int i = 0; i < dayLength; i++) {\n                    volumes[i] = scanner.nextInt();\n                }\n                \n                for (int h = 0; h < 24; h++) {\n                    int time = (currentTime + h) % dayLength;\n                    if (volumes[time] > maxVolume) {\n                        maxVolume = volumes[time];\n                    }\n                }\n            }\n            \n            System.out.println(maxVolume);\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:11:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PlanetWebServiceAccess {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n        \n        for (int d = 0; d < datasets; d++) {\n            int planets = scanner.nextInt();\n            int[] maxAccessVolume = new int[24];\n            \n            for (int p = 0; p < planets; p++) {\n                int dayLength = scanner.nextInt();\n                int currentTime = scanner.nextInt();\n                \n                int[] planetAccess = new int[24];\n                for (int h = 0; h < 24; h++) {\n                    planetAccess[h] = scanner.nextInt();\n                }\n                \n                for (int h = 0; h < 24; h++) {\n                    int adjustedHour = (h + currentTime) % dayLength * 24 / dayLength;\n                    maxAccessVolume[adjustedHour] += planetAccess[h];\n                }\n            }\n            \n            int maxVolume = Arrays.stream(maxAccessVolume).max().getAsInt();\n            System.out.println(maxVolume);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:11:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MAX_PLANETS 100\n#define MAX_DAY_HOURS 24\n\nint main() {\n    int t;\n    scanf(\"%d\", &t);\n\n    while (t--) {\n        int n, k;\n        scanf(\"%d %d\", &n, &k);\n\n        int max_access = 0;\n        for (int planet = 0; planet < n; planet++) {\n            int day_length, current_time;\n            scanf(\"%d %d\", &day_length, &current_time);\n\n            int access_volumes[MAX_DAY_HOURS] = {0};\n            for (int hour = 0; hour < day_length; hour++) {\n                scanf(\"%d\", &access_volumes[hour]);\n            }\n\n            int max_planet_access = 0;\n            for (int start_hour = 0; start_hour < k; start_hour++) {\n                int current_access = 0;\n                for (int i = 0; i < k; i++) {\n                    int hour_index = (start_hour + i) % day_length;\n                    current_access += access_volumes[hour_index];\n                }\n                max_planet_access = (current_access > max_planet_access) ? current_access : max_planet_access;\n            }\n\n            max_access = (max_planet_access > max_access) ? max_planet_access : max_access;\n        }\n\n        printf(\"%d\\n\", max_access);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <iomanip>\n#include <limits>\n\nusing namespace std;\n\nint findMaxAccessVolume(vector<int>& dayLengths, vector<int>& currentTimes, vector<vector<int>>& accessVolumes) {\n    int maxVolume = 0;\n    int numPlanets = dayLengths.size();\n\n    for (int hourOffset = 0; hourOffset < 24; ++hourOffset) {\n        int currentVolume = 0;\n        \n        for (int p = 0; p < numPlanets; ++p) {\n            int adjustedTime = (currentTimes[p] + hourOffset) % dayLengths[p];\n            int hourIndex = adjustedTime % 24;\n            currentVolume += accessVolumes[p][hourIndex];\n        }\n        \n        maxVolume = max(maxVolume, currentVolume);\n    }\n    \n    return maxVolume;\n}\n\nint main() {\n    int datasets;\n    cin >> datasets;\n    \n    for (int d = 0; d < datasets; ++d) {\n        int numPlanets;\n        cin >> numPlanets;\n        \n        vector<int> dayLengths(numPlanets);\n        vector<int> currentTimes(numPlanets);\n        vector<vector<int>> accessVolumes(numPlanets, vector<int>(24));\n        \n        for (int p = 0; p < numPlanets; ++p) {\n            cin >> dayLengths[p] >> currentTimes[p];\n            \n            for (int h = 0; h < 24; ++h) {\n                cin >> accessVolumes[p][h];\n            }\n        }\n        \n        int result = findMaxAccessVolume(dayLengths, currentTimes, accessVolumes);\n        cout << result << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_access_volume(datasets):\n    results = []\n    for dataset in datasets:\n        max_volume = 0\n        for planet in dataset:\n            _, _, volumes = planet\n            max_volume = max(max_volume, max(volumes))\n        results.append(max_volume)\n    return results\n\n# Usage example\n# Each planet in a dataset is represented as (day_length, current_time, [hourly_volumes])\ndatasets = [\n    [\n        (24, 10, [100, 200, 150, 120, 180, 90, 230, 175, 210, 300, 190, 150, 140, 130, 250, 400, 320, 110, 180, 190, 210, 170, 150, 180]),\n        (30, 5, [190, 220, 180, 200, 260, 170, 150, 240, 300, 310, 120, 140, 350, 360, 330, 140, 390, 310, 210, 170, 190, 290, 310, 280, 290, 210, 400, 420, 190, 200])\n    ],\n    [\n        (20, 0, [150, 240, 130, 150, 260, 310, 220, 330, 180, 200, 210, 190, 250, 160, 130, 170, 300, 310, 120, 180]),\n        (48, 12, [190, 150, 250, 230, 310, 120, 330, 340, 290, 210, 380, 260, 270, 180, 140, 160, 170, 180, 250, 240, 230, 190, 400, 310, 360, 370, 220, 170, 180, 290, 310, 240, 260, 280, 200, 230, 210, 220, 180, 160, 130, 180, 150, 310, 290, 270, 240, 220])\n    ]\n]\n\nprint(max_access_volume(datasets))",
+    "timestamp": "2025-08-13 05:22:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MaxAccessVolume {\n\n    static class Planet {\n        int lengthOfDay;\n        int currentTime;\n        int[] accessVolumes;\n\n        public Planet(int lengthOfDay, int currentTime, int[] accessVolumes) {\n            this.lengthOfDay = lengthOfDay;\n            this.currentTime = currentTime;\n            this.accessVolumes = accessVolumes;\n        }\n    }\n\n    public static int findMaxVolume(Planet[] planets) {\n        int maxVolume = 0;\n        for (Planet planet : planets) {\n            int planetMaxVolume = getMaxAccessVolumeForPlanet(planet);\n            maxVolume = Math.max(maxVolume, planetMaxVolume);\n        }\n        return maxVolume;\n    }\n\n    private static int getMaxAccessVolumeForPlanet(Planet planet) {\n        int lengthOfDay = planet.lengthOfDay;\n        int[] volumes = planet.accessVolumes;\n        int currentTimeIndex = planet.currentTime % lengthOfDay;\n        \n        int maxVolume = 0;\n        for (int i = 0; i < lengthOfDay; i++) {\n            int start = (currentTimeIndex + i) % lengthOfDay;\n            maxVolume = Math.max(maxVolume, volumes[start]);\n        }\n\n        return maxVolume;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int numberOfDatasets = scanner.nextInt();\n        while (numberOfDatasets-- > 0) {\n            int numberOfPlanets = scanner.nextInt();\n            Planet[] planets = new Planet[numberOfPlanets];\n            for (int i = 0; i < numberOfPlanets; i++) {\n                int lengthOfDay = scanner.nextInt();\n                int currentTime = scanner.nextInt();\n                int[] accessVolumes = new int[lengthOfDay];\n                for (int j = 0; j < lengthOfDay; j++) {\n                    accessVolumes[j] = scanner.nextInt();\n                }\n                planets[i] = new Planet(lengthOfDay, currentTime, accessVolumes);\n            }\n            System.out.println(findMaxVolume(planets));\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 05:22:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int lengthOfDay;\n    int currentTime;\n    int* accessVolumes;\n} Planet;\n\nint maxAccessVolume(Planet** planets, int numPlanets) {\n    int globalMaxVolume = 0;\n\n    for (int i = 0; i < numPlanets; i++) {\n        Planet* planet = planets[i];\n        \n        int planetMaxVolume = planet->accessVolumes[planet->currentTime];\n        \n        for (int j = 1; j < planet->lengthOfDay; j++) {\n            int index = (planet->currentTime + j) % planet->lengthOfDay;\n            if (planet->accessVolumes[index] > planetMaxVolume) {\n                planetMaxVolume = planet->accessVolumes[index];\n            }\n        }\n\n        if (planetMaxVolume > globalMaxVolume) {\n            globalMaxVolume = planetMaxVolume;\n        }\n    }\n\n    return globalMaxVolume;\n}\n\nint main() {\n    int numDatasets;\n    scanf(\"%d\", &numDatasets);\n\n    for (int d = 0; d < numDatasets; d++) {\n        int numPlanets;\n        scanf(\"%d\", &numPlanets);\n\n        Planet** planets = (Planet**)malloc(numPlanets * sizeof(Planet*));\n\n        for (int i = 0; i < numPlanets; i++) {\n            Planet* planet = (Planet*)malloc(sizeof(Planet));\n            scanf(\"%d\", &planet->lengthOfDay);\n            scanf(\"%d\", &planet->currentTime);\n\n            planet->accessVolumes = (int*)malloc(planet->lengthOfDay * sizeof(int));\n            \n            for (int j = 0; j < planet->lengthOfDay; j++) {\n                scanf(\"%d\", &planet->accessVolumes[j]);\n            }\n\n            planets[i] = planet;\n        }\n\n        printf(\"%d\\n\", maxAccessVolume(planets, numPlanets));\n\n        for (int i = 0; i < numPlanets; i++) {\n            free(planets[i]->accessVolumes);\n            free(planets[i]);\n        }\n        free(planets);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:22:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_max_hourly_access(planets):\n    max_access_volumes = []\n    \n    for planet_dataset in planets:\n        day_length = planet_dataset['day_length']\n        current_time = planet_dataset['current_time']\n        access_volumes = planet_dataset['access_volumes']\n        \n        adjusted_volumes = [0] * day_length\n        \n        for hour, volume in enumerate(access_volumes):\n            adjusted_hour = (hour - current_time) % day_length\n            adjusted_volumes[adjusted_hour] += volume\n        \n        max_access_volumes.append(max(adjusted_volumes))\n    \n    return max_access_volumes\n\ndef main():\n    # Example input format\n    planets = [\n        {\n            'day_length': 24,\n            'current_time': 6,\n            'access_volumes': [10, 20, 30, 40, 50, 60, 70, 80]\n        },\n        {\n            'day_length': 36,\n            'current_time': 12,\n            'access_volumes': [5, 15, 25, 35, 45, 55]\n        }\n    ]\n    \n    result = find_max_hourly_access(planets)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 05:22:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_max_access_volume(datasets):\n    results = []\n    for dataset in datasets:\n        max_volume = 0\n        planets = dataset['planets']\n        for planet in planets:\n            day_length = planet['day_length']\n            current_time = planet['current_time']\n            access_volumes = planet['access_volumes']\n            \n            # Calculate the hour index in the planet's day\n            hour_index = current_time % day_length\n            \n            # Get the access volume for the current hour\n            current_volume = access_volumes[hour_index]\n            \n            if current_volume > max_volume:\n                max_volume = current_volume\n        results.append(max_volume)\n    return results",
+    "timestamp": "2025-08-13 05:22:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Planet {\n    int day_length;\n    int current_time;\n    std::vector<int> access_volumes;\n};\n\nint findMaxAccessVolume(const Planet& planet) {\n    return *std::max_element(planet.access_volumes.begin(), planet.access_volumes.end());\n}\n\nint main() {\n    int num_datasets;\n    std::cin >> num_datasets;\n    \n    while (num_datasets--) {\n        int num_planets;\n        std::cin >> num_planets;\n        \n        int global_max_volume = 0;\n        \n        for (int i = 0; i < num_planets; ++i) {\n            Planet planet;\n            std::cin >> planet.day_length >> planet.current_time;\n            planet.access_volumes.resize(planet.day_length);\n            \n            for (int j = 0; j < planet.day_length; ++j) {\n                std::cin >> planet.access_volumes[j];\n            }\n            \n            int planet_max_volume = findMaxAccessVolume(planet);\n            global_max_volume = std::max(global_max_volume, planet_max_volume);\n        }\n        \n        std::cout << global_max_volume << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:24:42"
+  }
+]

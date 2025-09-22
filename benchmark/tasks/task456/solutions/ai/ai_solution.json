@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int a, b, c, x, y, z;\n    scanf(\"%d %d %d %d %d %d\", &a, &b, &c, &x, &y, &z);\n    \n    if (a >= x && b >= y && c >= z) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:37:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    vector<pair<int, int>> conditions(M);\n    for (int i = 0; i < M; ++i) {\n        cin >> conditions[i].first >> conditions[i].second;\n    }\n\n    sort(A.begin(), A.end(), greater<int>());\n\n    bool possible = true;\n    for (auto &cond : conditions) {\n        int X = cond.first;\n        int S = cond.second;\n        auto it = lower_bound(A.begin(), A.end(), S, greater<int>());\n        if (it == A.end() || (A.end() - it) < X) {\n            possible = false;\n            break;\n        }\n    }\n\n    cout << (possible ? \"Yes\" : \"No\") << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:37:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int[] A = new int[M];\n        int[] B = new int[M];\n        for (int i = 0; i < M; i++) {\n            A[i] = scanner.nextInt();\n            B[i] = scanner.nextInt();\n        }\n        \n        int[] skillPoints = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            skillPoints[i] = scanner.nextInt();\n        }\n        \n        boolean canLearnAll = true;\n        for (int i = 0; i < M; i++) {\n            if (skillPoints[A[i]] >= skillPoints[B[i]]) {\n                canLearnAll = false;\n                break;\n            }\n        }\n        \n        System.out.println(canLearnAll ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 21:38:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt(); // Number of commands\n        int m = scanner.nextInt(); // Number of conditions\n        \n        int[] commands = new int[n];\n        int[] requiredSkills = new int[m];\n        int[] requiredLevels = new int[m];\n        \n        for (int i = 0; i < n; i++) {\n            commands[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < m; i++) {\n            requiredSkills[i] = scanner.nextInt();\n            requiredLevels[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(commands);\n        \n        boolean canLearnAll = true;\n        \n        for (int i = 0; i < m; i++) {\n            boolean canLearn = false;\n            for (int j = 0; j < n; j++) {\n                if (commands[j] == requiredSkills[i] && commands[j] >= requiredLevels[i]) {\n                    canLearn = true;\n                    break;\n                }\n            }\n            \n            if (!canLearn) {\n                canLearnAll = false;\n                break;\n            }\n        }\n        \n        System.out.println(canLearnAll ? \"Yes\" : \"No\");\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:38:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_COMMANDS 100\n#define MAX_SKILLS 100\n\ntypedef struct {\n    int skill_id;\n    int required_points;\n} Command;\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    int skill_points[MAX_SKILLS + 1] = {0};\n    Command commands[MAX_COMMANDS];\n\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d %d\", &commands[i].skill_id, &commands[i].required_points);\n    }\n\n    int K;\n    scanf(\"%d\", &K);\n\n    for (int i = 0; i < K; i++) {\n        int skill, points;\n        scanf(\"%d %d\", &skill, &points);\n        skill_points[skill] += points;\n    }\n\n    bool can_learn_all = true;\n    for (int i = 0; i < M; i++) {\n        if (skill_points[commands[i].skill_id] < commands[i].required_points) {\n            can_learn_all = false;\n            break;\n        }\n    }\n\n    printf(\"%s\\n\", can_learn_all ? \"Yes\" : \"No\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:38:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<int> skill_points(N);\n    for (int i = 0; i < N; i++) {\n        cin >> skill_points[i];\n    }\n    \n    bool possible = true;\n    for (int j = 0; j < M; j++) {\n        int K, x, y;\n        cin >> K >> x >> y;\n        \n        vector<int> condition(K);\n        for (int k = 0; k < K; k++) {\n            cin >> condition[k];\n        }\n        \n        int sum = 0;\n        for (int k = 0; k < K; k++) {\n            sum += skill_points[condition[k] - 1];\n        }\n        \n        if (sum < x || sum > y) {\n            possible = false;\n            break;\n        }\n    }\n    \n    cout << (possible ? \"Yes\" : \"No\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:38:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_learn_all_commands(skill_points, conditions):\n    for condition in conditions:\n        if sum(skill_points[i] for i in condition['skills']) < condition['minimum_points']:\n            return \"No\"\n    return \"Yes\"\n\n# Example usage:\nn = 5  # Number of skills\nskill_points = [3, 8, 12, 5, 7]\nconditions = [\n    {'skills': [0, 1], 'minimum_points': 10},  # Condition 1\n    {'skills': [2, 3, 4], 'minimum_points': 20},  # Condition 2\n]\n\nprint(can_learn_all_commands(skill_points, conditions))  # Outputs: Yes",
+    "timestamp": "2025-08-13 07:21:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class RPGSkills {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt(); // Number of conditions\n        int m = scanner.nextInt(); // Skill points available\n        int[] skillPoints = new int[m];\n        \n        for (int i = 0; i < m; i++) {\n            skillPoints[i] = scanner.nextInt();\n        }\n\n        boolean canLearn = true;\n\n        for (int i = 0; i < n; i++) {\n            int k = scanner.nextInt(); // Number of skills in the condition\n            int totalSkillPointsRequired = 0;\n\n            for (int j = 0; j < k; j++) {\n                int requiredSkillID = scanner.nextInt() - 1;\n                totalSkillPointsRequired += skillPoints[requiredSkillID];\n            }\n\n            int conditionThreshold = scanner.nextInt();\n            if (totalSkillPointsRequired < conditionThreshold) {\n                canLearn = false;\n                break;\n            }\n        }\n\n        scanner.close();\n        System.out.println(canLearn ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-13 07:21:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int skillPoints, numCommands;\n    scanf(\"%d %d\", &skillPoints, &numCommands);\n\n    int requiredPoints[numCommands];\n    for (int i = 0; i < numCommands; i++) {\n        scanf(\"%d\", &requiredPoints[i]);\n    }\n\n    for (int i = 0; i < numCommands; i++) {\n        if (skillPoints < requiredPoints[i]) {\n            printf(\"No\\n\");\n            return 0;\n        }\n        skillPoints -= requiredPoints[i];\n    }\n\n    printf(\"Yes\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:21:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_learn_all_commands(n, conditions):\n    skills = [0] * n\n    for cmd, req_skill, points in conditions:\n        skills[req_skill] += points\n        \n    for cmd, req_skill, points in conditions:\n        if skills[req_skill] < points:\n            return \"No\"\n    \n    return \"Yes\"\n\n# Read input\nn = int(input())\nm = int(input())\nconditions = []\n\nfor _ in range(m):\n    cmd, req_skill, points = map(int, input().split())\n    conditions.append((cmd-1, req_skill-1, points))\n\n# Solve and print result\nprint(can_learn_all_commands(n, conditions))",
+    "timestamp": "2025-08-13 07:22:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    N, M = map(int, input().split())\n    conditions = []\n    for _ in range(M):\n        a, b = map(int, input().split())\n        conditions.append((a, b))\n    \n    K = int(input())\n    people = []\n    for _ in range(K):\n        c, d = map(int, input().split())\n        people.append((c, d))\n    \n    max_commands = 0\n    # Try all possible combinations of choices (2^K possibilities)\n    for mask in range(1 << K):\n        balls = set()\n        for i in range(K):\n            c, d = people[i]\n            if mask & (1 << i):\n                balls.add(d)\n            else:\n                balls.add(c)\n        # Check how many conditions are satisfied\n        satisfied = 0\n        for a, b in conditions:\n            if a in balls and b in balls:\n                satisfied += 1\n        if satisfied == M:\n            print(\"Yes\")\n            return\n    print(\"No\")\n\nsolve()",
+    "timestamp": "2025-08-13 07:22:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <tuple>\n\nbool canLearnAllCommands(int availablePoints, const std::vector<std::tuple<int, int>>& conditions) {\n    for (const auto& condition : conditions) {\n        int requiredPoints, requiredCommands;\n        std::tie(requiredPoints, requiredCommands) = condition;\n\n        if (availablePoints >= requiredPoints) {\n            availablePoints -= requiredCommands;\n        } else {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int availablePoints;\n    std::cin >> availablePoints;\n\n    int numConditions;\n    std::cin >> numConditions;\n\n    std::vector<std::tuple<int, int>> conditions(numConditions);\n    for (int i = 0; i < numConditions; ++i) {\n        int requiredPoints, requiredCommands;\n        std::cin >> requiredPoints >> requiredCommands;\n        conditions[i] = std::make_tuple(requiredPoints, requiredCommands);\n    }\n\n    if (canLearnAllCommands(availablePoints, conditions)) {\n        std::cout << \"Yes\" << std::endl;\n    } else {\n        std::cout << \"No\" << std::endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:38:07"
+  }
+]

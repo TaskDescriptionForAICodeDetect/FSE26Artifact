@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MAX_N 100000\n\nint N;\nlong long A[MAX_N];\n\nlong long abs_val(long long x) {\n    return x >= 0 ? x : -x;\n}\n\nint check_sorted() {\n    for (int i = 1; i < N; i++) {\n        if (A[i-1] > A[i]) return 0;\n    }\n    return 1;\n}\n\nint solve() {\n    int operations = 0;\n    \n    while (!check_sorted()) {\n        int changed = 0;\n        \n        for (int i = 1; i < N; i++) {\n            if (A[i-1] > A[i]) {\n                int found = 0;\n                \n                for (int j = 0; j < N; j++) {\n                    long long old_val = A[j];\n                    A[j] *= -2;\n                    \n                    if (check_sorted()) {\n                        found = 1;\n                        operations++;\n                        break;\n                    }\n                    \n                    A[j] = old_val;\n                }\n                \n                if (found) break;\n                \n                return -1;\n            }\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i]);\n    }\n    \n    printf(\"%d\\n\", solve());\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MAX_N 100000\n\ntypedef struct {\n    long long value;\n    int index;\n} Element;\n\nElement A[MAX_N];\nint N;\n\nint compare(const void *a, const void *b) {\n    Element *elemA = (Element *)a;\n    Element *elemB = (Element *)b;\n    if (elemA->value != elemB->value) {\n        return (elemA->value > elemB->value) ? 1 : -1;\n    }\n    return elemA->index - elemB->index;\n}\n\nint solve() {\n    qsort(A, N, sizeof(Element), compare);\n    int operations = 0;\n    for (int i = 0; i < N; i++) {\n        if (A[i].index != i) {\n            if (A[i].value == A[A[i].index].value) {\n                int temp = A[i].index;\n                A[i].index = A[temp].index;\n                A[temp].index = temp;\n                operations++;\n                i--;\n            } else {\n                return -1;\n            }\n        }\n    }\n    return operations;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i].value);\n        A[i].index = i;\n    }\n    printf(\"%d\\n\", solve());\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    vector<vector<long long>> dp(N, vector<long long>(4, LLONG_MAX));\n    for (int k = 0; k < 4; ++k) {\n        dp[0][k] = 0;\n    }\n\n    for (int i = 1; i < N; ++i) {\n        for (int prev = 0; prev < 4; ++prev) {\n            if (dp[i-1][prev] == LLONG_MAX) continue;\n            long long prev_val = A[i-1];\n            for (int t = 0; t < prev; ++t) {\n                prev_val *= -2;\n            }\n            for (int curr = 0; curr < 4; ++curr) {\n                long long curr_val = A[i];\n                for (int t = 0; t < curr; ++t) {\n                    curr_val *= -2;\n                }\n                if (prev_val <= curr_val) {\n                    if (dp[i][curr] > dp[i-1][prev] + curr) {\n                        dp[i][curr] = dp[i-1][prev] + curr;\n                    }\n                }\n            }\n        }\n    }\n\n    long long result = *min_element(dp[N-1].begin(), dp[N-1].end());\n    if (result == LLONG_MAX) {\n        cout << -1 << endl;\n    } else {\n        cout << result << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        long[] A = new long[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextLong();\n        }\n        \n        long[] prev = new long[N];\n        prev[0] = A[0];\n        for (int i = 1; i < N; i++) {\n            prev[i] = Math.max(prev[i-1], A[i]);\n        }\n        \n        long[] next = new long[N];\n        next[N-1] = A[N-1];\n        for (int i = N-2; i >= 0; i--) {\n            next[i] = Math.min(next[i+1], A[i]);\n        }\n        \n        boolean possible = true;\n        for (int i = 0; i < N-1; i++) {\n            if (prev[i] > next[i+1]) {\n                possible = false;\n                break;\n            }\n        }\n        if (!possible) {\n            System.out.println(-1);\n            return;\n        }\n        \n        int operations = 0;\n        for (int i = 0; i < N-1; i++) {\n            while (A[i] > A[i+1]) {\n                A[i] *= -2;\n                operations++;\n            }\n        }\n        System.out.println(operations);\n    }\n}",
+    "timestamp": "2025-08-05 23:00:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void solve(int[] A) {\n        int N = A.length;\n        int operations = 0;\n        \n        for (int i = 1; i < N; i++) {\n            while (A[i] < A[i-1]) {\n                boolean foundOperation = false;\n                \n                for (int j = i; j >= 0; j--) {\n                    if (A[j] * -2 >= A[i]) {\n                        A[j] *= -2;\n                        operations++;\n                        foundOperation = true;\n                        break;\n                    }\n                }\n                \n                if (!foundOperation) {\n                    System.out.println(-1);\n                    return;\n                }\n            }\n        }\n        \n        System.out.println(operations);\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        solve(A);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:00:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> A(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n    \n    int ans = INT_MAX;\n    for (int mask = 0; mask < (1 << N); mask++) {\n        vector<long long> B = A;\n        int ops = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                B[i] *= -2;\n                ops++;\n            }\n        }\n        \n        bool valid = true;\n        for (int i = 1; i < N; i++) {\n            if (B[i] < B[i-1]) {\n                valid = false;\n                break;\n            }\n        }\n        \n        if (valid) {\n            ans = min(ans, ops);\n        }\n    }\n    \n    cout << (ans == INT_MAX ? -1 : ans) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:00:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_operations_to_sort(N, A):\n    operations_count = 0\n    # Iterate N-1 times to ensure complete sorting possibility\n    for _ in range(N):\n        for i in range(N-1):\n            if A[i] > A[i+1]:\n                # Check if A[i] can be corrected by multiplying by -2\n                if A[i]*-2 <= A[i+1]:\n                    A[i] *= -2\n                    operations_count += 1\n                else:\n                    return -1\n    if sorted(A) == A:\n        return operations_count\n    else:\n        return -1\n\n# Example usage:\nN = int(input())\nA = list(map(int, input().split()))\nprint(minimum_operations_to_sort(N, A))",
+    "timestamp": "2025-08-13 13:16:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static int minOperationsToSort(int[] A) {\n        int n = A.length;\n        // Attempt to sort A using as few operations as possible    \n        int operations = 0;\n        // We need to ensure the current value is not greater than the next\n        for (int i = 0; i < n - 1; i++) {\n            while (i < n - 1 && A[i] > A[i + 1]) {\n                int curr = A[i + 1];\n                int previous = A[i];\n                if (curr < 0 && previous > 0) return -1; // If there are negative and positive numbers in wrong order, impossible\n                if (curr == 0 || previous == 0) return -1; // If either is zero, impossible to achieve\n                // When current is positive and less than or equal to its left\n                A[i + 1] *= -2;\n                operations++;\n            }\n        }\n        return operations;\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextInt();\n        }\n        int result = minOperationsToSort(A);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 13:16:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint minOperations(int A[], int N) {\n    int operations = 0;\n    for (int i = 0; i < N - 1; i++) {\n        while (A[i] > A[i + 1]) {\n            A[i + 1] *= -2;\n            operations++;\n            if (A[i + 1] < 0) return -1;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    int result = minOperations(A, N);\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:16:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    int operations = 0;\n    for (int i = 0; i < N - 1; ++i) {\n        while (A[i] > A[i + 1]) {\n            if (A[i] > 0) {\n                A[i] *= -2;\n                operations++;\n            } else {\n                cout << -1 << endl;\n                return 0;\n            }\n        }\n    }\n\n    cout << operations << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:16:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, A):\n    def is_sorted(arr):\n        return all(arr[i] <= arr[i+1] for i in range(len(arr)-1))\n    \n    def dfs(arr, ops):\n        if is_sorted(arr):\n            return ops\n        \n        if ops > N * 20:  # Reasonable upper bound to prevent infinite recursion\n            return float('inf')\n        \n        best = float('inf')\n        for i in range(N):\n            new_arr = arr.copy()\n            new_arr[i] *= -2\n            res = dfs(new_arr, ops + 1)\n            best = min(best, res)\n        \n        return best\n    \n    result = dfs(A, 0)\n    return result if result != float('inf') else -1\n\n# Read input\nN = int(input())\nA = list(map(int, input().split()))\n\n# Print result\nprint(solve(N, A))",
+    "timestamp": "2025-08-13 13:16:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    A = list(map(int, sys.stdin.readline().split()))\n    \n    if N == 1:\n        print(0)\n        return\n    \n    # Precompute the possible states (sign and parity of exponent)\n    # Each element can be represented as sign * original * (-2)^k\n    # The sign can be flipped, and k's parity can change.\n    # We need to find a sequence where the transformed elements are non-decreasing.\n    \n    # The transformed value is original * (-2)^k = original * (-1)^k * 2^k\n    # So the sign is original_sign * (-1)^k, and the magnitude is original * 2^k\n    \n    # The key observation is that the transformed sequence must have non-decreasing magnitudes,\n    # and the signs must be consistent with the order (all non-positive before non-negative)\n    \n    # We can model the problem by considering for each element, whether to flip its sign and whether to have even or odd k.\n    # However, the exact k doesn't matter, only the sign and the magnitude relative to others.\n    \n    # We can represent the options for each element as:\n    # Option 1: original * (-2)^0 = original (k=0, sign unchanged)\n    # Option 2: original * (-2)^1 = -2 * original (k=1, sign flipped, magnitude 2|original|)\n    # Option 3: original * (-2)^2 = 4 * original (k=2, sign unchanged, magnitude 4|original|)\n    # Option 4: original * (-2)^3 = -8 * original (k=3, sign flipped, magnitude 8|original|)\n    # etc.\n    # But since the magnitude grows exponentially, the minimal operations will prefer smaller k.\n    # So we only need to consider k=0 and k=1 for each element, because larger k will lead to larger magnitudes and more operations.\n    \n    # So for each element, there are two choices:\n    # 1. Keep as is (k=0)\n    # 2. Flip sign and double magnitude (k=1)\n    \n    # Now, we need to assign to each element a choice (0 or 1) such that the sequence is non-decreasing.\n    # We can use dynamic programming to track the last choice and the last value.\n    \n    # Initialize DP: dp[i][last_choice][last_value] = min operations\n    # But last_value can be large, so we need a smarter way.\n    \n    # Instead, we can represent the DP state as the last choice and the last transformed value.\n    # But since the transformed value can be very large, we need to find a way to limit the state space.\n    \n    # Another observation: the transformed value is either A_i or -2*A_i.\n    # So for each position, we can track the last choice (0 or 1) and the last value.\n    # The DP state can be represented as (position, last_choice, last_value), but last_value can be up to 2e9, which is not feasible.\n    \n    # So we need a different approach.\n    \n    # Let's consider the possible sequences of choices (0 or 1 for each element).\n    # For the sequence to be non-decreasing, the following must hold:\n    # For each i, transformed A_i <= transformed A_{i+1}\n    # transformed A_i is either A_i or -2*A_i\n    # transformed A_{i+1} is either A_{i+1} or -2*A_{i+1}\n    \n    # So for each i, we have four possible combinations:\n    # 1. A_i <= A_{i+1}\n    # 2. A_i <= -2*A_{i+1}\n    # 3. -2*A_i <= A_{i+1}\n    # 4. -2*A_i <= -2*A_{i+1} => A_i >= A_{i+1}\n    \n    # The sequence is valid if for each i, one of these four conditions is satisfied based on the choices.\n    \n    # Now, we can model this as a state machine where each state represents the last choice (0 or 1), and transitions are valid based on the current choice and the next choice.\n    \n    # We can use dynamic programming where dp[i][c] is the minimal operations up to position i with choice c for position i.\n    \n    INF = float('inf')\n    dp = [[INF, INF] for _ in range(N)]\n    # Initial states for the first element\n    dp[0][0] = 0  # choice 0: no operation\n    dp[0][1] = 1   # choice 1: one operation\n    \n    for i in range(1, N):\n        for prev_choice in [0, 1]:\n            if dp[i-1][prev_choice] == INF:\n                continue\n            prev_val = A[i-1] * ((-2) ** prev_choice)\n            for curr_choice in [0, 1]:\n                curr_val = A[i] * ((-2) ** curr_choice)\n                if prev_val <= curr_val:\n                    if dp[i][curr_choice] > dp[i-1][prev_choice] + curr_choice:\n                        dp[i][curr_choice] = dp[i-1][prev_choice] + curr_choice\n    \n    min_operations = min(dp[N-1][0], dp[N-1][1])\n    if min_operations == INF:\n        print(-1)\n    else:\n        print(min_operations)\n\nsolve()",
+    "timestamp": "2025-08-13 13:17:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperationsToSort(N, A) {\n    let ops = 0;\n\n    for (let i = N - 1; i > 0; i--) {\n        while (A[i] < A[i - 1]) {\n            A[i] *= -2;\n            ops++;\n            if (A[i] < 0) return -1;\n        }\n    }\n    \n    return ops;\n}",
+    "timestamp": "2025-08-13 13:17:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, A) {\n    function canSort(arr) {\n        for (let i = 1; i < arr.length; i++) {\n            if (arr[i] < arr[i-1]) return false;\n        }\n        return true;\n    }\n    \n    let minOperations = Infinity;\n    \n    for (let mask = 0; mask < (1 << N); mask++) {\n        let copy = [...A];\n        let operations = 0;\n        \n        for (let i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                copy[i] *= -2;\n                operations++;\n            }\n        }\n        \n        if (canSort(copy)) {\n            minOperations = Math.min(minOperations, operations);\n        }\n    }\n    \n    return minOperations === Infinity ? -1 : minOperations;\n}",
+    "timestamp": "2025-08-13 13:17:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const fs = require('fs');\n    const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const N = parseInt(input[0], 10);\n    const A = input[1].split(' ').map(Number);\n    \n    if (N === 1) {\n        console.log(0);\n        return;\n    }\n    \n    let operations = 0;\n    let possible = true;\n    \n    for (let i = 0; i < N - 1; i++) {\n        if (A[i] > A[i + 1]) {\n            // Check if we can fix by flipping A[i] or A[i+1]\n            let flipI = false;\n            let flipIPlus1 = false;\n            \n            // Try flipping A[i] once\n            let tempA = A[i] * -2;\n            if (tempA <= A[i + 1]) {\n                flipI = true;\n            }\n            \n            // Try flipping A[i+1] once\n            let tempB = A[i + 1] * -2;\n            if (A[i] <= tempB) {\n                flipIPlus1 = true;\n            }\n            \n            if (!flipI && !flipIPlus1) {\n                // Try flipping A[i] twice (which is same as multiplying by 4)\n                tempA = A[i] * 4;\n                if (tempA <= A[i + 1]) {\n                    operations += 2;\n                    A[i] = tempA;\n                } else {\n                    // Try flipping A[i+1] twice\n                    tempB = A[i + 1] * 4;\n                    if (A[i] <= tempB) {\n                        operations += 2;\n                        A[i + 1] = tempB;\n                    } else {\n                        possible = false;\n                        break;\n                    }\n                }\n            } else {\n                if (flipI && flipIPlus1) {\n                    // Choose the one that requires fewer operations\n                    // Both require 1 operation, so choose any\n                    operations += 1;\n                    A[i] *= -2;\n                } else if (flipI) {\n                    operations += 1;\n                    A[i] *= -2;\n                } else {\n                    operations += 1;\n                    A[i + 1] *= -2;\n                }\n            }\n        }\n        \n        // After flipping, check if previous elements are still <= current\n        if (i > 0 && A[i - 1] > A[i]) {\n            possible = false;\n            break;\n        }\n    }\n    \n    if (possible) {\n        console.log(operations);\n    } else {\n        console.log(-1);\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:17:47"
+  }
+]

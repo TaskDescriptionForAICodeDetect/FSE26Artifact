@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int cards[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n    \n    int unnecessary_count = 0;\n    \n    for (int j = 0; j < N; j++) {\n        int is_unnecessary = 1;\n        \n        for (int subset = 1; subset < (1 << N); subset++) {\n            if (!(subset & (1 << j))) continue;\n            \n            int subset_sum = 0;\n            for (int k = 0; k < N; k++) {\n                if (subset & (1 << k)) {\n                    subset_sum += cards[k];\n                }\n            }\n            \n            if (subset_sum >= K) {\n                int subset_without_j = subset ^ (1 << j);\n                int subset_without_j_sum = subset_sum - cards[j];\n                \n                if (subset_without_j_sum < K) {\n                    is_unnecessary = 0;\n                    break;\n                }\n            }\n        }\n        \n        if (is_unnecessary) {\n            unnecessary_count++;\n        }\n    }\n    \n    printf(\"%d\\n\", unnecessary_count);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int *cards = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n    qsort(cards, N, sizeof(int), compare);\n\n    long long sum = 0;\n    int unnecessary = 0;\n    for (int i = 0; i < N; i++) {\n        if (sum + cards[i] < K) {\n            sum += cards[i];\n            unnecessary++;\n        } else {\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", unnecessary);\n    free(cards);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    sort(a.begin(), a.end());\n\n    int ans = 0;\n    int sum = 0;\n    for (int i = 0; i < N; ++i) {\n        if (sum + a[i] < K) {\n            sum += a[i];\n            ++ans;\n        } else {\n            break;\n        }\n    }\n\n    for (int i = N - 1; i >= 0; --i) {\n        if (a[i] >= K) {\n            ans = 0;\n            break;\n        }\n    }\n\n    cout << ans << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class UnnecessaryCards {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        Arrays.sort(A);\n        \n        long sum = 0;\n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            if (sum + A[i] < K) {\n                sum += A[i];\n                count++;\n            } else {\n                break;\n            }\n        }\n        \n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 23:24:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class UnnecessaryCards {\n    public static int findUnnecessaryCards(int[] cards, int K) {\n        int n = cards.length;\n        int totalSum = 0;\n        for (int card : cards) {\n            totalSum += card;\n        }\n\n        int unnecessaryCount = 0;\n        for (int i = 0; i < n; i++) {\n            int currentSum = totalSum - cards[i];\n            if (currentSum >= K) {\n                unnecessaryCount++;\n            }\n        }\n\n        return unnecessaryCount;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] cards = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            cards[i] = scanner.nextInt();\n        }\n\n        System.out.println(findUnnecessaryCards(cards, K));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:25:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> cards(N);\n    for (int i = 0; i < N; i++) {\n        cin >> cards[i];\n    }\n    \n    int unnecessary_count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        bool is_unnecessary = true;\n        \n        for (int mask = 1; mask < (1 << N); mask++) {\n            if (!(mask & (1 << i))) continue;\n            \n            int subset_sum = 0;\n            for (int j = 0; j < N; j++) {\n                if (mask & (1 << j)) {\n                    subset_sum += cards[j];\n                }\n            }\n            \n            if (subset_sum >= K) {\n                int subset_without_card_sum = subset_sum - cards[i];\n                if (subset_without_card_sum < K) {\n                    is_unnecessary = false;\n                    break;\n                }\n            }\n        }\n        \n        if (is_unnecessary) {\n            unnecessary_count++;\n        }\n    }\n    \n    cout << unnecessary_count << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_unnecessary_cards(N, K, cards):\n    # Sort the cards in descending order\n    cards.sort(reverse=True)\n    \n    # Sum all the cards\n    total_sum = sum(cards)\n    \n    # Try to form a good subset without each card\n    unnecessary_count = 0\n    current_sum = 0\n    \n    # Traverse all cards to find unnecessary cards\n    for card in cards:\n        # Check if removing the card still maintains at least K sum\n        if total_sum - card >= K:\n            unnecessary_count += 1\n        total_sum -= card\n    \n    return unnecessary_count\n\n# Example usage\nN = 5\nK = 10\ncards = [1, 2, 3, 10, 5]\nprint(count_unnecessary_cards(N, K, cards))  # Output: 2",
+    "timestamp": "2025-08-13 15:11:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class DeerCards {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int K = sc.nextInt();\n        int[] cards = new int[N];\n        for (int i = 0; i < N; i++) {\n            cards[i] = sc.nextInt();\n        }\n        \n        Arrays.sort(cards);\n        int totalSum = Arrays.stream(cards).sum();\n        int unnecessaryCount = 0;\n\n        for (int i = 0; i < N; i++) {\n            int remainingSum = totalSum - cards[i];\n            if (remainingSum >= K) {\n                unnecessaryCount++;\n            }\n        }\n\n        System.out.println(unnecessaryCount);\n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-13 15:11:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nint findUnnecessaryCards(int cards[], int N, int K) {\n    int sum = 0, unnecessaryCount = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        sum += cards[i];\n    }\n\n    for (int i = 0; i < N; ++i) {\n        if (sum - cards[i] >= K) {\n            unnecessaryCount++;\n        }\n    }\n    \n    return unnecessaryCount;\n}\n\nint main() {\n    int N, K;\n    printf(\"Enter the number of cards and the value K: \");\n    scanf(\"%d %d\", &N, &K);\n\n    int cards[N];\n    printf(\"Enter the card values: \");\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &cards[i]);\n    }\n    \n    printf(\"Number of unnecessary cards: %d\\n\", findUnnecessaryCards(cards, N, K));\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:11:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint countUnnecessaryCards(vector<int>& cards, int N, int K) {\n    vector<int> dp(K + 1, 0); // DP array to keep track of reachable sums\n    dp[0] = 1; // Base case: sum of 0 is always possible\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = K; j >= cards[i]; --j) { // Reverse iterate to prevent overwriting\n            if (dp[j - cards[i]]) {\n                dp[j] = 1;\n            }\n        }\n    }\n    \n    int unnecessaryCount = 0;\n    for (int i = 0; i < N; ++i) {\n        bool isUnnecessary = true;\n        for (int j = K; j < dp.size(); ++j) {\n            if (dp[j]) {\n                int requiredSum = j - cards[i];\n                if (requiredSum >= 0 && !dp[requiredSum]) {\n                    isUnnecessary = false;\n                    break;\n                }\n            }\n        }\n        if (isUnnecessary) {\n            unnecessaryCount++;\n        }\n    }\n    \n    return unnecessaryCount;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> cards(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> cards[i];\n    }\n\n    int result = countUnnecessaryCards(cards, N, K);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:11:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_unnecessary_cards(N, K, cards):\n    unnecessary_count = 0\n    \n    for i in range(N):\n        is_unnecessary = True\n        \n        for subset in range(1, 1 << N):\n            if subset & (1 << i):  # subset contains current card\n                subset_sum = sum(cards[j] for j in range(N) if subset & (1 << j))\n                subset_without_card = subset ^ (1 << i)\n                subset_without_card_sum = sum(cards[j] for j in range(N) if subset_without_card & (1 << j))\n                \n                if subset_sum >= K and subset_without_card_sum < K:\n                    is_unnecessary = False\n                    break\n        \n        if is_unnecessary:\n            unnecessary_count += 1\n    \n    return unnecessary_count\n\n# Read input\nN, K = map(int, input().split())\ncards = list(map(int, input().split()))\n\n# Output result\nprint(find_unnecessary_cards(N, K, cards))",
+    "timestamp": "2025-08-13 15:11:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    K = int(data[1])\n    A = list(map(int, data[2:2+N]))\n    A.sort()\n    \n    sum_ = 0\n    res = 0\n    for i in range(N-1, -1, -1):\n        if sum_ + A[i] < K:\n            sum_ += A[i]\n        else:\n            res = i\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 15:11:24"
+  }
+]

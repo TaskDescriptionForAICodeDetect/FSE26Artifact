@@ -1,0 +1,1 @@
+Write a program to extract the web pages visited from a record of browser operations. The browser has a buffer to store pages with operations to click links, move back and forward in history, and show the current page. You need to interpret mouse click coordinates to trigger navigation based on defined buttons on each page.

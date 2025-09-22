@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "6\nW 0 2\nW 1 2\nD 0\nW 2 4\nR 3\nR 1",
+      "output": "1\n2\n"
+    },
+    {
+      "input": "1\nR 1000000000",
+      "output": "-1\n"
+    }
+  ]
+}

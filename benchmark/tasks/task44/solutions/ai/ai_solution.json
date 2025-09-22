@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, ticket):\n    def can_make_happy(ticket):\n        first_half_sum = sum(int(ticket[i]) for i in range(n//2))\n        second_half_sum = sum(int(ticket[i]) for i in range(n//2, n))\n        return first_half_sum == second_half_sum\n\n    def is_ticket_complete(ticket):\n        return '?' not in ticket\n\n    def minimax(ticket, is_monocarp_turn):\n        if is_ticket_complete(ticket):\n            return can_make_happy(ticket)\n        \n        qmark_indices = [i for i in range(n) if ticket[i] == '?']\n        \n        if is_monocarp_turn:\n            # Monocarp tries to lose\n            for i in qmark_indices:\n                for d in range(10):\n                    new_ticket = list(ticket)\n                    new_ticket[i] = str(d)\n                    new_ticket = ''.join(new_ticket)\n                    \n                    if not minimax(new_ticket, False):\n                        return False\n            return True\n        else:\n            # Bicarp tries to win\n            for i in qmark_indices:\n                for d in range(10):\n                    new_ticket = list(ticket)\n                    new_ticket[i] = str(d)\n                    new_ticket = ''.join(new_ticket)\n                    \n                    if minimax(new_ticket, True):\n                        return True\n            return False\n\n    return \"Bicarp\" if not minimax(ticket, True) else \"Monocarp\"\n\n# Read input\nn = int(input())\nticket = input()\n\n# Print result\nprint(solve(n, ticket))",
+    "timestamp": "2025-08-05 17:32:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\ns = input().strip()\nhalf = n // 2\nleft_sum = 0\nleft_q = 0\nright_sum = 0\nright_q = 0\n\nfor i in range(half):\n    c = s[i]\n    if c == '?':\n        left_q += 1\n    else:\n        left_sum += int(c)\n\nfor i in range(half, n):\n    c = s[i]\n    if c == '?':\n        right_q += 1\n    else:\n        right_sum += int(c)\n\ntotal_diff = left_sum - right_sum\ntotal_q = left_q + right_q\n\nif total_q == 0:\n    if total_diff == 0:\n        print(\"Bicarp\")\n    else:\n        print(\"Monocarp\")\nelse:\n    if (total_diff + (left_q - right_q) * 9 // 2) == 0:\n        print(\"Bicarp\")\n    else:\n        print(\"Monocarp\")",
+    "timestamp": "2025-08-05 17:33:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def determine_winner(n, ticket):\n    half_n = n // 2\n    first_half_score = sum(int(ticket[i]) for i in range(half_n) if ticket[i] != '?')\n    second_half_score = sum(int(ticket[i]) for i in range(half_n, n) if ticket[i] != '?')\n    \n    question_marks_first_half = sum(ticket[i] == '?' for i in range(half_n))\n    question_marks_second_half = sum(ticket[i] == '?' for i in range(half_n, n))\n    \n    difference = first_half_score - second_half_score\n    total_question_marks = question_marks_first_half + question_marks_second_half\n    \n    if total_question_marks == 0:\n        winner = \"Bicarp\" if difference == 0 else \"Monocarp\"\n    else:\n        net_questions_in_first_half = question_marks_first_half - question_marks_second_half\n        adjustment_needed = difference - 9 * (net_questions_in_first_half // 2)\n        winner = \"Bicarp\" if adjustment_needed == 0 else \"Monocarp\"\n        \n    return winner\n\nn = int(input().strip())\nticket = input().strip()\nprint(determine_winner(n, ticket))",
+    "timestamp": "2025-08-12 21:54:41"
+  }
+]

@@ -1,0 +1,1 @@
+Given a suggested set of coin values from a king, determine if you can pay any positive integer amount, if the greedy algorithm can be used efficiently, or if none of the coin values can pay certain amounts. For each test case, print whether the coin set is satisfactory or not.

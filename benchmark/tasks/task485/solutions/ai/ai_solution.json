@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint manhattan_distance(int x1, int y1, int z1, int x2, int y2, int z2) {\n    return abs(x1 - x2) + abs(y1 - y2) + abs(z1 - z2);\n}\n\nint main() {\n    int X, Y, Z, N, A, B, C;\n    scanf(\"%d %d %d %d %d %d %d\", &X, &Y, &Z, &N, &A, &B, &C);\n\n    int* color_counts = calloc(N, sizeof(int));\n\n    for (int x = 0; x < X; x++) {\n        for (int y = 0; y < Y; y++) {\n            for (int z = 0; z < Z; z++) {\n                int distance = manhattan_distance(x, y, z, A, B, C);\n                int color = distance % N;\n                color_counts[color]++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", color_counts[i]);\n    }\n    printf(\"\\n\");\n\n    free(color_counts);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int X, Y, Z, N, A, B, C;\n    scanf(\"%d %d %d %d %d %d %d\", &X, &Y, &Z, &N, &A, &B, &C);\n\n    int *count = (int *)calloc(N, sizeof(int));\n    if (count == NULL) {\n        return 1;\n    }\n\n    for (int x = 0; x < X; x++) {\n        for (int y = 0; y < Y; y++) {\n            for (int z = 0; z < Z; z++) {\n                int distance = abs(x - A) + abs(y - B) + abs(z - C);\n                int color = distance % N;\n                count[color]++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d\\n\", count[i]);\n    }\n\n    free(count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int X, Y, Z, A, B, C, N;\n    cin >> X >> Y >> Z >> A >> B >> C >> N;\n\n    vector<int> count(N, 0);\n\n    for (int x = 0; x < X; ++x) {\n        for (int y = 0; y < Y; ++y) {\n            for (int z = 0; z < Z; ++z) {\n                int dx = abs(x - A);\n                int dy = abs(y - B);\n                int dz = abs(z - C);\n                int distance = dx + dy + dz;\n                int color = distance % N;\n                count[color]++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; ++i) {\n        cout << count[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class CubicPainting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int X = scanner.nextInt();\n        int Y = scanner.nextInt();\n        int Z = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        int C = scanner.nextInt();\n        int N = scanner.nextInt();\n\n        long[] counts = new long[N];\n        \n        for (int x = 0; x < X; x++) {\n            for (int y = 0; y < Y; y++) {\n                for (int z = 0; z < Z; z++) {\n                    int distance = Math.abs(x - A) + Math.abs(y - B) + Math.abs(z - C);\n                    int color = distance % N;\n                    counts[color]++;\n                }\n            }\n        }\n        \n        for (int i = 0; i < N; i++) {\n            System.out.print(counts[i] + \" \");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:52:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CubicPainting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int X = scanner.nextInt();\n        int Y = scanner.nextInt();\n        int Z = scanner.nextInt();\n        int N = scanner.nextInt();\n        \n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        int C = scanner.nextInt();\n        \n        int[] colorCount = new int[N];\n        \n        for (int x = 0; x < X; x++) {\n            for (int y = 0; y < Y; y++) {\n                for (int z = 0; z < Z; z++) {\n                    int distance = Math.abs(x - A) + Math.abs(y - B) + Math.abs(z - C);\n                    int color = distance % N;\n                    colorCount[color]++;\n                }\n            }\n        }\n        \n        for (int i = 0; i < N; i++) {\n            System.out.println(colorCount[i]);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:52:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int X, Y, Z, N, A, B, C;\n    cin >> X >> Y >> Z >> N >> A >> B >> C;\n\n    vector<int> colorCount(N, 0);\n\n    for (int x = 0; x < X; ++x) {\n        for (int y = 0; y < Y; ++y) {\n            for (int z = 0; z < Z; ++z) {\n                int distance = abs(x - A) + abs(y - B) + abs(z - C);\n                int color = distance % N;\n                colorCount[color]++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; ++i) {\n        cout << colorCount[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def paint_cubes(X, Y, Z, A, B, C, N):\n    from collections import defaultdict\n    \n    colors_count = defaultdict(int)\n    \n    for x in range(X):\n        for y in range(Y):\n            for z in range(Z):\n                distance = abs(x - A) + abs(y - B) + abs(z - C)\n                color = distance % N\n                colors_count[color] += 1\n                \n    return [colors_count[i] for i in range(N)]\n\n# Example usage\nX, Y, Z = 3, 3, 3\nA, B, C = 1, 1, 1\nN = 2\nprint(paint_cubes(X, Y, Z, A, B, C, N))",
+    "timestamp": "2025-08-13 07:55:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class CubicColoring {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int X = scanner.nextInt();\n        int Y = scanner.nextInt();\n        int Z = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        int C = scanner.nextInt();\n        int N = scanner.nextInt();\n        scanner.close();\n\n        int[] colorCount = new int[N];\n\n        for (int x = 0; x < X; x++) {\n            for (int y = 0; y < Y; y++) {\n                for (int z = 0; z < Z; z++) {\n                    int manhattanDistance = Math.abs(x - A) + Math.abs(y - B) + Math.abs(z - C);\n                    int color = manhattanDistance % N;\n                    colorCount[color]++;\n                }\n            }\n        }\n\n        for (int count : colorCount) {\n            System.out.println(count);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 07:55:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int X, Y, Z, N, A, B, C;\n    scanf(\"%d %d %d\", &X, &Y, &Z);\n    scanf(\"%d\", &N);\n    scanf(\"%d %d %d\", &A, &B, &C);\n\n    int colorCount[N];\n    for (int i = 0; i < N; i++) {\n        colorCount[i] = 0;\n    }\n\n    for (int x = 0; x < X; x++) {\n        for (int y = 0; y < Y; y++) {\n            for (int z = 0; z < Z; z++) {\n                int D = abs(x - A) + abs(y - B) + abs(z - C);\n                int color = D % N;\n                colorCount[color]++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d\\n\", colorCount[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:55:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_cube_painting(X, Y, Z, A, B, C, N):\n    color_counts = [0] * N\n    \n    for x in range(X):\n        for y in range(Y):\n            for z in range(Z):\n                distance = abs(x - A) + abs(y - B) + abs(z - C)\n                color = distance % N\n                color_counts[color] += 1\n    \n    return color_counts\n\n# Example usage\nX, Y, Z = map(int, input().split())\nA, B, C = map(int, input().split())\nN = int(input())\n\nresult = solve_cube_painting(X, Y, Z, A, B, C, N)\nprint(*result)",
+    "timestamp": "2025-08-13 07:55:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "X, Y, Z = map(int, input().split())\nA, B, C = map(int, input().split())\nN = int(input())\n\ncolor_counts = [0] * N\n\nfor x in range(X):\n    for y in range(Y):\n        for z in range(Z):\n            distance = abs(x - A) + abs(y - B) + abs(z - C)\n            color = distance % N\n            color_counts[color] += 1\n\nprint(' '.join(map(str, color_counts)))",
+    "timestamp": "2025-08-13 07:55:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int X, Y, Z, A, B, C, N;\n    cin >> X >> Y >> Z >> A >> B >> C >> N;\n\n    vector<int> colorCount(N, 0);\n\n    for (int x = 0; x < X; ++x) {\n        for (int y = 0; y < Y; ++y) {\n            for (int z = 0; z < Z; ++z) {\n                int manhattanDistance = abs(x - A) + abs(y - B) + abs(z - C);\n                int colorIndex = manhattanDistance % N;\n                colorCount[colorIndex]++;\n            }\n        }\n    }\n\n    for (int i = 0; i < N; ++i) {\n        cout << colorCount[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:41:46"
+  }
+]

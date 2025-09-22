@@ -1,0 +1,1 @@
+You are to determine the possible folding sequences of a ribbon based on a given number of folds and a marked layer. The ribbon is folded a specified number of times, and one layer is marked. After unfolding the ribbon, you need to identify the folding operations that lead to a specific marked part of the ribbon.

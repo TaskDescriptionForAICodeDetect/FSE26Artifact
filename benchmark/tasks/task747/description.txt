@@ -1,0 +1,1 @@
+You have a sequence of N integers initialized to zero. You will perform M operations where in each operation you choose two distinct indices i and j, increment x[i] by 2 and x[j] by 1. Your task is to find the number of different sequences that can result after M operations, modulo 998244353.

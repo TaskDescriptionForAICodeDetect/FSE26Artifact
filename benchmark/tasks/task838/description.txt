@@ -1,0 +1,1 @@
+You are given integers N, K, and an integer sequence A of length M. An integer sequence is colorful if it contains a contiguous subsequence of length K that includes each integer from 1 to K exactly once. For every colorful integer sequence of length N, count the number of contiguous subsequences that match A, and return the total counts modulo 10^9 + 7.

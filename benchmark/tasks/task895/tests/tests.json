@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13\naab\nccb\n",
+      "output": "16"
+    },
+    {
+      "input": "21\nZ\nZ\n",
+      "output": "23"
+    },
+    {
+      "input": "352\nRvvttdWIyyPPQFFZZssffEEkkaSSDKqcibbeYrhAljCCGGJppHHn\nRLLwwdWIxxNNQUUXXVVMMooBBaggDKqcimmeYrhAljOOTTJuuzzn\n",
+      "output": "3958681902"
+    }
+  ]
+}

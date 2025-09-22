@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, a, b, c, d):\n    valid_squares = set()\n    \n    for x1 in range(1, n+1):\n        for x2 in range(1, n+1):\n            for x3 in range(1, n+1):\n                for x4 in range(1, n+1):\n                    for x5 in range(1, n+1):\n                        for x6 in range(1, n+1):\n                            for x7 in range(1, n+1):\n                                for x8 in range(1, n+1):\n                                    grid = [\n                                        [x1, a, x2],\n                                        [b, x3, c],\n                                        [x4, d, x5]\n                                    ]\n                                    \n                                    # Check 2x2 square sums\n                                    top_left_sum = grid[0][0] + grid[0][1] + grid[1][0] + grid[1][1]\n                                    top_right_sum = grid[0][1] + grid[0][2] + grid[1][1] + grid[1][2]\n                                    bottom_left_sum = grid[1][0] + grid[1][1] + grid[2][0] + grid[2][1]\n                                    bottom_right_sum = grid[1][1] + grid[1][2] + grid[2][1] + grid[2][2]\n                                    \n                                    if (top_left_sum == top_right_sum and \n                                        top_left_sum == bottom_left_sum and \n                                        top_left_sum == bottom_right_sum):\n                                        valid_squares.add(tuple(map(tuple, grid)))\n    \n    return len(valid_squares)\n\nn, a, b, c, d = map(int, input().split())\nprint(solve(n, a, b, c, d))",
+    "timestamp": "2025-08-05 17:33:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, a, b, c, d = map(int, input().split())\n\ncount = 0\n\nfor x in range(1, n + 1):\n    s = x + a + b\n    y = s - a - c\n    z = s - b - d\n    w = s - c - d\n    if 1 <= y <= n and 1 <= z <= n and 1 <= w <= n:\n        count += 1\n\nprint(count)",
+    "timestamp": "2025-08-05 17:34:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_distinct_squares(n, a, b, c, d):\n    valid_squares = 0\n    target_sum = a + b\n\n    for x in range(1, n + 1):\n        for y in range(1, n + 1):\n            z = target_sum - x - a\n            w = target_sum - y - b\n\n            if 1 <= z <= n and 1 <= w <= n and z + d == y + c:\n                valid_squares += 1\n\n    return valid_squares\n\n# Example usage\nn, a, b, c, d = map(int, input().split())\nprint(count_distinct_squares(n, a, b, c, d))",
+    "timestamp": "2025-08-12 21:55:24"
+  }
+]

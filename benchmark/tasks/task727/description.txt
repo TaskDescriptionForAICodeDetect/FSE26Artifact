@@ -1,0 +1,1 @@
+Given two positive integers A and B, determine the maximum number of coprime common divisors that can be selected from A and B. A common divisor is defined as an integer that divides both A and B, and two integers are coprime if their only common positive divisor is 1.

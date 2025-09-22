@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <limits.h>\n\nint smallestSubarray(int* arr, int N, int K) {\n    int* count = calloc(K + 1, sizeof(int));\n    int uniqueCount = 0, start = 0, minLen = INT_MAX;\n    \n    for (int end = 0; end < N; end++) {\n        if (arr[end] <= K) {\n            if (count[arr[end]] == 0) {\n                uniqueCount++;\n            }\n            count[arr[end]]++;\n        }\n        \n        while (uniqueCount == K) {\n            minLen = fmin(minLen, end - start + 1);\n            \n            if (arr[start] <= K) {\n                count[arr[start]]--;\n                if (count[arr[start]] == 0) {\n                    uniqueCount--;\n                }\n            }\n            start++;\n        }\n    }\n    \n    free(count);\n    return minLen == INT_MAX ? 0 : minLen;\n}",
+    "timestamp": "2025-08-05 22:19:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minSubarrayLength(int arr[], int N, int K) {\n    int freq[K + 1];\n    for (int i = 0; i <= K; i++) {\n        freq[i] = 0;\n    }\n    \n    int count = 0;\n    int left = 0;\n    int min_len = INT_MAX;\n    \n    for (int right = 0; right < N; right++) {\n        if (arr[right] >= 1 && arr[right] <= K) {\n            if (freq[arr[right]] == 0) {\n                count++;\n            }\n            freq[arr[right]]++;\n        }\n        \n        while (count == K) {\n            if (right - left + 1 < min_len) {\n                min_len = right - left + 1;\n            }\n            if (arr[left] >= 1 && arr[left] <= K) {\n                freq[arr[left]]--;\n                if (freq[arr[left]] == 0) {\n                    count--;\n                }\n            }\n            left++;\n        }\n    }\n    \n    return (min_len == INT_MAX) ? 0 : min_len;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int arr[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    \n    int result = minSubarrayLength(arr, N, K);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:19:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <climits>\n\nusing namespace std;\n\nint smallestSubarrayWithKRange(const vector<int>& arr, int K) {\n    unordered_map<int, int> count;\n    int unique = 0;\n    int left = 0;\n    int min_len = INT_MAX;\n\n    for (int right = 0; right < arr.size(); ++right) {\n        if (arr[right] >= 1 && arr[right] <= K) {\n            if (count[arr[right]] == 0) {\n                unique++;\n            }\n            count[arr[right]]++;\n        }\n\n        while (unique == K) {\n            min_len = min(min_len, right - left + 1);\n            if (arr[left] >= 1 && arr[left] <= K) {\n                count[arr[left]]--;\n                if (count[arr[left]] == 0) {\n                    unique--;\n                }\n            }\n            left++;\n        }\n    }\n\n    return (min_len == INT_MAX) ? 0 : min_len;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> arr(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> arr[i];\n    }\n    cout << smallestSubarrayWithKRange(arr, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:20:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.HashMap;\n\npublic class Solution {\n    public static int smallestSubarraySize(int[] arr, int K) {\n        HashMap<Integer, Integer> map = new HashMap<>();\n        int left = 0;\n        int minLength = Integer.MAX_VALUE;\n        int count = 0;\n\n        for (int right = 0; right < arr.length; right++) {\n            if (arr[right] >= 1 && arr[right] <= K) {\n                if (!map.containsKey(arr[right]) || map.get(arr[right]) == 0) {\n                    count++;\n                }\n                map.put(arr[right], map.getOrDefault(arr[right], 0) + 1);\n            }\n\n            while (count == K) {\n                minLength = Math.min(minLength, right - left + 1);\n                if (arr[left] >= 1 && arr[left] <= K) {\n                    map.put(arr[left], map.get(arr[left]) - 1);\n                    if (map.get(arr[left]) == 0) {\n                        count--;\n                    }\n                }\n                left++;\n            }\n        }\n\n        return minLength == Integer.MAX_VALUE ? 0 : minLength;\n    }\n}",
+    "timestamp": "2025-08-05 22:20:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int smallestSubarray(int[] arr, int K) {\n        int[] count = new int[K + 1];\n        int uniqueCount = 0;\n        int minLength = Integer.MAX_VALUE;\n        int left = 0;\n\n        for (int right = 0; right < arr.length; right++) {\n            if (arr[right] <= K) {\n                if (count[arr[right]] == 0) {\n                    uniqueCount++;\n                }\n                count[arr[right]]++;\n            }\n\n            while (uniqueCount == K) {\n                minLength = Math.min(minLength, right - left + 1);\n\n                if (arr[left] <= K) {\n                    count[arr[left]]--;\n                    if (count[arr[left]] == 0) {\n                        uniqueCount--;\n                    }\n                }\n                left++;\n            }\n        }\n\n        return minLength == Integer.MAX_VALUE ? 0 : minLength;\n    }\n}",
+    "timestamp": "2025-08-05 22:20:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int smallestSubarray(vector<int>& arr, int K) {\n        unordered_map<int, int> freq;\n        int n = arr.size();\n        int minLen = INT_MAX;\n        int left = 0, count = 0;\n        \n        for (int right = 0; right < n; right++) {\n            if (arr[right] <= K) {\n                if (freq[arr[right]] == 0) {\n                    count++;\n                }\n                freq[arr[right]]++;\n            }\n            \n            while (count == K) {\n                minLen = min(minLen, right - left + 1);\n                \n                if (arr[left] <= K) {\n                    freq[arr[left]]--;\n                    if (freq[arr[left]] == 0) {\n                        count--;\n                    }\n                }\n                left++;\n            }\n        }\n        \n        return minLen == INT_MAX ? 0 : minLen;\n    }\n};",
+    "timestamp": "2025-08-05 22:20:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def smallest_subarray_with_all_K_elements(arr, K):\n    from collections import defaultdict\n\n    n = len(arr)\n    left = 0\n    min_length = float('inf')\n    element_count = defaultdict(int)\n    total_unique_elements = 0\n\n    for right in range(n):\n        if 1 <= arr[right] <= K:\n            if element_count[arr[right]] == 0:\n                total_unique_elements += 1\n            element_count[arr[right]] += 1\n\n        while total_unique_elements == K:\n            min_length = min(min_length, right - left + 1)\n            if 1 <= arr[left] <= K:\n                element_count[arr[left]] -= 1\n                if element_count[arr[left]] == 0:\n                    total_unique_elements -= 1\n            left += 1\n\n    return min_length if min_length != float('inf') else 0",
+    "timestamp": "2025-08-13 10:04:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\n\npublic class SubArrayFinder {\n\n    public static int smallestSubArrayWithKNumbers(int[] arr, int K) {\n        int n = arr.length;\n        if (n < K) return 0;\n\n        HashMap<Integer, Integer> countMap = new HashMap<>();\n        int requiredCount = K;\n        int minLength = Integer.MAX_VALUE;\n        int start = 0;\n\n        for (int end = 0; end < n; end++) {\n            int currentElement = arr[end];\n            if (currentElement >= 1 && currentElement <= K) {\n                countMap.put(currentElement, countMap.getOrDefault(currentElement, 0) + 1);\n                if (countMap.get(currentElement) == 1) {\n                    requiredCount--;\n                }\n            }\n\n            while (requiredCount == 0) {\n                minLength = Math.min(minLength, end - start + 1);\n                int startElement = arr[start];\n\n                if (startElement >= 1 && startElement <= K) {\n                    if (countMap.get(startElement) == 1) {\n                        requiredCount++;\n                    }\n                    countMap.put(startElement, countMap.get(startElement) - 1);\n                }\n                start++;\n            }\n        }\n\n        return minLength == Integer.MAX_VALUE ? 0 : minLength;\n    }\n\n    public static void main(String[] args) {\n        int[] arr = {1, 2, 3, 4, 5, 6, 7};\n        int K = 3;\n        System.out.println(smallestSubArrayWithKNumbers(arr, K)); // Output: 3\n    }\n}",
+    "timestamp": "2025-08-13 10:04:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minSubArrayContainingAllK(int arr[], int n, int K) {\n    int minLength = INT_MAX;\n    int count[K + 1];\n    int uniqueCount = 0;\n    \n    for(int i = 0; i <= K; i++) {\n        count[i] = 0;\n    }\n    \n    int start = 0;\n    \n    for(int end = 0; end < n; end++) {\n        if (arr[end] <= K && arr[end] >= 1) {\n            if (count[arr[end]] == 0) {\n                uniqueCount++;\n            }\n            count[arr[end]]++;\n        }\n        \n        while (uniqueCount == K) {\n            minLength = (end - start + 1 < minLength) ? (end - start + 1) : minLength;\n            if (arr[start] <= K && arr[start] >= 1) {\n                count[arr[start]]--;\n                if (count[arr[start]] == 0) {\n                    uniqueCount--;\n                }\n            }\n            start++;\n        }\n    }\n    \n    return (minLength == INT_MAX) ? 0 : minLength;\n}\n\nint main() {\n    int arr[] = {1, 2, 3, 4, 5, 2, 1, 1, 2, 1};\n    int n = sizeof(arr) / sizeof(arr[0]);\n    int K = 5;\n    printf(\"Minimum sub-array length: %d\\n\", minSubArrayContainingAllK(arr, n, K));\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:04:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_smallest_subarray(arr, K):\n    n = len(arr)\n    \n    # Check if all required elements exist in the array\n    required_elements = set(range(1, K + 1))\n    if not required_elements.issubset(set(arr)):\n        return 0\n    \n    min_length = float('inf')\n    \n    for start in range(n):\n        current_elements = set()\n        \n        for end in range(start, n):\n            current_elements.add(arr[end])\n            \n            if len(current_elements) == K and all(x in current_elements for x in required_elements):\n                min_length = min(min_length, end - start + 1)\n                break\n    \n    return min_length if min_length != float('inf') else 0",
+    "timestamp": "2025-08-13 10:04:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def smallest_subarray_size(arr, K):\n    required = set(range(1, K + 1))\n    current = {}\n    left = 0\n    min_length = float('inf')\n    \n    for right in range(len(arr)):\n        num = arr[right]\n        if num in required:\n            current[num] = current.get(num, 0) + 1\n        \n        while len(current) == K:\n            min_length = min(min_length, right - left + 1)\n            left_num = arr[left]\n            if left_num in current:\n                current[left_num] -= 1\n                if current[left_num] == 0:\n                    del current[left_num]\n            left += 1\n    \n    return min_length if min_length != float('inf') else 0",
+    "timestamp": "2025-08-13 10:04:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <limits.h>\n\nint smallestSubarrayWithAllK(const std::vector<int>& arr, int K) {\n    std::unordered_map<int, int> countMap;\n    int left = 0, minLength = INT_MAX;\n    int uniqueCount = 0;\n    \n    for (int right = 0; right < arr.size(); ++right) {\n        if (arr[right] >= 1 && arr[right] <= K) {\n            if (countMap[arr[right]] == 0) {\n                uniqueCount++;\n            }\n            countMap[arr[right]]++;\n        }\n        \n        while (uniqueCount == K) {\n            minLength = std::min(minLength, right - left + 1);\n            if (arr[left] >= 1 && arr[left] <= K) {\n                countMap[arr[left]]--;\n                if (countMap[arr[left]] == 0) {\n                    uniqueCount--;\n                }\n            }\n            left++;\n        }\n    }\n    \n    return minLength == INT_MAX ? 0 : minLength;\n}\n\nint main() {\n    std::vector<int> arr = {1, 2, 3, 4, 2, 5};\n    int K = 5;\n    std::cout << smallestSubarrayWithAllK(arr, K) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:57:01"
+  }
+]

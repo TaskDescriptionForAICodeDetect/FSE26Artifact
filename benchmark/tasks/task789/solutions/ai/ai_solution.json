@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_N 100005\n\ntypedef struct {\n    int x, y;\n} Point;\n\nPoint points[MAX_N];\nbool grid[1005][1005];\n\nint main() {\n    int N, x, y;\n    scanf(\"%d\", &N);\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &points[i].x, &points[i].y);\n        grid[points[i].x][points[i].y] = true;\n    }\n\n    for (int i = 0; i < N; i++) {\n        int x = points[i].x, y = points[i].y;\n        grid[x][y] = !grid[x][y];\n        grid[x][y+1] = !grid[x][y+1];\n        grid[x+1][y] = !grid[x+1][y];\n    }\n\n    for (int i = 0; i < N; i++) {\n        int x = points[i].x, y = points[i].y;\n        if (!grid[x][y]) {\n            printf(\"%d %d\\n\", x, y);\n            return 0;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\nPoint find_initial_point(Point lamps[], int N) {\n    int min_x = lamps[0].x, max_x = lamps[0].x;\n    int min_y = lamps[0].y, max_y = lamps[0].y;\n    \n    for (int i = 1; i < N; ++i) {\n        if (lamps[i].x < min_x) min_x = lamps[i].x;\n        if (lamps[i].x > max_x) max_x = lamps[i].x;\n        if (lamps[i].y < min_y) min_y = lamps[i].y;\n        if (lamps[i].y > max_y) max_y = lamps[i].y;\n    }\n    \n    Point initial;\n    initial.x = min_x;\n    initial.y = min_y;\n    return initial;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Point *lamps = (Point *)malloc(N * sizeof(Point));\n    \n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &lamps[i].x, &lamps[i].y);\n    }\n    \n    Point initial = find_initial_point(lamps, N);\n    printf(\"%d %d\\n\", initial.x, initial.y);\n    \n    free(lamps);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, int>> lamps(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> lamps[i].first >> lamps[i].second;\n    }\n    \n    sort(lamps.begin(), lamps.end());\n    \n    int X = lamps[0].first + lamps.back().first - lamps[1].first;\n    int Y = lamps[0].second + lamps.back().second - lamps[1].second;\n    \n    cout << X << \" \" << Y << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int minX = Integer.MAX_VALUE;\n        int minY = Integer.MAX_VALUE;\n        \n        for (int i = 0; i < N; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            if (x + y < minX + minY) {\n                minX = x;\n                minY = y;\n            } else if (x + y == minX + minY) {\n                if (x < minX) {\n                    minX = x;\n                    minY = y;\n                }\n            }\n        }\n        \n        System.out.println(minX + \" \" + minY);\n    }\n}",
+    "timestamp": "2025-08-05 22:55:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LampProblem {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        \n        Set<String> onLamps = new HashSet<>();\n        for (int i = 0; i < N; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            onLamps.add(x + \",\" + y);\n        }\n        \n        for (String lamp : onLamps) {\n            String[] coord = lamp.split(\",\");\n            int x = Integer.parseInt(coord[0]);\n            int y = Integer.parseInt(coord[1]);\n            \n            if (isOriginalLamp(x, y, onLamps)) {\n                System.out.println(x + \" \" + y);\n                return;\n            }\n        }\n    }\n    \n    private static boolean isOriginalLamp(int x, int y, Set<String> onLamps) {\n        return !onLamps.contains((x-1) + \",\" + y) &&\n               !onLamps.contains((x-1) + \",\" + (y-1)) &&\n               !onLamps.contains(x + \",\" + (y-1));\n    }\n}",
+    "timestamp": "2025-08-05 22:56:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n\n    vector<pair<int, int>> on_lamps(N);\n    for (int i = 0; i < N; i++) {\n        cin >> on_lamps[i].first >> on_lamps[i].second;\n    }\n\n    sort(on_lamps.begin(), on_lamps.end());\n\n    int x = on_lamps[0].first;\n    int y = on_lamps[0].second;\n\n    set<pair<int, int>> lamp_set(on_lamps.begin(), on_lamps.end());\n\n    for (auto& lamp : on_lamps) {\n        if (!lamp_set.count({lamp.first-1, lamp.second}) &&\n            !lamp_set.count({lamp.first-1, lamp.second-1}) &&\n            !lamp_set.count({lamp.first, lamp.second-1})) {\n            x = lamp.first;\n            y = lamp.second;\n            break;\n        }\n    }\n\n    cout << x << \" \" << y << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_original_lamp(n, lamps):\n    xor_x, xor_y = 0, 0\n    for x, y in lamps:\n        xor_x ^= x\n        xor_y ^= y\n    return xor_x, xor_y\n\n# Example usage:\nn = 3\nlamps = [(1, 1), (1, 2), (2, 1)]\noriginal_lamp = find_original_lamp(n, lamps)\nprint(original_lamp)",
+    "timestamp": "2025-08-13 12:59:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LampsFinder {\n    public static int[] findInitialLamp(int[][] lamps) {\n        int xorX = 0, xorY = 0;\n        for (int[] lamp : lamps) {\n            xorX ^= lamp[0];\n            xorY ^= lamp[1];\n        }\n        return new int[]{xorX, xorY};\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[][] lamps = new int[N][2];\n        for (int i = 0; i < N; i++) {\n            lamps[i][0] = sc.nextInt();\n            lamps[i][1] = sc.nextInt();\n        }\n        int[] originalCoordinates = findInitialLamp(lamps);\n        System.out.println(originalCoordinates[0] + \" \" + originalCoordinates[1]);\n    }\n}",
+    "timestamp": "2025-08-13 12:59:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int toggleCount[10001][10001] = {0}; // A sufficiently large grid for toggle counts\n    \n    int coords[N][2];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &coords[i][0], &coords[i][1]);\n        // Reversing the toggle operation to deduce initial point\n        toggleCount[coords[i][0]][coords[i][1]] ^= 1;\n        toggleCount[coords[i][0]][coords[i][1]+1] ^= 1;\n        toggleCount[coords[i][0]+1][coords[i][1]] ^= 1;\n    }\n    \n    for (int i = 0; i < 10001; i++) {\n        for (int j = 0; j < 10001; j++) {\n            if (toggleCount[i][j] == 1) {\n                printf(\"%d %d\\n\", i, j);\n                return 0;\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:59:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <unordered_set>\n#include <utility>\n\nusing namespace std;\n\nusing Pair = pair<int, int>;\nusing PairHash = pair<int, int>;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    unordered_set<Pair, PairHash> lamps;\n    \n    while (N--) {\n        int x, y;\n        cin >> x >> y;\n        lamps.insert({x, y});\n    }\n\n    for (const auto& [x, y] : lamps) {\n        bool possible_origin = true;\n\n        for (const auto& [tx, ty] : lamps) {\n            if ((tx < x) || (ty < y) || (tx > x + 1) || (ty > y + 1)) {\n                possible_origin = false;\n                break;\n            }\n        }\n        \n        if (possible_origin) {\n            cout << x << \" \" << y << endl;\n            return 0;\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:59:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_initial_lamp(N, on_lamps):\n    def toggle(x, y, grid):\n        grid[(x, y)] = not grid.get((x, y), False)\n        grid[(x, y+1)] = not grid.get((x, y+1), False)\n        grid[(x+1, y)] = not grid.get((x+1, y), False)\n\n    for x in range(-N, N):\n        for y in range(-N, N):\n            grid = {(x, y): True}\n            used_lamps = set([(x, y)])\n\n            for nx, ny in on_lamps:\n                found = False\n                for dx in range(-N, N):\n                    for dy in range(-N, N):\n                        test_grid = grid.copy()\n                        toggle(dx, dy, test_grid)\n                        if test_grid.get((nx, ny), False):\n                            grid = test_grid\n                            used_lamps.add((dx, dy))\n                            found = True\n                            break\n                    if found:\n                        break\n                if not found:\n                    break\n            else:\n                return (x, y)\n\n    return None",
+    "timestamp": "2025-08-13 12:59:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    lamps = []\n    for i in range(1, 2*N + 1, 2):\n        x = int(data[i])\n        y = int(data[i+1])\n        lamps.append((x, y))\n    \n    # Calculate X and Y\n    min_x = min(lamps, key=lambda p: p[0] + p[1])[0]\n    min_y = min(lamps, key=lambda p: p[0] + p[1])[1]\n    max_x = max(lamps, key=lambda p: p[0] - p[1])[0]\n    max_y = max(lamps, key=lambda p: p[0] - p[1])[1]\n    \n    X = (min_x + max_x - max_y + min_y) // 2\n    Y = (min_y + max_y - max_x + min_x) // 2\n    print(X, Y)\n\nsolve()",
+    "timestamp": "2025-08-13 12:59:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findInitialLamp(lamps) {\n  const toggle = (x, y, state) => {\n    state[x] = state[x] || {};\n    state[x][y] = !state[x][y];\n    state[x][y + 1] = !(state[x][y + 1] || false);\n    state[x + 1] = state[x + 1] || {};\n    state[x + 1][y] = !(state[x + 1][y] || false);\n  };\n\n  let state = {};\n\n  for (const [x, y] of lamps) {\n    toggle(x, y, state);\n  }\n\n  for (const x in state) {\n    for (const y in state[x]) {\n      if (state[x][y]) {\n        return [parseInt(x), parseInt(y)];\n      }\n    }\n  }\n\n  return null;\n}",
+    "timestamp": "2025-08-13 13:00:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findOriginalLamp(N, onLamps) {\n    let xorSum = 0;\n    let yorSum = 0;\n    \n    for (let [x, y] of onLamps) {\n        xorSum ^= x;\n        yorSum ^= y;\n    }\n    \n    return [xorSum, yorSum];\n}",
+    "timestamp": "2025-08-13 13:00:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N = 0;\n    let lamps = [];\n    let lineCount = 0;\n\n    rl.on('line', (line) => {\n        if (lineCount === 0) {\n            N = parseInt(line.trim(), 10);\n            lineCount++;\n        } else {\n            const [x, y] = line.trim().split(' ').map(Number);\n            lamps.push({ x, y });\n            if (lamps.length === N) {\n                rl.close();\n            }\n        }\n    });\n\n    rl.on('close', () => {\n        let minX = Infinity;\n        let minY = Infinity;\n        for (const lamp of lamps) {\n            const s = lamp.x + lamp.y;\n            const t = lamp.x - lamp.y;\n            if (s < minX) {\n                minX = s;\n            }\n            if (t < minY) {\n                minY = t;\n            }\n        }\n        const X = (minX + minY) / 2;\n        const Y = (minX - minY) / 2;\n        console.log(X, Y);\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:00:21"
+  }
+]

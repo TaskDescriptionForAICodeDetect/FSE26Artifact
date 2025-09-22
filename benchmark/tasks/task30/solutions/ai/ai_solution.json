@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, m):\n    MOD = 10**9 + 7\n    \n    # Total ways = (3^m - 2^m)\n    # 3^m represents all possible ways of distributing n types into m boxes \n    # 2^m represents invalid ways where some type is unused\n    \n    def pow_mod(base, exp):\n        result = 1\n        while exp > 0:\n            if exp % 2:\n                result = (result * base) % MOD\n            base = (base * base) % MOD\n            exp //= 2\n        return result\n    \n    total_ways = (pow_mod(3, m) - pow_mod(2, m) + MOD) % MOD\n    return total_ways\n\n# Read input\nn, m = map(int, input().split())\nprint(solve(n, m))",
+    "timestamp": "2025-08-05 17:32:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m = map(int, input().split())\nmod = 10**9 + 7\n\n# The formula is ( (2^m - 1)^n ) mod mod\n# We need to compute (pow(2, m, mod) - 1) ^ n mod mod\n\npow_2m = pow(2, m, mod)\nterm = (pow_2m - 1) % mod\nresult = pow(term, n, mod)\nprint(result)",
+    "timestamp": "2025-08-05 17:32:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def number_of_ways(n, m):\n    MOD = 10**9 + 7\n    return (pow(2, m, MOD) - 1) ** n % MOD\n\nif __name__ == \"__main__\":\n    import sys\n    input = sys.stdin.read\n    n, m = map(int, input().strip().split())\n    print(number_of_ways(n, m))",
+    "timestamp": "2025-08-12 21:53:36"
+  }
+]

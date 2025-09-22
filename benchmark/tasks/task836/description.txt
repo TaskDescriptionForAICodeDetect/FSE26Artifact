@@ -1,0 +1,1 @@
+There are N boxes arranged in a row containing a_i manju each. Two players, Sugim and Sigma, take turns placing a piece in an adjacent empty box or any empty box on the first turn. They aim to maximize their total manju at the end of the game. Determine the number of manju each player will have at the end.

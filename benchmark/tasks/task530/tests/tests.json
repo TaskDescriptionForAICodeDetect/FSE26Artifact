@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "14 16 A L \nooo.....ooo.....\noAo-----oHo.....\nooo.....ooo..ooo\n.|.......|...oLo\nooo..ooo.|...ooo\noKo--oYo.|....|.\nooo..ooo.|....|.\n.|....|.ooo...|.\n.|....|.oGo...|.\n.|....|.ooo...|.\n.|....|.......|.\nooo..ooo.....ooo\noFo--oXo-----oEo\nooo..ooo.....ooo\n",
+      "output": "5"
+    },
+    {
+      "input": "21 17 F L\n...................\n.....ooo.....ooo.\n.....oAo-----oBo.\n.....ooo.....ooo.\n......|.......|..\n.ooo..|..ooo..|..\n.oCo..|..oDo.ooo.\n.ooo.ooo.ooo.oEo.\n..|..oFo..|..ooo.\n..|..ooo..|...|..\n..|...|...|...|..\n..|...|...|...|..\n..|...|...|...|..\n.ooo.ooo.ooo..|..\n.oGo-oHo-oIo..|..\n.ooo.ooo.ooo..|..\n..|...........|..\n.ooo...ooo...ooo.\n.oJo---oKo---oLo.\n.ooo...ooo...ooo.\n.................\n",
+      "output": "4"
+    }
+  ]
+}

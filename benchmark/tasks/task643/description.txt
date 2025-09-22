@@ -1,0 +1,1 @@
+You are given a grid of N rows and M columns, where a nonnegative integer A_{i,j} is written for each square (i,j). You need to choose some squares such that each row and column contains at most K chosen squares. Your task is to calculate the maximum value of the sum of the integers written on the chosen squares and also provide a way to choose squares that achieves this maximum.

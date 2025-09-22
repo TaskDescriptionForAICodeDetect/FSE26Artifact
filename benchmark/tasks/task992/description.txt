@@ -1,0 +1,1 @@
+There are N towns in the Snuke Kingdom, each with a Teleporter that transports a person to another town. Town 1 is the capital. The goal is to modify the teleporters so that starting from any town, after K uses of the Teleporters, one will arrive at the capital. Find the minimum number of Teleporters that need to be changed to achieve this.

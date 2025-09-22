@@ -1,0 +1,19 @@
+Problem F: Social Monsters
+
+In a world where mysterious creatures and humans live together mutually helping each other, tournaments are held where captured monsters battle each other. Many boys and girls aim to become the world's best trainers.
+
+In battles, trainers form parties from the monsters they have captured, and these parties compete against each other. Each pair of monsters has compatibility that can be very poor or normal. If the compatibility is very poor, those monsters cannot be included in the same party. If the compatibility is normal, it is represented by a friendship value. The sum of the friendship values across the entire party is key to winning the battle.
+
+You want to form a party of K monsters from N captured monsters, where M pairs of monsters (a_i, b_i) have known compatibility represented by integers c_i. If c_i = 0, it means that the a_i-th monster and the b_i-th monster have very poor compatibility. If c_i ≠ 0, it means that the a_i-th and b_i-th monsters have normal compatibility with a friendship value of c_i. All other pairs not given are considered to have normal compatibility with a friendship value of 0.
+
+Consider how to maximize the sum of friendship values for the party you are building.
+
+### Input Format
+The input is provided in the following format:
+N M K
+a_0 b_0 c_0
+...
+a_{M-1} b_{M-1} c_{M-1}
+
+### Output Format
+If it is impossible to create a party of K monsters, output 'Impossible' on one line. If it is possible, output the maximum sum of friendship values.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int coordinate;\n    int direction;\n} Ant;\n\nvoid solve_ant_positions(int L, int N, int T, Ant* ants) {\n    for (int i = 0; i < N; i++) {\n        int new_coord = ants[i].coordinate;\n        \n        if (ants[i].direction == 1) {\n            new_coord = (new_coord + T) % L;\n        } else {\n            new_coord = (new_coord - T + L) % L;\n        }\n        \n        ants[i].coordinate = new_coord;\n    }\n}\n\nint main() {\n    int L, N, T;\n    scanf(\"%d %d %d\", &L, &N, &T);\n    \n    Ant* ants = malloc(N * sizeof(Ant));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &ants[i].coordinate, &ants[i].direction);\n    }\n    \n    solve_ant_positions(L, N, T, ants);\n    \n    for (int i = 0; i < N; i++) {\n        printf(\"%d\\n\", ants[i].coordinate);\n    }\n    \n    free(ants);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:22:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int id;\n    int pos;\n    int dir;\n} Ant;\n\nint compare(const void *a, const void *b) {\n    Ant *antA = (Ant *)a;\n    Ant *antB = (Ant *)b;\n    return antA->pos - antB->pos;\n}\n\nint compare_id(const void *a, const void *b) {\n    Ant *antA = (Ant *)a;\n    Ant *antB = (Ant *)b;\n    return antA->id - antB->id;\n}\n\nint main() {\n    int L, T, N;\n    scanf(\"%d %d %d\", &L, &T, &N);\n\n    Ant *ants = (Ant *)malloc(N * sizeof(Ant));\n    for (int i = 0; i < N; i++) {\n        int pos;\n        char dir;\n        scanf(\"%d %c\", &pos, &dir);\n        ants[i].id = i;\n        ants[i].pos = pos;\n        ants[i].dir = (dir == 'L') ? -1 : 1;\n    }\n\n    qsort(ants, N, sizeof(Ant), compare);\n\n    int *final_pos = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        int pos = ants[i].pos + T * ants[i].dir;\n        pos %= L;\n        if (pos < 0) pos += L;\n        final_pos[i] = pos;\n    }\n\n    qsort(final_pos, N, sizeof(int), compare);\n\n    for (int i = 0; i < N; i++) {\n        ants[i].pos = final_pos[i];\n    }\n\n    qsort(ants, N, sizeof(Ant), compare_id);\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", ants[i].pos);\n    }\n    printf(\"\\n\");\n\n    free(ants);\n    free(final_pos);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, L, T;\n    cin >> N >> L >> T;\n    vector<int> X(N), W(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> X[i] >> W[i];\n    }\n\n    vector<int> final_pos(N);\n    for (int i = 0; i < N; ++i) {\n        if (W[i] == 1) {\n            final_pos[i] = (X[i] + T) % L;\n        } else {\n            final_pos[i] = (X[i] - T) % L;\n            if (final_pos[i] < 0) {\n                final_pos[i] += L;\n            }\n        }\n    }\n\n    int count = 0;\n    for (int i = 0; i < N; ++i) {\n        if (W[i] == 1) {\n            count += (X[i] + T) / L;\n        } else {\n            count -= (X[i] - T - 1) / L;\n        }\n    }\n\n    sort(final_pos.begin(), final_pos.end());\n    int offset = ((count % N) + N) % N;\n    rotate(final_pos.begin(), final_pos.begin() + offset, final_pos.end());\n\n    for (int pos : final_pos) {\n        cout << pos << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class AntsOnCircle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int L = scanner.nextInt();\n        int T = scanner.nextInt();\n        int N = scanner.nextInt();\n        \n        int[] positions = new int[N];\n        int[] directions = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            positions[i] = scanner.nextInt();\n            directions[i] = scanner.nextInt();\n        }\n        \n        int[] finalPositions = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            if (directions[i] == 1) {\n                finalPositions[i] = (positions[i] + T) % L;\n            } else {\n                finalPositions[i] = (positions[i] - T) % L;\n                if (finalPositions[i] < 0) {\n                    finalPositions[i] += L;\n                }\n            }\n        }\n        \n        Arrays.sort(finalPositions);\n        \n        for (int pos : finalPositions) {\n            System.out.print(pos + \" \");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:23:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class CircleAntProblem {\n    public static int[] findAntPositions(int L, int T, int[] initialPositions, int[] initialDirections) {\n        int N = initialPositions.length;\n        int[] finalPositions = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            int currentPos = initialPositions[i];\n            int direction = initialDirections[i];\n            \n            int movedDistance = T * direction;\n            int finalPos = (currentPos + movedDistance + L) % L;\n            \n            finalPositions[i] = finalPos;\n        }\n        \n        return finalPositions;\n    }\n}",
+    "timestamp": "2025-08-05 23:23:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nvector<int> findAntPositions(int L, int T, vector<int>& initialPositions) {\n    int N = initialPositions.size();\n    vector<int> finalPositions(N);\n\n    for (int i = 0; i < N; i++) {\n        int distance = T;\n        int currentPos = initialPositions[i];\n\n        // Normalize position within circle\n        currentPos %= L;\n\n        // Determine final position by moving in initial direction\n        currentPos += distance;\n\n        // Handle wrap-around\n        currentPos %= L;\n\n        // Ensure non-negative result\n        if (currentPos < 0) currentPos += L;\n\n        finalPositions[i] = currentPos;\n    }\n\n    return finalPositions;\n}\n\nint main() {\n    int L, T, N;\n    cin >> L >> T >> N;\n\n    vector<int> initialPositions(N);\n    for (int i = 0; i < N; i++) {\n        cin >> initialPositions[i];\n    }\n\n    vector<int> result = findAntPositions(L, T, initialPositions);\n\n    for (int pos : result) {\n        cout << pos << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def ants_positions(L, N, ant_positions, directions, T):\n    final_positions = ant_positions[:]\n    \n    for _ in range(T):\n        next_positions = [(final_positions[i] + (1 if directions[i] == 'C' else -1)) % L for i in range(N)]\n        \n        position_count = {}\n        for pos in next_positions:\n            position_count[pos] = position_count.get(pos, 0) + 1\n        \n        for i in range(N):\n            pos = next_positions[i]\n            if position_count[pos] > 1:\n                directions[i] = 'C' if directions[i] == 'CC' else 'CC'\n        \n        final_positions = next_positions\n    \n    return final_positions\n\n# Example usage:\nL = 100\nN = 3\nant_positions = [0, 30, 70]\ndirections = ['C', 'CC', 'C']\nT = 10\n\nprint(ants_positions(L, N, ant_positions, directions, T))",
+    "timestamp": "2025-08-13 15:03:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\nclass Ant {\n    long position;\n    boolean direction; // true for clockwise, false for counterclockwise\n\n    public Ant(long position, char dirChar) {\n        this.position = position;\n        this.direction = (dirChar == 'C');\n    }\n\n    public void move(long L) {\n        if (direction) {\n            position = (position + 1) % L;\n        } else {\n            position = (position - 1 + L) % L;\n        }\n    }\n}\n\npublic class AntsOnCircle {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        long L = scanner.nextLong();\n        int N = scanner.nextInt();\n        long T = scanner.nextLong();\n        Ant[] ants = new Ant[N];\n\n        for (int i = 0; i < N; i++) {\n            long X = scanner.nextLong();\n            char D = scanner.next().charAt(0);\n            ants[i] = new Ant(X, D);\n        }\n\n        for (long t = 0; t < T; t++) {\n            for (Ant ant : ants) {\n                ant.move(L);\n            }\n\n            // Detect collisions and reverse directions\n            for (int i = 0; i < N; i++) {\n                for (int j = i + 1; j < N; j++) {\n                    if (ants[i].position == ants[j].position) {\n                        ants[i].direction = !ants[i].direction;\n                        ants[j].direction = !ants[j].direction;\n                    }\n                }\n            }\n        }\n\n        for (Ant ant : ants) {\n            System.out.println(ant.position);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 15:03:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_ANTS 1000\n\ntypedef struct {\n    int position;\n    int direction; // 1 for clockwise, -1 for counter-clockwise\n} Ant;\n\nvoid simulateAnts(int L, int N, Ant ants[], int T) {\n    for (int t = 0; t < T; ++t) {\n        for (int i = 0; i < N; ++i) {\n            ants[i].position = (ants[i].position + ants[i].direction + L) % L;\n        }\n        for (int i = 0; i < N; ++i) {\n            for (int j = i + 1; j < N; ++j) {\n                if (ants[i].position == ants[j].position) {\n                    ants[i].direction *= -1;\n                    ants[j].direction *= -1;\n                }\n            }\n        }\n    }\n}\n\nint main() {\n    int L, N, T;\n    Ant ants[MAX_ANTS];\n\n    // Input\n    scanf(\"%d %d %d\", &L, &N, &T);\n\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &ants[i].position, &ants[i].direction);\n    }\n\n    // Simulate\n    simulateAnts(L, N, ants, T);\n\n    // Output\n    for (int i = 0; i < N; ++i) {\n        printf(\"%d\\n\", ants[i].position);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:03:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int L, N, T;\n    cin >> L >> N >> T;\n    \n    vector<int> positions(N);\n    vector<int> directions(N); // 1 for clockwise, -1 for counterclockwise\n    \n    for (int i = 0; i < N; ++i) {\n        int x;\n        cin >> x;\n        positions[i] = x;\n    }\n    \n    for (int i = 0; i < N; ++i) {\n        int d;\n        cin >> d;\n        directions[i] = d;\n    }\n\n    for (int time = 0; time < T; ++time) {\n        // Move ants\n        for (int i = 0; i < N; ++i) {\n            positions[i] = (positions[i] + directions[i] + L) % L;\n        }\n        \n        // Detect collisions and reverse direction\n        vector<bool> bumped(N, false);\n        for (int i = 0; i < N; ++i) {\n            for (int j = i + 1; j < N; ++j) {\n                if (positions[i] == positions[j] && !bumped[i] && !bumped[j]) {\n                    directions[i] *= -1;\n                    directions[j] *= -1;\n                    bumped[i] = bumped[j] = true;\n                }\n            }\n        }\n    }\n    \n    for (int i = 0; i < N; ++i) {\n        cout << positions[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:03:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def ant_positions(L, N, initial_positions, T):\n    # Create a list to store the final positions of ants\n    final_positions = []\n    \n    for pos, direction in initial_positions:\n        # Calculate the effective position after T seconds\n        if direction == 1:  # Clockwise\n            final_pos = (pos + T) % L\n        else:  # Counterclockwise\n            final_pos = (pos - T + L) % L\n        \n        final_positions.append(final_pos)\n    \n    return sorted(final_positions)\n\n# Example usage\nL = 10  # Circle circumference\nN = 3  # Number of ants\ninitial_positions = [\n    (2, 1),   # Ant at position 2, moving clockwise\n    (5, -1),  # Ant at position 5, moving counterclockwise\n    (8, 1)    # Ant at position 8, moving clockwise\n]\nT = 3  # Time in seconds\n\nresult = ant_positions(L, N, initial_positions, T)\nprint(result)",
+    "timestamp": "2025-08-13 15:03:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "L, N, T = map(int, input().split())\nants = []\nfor _ in range(N):\n    x, d = input().split()\n    ants.append((int(x), d))\n\n# Simulate the movement without considering collisions\nfinal_positions = []\nfor x, d in ants:\n    if d == 'C':\n        new_x = (x + T) % L\n    else:\n        new_x = (x - T) % L\n    final_positions.append(new_x)\n\n# Sort the final positions to handle collisions (they pass through each other)\nfinal_positions.sort()\n\n# The original order is maintained in terms of their positions after collision handling\n# So we just need to output the sorted positions\nfor pos in final_positions:\n    print(pos)",
+    "timestamp": "2025-08-13 15:03:55"
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "WwRR wwrg RRGb rGBG RGrb RrRg RGrg rgBB Wrgr",
+      "output": 40
+    },
+    {
+      "input": "RrGb WWGR rGgb Wbrg wgBb GgBg WbBG Wwwg WWGG",
+      "output": 8
+    },
+    {
+      "input": "RBbr Wrbr wGGG wggR WgGR WBWb WRgB wBgG WBgG",
+      "output": 32
+    },
+    {
+      "input": "wBrg rGgb WRrB WWbw wRRB RbbB WRrb wrbb WgrG",
+      "output": 4
+    },
+    {
+      "input": "WrwB WWww wRRB WGGb Wbbg WBgG WrbG Wrww RBgg",
+      "output": 12
+    },
+    {
+      "input": "WWgg RBrr Rggr RGBg Wbgr WGbg WBbr WGWB GGGg",
+      "output": 0
+    }
+  ]
+}

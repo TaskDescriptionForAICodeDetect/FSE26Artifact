@@ -1,0 +1,1 @@
+Create a program that takes a color code in the format #RGB and outputs the name of the color from a predefined list that is closest to the provided color code. The color code represents the intensity of red, green, and blue, each in the range of 00 to ff. If the closest color has multiple candidates, choose the one that appears first in the list.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nlong long max(long long a, long long b) {\n    return (a > b) ? a : b;\n}\n\nvoid solve(int n, int m, long long *K) {\n    long long max_leftover = -1;\n    long long sum = 0;\n    int left = 0;\n\n    for (int right = 0; right < n; right++) {\n        sum += K[right];\n        while (sum >= m) {\n            long long leftover = sum % m;\n            max_leftover = max(max_leftover, leftover);\n            sum -= K[left];\n            left++;\n        }\n        long long leftover = sum % m;\n        max_leftover = max(max_leftover, leftover);\n    }\n\n    printf(\"%lld\\n\", max_leftover);\n}\n\nint main() {\n    int n, m;\n    while (1) {\n        scanf(\"%d %d\", &n, &m);\n        if (n == 0 && m == 0) break;\n        long long *K = (long long *)malloc(n * sizeof(long long));\n        for (int i = 0; i < n; i++) {\n            scanf(\"%lld\", &K[i]);\n        }\n        solve(n, m, K);\n        free(K);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class SconeDelivery {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));\n        \n        while (true) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int n = Integer.parseInt(st.nextToken());\n            int m = Integer.parseInt(st.nextToken());\n            \n            if (n == 0 && m == 0) break;\n            \n            st = new StringTokenizer(br.readLine());\n            long[] scones = new long[n];\n            for (int i = 0; i < n; i++) {\n                scones[i] = Long.parseLong(st.nextToken());\n            }\n            \n            long maxLeftover = solve(n, m, scones);\n            bw.write(maxLeftover + \"\\n\");\n        }\n        \n        bw.flush();\n        bw.close();\n        br.close();\n    }\n    \n    static long solve(int n, int m, long[] scones) {\n        long[] prefixSum = new long[n + 1];\n        for (int i = 0; i < n; i++) {\n            prefixSum[i + 1] = prefixSum[i] + scones[i];\n        }\n        \n        long maxLeftover = 0;\n        for (int start = 0; start < n; start++) {\n            for (int end = start; end < n; end++) {\n                long totalScones = prefixSum[end + 1] - prefixSum[start];\n                long deliverableCustomers = totalScones / m;\n                long leftover = totalScones % m;\n                \n                maxLeftover = Math.max(maxLeftover, leftover);\n            }\n        }\n        \n        return maxLeftover;\n    }\n}",
+    "timestamp": "2025-08-05 18:38:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nvoid solve() {\n    int n, m;\n    while (cin >> n >> m, n || m) {\n        vector<long long> K(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> K[i];\n        }\n        \n        vector<long long> prefix(n + 1, 0);\n        for (int i = 0; i < n; ++i) {\n            prefix[i + 1] = prefix[i] + K[i];\n        }\n        \n        long long max_leftover = 0;\n        for (int i = 0; i <= n; ++i) {\n            long long sum_i = prefix[i];\n            auto it = lower_bound(prefix.begin(), prefix.end(), sum_i - m);\n            if (it != prefix.end()) {\n                long long sum_j = *it;\n                long long leftover = (sum_i - sum_j) % m;\n                if (leftover > max_leftover) {\n                    max_leftover = leftover;\n                }\n            }\n            it = lower_bound(prefix.begin(), prefix.end(), sum_i + m);\n            if (it != prefix.end()) {\n                long long sum_j = *it;\n                long long leftover = (sum_j - sum_i) % m;\n                if (leftover > max_leftover) {\n                    max_leftover = leftover;\n                }\n            }\n        }\n        \n        cout << max_leftover << endl;\n    }\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_TRAYS 30001\n\nint main() {\n    int n, m, trays[MAX_TRAYS];\n    \n    while (1) {\n        scanf(\"%d %d\", &n, &m);\n        \n        if (n == 0 && m == 0) break;\n        \n        for (int i = 1; i <= n; i++) {\n            scanf(\"%d\", &trays[i]);\n        }\n        \n        int max_leftover = 0;\n        \n        for (int left = 1; left <= n; left++) {\n            int total_scones = 0;\n            int customers_served = 0;\n            \n            for (int right = left; right <= n; right++) {\n                total_scones += trays[right];\n                customers_served = total_scones / m;\n                \n                int leftover = total_scones % m;\n                \n                if (leftover > max_leftover) {\n                    max_leftover = leftover;\n                }\n            }\n        }\n        \n        printf(\"%d\\n\", max_leftover);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    while (true) {\n        int n, m;\n        cin >> n >> m;\n\n        if (n == 0 && m == 0) break;\n\n        vector<long long> trays(n);\n        for (int i = 0; i < n; i++) {\n            cin >> trays[i];\n        }\n\n        vector<long long> prefixSum(n + 1, 0);\n        for (int i = 0; i < n; i++) {\n            prefixSum[i + 1] = prefixSum[i] + trays[i];\n        }\n\n        long long maxLeftover = 0;\n        for (int start = 0; start < n; start++) {\n            for (int end = start; end < n; end++) {\n                long long totalScones = prefixSum[end + 1] - prefixSum[start];\n                long long deliveryCount = totalScones / m;\n                long long leftover = totalScones % m;\n\n                maxLeftover = max(maxLeftover, leftover);\n            }\n        }\n\n        cout << maxLeftover << '\\n';\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:38:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringBuilder output = new StringBuilder();\n        String line;\n        while ((line = br.readLine()) != null) {\n            StringTokenizer st = new StringTokenizer(line);\n            int n = Integer.parseInt(st.nextToken());\n            int m = Integer.parseInt(st.nextToken());\n            if (n == 0 && m == 0) break;\n            \n            long[] prefix = new long[n + 1];\n            st = new StringTokenizer(br.readLine());\n            for (int i = 1; i <= n; i++) {\n                prefix[i] = prefix[i - 1] + Long.parseLong(st.nextToken());\n            }\n            \n            TreeSet<Long> set = new TreeSet<>();\n            set.add(0L);\n            long maxLeftover = -1;\n            for (int i = 1; i <= n; i++) {\n                long sum = prefix[i];\n                Long ceiling = set.ceiling(sum - m);\n                if (ceiling != null) {\n                    long leftover = (sum - ceiling) % m;\n                    if (leftover > maxLeftover) {\n                        maxLeftover = leftover;\n                    }\n                }\n                set.add(sum);\n            }\n            output.append(maxLeftover).append(\"\\n\");\n        }\n        System.out.print(output);\n    }\n}",
+    "timestamp": "2025-08-05 18:39:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef max_scones_leftover(n, m, trays):\n    max_leftover = 0\n    current_sum = 0\n    current_remainder = 0\n\n    for end in range(n):\n        current_sum += trays[end]\n        current_remainder = current_sum % m\n\n        if end >= 0:\n            max_leftover = max(max_leftover, current_remainder)\n            current_sum -= trays[end - (end+1) + 0]\n\n    return max_leftover\n\nif __name__ == \"__main__\":\n    input = sys.stdin.read().strip().split(\"\\n\")\n    i = 0\n    while i < len(input):\n        line = input[i]\n        n, m = map(int, line.split())\n        \n        if n == 0 and m == 0:\n            break\n        \n        i += 1\n        trays = list(map(int, input[i].split()))\n        \n        print(max_scones_leftover(n, m, trays))\n        i += 1",
+    "timestamp": "2025-08-13 00:20:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SconeDelivery {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        while (true) {\n            int n = scanner.nextInt();\n            int m = scanner.nextInt();\n            if (n == 0 && m == 0) break;\n\n            int[] trays = new int[n];\n            for (int i = 0; i < n; i++) {\n                trays[i] = scanner.nextInt();\n            }\n\n            long maxLeftover = 0;\n            long currentSum = 0;\n            for (int left = 0, right = 0; right < n; right++) {\n                currentSum += trays[right];\n                while (currentSum >= m && left <= right) {\n                    maxLeftover = Math.max(maxLeftover, currentSum % m);\n                    currentSum -= trays[left++];\n                }\n                maxLeftover = Math.max(maxLeftover, currentSum % m);\n            }\n            System.out.println(maxLeftover);\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 00:20:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\n#define MAX_N 30000\n\nint main() {\n    int n, m;\n    uint64_t K[MAX_N];\n\n    while (1) {\n        scanf(\"%d %d\", &n, &m);\n        if (n == 0 && m == 0) break;\n\n        for (int i = 0; i < n; i++) {\n            scanf(\"%llu\", &K[i]);\n        }\n\n        uint64_t current_sum = 0, max_leftover = 0;\n        int start = 0;\n        \n        for (int end = 0; end < n; end++) {\n            current_sum += K[end];\n            while (current_sum >= m && start <= end) {\n                uint64_t leftover = current_sum % m;\n                if (leftover > max_leftover) {\n                    max_leftover = leftover;\n                }\n                current_sum -= K[start];\n                start++;\n            }\n        }\n\n        printf(\"%llu\\n\", max_leftover);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:21:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_leftover_scones(n, m, trays):\n    max_leftover = 0\n    \n    for start in range(n):\n        total_scones = 0\n        for end in range(start, n):\n            total_scones += trays[end]\n            customers = total_scones // m\n            leftover = total_scones % m\n            \n            max_leftover = max(max_leftover, leftover)\n    \n    return max_leftover\n\ndef main():\n    while True:\n        n, m = map(int, input().split())\n        \n        if n == 0 and m == 0:\n            break\n        \n        trays = list(map(int, input().split()))\n        \n        result = max_leftover_scones(n, m, trays)\n        print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 00:21:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    while True:\n        line = sys.stdin.readline()\n        if not line:\n            break\n        n, m = map(int, line.strip().split())\n        if n == 0 and m == 0:\n            break\n        K = list(map(int, sys.stdin.readline().strip().split()))\n        prefix = [0] * (n + 1)\n        for i in range(1, n+1):\n            prefix[i] = prefix[i-1] + K[i-1]\n        \n        max_left = -1\n        left = 0\n        for right in range(1, n+1):\n            while prefix[right] - prefix[left] >= m:\n                left += 1\n            current = prefix[right] - prefix[left]\n            if current < m and current > max_left:\n                max_left = current\n        print(max_left if max_left != -1 else 0)\n\nsolve()",
+    "timestamp": "2025-08-13 00:21:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    while (true) {\n        int n, m;\n        cin >> n >> m;\n        if (n == 0 && m == 0) break;\n\n        vector<unsigned long long> trays(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> trays[i];\n        }\n\n        unsigned long long currentSum = 0;\n        unsigned long long maxLeftover = 0;\n\n        int left = 0;\n        for (int right = 0; right < n; ++right) {\n            currentSum += trays[right];\n            while (currentSum >= m && left <= right) {\n                currentSum -= trays[left];\n                left++;\n            }\n            maxLeftover = max(maxLeftover, currentSum);\n        }\n        \n        cout << maxLeftover << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:53:33"
+  }
+]

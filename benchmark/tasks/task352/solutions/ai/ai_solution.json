@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int interviews[M];\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &interviews[i]);\n    }\n    \n    int sleep = 1;\n    int caffeine = 0;\n    int day = 1;\n    int interview_index = 0;\n    \n    while (interview_index < M) {\n        if (day == interviews[interview_index]) {\n            if (sleep < interviews[interview_index]) {\n                caffeine++;\n                sleep = 1;\n            }\n            interview_index++;\n        } else {\n            sleep += 1;\n            if (sleep > N) {\n                sleep = 1;\n            }\n        }\n        day++;\n    }\n    \n    printf(\"%d\\n\", caffeine);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<int> sleepHours(N);\n    sleepHours[0] = 1;\n    for (int i = 1; i < N; ++i) {\n        sleepHours[i] = sleepHours[i - 1] + 1;\n    }\n    \n    vector<int> interviews(M);\n    for (int i = 0; i < M; ++i) {\n        cin >> interviews[i];\n    }\n    sort(interviews.begin(), interviews.end());\n    \n    int caffeine = 0;\n    int currentDay = 0;\n    int totalSleep = 0;\n    \n    for (int interviewDay : interviews) {\n        while (currentDay < interviewDay) {\n            totalSleep += sleepHours[currentDay % N];\n            currentDay++;\n        }\n        if (totalSleep >= interviewDay) {\n            caffeine++;\n            totalSleep = 0;\n        }\n    }\n    \n    cout << caffeine << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        int[] interviews = new int[m];\n        for (int i = 0; i < m; i++) {\n            interviews[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(interviews);\n        int caffeineDoses = 0;\n        int sleepHours = 1;\n        int currentDay = 1;\n        int interviewIndex = 0;\n        \n        while (interviewIndex < m) {\n            if (currentDay > interviews[interviewIndex]) {\n                System.out.println(-1);\n                return;\n            }\n            \n            if (currentDay == interviews[interviewIndex]) {\n                interviewIndex++;\n                currentDay++;\n                sleepHours = 1;\n            } else {\n                if (currentDay + sleepHours - 1 >= interviews[interviewIndex]) {\n                    currentDay = interviews[interviewIndex];\n                } else {\n                    caffeineDoses++;\n                    currentDay += sleepHours;\n                    sleepHours++;\n                }\n            }\n        }\n        \n        System.out.println(caffeineDoses);\n    }\n}",
+    "timestamp": "2025-08-05 21:11:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Solution {\n    public static int minimumCaffeineDoses(int[] interviews, int[] sleepCycle) {\n        int n = interviews.length;\n        int[] sleepHours = new int[n];\n        sleepHours[0] = 1;\n        \n        for (int i = 1; i < n; i++) {\n            sleepHours[i] = sleepCycle[(i - 1) % sleepCycle.length];\n        }\n        \n        Arrays.sort(interviews);\n        int caffeineDoses = 0;\n        int currentTime = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (currentTime + sleepHours[i] <= interviews[i]) {\n                currentTime += sleepHours[i];\n            } else {\n                int hoursToWake = sleepHours[i];\n                while (currentTime + hoursToWake > interviews[i]) {\n                    caffeineDoses++;\n                    hoursToWake /= 2;\n                }\n                currentTime += hoursToWake;\n            }\n        }\n        \n        return caffeineDoses;\n    }\n}",
+    "timestamp": "2025-08-05 21:11:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_INTERVIEWS 100\n#define MAX_SLEEP_CYCLE 50\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n\n    int interviews[MAX_INTERVIEWS];\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d\", &interviews[i]);\n    }\n\n    int sleep_cycle[MAX_SLEEP_CYCLE];\n    sleep_cycle[0] = 1;\n    for (int i = 1; i < n; i++) {\n        sleep_cycle[i] = sleep_cycle[i-1] + 1;\n    }\n\n    int caffeine_doses = 0;\n    int current_cycle_index = 0;\n    int total_sleep_hours = 0;\n\n    for (int i = 0; i < m; i++) {\n        while (total_sleep_hours < interviews[i]) {\n            total_sleep_hours += sleep_cycle[current_cycle_index];\n            current_cycle_index = (current_cycle_index + 1) % n;\n            \n            if (i > 0 && total_sleep_hours < interviews[i]) {\n                caffeine_doses++;\n            }\n        }\n        \n        total_sleep_hours -= interviews[i];\n    }\n\n    printf(\"%d\\n\", caffeine_doses);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:11:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint minimumCaffeineDoses(vector<int>& interviews, vector<int>& sleepCycle) {\n    int n = interviews.size();\n    int m = sleepCycle.size();\n    int caffeineDoses = 0;\n    int currentSleepTime = 1;\n    int cycleIndex = 0;\n\n    sort(interviews.begin(), interviews.end());\n\n    for (int interview : interviews) {\n        while (currentSleepTime < interview) {\n            currentSleepTime += sleepCycle[cycleIndex % m];\n            cycleIndex++;\n        }\n\n        if (currentSleepTime > interview) {\n            caffeineDoses++;\n            currentSleepTime -= 8;\n        }\n    }\n\n    return caffeineDoses;\n}\n\nint main() {\n    int numInterviews, numSleepCycle;\n    cin >> numInterviews >> numSleepCycle;\n\n    vector<int> interviews(numInterviews);\n    vector<int> sleepCycle(numSleepCycle);\n\n    for (int i = 0; i < numInterviews; i++) {\n        cin >> interviews[i];\n    }\n\n    for (int i = 0; i < numSleepCycle; i++) {\n        cin >> sleepCycle[i];\n    }\n\n    int result = minimumCaffeineDoses(interviews, sleepCycle);\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:12:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_caffeine_doses(interview_days, cycle):\n    sleep_hours = [1]\n    while len(sleep_hours) < max(interview_days):\n        sleep_hours.append(sleep_hours[-1] + 1)\n        \n    current_cycle_length = len(sleep_hours)\n    total_caffeine = 0\n\n    for interview_day in interview_days:\n        if (interview_day - 1) % current_cycle_length >= len(sleep_hours):\n            total_caffeine += 1\n    return total_caffeine\n\n# Example usage\ninterview_days = [1, 2, 5, 10, 20, 25]\ncycle_length = 1\nprint(min_caffeine_doses(interview_days, cycle_length))",
+    "timestamp": "2025-08-13 05:24:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SleepCycle {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int numDays = scanner.nextInt();\n        int[] interviewDays = new int[numDays];\n        \n        for (int i = 0; i < numDays; i++) {\n            interviewDays[i] = scanner.nextInt();\n        }\n        \n        int caffeineCount = 0;\n        int sleepCycle = 1;\n        int currentDay = 1;\n        \n        for (int interviewDay : interviewDays) {\n            while (currentDay < interviewDay) {\n                sleepCycle++;\n                if (sleepCycle > 24) {\n                    sleepCycle = 1;\n                }\n                currentDay++;\n            }\n            if (sleepCycle > 8) { // Assuming over 8 hours he can't wake up on time\n                caffeineCount++;\n            }\n        }\n        \n        System.out.println(caffeineCount);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 05:24:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n, m, i, day, caffeine = 0, totalSleep = 0;\n    scanf(\"%d\", &n);\n    int sleepCycle[n];\n    for (i = 0; i < n; i++) {\n        scanf(\"%d\", &sleepCycle[i]);\n    }\n\n    scanf(\"%d\", &m);\n    int interviews[m];\n    for (i = 0; i < m; i++) {\n        scanf(\"%d\", &interviews[i]);\n    }\n\n    day = 0;\n    for (i = 0; i < m; i++) {\n        while (day < interviews[i]) {\n            totalSleep += sleepCycle[day % n];\n            day++;\n        }\n\n        if (totalSleep > interviews[i]) {\n            caffeine += (totalSleep - interviews[i]);\n            totalSleep = interviews[i];\n        }\n    }\n\n    printf(\"%d\\n\", caffeine);\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:24:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_caffeine_doses(sleep_cycle, interviews):\n    total_sleep = 0\n    caffeine_doses = 0\n    \n    for interview_time in sorted(interviews):\n        while total_sleep < interview_time:\n            total_sleep += 1 if total_sleep == 0 else sleep_cycle[total_sleep % len(sleep_cycle)]\n            if total_sleep < interview_time:\n                caffeine_doses += 1\n    \n    return caffeine_doses\n\n# Example usage\nsleep_cycle = [1, 2, 3, 4]\ninterviews = [5, 8, 12]\nprint(min_caffeine_doses(sleep_cycle, interviews))",
+    "timestamp": "2025-08-13 05:24:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_caffeine_needed(sleep_cycle, interviews):\n    current_sleep = 1\n    caffeine_count = 0\n    day = 0\n    interview_days = sorted(interviews)\n    \n    for interview_day in interview_days:\n        while day < interview_day:\n            current_sleep = sleep_cycle[(day) % len(sleep_cycle)]\n            day += 1\n        \n        if current_sleep > 8:\n            caffeine_count += 1\n            current_sleep = 1\n    \n    return caffeine_count",
+    "timestamp": "2025-08-13 05:24:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int n; // number of days in the sleep cycle\n    std::cin >> n;\n    \n    std::vector<int> sleepCycle(n);\n    for (int i = 0; i < n; ++i) {\n        sleepCycle[i] = i + 1;\n    }\n    \n    int m; // number of interviews\n    std::cin >> m;\n    \n    std::vector<int> interviews(m);\n    for (int i = 0; i < m; ++i) {\n        std::cin >> interviews[i];\n    }\n    \n    int caffeineCycles = 0;\n    for (int interview : interviews) {\n        int cycleIndex = interview % n != 0 ? interview % n - 1 : n - 1;\n        if (sleepCycle[cycleIndex] * 60 < 480) {\n            caffeineCycles++;\n        }\n    }\n    \n    std::cout << caffeineCycles << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:24:50"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int* perm = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &perm[i]);\n    }\n    \n    int* stack = malloc(n * sizeof(int));\n    int top = -1;\n    char* result = malloc((2 * n + 1) * sizeof(char));\n    int resultIndex = 0;\n    \n    bool valid = true;\n    int nextOpen = 1;\n    \n    for (int i = 0; i < n; i++) {\n        while (nextOpen <= perm[i]) {\n            stack[++top] = nextOpen;\n            result[resultIndex++] = '(';\n            nextOpen++;\n        }\n        \n        if (top == -1 || stack[top] != perm[i]) {\n            valid = false;\n            break;\n        }\n        \n        top--;\n        result[resultIndex++] = ')';\n    }\n    \n    if (!valid || top != -1) {\n        printf(\":(\");\n    } else {\n        result[resultIndex] = '\\0';\n        printf(\"%s\", result);\n    }\n    \n    free(perm);\n    free(stack);\n    free(result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    int *arr;\n    int top;\n    int capacity;\n} Stack;\n\nStack* createStack(int capacity) {\n    Stack* stack = (Stack*)malloc(sizeof(Stack));\n    stack->capacity = capacity;\n    stack->top = -1;\n    stack->arr = (int*)malloc(capacity * sizeof(int));\n    return stack;\n}\n\nvoid push(Stack* stack, int item) {\n    stack->arr[++stack->top] = item;\n}\n\nint pop(Stack* stack) {\n    return stack->arr[stack->top--];\n}\n\nint isEmpty(Stack* stack) {\n    return stack->top == -1;\n}\n\nvoid freeStack(Stack* stack) {\n    free(stack->arr);\n    free(stack);\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int *p = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n\n    char *result = (char*)malloc((2 * n + 1) * sizeof(char));\n    int result_idx = 0;\n    Stack* stack = createStack(n);\n    int current_open = 0;\n\n    for (int i = 0; i < n; i++) {\n        while (current_open < p[i]) {\n            result[result_idx++] = '(';\n            push(stack, current_open + 1);\n            current_open++;\n        }\n        if (isEmpty(stack) || stack->arr[stack->top] != p[i]) {\n            printf(\":(\\n\");\n            free(p);\n            free(result);\n            freeStack(stack);\n            return 0;\n        }\n        result[result_idx++] = ')';\n        pop(stack);\n    }\n\n    if (!isEmpty(stack)) {\n        printf(\":(\\n\");\n    } else {\n        result[result_idx] = '\\0';\n        printf(\"%s\\n\", result);\n    }\n\n    free(p);\n    free(result);\n    freeStack(stack);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n;\n    cin >> n;\n    vector<int> p(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> p[i];\n    }\n\n    if (n % 2 != 0) {\n        cout << \":(\\n\";\n        return 0;\n    }\n\n    vector<pair<int, int>> pairs;\n    for (int i = 0; i < n; ++i) {\n        pairs.emplace_back(p[i], i + 1);\n    }\n    sort(pairs.begin(), pairs.end());\n\n    stack<int> st;\n    string res;\n    int current_open = 0;\n    int pos = 0;\n\n    for (int i = 1; i <= n; ++i) {\n        while (pos < n && pairs[pos].first == i) {\n            st.push(pairs[pos].second);\n            pos++;\n        }\n        if (st.empty() || st.top() != i) {\n            cout << \":(\\n\";\n            return 0;\n        }\n        st.pop();\n    }\n\n    res.resize(n, '(');\n    for (int i = 0; i < n; ++i) {\n        res[pairs[i].second - 1] = ')';\n    }\n\n    stack<int> validation;\n    for (char c : res) {\n        if (c == '(') {\n            validation.push(1);\n        } else {\n            if (validation.empty()) {\n                cout << \":(\\n\";\n                return 0;\n            }\n            validation.pop();\n        }\n    }\n    if (!validation.empty()) {\n        cout << \":(\\n\";\n        return 0;\n    }\n\n    cout << res << '\\n';\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class ParenthesesNumber {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int n = Integer.parseInt(br.readLine());\n        String[] parts = br.readLine().split(\" \");\n        int[] p = new int[n];\n        for (int i = 0; i < n; i++) {\n            p[i] = Integer.parseInt(parts[i]);\n        }\n\n        Stack<Integer> stack = new Stack<>();\n        StringBuilder sb = new StringBuilder();\n        int currentOpen = 0;\n        boolean possible = true;\n\n        for (int i = 0; i < n; i++) {\n            while (currentOpen < p[i]) {\n                sb.append('(');\n                stack.push(currentOpen);\n                currentOpen++;\n            }\n            if (stack.isEmpty() || stack.peek() != p[i] - 1) {\n                possible = false;\n                break;\n            }\n            sb.append(')');\n            stack.pop();\n        }\n\n        if (possible && stack.isEmpty()) {\n            System.out.println(sb.toString());\n        } else {\n            System.out.println(\":(\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:04:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ParenthesesNumber {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int[] p = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            p[i] = scanner.nextInt();\n        }\n        \n        String result = solve(n, p);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n    \n    static String solve(int n, int[] p) {\n        int[] matchingOpen = new int[n + 1];\n        int[] used = new int[n + 1];\n        StringBuilder result = new StringBuilder();\n        \n        for (int i = 0; i < n; i++) {\n            result.append('(');\n            used[p[i]]++;\n            \n            while (used[p[i]] > 1) {\n                result.append(')');\n                used[p[i]]--;\n                \n                for (int j = 1; j <= n; j++) {\n                    if (matchingOpen[j] == 0 && used[j] == 0) {\n                        matchingOpen[j] = p[i];\n                        break;\n                    }\n                }\n            }\n        }\n        \n        for (int i = 1; i <= n; i++) {\n            if (used[i] > 0) {\n                return \":(\";\n            }\n        }\n        \n        while (result.length() < 2 * n) {\n            result.append(')');\n        }\n        \n        return result.toString();\n    }\n}",
+    "timestamp": "2025-08-05 22:05:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\n\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<int> p(n);\n    for (int i = 0; i < n; i++) {\n        cin >> p[i];\n    }\n    \n    vector<int> result(n);\n    stack<int> st;\n    \n    for (int i = 0; i < n; i++) {\n        if (st.empty() || p[i] > st.top()) {\n            st.push(p[i]);\n        } else {\n            bool found = false;\n            while (!st.empty() && p[i] < st.top()) {\n                int j = st.top();\n                st.pop();\n                result[j - 1] = i + 1;\n                \n                if (p[i] == j) {\n                    found = true;\n                    break;\n                }\n            }\n            \n            if (!found) {\n                cout << \":(\" << endl;\n                return 0;\n            }\n        }\n    }\n    \n    if (!st.empty()) {\n        cout << \":(\" << endl;\n        return 0;\n    }\n    \n    for (int val : result) {\n        cout << val << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_parentheses_sequence(n, permutation):\n    # Check if n is even, as only even n can form a complete parentheses sequence\n    if n % 2 != 0:\n        return \":(\"\n    \n    open_parentheses = ['('] * (n // 2)\n    close_parentheses = [')'] * (n // 2)\n\n    current_depth = 0\n    max_depth = 0\n\n    # This array will store the resulting parentheses\n    result = [None] * n\n\n    for i in range(n):\n        # Convert to 0-based index\n        index = permutation[i] - 1\n\n        if index < 0 or index >= n:\n            return \":(\"\n\n        # We are assigning () based on 0-indexed positions.\n        if index < n // 2:\n            result[index] = '('\n        else:\n            result[index] = ')'\n\n    # Validate the parentheses properly close and match\n    for i, char in enumerate(result):\n        if char == '(':\n            current_depth += 1\n        else:\n            current_depth -= 1\n\n        if current_depth < 0:\n            return \":(\"\n        max_depth = max(max_depth, current_depth)\n    \n    if current_depth != 0:\n        return \":(\"\n\n    return ''.join(result)\n\n# Input\nn = int(input().strip())\npermutation = list(map(int, input().strip().split()))\n\n# Output\nprint(find_parentheses_sequence(n, permutation))",
+    "timestamp": "2025-08-13 08:50:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class ParenthesesNumber {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int[] permutation = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            permutation[i] = scanner.nextInt();\n        }\n        \n        if (!isValidPermutation(permutation)) {\n            System.out.println(\":(\");\n            return;\n        }\n        \n        int[] position = new int[n + 1];\n        char[] result = new char[n];\n        \n        Stack<Integer> stack = new Stack<>();\n        \n        for (int i = 0; i < n; i++) {\n            int current = permutation[i];\n            position[current] = i;\n            stack.push(current);\n        }\n        \n        int[] openCount = new int[n + 1];\n        \n        for (int i = 0; i < n; i++) {\n            while (!stack.isEmpty() && position[stack.peek()] <= i) {\n                int matchedOpen = stack.pop();\n                openCount[matchedOpen]++;\n                result[i] = ')';\n            }\n            if (openCount[i + 1] > 0) {\n                openCount[i + 1]--;\n            } else {\n                result[i] = '(';\n            }\n        }\n        \n        System.out.println(new String(result));\n    }\n    \n    static boolean isValidPermutation(int[] permutation) {\n        int n = permutation.length;\n        boolean[] seen = new boolean[n+1];\n        for (int num : permutation) {\n            if (num < 1 || num > n || seen[num]) {\n                return false;\n            }\n            seen[num] = true;\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-13 08:50:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100000\n\nint n;\nint p[MAXN];\nchar result[MAXN * 2 + 1];\n\nint main() {\n    // Read the input\n    scanf(\"%d\", &n);\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n\n    // Initialize balance and mapping\n    int balance = 0;\n    int open_balance[MAXN] = {0};\n\n    // Build the result parenthesis sequence\n    for (int i = 1; i <= n; i++) {\n        result[2 * (i - 1)] = '(';\n        result[2 * (p[i] - 1) + 1] = ')';\n        open_balance[p[i]]++;\n        if (open_balance[i] == 0) {\n            balance++;\n        } else {\n            open_balance[i]--;\n        }\n        balance--;\n        if (balance < 0) {\n            printf(\":(\");\n            return 0;\n        }\n    }\n\n    result[2 * n] = '\\0';\n\n    printf(\"%s\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:50:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_parentheses_sequence(n, p):\n    # Check if the permutation is valid\n    if len(p) != n or len(set(p)) != n or any(x < 1 or x > n for x in p):\n        return \":(\"\n    \n    # Convert to 0-based indexing\n    p = [x - 1 for x in p]\n    \n    # Track open parentheses\n    stack = []\n    used = [False] * n\n    result = []\n    \n    for i in range(n):\n        if used[i]:\n            continue\n        \n        # Find the corresponding opening parenthesis\n        opening = i\n        closing = p[i]\n        \n        # Check for validity\n        if closing < opening or used[closing]:\n            return \":(\"\n        \n        # Mark the parenthesis pair as used\n        used[i] = True\n        used[closing] = True\n        \n        # Push depths into the stack\n        stack.append(opening)\n    \n    # Check if all parentheses are matched\n    if len(stack) * 2 != n:\n        return \":(\"\n    \n    # Reconstruct the sequence\n    result = []\n    for x in sorted(stack):\n        result.append('(')\n    for x in sorted(stack, reverse=True):\n        result.append(')')\n    \n    return ''.join(result)\n\n# Read input\nn = int(input())\np = list(map(int, input().split()))\n\n# Print the result\nprint(solve_parentheses_sequence(n, p))",
+    "timestamp": "2025-08-13 08:51:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    n = int(sys.stdin.readline())\n    P = list(map(int, sys.stdin.readline().split()))\n    \n    if P[-1] != 1:\n        print(\":(\")\n        return\n    \n    stack = []\n    res = []\n    current_open = 0\n    max_open = 0\n    \n    for i in range(n):\n        val = P[i]\n        if val > current_open + 1:\n            print(\":(\")\n            return\n        if val == current_open + 1:\n            res.append('(')\n            current_open += 1\n            max_open = max(max_open, current_open)\n        else:\n            res.append(')')\n            current_open -= 1\n            if current_open < 0:\n                print(\":(\")\n                return\n    \n    if current_open != 0:\n        print(\":(\")\n    else:\n        print(''.join(res))\n\nsolve()",
+    "timestamp": "2025-08-13 08:51:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\n\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> permutation(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> permutation[i];\n    }\n\n    vector<int> matched(n + 1, 0); // Tracks matched pairs\n    string result(n, ')'); // Initialize result with closing parentheses\n    stack<int> openingStack; // Tracks indices of matched opening parentheses\n\n    for (int i = n - 1; i >= 0; --i) {\n        if (permutation[i] > n || matched[permutation[i]]) {\n            cout << \":(\" << endl;\n            return 0;\n        }\n        matched[permutation[i]] = 1;\n        result[permutation[i] - 1] = '(';\n        openingStack.push(permutation[i] - 1);\n    }\n\n    if (openingStack.size() != n / 2) {\n        cout << \":(\" << endl;\n        return 0;\n    }\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:02"
+  }
+]

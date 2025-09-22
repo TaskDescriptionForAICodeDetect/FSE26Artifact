@@ -1,0 +1,1 @@
+Joisino the magical girl wants to change every digit (0-9) on a wall into 1. The wall is represented as a grid of squares, some of which contain digits, while others do not. Changing a digit 'i' to 'j' costs 'c_{i,j}' Magic Points (MP). Your task is to calculate the minimum total MP required to convert every found digit into 1.

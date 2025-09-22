@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_LEN 2001\n#define MOD 1000000007\n\nbool is_in_set(char *word, char **S, int N) {\n    for (int i = 0; i < N; i++) {\n        if (strcmp(word, S[i]) == 0) {\n            return true;\n        }\n    }\n    return false;\n}\n\nint count_separations(char *t, char **S, int N) {\n    int len = strlen(t);\n    int dp[MAX_LEN] = {0};\n    dp[0] = 1;\n\n    for (int i = 1; i <= len; i++) {\n        for (int j = 0; j < i; j++) {\n            char substr[MAX_LEN];\n            strncpy(substr, t + j, i - j);\n            substr[i - j] = '\\0';\n\n            if (is_in_set(substr, S, N)) {\n                dp[i] = (dp[i] + dp[j]) % MOD;\n            }\n        }\n    }\n\n    return dp[len];\n}\n\nint main() {\n    int N;\n    char t[MAX_LEN];\n    char *S[MAX_LEN];\n\n    scanf(\"%d %s\", &N, t);\n    for (int i = 0; i < N; i++) {\n        S[i] = malloc(MAX_LEN * sizeof(char));\n        scanf(\"%s\", S[i]);\n    }\n\n    printf(\"%d\\n\", count_separations(t, S, N));\n\n    for (int i = 0; i < N; i++) {\n        free(S[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n#define MAX_LEN 5000\n\ntypedef struct {\n    char str[MAX_LEN + 1];\n} String;\n\nint countWays(char* t, String* S, int N) {\n    int len_t = strlen(t);\n    long long dp[MAX_LEN + 1] = {0};\n    dp[0] = 1;\n\n    for (int i = 1; i <= len_t; i++) {\n        for (int j = 0; j < N; j++) {\n            int len_s = strlen(S[j].str);\n            if (i >= len_s && strncmp(t + i - len_s, S[j].str, len_s) == 0) {\n                dp[i] = (dp[i] + dp[i - len_s]) % MOD;\n            }\n        }\n    }\n\n    return (int)dp[len_t];\n}\n\nint main() {\n    char t[MAX_LEN + 1];\n    scanf(\"%s\", t);\n\n    int N;\n    scanf(\"%d\", &N);\n    String* S = (String*)malloc(N * sizeof(String));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", S[i].str);\n    }\n\n    printf(\"%d\\n\", countWays(t, S, N));\n    free(S);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    string t;\n    int N;\n    cin >> t >> N;\n    unordered_set<string> S;\n    for (int i = 0; i < N; ++i) {\n        string s;\n        cin >> s;\n        S.insert(s);\n    }\n\n    int len = t.size();\n    vector<int> dp(len + 1, 0);\n    dp[0] = 1;\n\n    for (int i = 1; i <= len; ++i) {\n        for (int j = 0; j < i; ++j) {\n            string sub = t.substr(j, i - j);\n            if (S.find(sub) != S.end()) {\n                dp[i] = (dp[i] + dp[j]) % MOD;\n            }\n        }\n    }\n\n    cout << dp[len] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 1_000_000_007;\n\n    public static int countWays(String t, String[] S) {\n        Set<String> dict = new HashSet<>(Arrays.asList(S));\n        int n = t.length();\n        int[] dp = new int[n + 1];\n        dp[0] = 1;\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j < i; j++) {\n                String substring = t.substring(j, i);\n                if (dict.contains(substring)) {\n                    dp[i] = (dp[i] + dp[j]) % MOD;\n                }\n            }\n        }\n        return dp[n];\n    }\n}",
+    "timestamp": "2025-08-05 22:03:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class StringSeparation {\n    public static int countSeparations(String t, Set<String> S) {\n        int MOD = 1_000_000_007;\n        int n = t.length();\n        long[] dp = new long[n + 1];\n        dp[0] = 1;\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j < i; j++) {\n                String substring = t.substring(j, i);\n                if (S.contains(substring)) {\n                    dp[i] = (dp[i] + dp[j]) % MOD;\n                }\n            }\n        }\n\n        return (int) dp[n];\n    }\n\n    public static void main(String[] args) {\n        String t = \"abcde\";\n        Set<String> S = new HashSet<>(Arrays.asList(\"ab\", \"cd\", \"e\"));\n        System.out.println(countSeparations(t, S));\n    }\n}",
+    "timestamp": "2025-08-05 22:03:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int numWays(string t, vector<string>& S) {\n        int n = t.length();\n        const int MOD = 1e9 + 7;\n        \n        unordered_set<string> set_S(S.begin(), S.end());\n        \n        vector<int> dp(n + 1, 0);\n        dp[0] = 1;\n        \n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j < i; j++) {\n                string curr = t.substr(j, i - j);\n                if (set_S.count(curr)) {\n                    dp[i] = (dp[i] + dp[j]) % MOD;\n                }\n            }\n        }\n        \n        return dp[n];\n    }\n};",
+    "timestamp": "2025-08-05 22:03:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_ways_to_separate(t, S):\n    MOD = 1000000007\n    n = len(t)\n    dp = [0] * (n + 1)\n    dp[0] = 1\n    \n    for i in range(1, n + 1):\n        for s in S:\n            if i >= len(s) and t[i-len(s):i] == s:\n                dp[i] = (dp[i] + dp[i-len(s)]) % MOD\n    \n    return dp[n]\n\n# Example usage\nt = \"example\"\nS = {\"ex\", \"ample\", \"exam\", \"ple\"}\nresult = count_ways_to_separate(t, S)\nprint(result)",
+    "timestamp": "2025-08-13 08:40:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class StringSeparator {\n\n    private static final int MOD = 1_000_000_007;\n\n    public static int countWays(String t, Set<String> s) {\n        int n = t.length();\n        int[] dp = new int[n + 1];\n        dp[0] = 1; // base case\n\n        for (int i = 1; i <= n; i++) {\n            for (String word : s) {\n                int len = word.length();\n                if (i >= len && t.substring(i - len, i).equals(word)) {\n                    dp[i] = (dp[i] + dp[i - len]) % MOD;\n                }\n            }\n        }\n\n        return dp[n];\n    }\n\n    public static void main(String[] args) {\n        String t = \"yourstringhere\";\n        Set<String> s = new HashSet<>(Arrays.asList(\"your\", \"string\", \"here\", \"yo\", \"ur\", \"str\", \"ing\", \"her\"));\n        System.out.println(countWays(t, s));\n    }\n}",
+    "timestamp": "2025-08-13 08:40:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint countWaysToSeparate(char *t, char **S, int N) {\n    int length = strlen(t);\n    int dp[length + 1];\n    memset(dp, 0, sizeof(dp));\n    dp[0] = 1; // Base case: one way to separate an empty string.\n\n    for (int i = 1; i <= length; i++) {\n        for (int j = 0; j < N; j++) {\n            int len = strlen(S[j]);\n            if (i >= len && strncmp(t + i - len, S[j], len) == 0) {\n                dp[i] = (dp[i] + dp[i - len]) % MOD;\n            }\n        }\n    }\n    return dp[length];\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    char t[1001];\n    scanf(\"%s\", t);\n\n    char *S[N];\n    for (int i = 0; i < N; i++) {\n        S[i] = (char *)malloc(101 * sizeof(char));\n        scanf(\"%s\", S[i]);\n    }\n\n    int result = countWaysToSeparate(t, S, N);\n    printf(\"%d\\n\", result);\n\n    for (int i = 0; i < N; i++) {\n        free(S[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:40:28"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_separations(t, S):\n    MOD = 10**9 + 7\n    n = len(t)\n    dp = [0] * (n + 1)\n    dp[0] = 1\n\n    for i in range(1, n + 1):\n        for j in range(i):\n            if t[j:i] in S:\n                dp[i] = (dp[i] + dp[j]) % MOD\n\n    return dp[n]",
+    "timestamp": "2025-08-13 08:40:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef count_ways_to_separate(t, S):\n    word_set = set(S)\n    n = len(t)\n    dp = [0] * (n + 1)\n    dp[0] = 1  # empty string has one way\n    \n    for i in range(1, n + 1):\n        for j in range(i):\n            substring = t[j:i]\n            if substring in word_set:\n                dp[i] = (dp[i] + dp[j]) % MOD\n    return dp[n]\n\n# Example usage:\n# t = \"abcde\"\n# S = [\"a\", \"b\", \"c\", \"d\", \"e\", \"ab\", \"bc\", \"cd\", \"de\", \"abc\", \"cde\"]\n# print(count_ways_to_separate(t, S))",
+    "timestamp": "2025-08-13 08:40:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nconst int MOD = 1000000007;\n\nint countWays(const std::string& t, const std::unordered_set<std::string>& S) {\n    int len = t.size();\n    std::vector<int> dp(len + 1, 0);\n    dp[0] = 1;\n\n    for (int i = 1; i <= len; ++i) {\n        for (int j = 0; j < i; ++j) {\n            if (S.find(t.substr(j, i - j)) != S.end()) {\n                dp[i] = (dp[i] + dp[j]) % MOD;\n            }\n        }\n    }\n\n    return dp[len];\n}\n\nint main() {\n    std::string t;\n    int N;\n    std::cin >> t >> N;\n\n    std::unordered_set<std::string> S;\n    for (int i = 0; i < N; ++i) {\n        std::string temp;\n        std::cin >> temp;\n        S.insert(temp);\n    }\n\n    std::cout << countWays(t, S) << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:25"
+  }
+]

@@ -1,0 +1,1 @@
+In a strategic simulation game set in a hexagonal grid, each turn you can move to an adjacent cell, avoiding obstacles. Given a number of turns and the locations of the obstacles, determine how many cells can be reached by the start position within the given turns.

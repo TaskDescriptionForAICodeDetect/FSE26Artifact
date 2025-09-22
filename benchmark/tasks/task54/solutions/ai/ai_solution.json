@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, m, switches):\n    for skip in range(n):\n        lamps = [0] * m\n        for i in range(n):\n            if i == skip:\n                continue\n            for j in range(m):\n                if switches[i][j] == '1':\n                    lamps[j] = 1\n        \n        if all(lamps):\n            return \"YES\"\n    \n    return \"NO\"\n\ndef main():\n    n, m = map(int, input().split())\n    switches = []\n    for _ in range(n):\n        switches.append(input().strip())\n    \n    print(solve(n, m, switches))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:33:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m = map(int, input().split())\nmatrix = []\nlamp_counts = [0] * m\n\nfor _ in range(n):\n    row = input().strip()\n    matrix.append(row)\n    for j in range(m):\n        if row[j] == '1':\n            lamp_counts[j] += 1\n\nfound = False\nfor i in range(n):\n    possible = True\n    for j in range(m):\n        if matrix[i][j] == '1' and lamp_counts[j] == 1:\n            possible = False\n            break\n    if possible:\n        found = True\n        break\n\nprint(\"YES\" if found else \"NO\")",
+    "timestamp": "2025-08-05 17:33:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_ignore_a_switch(n, m, matrix):\n    # Create a list to store the count of switches turning on each lamp\n    lamp_counts = [0] * m\n    \n    # Count how many switches can turn on each lamp\n    for row in matrix:\n        for j in range(m):\n            if row[j] == '1':\n                lamp_counts[j] += 1\n                \n    # Check if there exists a switch that can be ignored\n    for i in range(n):\n        can_ignore = True\n        for j in range(m):\n            if matrix[i][j] == '1' and lamp_counts[j] == 1:\n                can_ignore = False\n                break\n        if can_ignore:\n            return \"YES\"\n    return \"NO\"\n\n# Read input\nn, m = map(int, input().split())\nmatrix = [input().strip() for _ in range(n)]\n\n# Output result\nprint(can_ignore_a_switch(n, m, matrix))",
+    "timestamp": "2025-08-12 21:55:22"
+  }
+]

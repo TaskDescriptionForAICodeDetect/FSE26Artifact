@@ -1,0 +1,1 @@
+You are given a graph composed of N vertices, numbered from 1 to N, connected by N-1 undirected edges. For each vertex, output the shortest number of steps required to visit all vertices starting from that vertex. Moving from one vertex to another by following an edge counts as one step.

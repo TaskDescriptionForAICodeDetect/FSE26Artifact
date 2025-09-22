@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nint compare_desc(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nint compare_asc(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nlong long calculate_energy(int bm, int bw) {\n    long long diff = abs(bm - bw);\n    return diff * (diff - 30) * (diff - 30);\n}\n\nlong long max_energy(int males[], int females[], int M, int F) {\n    qsort(males, M, sizeof(int), compare_desc);\n    qsort(females, F, sizeof(int), compare_asc);\n    \n    int pairs = (M < F) ? M : F;\n    long long total = 0;\n    \n    for (int i = 0; i < pairs; i++) {\n        total += calculate_energy(males[i], females[i]);\n    }\n    \n    return total;\n}\n\nint main() {\n    int M, F;\n    scanf(\"%d %d\", &M, &F);\n    \n    int *males = (int *)malloc(M * sizeof(int));\n    int *females = (int *)malloc(F * sizeof(int));\n    \n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &males[i]);\n    }\n    for (int i = 0; i < F; i++) {\n        scanf(\"%d\", &females[i]);\n    }\n    \n    long long result = max_energy(males, females, M, F);\n    printf(\"%lld\\n\", result);\n    \n    free(males);\n    free(females);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:41:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MicrobialPowerGeneration {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int M = scanner.nextInt(); // Number of male microorganisms\n        int W = scanner.nextInt(); // Number of female microorganisms\n        \n        int[] males = new int[M];\n        int[] females = new int[W];\n        \n        for (int i = 0; i < M; i++) {\n            males[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < W; i++) {\n            females[i] = scanner.nextInt();\n        }\n        \n        long maxEnergy = calculateMaxEnergy(males, females);\n        System.out.println(maxEnergy);\n    }\n    \n    static long calculateMaxEnergy(int[] males, int[] females) {\n        Arrays.sort(males);\n        Arrays.sort(females);\n        \n        long totalEnergy = 0;\n        int m = 0, w = 0;\n        \n        while (m < males.length && w < females.length) {\n            long energy = calculateFusionEnergy(males[m], females[w]);\n            totalEnergy += energy;\n            m++;\n            w++;\n        }\n        \n        return totalEnergy;\n    }\n    \n    static long calculateFusionEnergy(int male, int female) {\n        long diff = Math.abs(male - female);\n        return diff * (diff - 30) * (diff - 30);\n    }\n}",
+    "timestamp": "2025-08-05 18:41:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nlong long calculateEnergy(long long bm, long long bw) {\n    long long diff = abs(bm - bw);\n    return diff * (diff - 30) * (diff - 30);\n}\n\nlong long maxEnergy(vector<long long>& males, vector<long long>& females) {\n    sort(males.begin(), males.end());\n    sort(females.begin(), females.end());\n    \n    long long total = 0;\n    int n = males.size();\n    for (int i = 0; i < n; ++i) {\n        total += calculateEnergy(males[i], females[i]);\n    }\n    return total;\n}\n\nint main() {\n    int M, F;\n    cin >> M >> F;\n    \n    vector<long long> males(M);\n    vector<long long> females(F);\n    \n    for (int i = 0; i < M; ++i) {\n        cin >> males[i];\n    }\n    for (int i = 0; i < F; ++i) {\n        cin >> females[i];\n    }\n    \n    sort(males.begin(), males.end());\n    sort(females.begin(), females.end());\n    \n    if (M < F) {\n        long long total = 0;\n        for (int i = 0; i < M; ++i) {\n            total += calculateEnergy(males[i], females[F - M + i]);\n        }\n        cout << total << endl;\n    } else {\n        long long total = 0;\n        for (int i = 0; i < F; ++i) {\n            total += calculateEnergy(males[M - F + i], females[i]);\n        }\n        cout << total << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:41:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint calculateEnergy(int bm, int bw) {\n    int diff = abs(bm - bw);\n    return diff * (diff - 30) * (diff - 30);\n}\n\nint main() {\n    int males, females;\n    scanf(\"%d %d\", &males, &females);\n\n    int* maleBParticles = malloc(males * sizeof(int));\n    int* femaleBParticles = malloc(females * sizeof(int));\n\n    for (int i = 0; i < males; i++) {\n        scanf(\"%d\", &maleBParticles[i]);\n    }\n\n    for (int i = 0; i < females; i++) {\n        scanf(\"%d\", &femaleBParticles[i]);\n    }\n\n    int maxEnergy = 0;\n\n    for (int i = 0; i < males; i++) {\n        for (int j = 0; j < females; j++) {\n            int currentEnergy = calculateEnergy(maleBParticles[i], femaleBParticles[j]);\n            if (currentEnergy > maxEnergy) {\n                maxEnergy = currentEnergy;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", maxEnergy);\n\n    free(maleBParticles);\n    free(femaleBParticles);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:41:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int M, W;\n    cin >> M >> W;\n    \n    vector<int> males(M);\n    vector<int> females(W);\n    \n    for (int i = 0; i < M; i++) {\n        cin >> males[i];\n    }\n    \n    for (int i = 0; i < W; i++) {\n        cin >> females[i];\n    }\n    \n    long long maxEnergy = 0;\n    \n    for (int i = 0; i < M; i++) {\n        for (int j = 0; j < W; j++) {\n            long long energy = abs(males[i] - females[j]);\n            energy *= (energy - 30);\n            maxEnergy = max(maxEnergy, energy);\n        }\n    }\n    \n    cout << maxEnergy << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:41:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MicrobialPower {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int[] males = new int[N];\n        int[] females = new int[M];\n        \n        for (int i = 0; i < N; i++) {\n            males[i] = sc.nextInt();\n        }\n        for (int i = 0; i < M; i++) {\n            females[i] = sc.nextInt();\n        }\n        \n        Arrays.sort(males);\n        Arrays.sort(females);\n        \n        long maxEnergy = 0;\n        int i = 0, j = 0;\n        \n        while (i < N && j < M) {\n            int bm = males[i];\n            int bw = females[j];\n            int diff = Math.abs(bm - bw);\n            long energy = (long) diff * (diff - 30) * (diff - 30);\n            maxEnergy += energy;\n            i++;\n            j++;\n        }\n        \n        System.out.println(maxEnergy);\n    }\n}",
+    "timestamp": "2025-08-05 18:42:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_energy(males, females):\n    males.sort()\n    females.sort()\n    \n    max_energy = 0\n    male_index = 0\n    female_index = 0\n    \n    while male_index < len(males) and female_index < len(females):\n        bm = males[male_index]\n        bw = females[female_index]\n        energy = abs(bm - bw) * (abs(bm - bw) - 30) ** 2\n        max_energy = max(max_energy, energy)\n        \n        if bm < bw:\n            male_index += 1\n        else:\n            female_index += 1\n    \n    return max_energy\n\n# Example usage:\nmales = [60, 45, 70, 85]\nfemales = [55, 80, 95, 65]\nprint(max_energy(males, females))",
+    "timestamp": "2025-08-13 00:33:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MicrobialPowerGeneration {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt(); // Number of male microorganisms\n        int m = scanner.nextInt(); // Number of female microorganisms\n        \n        int[] bm = new int[n]; // B particles in male microorganisms\n        int[] bw = new int[m]; // B particles in female microorganisms\n        \n        for (int i = 0; i < n; i++) {\n            bm[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < m; i++) {\n            bw[i] = scanner.nextInt();\n        }\n\n        Arrays.sort(bm);\n        Arrays.sort(bw);\n\n        int maxEnergy = 0;\n        \n        // Calculate the maximum energy using the sorted arrays\n        for (int i = 0, j = 0; i < n && j < m;) {\n            int diff = Math.abs(bm[i] - bw[j]);\n            int energy = diff * (diff - 30) * (diff - 30);\n            maxEnergy = Math.max(maxEnergy, energy);\n            \n            if (bm[i] < bw[j]) {\n                i++;\n            } else {\n                j++;\n            }\n        }\n\n        System.out.println(maxEnergy);\n    }\n}",
+    "timestamp": "2025-08-13 00:33:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nlong long calculate_energy(int diff) {\n    long long energy = (long long)diff * (diff - 30) * (diff - 30);\n    return energy;\n}\n\nlong long max_energy(int males[], int females[], int num_males, int num_females) {\n    qsort(males, num_males, sizeof(int), cmp);\n    qsort(females, num_females, sizeof(int), cmp);\n\n    long long total_energy = 0;\n    int i = 0, j = 0;\n    \n    while (i < num_males && j < num_females) {\n        int match_energy = abs(males[i] - females[j]);\n        long long energy = calculate_energy(match_energy);\n        if (energy > 0) {\n            total_energy += energy;\n            i++;\n            j++;\n        } else {\n            if (males[i] < females[j]) i++;\n            else j++;\n        }\n    }\n    return total_energy;\n}\n\nint main() {\n    int num_males, num_females;\n    scanf(\"%d\", &num_males);\n    scanf(\"%d\", &num_females);\n    \n    int males[num_males];\n    int females[num_females];\n    \n    for (int i = 0; i < num_males; i++) {\n        scanf(\"%d\", &males[i]);\n    }\n    \n    for (int j = 0; j < num_females; j++) {\n        scanf(\"%d\", &females[j]);\n    }\n    \n    long long max_total_energy = max_energy(males, females, num_males, num_females);\n    printf(\"%lld\\n\", max_total_energy);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 00:33:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_microbial_energy(males, females, male_particles, female_particles):\n    max_energy = 0\n    for m in male_particles:\n        for w in female_particles:\n            energy = abs(m - w) * (abs(m - w) - 30)**2\n            max_energy = max(max_energy, energy)\n    return max_energy\n\ndef main():\n    N, M = map(int, input().split())\n    male_particles = list(map(int, input().split()))\n    female_particles = list(map(int, input().split()))\n    \n    print(max_microbial_energy(N, M, male_particles, female_particles))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 00:33:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_electrical_energy(males, females):\n    males_sorted = sorted(males, reverse=True)\n    females_sorted = sorted(females, reverse=True)\n    total_energy = 0\n    \n    for bm, bw in zip(males_sorted, females_sorted):\n        diff = abs(bm - bw)\n        energy = diff * (diff - 30) ** 2\n        total_energy += energy\n    \n    return total_energy\n\n# Sample usage:\n# males = [50, 40, 30]\n# females = [60, 30, 20]\n# print(max_electrical_energy(males, females))",
+    "timestamp": "2025-08-13 00:34:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nint calculateEnergy(int bm, int bw) {\n    int difference = std::abs(bm - bw);\n    return difference * std::pow(difference - 30, 2);\n}\n\nint getMaxEnergy(std::vector<int>& males, std::vector<int>& females) {\n    std::sort(males.begin(), males.end());\n    std::sort(females.begin(), females.end(), std::greater<int>());\n\n    int maxEnergy = 0;\n    for (size_t i = 0; i < males.size() && i < females.size(); ++i) {\n        int energy = calculateEnergy(males[i], females[i]);\n        maxEnergy += energy;\n    }\n    \n    return maxEnergy;\n}\n\nint main() {\n    int n, m;\n    std::cin >> n >> m;\n    std::vector<int> males(n), females(m);\n    \n    for (int i = 0; i < n; ++i) {\n        std::cin >> males[i];\n    }\n    \n    for (int i = 0; i < m; ++i) {\n        std::cin >> females[i];\n    }\n    \n    int maxEnergy = getMaxEnergy(males, females);\n    std::cout << maxEnergy << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:54:49"
+  }
+]

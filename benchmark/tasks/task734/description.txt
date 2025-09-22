@@ -1,0 +1,1 @@
+Given a rooted tree with N vertices numbered from 1 to N, where the root is Vertex 1, and each vertex has an initially zero counter. You will perform Q operations where each operation involves incrementing the counter of all vertices in the subtree rooted at Vertex p_j by x_j. Your goal is to find the value of the counter on each vertex after all operations are completed.

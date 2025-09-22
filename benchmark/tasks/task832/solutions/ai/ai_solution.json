@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid swap(int* a, int* b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nint partition(int* arr, int low, int high) {\n    int pivot = arr[high];\n    int i = low - 1;\n\n    for (int j = low; j < high; j++) {\n        if (arr[j] <= pivot) {\n            i++;\n            swap(&arr[i], &arr[j]);\n        }\n    }\n    swap(&arr[i + 1], &arr[high]);\n    return i + 1;\n}\n\nint quickSelect(int* arr, int low, int high, int k) {\n    if (low <= high) {\n        int pivotIndex = partition(arr, low, high);\n        if (pivotIndex == k) return arr[k];\n        if (pivotIndex > k) return quickSelect(arr, low, pivotIndex - 1, k);\n        return quickSelect(arr, pivotIndex + 1, high, k);\n    }\n    return arr[k];\n}\n\nint findMedian(int* arr, int size) {\n    int medianIndex = size / 2;\n    if (size % 2 == 0) {\n        int left = quickSelect(arr, 0, size - 1, medianIndex - 1);\n        int right = quickSelect(arr, 0, size - 1, medianIndex);\n        return (left + right) / 2;\n    }\n    return quickSelect(arr, 0, size - 1, medianIndex);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int* a = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int* m = malloc((N * (N + 1) / 2) * sizeof(int));\n    int mIndex = 0;\n\n    for (int l = 0; l < N; l++) {\n        for (int r = l; r < N; r++) {\n            int* subArr = malloc((r - l + 1) * sizeof(int));\n            for (int k = l; k <= r; k++) {\n                subArr[k - l] = a[k];\n            }\n            m[mIndex++] = findMedian(subArr, r - l + 1);\n            free(subArr);\n        }\n    }\n\n    int finalMedian = findMedian(m, mIndex);\n    printf(\"%d\\n\", finalMedian);\n\n    free(a);\n    free(m);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int total_subsequences = N * (N + 1) / 2;\n    int m[total_subsequences];\n    int index = 0;\n\n    for (int l = 0; l < N; l++) {\n        for (int r = l; r < N; r++) {\n            int len = r - l + 1;\n            int temp[len];\n            for (int i = l; i <= r; i++) {\n                temp[i - l] = a[i];\n            }\n            qsort(temp, len, sizeof(int), compare);\n            if (len % 2 == 1) {\n                m[index++] = temp[len / 2];\n            } else {\n                m[index++] = temp[(len / 2) - 1];\n            }\n        }\n    }\n\n    qsort(m, total_subsequences, sizeof(int), compare);\n    int median;\n    if (total_subsequences % 2 == 1) {\n        median = m[total_subsequences / 2];\n    } else {\n        median = m[(total_subsequences / 2) - 1];\n    }\n\n    printf(\"%d\\n\", median);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n\n    vector<int> m;\n    for (int l = 0; l < N; ++l) {\n        vector<int> subarray;\n        for (int r = l; r < N; ++r) {\n            subarray.push_back(a[r]);\n            vector<int> temp = subarray;\n            sort(temp.begin(), temp.end());\n            int median;\n            int size = temp.size();\n            if (size % 2 == 1) {\n                median = temp[size / 2];\n            } else {\n                median = temp[size / 2 - 1];\n            }\n            m.push_back(median);\n        }\n    }\n\n    sort(m.begin(), m.end());\n    int size_m = m.size();\n    int result;\n    if (size_m % 2 == 1) {\n        result = m[size_m / 2];\n    } else {\n        result = m[size_m / 2 - 1];\n    }\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MedianOfMedians {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        List<Integer> m = new ArrayList<>();\n\n        for (int l = 0; l < N; l++) {\n            List<Integer> subarray = new ArrayList<>();\n            for (int r = l; r < N; r++) {\n                subarray.add(a[r]);\n                List<Integer> temp = new ArrayList<>(subarray);\n                Collections.sort(temp);\n                int median;\n                int size = temp.size();\n                if (size % 2 == 1) {\n                    median = temp.get(size / 2);\n                } else {\n                    median = temp.get(size / 2 - 1);\n                }\n                m.add(median);\n            }\n        }\n\n        Collections.sort(m);\n        int size = m.size();\n        int result;\n        if (size % 2 == 1) {\n            result = m.get(size / 2);\n        } else {\n            result = m.get(size / 2 - 1);\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 23:04:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MedianOfMedians {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        List<Double> medians = new ArrayList<>();\n        \n        for (int l = 0; l < N; l++) {\n            for (int r = l; r < N; r++) {\n                medians.add(calculateMedian(a, l, r));\n            }\n        }\n        \n        Collections.sort(medians);\n        int size = medians.size();\n        double result = size % 2 == 0 ? \n            (medians.get(size/2 - 1) + medians.get(size/2)) / 2.0 : \n            medians.get(size/2);\n        \n        System.out.printf(\"%.1f\\n\", result);\n    }\n    \n    private static double calculateMedian(int[] arr, int l, int r) {\n        int[] subArr = Arrays.copyOfRange(arr, l, r + 1);\n        Arrays.sort(subArr);\n        int len = subArr.length;\n        return len % 2 == 0 ? \n            (subArr[len/2 - 1] + subArr[len/2]) / 2.0 : \n            subArr[len/2];\n    }\n}",
+    "timestamp": "2025-08-05 23:04:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\ndouble findMedian(vector<int>& subseq) {\n    int n = subseq.size();\n    sort(subseq.begin(), subseq.end());\n    \n    if (n % 2 == 0) {\n        return (subseq[n/2 - 1] + subseq[n/2]) / 2.0;\n    }\n    return subseq[n/2];\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    \n    vector<double> m;\n    \n    for (int l = 0; l < N; ++l) {\n        for (int r = l; r < N; ++r) {\n            vector<int> subseq(a.begin() + l, a.begin() + r + 1);\n            m.push_back(findMedian(subseq));\n        }\n    }\n    \n    sort(m.begin(), m.end());\n    \n    int medianIndex = m.size() / 2;\n    double result;\n    \n    if (m.size() % 2 == 0) {\n        result = (m[medianIndex - 1] + m[medianIndex]) / 2.0;\n    } else {\n        result = m[medianIndex];\n    }\n    \n    cout << fixed;\n    cout.precision(1);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_median(seq):\n    n = len(seq)\n    seq_sorted = sorted(seq)\n    mid = n // 2\n    if n % 2 == 0:\n        return (seq_sorted[mid - 1] + seq_sorted[mid]) / 2\n    else:\n        return seq_sorted[mid]\n\ndef median_of_medians(sequence):\n    n = len(sequence)\n    medians = []\n    for l in range(n):\n        for r in range(l, n):\n            sub_seq = sequence[l:r+1]\n            medians.append(find_median(sub_seq))\n    return find_median(medians)\n\n# Example usage:\na = [2, 1, 5, 7, 2, 0, 5]\nprint(median_of_medians(a))",
+    "timestamp": "2025-08-13 13:29:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.Arrays;\n\npublic class SequenceMedian {\n    public static double findMedian(int[] sequence) {\n        int n = sequence.length;\n        ArrayList<Integer> medians = new ArrayList<>();\n\n        for (int l = 0; l < n; l++) {\n            for (int r = l; r < n; r++) {\n                int[] subsequence = Arrays.copyOfRange(sequence, l, r + 1);\n                Arrays.sort(subsequence);\n                int length = subsequence.length;\n                if (length % 2 == 0) {\n                    medians.add((subsequence[length / 2 - 1] + subsequence[length / 2]) / 2);\n                } else {\n                    medians.add(subsequence[length / 2]);\n                }\n            }\n        }\n\n        int[] medianArray = medians.stream().mapToInt(i -> i).toArray();\n        Arrays.sort(medianArray);\n        int medianArrayLength = medianArray.length;\n        if (medianArrayLength % 2 == 0) {\n            return (medianArray[medianArrayLength / 2 - 1] + medianArray[medianArrayLength / 2]) / 2.0;\n        } else {\n            return medianArray[medianArrayLength / 2];\n        }\n    }\n  \n    public static void main(String[] args) {\n        int[] sequence = {1, 2, 3, 4};\n        double median = findMedian(sequence);\n        System.out.println(\"Median: \" + median);\n    }\n}",
+    "timestamp": "2025-08-13 13:29:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint comp(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint findMedian(int *arr, int size) {\n    qsort(arr, size, sizeof(int), comp);\n    return size % 2 == 0 ? arr[size / 2 - 1] : arr[size / 2];\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int totalMedians = N * (N + 1) / 2;\n    int *medians = (int *)malloc(totalMedians * sizeof(int));\n    \n    int mediansIndex = 0;\n    for (int l = 0; l < N; l++) {\n        for (int r = l; r < N; r++) {\n            int len = r - l + 1;\n            int subsequence[len];\n            for (int k = 0; k < len; k++) {\n                subsequence[k] = a[l + k];\n            }\n            medians[mediansIndex++] = findMedian(subsequence, len);\n        }\n    }\n\n    printf(\"%d\\n\", findMedian(medians, totalMedians));\n    free(medians);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:29:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\n// Function to find median of a sequence\ndouble findMedian(vector<int>& seq) {\n    sort(seq.begin(), seq.end());\n    int size = seq.size();\n    if (size % 2 == 1) {\n        return seq[size / 2];\n    } else {\n        return (seq[size / 2 - 1] + seq[size / 2]) / 2.0;\n    }\n}\n\n// Main function to calculate the median of medians\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n    }\n    \n    vector<double> medians;\n    for (int l = 0; l < N; l++) {\n        vector<int> subsequence;\n        for (int r = l; r < N; r++) {\n            subsequence.push_back(a[r]);\n            medians.push_back(findMedian(subsequence));\n        }\n    }\n    \n    double result = findMedian(medians);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:29:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(a):\n    N = len(a)\n    medians = []\n    \n    for l in range(N):\n        for r in range(l, N):\n            subseq = sorted(a[l:r+1])\n            mid = len(subseq) // 2\n            \n            if len(subseq) % 2 == 0:\n                median = (subseq[mid-1] + subseq[mid]) / 2\n            else:\n                median = subseq[mid]\n            \n            medians.append(median)\n    \n    medians.sort()\n    mid = len(medians) // 2\n    \n    if len(medians) % 2 == 0:\n        return (medians[mid-1] + medians[mid]) / 2\n    else:\n        return medians[mid]\n\n# Example usage\nN = int(input())\na = list(map(int, input().split()))\nprint(solve(a))",
+    "timestamp": "2025-08-13 13:29:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import bisect\n\ndef solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    N = int(data[0])\n    a = list(map(int, data[1:N+1]))\n    \n    # Binary search the answer\n    low = min(a)\n    high = max(a)\n    answer = low\n    \n    def count_leq(x):\n        # Using a BIT (Fenwick Tree) to compute the number of inversions\n        class BIT:\n            def __init__(self, size):\n                self.N = size + 2\n                self.tree = [0] * (self.N)\n            \n            def update(self, index, delta=1):\n                while index < self.N:\n                    self.tree[index] += delta\n                    index += index & -index\n            \n            def query(self, index):\n                res = 0\n                while index > 0:\n                    res += self.tree[index]\n                    index -= index & -index\n                return res\n        \n        # Coordinate compression\n        s = set()\n        s.add(0)\n        prefix = [0] * (N + 1)\n        for i in range(1, N + 1):\n            prefix[i] = prefix[i-1] + (1 if a[i-1] <= x else -1)\n            s.add(prefix[i])\n        sorted_s = sorted(s)\n        rank = {v: i+1 for i, v in enumerate(sorted_s)}\n        \n        bit = BIT(len(sorted_s))\n        bit.update(rank[0])\n        res = 0\n        for i in range(1, N + 1):\n            val = prefix[i]\n            compressed_val = rank[val]\n            res += bit.query(compressed_val)\n            bit.update(compressed_val)\n        return res\n    \n    total_subarrays = N * (N + 1) // 2\n    needed = (total_subarrays + 1) // 2\n    \n    while low <= high:\n        mid = (low + high) // 2\n        if count_leq(mid) >= needed:\n            answer = mid\n            high = mid - 1\n        else:\n            low = mid + 1\n    print(answer)\n\nsolve()",
+    "timestamp": "2025-08-13 13:29:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findMedian(arr) {\n    const mid = Math.floor(arr.length / 2);\n    const sorted = arr.slice().sort((a, b) => a - b);\n    return arr.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;\n}\n\nfunction medianOfSubsequenceMedians(a) {\n    const N = a.length;\n    const medians = [];\n\n    for (let l = 0; l < N; l++) {\n        for (let r = l; r < N; r++) {\n            const subArr = a.slice(l, r + 1);\n            medians.push(findMedian(subArr));\n        }\n    }\n\n    return findMedian(medians);\n}\n\n// Example usage\n// const a = [some array];\n// console.log(medianOfSubsequenceMedians(a));",
+    "timestamp": "2025-08-13 13:29:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findMedianOfSubsequenceMedians(a) {\n    const N = a.length;\n    const medians = [];\n\n    for (let l = 0; l < N; l++) {\n        for (let r = l; r < N; r++) {\n            const subsequence = a.slice(l, r + 1);\n            subsequence.sort((x, y) => x - y);\n            const mid = Math.floor(subsequence.length / 2);\n            \n            const median = subsequence.length % 2 === 1 \n                ? subsequence[mid] \n                : (subsequence[mid - 1] + subsequence[mid]) / 2;\n            \n            medians.push(median);\n        }\n    }\n\n    medians.sort((x, y) => x - y);\n    const midMedian = Math.floor(medians.length / 2);\n    \n    return medians.length % 2 === 1 \n        ? medians[midMedian] \n        : (medians[midMedian - 1] + medians[midMedian]) / 2;\n}",
+    "timestamp": "2025-08-13 13:29:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findMedianOfMedians(a) {\n    const N = a.length;\n    let medians = [];\n\n    for (let l = 0; l < N; l++) {\n        for (let r = l; r < N; r++) {\n            const subarray = a.slice(l, r + 1);\n            subarray.sort((x, y) => x - y);\n            const length = subarray.length;\n            let median;\n            if (length % 2 === 1) {\n                median = subarray[Math.floor(length / 2)];\n            } else {\n                median = (subarray[length / 2 - 1] + subarray[length / 2]) / 2;\n            }\n            medians.push(median);\n        }\n    }\n\n    medians.sort((x, y) => x - y);\n    const mLength = medians.length;\n    let result;\n    if (mLength % 2 === 1) {\n        result = medians[Math.floor(mLength / 2)];\n    } else {\n        result = (medians[mLength / 2 - 1] + medians[mLength / 2]) / 2;\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 13:30:00"
+  }
+]

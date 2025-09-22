@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    // Placeholder implementation\n    int result = 0;\n    for (int i = 0; i < N; i++) {\n        result += a[i];\n    }\n    \n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:33:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    long long result = 0;\n    for (int i = 0; i < N; i++) {\n        result += (long long)(i + 1) * a[i];\n    }\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:33:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n\n    vector<int> sorted_a = a;\n    sort(sorted_a.begin(), sorted_a.end());\n\n    for (int i = 0; i < N; ++i) {\n        if (a[i] == sorted_a[N-1]) {\n            cout << sorted_a[N-2] << endl;\n            break;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:33:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N + 1];\n        int[] pos = new int[N + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            a[i] = scanner.nextInt();\n            pos[a[i]] = i;\n        }\n        \n        long result = 0;\n        for (int i = 1; i <= N; i++) {\n            result += (long) i * pos[i];\n        }\n        \n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 23:34:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class SnukePermutation {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        \n        // Read N\n        int N = Integer.parseInt(br.readLine());\n        \n        // Read permutation\n        String[] input = br.readLine().split(\" \");\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = Integer.parseInt(input[i]);\n        }\n        \n        // Solve the problem\n        int result = solve(N, A);\n        \n        // Print result\n        System.out.println(result);\n    }\n    \n    static int solve(int N, int[] A) {\n        // Placeholder implementation - replace with actual problem-specific logic\n        return 0;\n    }\n}",
+    "timestamp": "2025-08-05 23:34:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    \n    vector<int> sorted_A = A;\n    sort(sorted_A.begin(), sorted_A.end());\n    \n    int result = 0;\n    for (int i = 0; i < N; ++i) {\n        result += abs(A[i] - sorted_A[i]);\n    }\n    \n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:34:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_certain_value(permutation):\n    n = len(permutation)\n    # Assuming the 'certain value' is the sum of the permutation\n    return sum(permutation)\n\n# Example usage\npermutation = [3, 1, 4, 2]  # Example permutation\nvalue = find_certain_value(permutation)\nprint(value)",
+    "timestamp": "2025-08-13 16:05:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SnukePermutation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] permutation = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            permutation[i] = scanner.nextInt();\n        }\n        \n        // Initially set the max and min as the first element\n        int maxValue = permutation[0];\n        int minValue = permutation[0];\n        \n        // Loop through the permutation to find the max and min values\n        for (int i = 1; i < N; i++) {\n            if (permutation[i] > maxValue) {\n                maxValue = permutation[i];\n            }\n            if (permutation[i] < minValue) {\n                minValue = permutation[i];\n            }\n        }\n        \n        // Output the result\n        System.out.println(\"Max Value: \" + maxValue);\n        System.out.println(\"Min Value: \" + minValue);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 16:05:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint findPermValue(int perm[], int N) {\n    int value = 0;\n\n    for (int i = 0; i < N; i++) {\n        value += perm[i] * (i + 1);\n    }\n\n    return value;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int perm[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &perm[i]);\n    }\n\n    int result = findPermValue(perm, N);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:05:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> a(N);\n    \n    for(int i = 0; i < N; i++) {\n        std::cin >> a[i];\n    }\n\n    // Finding the sum of the array as a \"certain value\"\n    int certainValue = 0;\n    for(int i = 0; i < N; i++) {\n        certainValue += a[i];\n    }\n\n    std::cout << certainValue << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:05:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, permutation):\n    # Find the number of inversions in the permutation\n    inversions = 0\n    for i in range(N):\n        for j in range(i+1, N):\n            if permutation[i] > permutation[j]:\n                inversions += 1\n    \n    return inversions",
+    "timestamp": "2025-08-13 16:05:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    N = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    pos = [0] * (N + 1)\n    for idx, num in enumerate(a):\n        pos[num] = idx + 1  # 1-based index\n    \n    # The problem is to find the number of i where pos[i] < pos[i+1]\n    res = 0\n    for i in range(1, N):\n        if pos[i] < pos[i+1]:\n            res += 1\n    print(N - res)\n\nsolve()",
+    "timestamp": "2025-08-13 16:05:43"
+  }
+]

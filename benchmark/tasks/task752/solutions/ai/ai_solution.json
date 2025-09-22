@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_N 100000\n#define MOD 1000000007\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    bool board[2 * MAX_N + 1] = {false};\n    for (int i = 1; i <= N; i++) {\n        board[i + MAX_N] = true;\n    }\n\n    int dp[2 * MAX_N + 1] = {0};\n    dp[0] = 1;\n\n    for (int state = 0; state < (1 << N); state++) {\n        for (int i = 1; i <= N; i++) {\n            if (!(state & (1 << (i - 1))) && board[i + MAX_N]) {\n                int new_state = state | (1 << (i - 1));\n                int x_minus_2 = i - 2;\n                int x_plus_k = i + K;\n\n                if (x_minus_2 >= 1 && x_minus_2 <= N && !board[x_minus_2 + MAX_N]) {\n                    dp[new_state] = (dp[new_state] + dp[state]) % MOD;\n                }\n\n                if (x_plus_k >= 1 && x_plus_k <= N && board[x_plus_k + MAX_N]) {\n                    dp[new_state] = (dp[new_state] + dp[state]) % MOD;\n                }\n            }\n        }\n    }\n\n    int total_sets = 0;\n    for (int state = 0; state < (1 << N); state++) {\n        total_sets = (total_sets + dp[state]) % MOD;\n    }\n\n    printf(\"%d\\n\", total_sets);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint main() {\n    long long N, K, M;\n    scanf(\"%lld %lld %lld\", &N, &K, &M);\n\n    if (K % 2 == 0) {\n        long long res;\n        if (N == 1) {\n            res = 2 % M;\n        } else {\n            res = (N + 1) % M;\n        }\n        printf(\"%lld\\n\", res);\n    } else {\n        long long res = 1;\n        long long pow = 2;\n        long long exp = N;\n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                res = (res * pow) % M;\n            }\n            pow = (pow * pow) % M;\n            exp /= 2;\n        }\n        printf(\"%lld\\n\", res);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint solve(int N, int K, int M) {\n    if (K == 0) {\n        // Each element can be either present or not, except for the initial ones.\n        // The operations don't change anything since x-2 and x+K would be x (when K=0), which is already present.\n        // So the answer is 1 (only the initial state is possible).\n        return 1 % M;\n    }\n    \n    if (K % 2 == 0) {\n        // When K is even, the problem reduces to independent chains of elements.\n        // The number of possible sets is (K + 1) for each chain.\n        // There are (N / (K / 2 + 1)) chains, but need to compute it correctly.\n        // The total is (K + 2)^m, where m is the number of chains.\n        int m = 0;\n        for (int i = 1; i <= K / 2; ++i) {\n            m += (N - i) / K + 1;\n        }\n        long long res = 1;\n        for (int i = 0; i < m; ++i) {\n            res = res * (K + 2) % M;\n        }\n        return res;\n    } else {\n        // When K is odd, the problem reduces to independent pairs.\n        // The number of possible sets is 3 for each pair.\n        // There are (N + 1) / 2 pairs.\n        int m = (N + 1) / 2;\n        long long res = 1;\n        for (int i = 0; i < m; ++i) {\n            res = res * 3 % M;\n        }\n        return res;\n    }\n}\n\nint main() {\n    int N, K, M;\n    cin >> N >> K >> M;\n    cout << solve(N, K, M) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        long N = sc.nextLong();\n        long K = sc.nextLong();\n        long M = sc.nextLong();\n\n        if (K % 2 == 0) {\n            long res = 1;\n            long maxGroups = N / K;\n            for (long i = 0; i < maxGroups; i++) {\n                res = res * (K + 1) % M;\n            }\n            long remaining = N % K;\n            res = res * (remaining + 1) % M;\n            System.out.println(res);\n        } else {\n            long res = 1;\n            long maxGroups = (2 * N) / K;\n            for (long i = 0; i < maxGroups; i++) {\n                res = res * (K + 1) % M;\n            }\n            long remaining = (2 * N) % K;\n            res = res * (remaining / 2 + 1) % M;\n            System.out.println(res);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:47:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class BlackboardSets {\n    static final int MAX = 1000; // Reasonable limit for states\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        Set<Set<Integer>> uniqueSets = new HashSet<>();\n        uniqueSets.add(new HashSet<>());\n\n        for (int iteration = 0; iteration < MAX; iteration++) {\n            Set<Set<Integer>> newSets = new HashSet<>();\n            \n            for (Set<Integer> currentSet : uniqueSets) {\n                for (int x = 1; x <= N; x++) {\n                    if (!currentSet.contains(x)) {\n                        Set<Integer> newSet = new HashSet<>(currentSet);\n                        newSet.add(x);\n                        \n                        if (newSet.contains(x - 2)) {\n                            newSet.remove(x - 2);\n                        }\n                        \n                        if (!currentSet.contains(x + K)) {\n                            newSet.add(x + K);\n                        }\n                        \n                        newSets.add(newSet);\n                    }\n                }\n            }\n            \n            uniqueSets.addAll(newSets);\n        }\n\n        System.out.println(uniqueSets.size() % M);\n    }\n}",
+    "timestamp": "2025-08-05 22:47:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nclass Solution {\npublic:\n    int countBoardConfigurations(int N, int K, int M) {\n        vector<bool> possible(2*N+1, false);\n        possible[0] = true;\n        \n        for (int i = 1; i <= N; i++) {\n            vector<bool> next(2*N+1, false);\n            \n            for (int j = 0; j <= 2*N; j++) {\n                if (!possible[j]) continue;\n                \n                // Option 1: Erase number i\n                if (j + i <= 2*N) {\n                    // Subtract 2\n                    int sub = j + i - 2;\n                    if (sub >= 0 && sub <= 2*N) {\n                        next[sub] = true;\n                    }\n                    \n                    // Add K\n                    int add = j + i + K;\n                    if (add >= 0 && add <= 2*N) {\n                        next[add] = true;\n                    }\n                }\n            }\n            \n            for (int j = 0; j <= 2*N; j++) {\n                if (next[j]) possible[j] = true;\n            }\n        }\n        \n        int count = 0;\n        for (bool p : possible) {\n            if (p) count++;\n        }\n        \n        return count % M;\n    }\n};\n\nint main() {\n    int N, K, M;\n    cin >> N >> K >> M;\n    \n    Solution solution;\n    cout << solution.countBoardConfigurations(N, K, M) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_possible_sets(N, K, M):\n    possible_sets = set()\n    \n    def dfs(s):\n        if s in possible_sets:\n            return\n        possible_sets.add(s)\n        \n        for x in list(s):\n            if x-2 not in s and x-2 >= 1:\n                new_set = s | {x-2}\n                dfs(new_set)\n                \n            if x+K not in s and x+K <= N:\n                new_set = s | {x+K}\n                dfs(new_set)\n                \n    initial_set = set(range(1, N+1))\n    dfs(initial_set)\n    \n    return len(possible_sets) % M\n\n# Example Usage\nN = 10  # Adjust the range here\nK = 2   # Adjust the increment here\nM = 1000000007  # Modulo value\nresult = count_possible_sets(N, K, M)\nprint(result)",
+    "timestamp": "2025-08-13 12:32:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Scanner;\nimport java.util.Set;\n\npublic class BlackboardOperations {\n    private static final long MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n\n        if (K == 0) { \n            System.out.println(1);\n            return;\n        }\n\n        Set<Long> uniqueDifferences = new HashSet<>();\n        for (int i = 1; i <= N; i++) {\n            long difference = (K * 2L) % MOD;\n            if (!uniqueDifferences.contains(difference)) {\n                uniqueDifferences.add(difference);\n            }\n        }\n\n        long result = 1;\n        for (int i = 0; i < uniqueDifferences.size(); i++) {\n            result = (result * 2) % MOD;\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 12:32:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    long long N, K, M;\n    scanf(\"%lld %lld %lld\", &N, &K, &M);\n    \n    if (K == 1) {\n        printf(\"%lld\\n\", N % M);\n    } else {\n        long long result = 1;\n        for (long long i = 0; i < N; i++) {\n            result = (result * 2) % M;\n        }\n        printf(\"%lld\\n\", result);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:32:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <unordered_map>\n\nconst long long MOD = 1000000007;\n\nlong long mod_exp(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long count_possible_sets(int N, int K, int M) {\n    // Base cases.\n    if (K % 2 == 0) return mod_exp(2, N, M);\n    else return mod_exp(2, N + 1, M);\n}\n\nint main() {\n    int N, K, M;\n    std::cin >> N >> K >> M;\n    \n    std::cout << count_possible_sets(N, K, M) << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:32:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from typing import Set\nfrom functools import lru_cache\n\ndef solve(N: int, K: int, M: int) -> int:\n    @lru_cache(maxsize=None)\n    def generate_sets(current_set: frozenset[int]) -> Set[frozenset[int]]:\n        result = {current_set}\n        \n        for x in list(current_set):\n            if 1 <= x <= N:\n                new_set1 = set(current_set)\n                new_set1.remove(x)\n                \n                if x - 2 not in new_set1:\n                    new_set1.add(x - 2)\n                    result.update(generate_sets(frozenset(new_set1)))\n                \n                new_set2 = set(current_set)\n                new_set2.remove(x)\n                \n                if x + K not in new_set2:\n                    new_set2.add(x + K)\n                    result.update(generate_sets(frozenset(new_set2)))\n        \n        return result\n\n    initial_set = frozenset(range(1, N + 1))\n    all_possible_sets = generate_sets(initial_set)\n    return len(all_possible_sets) % M\n\n# Example usage\nN, K, M = map(int, input().split())\nprint(solve(N, K, M))",
+    "timestamp": "2025-08-13 12:32:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, K, M = map(int, sys.stdin.readline().split())\n    MOD = M\n    \n    if K == 0:\n        # Only possible to remove or keep each x in 1..N\n        print(pow(2, N, MOD))\n        return\n    \n    # The problem reduces to counting the number of possible subsets S of {1..N} such that:\n    # For any x in S, x+K is not in S (if x+K <= N)\n    # This is equivalent to counting independent sets in a graph where edges are between x and x+K\n    \n    # The graph is a collection of chains of lengths depending on N and K\n    # For each chain, the number of independent sets is Fibonacci-like\n    \n    # The number of chains is K, each chain has m = floor((N - i)/K) + 1 elements for i in 1..K\n    res = 1\n    for i in range(1, K + 1):\n        m = (N - i) // K + 1\n        # For a chain of length m, the number of independent sets is fib(m + 2)\n        # Compute fib(m + 2) mod MOD\n        a, b = 1, 1  # fib(0) = 0, fib(1) = 1, fib(2) = 1, etc.\n        for _ in range(m):\n            a, b = b, (a + b) % MOD\n        res = res * b % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 12:33:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countPossibleSets(N, K, M) {\n    let memo = {};\n\n    function dfs(x) {\n        if (memo[x] !== undefined) return memo[x];\n        let possibleSets = 1;\n        if (x - 2 >= -Math.pow(10, 18)) possibleSets += dfs(x - 2);\n        possibleSets %= M;\n        if (x + K <= Math.pow(10, 18)) possibleSets += dfs(x + K);\n        possibleSets %= M;\n        memo[x] = possibleSets;\n        return possibleSets;\n    }\n\n    return dfs(0);\n}\n\nconsole.log(countPossibleSets(1000, 3, 1000000007));",
+    "timestamp": "2025-08-13 12:33:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, K, M) {\n    const dp = new Map();\n    dp.set(new Set(Array.from({length: N}, (_, i) => i + 1)), 1n);\n\n    const dfs = (current) => {\n        if (dp.has(current)) return dp.get(current);\n\n        let count = 0n;\n        for (const x of current) {\n            const newSet1 = new Set(current);\n            newSet1.delete(x);\n            \n            if (x - 2 >= 1 && !newSet1.has(x - 2)) {\n                newSet1.add(x - 2);\n                const newSetKey1 = new Set([...newSet1].sort((a, b) => a - b));\n                count += dfs(newSetKey1);\n            }\n\n            if (!current.has(x + K)) {\n                const newSet2 = new Set(current);\n                newSet2.delete(x);\n                newSet2.add(x + K);\n                const newSetKey2 = new Set([...newSet2].sort((a, b) => a - b));\n                count += dfs(newSetKey2);\n            }\n        }\n\n        count %= BigInt(M);\n        dp.set(current, count);\n        return count;\n    };\n\n    return Number(dfs(new Set(Array.from({length: N}, (_, i) => i + 1))));\n}",
+    "timestamp": "2025-08-13 12:33:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const fs = require('fs');\n    const input = fs.readFileSync('/dev/stdin', 'utf8').trim().split(' ');\n    const N = parseInt(input[0], 10);\n    const K = parseInt(input[1], 10);\n    const M = parseInt(input[2], 10);\n\n    if (K === 0) {\n        let res = 1;\n        for (let i = 0; i < N; i++) {\n            res = res * 2 % M;\n        }\n        console.log(res);\n        return;\n    }\n\n    const visited = new Set();\n    let res = 1;\n\n    for (let x = 1; x <= N; x++) {\n        if (visited.has(x)) continue;\n        let current = x;\n        let cycleLength = 0;\n        const path = [];\n\n        while (true) {\n            if (current < 1 || current > N || visited.has(current)) break;\n            visited.add(current);\n            path.push(current);\n            current += K;\n        }\n\n        current = x - 2;\n        while (true) {\n            if (current < 1 || current > N || visited.has(current)) break;\n            visited.add(current);\n            path.push(current);\n            current -= 2;\n        }\n\n        cycleLength = path.length;\n        res = res * (cycleLength + 1) % M;\n    }\n\n    console.log(res);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:33:40"
+  }
+]

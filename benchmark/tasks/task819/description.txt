@@ -1,0 +1,1 @@
+We have a directed weighted graph with N vertices. Each vertex has two integers written on it, A_i and B_i. There exists an edge from Vertex x to Vertex y for all pairs 1 ≤ x, y ≤ N, with a weight of min(A_x, B_y). The task is to find the minimum total weight of a directed cycle that visits every vertex exactly once.

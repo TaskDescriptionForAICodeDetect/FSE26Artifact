@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "18\nDWANGOMEDIACLUSTER\n1\n18",
+      "output": "1"
+    },
+    {
+      "input": "18\nDDDDDDMMMMMCCCCCCC\n1\n18",
+      "output": "210"
+    },
+    {
+      "input": "54\nDIALUPWIDEAREANETWORKGAMINGOPERATIONCORPORATIONLIMITED\n3\n20 30 40",
+      "output": "0\n1\n2"
+    },
+    {
+      "input": "30\nDMCDMCDMCDMCDMCDMCDMCDMCDMCDMC\n4\n5 10 15 20",
+      "output": "10\n52\n110\n140"
+    }
+  ]
+}

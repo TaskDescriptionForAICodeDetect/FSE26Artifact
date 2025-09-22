@@ -1,0 +1,1 @@
+Given N people, we want to divide them into groups such that each group contains between A and B people, inclusive. Additionally, for each group size i, the number of groups containing exactly i people should either be 0 or fall between C and D. You need to find the number of ways to do this modulo 10^9 + 7.

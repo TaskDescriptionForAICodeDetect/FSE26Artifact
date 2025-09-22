@@ -1,0 +1,1 @@
+Find the convex hull of a given set of points P. In other words, find the smallest convex polygon containing all the points of P. All interior angles in the polygon should be less than or equal to 180 degrees. You must return all points of P that lie on the corner and boundary of the convex polygon.

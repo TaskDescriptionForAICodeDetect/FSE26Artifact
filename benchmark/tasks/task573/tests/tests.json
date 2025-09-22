@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "5\nH4 C9 S4 D2 C3",
+      "output": "D2 C3 H4 S4 C9\nStable\nD2 C3 S4 H4 C9\nNot stable"
+    },
+    {
+      "input": "2\nS1 H1",
+      "output": "S1 H1\nStable\nS1 H1\nStable"
+    }
+  ]
+}

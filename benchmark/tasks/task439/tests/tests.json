@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": ".tweets.1\nname: shimeji\nid: shimejitan\ntweets:\n  1: shimejilove\n  2: azupero",
+      "output": "string \"shimejilove\""
+    },
+    {
+      "input": ".a\na: sample case",
+      "output": "string \"sample case\""
+    },
+    {
+      "input": ".my.obj\nmy:\n str: string value\n obj:\n    a: a\n    b: b\n    c: c",
+      "output": "object"
+    },
+    {
+      "input": ".str.inner\nstr: inner",
+      "output": "no such property"
+    },
+    {
+      "input": ".no.such.property\nobject:\n    prop1: str\n    prop2: str",
+      "output": "no such property"
+    }
+  ]
+}

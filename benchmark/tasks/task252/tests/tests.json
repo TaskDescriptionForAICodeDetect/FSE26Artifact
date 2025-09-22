@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3 5\n0W 1W\n0W 2W\n0W 2E\n0E 1E\n1E 2E\naabbccdee\n-\n-\n-\n-\nbbaadeecc\n3 3\n0E 1W\n1E 2W\n2E 0W\naabb\nbbcc\naa\nbbbb\ncc\naaaa\n3 4\n0E 1W\n0E 2E\n1E 2W\n2E 0W\nababab\n-\n-\naaabbb\n-\n-\n0 0",
+      "output": "4\n2\n5"
+    }
+  ]
+}

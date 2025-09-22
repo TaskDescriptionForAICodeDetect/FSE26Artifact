@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n\nlong long factorial(int n) {\n    long long result = 1;\n    for (int i = 1; i <= n; i++) {\n        result = (result * i) % MOD;\n    }\n    return result;\n}\n\nlong long power(long long base, long long exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2) {\n            result = (result * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long modInverse(long long n) {\n    return power(n, MOD - 2);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    long long total_balls = (long long)N * K;\n    long long total_arrangements = factorial(total_balls);\n\n    for (int i = 1; i <= N; i++) {\n        total_arrangements = (total_arrangements * modInverse(factorial(K))) % MOD;\n    }\n\n    printf(\"%lld\\n\", total_arrangements);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:36:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n#define MAX_N 2005\n#define MAX_K 2005\n\nlong long fact[MAX_N * MAX_K];\nlong long inv_fact[MAX_N * MAX_K];\n\nlong long power(long long a, long long b) {\n    long long res = 1;\n    while (b > 0) {\n        if (b % 2 == 1) {\n            res = res * a % MOD;\n        }\n        a = a * a % MOD;\n        b /= 2;\n    }\n    return res;\n}\n\nvoid precompute_factorials(int max_n) {\n    fact[0] = 1;\n    for (int i = 1; i <= max_n; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    inv_fact[max_n] = power(fact[max_n], MOD - 2);\n    for (int i = max_n - 1; i >= 0; i--) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    precompute_factorials(N * K);\n    \n    long long res = 0;\n    for (int i = 0; i <= N; i++) {\n        long long sign = (i % 2 == 0) ? 1 : -1;\n        long long c = comb(N, i);\n        long long term = c * comb((N - i) * (K - 1) + N - 1, N - 1) % MOD;\n        res = (res + sign * term) % MOD;\n    }\n    res = (res + MOD) % MOD;\n    printf(\"%lld\\n\", res);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst long long MOD = 1e9 + 7;\n\nlong long mod_pow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long mod_inverse(long long a, long long mod) {\n    return mod_pow(a, mod - 2, mod);\n}\n\nlong long comb(long long n, long long k, const vector<long long>& fact, const vector<long long>& inv_fact) {\n    if (k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<long long> fact(N * K + 1);\n    vector<long long> inv_fact(N * K + 1);\n    \n    fact[0] = 1;\n    for (int i = 1; i <= N * K; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    \n    inv_fact[N * K] = mod_inverse(fact[N * K], MOD);\n    for (int i = N * K - 1; i >= 0; --i) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n    \n    long long res = 0;\n    for (int i = 0; i <= N; ++i) {\n        long long c = comb(N, i, fact, inv_fact);\n        long long m = comb((N - i) * (K - 1) + N - 1, N - 1, fact, inv_fact);\n        if (i % 2 == 0) {\n            res = (res + c * m) % MOD;\n        } else {\n            res = (res - c * m % MOD + MOD) % MOD;\n        }\n    }\n    \n    cout << res << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 1000000007;\n    static long[] fact;\n    static long[] invFact;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int K = sc.nextInt();\n        \n        int max = N * K;\n        fact = new long[max + 1];\n        invFact = new long[max + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= max; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        invFact[max] = pow(fact[max], MOD - 2);\n        for (int i = max - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n        \n        long res = 0;\n        for (int i = 0; i <= N; i++) {\n            long c = comb(N, i) * comb((N - i) * (K - 1) + N - 1, N - 1) % MOD;\n            if (i % 2 == 0) {\n                res = (res + c) % MOD;\n            } else {\n                res = (res - c + MOD) % MOD;\n            }\n        }\n        System.out.println(res);\n    }\n    \n    static long comb(int n, int k) {\n        if (n < 0 || k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n    \n    static long pow(long a, long b) {\n        long res = 1;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                res = res * a % MOD;\n            }\n            a = a * a % MOD;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 23:37:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SnukeBallsColoring {\n    static final int MOD = 1_000_000_007;\n\n    public static long countColorSequences(int N, int K) {\n        long[] factorial = new long[N * K + 1];\n        factorial[0] = 1;\n        for (int i = 1; i <= N * K; i++) {\n            factorial[i] = (factorial[i - 1] * i) % MOD;\n        }\n\n        long[] invFactorial = new long[N * K + 1];\n        invFactorial[N * K] = modInverse(factorial[N * K], MOD);\n        for (int i = N * K - 1; i >= 0; i--) {\n            invFactorial[i] = (invFactorial[i + 1] * (i + 1)) % MOD;\n        }\n\n        long result = factorial[N * K];\n        for (int i = 1; i <= N; i++) {\n            result = (result * invFactorial[K]) % MOD;\n        }\n\n        return result;\n    }\n\n    static long modInverse(long a, long m) {\n        return pow(a, m - 2, m);\n    }\n\n    static long pow(long base, long exp, long mod) {\n        long result = 1;\n        base %= mod;\n        while (exp > 0) {\n            if ((exp & 1) == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp >>= 1;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        System.out.println(countColorSequences(N, K));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:38:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst int MOD = 1e9 + 7;\n\nll factorial(int n) {\n    ll res = 1;\n    for (int i = 2; i <= n; i++) {\n        res = (res * i) % MOD;\n    }\n    return res;\n}\n\nll solve(int N, int K) {\n    ll totalBalls = N * K;\n    ll result = factorial(totalBalls);\n    \n    for (int color = 1; color <= N; color++) {\n        ll colorCount = K;\n        result = (result * modInverse(factorial(colorCount))) % MOD;\n    }\n    \n    return result;\n}\n\nll modInverse(ll a) {\n    return modPow(a, MOD - 2);\n}\n\nll modPow(ll base, ll exp) {\n    ll result = 1;\n    base %= MOD;\n    while (exp > 0) {\n        if (exp & 1) result = (result * base) % MOD;\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return result;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    cout << solve(N, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:38:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef factorial(n):\n    result = 1\n    for i in range(2, n + 1):\n        result = (result * i) % MOD\n    return result\n\ndef colorful_balls(N, K):\n    if K == 1:\n        return factorial(N*K) // factorial(N)\n    \n    # Calculate (NK-1)! % MOD\n    factorial_nk_minus_1 = factorial(N*K - 1)\n    \n    # Calculate (K-1)!^(N-1) % MOD\n    factorial_k_minus_1 = factorial(K - 1)\n    power_k_minus_1 = 1\n    for _ in range(N - 1):\n        power_k_minus_1 = (power_k_minus_1 * factorial_k_minus_1) % MOD\n    \n    # Calculate N^(K-1) % MOD\n    power_n = 1\n    for _ in range(K - 1):\n        power_n = (power_n * N) % MOD\n    \n    result = (factorial_nk_minus_1 * power_k_minus_1 * power_n) % MOD\n    return result\n\n# Example usage\nN = 3\nK = 2\nprint(colorful_balls(N, K))",
+    "timestamp": "2025-08-13 16:26:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SnukeColorfulBalls {\n    static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        scanner.close();\n        \n        System.out.println(countSequences(N, K));\n    }\n    \n    private static long countSequences(int N, int K) {\n        long[] factorial = new long[N * K + 1];\n        factorial[0] = 1;\n        for (int i = 1; i <= N * K; i++) {\n            factorial[i] = factorial[i - 1] * i % MOD;\n        }\n        \n        long result = factorial[N * K];\n        for (int i = 0; i < N; i++) {\n            result = result * modInverse(K, MOD) % MOD;\n        }\n        \n        return result;\n    }\n    \n    private static long modInverse(long x, int mod) {\n        return modPower(x, mod - 2, mod);\n    }\n    \n    private static long modPower(long base, long exp, int mod) {\n        long result = 1;\n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                result = result * base % mod;\n            }\n            base = base * base % mod;\n            exp /= 2;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-13 16:26:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n\nlong long factorial(int n) {\n    long long result = 1;\n    for (int i = 2; i <= n; i++) {\n        result = (result * i) % MOD;\n    }\n    return result;\n}\n\nlong long binomial_coefficient(int n, int k) {\n    long long result = 1;\n    for (int i = 0; i < k; i++) {\n        result = (result * (n - i)) % MOD;\n        result = (result * modular_inverse(i + 1, MOD)) % MOD;\n    }\n    return result;\n}\n\nlong long modular_inverse(long long a, long long m) {\n    long long m0 = m;\n    long long y = 0, x = 1;\n    if (m == 1) return 0;\n    while (a > 1) {\n        long long q = a / m;\n        long long t = m;\n        m = a % m, a = t;\n        t = y;\n        y = x - q * y;\n        x = t;\n    }\n    if (x < 0) x += m0;\n    return x;\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n\n    long long total_balls = n * k;\n    long long result = binomial_coefficient(total_balls - 1, n - 1);\n    result = (result * factorial(n)) % MOD;\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:26:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\n\nconst int MOD = 1000000007;\n\n// Function to calculate factorial modulo MOD\nlong long factorial(int n) {\n    long long result = 1;\n    for (int i = 2; i <= n; ++i) {\n        result = (result * i) % MOD;\n    }\n    return result;\n}\n\n// Function to calculate modular inverse using Fermat's Little Theorem\nlong long modInverse(int x, int mod) {\n    long long result = 1, base = x, exp = mod - 2;\n    while (exp) {\n        if (exp % 2) result = (result * base) % mod;\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\n// Function to calculate binomial coefficient modulo MOD\nlong long binomial(int n, int k) {\n    if (k > n) return 0;\n    long long num = factorial(n);\n    long long denom = (factorial(k) * factorial(n - k)) % MOD;\n    return (num * modInverse(denom, MOD)) % MOD;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n\n    // Calculate the total number of balls\n    int totalBalls = N * K;\n\n    // Calculate the number of possible sequences\n    long long result = binomial(totalBalls, N);\n\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:26:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, K):\n    MOD = 10**9 + 7\n    \n    # Calculate total number of initial arrangements\n    total_arrangements = 1\n    for i in range(N):\n        total_arrangements *= K\n        total_arrangements %= MOD\n    \n    # Calculate number of restricted arrangements\n    restricted_arrangements = 1\n    for i in range(N):\n        restricted_arrangements *= (K - i)\n        restricted_arrangements %= MOD\n    \n    # Subtract restricted arrangements from total arrangements\n    result = (total_arrangements - restricted_arrangements + MOD) % MOD\n    \n    return result\n\n# Read input\nN, K = map(int, input().split())\n\n# Print result\nprint(solve(N, K))",
+    "timestamp": "2025-08-13 16:27:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef solve():\n    N, K = map(int, sys.stdin.readline().split())\n    max_n = N * K + 2\n    fact = [1] * (max_n)\n    inv_fact = [1] * (max_n)\n    for i in range(1, max_n):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[max_n-1] = pow(fact[max_n-1], MOD-2, MOD)\n    for i in range(max_n-2, -1, -1):\n        inv_fact[i] = inv_fact[i+1] * (i+1) % MOD\n    \n    def comb(a, b):\n        if a < 0 or b < 0 or a < b:\n            return 0\n        return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD\n    \n    res = 0\n    for m in range(0, min(N, K) + 1):\n        c = comb(N, m) * comb((K - m) * N + m - 1, m - 1) % MOD\n        res = (res + c) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 16:27:14"
+  }
+]

@@ -1,0 +1,1 @@
+Write a program that manipulates a sequence A = {a1, a2, ..., an} with the following operations: add(s, t, x) to add x to elements from as to at, and getSum(s, t) to report the sum of elements from as to at. The initial values of ai (i = 1, 2, ..., n) are 0. The program should handle a series of queries given in the specified format.

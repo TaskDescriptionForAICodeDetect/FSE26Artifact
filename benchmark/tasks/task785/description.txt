@@ -1,0 +1,1 @@
+Given two permutations p and q of integers from 1 to N, define a sequence of permutations where a_1 = p, a_2 = q, and a_{n+2} = f(a_n, a_{n+1}), where f(p, q) is defined such that the p_i-th element in f(p, q) is q_i. Given a positive integer K, find the permutation a_K.

@@ -1,0 +1,1 @@
+You are given an undirected graph consisting of N vertices and M edges. Each vertex has a label 'A' or 'B'. Nusook, the phantom thief, will choose a starting vertex and traverse edges multiple times, forming a string with the labels of the visited vertices in order. Your goal is to determine if Nusook can create all permutations of strings consisting solely of 'A' and 'B'.

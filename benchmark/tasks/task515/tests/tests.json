@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "5\npassword\nlogin\nadmin\nroot\nmaster\n",
+      "output": "b\n"
+    },
+    {
+      "input": "3\nabcdefghijklmnopqrstuvwxy\nqwertyuiopasdfghjklxcvbnm\nqawsxedcrfvtgbyhnujmikolp\n",
+      "output": "z\n"
+    },
+    {
+      "input": "1\nabcdefghijklmnopqrstuvwxyz\n",
+      "output": "aa\n"
+    }
+  ]
+}

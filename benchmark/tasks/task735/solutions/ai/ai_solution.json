@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "int minimumLength(char* s, char* t) {\n    int s_len = strlen(s);\n    int t_len = strlen(t);\n    \n    // If t is longer than s, we can immediately check if t is a subsequence of repeated s\n    for (int repeat = 1; repeat <= t_len / s_len + 2; repeat++) {\n        char* repeated = malloc(s_len * repeat + 1);\n        repeated[0] = '\\0';\n        \n        // Create repeated string\n        for (int j = 0; j < repeat; j++) {\n            strcat(repeated, s);\n        }\n        \n        // Check if t is a subsequence of repeated\n        int t_idx = 0;\n        int repeated_idx = 0;\n        \n        while (repeated_idx < strlen(repeated) && t_idx < t_len) {\n            if (repeated[repeated_idx] == t[t_idx]) {\n                t_idx++;\n            }\n            repeated_idx++;\n        }\n        \n        // If entire t is found, return length of prefix\n        if (t_idx == t_len) {\n            free(repeated);\n            return s_len * repeat;\n        }\n        \n        free(repeated);\n    }\n    \n    return -1;\n}",
+    "timestamp": "2025-08-05 22:44:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint findMinI(const char *s, const char *t) {\n    int s_len = strlen(s);\n    int t_len = strlen(t);\n    int i = 0, j = 0;\n    int count = 0;\n    \n    while (j < t_len) {\n        if (s[i % s_len] == t[j]) {\n            j++;\n        }\n        i++;\n        if (i > s_len * t_len + t_len) { // To prevent infinite loop\n            return -1;\n        }\n    }\n    \n    return i;\n}\n\nint main() {\n    char s[100001], t[100001];\n    scanf(\"%s %s\", s, t);\n    int result = findMinI(s, t);\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:44:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint findMinimumI(const string &s, const string &t) {\n    vector<vector<int>> pos(26);\n    for (int i = 0; i < s.size(); ++i) {\n        pos[s[i] - 'a'].push_back(i);\n    }\n    \n    int res = 1;\n    int current_pos = -1;\n    \n    for (char c : t) {\n        int idx = c - 'a';\n        if (pos[idx].empty()) {\n            return -1;\n        }\n        auto it = upper_bound(pos[idx].begin(), pos[idx].end(), current_pos);\n        if (it != pos[idx].end()) {\n            current_pos = *it;\n        } else {\n            res++;\n            current_pos = pos[idx][0];\n        }\n    }\n    \n    return res;\n}",
+    "timestamp": "2025-08-05 22:44:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.ArrayList;\nimport java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class Solution {\n    public int isSubsequenceInRepeatedString(String s, String t) {\n        Map<Character, List<Integer>> charIndices = new HashMap<>();\n        for (int i = 0; i < s.length(); i++) {\n            char c = s.charAt(i);\n            charIndices.computeIfAbsent(c, k -> new ArrayList<>()).add(i);\n        }\n\n        int result = 0;\n        int currentPos = -1;\n        int sLength = s.length();\n\n        for (char c : t.toCharArray()) {\n            if (!charIndices.containsKey(c)) {\n                return -1;\n            }\n\n            List<Integer> indices = charIndices.get(c);\n            int left = 0, right = indices.size();\n            while (left < right) {\n                int mid = left + (right - left) / 2;\n                if (indices.get(mid) > currentPos) {\n                    right = mid;\n                } else {\n                    left = mid + 1;\n                }\n            }\n\n            if (left < indices.size()) {\n                currentPos = indices.get(left);\n            } else {\n                result++;\n                currentPos = indices.get(0);\n            }\n        }\n\n        return result * sLength + currentPos + 1;\n    }\n}",
+    "timestamp": "2025-08-05 22:44:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int findMinimumLength(String s, String t) {\n        int n = s.length(), m = t.length();\n        \n        // Check if t can be a subsequence\n        if (!canBeSubsequence(s, t)) {\n            return -1;\n        }\n        \n        // Find the smallest number of s repetitions needed\n        long i = (long)Math.ceil((double)m / n);\n        \n        while (true) {\n            StringBuilder sb = new StringBuilder();\n            for (int j = 0; j < i; j++) {\n                sb.append(s);\n            }\n            \n            if (isSubsequence(sb.toString(), t)) {\n                return (int)(i * n);\n            }\n            \n            i++;\n        }\n    }\n    \n    private boolean canBeSubsequence(String s, String t) {\n        boolean[] seen = new boolean[26];\n        for (char c : s.toCharArray()) {\n            seen[c - 'a'] = true;\n        }\n        \n        for (char c : t.toCharArray()) {\n            if (!seen[c - 'a']) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n    \n    private boolean isSubsequence(String s, String t) {\n        int j = 0;\n        for (int i = 0; i < s.length() && j < t.length(); i++) {\n            if (s.charAt(i) == t.charAt(j)) {\n                j++;\n            }\n        }\n        \n        return j == t.length();\n    }\n}",
+    "timestamp": "2025-08-05 22:44:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    long long findMinInteger(string s, string t) {\n        int m = s.length(), n = t.length();\n        \n        // Check if t is a subsequence of repeated s\n        auto isSubsequence = [&](long long iterations) {\n            long long pos = 0;\n            for (char c : t) {\n                bool found = false;\n                while (pos < iterations * m) {\n                    if (s[pos % m] == c) {\n                        found = true;\n                        pos++;\n                        break;\n                    }\n                    pos++;\n                }\n                if (!found) return false;\n            }\n            return true;\n        };\n        \n        long long left = 1, right = 1e12;\n        \n        while (left < right) {\n            long long mid = left + (right - left) / 2;\n            \n            if (isSubsequence(mid)) {\n                right = mid;\n            } else {\n                left = mid + 1;\n            }\n        }\n        \n        return isSubsequence(left) ? left : -1;\n    }\n};",
+    "timestamp": "2025-08-05 22:44:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_subsequence(s, t):\n    it = iter(s)\n    return all(char in it for char in t)\n\ndef min_i_for_subsequence(s, t):\n    n = len(s)\n    # Check if t is a subsequence of s^i for increasing values of i\n    for i in range(1, len(t)//n + 2):\n        if is_subsequence(s * i, t):\n            return i * n\n    return -1\n\ns = \"your_string_s_here\"\nt = \"your_string_t_here\"\n\nprint(min_i_for_subsequence(s, t))",
+    "timestamp": "2025-08-13 12:21:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class SubsequenceFinder {\n\n    public static int findMinimumI(String s, String t) {\n        int[] nextIndex = new int[s.length() + 1];\n        for (int i = s.length() - 1; i >= 0; i--) {\n            int j = i + 1;\n            while (j <= s.length() && s.charAt(j - 1) != t.charAt(0)) {\n                j = nextIndex[j];\n            }\n            nextIndex[i] = (j <= s.length()) ? j : s.length() + 1;\n        }\n\n        int i = 0;\n        int indexT = 0;\n        int lengthS = s.length();\n        int lengthT = t.length();\n\n        while (indexT < lengthT) {\n            int j = i % lengthS;\n            if (indexT == 0 || s.charAt(j) == t.charAt(indexT)) {\n                i++;\n                indexT++;\n            } else {\n                int nextCharIndex = nextIndex[j + 1];\n                if (nextCharIndex == s.length() + 1) return -1;\n                i += (nextCharIndex - j);\n            }\n        }\n\n        return i;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(findMinimumI(\"abc\", \"ac\")); // Example test case\n        System.out.println(findMinimumI(\"abc\", \"bca\")); // Example test case\n    }\n}",
+    "timestamp": "2025-08-13 12:21:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint isSubsequence(char *s, char *t) {\n    while (*s && *t) {\n        if (*s == *t) {\n            t++;\n        }\n        s++;\n    }\n    return *t == '\\0';\n}\n\nint minIForSubsequence(char *s, char *t) {\n    int s_len = strlen(s);\n    int t_len = strlen(t);\n    int s_repeats = 0;\n    int s_index = 0;\n    int t_index = 0;\n\n    // While there are still characters in t to match\n    while (t_index < t_len) {\n        if (s[s_index] == t[t_index]) {\n            t_index++;\n        }\n        s_index++;\n\n        // If at the end of the s, consider it as an additional repeat of s\n        if (s_index == s_len) {\n            s_repeats++;\n            s_index = 0;\n\n            // If we complete a repeat cycle and couldn't match the first t_index characters,\n            // then it's impossible to match t\n            if (s_repeats >= 1 && t_index == 0) {\n                return -1;\n            }\n        }\n    }\n\n    // Calculate the number of full strings needed\n    return s_repeats * s_len + s_index;\n}\n\nint main() {\n    char s[] = \"abc\";\n    char t[] = \"cab\";\n\n    int result = minIForSubsequence(s, t);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:21:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint minConcatenationIndex(string s, string t) {\n    int n = s.size();\n    int m = t.size();\n    \n    // Two pointers to track positions in s and t\n    int ps = 0, pt = 0;\n    int count = 0;\n\n    // Simulate the process iterate over s as it repeats indefinitely\n    while (pt < m) {\n        if (s[ps] == t[pt]) {\n            pt++;\n        }\n        ps++;\n        if (ps == n) {\n            ps = 0;\n            count++; // Once we reach end of s, increment the count\n            if (count > 10 && pt == 0) {\n                return -1; // If after 10 iterations t hasn't started to match, it won't\n            }\n        }\n    }\n\n    return count * n + ps;\n}\n\nint main() {\n    string s, t;\n    cin >> s >> t;\n    int result = minConcatenationIndex(s, t);\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:21:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def findMinInteger(s, t):\n    def is_subsequence(sub, main):\n        j = 0\n        for char in main:\n            if j < len(sub) and char == sub[j]:\n                j += 1\n        return j == len(sub)\n\n    if not t:\n        return 0\n\n    repeated_s = s\n    for i in range(1, len(t) * len(s) + 1):\n        if is_subsequence(t, repeated_s):\n            return i\n        repeated_s += s\n\n    return -1",
+    "timestamp": "2025-08-13 12:21:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_subsequence(s, t):\n    it = iter(s)\n    return all(c in it for c in t)\n\ndef find_min_i(s, t):\n    if not t:\n        return 0\n    if not is_subsequence(s, t):\n        return -1\n    \n    max_repeats = (len(t) // len(s)) + 2\n    concatenated = s * max_repeats\n    \n    min_i = -1\n    current_i = 0\n    t_ptr = 0\n    \n    for i in range(1, len(concatenated) + 1):\n        if t_ptr < len(t) and concatenated[i - 1] == t[t_ptr]:\n            t_ptr += 1\n            if t_ptr == len(t):\n                min_i = i\n                break\n    \n    return min_i if min_i != -1 else -1",
+    "timestamp": "2025-08-13 12:21:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findMinimumI(s, t) {\n    let maxRepeat = Math.min(t.length, 100); // Limiting max repeat for performance\n    let concatenated = \"\";\n    for (let repeat = 1; repeat <= maxRepeat; repeat++) {\n        concatenated += s;\n        if (isSubsequence(concatenated, t)) {\n            return repeat * s.length;\n        }\n    }\n    return -1;\n\n    function isSubsequence(concat, target) {\n        let j = 0;\n        for (let i = 0; i < concat.length && j < target.length; i++) {\n            if (concat[i] === target[j]) {\n                j++;\n            }\n        }\n        return j === target.length;\n    }\n}",
+    "timestamp": "2025-08-13 12:22:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "var findMinimumConcatenation = function(s, t) {\n    if (t.length === 0) return 0;\n    if (s.length === 0) return -1;\n    \n    const isSubsequence = (str, sub) => {\n        let j = 0;\n        for (let i = 0; i < str.length && j < sub.length; i++) {\n            if (str[i] === sub[j]) {\n                j++;\n            }\n        }\n        return j === sub.length;\n    };\n    \n    let repeated = s;\n    for (let i = 1; i <= s.length; i++) {\n        if (isSubsequence(repeated, t)) {\n            return i;\n        }\n        repeated += s;\n    }\n    \n    return -1;\n};",
+    "timestamp": "2025-08-13 12:22:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isSubsequence(s, t) {\n    let sPtr = 0, tPtr = 0;\n    const sLen = s.length, tLen = t.length;\n    while (tPtr < tLen) {\n        if (s[sPtr % sLen] === t[tPtr]) {\n            tPtr++;\n        }\n        sPtr++;\n        if (sPtr > sLen * tLen + tLen) {\n            return -1;\n        }\n    }\n    return Math.ceil(sPtr / sLen);\n}\n\nfunction findMinimumI(s, t) {\n    if (t.length === 0) return 0;\n    const sLen = s.length;\n    const tLen = t.length;\n    let firstOccurrence = new Array(26).fill(-1);\n    let lastOccurrence = new Array(26).fill(-1);\n    for (let i = 0; i < sLen; i++) {\n        const char = s.charCodeAt(i) - 97;\n        if (firstOccurrence[char] === -1) {\n            firstOccurrence[char] = i;\n        }\n        lastOccurrence[char] = i;\n    }\n    for (const char of t) {\n        const code = char.charCodeAt(0) - 97;\n        if (firstOccurrence[code] === -1) {\n            return -1;\n        }\n    }\n    const result = isSubsequence(s, t);\n    return result === -1 ? -1 : result;\n}",
+    "timestamp": "2025-08-13 12:22:29"
+  }
+]

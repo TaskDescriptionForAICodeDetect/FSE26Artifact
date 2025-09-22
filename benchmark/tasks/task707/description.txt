@@ -1,0 +1,1 @@
+Niwango has N cards, numbered from 1 to N, and he wants to arrange them in a row while satisfying N specific conditions. For each card i, the card immediately to the right of it (if present) must not be card a_i. The goal is to determine if a valid arrangement exists and, if so, to find the lexicographically smallest arrangement.

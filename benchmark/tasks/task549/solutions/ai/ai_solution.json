@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nint solve(int* arr, int n) {\n    int actions = 0;\n    bool hasEven = false, hasOdd = false;\n\n    for (int i = 0; i < n; i++) {\n        if (arr[i] % 2 == 0) hasEven = true;\n        else hasOdd = true;\n    }\n\n    while (!(hasEven && hasOdd)) {\n        int minIdx1 = -1, minIdx2 = -1;\n        int minSum = INT_MAX;\n\n        for (int i = 0; i < n; i++) {\n            if (arr[i] != -1) {\n                for (int j = i + 1; j < n; j++) {\n                    if (arr[j] != -1) {\n                        int sum = arr[i] + arr[j];\n                        if (sum < minSum) {\n                            minSum = sum;\n                            minIdx1 = i;\n                            minIdx2 = j;\n                        }\n                    }\n                }\n            }\n        }\n\n        if (minIdx1 == -1) break;\n\n        arr[minIdx1] = minSum;\n        arr[minIdx2] = -1;\n        actions++;\n\n        hasEven = false;\n        hasOdd = false;\n        for (int i = 0; i < n; i++) {\n            if (arr[i] != -1 && arr[i] % 2 == 0) hasEven = true;\n            if (arr[i] != -1 && arr[i] % 2 != 0) hasOdd = true;\n        }\n    }\n\n    return actions;\n}",
+    "timestamp": "2025-08-05 22:05:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int odd = 0, even = 0;\n    for (int i = 0; i < N; ++i) {\n        int num;\n        scanf(\"%d\", &num);\n        if (num % 2 == 0) {\n            even++;\n        } else {\n            odd++;\n        }\n    }\n    int actions = 0;\n    while (1) {\n        if (odd == 0 || even == 0) {\n            break;\n        }\n        if (odd >= 2) {\n            odd -= 2;\n            even += 1;\n        } else {\n            odd -= 1;\n            even -= 1;\n            odd += 1;\n        }\n        actions++;\n    }\n    printf(\"%d\\n\", actions);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> balls(N);\n    int even = 0, odd = 0;\n    for (int i = 0; i < N; ++i) {\n        cin >> balls[i];\n        if (balls[i] % 2 == 0) {\n            even++;\n        } else {\n            odd++;\n        }\n    }\n    \n    int actions = 0;\n    while (true) {\n        if (even == 0 || odd == 0) {\n            break;\n        }\n        actions++;\n        even--;\n        odd--;\n        even++;\n    }\n    \n    cout << actions << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class MaxOperations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int evenCount = 0;\n        int oddCount = 0;\n        \n        for (int i = 0; i < N; i++) {\n            int num = scanner.nextInt();\n            if (num % 2 == 0) {\n                evenCount++;\n            } else {\n                oddCount++;\n            }\n        }\n        \n        int operations = 0;\n        while (true) {\n            if (evenCount == 0 || oddCount == 0) {\n                break;\n            }\n            if (evenCount > 0 && oddCount > 0) {\n                operations++;\n                evenCount--;\n                oddCount--;\n            }\n        }\n        \n        while (oddCount >= 3) {\n            operations += 2;\n            oddCount -= 3;\n        }\n        \n        System.out.println(operations);\n    }\n}",
+    "timestamp": "2025-08-05 22:05:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BallBoxProblem {\n    public static int maxActions(List<Integer> balls) {\n        PriorityQueue<Integer> pq = new PriorityQueue<>(balls);\n        int actions = 0;\n        \n        while (pq.size() > 1) {\n            boolean allOdd = true;\n            boolean allEven = true;\n            \n            for (int ball : pq) {\n                if (ball % 2 == 0) allOdd = false;\n                if (ball % 2 == 1) allEven = false;\n            }\n            \n            if (allOdd || allEven) break;\n            \n            int first = pq.poll();\n            int second = pq.poll();\n            int sum = first + second;\n            pq.offer(sum);\n            actions++;\n        }\n        \n        return actions;\n    }\n    \n    public static void main(String[] args) {\n        List<Integer> balls = Arrays.asList(1, 2, 3, 4);\n        System.out.println(maxActions(balls));\n    }\n}",
+    "timestamp": "2025-08-05 22:06:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxActions(vector<int>& balls) {\n    int actions = 0;\n    \n    while (true) {\n        int evenCount = count_if(balls.begin(), balls.end(), [](int x) { return x % 2 == 0; });\n        \n        if (evenCount == 0 || evenCount == balls.size()) {\n            break;\n        }\n        \n        int minEven = INT_MAX, minOdd = INT_MAX;\n        int minEvenIndex = -1, minOddIndex = -1;\n        \n        for (int i = 0; i < balls.size(); i++) {\n            if (balls[i] % 2 == 0 && balls[i] < minEven) {\n                minEven = balls[i];\n                minEvenIndex = i;\n            }\n            if (balls[i] % 2 == 1 && balls[i] < minOdd) {\n                minOdd = balls[i];\n                minOddIndex = i;\n            }\n        }\n        \n        int newBall = minEven + minOdd;\n        balls.erase(balls.begin() + max(minEvenIndex, minOddIndex));\n        balls.erase(balls.begin() + min(minEvenIndex, minOddIndex));\n        balls.push_back(newBall);\n        \n        actions++;\n    }\n    \n    return actions;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> balls(N);\n    for (int i = 0; i < N; i++) {\n        cin >> balls[i];\n    }\n    \n    cout << maxActions(balls) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:06:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_actions(N, balls):\n    even_count = sum(1 for x in balls if x % 2 == 0)\n    odd_count = N - even_count\n    \n    if even_count == 0 or odd_count == 0:\n        return 0\n    \n    # Can pair odd with even to perform an action, maximum actions is minimum of even and odd counts\n    return min(even_count, odd_count)\n\n# Example usage\nN = 6\nballs = [1, 2, 3, 4, 5, 6]\nprint(max_actions(N, balls))",
+    "timestamp": "2025-08-13 08:59:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class BallActions {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int evenCount = 0;\n        int oddCount = 0;\n        \n        for (int i = 0; i < N; i++) {\n            int ballLabel = scanner.nextInt();\n            if (ballLabel % 2 == 0) {\n                evenCount++;\n            } else {\n                oddCount++;\n            }\n        }\n        \n        // You can only perform actions if there are both even and odd balls\n        int maxActions = Math.min(evenCount, oddCount);\n        System.out.println(maxActions);\n    }\n}",
+    "timestamp": "2025-08-13 08:59:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, ball, even_count = 0, odd_count = 0;\n    \n    // Read the number of balls\n    scanf(\"%d\", &N);\n    \n    // Read each ball and count even and odd numbers\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &ball);\n        if (ball % 2 == 0) {\n            even_count++;\n        } else {\n            odd_count++;\n        }\n    }\n    \n    // The maximum number of actions is the minimum of even and odd counts\n    int max_actions = (even_count < odd_count) ? even_count : odd_count;\n    \n    // Print the result\n    printf(\"%d\\n\", max_actions);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 08:59:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_actions(balls):\n    def can_reduce(arr):\n        return not (all(x % 2 == 1 for x in arr) or all(x % 2 == 0 for x in arr))\n\n    actions = 0\n    while len(balls) > 1 and can_reduce(balls):\n        if len(balls) == 2:\n            balls = [sum(balls)]\n            actions += 1\n            break\n\n        min_idx1, min_idx2 = 0, 1\n        if balls[min_idx1] > balls[min_idx2]:\n            min_idx1, min_idx2 = min_idx2, min_idx1\n\n        for i in range(len(balls)):\n            for j in range(i+1, len(balls)):\n                if i != min_idx1 and i != min_idx2 and j != min_idx1 and j != min_idx2:\n                    if balls[i] + balls[j] < balls[min_idx1] + balls[min_idx2]:\n                        min_idx1, min_idx2 = i, j\n\n        new_ball = balls[min_idx1] + balls[min_idx2]\n        balls.pop(max(min_idx1, min_idx2))\n        balls.pop(min(min_idx1, min_idx2))\n        balls.append(new_ball)\n        actions += 1\n\n    return actions\n\n# Example usage\nN = int(input())\nballs = list(map(int, input().split()))\nprint(max_actions(balls))",
+    "timestamp": "2025-08-13 09:00:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_operations(N, balls):\n    even = 0\n    odd = 0\n    for num in balls:\n        if num % 2 == 0:\n            even += 1\n        else:\n            odd += 1\n    if odd == 0 or even == 0:\n        return 0\n    return min(even, odd) + (odd - min(even, odd)) // 2\n\n# Sample usage:\n# N = int(input())\n# balls = list(map(int, input().split()))\n# print(max_operations(N, balls))",
+    "timestamp": "2025-08-13 09:00:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint max_actions(vector<int>& balls) {\n    int odd_count = 0;\n    int even_count = 0;\n\n    for (int ball : balls) {\n        if (ball % 2 == 0) {\n            even_count++;\n        } else {\n            odd_count++;\n        }\n    }\n\n    return min(odd_count, even_count);\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> balls(N);\n    for (int i = 0; i < N; i++) {\n        cin >> balls[i];\n    }\n\n    cout << max_actions(balls) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:54"
+  }
+]

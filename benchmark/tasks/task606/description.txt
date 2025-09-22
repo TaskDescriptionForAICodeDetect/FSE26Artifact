@@ -1,0 +1,1 @@
+You have N coins each of which has a value ai. Find the number of combinations that result when you choose K different coins in such a way that the total value of the coins is greater than or equal to L and less than or equal to R.

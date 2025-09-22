@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_KEYS 100\n\ndouble optimalBST(double keys[], double freq[], int n) {\n    double cost[MAX_KEYS][MAX_KEYS] = {0};\n    double w[MAX_KEYS][MAX_KEYS] = {0};\n\n    for (int i = 0; i < n; i++) {\n        cost[i][i] = freq[i];\n        w[i][i] = freq[i];\n    }\n\n    for (int len = 2; len <= n; len++) {\n        for (int i = 0; i < n - len + 1; i++) {\n            int j = i + len - 1;\n            cost[i][j] = INT_MAX;\n            w[i][j] = w[i][j-1] + freq[j];\n\n            for (int r = i; r <= j; r++) {\n                double c = ((r > i) ? cost[i][r-1] : 0) +\n                           ((r < j) ? cost[r+1][j] : 0) +\n                           w[i][j];\n\n                if (c < cost[i][j]) {\n                    cost[i][j] = c;\n                }\n            }\n        }\n    }\n\n    return cost[0][n-1];\n}\n\nint main() {\n    int n;\n    double keys[MAX_KEYS], freq[MAX_KEYS];\n\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++)\n        scanf(\"%lf\", &keys[i]);\n    for (int i = 0; i < n; i++)\n        scanf(\"%lf\", &freq[i]);\n\n    double result = optimalBST(keys, freq, n);\n    printf(\"%.2lf\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:08:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nfloat optimalBST(float p[], float q[], int n) {\n    float e[n + 2][n + 1];\n    float w[n + 2][n + 1];\n    int root[n + 1][n + 1];\n\n    for (int i = 1; i <= n + 1; i++) {\n        e[i][i - 1] = q[i - 1];\n        w[i][i - 1] = q[i - 1];\n    }\n\n    for (int l = 1; l <= n; l++) {\n        for (int i = 1; i <= n - l + 1; i++) {\n            int j = i + l - 1;\n            e[i][j] = INT_MAX;\n            w[i][j] = w[i][j - 1] + p[j] + q[j];\n            for (int r = i; r <= j; r++) {\n                float t = e[i][r - 1] + e[r + 1][j] + w[i][j];\n                if (t < e[i][j]) {\n                    e[i][j] = t;\n                    root[i][j] = r;\n                }\n            }\n        }\n    }\n\n    return e[1][n];\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    float p[n + 1], q[n + 1];\n\n    for (int i = 1; i <= n; i++) {\n        scanf(\"%f\", &p[i]);\n    }\n    for (int i = 0; i <= n; i++) {\n        scanf(\"%f\", &q[i]);\n    }\n\n    printf(\"%.6f\\n\", optimalBST(p, q, n));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\nusing namespace std;\n\nvoid optimalBST(const vector<double>& p, const vector<double>& q, int n) {\n    vector<vector<double>> e(n + 2, vector<double>(n + 1, 0));\n    vector<vector<double>> w(n + 2, vector<double>(n + 1, 0));\n    vector<vector<int>> root(n + 1, vector<int>(n + 1, 0));\n\n    for (int i = 1; i <= n + 1; ++i) {\n        e[i][i - 1] = q[i - 1];\n        w[i][i - 1] = q[i - 1];\n    }\n\n    for (int l = 1; l <= n; ++l) {\n        for (int i = 1; i <= n - l + 1; ++i) {\n            int j = i + l - 1;\n            e[i][j] = INT_MAX;\n            w[i][j] = w[i][j - 1] + p[j] + q[j];\n            for (int r = i; r <= j; ++r) {\n                double t = e[i][r - 1] + e[r + 1][j] + w[i][j];\n                if (t < e[i][j]) {\n                    e[i][j] = t;\n                    root[i][j] = r;\n                }\n            }\n        }\n    }\n\n    cout << e[1][n] << endl;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<double> p(n + 1), q(n + 1);\n    for (int i = 1; i <= n; ++i) {\n        cin >> p[i];\n    }\n    for (int i = 0; i <= n; ++i) {\n        cin >> q[i];\n    }\n    optimalBST(p, q, n);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:09:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class OptimalBST {\n    public static double optimalBST(double[] p, double[] q, int n) {\n        double[][] e = new double[n + 2][n + 1];\n        double[][] w = new double[n + 2][n + 1];\n        int[][] root = new int[n + 1][n + 1];\n\n        for (int i = 1; i <= n + 1; i++) {\n            e[i][i - 1] = q[i - 1];\n            w[i][i - 1] = q[i - 1];\n        }\n\n        for (int l = 1; l <= n; l++) {\n            for (int i = 1; i <= n - l + 1; i++) {\n                int j = i + l - 1;\n                e[i][j] = Double.MAX_VALUE;\n                w[i][j] = w[i][j - 1] + p[j] + q[j];\n                for (int r = i; r <= j; r++) {\n                    double t = e[i][r - 1] + e[r + 1][j] + w[i][j];\n                    if (t < e[i][j]) {\n                        e[i][j] = t;\n                        root[i][j] = r;\n                    }\n                }\n            }\n        }\n        return e[1][n];\n    }\n\n    public static void main(String[] args) {\n        double[] p = {0, 0.15, 0.10, 0.05, 0.10, 0.20};\n        double[] q = {0.05, 0.10, 0.05, 0.05, 0.05, 0.10};\n        int n = p.length - 1;\n        System.out.println(\"Optimal BST cost: \" + optimalBST(p, q, n));\n    }\n}",
+    "timestamp": "2025-08-05 22:09:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class OptimalBinarySearchTree {\n    public static int[][] constructOptimalBST(double[] keys, double[] freq, int n) {\n        double[][] cost = new double[n + 2][n + 1];\n        int[][] root = new int[n + 2][n + 1];\n\n        for (int i = 1; i <= n + 1; i++) {\n            cost[i][i - 1] = freq[i - 1];\n        }\n\n        for (int len = 1; len <= n; len++) {\n            for (int i = 1; i <= n - len + 1; i++) {\n                int j = i + len - 1;\n                cost[i][j] = Double.MAX_VALUE;\n                double total = sumFreq(freq, i - 1, j);\n\n                for (int k = i; k <= j; k++) {\n                    double tempCost = cost[i][k - 1] + cost[k + 1][j] + total;\n                    if (tempCost < cost[i][j]) {\n                        cost[i][j] = tempCost;\n                        root[i][j] = k;\n                    }\n                }\n            }\n        }\n\n        return root;\n    }\n\n    private static double sumFreq(double[] freq, int start, int end) {\n        double sum = 0;\n        for (int i = start + 1; i <= end + 1; i++) {\n            sum += freq[i];\n        }\n        return sum;\n    }\n\n    public static void printOptimalBST(int[][] root, int start, int end, int level) {\n        if (start > end) return;\n\n        int rootIndex = root[start][end];\n        System.out.println(\"Level \" + level + \": Root = \" + rootIndex);\n\n        printOptimalBST(root, start, rootIndex - 1, level + 1);\n        printOptimalBST(root, rootIndex + 1, end, level + 1);\n    }\n\n    public static void main(String[] args) {\n        double[] keys = {0, 10, 12, 16, 21};\n        double[] freq = {0, 4, 2, 6, 3, 1};\n        int n = keys.length - 1;\n\n        int[][] optimalRoot = constructOptimalBST(keys, freq, n);\n        printOptimalBST(optimalRoot, 1, n, 0);\n    }\n}",
+    "timestamp": "2025-08-05 22:10:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <iomanip>\n\nusing namespace std;\n\ndouble optimalBST(vector<double>& keys, vector<double>& dummy) {\n    int n = keys.size();\n    vector<vector<double>> cost(n + 1, vector<double>(n + 1, 0.0));\n    vector<vector<double>> weight(n + 1, vector<double>(n + 1, 0.0));\n\n    // Initialize weights\n    for (int i = 1; i <= n + 1; i++) {\n        weight[i][i - 1] = dummy[i - 1];\n    }\n\n    // Calculate weights and costs\n    for (int len = 1; len <= n; len++) {\n        for (int i = 1; i <= n - len + 1; i++) {\n            int j = i + len - 1;\n            cost[i][j] = INT_MAX;\n            weight[i][j] = weight[i][j - 1] + keys[j - 1] + dummy[j];\n\n            for (int k = i; k <= j; k++) {\n                double temp = cost[i][k - 1] + cost[k + 1][j] + weight[i][j];\n                if (temp < cost[i][j]) {\n                    cost[i][j] = temp;\n                }\n            }\n        }\n    }\n\n    return cost[1][n];\n}\n\nint main() {\n    int n;\n    cout << \"Enter number of keys: \";\n    cin >> n;\n\n    vector<double> keys(n);\n    vector<double> dummy(n + 1);\n\n    cout << \"Enter probabilities for keys:\\n\";\n    for (int i = 0; i < n; i++) {\n        cin >> keys[i];\n    }\n\n    cout << \"Enter probabilities for dummy keys:\\n\";\n    for (int i = 0; i <= n; i++) {\n        cin >> dummy[i];\n    }\n\n    double result = optimalBST(keys, dummy);\n    cout << fixed << setprecision(2);\n    cout << \"Expected search cost: \" << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def optimal_bst(p, q, n):\n    e = [[0] * (n + 2) for _ in range(n + 2)]\n    w = [[0] * (n + 2) for _ in range(n + 2)]\n\n    for i in range(n + 1):\n        e[i + 1][i] = q[i]\n        w[i + 1][i] = q[i]\n\n    for l in range(1, n + 1):\n        for i in range(1, n - l + 2):\n            j = i + l - 1\n            e[i][j] = float('inf')\n            w[i][j] = w[i][j - 1] + p[j - 1] + q[j]\n            for r in range(i, j + 1):\n                t = e[i][r - 1] + e[r + 1][j] + w[i][j]\n                if t < e[i][j]:\n                    e[i][j] = t\n\n    return e[1][n]\n\n\n# Example usage\n# p: probabilities of actual keys\n# q: probabilities of dummy keys\n# n: number of keys\np = [0.15, 0.1, 0.05, 0.1, 0.2]\nq = [0.05, 0.1, 0.05, 0.05, 0.05, 0.1]\nn = len(p)\n\nexpected_cost = optimal_bst(p, q, n)\nprint(expected_cost)",
+    "timestamp": "2025-08-13 09:13:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class OptimalBST {\n    public static double optimalBST(double[] p, double[] q, int n) {\n        double[][] e = new double[n + 2][n + 2];\n        double[][] w = new double[n + 2][n + 2];\n        double[][] root = new double[n + 1][n + 1];\n\n        for (int i = 1; i <= n + 1; i++) {\n            e[i][i - 1] = q[i - 1];\n            w[i][i - 1] = q[i - 1];\n        }\n\n        for (int l = 1; l <= n; l++) {\n            for (int i = 1; i <= n - l + 1; i++) {\n                int j = i + l - 1;\n                e[i][j] = Double.MAX_VALUE;\n                w[i][j] = w[i][j - 1] + p[j] + q[j];\n                for (int r = i; r <= j; r++) {\n                    double t = e[i][r - 1] + e[r + 1][j] + w[i][j];\n                    if (t < e[i][j]) {\n                        e[i][j] = t;\n                        root[i][j] = r;\n                    }\n                }\n            }\n        }\n\n        return e[1][n];\n    }\n\n    public static void main(String[] args) {\n        double[] p = {0, 0.15, 0.1, 0.05, 0.1, 0.2}; // Including 0 at start for 1-based index\n        double[] q = {0.05, 0.1, 0.05, 0.05, 0.05, 0.1};\n        int n = p.length - 1;\n\n        double cost = optimalBST(p, q, n);\n        System.out.printf(\"The expected cost of the Optimal BST is: %.2f%n\", cost);\n    }\n}",
+    "timestamp": "2025-08-13 09:13:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define N 100\n\ndouble optimalBST(double p[], double q[], int n) {\n    double e[N+1][N+1], w[N+1][N+1], root[N+1][N+1]; // cost, weights, roots\n    int i, j, l, r;\n\n    for (i = 0; i <= n; i++) {\n        e[i][i] = q[i];\n        w[i][i] = q[i];\n    }\n\n    for (l = 1; l <= n; l++) { // l is the chain length\n        for (i = 0; i <= n-l; i++) {\n            j = i+l;\n            e[i][j] = INT_MAX;\n            w[i][j] = w[i][j-1] + p[j-1] + q[j];\n\n            for (r = i; r < j; r++) {\n                double t = e[i][r] + e[r+1][j] + w[i][j];\n                if (t < e[i][j]) {\n                    e[i][j] = t;\n                }\n            }\n        }\n    }\n\n    return e[0][n];\n}\n\nint main() {\n    int n, i;\n    double p[N], q[N+1];\n    \n    printf(\"Enter the number of keys: \");\n    scanf(\"%d\", &n);\n\n    printf(\"Enter the probabilities p for each key: \");\n    for (i = 0; i < n; i++) {\n        scanf(\"%lf\", &p[i]);\n    }\n\n    printf(\"Enter the probabilities q for the dummy keys: \");\n    for (i = 0; i <= n; i++) {\n        scanf(\"%lf\", &q[i]);\n    }\n\n    double cost = optimalBST(p, q, n);\n    printf(\"The expected cost of the optimal BST: %lf\\n\", cost);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:13:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def optimal_bst(keys, freq, dummy_freq):\n    n = len(keys)\n    cost = [[0] * (n + 1) for _ in range(n + 1)]\n    weight = [[0] * (n + 1) for _ in range(n + 1)]\n\n    for i in range(n + 1):\n        cost[i][i] = dummy_freq[i]\n        weight[i][i] = dummy_freq[i]\n\n    for length in range(1, n + 1):\n        for i in range(n - length + 1):\n            j = i + length\n            cost[i][j] = float('inf')\n            weight[i][j] = weight[i][j-1] + freq[j-1] + dummy_freq[j]\n\n            for root in range(i, j):\n                total_cost = cost[i][root] + cost[root+1][j] + weight[i][j]\n                if total_cost < cost[i][j]:\n                    cost[i][j] = total_cost\n\n    return cost[0][n]\n\n# Example usage\nkeys = [10, 12, 20]\nfreq = [34, 8, 50]\ndummy_freq = [4, 11, 5, 6]\nprint(optimal_bst(keys, freq, dummy_freq))",
+    "timestamp": "2025-08-13 09:13:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def optimal_bst(keys, dummy_probs, key_probs):\n    n = len(keys)\n    # Create a DP table and initialize with 0\n    dp = [[0 for _ in range(n + 1)] for _ in range(n + 2)]\n    # Create a table to store sum of probabilities\n    sum_p = [[0 for _ in range(n + 1)] for _ in range(n + 2)]\n    \n    for i in range(1, n + 1):\n        dp[i][i] = key_probs[i - 1]\n        sum_p[i][i] = key_probs[i - 1] + dummy_probs[i - 1] + dummy_probs[i]\n    \n    for length in range(2, n + 1):\n        for i in range(1, n - length + 2):\n            j = i + length - 1\n            dp[i][j] = float('inf')\n            sum_p[i][j] = sum_p[i][j - 1] + key_probs[j - 1] + dummy_probs[j]\n            \n            for r in range(i, j + 1):\n                temp = dp[i][r - 1] + dp[r + 1][j] + sum_p[i][j]\n                if temp < dp[i][j]:\n                    dp[i][j] = temp\n    \n    return dp[1][n]\n\n# Example usage:\nkeys = [10, 20, 30]\ndummy_probs = [0.05, 0.1, 0.05, 0.05]\nkey_probs = [0.15, 0.1, 0.05]\nprint(optimal_bst(keys, dummy_probs, key_probs))",
+    "timestamp": "2025-08-13 09:14:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <limits>\n\nusing namespace std;\n\nfloat optimalBST(const vector<float>& p, const vector<float>& q, int n) {\n    vector<vector<float>> e(n + 2, vector<float>(n + 1, 0));\n    vector<vector<float>> w(n + 2, vector<float>(n + 1, 0));\n    vector<vector<int>> root(n + 1, vector<int>(n + 1, 0));\n\n    for (int i = 1; i <= n + 1; i++) {\n        e[i][i - 1] = q[i - 1];\n        w[i][i - 1] = q[i - 1];\n    }\n\n    for (int length = 1; length <= n; ++length) {\n        for (int i = 1; i <= n - length + 1; ++i) {\n            int j = i + length - 1;\n            e[i][j] = std::numeric_limits<float>::max();\n            w[i][j] = w[i][j - 1] + p[j - 1] + q[j];\n            for (int r = i; r <= j; ++r) {\n                float temp = e[i][r - 1] + e[r + 1][j] + w[i][j];\n                if (temp < e[i][j]) {\n                    e[i][j] = temp;\n                    root[i][j] = r;\n                }\n            }\n        }\n    }\n\n    return e[1][n];\n}\n\nint main() {\n    int n;\n    cout << \"Enter number of keys: \";\n    cin >> n;\n\n    vector<float> p(n), q(n + 1);\n    cout << \"Enter probabilities for keys: \";\n    for (int i = 0; i < n; ++i) {\n        cin >> p[i];\n    }\n\n    cout << \"Enter probabilities for dummy keys: \";\n    for (int i = 0; i <= n; ++i) {\n        cin >> q[i];\n    }\n\n    float expectedCost = optimalBST(p, q, n);\n    cout << \"Expected cost of search operations: \" << expectedCost << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:50:15"
+  }
+]

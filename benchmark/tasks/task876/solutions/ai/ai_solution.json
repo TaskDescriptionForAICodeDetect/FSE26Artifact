@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint time_gap(int a, int b) {\n    int diff = abs(a - b);\n    return min(diff, 24 - diff);\n}\n\nint main() {\n    int N, i, j;\n    scanf(\"%d\", &N);\n    \n    int* D = malloc((N + 1) * sizeof(int));\n    for (i = 0; i < N + 1; i++) {\n        scanf(\"%d\", &D[i]);\n    }\n    \n    int max_min_gap = 0;\n    for (i = 0; i < N + 1; i++) {\n        for (j = i + 1; j < N + 1; j++) {\n            int current_gap = time_gap(D[i], D[j]);\n            if (current_gap > max_min_gap) {\n                max_min_gap = current_gap;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", max_min_gap);\n    \n    free(D);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int D[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &D[i]);\n    }\n    \n    qsort(D, N, sizeof(int), compare);\n    \n    int max_min_gap = 0;\n    for (int i = 0; i < N; i++) {\n        int current_gap = min(D[i], 24 - D[i]);\n        if (current_gap > max_min_gap) {\n            max_min_gap = current_gap;\n        }\n    }\n    \n    int min_gap = 24;\n    for (int i = 0; i < N - 1; i++) {\n        int gap = D[i + 1] - D[i];\n        gap = min(gap, 24 - gap);\n        if (gap < min_gap) {\n            min_gap = gap;\n        }\n    }\n    \n    int last_gap = D[N - 1] - D[0];\n    last_gap = min(last_gap, 24 - last_gap);\n    min_gap = min(min_gap, last_gap);\n    \n    printf(\"%d\\n\", max(min_gap, max_min_gap / 2));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> D(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> D[i];\n    }\n    \n    // Takahashi's time gap is 0, so we can insert it into the array\n    D.push_back(0);\n    sort(D.begin(), D.end());\n    \n    int max_min_gap = 0;\n    for (int i = 0; i < D.size(); ++i) {\n        for (int j = i + 1; j < D.size(); ++j) {\n            int gap = D[j] - D[i];\n            gap = min(gap, 24 - gap);\n            if (gap > max_min_gap) {\n                max_min_gap = gap;\n            }\n        }\n    }\n    \n    cout << max_min_gap << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] D = new int[N];\n        for (int i = 0; i < N; i++) {\n            D[i] = sc.nextInt();\n        }\n        \n        Arrays.sort(D);\n        int maxMin = 0;\n        \n        for (int i = 0; i < N; i++) {\n            for (int j = i + 1; j < N; j++) {\n                int gap = Math.min(Math.abs(D[i] - D[j]), 24 - Math.abs(D[i] - D[j]));\n                if (gap > maxMin) {\n                    maxMin = gap;\n                }\n            }\n        }\n        \n        System.out.println(maxMin);\n    }\n}",
+    "timestamp": "2025-08-05 23:12:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine());\n        int[] D = new int[N+1];\n        \n        for (int i = 0; i < N+1; i++) {\n            D[i] = Integer.parseInt(br.readLine());\n        }\n        \n        int maxMinGap = 0;\n        \n        for (int i = 0; i < N+1; i++) {\n            for (int j = i+1; j < N+1; j++) {\n                int gap = Math.min(Math.abs(D[i] - D[j]), 24 - Math.abs(D[i] - D[j]));\n                maxMinGap = Math.max(maxMinGap, gap);\n            }\n        }\n        \n        System.out.println(maxMinGap);\n    }\n}",
+    "timestamp": "2025-08-05 23:12:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> D(N+1);\n    for(int i = 0; i < N+1; i++) {\n        cin >> D[i];\n    }\n    \n    int maxMinGap = 0;\n    for(int i = 0; i < N+1; i++) {\n        for(int j = i+1; j < N+1; j++) {\n            int gap = min(abs(D[i] - D[j]), 24 - abs(D[i] - D[j]));\n            maxMinGap = max(maxMinGap, gap);\n        }\n    }\n    \n    cout << maxMinGap << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_min_time_gap(N, D):\n    max_gap = 0\n    for i in range(N):\n        for j in range(i+1, N+1):\n            time_gap_ij = min(abs(D[i] - D[j]), 24 - abs(D[i] - D[j]))\n            max_gap = max(max_gap, time_gap_ij)\n    return max_gap\n\n# Example usage:\nN = 4\nD = [0, 6, 12, 18, 3]\nprint(max_min_time_gap(N, D))",
+    "timestamp": "2025-08-13 14:07:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class CodeFestival {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] D = new int[N + 1];\n        for (int i = 0; i <= N; i++) {\n            D[i] = scanner.nextInt();\n        }\n        scanner.close();\n\n        int maxTimeGap = 0;\n        for (int i = 0; i <= N; i++) {\n            for (int j = i + 1; j <= N; j++) {\n                int timeGap = Math.min(D[i], D[j]);\n                maxTimeGap = Math.max(maxTimeGap, timeGap);\n            }\n        }\n\n        System.out.println(maxTimeGap);\n    }\n}",
+    "timestamp": "2025-08-13 14:07:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int D[N+1];\n    for (int i = 0; i <= N; i++) {\n        scanf(\"%d\", &D[i]);\n    }\n    \n    int max_min_gap = 0;\n    for (int i = 0; i <= N; i++) {\n        for (int j = i + 1; j <= N; j++) {\n            int gap = D[i] < D[j] ? D[i] : D[j];\n            if (gap > max_min_gap) {\n                max_min_gap = gap;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", max_min_gap);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:07:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> D(N + 1);\n    for (int i = 0; i <= N; ++i) {\n        std::cin >> D[i];\n    }\n    \n    std::vector<int> time_gaps(N + 1);\n    for (int i = 0; i <= N; ++i) {\n        time_gaps[i] = std::min(D[i], 24 - D[i]);\n    }\n\n    std::sort(time_gaps.begin(), time_gaps.end());\n    int max_gap = time_gaps[N]; // Since time_gaps is sorted, the maximum element is the last element after sorting.\n\n    std::cout << max_gap << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:07:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, D):\n    max_min_gap = 0\n    for i in range(N+1):\n        for j in range(i+1, N+1):\n            gap = min(abs(D[i] - D[j]), 24 - abs(D[i] - D[j]))\n            max_min_gap = max(max_min_gap, gap)\n    return max_min_gap\n\ndef main():\n    N = int(input())\n    D = list(map(int, input().split()))\n    D.append(0)  # Takahashi's time zone\n    result = solve(N, D)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 14:07:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\nD = list(map(int, input().split()))\nD.append(0)  # Takahashi's time gap is 0\nD.sort()\n\nmax_min_gap = 0\nfor i in range(len(D)):\n    for j in range(i + 1, len(D)):\n        gap = abs(D[j] - D[i])\n        min_gap = min(gap, 24 - gap)\n        if min_gap > max_min_gap:\n            max_min_gap = min_gap\n\nprint(max_min_gap)",
+    "timestamp": "2025-08-13 14:07:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function max_min_time_gap(D) {\n    let maxGap = 0;\n    for (let i = 0; i < D.length - 1; i++) {\n        for (let j = i + 1; j < D.length; j++) {\n            let gap = Math.min(D[i], D[j]);\n            maxGap = Math.max(maxGap, gap);\n        }\n    }\n    return maxGap;\n}\n\n// Example usage:\nconst D = [5, 8, 3, 14];  // Example input, where D_i is the time gap for i-th participant's city\nconsole.log(max_min_time_gap(D));  // Output the maximum possible smallest time gap",
+    "timestamp": "2025-08-13 14:08:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxMinTimeGap(N, times) {\n    let maxMinGap = 0;\n    \n    for (let i = 0; i < N + 1; i++) {\n        for (let j = i + 1; j < N + 1; j++) {\n            let gap = Math.min(Math.abs(times[i] - times[j]), 24 - Math.abs(times[i] - times[j]));\n            maxMinGap = Math.max(maxMinGap, gap);\n        }\n    }\n    \n    return maxMinGap;\n}\n\nfunction solve(input) {\n    const lines = input.trim().split('\\n');\n    const N = parseInt(lines[0]);\n    const times = lines[1].split(' ').map(Number);\n    \n    console.log(maxMinTimeGap(N, times));\n}\n\n// Example usage\nconst input = `\n2\n5 15 0\n`;\n\nsolve(input);",
+    "timestamp": "2025-08-13 14:08:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const N = parseInt(readline());\n    const D = readline().split(' ').map(Number);\n    \n    D.sort((a, b) => a - b);\n    D.push(D[0] + 24); // To handle circular condition\n    \n    let maxMinGap = 0;\n    for (let i = 1; i < D.length; i++) {\n        const gap = D[i] - D[i - 1];\n        const timeGap = Math.min(gap, 24 - gap);\n        if (timeGap > maxMinGap) {\n            maxMinGap = timeGap;\n        }\n    }\n    \n    console.log(maxMinGap);\n}\n\n// For testing purposes, you can replace readline() with actual input methods\n// Example:\n// function readline() {\n//     return input.shift();\n// }\n// const input = ['3', '6 9 11'];\n// solve();",
+    "timestamp": "2025-08-13 14:08:57"
+  }
+]

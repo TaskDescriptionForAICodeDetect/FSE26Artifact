@@ -1,0 +1,32 @@
+Parentheses Number
+
+Problem
+Define a correct parentheses sequence as follows:
+
+- The empty string is a correct parentheses sequence.
+- If S is a correct parentheses sequence, then (S) is also a correct parentheses sequence.
+- If S and T are correct parentheses sequences, then ST is also a correct parentheses sequence.
+
+We will map a sequence of permutations to a correct parentheses sequence based on these rules:
+
+- When the i-th closing parenthesis corresponds to the j-th opening parenthesis, the i-th value in the sequence is j.
+
+Given a permutation P of length n = (p_1, p_2, ..., p_n), restore the corresponding parentheses sequence.
+
+If there is no corresponding parentheses sequence, output :(.
+
+Input Format
+
+The first line contains the number of items in the permutation n.
+The second line contains the permutation p_1, p_2, ..., p_n separated by spaces.
+
+Constraints
+
+1 ≤ n ≤ 10^5
+1 ≤ p_i ≤ n
+All input must be integers.
+P = (p_1, p_2, ..., p_n) is a permutation.
+
+Output Format
+
+Output the parentheses sequence corresponding to the permutation. If such a parentheses sequence does not exist, output :(

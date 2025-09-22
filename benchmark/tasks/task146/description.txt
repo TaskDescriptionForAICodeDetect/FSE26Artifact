@@ -1,0 +1,29 @@
+Icicles
+
+Problem
+
+In front of JOI-kun's house in Canada, there are beautiful icicles hanging from the eaves. Since it's a great opportunity, JOI-kun decided to investigate the icicles.
+
+There are N icicles (2 ≤ N ≤ 100000) hanging from the eaves in a straight line. The i-th icicle is located at the position i cm from the left end of the eaves (1 ≤ i ≤ N). The initial length of the i-th icicle is a_i cm (a_i is a positive integer). The icicles grow according to the following rules:
+
+The i-th icicle will grow by 1 cm per hour only if it is longer than both the (i-1)-th icicle and the (i+1)-th icicle (for the edge icicles, only one neighbor is considered). Specifically, if the first icicle is longer than the second, it will grow, and if the N-th icicle is longer than the (N-1)-th icicle, it will grow as well.
+
+As soon as any icicle reaches a length of L cm (2 ≤ L ≤ 50000), it breaks off from the root (the broken icicle is considered to have a length of 0 cm thereafter).
+
+Initially, all adjacent icicles have different lengths. Given enough time, all N icicles will eventually break and become 0 cm long. JOI-kun wants to know how long it will take for all the icicles to break.
+
+Given the initial lengths of the N icicles and the maximum length L, create a program to determine the time it takes for all the icicles to break.
+
+Input
+
+The input is provided in a file named input.txt.
+
+The first line contains integers N (the number of icicles) and L (the maximum length), separated by a space. Each of the next N lines (1 ≤ i ≤ N) contains an integer a_i representing the initial length of the i-th icicle (1 ≤ a_i < L).
+
+For 30% of the scoring data, the constraints N ≤ 500 and L ≤ 1000 hold.
+
+Output
+
+The output should be written to a file named output.txt.
+
+The output should contain a single integer on one line that represents the time it takes for all icicles to break.

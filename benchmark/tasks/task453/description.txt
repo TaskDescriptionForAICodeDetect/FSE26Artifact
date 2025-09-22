@@ -1,0 +1,1 @@
+You are given a connected undirected graph with an even number of nodes. Your task is to find a spanning tree whose median value of edge costs is minimized. The input consists of multiple datasets, with each dataset providing the number of nodes and edges, followed by the edges with their corresponding costs. The program should print the median value for each dataset.

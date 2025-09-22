@@ -1,0 +1,1 @@
+Given a chain consisting of multiple circles on a plane, find the shortest path connecting the centers of the first and last circle such that the path is confined within or on at least one of the circles.

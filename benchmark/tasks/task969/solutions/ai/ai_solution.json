@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_N 200\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint solve(int N, int M, int cards[]) {\n    bool used[MAX_N] = {false};\n    int pairs = 0;\n\n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n\n        for (int j = i + 1; j < N; j++) {\n            if (used[j]) continue;\n\n            if (cards[i] == cards[j] || (cards[i] + cards[j]) % M == 0) {\n                pairs++;\n                used[i] = true;\n                used[j] = true;\n                break;\n            }\n        }\n    }\n\n    return pairs;\n}\n\nint main() {\n    int N, M;\n    int cards[MAX_N];\n\n    scanf(\"%d %d\", &N, &M);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n\n    printf(\"%d\\n\", solve(N, M, cards));\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int *count = (int *)calloc(M, sizeof(int));\n    for (int i = 0; i < N; i++) {\n        int num;\n        scanf(\"%d\", &num);\n        count[num % M]++;\n    }\n    \n    int pairs = count[0] / 2;\n    for (int i = 1; i <= M / 2; i++) {\n        if (i == M - i) {\n            pairs += count[i] / 2;\n        } else {\n            pairs += (count[i] < count[M - i]) ? count[i] : count[M - i];\n        }\n    }\n    \n    printf(\"%d\\n\", pairs);\n    free(count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> A(N);\n    unordered_map<int, int> freq;\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        freq[A[i] % M]++;\n    }\n    \n    int pairs = 0;\n    for (int r = 0; r <= M / 2; ++r) {\n        if (r == 0 || (M % 2 == 0 && r == M / 2)) {\n            pairs += freq[r] / 2;\n        } else {\n            int complement = M - r;\n            if (freq.count(r) && freq.count(complement)) {\n                pairs += min(freq[r], freq[complement]);\n            }\n        }\n    }\n    \n    cout << pairs << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int num : A) {\n            int mod = num % M;\n            freq.put(mod, freq.getOrDefault(mod, 0) + 1);\n        }\n\n        int pairs = 0;\n        Set<Integer> processed = new HashSet<>();\n        for (int mod : freq.keySet()) {\n            if (processed.contains(mod)) {\n                continue;\n            }\n            int complement = (M - mod) % M;\n            if (mod == complement) {\n                pairs += freq.get(mod) / 2;\n            } else if (freq.containsKey(complement)) {\n                int min = Math.min(freq.get(mod), freq.get(complement));\n                pairs += min;\n                processed.add(complement);\n            }\n            processed.add(mod);\n        }\n        System.out.println(pairs);\n    }\n}",
+    "timestamp": "2025-08-05 23:31:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int maxPairs(int[] cards, int M) {\n        int n = cards.length;\n        boolean[] used = new boolean[n];\n        int pairs = 0;\n\n        // First match cards with same value\n        for (int i = 0; i < n; i++) {\n            if (used[i]) continue;\n            for (int j = i + 1; j < n; j++) {\n                if (used[j]) continue;\n                if (cards[i] == cards[j]) {\n                    pairs++;\n                    used[i] = true;\n                    used[j] = true;\n                    break;\n                }\n            }\n        }\n\n        // Then match cards with sum divisible by M\n        for (int i = 0; i < n; i++) {\n            if (used[i]) continue;\n            for (int j = i + 1; j < n; j++) {\n                if (used[j]) continue;\n                if ((cards[i] + cards[j]) % M == 0) {\n                    pairs++;\n                    used[i] = true;\n                    used[j] = true;\n                    break;\n                }\n            }\n        }\n\n        return pairs;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int[] cards = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            cards[i] = scanner.nextInt();\n        }\n        \n        System.out.println(maxPairs(cards, M));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:31:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\nusing namespace std;\n\nint maxPairs(int N, int M, vector<int>& cards) {\n    unordered_map<int, int> count;\n    for (int card : cards) {\n        count[card]++;\n    }\n    \n    int pairs = 0;\n    vector<bool> used(N, false);\n    \n    // First pass: match identical cards\n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n        for (int j = i + 1; j < N; j++) {\n            if (used[j]) continue;\n            if (cards[i] == cards[j]) {\n                pairs++;\n                used[i] = used[j] = true;\n                break;\n            }\n        }\n    }\n    \n    // Second pass: match cards with sum divisible by M\n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n        for (int j = i + 1; j < N; j++) {\n            if (used[j]) continue;\n            if ((cards[i] + cards[j]) % M == 0) {\n                pairs++;\n                used[i] = used[j] = true;\n                break;\n            }\n        }\n    }\n    \n    return pairs;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> cards(N);\n    for (int i = 0; i < N; i++) {\n        cin >> cards[i];\n    }\n    \n    cout << maxPairs(N, M, cards) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_pairs(cards, M):\n    from collections import defaultdict\n    \n    count = defaultdict(int)\n    \n    # Count occurrences of each card\n    for card in cards:\n        count[card] += 1\n\n    pairs = 0\n\n    # First pass: Pair same numbers\n    for card in list(count.keys()):\n        pairs += count[card] // 2\n        count[card] %= 2\n    \n    # Convert to list of remaining card values\n    numbers = sorted([card for card in count if count[card] > 0])\n\n    # Second pass: Pair sums that are multiples of M\n    i, j = 0, len(numbers) - 1\n    while i < j:\n        sum_mod = (numbers[i] + numbers[j]) % M\n        if sum_mod == 0:\n            pairs += 1\n            i += 1\n            j -= 1\n        elif (numbers[i] + numbers[j]) < M:\n            i += 1\n        else:\n            j -= 1\n\n    return pairs\n\n\n# Example usage:\ncards = [1, 3, 2, 6, 4, 5, 9]\nM = 5\nprint(max_pairs(cards, M))  # Output: 3",
+    "timestamp": "2025-08-13 15:41:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class CardPairs {\n\n    public static int maxPairs(int[] cards, int M) {\n        Map<Integer, Integer> cardCount = new HashMap<>();\n        \n        for (int card : cards) {\n            cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);\n        }\n\n        int pairs = 0;\n\n        // Check for pairs of the same number\n        for (int card : cardCount.keySet()) {\n            int count = cardCount.get(card);\n            pairs += count / 2;\n            cardCount.put(card, count % 2);\n        }\n\n        // Check for pairs where sum is multiple of M\n        List<Integer> uniqueCards = new ArrayList<>(cardCount.keySet());\n        int n = uniqueCards.size();\n        \n        boolean[] used = new boolean[n];\n        for (int i = 0; i < n; i++) {\n            if (used[i]) continue;\n            int card1 = uniqueCards.get(i);\n            for (int j = i + 1; j < n; j++) {\n                if (used[j]) continue;\n                int card2 = uniqueCards.get(j);\n                if ((card1 + card2) % M == 0) {\n                    pairs++;\n                    used[i] = true;\n                    used[j] = true;\n                    break;\n                }\n            }\n        }\n\n        return pairs;\n    }\n\n    public static void main(String[] args) {\n        int[] cards = {1, 3, 2, 3, 5, 5};\n        int M = 4;\n        System.out.println(maxPairs(cards, M));  // Output: 2\n    }\n}",
+    "timestamp": "2025-08-13 15:42:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint maxPairs(int *cards, int N, int M) {\n    qsort(cards, N, sizeof(int), compare);\n    int pairs = 0;\n    int used[N];\n    \n    for (int i = 0; i < N; i++) {\n        used[i] = 0;\n    }\n    \n    for (int i = 0; i < N; i++) {\n        if (used[i]) continue;\n        \n        // Check for any matching pair first\n        for (int j = i + 1; j < N; j++) {\n            if (!used[j] && cards[i] == cards[j]) {\n                used[i] = used[j] = 1;\n                pairs++;\n                break;\n            }\n        }\n        \n        // If no match found, check for pair sum multiple of M\n        if (!used[i]) {\n            for (int j = i + 1; j < N; j++) {\n                if (!used[j] && (cards[i] + cards[j]) % M == 0) {\n                    used[i] = used[j] = 1;\n                    pairs++;\n                    break;\n                }\n            }\n        }\n    }\n    \n    return pairs;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int cards[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n\n    int result = maxPairs(cards, N, M);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:42:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n    std::vector<int> cards(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> cards[i];\n    }\n\n    std::unordered_map<int, int> freq;\n    for (int card : cards) {\n        ++freq[card];\n    }\n\n    int pairs = 0;\n\n    // Create pairs of the same integers\n    for (auto& [key, value] : freq) {\n        pairs += value / 2;\n        freq[key] %= 2;\n    }\n\n    std::unordered_map<int, int> remainder_count;\n    for (auto& [key, count] : freq) {\n        if (count > 0) {\n            int remainder = key % M;\n            ++remainder_count[remainder];\n        }\n    }\n\n    // Create pairs based on remainders\n    for (auto& [rem, count] : remainder_count) {\n        int complement = (M - rem) % M;\n        if (rem == complement) {\n            pairs += count / 2;\n        } else if (remainder_count.count(complement)) {\n            int min_count = std::min(count, remainder_count[complement]);\n            pairs += min_count;\n            remainder_count[complement] = 0;  // Avoid counting complement pairs again\n        }\n    }\n\n    std::cout << pairs << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:42:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_card_pairs(N, M, cards):\n    # Count occurrences of each card value\n    count = {}\n    for card in cards:\n        count[card] = count.get(card, 0) + 1\n    \n    # Track which cards have been paired\n    used = [False] * N\n    pairs = 0\n    \n    # First, pair identical cards\n    for card, freq in count.items():\n        pairs += freq // 2\n        for i in range(freq // 2):\n            # Mark first two of each pair as used\n            idx1 = cards.index(card)\n            used[idx1] = True\n            cards[idx1] = -1  # Invalidate this card\n            \n            idx2 = cards.index(card)\n            used[idx2] = True\n            cards[idx2] = -1  # Invalidate this card\n    \n    # Then pair cards that sum to multiple of M\n    for i in range(N):\n        if used[i]:\n            continue\n        for j in range(i+1, N):\n            if used[j]:\n                continue\n            if (cards[i] + cards[j]) % M == 0:\n                pairs += 1\n                used[i] = True\n                used[j] = True\n                break\n    \n    return pairs\n\n# Example usage\nN, M = map(int, input().split())\ncards = list(map(int, input().split()))\nprint(max_card_pairs(N, M, cards))",
+    "timestamp": "2025-08-13 15:42:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_pairs(N, M, cards):\n    freq = {}\n    for num in cards:\n        freq[num] = freq.get(num, 0) + 1\n    \n    count = 0\n    used = set()\n    \n    for num in list(freq.keys()):\n        if num in used:\n            continue\n        remainder = num % M\n        complement = (M - remainder) % M\n        if complement == remainder:\n            count += freq[num] // 2\n        else:\n            if complement in freq:\n                pairs = min(freq[num], freq[complement])\n                count += pairs\n                used.add(complement)\n        used.add(num)\n    \n    return count\n\n# Sample usage:\n# N, M = map(int, input().split())\n# cards = list(map(int, input().split()))\n# print(max_pairs(N, M, cards))",
+    "timestamp": "2025-08-13 15:42:26"
+  }
+]

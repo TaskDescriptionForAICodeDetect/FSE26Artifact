@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MOD 998244353\n\nint distinctStrings(char* S, int K) {\n    int len = strlen(S);\n    int maxStates = (1 << len);\n    int* dp = (int*)calloc(maxStates, sizeof(int));\n    dp[0] = 1;\n\n    for (int k = 0; k < K; k++) {\n        int* newDp = (int*)calloc(maxStates, sizeof(int));\n        \n        for (int state = 0; state < maxStates; state++) {\n            if (dp[state] == 0) continue;\n            \n            for (int i = 0; i < len; i++) {\n                for (int j = i + 1; j < len; j++) {\n                    if ((S[i] == '0' && S[j] == '1') || (S[i] == '1' && S[j] == '0')) {\n                        int newState = state;\n                        char* newStr = strdup(S);\n                        \n                        char temp = newStr[j];\n                        memmove(newStr + i + 1, newStr + i, j - i);\n                        newStr[i] = temp;\n                        \n                        int mask = 0;\n                        for (int x = 0; x < len; x++) {\n                            if (newStr[x] != S[x]) {\n                                mask |= (1 << x);\n                            }\n                        }\n                        \n                        newDp[mask] = (newDp[mask] + dp[state]) % MOD;\n                        free(newStr);\n                    }\n                }\n            }\n        }\n        \n        memcpy(dp, newDp, maxStates * sizeof(int));\n        free(newDp);\n    }\n    \n    int result = 0;\n    for (int state = 0; state < maxStates; state++) {\n        result = (result + dp[state]) % MOD;\n    }\n    \n    free(dp);\n    return result;\n}\n\nint main() {\n    char S[100];\n    int K;\n    scanf(\"%s %d\", S, &K);\n    printf(\"%d\\n\", distinctStrings(S, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MOD 998244353\n#define MAXN 3005\n\nint dp[MAXN][MAXN];\nchar s[MAXN];\nint n, k;\n\nint solve() {\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j <= k; ++j) {\n            if (!dp[i][j]) continue;\n            \n            // Option 1: Do not perform any operation on s[i]\n            dp[i+1][j] = (dp[i+1][j] + dp[i][j]) % MOD;\n            \n            // Option 2: Find a pair (i, m) where s[i] != s[m] and perform operation\n            for (int m = i + 1; m < n && j + (m - i) <= k; ++m) {\n                if (s[i] != s[m]) {\n                    dp[m+1][j + (m - i)] = (dp[m+1][j + (m - i)] + dp[i][j]) % MOD;\n                }\n            }\n        }\n    }\n\n    int res = 0;\n    for (int j = 0; j <= k; ++j) {\n        res = (res + dp[n][j]) % MOD;\n    }\n    return res;\n}\n\nint main() {\n    scanf(\"%s %d\", s, &k);\n    n = strlen(s);\n    printf(\"%d\\n\", solve());\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    string S;\n    int K;\n    cin >> S >> K;\n    \n    int n = S.size();\n    set<string> visited;\n    queue<pair<string, int>> q;\n    q.push({S, 0});\n    visited.insert(S);\n    \n    while (!q.empty()) {\n        auto current = q.front();\n        q.pop();\n        string s = current.first;\n        int steps = current.second;\n        \n        if (steps >= K) continue;\n        \n        for (int i = 0; i < s.size(); ++i) {\n            for (int j = i + 1; j < s.size(); ++j) {\n                if ((s[i] == '0' && s[j] == '1') || (s[i] == '1' && s[j] == '0')) {\n                    string next_s = s;\n                    char c = next_s[j];\n                    next_s.erase(j, 1);\n                    next_s.insert(next_s.begin() + i, c);\n                    \n                    if (visited.find(next_s) == visited.end()) {\n                        visited.insert(next_s);\n                        q.push({next_s, steps + 1});\n                    }\n                }\n            }\n        }\n    }\n    \n    cout << visited.size() % MOD << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.HashSet;\nimport java.util.Set;\n\npublic class Solution {\n    private static final int MOD = 998244353;\n    private Set<String> distinctStrings;\n\n    public int countDistinctStrings(String S, int K) {\n        distinctStrings = new HashSet<>();\n        distinctStrings.add(S);\n        for (int i = 0; i < K; i++) {\n            Set<String> newStrings = new HashSet<>();\n            for (String current : distinctStrings) {\n                generateNewStrings(current, newStrings);\n            }\n            distinctStrings.addAll(newStrings);\n            if (newStrings.isEmpty()) {\n                break;\n            }\n        }\n        return distinctStrings.size() % MOD;\n    }\n\n    private void generateNewStrings(String s, Set<String> newStrings) {\n        int n = s.length();\n        for (int i = 0; i < n; i++) {\n            if (s.charAt(i) == '0') {\n                for (int j = 0; j < n; j++) {\n                    if (s.charAt(j) == '1') {\n                        StringBuilder sb = new StringBuilder(s);\n                        char c = sb.charAt(j);\n                        sb.deleteCharAt(j);\n                        sb.insert(i, c);\n                        newStrings.add(sb.toString());\n                    }\n                }\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:29:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int distinctStrings(String S, int K) {\n        Set<String> unique = new HashSet<>();\n        unique.add(S);\n        Queue<String> queue = new LinkedList<>();\n        queue.offer(S);\n        \n        for (int ops = 0; ops < K; ops++) {\n            int size = queue.size();\n            Set<String> newUnique = new HashSet<>();\n            \n            for (int i = 0; i < size; i++) {\n                String current = queue.poll();\n                \n                for (int j = 0; j < current.length(); j++) {\n                    for (int k = j + 1; k < current.length(); k++) {\n                        if ((current.charAt(j) == '0' && current.charAt(k) == '1') || \n                            (current.charAt(j) == '1' && current.charAt(k) == '0')) {\n                            \n                            String newStr = current.substring(0, j) + current.substring(k, k+1) + \n                                            current.substring(j, k) + current.substring(k+1);\n                            \n                            if (!unique.contains(newStr)) {\n                                newUnique.add(newStr);\n                                queue.offer(newStr);\n                            }\n                        }\n                    }\n                }\n            }\n            \n            unique.addAll(newUnique);\n        }\n        \n        return unique.size() % 998244353;\n    }\n}",
+    "timestamp": "2025-08-05 22:29:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int numDistinct(string S, int K) {\n        const int MOD = 998244353;\n        set<string> distinct;\n        distinct.insert(S);\n        \n        queue<string> q;\n        q.push(S);\n        \n        for (int op = 0; op < K; op++) {\n            int size = q.size();\n            set<string> newDistinct;\n            \n            while (size--) {\n                string curr = q.front();\n                q.pop();\n                \n                for (int i = 0; i < curr.length(); i++) {\n                    for (int j = i + 1; j < curr.length(); j++) {\n                        if ((curr[i] == '0' && curr[j] == '1') || \n                            (curr[i] == '1' && curr[j] == '0')) {\n                            string newStr = curr;\n                            char removed = newStr[j];\n                            newStr.erase(j, 1);\n                            newStr.insert(newStr.begin() + i, removed);\n                            \n                            if (newDistinct.find(newStr) == newDistinct.end()) {\n                                newDistinct.insert(newStr);\n                                q.push(newStr);\n                            }\n                        }\n                    }\n                }\n            }\n            \n            for (const string& s : newDistinct) {\n                distinct.insert(s);\n            }\n        }\n        \n        return distinct.size() % MOD;\n    }\n};",
+    "timestamp": "2025-08-05 22:29:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_distinct_strings(S, K):\n    MOD = 998244353\n    \n    n = len(S)\n    dp = [[0] * (K + 1) for _ in range(n + 1)]\n    \n    dp[0][0] = 1\n    \n    for i in range(1, n + 1):\n        for k in range(K + 1):\n            dp[i][k] = dp[i - 1][k]\n            if k > 0 and i > 1:\n                for j in range(i - 1):\n                    if S[j] == '0' and S[i - 1] == '1':\n                        dp[i][k] = (dp[i][k] + dp[j][k - 1]) % MOD\n    \n    result_set = set()\n    for k in range(K + 1):\n        result_set.add(dp[n][k])\n    \n    return len(result_set) % MOD\n\n# Example call\nS = \"010101\"\nK = 2\nprint(count_distinct_strings(S, K))",
+    "timestamp": "2025-08-13 10:57:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class DistinctStrings {\n\n    private static final int MOD = 998244353;\n\n    public int countDistinctStrings(String S, int K) {\n        int n = S.length();\n        int[][] dp = new int[n + 1][n + 1];\n        \n        // Initialize dp base case\n        dp[0][0] = 1;\n        \n        int[] prefixZeros = new int[n + 1];\n        int[] prefixOnes = new int[n + 1];\n        \n        for (int i = 1; i <= n; i++) {\n            prefixZeros[i] = prefixZeros[i - 1] + (S.charAt(i - 1) == '0' ? 1 : 0);\n            prefixOnes[i] = prefixOnes[i - 1] + (S.charAt(i - 1) == '1' ? 1 : 0);\n        }\n        \n        ArrayList<ArrayList<Integer>> pos = new ArrayList<>();\n        for (int i = 0; i <= n; i++) {\n            pos.add(new ArrayList<>());\n        }\n        \n        for (int i = 0; i <= n; i++) {\n            if (prefixZeros[i] > prefixZeros[Math.max(i - 1, 0)]) {\n                pos.get(prefixZeros[i]).add(i);\n            }\n        }\n\n        for (int i = 1; i <= n; i++) {\n            if (S.charAt(i - 1) == '1') {\n                for (int j = 0; j < i; j++) {\n                    if (S.charAt(j) == '0') {\n                        dp[i][prefixZeros[j + 1]] = (dp[i][prefixZeros[j + 1]] + dp[j][prefixZeros[j]]) % MOD;\n                    }\n                }\n            }\n        }\n\n        int result = 0;\n        for (int i = 0; i <= n; i++) {\n            if (prefixZeros[i] <= K) {\n                result = (result + dp[n][prefixZeros[i]]) % MOD;\n            }\n        }\n        \n        return result;\n    }\n    \n    public static void main(String[] args) {\n        DistinctStrings solution = new DistinctStrings();\n        String testString = \"101010\";\n        int K = 3;\n        System.out.println(solution.countDistinctStrings(testString, K));\n    }\n}",
+    "timestamp": "2025-08-13 10:57:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MODULO 998244353\n\nlong long distinctStrings(char *S, int K) {\n    int n = strlen(S);\n    bool seen[MODULO];\n    memset(seen, false, sizeof(seen));\n    \n    int *queue = (int *)malloc(n * sizeof(int));\n    int front = 0, rear = 0;\n    queue[rear++] = 0; // initial state with hash value of 0\n    \n    int count = 0;\n    while (front != rear && front < MODULO) {\n        int currentHash = queue[front++];\n        \n        if (!seen[currentHash]) {\n            seen[currentHash] = true;\n            count += 1;\n            count %= MODULO;\n            \n            for (int k = 1; k <= K; ++k) {\n                for (int i = 0; i < n - 1; ++i) {\n                    if (S[i] == '0' && S[i+1] == '1') {\n                        char newS[n+1];\n                        strcpy(newS, S);\n                        newS[i] = newS[i+1];\n                        newS[i+1] = '0'; // swap '0' and '1' to get a new version\n                        \n                        int newHash = 0;\n                        for (int j = 0; j < n; ++j) {\n                            newHash = (newHash * 2 + (newS[j] - '0')) % MODULO;\n                        }\n                        \n                        if (!seen[newHash]) {\n                            queue[rear++] = newHash;\n                        }\n                    }\n                }\n            }\n        }\n    }\n    \n    free(queue);\n    \n    return count;\n}\n\nint main() {\n    char S[] = \"010101\";\n    int K = 3;\n    printf(\"%lld\\n\", distinctStrings(S, K));\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:57:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function distinctStrings(S, K) {\n    const MOD = 998244353;\n\n    function calculatePower(base, exponent, mod) {\n        let result = 1;\n        while (exponent > 0) {\n            if (exponent % 2 === 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exponent = Math.floor(exponent / 2);\n        }\n        return result;\n    }\n\n    function factorial(n, mod) {\n        let result = 1;\n        for (let i = 2; i <= n; i++) {\n            result = (result * i) % mod;\n        }\n        return result;\n    }\n\n    function binomialCoefficient(n, k, mod) {\n        if (k > n) return 0;\n        let numerator = factorial(n, mod);\n        let denominator = (factorial(k, mod) * factorial(n - k, mod)) % mod;\n        return (numerator * calculatePower(denominator, mod - 2, mod)) % mod;\n    }\n\n    let count0 = 0;\n    let count1 = 0;\n\n    for (let char of S) {\n        if (char === '0') count0++;\n        else count1++;\n    }\n\n    const minPairs = Math.min(count0, count1);\n    let result = 0;\n\n    for (let i = 0; i <= Math.min(minPairs, K); i++) {\n        result = (result + binomialCoefficient(minPairs, i, MOD)) % MOD;\n    }\n\n    return result;\n}\n\n// Example usage:\n// const S = \"101\";\n// const K = 2;\n// console.log(distinctStrings(S, K)); // Output: the correct integer",
+    "timestamp": "2025-08-13 10:57:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class Solution:\n    def countStrings(self, S: str, K: int) -> int:\n        MOD = 998244353\n        n = len(S)\n        \n        # Use dynamic programming with memoization\n        @cache\n        def dp(mask, k):\n            # If no more operations allowed\n            if k == 0:\n                return 1\n            \n            total = 0\n            for i in range(n):\n                for j in range(n):\n                    # Check if indices differ and characters can be swapped\n                    if i != j and ((mask >> i) & 1) and not ((mask >> j) & 1):\n                        # Try moving 1 from i to j's left\n                        new_mask = mask ^ (1 << i) | (1 << j)\n                        total = (total + dp(new_mask, k - 1)) % MOD\n            \n            return total\n        \n        # Initial state with all characters in their original positions\n        initial_mask = int(S.replace('0', '0').replace('1', '1'), 2)\n        \n        return dp(initial_mask, K)",
+    "timestamp": "2025-08-13 10:57:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "var distinctEvenSubstrings = function(S, K) {\n    const MOD = 998244353;\n    const n = S.length;\n    const seen = new Set();\n    \n    const dfs = (s, k) => {\n        if (k === 0 || s.length <= 1) {\n            seen.add(s);\n            return;\n        }\n        \n        seen.add(s);\n        \n        for (let i = 0; i < s.length - 1; i++) {\n            if ((s[i] === '0' && s[i+1] === '1') || (s[i] === '1' && s[i+1] === '0')) {\n                const newS = s.slice(0, i) + s.slice(i+2, s.length);\n                const inserted = newS.slice(0, i) + s[i+1] + newS.slice(i);\n                dfs(inserted, k - 1);\n            }\n        }\n    };\n    \n    dfs(S, K);\n    \n    return seen.size % MOD;\n};",
+    "timestamp": "2025-08-13 10:57:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef solve():\n    S = input().strip()\n    K = int(input())\n    n = len(S)\n    \n    # Precompute factorial, inverse factorial for combinatorics\n    max_n = n + K\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    def comb(a, b):\n        if a < 0 or b < 0 or a < b:\n            return 0\n        return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD\n    \n    c0 = S.count('0')\n    c1 = n - c0\n    \n    # The problem reduces to counting the number of strings with a0 zeros and a1 ones,\n    # where a0 + a1 = n - t, t is the number of operations (0 <= t <= K)\n    # and a0 <= c0 + t, a1 <= c1\n    \n    res = 0\n    for t in range(0, K + 1):\n        m = n - t\n        if m < 0:\n            continue\n        # a0 can be from max(0, m - c1) to min(c0 + t, m)\n        low = max(0, m - c1)\n        high = min(c0 + t, m)\n        ways = 0\n        for a0 in range(low, high + 1):\n            a1 = m - a0\n            if a1 < 0 or a1 > c1:\n                continue\n            ways = (ways + comb(m, a0)) % MOD\n        res = (res + ways) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 10:58:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve(S, K) {\n    const n = S.length;\n    let dp = new Array(n + 1).fill(0).map(() => new Array(n + 1).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 0; i < n; i++) {\n        const c = S[i];\n        let ndp = new Array(n + 1).fill(0).map(() => new Array(n + 1).fill(0));\n        for (let a = 0; a <= i; a++) {\n            for (let b = 0; b <= i; b++) {\n                if (dp[a][b] === 0) continue;\n                // not take\n                ndp[a][b] = (ndp[a][b] + dp[a][b]) % MOD;\n                // take\n                if (c === '0') {\n                    if (b > 0) {\n                        ndp[a + 1][b - 1] = (ndp[a + 1][b - 1] + dp[a][b]) % MOD;\n                    }\n                } else {\n                    ndp[a][b + 1] = (ndp[a][b + 1] + dp[a][b]) % MOD;\n                }\n            }\n        }\n        dp = ndp;\n    }\n\n    let res = 0;\n    for (let a = 0; a <= n; a++) {\n        for (let b = 0; b <= n; b++) {\n            if (a <= K) {\n                res = (res + dp[a][b]) % MOD;\n            }\n        }\n    }\n    return res;\n}",
+    "timestamp": "2025-08-13 10:58:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <unordered_set>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nconst int MOD = 998244353;\n\nstd::unordered_set<std::string> generateVariations(const std::string& S, int K, int depth) {\n    std::unordered_set<std::string> results;\n    if (depth > K) return results;\n    \n    results.insert(S);\n    \n    for (size_t i = 0; i < S.length() - 1; ++i) {\n        if (S[i] == '0' && S[i + 1] == '1') {\n            std::string newStr = S;\n            newStr.erase(i + 1, 1);\n            newStr.insert(i, \"1\");\n            auto deeperResults = generateVariations(newStr, K, depth + 1);\n            results.insert(deeperResults.begin(), deeperResults.end());\n        }\n    }\n    \n    return results;\n}\n\nint main() {\n    std::string S;\n    int K;\n    std::cin >> S >> K;\n    \n    auto resultSet = generateVariations(S, K, 0);\n    std::cout << resultSet.size() % MOD << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:01:34"
+  }
+]

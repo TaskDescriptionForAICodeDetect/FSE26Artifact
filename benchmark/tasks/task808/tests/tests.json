@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "13 100\n1 2\n2 3\n",
+      "output": "13\n4\n3\n"
+    },
+    {
+      "input": "24 100\n1 2\n1 3\n1 4\n",
+      "output": "28\n5\n5\n5\n"
+    },
+    {
+      "input": "31 100\n",
+      "output": "31\n"
+    },
+    {
+      "input": "410 2\n8 5\n10 8\n6 5\n1 5\n4 8\n2 10\n3 6\n9 2\n1 7\n",
+      "output": "40\n0\n1\n1\n1\n0\n1\n0\n1\n1\n"
+    }
+  ]
+}

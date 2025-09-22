@@ -1,0 +1,1 @@
+Find the sum of the weights of edges of the Minimum-Cost Arborescence with the root r for a given weighted directed graph G = (V, E).

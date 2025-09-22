@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "2 4\nACM\nICPC\n",
+      "output": "2\n"
+    },
+    {
+      "input": "2 9\nPROBLEMF\nCONNECT\n",
+      "output": "6\n"
+    },
+    {
+      "input": "4 16\nINTERNATIONAL\nCOLLEGIATE\nPROGRAMMING\nCONTEST\n",
+      "output": "18\n"
+    }
+  ]
+}

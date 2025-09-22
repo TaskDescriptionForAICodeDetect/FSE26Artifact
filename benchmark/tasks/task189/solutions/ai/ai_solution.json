@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint count_pairs(int L) {\n    int count = 0;\n    for (int a = 1; a * a <= L; a++) {\n        if (L % a == 0) {\n            int b = L / a;\n            if (gcd(a, b) == 1) {\n                count++;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int L;\n    while (1) {\n        scanf(\"%d\", &L);\n        if (L == 0) {\n            break;\n        }\n        printf(\"%d\\n\", count_pairs(L));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:59:28"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LCMPairCounter {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (true) {\n            int L = scanner.nextInt();\n            if (L == 0) break;\n            \n            int count = countLCMPairs(L);\n            System.out.println(count);\n        }\n        \n        scanner.close();\n    }\n    \n    private static int countLCMPairs(int L) {\n        int count = 0;\n        \n        for (int a = 1; a * a <= L; a++) {\n            if (L % a == 0) {\n                int b = L / a;\n                for (int k = 1; k * a <= L && k * b <= L; k++) {\n                    if (lcm(k * a, k * b) == L) {\n                        count++;\n                    }\n                }\n            }\n        }\n        \n        return count;\n    }\n    \n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n    \n    private static int lcm(int a, int b) {\n        return a * (b / gcd(a, b));\n    }\n}",
+    "timestamp": "2025-08-05 18:59:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\nusing namespace std;\n\nvector<pair<int, int>> factorize(int n) {\n    vector<pair<int, int>> factors;\n    if (n == 1) {\n        return factors;\n    }\n    for (int i = 2; i * i <= n; ++i) {\n        if (n % i == 0) {\n            int cnt = 0;\n            while (n % i == 0) {\n                n /= i;\n                cnt++;\n            }\n            factors.emplace_back(i, cnt);\n        }\n    }\n    if (n > 1) {\n        factors.emplace_back(n, 1);\n    }\n    return factors;\n}\n\nint countPairs(int L) {\n    if (L == 1) {\n        return 1;\n    }\n    auto factors = factorize(L);\n    int res = 1;\n    for (auto &p : factors) {\n        res *= (2 * p.second + 1);\n    }\n    return (res + 1) / 2;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    int L;\n    while (cin >> L, L != 0) {\n        cout << countPairs(L) << '\\n';\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:59:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint lcm(int a, int b) {\n    return a * b / gcd(a, b);\n}\n\nint count_lcm_pairs(int L) {\n    int count = 0;\n    for (int a = 1; a <= L; a++) {\n        for (int b = a; b <= L; b++) {\n            if (lcm(a, b) == L) {\n                count++;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int L;\n    while (1) {\n        scanf(\"%d\", &L);\n        if (L == 0) break;\n        printf(\"%d\\n\", count_lcm_pairs(L));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:59:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint lcm(int a, int b) {\n    return (a / gcd(a, b)) * b;\n}\n\nint countLCMPairs(int L) {\n    int count = 0;\n    for (int a = 1; a <= sqrt(L); a++) {\n        if (L % a == 0) {\n            int b = L / a;\n            if (lcm(a, b) == L) {\n                count++;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int L;\n    while (cin >> L && L != 0) {\n        cout << countLCMPairs(L) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:59:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class LCMPairs {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (true) {\n            int L = scanner.nextInt();\n            if (L == 0) {\n                break;\n            }\n            System.out.println(countPairs(L));\n        }\n        scanner.close();\n    }\n\n    private static int countPairs(int L) {\n        List<Integer> divisors = getDivisors(L);\n        int count = 0;\n        for (int i = 0; i < divisors.size(); i++) {\n            for (int j = i; j < divisors.size(); j++) {\n                int a = divisors.get(i);\n                int b = divisors.get(j);\n                if (lcm(a, b) == L) {\n                    count++;\n                }\n            }\n        }\n        return count;\n    }\n\n    private static List<Integer> getDivisors(int n) {\n        List<Integer> divisors = new ArrayList<>();\n        for (int i = 1; i <= n; i++) {\n            if (n % i == 0) {\n                divisors.add(i);\n            }\n        }\n        return divisors;\n    }\n\n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    private static int lcm(int a, int b) {\n        return a * (b / gcd(a, b));\n    }\n}",
+    "timestamp": "2025-08-05 19:00:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_pairs_with_lcm(L):\n    def gcd(x, y):\n        while y:\n            x, y = y, x % y\n        return x\n\n    def lcm(x, y):\n        return (x * y) // gcd(x, y)\n\n    count = 0\n    for a in range(1, L + 1):\n        if L % a == 0:  # Check if a divides L\n            b = L // a\n            if lcm(a, b) == L and a <= b:\n                count += 1\n    return count\n\ndef process_inputs():\n    results = []\n    while True:\n        L = int(input().strip())\n        if L == 0:\n            break\n        results.append(count_pairs_with_lcm(L))\n    for result in results:\n        print(result)\n\nprocess_inputs()",
+    "timestamp": "2025-08-13 01:54:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class LCMPairs {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (true) {\n            int L = scanner.nextInt();\n            if (L == 0) break;\n            int count = 0;\n            for (int a = 1; a * a <= L; a++) {\n                if (L % a == 0) {\n                    int b = L / a;\n                    if (lcm(a, b) == L) {\n                        count++;\n                        if (a != b) count++;\n                    }\n                }\n            }\n            System.out.println(count);\n        }\n        scanner.close();\n    }\n\n    private static int gcd(int x, int y) {\n        while (y != 0) {\n            int temp = y;\n            y = x % y;\n            x = temp;\n        }\n        return x;\n    }\n\n    private static int lcm(int x, int y) {\n        return (x / gcd(x, y)) * y;\n    }\n}",
+    "timestamp": "2025-08-13 01:54:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}\n\nint main() {\n    int L;\n    while (scanf(\"%d\", &L), L != 0) {\n        int count = 0;\n        for (int a = 1; a * a <= L; a++) {\n            if (L % a == 0) {\n                int b = L / a;\n                if (gcd(a, b) == 1) {\n                    if (a <= b) count++;\n                    if (a < b) count++;\n                }\n            }\n        }\n        printf(\"%d\\n\", count);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:54:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_lcm_pairs(L):\n    count = 0\n    for a in range(1, L + 1):\n        for b in range(a, L + 1):\n            if (a * b) // gcd(a, b) == L:\n                count += 1\n    return count\n\ndef gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef main():\n    while True:\n        L = int(input())\n        if L == 0:\n            break\n        print(count_lcm_pairs(L))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 01:55:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef count_lcm_pairs(L):\n    if L == 1:\n        return 1\n    factors = {}\n    temp = L\n    # Factorize L\n    for i in range(2, int(math.sqrt(temp)) + 1):\n        while temp % i == 0:\n            factors[i] = factors.get(i, 0) + 1\n            temp = temp // i\n    if temp > 1:\n        factors[temp] = factors.get(temp, 0) + 1\n    \n    total = 1\n    for prime, exp in factors.items():\n        total *= (2 * exp + 1)\n    \n    return (total + 1) // 2\n\nwhile True:\n    L = int(input())\n    if L == 0:\n        break\n    print(count_lcm_pairs(L))",
+    "timestamp": "2025-08-13 01:55:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <set>\nusing namespace std;\n\nlong long gcd(long long a, long long b) {\n    while (b) {\n        long long t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}\n\nint main() {\n    long long L;\n    while (cin >> L && L != 0) {\n        int count = 0;\n        for (long long a = 1; a * a <= L; ++a) {\n            if (L % a == 0) {\n                long long b = L / a;\n                if ((a * b) / gcd(a, b) == L) {\n                    if (a <= b) ++count;\n                    if (a < b && (b * a / gcd(a, b) == L)) ++count;\n                }\n            }\n        }\n        cout << count << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:03:19"
+  }
+]

@@ -1,0 +1,1 @@
+You are given an array a_0, a_1, ..., a_{N-1} of length N. Process Q queries of two types: (0 p x) to update the element at index p by adding x to it, and (1 l r) to print the sum of the elements from index l to r-1.

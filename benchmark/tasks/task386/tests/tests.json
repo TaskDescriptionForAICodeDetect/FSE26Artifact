@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "2 6\n6>--v.\n.^--_@",
+      "output": "YES"
+    },
+    {
+      "input": "2 6\n5>--v.\n.^--_@",
+      "output": "NO"
+    },
+    {
+      "input": "2 6\n.>--v.\n.^--?@",
+      "output": "YES"
+    }
+  ]
+}

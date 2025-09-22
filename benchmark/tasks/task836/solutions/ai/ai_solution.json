@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 100001\n\nint main() {\n    int N, a[MAX_N];\n    long long sugim = 0, sigma = 0;\n    \n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int left = 0, right = N - 1;\n    int turn = 0;\n    \n    while (left <= right) {\n        int max_manju = 0;\n        int max_idx = -1;\n        \n        for (int i = left; i <= right; i++) {\n            if (a[i] > max_manju) {\n                max_manju = a[i];\n                max_idx = i;\n            }\n        }\n        \n        if (turn % 2 == 0) {\n            sugim += max_manju;\n        } else {\n            sigma += max_manju;\n        }\n        \n        if (max_idx == left) {\n            left++;\n        } else {\n            right--;\n        }\n        \n        turn++;\n    }\n    \n    printf(\"%lld %lld\\n\", sugim, sigma);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint max_manju(int a[], int left, int right, int turn, int memo[][100][2]) {\n    if (left > right) return 0;\n    if (memo[left][right][turn] != -1) return memo[left][right][turn];\n    \n    if (turn == 0) {\n        int take_left = a[left] + max_manju(a, left + 1, right, 1, memo);\n        int take_right = a[right] + max_manju(a, left, right - 1, 1, memo);\n        memo[left][right][turn] = (take_left > take_right) ? take_left : take_right;\n    } else {\n        int take_left = max_manju(a, left + 1, right, 0, memo);\n        int take_right = max_manju(a, left, right - 1, 0, memo);\n        memo[left][right][turn] = (take_left < take_right) ? take_left : take_right;\n    }\n    \n    return memo[left][right][turn];\n}\n\nvoid solve(int N, int a[]) {\n    int memo[100][100][2];\n    for (int i = 0; i < 100; i++) {\n        for (int j = 0; j < 100; j++) {\n            memo[i][j][0] = -1;\n            memo[i][j][1] = -1;\n        }\n    }\n    int total = 0;\n    for (int i = 0; i < N; i++) {\n        total += a[i];\n    }\n    int sugim = max_manju(a, 0, N - 1, 0, memo);\n    int sigma = total - sugim;\n    printf(\"%d %d\\n\", sugim, sigma);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    solve(N, a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    \n    int sugim = 0, sigma = 0;\n    int left = 0, right = N - 1;\n    bool turn = true; // true for Sugim's turn\n    \n    while (left <= right) {\n        if (turn) {\n            if (a[left] >= a[right]) {\n                sugim += a[left];\n                left++;\n            } else {\n                sugim += a[right];\n                right--;\n            }\n        } else {\n            if (a[left] >= a[right]) {\n                sigma += a[left];\n                left++;\n            } else {\n                sigma += a[right];\n                right--;\n            }\n        }\n        turn = !turn;\n    }\n    \n    cout << sugim << \" \" << sigma << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:04:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ManjuGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        int[][] dp = new int[N][N];\n        int[][] sum = new int[N][N];\n        \n        for (int i = 0; i < N; i++) {\n            sum[i][i] = a[i];\n            dp[i][i] = a[i];\n            for (int j = i + 1; j < N; j++) {\n                sum[i][j] = sum[i][j - 1] + a[j];\n            }\n        }\n        \n        for (int length = 2; length <= N; length++) {\n            for (int i = 0; i <= N - length; i++) {\n                int j = i + length - 1;\n                dp[i][j] = sum[i][j] - Math.min(dp[i + 1][j], dp[i][j - 1]);\n            }\n        }\n        \n        int total = sum[0][N - 1];\n        int sugim = dp[0][N - 1];\n        int sigma = total - sugim;\n        \n        System.out.println(sugim + \" \" + sigma);\n    }\n}",
+    "timestamp": "2025-08-05 23:05:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ManjiGame {\n    public static void solve(int[] boxes) {\n        int n = boxes.length;\n        long[][] dp = new long[n][n];\n        \n        // Initialize base cases\n        for (int i = 0; i < n; i++) {\n            dp[i][i] = boxes[i];\n        }\n        \n        // Build DP table\n        for (int len = 2; len <= n; len++) {\n            for (int i = 0; i + len - 1 < n; i++) {\n                int j = i + len - 1;\n                dp[i][j] = Math.max(boxes[i] - dp[i+1][j], \n                                    boxes[j] - dp[i][j-1]);\n            }\n        }\n        \n        // Calculate final scores\n        long sugimScore = 0, sigmaScore = 0;\n        int left = 0, right = n - 1;\n        boolean sugimTurn = true;\n        \n        while (left <= right) {\n            if (sugimTurn) {\n                if (boxes[left] >= boxes[right]) {\n                    sugimScore += boxes[left];\n                    left++;\n                } else {\n                    sugimScore += boxes[right];\n                    right--;\n                }\n            } else {\n                if (boxes[left] >= boxes[right]) {\n                    sigmaScore += boxes[left];\n                    left++;\n                } else {\n                    sigmaScore += boxes[right];\n                    right--;\n                }\n            }\n            sugimTurn = !sugimTurn;\n        }\n        \n        System.out.println(sugimScore + \" \" + sigmaScore);\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] boxes = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            boxes[i] = sc.nextInt();\n        }\n        \n        solve(boxes);\n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:05:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> boxes(N);\n    for (int i = 0; i < N; i++) {\n        cin >> boxes[i];\n    }\n    \n    vector<vector<int>> dp(N, vector<int>(N, 0));\n    \n    for (int len = 1; len <= N; len++) {\n        for (int i = 0; i + len <= N; i++) {\n            int j = i + len - 1;\n            \n            if (len % 2 == 1) {\n                // Sugim's turn (maximize)\n                if (len == 1) {\n                    dp[i][j] = boxes[i];\n                } else {\n                    dp[i][j] = max(dp[i+1][j] + boxes[i], dp[i][j-1] + boxes[j]);\n                }\n            } else {\n                // Sigma's turn (maximize)\n                if (len == 2) {\n                    dp[i][j] = max(boxes[i], boxes[j]);\n                } else {\n                    dp[i][j] = max(dp[i+1][j] + boxes[i], dp[i][j-1] + boxes[j]);\n                }\n            }\n        }\n    }\n    \n    int sugimTotal = dp[0][N-1];\n    int totalManju = 0;\n    for (int box : boxes) {\n        totalManju += box;\n    }\n    \n    int sigmaTotal = totalManju - sugimTotal;\n    \n    cout << sugimTotal << \" \" << sigmaTotal << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:05:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_manju(N, a):\n    dp = [[0] * N for _ in range(N)]\n    \n    for i in range(N):\n        dp[i][i] = a[i]\n    \n    for length in range(2, N + 1):\n        for i in range(N - length + 1):\n            j = i + length - 1\n            dp[i][j] = max(a[i] - dp[i + 1][j], a[j] - dp[i][j - 1])\n    \n    total_manju = sum(a)\n    sugim_manju = (total_manju + dp[0][N - 1]) // 2\n    sigma_manju = total_manju - sugim_manju\n    \n    return sugim_manju, sigma_manju\n\n# Example usage:\nN = 5\na = [3, 2, 7, 5, 8]\nprint(calculate_manju(N, a))",
+    "timestamp": "2025-08-13 13:32:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class ManjuGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] boxes = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            boxes[i] = scanner.nextInt();\n        }\n        \n        int[] dp = new int[N + 1];\n        int prefixSum = 0;\n        \n        for (int i = N - 1; i >= 0; i--) {\n            prefixSum += boxes[i];\n            dp[i] = prefixSum - dp[i + 1];\n        }\n        \n        int sugimManju = dp[0];\n        int sigmaManju = prefixSum - sugimManju;\n\n        System.out.println(sugimManju + \" \" + sigmaManju);\n    }\n}",
+    "timestamp": "2025-08-13 13:32:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint maxManju(int *a, int start, int end, int **dp) {\n    if (start > end) return 0;\n    if (dp[start][end] != -1) return dp[start][end];\n\n    int op1 = a[start] + (\n        (a[start + 1] >= a[end]) ? maxManju(a, start + 2, end, dp) : maxManju(a, start + 1, end - 1, dp)\n    );\n    int op2 = a[end] + (\n        (a[start] >= a[end - 1]) ? maxManju(a, start + 1, end - 1, dp) : maxManju(a, start, end - 2, dp)\n    );\n\n    dp[start][end] = (op1 > op2) ? op1 : op2;\n    return dp[start][end];\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *a = (int *)malloc(sizeof(int) * N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int **dp = (int **)malloc(sizeof(int *) * N);\n    for (int i = 0; i < N; i++) {\n        dp[i] = (int *)malloc(sizeof(int) * N);\n        for (int j = 0; j < N; j++) {\n            dp[i][j] = -1;\n        }\n    }\n\n    int total = 0;\n    for (int i = 0; i < N; i++) {\n        total += a[i];\n    }\n\n    int sugimScore = maxManju(a, 0, N-1, dp);\n    int sigmaScore = total - sugimScore;\n\n    printf(\"Sugim: %d\\nSigma: %d\\n\", sugimScore, sigmaScore);\n\n    for (int i = 0; i < N; i++) {\n        free(dp[i]);\n    }\n    free(dp);\n    free(a);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:32:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateManju(N, A) {\n    let dp = Array.from({ length: N }, () => Array(N).fill(0));\n    \n    for (let length = 1; length <= N; ++length) {\n        for (let i = 0; i <= N - length; ++i) {\n            let j = i + length - 1;\n            let start = A[i] + (i + 1 <= j ? dp[i + 2][j] : 0);\n            let end = A[j] + (i <= j - 1 ? dp[i][j - 2] : 0);\n            dp[i][j] = Math.max(start, end);\n        }\n    }\n\n    let total = A.reduce((acc, val) => acc + val, 0);\n    let sumSugim = dp[0][N - 1];\n    let sumSigma = total - sumSugim;\n\n    return { Sugim: sumSugim, Sigma: sumSigma };\n}",
+    "timestamp": "2025-08-13 13:32:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_manju_game(N, boxes):\n    # Memoization for dynamic programming\n    dp = [[[None for _ in range(2)] for _ in range(N)] for _ in range(N)]\n    \n    def max_manju(left, right, is_sugim_turn):\n        # Base case: when no boxes remain\n        if left > right:\n            return 0\n        \n        # Check memoized result\n        if dp[left][right][is_sugim_turn] is not None:\n            return dp[left][right][is_sugim_turn]\n        \n        # If Sugim's turn\n        if is_sugim_turn:\n            # Try left and right boxes\n            take_left = boxes[left] + max_manju(left+1, right, 0)\n            take_right = boxes[right] + max_manju(left, right-1, 0)\n            result = max(take_left, take_right)\n        else:\n            # Sigma tries to minimize Sugim's total\n            take_left = max_manju(left+1, right, 1)\n            take_right = max_manju(left, right-1, 1)\n            result = min(take_left, take_right)\n        \n        # Memoize and return\n        dp[left][right][is_sugim_turn] = result\n        return result\n    \n    # Compute total manju for Sugim\n    sugim_total = max_manju(0, N-1, 1)\n    \n    # Compute total manju for Sigma\n    total_manju = sum(boxes)\n    sigma_total = total_manju - sugim_total\n    \n    return sugim_total, sigma_total\n\n# Input\nN = int(input())\nboxes = list(map(int, input().split()))\n\n# Solve and print results\nsugim, sigma = solve_manju_game(N, boxes)\nprint(sugim, sigma)",
+    "timestamp": "2025-08-13 13:32:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maximizeManju(boxes) {\n    const n = boxes.length;\n    const dp = Array.from({ length: n }, () => Array(n).fill(0));\n\n    for (let len = 1; len <= n; len++) {\n        for (let start = 0; start + len <= n; start++) {\n            const end = start + len - 1;\n\n            if (len === 1) {\n                dp[start][end] = boxes[start];\n            } else {\n                const takeLeft = boxes[start] + Math.min(\n                    start + 2 <= end ? dp[start + 2][end] : 0,\n                    start + 1 <= end - 1 ? dp[start + 1][end - 1] : 0\n                );\n\n                const takeRight = boxes[end] + Math.min(\n                    start <= end - 2 ? dp[start][end - 2] : 0,\n                    start + 1 <= end - 1 ? dp[start + 1][end - 1] : 0\n                );\n\n                dp[start][end] = Math.max(takeLeft, takeRight);\n            }\n        }\n    }\n\n    return dp[0][n - 1];\n}",
+    "timestamp": "2025-08-13 13:32:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    a = list(map(int, data[1:N+1]))\n    \n    if N == 1:\n        print(a[0], 0)\n        return\n    \n    # The optimal strategy is to take the largest possible numbers alternately\n    a_sorted = sorted(a, reverse=True)\n    sugim = sum(a_sorted[i] for i in range(0, N, 2))\n    sigma = sum(a_sorted[i] for i in range(1, N, 2))\n    \n    print(sugim, sigma)\n\nsolve()",
+    "timestamp": "2025-08-13 13:32:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxManju(a) {\n    const n = a.length;\n    if (n === 0) return [0, 0];\n    \n    let prefixSum = new Array(n + 1).fill(0);\n    for (let i = 0; i < n; i++) {\n        prefixSum[i + 1] = prefixSum[i] + a[i];\n    }\n    \n    let dp = new Array(n).fill().map(() => new Array(n).fill(0));\n    \n    for (let i = 0; i < n; i++) {\n        dp[i][i] = a[i];\n    }\n    \n    for (let len = 2; len <= n; len++) {\n        for (let i = 0; i <= n - len; i++) {\n            let j = i + len - 1;\n            dp[i][j] = Math.max(\n                a[i] + (prefixSum[j + 1] - prefixSum[i + 1] - dp[i + 1][j]),\n                a[j] + (prefixSum[j] - prefixSum[i] - dp[i][j - 1])\n            );\n        }\n    }\n    \n    const total = prefixSum[n];\n    const sugim = dp[0][n - 1];\n    const sigma = total - sugim;\n    \n    return [sugim, sigma];\n}\n\n// Example usage:\n// const a = [1, 2, 3, 4];\n// console.log(maxManju(a));",
+    "timestamp": "2025-08-13 13:32:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n    }\n\n    int totalSum = accumulate(a.begin(), a.end(), 0);\n    vector<vector<int>> dp(N, vector<int>(N, 0));\n\n    for (int len = 1; len <= N; len++) {\n        for (int i = 0; i <= N - len; i++) {\n            int j = i + len - 1;\n            int leftManju = a[i] + ((i + 1 <= j) ? dp[i + 1][j] : 0);\n            int rightManju = a[j] + ((i <= j - 1) ? dp[i][j - 1] : 0);\n            dp[i][j] = max(leftManju, rightManju);\n        }\n    }\n\n    int sugimManju = dp[0][N - 1];\n    int sigmaManju = totalSum - sugimManju;\n\n    cout << \"Sugim: \" << sugimManju << \", Sigma: \" << sigmaManju << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:40:07"
+  }
+]

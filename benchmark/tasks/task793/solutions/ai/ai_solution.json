@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint solve(int L, int* desired) {\n    int total_stones = 0;\n    for (int i = 0; i < L; i++) {\n        total_stones += desired[i];\n    }\n\n    int min_ops = INT_MAX;\n    for (int start = -total_stones; start <= total_stones; start++) {\n        int stones[L];\n        for (int i = 0; i < L; i++) stones[i] = 0;\n        \n        int curr = start;\n        int dir = 1;\n        int stones_placed = 0;\n        \n        while (stones_placed < total_stones) {\n            curr += 0.5 * dir;\n            int ear = (int)curr;\n            if (ear >= 0 && ear < L) {\n                stones[ear]++;\n            }\n            stones_placed++;\n            \n            if (stones_placed % 2 == 0) {\n                dir *= -1;\n            }\n        }\n        \n        int ops = 0;\n        for (int i = 0; i < L; i++) {\n            ops += abs(stones[i] - desired[i]);\n        }\n        \n        min_ops = (ops < min_ops) ? ops : min_ops;\n    }\n    \n    return min_ops / 2;\n}\n\nint main() {\n    int L;\n    scanf(\"%d\", &L);\n    \n    int desired[L];\n    for (int i = 0; i < L; i++) {\n        scanf(\"%d\", &desired[i]);\n    }\n    \n    printf(\"%d\\n\", solve(L, desired));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int L;\n    scanf(\"%d\", &L);\n    \n    int *a = (int *)malloc(L * sizeof(int));\n    for (int i = 0; i < L; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    long long operations = 0;\n    long long current = 0;\n    \n    for (int i = 0; i < L; i++) {\n        current += a[i];\n        operations += llabs(current);\n    }\n    \n    printf(\"%lld\\n\", operations);\n    free(a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int L;\n    cin >> L;\n    vector<int> a(L);\n    for (int i = 0; i < L; ++i) {\n        cin >> a[i];\n    }\n    \n    long long res = 0;\n    for (int i = 0; i < L; ++i) {\n        res += a[i] / 2;\n    }\n    \n    cout << res << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int L = sc.nextInt();\n        int[] a = new int[L + 1];\n        for (int i = 1; i <= L; i++) {\n            a[i] = sc.nextInt();\n        }\n\n        long[][] dp = new long[L + 1][5];\n        for (int i = 1; i <= L; i++) {\n            long cost0 = a[i];\n            long cost1 = (a[i] == 0) ? 2 : (a[i] % 2);\n            long cost2 = (a[i] + 1) % 2;\n            long cost3 = (a[i] == 0) ? 2 : (a[i] % 2);\n            long cost4 = a[i];\n\n            dp[i][0] = dp[i - 1][0] + cost0;\n            dp[i][1] = Math.min(dp[i - 1][0], dp[i - 1][1]) + cost1;\n            dp[i][2] = Math.min(Math.min(dp[i - 1][0], dp[i - 1][1]), dp[i - 1][2]) + cost2;\n            dp[i][3] = Math.min(Math.min(dp[i - 1][0], dp[i - 1][1]), Math.min(dp[i - 1][2], dp[i - 1][3])) + cost3;\n            dp[i][4] = Math.min(Math.min(Math.min(dp[i - 1][0], dp[i - 1][1]), Math.min(dp[i - 1][2], dp[i - 1][3])), dp[i - 1][4]) + cost4;\n        }\n\n        long min = Long.MAX_VALUE;\n        for (int j = 0; j < 5; j++) {\n            if (dp[L][j] < min) {\n                min = dp[L][j];\n            }\n        }\n        System.out.println(min);\n    }\n}",
+    "timestamp": "2025-08-05 22:56:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class SnukeWalk {\n    static final int MAX_COORDINATE = 1000;\n    \n    public static int minOperations(int L, int[] targetEars) {\n        int[][] dp = new int[MAX_COORDINATE * 2 + 1][L + 1];\n        \n        for (int[] row : dp) {\n            Arrays.fill(row, Integer.MAX_VALUE / 2);\n        }\n        \n        dp[MAX_COORDINATE][0] = 0;\n        \n        for (int stones = 0; stones < L; stones++) {\n            int[][] newDp = new int[MAX_COORDINATE * 2 + 1][L + 1];\n            for (int[] row : newDp) {\n                Arrays.fill(row, Integer.MAX_VALUE / 2);\n            }\n            \n            for (int pos = 0; pos < dp.length; pos++) {\n                for (int currStones = 0; currStones <= stones; currStones++) {\n                    if (dp[pos][currStones] == Integer.MAX_VALUE / 2) continue;\n                    \n                    // Move right\n                    for (int step = 1; step <= MAX_COORDINATE; step++) {\n                        int newPos = pos + step;\n                        int newStones = currStones + step;\n                        if (newStones > L) break;\n                        \n                        newDp[newPos][newStones] = Math.min(\n                            newDp[newPos][newStones], \n                            dp[pos][currStones]\n                        );\n                    }\n                    \n                    // Move left\n                    for (int step = 1; step <= MAX_COORDINATE; step++) {\n                        int newPos = pos - step;\n                        int newStones = currStones + step;\n                        if (newPos < 0 || newStones > L) break;\n                        \n                        newDp[newPos][newStones] = Math.min(\n                            newDp[newPos][newStones], \n                            dp[pos][currStones]\n                        );\n                    }\n                }\n            }\n            \n            dp = newDp;\n        }\n        \n        int minOps = Integer.MAX_VALUE;\n        for (int pos = 0; pos < dp.length; pos++) {\n            for (int stones = 0; stones <= L; stones++) {\n                if (dp[pos][stones] == Integer.MAX_VALUE / 2) continue;\n                \n                int currOps = 0;\n                for (int ear = 0; ear < L; ear++) {\n                    currOps += Math.abs(targetEars[ear] - stones);\n                }\n                \n                minOps = Math.min(minOps, dp[pos][stones] + currOps);\n            }\n        }\n        \n        return minOps;\n    }\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int L = Integer.parseInt(st.nextToken());\n        int[] targetEars = new int[L];\n        \n        st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < L; i++) {\n            targetEars[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        System.out.println(minOperations(L, targetEars));\n    }\n}",
+    "timestamp": "2025-08-05 22:56:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n#include <climits>\n\nusing namespace std;\n\nint solve(int L, vector<int>& target) {\n    int total_min_ops = INT_MAX;\n\n    for (int start = -1000; start <= 1000; start++) {\n        for (int end = -1000; end <= 1000; end++) {\n            vector<int> stones(L, 0);\n            int curr = start;\n            bool forward = true;\n            int stone_count = 0;\n\n            while (curr != end) {\n                if (forward) {\n                    stones[stone_count++] = curr + 0.5;\n                    curr++;\n                    if (curr > end) {\n                        forward = false;\n                        curr -= 2;\n                    }\n                } else {\n                    stones[stone_count++] = curr + 0.5;\n                    curr--;\n                    if (curr < start) {\n                        forward = true;\n                        curr += 2;\n                    }\n                }\n            }\n\n            int ops = 0;\n            for (int i = 0; i < L; i++) {\n                ops += abs(stones[i] - target[i]);\n            }\n            total_min_ops = min(total_min_ops, ops);\n        }\n    }\n\n    return total_min_ops;\n}\n\nint main() {\n    int L;\n    cin >> L;\n    vector<int> target(L);\n    for (int i = 0; i < L; i++) {\n        cin >> target[i];\n    }\n    cout << solve(L, target) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:57:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(L, target_stones):\n    total_needed_stones = sum(target_stones)\n    operations = 0\n\n    extra_stones = [0] * L\n    deficit_stones = [0] * L\n    \n    for i in range(L):\n        if target_stones[i] > total_needed_stones:\n            extra_stones[i] = target_stones[i] - total_needed_stones\n        else:\n            deficit_stones[i] = total_needed_stones - target_stones[i]\n\n    extra_idx = 0\n    deficit_idx = 0\n\n    while extra_idx < L and deficit_idx < L:\n        while extra_idx < L and extra_stones[extra_idx] == 0:\n            extra_idx += 1\n        while deficit_idx < L and deficit_stones[deficit_idx] == 0:\n            deficit_idx += 1\n\n        if extra_idx < L and deficit_idx < L:\n            transfer = min(extra_stones[extra_idx], deficit_stones[deficit_idx])\n            extra_stones[extra_idx] -= transfer\n            deficit_stones[deficit_idx] -= transfer\n            operations += transfer\n\n    return operations\n\n# Example usage: min_operations(L, target_stones)",
+    "timestamp": "2025-08-13 13:03:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class MinimumOperations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // Read number of ears\n        int L = scanner.nextInt();\n        \n        // Read array for required number of stones in each ear\n        int[] requiredStones = new int[L];\n        for (int i = 0; i < L; i++) {\n            requiredStones[i] = scanner.nextInt();\n        }\n        \n        // Calculate the prefix sums of required stones\n        int[] prefixSums = new int[L + 1];\n        for (int i = 1; i <= L; i++) {\n            prefixSums[i] = prefixSums[i - 1] + requiredStones[i - 1];\n        }\n        \n        // Find the minimum number of operations required\n        int minOperations = Integer.MAX_VALUE;\n        for (int i = 0; i <= L; i++) {\n            minOperations = Math.min(minOperations, Math.abs(prefixSums[i] - (prefixSums[L] - prefixSums[i])));\n        }\n        \n        // Print the minimum number of operations\n        System.out.println(minOperations);\n    }\n}",
+    "timestamp": "2025-08-13 13:03:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint minOperations(int* target, int L) {\n    int operations = 0;\n    int current[L];\n    for (int i = 0; i < L; i++) current[i] = 0;\n\n    for (int i = 0; i < L; i++) {\n        operations += abs(current[i] - target[i]);\n        if (i < L - 1) current[i + 1] += current[i] + operations - target[i];\n    }\n    return operations;\n}\n\nint main() {\n    int L;\n    scanf(\"%d\", &L);\n    int target[L];\n    \n    for(int i = 0; i < L; i++) {\n        scanf(\"%d\", &target[i]);\n    }\n\n    printf(\"%d\\n\", minOperations(target, L));\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:03:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperations(L, stones) {\n    let sumOfStones = stones.reduce((a, b) => a + b, 0);\n    if (sumOfStones % L !== 0) return -1;\n    \n    let target = sumOfStones / L;\n    let operations = 0, balance = 0;\n    \n    for (let i = 0; i < L; i++) {\n        balance += stones[i] - target;\n        operations += Math.abs(balance);\n    }\n    \n    return operations;\n}\n\n// Example usage:\n// const L = 3;\n// const stones = [1, 2, 3];\n// console.log(minOperations(L, stones)); // Output: minimum number of operations",
+    "timestamp": "2025-08-13 13:03:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(L, target_stones):\n    max_stones = max(target_stones)\n    min_operations = float('inf')\n    \n    for total_path_length in range(1, 2 * max_stones + 1):\n        for start_pos in range(-total_path_length, total_path_length + 1):\n            operations = 0\n            stones_per_ear = [0] * L\n            \n            current_pos = start_pos\n            direction = 1\n            \n            for step in range(total_path_length):\n                current_pos += direction\n                \n                if abs(current_pos - (current_pos - direction * 0.5)) < 1e-9:\n                    ear_index = abs(current_pos - 0.5) - 1\n                    if 0 <= ear_index < L:\n                        stones_per_ear[int(ear_index)] += 1\n                \n                if current_pos == start_pos + total_path_length or current_pos == start_pos - total_path_length:\n                    direction *= -1\n            \n            for ear in range(L):\n                operations += abs(stones_per_ear[ear] - target_stones[ear])\n            \n            min_operations = min(min_operations, operations)\n    \n    return min_operations",
+    "timestamp": "2025-08-13 13:03:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimumOperations(L, stones) {\n    let minOperations = Infinity;\n    \n    for (let start = -1000; start <= 1000; start++) {\n        for (let end = -1000; end <= 1000; end++) {\n            let currentStones = new Array(L).fill(0);\n            let totalOperations = 0;\n            \n            let currentPos = start;\n            let direction = 1;\n            \n            while (currentPos !== end) {\n                let nextPos = currentPos + direction;\n                \n                if (Math.abs(currentPos + 0.5 * direction) % 1 === 0.5) {\n                    let earIndex = Math.floor(Math.abs(currentPos + 0.5 * direction));\n                    if (earIndex < L) {\n                        currentStones[earIndex]++;\n                    }\n                }\n                \n                if (nextPos === end || (nextPos > end && direction === 1) || (nextPos < end && direction === -1)) {\n                    direction *= -1;\n                }\n                \n                currentPos = nextPos;\n            }\n            \n            for (let i = 0; i < L; i++) {\n                totalOperations += Math.abs(currentStones[i] - stones[i]);\n            }\n            \n            minOperations = Math.min(minOperations, totalOperations);\n        }\n    }\n    \n    return minOperations;\n}",
+    "timestamp": "2025-08-13 13:03:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    L = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    \n    # The minimal operations are the sum of absolute differences between a[i] and the initial 0\n    # Since Snuke can walk in any way, the minimal operations are simply the sum of a[i]\n    print(sum(a))\n\nsolve()",
+    "timestamp": "2025-08-13 13:03:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync(0, 'utf8').trim().split('\\n');\n    const L = parseInt(input[0], 10);\n    const A = input[1].split(' ').map(Number);\n    \n    let totalOperations = 0;\n    for (let i = 0; i < L; i++) {\n        totalOperations += Math.abs(A[i]);\n    }\n    \n    console.log(totalOperations);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:03:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\n// Function to calculate the minimum number of operations\nint minOperations(int L, const vector<int>& targetStones) {\n    int operations = 0;\n    int totalStones = 0;\n\n    // Calculate total target stones\n    for (int stones : targetStones) {\n        totalStones += stones;\n    }\n\n    // Snuke can place stones as he walks from 0 to totalStones\n    vector<int> placedStones(L, totalStones / L);\n\n    // Distribute remaining stones\n    int remainingStones = totalStones % L;\n    for (int i = 0; i < remainingStones; ++i) {\n        placedStones[i]++;\n    }\n\n    // Calculate operations needed\n    for (int i = 0; i < L; ++i) {\n        operations += abs(placedStones[i] - targetStones[i]);\n    }\n    \n    return operations / 2;\n}\n\nint main() {\n    int L;\n    cin >> L;\n    vector<int> targetStones(L);\n    for (int i = 0; i < L; ++i) {\n        cin >> targetStones[i];\n    }\n\n    cout << minOperations(L, targetStones) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:37:30"
+  }
+]

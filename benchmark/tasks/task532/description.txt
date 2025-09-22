@@ -1,0 +1,1 @@
+Define a 'Gochiusa number' as a natural number that contains '51?3' in its decimal representation, where '?' can be any digit from 0 to 9. Calculate the number of Gochiusa numbers that are less than or equal to a given input N.

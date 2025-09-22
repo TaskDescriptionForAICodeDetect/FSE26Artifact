@@ -1,0 +1,1 @@
+There are N towns on a plane, each located at coordinates (x_i, y_i). You can build a road between two towns at coordinates (a, b) and (c, d) for a cost of min(|a-c|, |b-d|) yen. Your objective is to build roads such that it is possible to travel between every pair of towns and to determine the minimum amount of money necessary to achieve this.

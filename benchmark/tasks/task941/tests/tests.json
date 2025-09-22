@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "16\nooxoox\n",
+      "output": "SSSWWS\n"
+    },
+    {
+      "input": "23\noox\n",
+      "output": "-1\n"
+    },
+    {
+      "input": "310\noxooxoxoox\n",
+      "output": "SSWWSSSWWS\n"
+    }
+  ]
+}

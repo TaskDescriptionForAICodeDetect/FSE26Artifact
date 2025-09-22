@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "15\n5\n2\n1\n4\n3",
+      "output": "Yes"
+    },
+    {
+      "input": "24\n3\n2\n4\n1",
+      "output": "No"
+    },
+    {
+      "input": "37\n3\n2\n1\n6\n5\n4\n7",
+      "output": "Yes"
+    },
+    {
+      "input": "46\n5\n3\n4\n1\n2\n6",
+      "output": "No"
+    }
+  ]
+}

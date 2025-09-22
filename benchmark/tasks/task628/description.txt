@@ -1,0 +1,1 @@
+Manage a state represented by 64 flags that can be ON (1) or OFF (0) using bit manipulation operations. The operations include testing a flag, setting a flag, clearing a flag, flipping a flag, and retrieving aggregate information about the flags.

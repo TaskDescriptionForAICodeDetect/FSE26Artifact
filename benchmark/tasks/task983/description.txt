@@ -1,0 +1,1 @@
+One day, Snuke was given a permutation of length N, a_1, a_2, ..., a_N, from his friend. Your task is to find a certain value based on this permutation.

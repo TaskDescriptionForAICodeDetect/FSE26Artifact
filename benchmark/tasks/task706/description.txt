@@ -1,0 +1,1 @@
+Given N points (x_i, y_i) in a two-dimensional plane, find the minimum radius of a circle such that all the points are inside or on it.

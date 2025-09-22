@@ -1,0 +1,1 @@
+Write a program which reads two sequences of node IDs obtained by the preorder tree walk and the inorder tree walk on a binary tree respectively, and prints a sequence of the nodes obtained by the postorder tree walk on the binary tree.

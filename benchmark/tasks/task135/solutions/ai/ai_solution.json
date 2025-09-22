@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(long long *)b - *(long long *)a);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    long long *C = (long long *)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &C[i]);\n    }\n    qsort(C, N, sizeof(long long), compare);\n\n    long long max_calories = 0;\n    for (int i = 0; i < N; i++) {\n        if (K <= 0) break;\n        int max_use = (i + 1 <= K) ? (i + 1) : K;\n        long long c = C[i];\n        long long full_cycles = (K - max_use) / (i + 1);\n        if (full_cycles > 0) {\n            long long sum = c * (i + 1) + (i * (i + 1LL) / 2);\n            max_calories += full_cycles * sum;\n            K -= full_cycles * (i + 1);\n        }\n        while (K > 0 && max_use > 0) {\n            max_calories += c;\n            c--;\n            K--;\n            max_use--;\n        }\n    }\n    printf(\"%lld\\n\", max_calories);\n    free(C);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MaxCalorieBurn {\n    public static int maxCalories(int N, int[] calories, int[] limits) {\n        int[][] dp = new int[N + 1][N + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j <= N; j++) {\n                for (int k = 0; k <= limits[i - 1]; k++) {\n                    if (j >= k) {\n                        dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - k] + k * calories[i - 1]);\n                    }\n                }\n            }\n        }\n        \n        int maxCal = 0;\n        for (int j = 1; j <= N; j++) {\n            maxCal = Math.max(maxCal, dp[N][j]);\n        }\n        \n        return maxCal;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] calories = new int[N];\n        int[] limits = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            calories[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            limits[i] = scanner.nextInt();\n        }\n        \n        int result = maxCalories(N, calories, limits);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:46:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <queue>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> C(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> C[i];\n    }\n    \n    priority_queue<int> max_heap;\n    for (int i = 0; i < N; ++i) {\n        max_heap.push(C[i]);\n    }\n    \n    long long total = 0;\n    while (K > 0 && !max_heap.empty()) {\n        int current = max_heap.top();\n        max_heap.pop();\n        total += current;\n        if (current > 1) {\n            max_heap.push(current - 1);\n        }\n        K--;\n    }\n    \n    cout << total << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_MACHINES 100\n\nint main() {\n    int N, total_tickets;\n    int calories[MAX_MACHINES];\n    int max_diff[MAX_MACHINES];\n    \n    scanf(\"%d %d\", &N, &total_tickets);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &calories[i]);\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &max_diff[i]);\n    }\n    \n    int dp[MAX_MACHINES][MAX_MACHINES + 1];\n    memset(dp, 0, sizeof(dp));\n    \n    for (int j = 1; j <= total_tickets; j++) {\n        for (int i = 0; i < N; i++) {\n            for (int k = 0; k < N; k++) {\n                if (abs(i - k) > max_diff[i]) continue;\n                \n                int ticket_use = (j > max_diff[i] ? max_diff[i] : j);\n                \n                dp[k][j] = fmax(dp[k][j], dp[i][j - ticket_use] + ticket_use * calories[k]);\n            }\n        }\n    }\n    \n    int max_calories = 0;\n    for (int i = 0; i < N; i++) {\n        max_calories = fmax(max_calories, dp[i][total_tickets]);\n    }\n    \n    printf(\"%d\\n\", max_calories);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nlong long maxCaloriesBurned(int N, vector<int>& calories, vector<int>& limits) {\n    vector<pair<int, int>> machines(N);\n    for (int i = 0; i < N; i++) {\n        machines[i] = {calories[i], limits[i]};\n    }\n    \n    sort(machines.begin(), machines.end(), [](const pair<int, int>& a, const pair<int, int>& b) {\n        return a.first > b.first;\n    });\n    \n    long long totalCalories = 0;\n    vector<int> usageCount(N, 0);\n    \n    for (int i = 0; i < N; i++) {\n        int maxUses = *min_element(limits.begin(), limits.end());\n        \n        while (usageCount[i] < maxUses) {\n            totalCalories += machines[i].first;\n            usageCount[i]++;\n        }\n    }\n    \n    return totalCalories;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> calories(N);\n    vector<int> limits(N);\n    \n    for (int i = 0; i < N; i++) {\n        cin >> calories[i];\n    }\n    \n    for (int i = 0; i < N; i++) {\n        cin >> limits[i];\n    }\n    \n    long long result = maxCaloriesBurned(N, calories, limits);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.PriorityQueue;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        PriorityQueue<Machine> maxHeap = new PriorityQueue<>((a, b) -> b.calories - a.calories);\n        \n        for (int i = 0; i < N; i++) {\n            int calories = scanner.nextInt();\n            maxHeap.add(new Machine(calories, 0));\n        }\n        \n        long totalCalories = 0;\n        for (int i = 0; i < K; i++) {\n            Machine current = maxHeap.poll();\n            totalCalories += current.calories;\n            maxHeap.add(new Machine(current.originalCalories, current.timesUsed + 1));\n        }\n        \n        System.out.println(totalCalories);\n    }\n    \n    static class Machine {\n        int originalCalories;\n        int calories;\n        int timesUsed;\n        \n        Machine(int originalCalories, int timesUsed) {\n            this.originalCalories = originalCalories;\n            this.timesUsed = timesUsed;\n            this.calories = originalCalories / (timesUsed + 1);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:47:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximize_calories(N, tickets, calories, usage_limits):\n    from itertools import combinations_with_replacement\n    max_calories = 0\n    \n    for combo in combinations_with_replacement(range(N), tickets):\n        valid = True\n        calorie_sum = 0\n        counts = [combo.count(i) for i in range(N)]\n        \n        for i in range(N):\n            if counts[i] > max(usage_limits) or (usage_limits[i] != 0 and counts[i] > counts[usage_limits[i]-1]):\n                valid = False\n                break\n                \n        if valid:\n            for i in combo:\n                calorie_sum += calories[i]\n            max_calories = max(max_calories, calorie_sum)\n    \n    return max_calories\n\n# Example usage\nN = 3\ntickets = 5\ncalories = [300, 200, 250]\nusage_limits = [2, 3, 0] # 0 means no usage limit relative to other machines\nprint(maximize_calories(N, tickets, calories, usage_limits))",
+    "timestamp": "2025-08-13 00:52:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class MaxCalorieBurn {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int numMachines = scanner.nextInt();\n        int numTickets = scanner.nextInt();\n\n        int[] calories = new int[numMachines];\n        for (int i = 0; i < numMachines; i++) {\n            calories[i] = scanner.nextInt();\n        }\n\n        Arrays.sort(calories);\n\n        int maxCalories = 0;\n        int remainingTickets = numTickets;\n\n        while (remainingTickets > 0) {\n            for (int i = numMachines - 1; i >= 0 && remainingTickets > 0; i--) {\n                maxCalories += calories[i];\n                remainingTickets--;\n            }\n        }\n\n        System.out.println(maxCalories);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 00:52:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int calorie;\n    int index;\n} Machine;\n\n// Comparator function for sorting machines by calorie consumption in descending order\nint compare(const void *a, const void *b) {\n    return ((Machine *)b)->calorie - ((Machine *)a)->calorie;\n}\n\nint maxCalories(int N, int M, int *calories) {\n    Machine machines[N];\n    for (int i = 0; i < N; i++) {\n        machines[i].calorie = calories[i];\n        machines[i].index = i + 1;\n    }\n    \n    // Sort machines by calories in descending order\n    qsort(machines, N, sizeof(Machine), compare);\n    \n    // Use machines in sorted order to maximize calorie burn\n    int maxCal = 0;\n    int ticketsLeft = M;\n    int usage[N];\n    \n    // Initialize usage count for each machine to 0\n    for (int i = 0; i < N; i++) {\n        usage[i] = 0;\n    }\n    \n    int current = 0;\n    while (ticketsLeft > 0) {\n        // If current machine can still be used\n        if (usage[machines[current].index - 1] == 0 || \n            usage[machines[current].index - 1] <= usage[machines[current + 1].index - 1]) {\n            maxCal += machines[current].calorie;\n            usage[machines[current].index - 1]++;\n            ticketsLeft--;\n        }\n        \n        // Move to next machine, if we've reached the end, start from the first\n        current = (current + 1) % N; \n    }\n    \n    return maxCal;\n}\n\nint main() {\n    int N = 5; // Number of machines\n    int M = 8; // Number of tickets\n    \n    int calories[] = {2, 3, 1, 4, 5}; // Calorie consumption for each machine\n    \n    int result = maxCalories(N, M, calories);\n    printf(\"Maximum Calories: %d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 00:52:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_calories(N, calories, max_diff):\n    # Initialize DP table\n    dp = [[0] * (N+1) for _ in range(N+1)]\n    \n    # Iterate through all possible machine usage configurations\n    for i in range(1, N+1):\n        for j in range(1, N+1):\n            # Check if machine j can be used relative to machine i\n            if j - i > max_diff:\n                continue\n            \n            # Calculate max calories by either skipping or using current machine\n            for k in range(i):\n                dp[i][j] = max(dp[i][j], dp[i-1][k] + calories[j-1])\n    \n    # Return maximum calories burned\n    return max(dp[N])\n\n# Example usage\nN = int(input())\ncalories = list(map(int, input().split()))\nmax_diff = int(input())\n\nprint(max_calories(N, calories, max_diff))",
+    "timestamp": "2025-08-13 00:52:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import heapq\n\ndef max_calories(N, M, K, calories):\n    max_heap = []\n    for i in range(N):\n        heapq.heappush(max_heap, -calories[i])\n    \n    total = 0\n    for _ in range(M):\n        if not max_heap:\n            break\n        current = -heapq.heappop(max_heap)\n        total += current\n        new_val = current // K\n        if new_val > 0:\n            heapq.heappush(max_heap, -new_val)\n    \n    return total\n\n# Read input\nN, M, K = map(int, input().split())\ncalories = list(map(int, input().split()))\n\n# Compute and print result\nprint(max_calories(N, M, K, calories))",
+    "timestamp": "2025-08-13 00:52:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Machine {\n    int calories;\n    int index;\n};\n\nbool compareMachines(const Machine &a, const Machine &b) {\n    return a.calories > b.calories;\n}\n\nint main() {\n    // Input: number of machines and available tickets\n    int N, tickets;\n    std::cin >> N >> tickets;\n\n    std::vector<Machine> machines(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> machines[i].calories;\n        machines[i].index = i;\n    }\n\n    // Sort the machines by calorie consumption in descending order\n    std::sort(machines.begin(), machines.end(), compareMachines);\n\n    std::vector<int> usageCount(N, 0);\n    int maxUsageDifference = 1;\n    int totalCalories = 0;\n    \n    for (int i = 0; i < tickets; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (usageCount[j] < (i / N) + maxUsageDifference) {\n                usageCount[j]++;\n                totalCalories += machines[j].calories;\n                break;\n            }\n        }\n    }\n\n    std::cout << totalCalories << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:56:32"
+  }
+]

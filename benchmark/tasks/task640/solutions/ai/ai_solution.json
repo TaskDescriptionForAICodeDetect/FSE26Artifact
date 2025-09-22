@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    int** grid = malloc(N * sizeof(int*));\n    for (int i = 0; i < N; i++) {\n        grid[i] = malloc(N * sizeof(int));\n        for (int j = 0; j < N; j++) {\n            grid[i][j] = (i >= 1 && i <= N-2 && j >= 1 && j <= N-2) ? 1 : 0;\n        }\n    }\n    \n    for (int q = 0; q < Q; q++) {\n        int type, index;\n        scanf(\"%d %d\", &type, &index);\n        \n        if (type == 1) {  // first row\n            for (int j = index; j < N; j++) {\n                grid[0][j] = 0;\n            }\n        } else {  // first column\n            for (int i = index; i < N; i++) {\n                grid[i][0] = 0;\n            }\n        }\n    }\n    \n    int black_stones = 0;\n    for (int i = 1; i < N-1; i++) {\n        for (int j = 1; j < N-1; j++) {\n            black_stones += grid[i][j];\n        }\n    }\n    \n    printf(\"%d\\n\", black_stones);\n    \n    for (int i = 0; i < N; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n\n    int *row_blocked = (int *)calloc(N + 1, sizeof(int));\n    int *col_blocked = (int *)calloc(N + 1, sizeof(int));\n    int row_min = N;\n    int col_min = N;\n    long long black_stones = (N > 2) ? (long long)(N - 2) * (N - 2) : 0;\n\n    while (Q--) {\n        int type, x;\n        scanf(\"%d %d\", &type, &x);\n\n        if (type == 1) {\n            if (x < col_min) {\n                black_stones -= (row_min - 2);\n                for (int i = x; i < col_min; i++) {\n                    col_blocked[i] = row_min;\n                }\n                col_min = x;\n            } else {\n                black_stones -= (col_blocked[x] - 2);\n            }\n        } else {\n            if (x < row_min) {\n                black_stones -= (col_min - 2);\n                for (int i = x; i < row_min; i++) {\n                    row_blocked[i] = col_min;\n                }\n                row_min = x;\n            } else {\n                black_stones -= (row_blocked[x] - 2);\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", black_stones);\n    free(row_blocked);\n    free(col_blocked);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, Q;\n    cin >> N >> Q;\n\n    int row_blocked = N + 1;\n    int col_blocked = N + 1;\n    long long black_stones = (N - 2) * 1LL * (N - 2);\n\n    vector<pair<int, int>> queries(Q);\n    for (int i = 0; i < Q; ++i) {\n        int type, x;\n        cin >> type >> x;\n        queries[i] = {type, x};\n    }\n\n    reverse(queries.begin(), queries.end());\n\n    for (auto &query : queries) {\n        int type = query.first;\n        int x = query.second;\n\n        if (type == 1) {\n            if (x < col_blocked) {\n                black_stones -= (N - 2) - (row_blocked - 2);\n                col_blocked = x;\n            }\n        } else {\n            if (x < row_blocked) {\n                black_stones -= (N - 2) - (col_blocked - 2);\n                row_blocked = x;\n            }\n        }\n    }\n\n    cout << black_stones << '\\n';\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\nimport java.util.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter out = new PrintWriter(System.out);\n        \n        int N = Integer.parseInt(br.readLine());\n        int Q = Integer.parseInt(br.readLine());\n        \n        boolean[] rowMarked = new boolean[N + 1];\n        boolean[] colMarked = new boolean[N + 1];\n        int rowCount = 0;\n        int colCount = 0;\n        \n        long totalBlack = (long) (N - 2) * (N - 2);\n        \n        for (int i = 0; i < Q; i++) {\n            String[] query = br.readLine().split(\" \");\n            int type = Integer.parseInt(query[0]);\n            int x = Integer.parseInt(query[1]);\n            \n            if (type == 1) {\n                if (!colMarked[x]) {\n                    colMarked[x] = true;\n                    totalBlack -= (N - 2 - rowCount);\n                    colCount++;\n                }\n            } else {\n                if (!rowMarked[x]) {\n                    rowMarked[x] = true;\n                    totalBlack -= (N - 2 - colCount);\n                    rowCount++;\n                }\n            }\n        }\n        \n        out.println(totalBlack);\n        out.flush();\n    }\n}",
+    "timestamp": "2025-08-05 22:24:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class BlackStones {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int Q = Integer.parseInt(st.nextToken());\n        \n        boolean[][] grid = new boolean[N][N];\n        \n        // Initially fill grid with black stones in center\n        for (int i = 1; i < N - 1; i++) {\n            for (int j = 1; j < N - 1; j++) {\n                grid[i][j] = true;\n            }\n        }\n        \n        for (int q = 0; q < Q; q++) {\n            st = new StringTokenizer(br.readLine());\n            int type = Integer.parseInt(st.nextToken());\n            int index = Integer.parseInt(st.nextToken());\n            \n            if (type == 1) {  // First row\n                for (int j = index; j < N; j++) {\n                    grid[index][j] = false;\n                }\n            } else {  // First column\n                for (int i = index; i < N; i++) {\n                    grid[i][index] = false;\n                }\n            }\n        }\n        \n        int blackStones = 0;\n        for (int i = 1; i < N - 1; i++) {\n            for (int j = 1; j < N - 1; j++) {\n                if (grid[i][j]) {\n                    blackStones++;\n                }\n            }\n        }\n        \n        System.out.println(blackStones);\n    }\n}",
+    "timestamp": "2025-08-05 22:25:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n\n    vector<vector<int>> grid(N, vector<int>(N, 1)); \n    \n    // Initialize white border stones\n    for (int i = 0; i < N; i++) {\n        grid[N-1][i] = 0;\n        grid[i][N-1] = 0;\n    }\n\n    int blackStones = (N-2) * (N-2);\n\n    while (Q--) {\n        int row, col;\n        cin >> row >> col;\n        row--; col--;\n\n        if (row == 0) {\n            for (int j = 0; j <= col; j++) {\n                if (grid[row][j] == 1) {\n                    grid[row][j] = 0;\n                    blackStones--;\n                }\n            }\n        }\n        else {\n            for (int i = 0; i <= row; i++) {\n                if (grid[i][col] == 1) {\n                    grid[i][col] = 0;\n                    blackStones--;\n                }\n            }\n        }\n    }\n\n    cout << blackStones << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:25:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def remaining_black_stones(N, Q, queries):\n    # Initialize the grid\n    grid = [['' for _ in range(N)] for _ in range(N)]\n\n    # Place black stones in (N-2) x (N-2) central squares\n    for i in range(1, N-1):\n        for j in range(1, N-1):\n            grid[i][j] = 'B'\n    \n    # Place white stones on the right and bottom borders\n    for i in range(N):\n        grid[i][N-1] = 'W'\n        grid[N-1][i] = 'W'\n    \n    # Process each query\n    for query in queries:\n        if query[0] == 'row':\n            row = query[1]\n            for j in range(N):\n                grid[row][j] = 'W'\n        elif query[0] == 'column':\n            column = query[1]\n            for i in range(N):\n                grid[i][column] = 'W'\n\n    # Count remaining black stones\n    count_black = 0\n    for i in range(1, N-1):\n        for j in range(1, N-1):\n            if grid[i][j] == 'B':\n                count_black += 1\n    \n    return count_black",
+    "timestamp": "2025-08-13 10:29:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class GridStones {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        boolean[][] grid = new boolean[N][N];\n\n        // Initialize the grid, where true means a black stone\n        for (int i = 1; i < N - 1; i++) {\n            for (int j = 1; j < N - 1; j++) {\n                grid[i][j] = true;\n            }\n        }\n\n        for (int i = 0; i < Q; i++) {\n            String direction = scanner.next();\n            int index = scanner.nextInt() - 1;\n\n            if (direction.equals(\"row\")) {\n                for (int j = 1; j < N - 1; j++) {\n                    grid[index][j] = false;\n                }\n            } else if (direction.equals(\"column\")) {\n                for (int j = 1; j < N - 1; j++) {\n                    grid[j][index] = false;\n                }\n            }\n        }\n\n        int blackStoneCount = 0;\n        for (int i = 1; i < N - 1; i++) {\n            for (int j = 1; j < N - 1; j++) {\n                if (grid[i][j]) {\n                    blackStoneCount++;\n                }\n            }\n        }\n\n        System.out.println(blackStoneCount);\n    }\n}",
+    "timestamp": "2025-08-13 10:29:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid processQueries(int N, int queries[][2], int Q) {\n    int blackStones = (N - 2) * (N - 2);\n    int row[N], col[N];\n    memset(row, 0, sizeof(row));\n    memset(col, 0, sizeof(col));\n\n    for (int i = 0; i < Q; i++) {\n        int type = queries[i][0];\n        int index = queries[i][1];\n\n        if (type == 1) { // Row query\n            if (row[index] == 0) {\n                blackStones -= (N - 2);\n                row[index] = 1;\n            }\n        } else if (type == 2) { // Column query\n            if (col[index] == 0) {\n                blackStones -= (N - 2);\n                col[index] = 1;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", blackStones);\n}\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    int queries[Q][2];\n\n    for (int i = 0; i < Q; i++) {\n        scanf(\"%d %d\", &queries[i][0], &queries[i][1]);\n    }\n\n    processQueries(N, queries, Q);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:29:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_stone_problem(N, queries):\n    # Initialize grid with black stones in central area and white stones on sides\n    grid = [[1] * N for _ in range(N)]\n    for i in range(1, N-1):\n        for j in range(1, N-1):\n            grid[i][j] = 0  # Black stones in central area\n\n    # Process queries\n    for query in queries:\n        if query[0] == 1:  # First row\n            for j in range(query[1], N):\n                grid[0][j] = 1\n        else:  # First column\n            for i in range(query[1], N):\n                grid[i][0] = 1\n\n    # Count remaining black stones\n    black_stones = sum(1 for row in grid[1:N-1] for cell in row[1:N-1] if cell == 0)\n    return black_stones\n\n# Read input\nN, Q = map(int, input().split())\nqueries = []\nfor _ in range(Q):\n    query_type, index = map(int, input().split())\n    queries.append((query_type, index))\n\n# Solve and print result\nresult = solve_stone_problem(N, queries)\nprint(result)",
+    "timestamp": "2025-08-13 10:29:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N = int(input[ptr])\n    ptr += 1\n    Q = int(input[ptr])\n    ptr += 1\n    \n    rows = N + 2  # 1-based, rows 1..N\n    cols = N + 2  # 1-based, cols 1..N\n    row_blocked = [False] * rows\n    col_blocked = [False] * cols\n    res = (N - 2) * (N - 2)\n    min_row = N\n    min_col = N\n    \n    for _ in range(Q):\n        query = input[ptr]\n        ptr += 1\n        x = int(input[ptr])\n        ptr += 1\n        if query == '1':\n            if not row_blocked[x]:\n                res -= (min_col - 2)\n                row_blocked[x] = True\n                if x < min_row:\n                    min_row = x\n        else:\n            if not col_blocked[x]:\n                res -= (min_row - 2)\n                col_blocked[x] = True\n                if x < min_col:\n                    min_col = x\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 10:30:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n\n    vector<vector<bool>> grid(N, vector<bool>(N, false));\n\n    for (int i = 1; i < N - 1; ++i) {\n        for (int j = 1; j < N - 1; ++j) {\n            grid[i][j] = true;\n        }\n    }\n\n    for (int i = 0; i < Q; ++i) {\n        char type;\n        int pos;\n        cin >> type >> pos;\n        if (type == 'R') {\n            for (int col = 0; col < N; ++col) {\n                grid[pos][col] = false;\n            }\n        } else if (type == 'C') {\n            for (int row = 0; row < N; ++row) {\n                grid[row][pos] = false;\n            }\n        }\n    }\n\n    int blackCount = 0;\n    for (int i = 1; i < N - 1; ++i) {\n        for (int j = 1; j < N - 1; ++j) {\n            if (grid[i][j]) {\n                blackCount++;\n            }\n        }\n    }\n\n    cout << blackCount << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:59:23"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def k_rounding(n, k):\n    if k == 0:\n        return n\n    \n    x = n\n    while x % (10 ** k) != 0:\n        x += n\n    \n    return x\n\nn, k = map(int, input().split())\nprint(k_rounding(n, k))",
+    "timestamp": "2025-08-05 17:32:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import math\n\nn, k = map(int, input().split())\n\nif k == 0:\n    print(n)\nelse:\n    # Calculate the required number of 2s and 5s in the factorization\n    required_2 = k\n    required_5 = k\n    \n    # Factorize n to count existing 2s and 5s\n    count2 = 0\n    count5 = 0\n    temp = n\n    while temp % 2 == 0:\n        count2 += 1\n        temp = temp // 2\n    temp = n\n    while temp % 5 == 0:\n        count5 += 1\n        temp = temp // 5\n    \n    additional_2 = max(0, required_2 - count2)\n    additional_5 = max(0, required_5 - count5)\n    \n    multiplier = (2 ** additional_2) * (5 ** additional_5)\n    x = n * multiplier\n    print(x)",
+    "timestamp": "2025-08-05 17:32:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def k_rounding(n, k):\n    multiplier = 10**k\n    factor = n\n    while factor % multiplier != 0:\n        factor += n\n    return factor\n\nn, k = map(int, input().split())\nprint(k_rounding(n, k))",
+    "timestamp": "2025-08-12 21:43:11"
+  }
+]

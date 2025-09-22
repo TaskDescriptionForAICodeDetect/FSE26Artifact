@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "2\n10 11\n11 12\n2\nN 2\nE 1\n",
+      "output": "Yes"
+    },
+    {
+      "input": "2\n10 11\n11 12\n2\nN 2\nW 1\n",
+      "output": "No"
+    },
+    {
+      "input": "3\n0 15\n5 10\n5 15\n5\nW 10\nS 10\nN 20\nE 10\nS 10\n",
+      "output": "No"
+    }
+  ]
+}

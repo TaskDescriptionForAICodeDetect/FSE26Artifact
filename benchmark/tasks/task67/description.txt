@@ -1,0 +1,1 @@
+Given a sequence of n integers using the digits from 0 to 9, create a program that reads a positive integer n and an integer s, and calculates how many unique sequences k1, k2, ..., kn satisfy the condition k1 + 2*k2 + 3*k3 + ... + n*kn = s. Each sequence must not contain any repeated numbers.

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    if (b == 0) return a;\n    return gcd(b, a % b);\n}\n\nint solve(int N, int K, int* A) {\n    int total_sum = 0;\n    for (int i = 0; i < N; i++) {\n        total_sum += A[i];\n    }\n    \n    if (total_sum % N != 0) return 1;\n    \n    int avg = total_sum / N;\n    int max_divisor = 1;\n    \n    for (int x = 1; x <= total_sum; x++) {\n        if (total_sum % x == 0) {\n            int possible = 1;\n            int operations_needed = 0;\n            \n            for (int i = 0; i < N; i++) {\n                int diff = A[i] - avg;\n                operations_needed += abs(diff);\n            }\n            \n            if (operations_needed / 2 <= K) {\n                max_divisor = x;\n            }\n        }\n    }\n    \n    return max_divisor;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int* A = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int result = solve(N, K, A);\n    printf(\"%d\\n\", result);\n    \n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nlong long compute_gcd(long long a, long long b) {\n    while (b != 0) {\n        long long temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    long long *A = (long long *)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i]);\n    }\n\n    long long sum = 0;\n    for (int i = 0; i < N; i++) {\n        sum += A[i];\n    }\n    sum = llabs(sum);\n\n    long long max_gcd = 1;\n    for (long long d = 1; d * d <= sum; d++) {\n        if (sum % d == 0) {\n            long long candidate1 = d;\n            long long candidate2 = sum / d;\n            \n            long long total1 = 0;\n            for (int i = 0; i < N; i++) {\n                total1 += (A[i] % candidate1 + candidate1) % candidate1;\n            }\n            if (total1 <= 2 * K && candidate1 > max_gcd) {\n                max_gcd = candidate1;\n            }\n            \n            if (candidate2 != candidate1) {\n                long long total2 = 0;\n                for (int i = 0; i < N; i++) {\n                    total2 += (A[i] % candidate2 + candidate2) % candidate2;\n                }\n                if (total2 <= 2 * K && candidate2 > max_gcd) {\n                    max_gcd = candidate2;\n                }\n            }\n        }\n    }\n    \n    printf(\"%lld\\n\", max_gcd);\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <numeric>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    \n    long long sum = accumulate(A.begin(), A.end(), 0LL);\n    \n    vector<long long> divisors;\n    for (long long d = 1; d * d <= sum; ++d) {\n        if (sum % d == 0) {\n            divisors.push_back(d);\n            if (d != sum / d) {\n                divisors.push_back(sum / d);\n            }\n        }\n    }\n    \n    sort(divisors.rbegin(), divisors.rend());\n    \n    for (long long d : divisors) {\n        vector<long long> mods(N);\n        long long total = 0;\n        for (int i = 0; i < N; ++i) {\n            mods[i] = A[i] % d;\n        }\n        sort(mods.begin(), mods.end());\n        \n        long long sum_neg = 0;\n        for (int i = 0; i < N; ++i) {\n            sum_neg += mods[i];\n            long long sum_pos = d * (N - i - 1) - (accumulate(mods.begin() + i + 1, mods.end(), 0LL));\n            if (sum_neg == sum_pos && sum_neg <= K) {\n                cout << d << endl;\n                return 0;\n            }\n        }\n    }\n    \n    cout << 1 << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        long[] A = new long[N];\n        long sum = 0;\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextLong();\n            sum += A[i];\n        }\n        \n        long maxDivisor = 1;\n        for (long d = 1; d * d <= sum; d++) {\n            if (sum % d == 0) {\n                long candidate1 = d;\n                long candidate2 = sum / d;\n                if (checkPossible(A, K, candidate1)) {\n                    if (candidate1 > maxDivisor) {\n                        maxDivisor = candidate1;\n                    }\n                }\n                if (checkPossible(A, K, candidate2)) {\n                    if (candidate2 > maxDivisor) {\n                        maxDivisor = candidate2;\n                    }\n                }\n            }\n        }\n        System.out.println(maxDivisor);\n    }\n    \n    private static boolean checkPossible(long[] A, long K, long d) {\n        if (d == 0) return false;\n        long totalOperations = 0;\n        for (long num : A) {\n            long remainder = num % d;\n            if (remainder < 0) remainder += d;\n            totalOperations += remainder;\n        }\n        return totalOperations <= 2 * K;\n    }\n}",
+    "timestamp": "2025-08-05 22:46:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MaxDivisibleSubset {\n    public static int getMaxDivisor(int[] A, int K) {\n        int N = A.length;\n        int totalSum = 0;\n        for (int num : A) {\n            totalSum += num;\n        }\n        \n        int maxDivisor = 1;\n        for (int d = 1; d <= totalSum; d++) {\n            if (totalSum % d == 0) {\n                boolean possible = canMakeAllDivisible(A.clone(), K, d);\n                if (possible) {\n                    maxDivisor = Math.max(maxDivisor, d);\n                }\n            }\n        }\n        \n        return maxDivisor;\n    }\n    \n    private static boolean canMakeAllDivisible(int[] arr, int K, int divisor) {\n        int operations = 0;\n        \n        while (operations < K) {\n            boolean allDivisible = true;\n            int maxRemainder = 0;\n            int maxRemainderIndex = -1;\n            int minRemainder = divisor;\n            int minRemainderIndex = -1;\n            \n            for (int i = 0; i < arr.length; i++) {\n                int remainder = arr[i] % divisor;\n                if (remainder != 0) {\n                    allDivisible = false;\n                    if (remainder > maxRemainder) {\n                        maxRemainder = remainder;\n                        maxRemainderIndex = i;\n                    }\n                    if (remainder < minRemainder) {\n                        minRemainder = remainder;\n                        minRemainderIndex = i;\n                    }\n                }\n            }\n            \n            if (allDivisible) {\n                return true;\n            }\n            \n            if (maxRemainderIndex == -1 || minRemainderIndex == -1) {\n                break;\n            }\n            \n            arr[maxRemainderIndex]--;\n            arr[minRemainderIndex]++;\n            operations++;\n        }\n        \n        for (int num : arr) {\n            if (num % divisor != 0) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n    \n    public static void main(String[] args) {\n        int[] A = {1, 2, 3, 4, 5};\n        int K = 5;\n        System.out.println(getMaxDivisor(A, K));\n    }\n}",
+    "timestamp": "2025-08-05 22:46:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\nint maxDivisor(vector<int>& A, int K) {\n    int N = A.size();\n    int total_sum = accumulate(A.begin(), A.end(), 0);\n    \n    vector<int> original = A;\n    \n    for (int operations = 0; operations < K; ++operations) {\n        bool improved = false;\n        for (int i = 0; i < N; ++i) {\n            for (int j = 0; j < N; ++j) {\n                if (i != j) {\n                    A[i]++;\n                    A[j]--;\n                    \n                    bool valid = true;\n                    for (int num : A) {\n                        if (num < 0) {\n                            valid = false;\n                            break;\n                        }\n                    }\n                    \n                    if (!valid) {\n                        A[i]--;\n                        A[j]++;\n                        continue;\n                    }\n                    \n                    improved = true;\n                    break;\n                }\n            }\n            if (improved) break;\n        }\n        \n        if (!improved) break;\n    }\n    \n    int result = 1;\n    for (int divisor = 1; divisor <= *max_element(A.begin(), A.end()); ++divisor) {\n        bool all_divisible = true;\n        for (int num : A) {\n            if (num % divisor != 0) {\n                all_divisible = false;\n                break;\n            }\n        }\n        \n        if (all_divisible) {\n            result = max(result, divisor);\n        }\n    }\n    \n    return result;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    \n    cout << maxDivisor(A, K) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_gcd_after_operations(n, k, A):\n    def gcd(a, b):\n        while b:\n            a, b = b, a % b\n        return a\n    \n    def possible(g):\n        surplus = 0\n        deficit = 0\n        for a in A:\n            remainder = a % g\n            surplus += (g - remainder) % g\n            deficit += remainder\n        return min(surplus, deficit) <= k\n\n    total_sum = sum(A)\n    possible_divisors = set()\n    \n    # Find all divisors of total_sum\n    for i in range(1, int(total_sum**0.5) + 1):\n        if total_sum % i == 0:\n            possible_divisors.add(i)\n            possible_divisors.add(total_sum // i)\n    \n    max_gcd = 1\n    for g in possible_divisors:\n        if possible(g):\n            max_gcd = max(max_gcd, g)\n    \n    return max_gcd\n\n# Example usage:\nn = 5\nk = 3\nA = [3, 9, 6, 2, 5]\nprint(max_gcd_after_operations(n, k, A))  # Output should be the maximum possible gcd",
+    "timestamp": "2025-08-13 12:26:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.Arrays;\n\npublic class MaxDivisorAfterOperations {\n\n    public static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    public static int gcdArray(int[] array) {\n        int result = array[0];\n        for (int num : array) {\n            result = gcd(result, num);\n        }\n        return result;\n    }\n\n    public static int maxDivisorAfterOperations(int[] arr, int N, int K) {\n        int sum = Arrays.stream(arr).sum();\n        for (int i = 1; i <= sum; ++i) {\n            if (sum % i == 0) {\n                int[] remainder = new int[N];\n                for (int j = 0; j < N; j++) {\n                    remainder[j] = arr[j] % i;\n                }\n                Arrays.sort(remainder);\n                int balance = 0;\n                for (int j = 0; j < N; j++) {\n                    balance += remainder[j];\n                    if (j == N - 1 || remainder[j + 1] != remainder[j]) {\n                        if (balance > K) {\n                            return i - 1;\n                        }\n                        balance = 0;\n                    }\n                }\n            }\n        }\n        return 1;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        System.out.println(maxDivisorAfterOperations(A, N, K));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 12:26:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    if (b == 0)\n        return a;\n    return gcd(b, a % b);\n}\n\nint max_divisor(int *A, int N, int K) {\n    int sum = 0;\n    for (int i = 0; i < N; ++i) {\n        sum += A[i];\n    }\n\n    for (int i = sum; i > 0; --i) {\n        int operations = 0;\n        for (int j = 0; j < N; ++j) {\n            int remainder = A[j] % i;\n            operations += (i - remainder) % i;\n        }\n        \n        if (operations / 2 <= K) {\n            return i;\n        }\n    }\n    return 1;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int *A = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    printf(\"%d\\n\", max_divisor(A, N, K));\n    \n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:26:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}\n\nint maxGCDWithOperations(const vector<int>& A, int K) {\n    int N = A.size();\n    int sum = accumulate(A.begin(), A.end(), 0);\n\n    for (int x = sum; x >= 1; --x) {\n\n        vector<int> remainders;\n        for (int i = 0; i < N; ++i) {\n            remainders.push_back(A[i] % x);\n        }\n        sort(remainders.begin(), remainders.end());\n\n        int totalToFix = 0;\n        for (int r : remainders) {\n            totalToFix += (x - r) % x;\n        }\n\n        if (totalToFix <= K * x) {\n            if (sum % x == 0) {\n                return x;\n            }\n        }\n    }\n\n    return 1;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    cout << maxGCDWithOperations(A, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:26:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_divisor(A, K):\n    N = len(A)\n    \n    def can_make_divisible(div):\n        needs = [0] * N\n        for i in range(N):\n            needs[i] = -(A[i] % div)\n        \n        total_ops = sum(abs(need) for need in needs if need > 0)\n        return total_ops <= K\n    \n    max_possible_divisor = 1\n    for div in range(1, max(A) + 1):\n        if all(A[i] % div == 0 for i in range(N)):\n            if can_make_divisible(div):\n                max_possible_divisor = max(max_possible_divisor, div)\n    \n    return max_possible_divisor\n\n# Example usage\nN, K = map(int, input().split())\nA = list(map(int, input().split()))\nprint(max_divisor(A, K))",
+    "timestamp": "2025-08-13 12:26:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef solve():\n    import sys\n    N, K = map(int, sys.stdin.readline().split())\n    A = list(map(int, sys.stdin.readline().split()))\n    total = sum(A)\n    max_divisor = 1\n    \n    # Generate all possible divisors of the total sum\n    divisors = set()\n    for i in range(1, int(math.isqrt(total)) + 1):\n        if total % i == 0:\n            divisors.add(i)\n            divisors.add(total // i)\n    \n    # Check each divisor in descending order\n    for d in sorted(divisors, reverse=True):\n        if d == 0:\n            continue\n        mods = []\n        sum_mod = 0\n        for num in A:\n            mod = num % d\n            if mod != 0:\n                mods.append(mod)\n        mods.sort()\n        sum_mod = sum(mods)\n        if sum_mod % d != 0:\n            continue\n        # Calculate the required operations\n        operations = 0\n        m = len(mods)\n        for i in range(m - sum_mod // d):\n            operations += mods[i]\n        if operations <= K:\n            max_divisor = d\n            break\n    print(max_divisor)\n\nsolve()",
+    "timestamp": "2025-08-13 12:26:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function gcd(a, b) {\n    while (b !== 0) {\n        [a, b] = [b, a % b];\n    }\n    return a;\n}\n\nfunction maxDivisor(N, K, A) {\n    const sumA = A.reduce((acc, num) => acc + num, 0);\n    if (K >= sumA) return sumA;\n\n    let maxGCD = 1;\n    for (let i = 1; i <= Math.sqrt(sumA); i++) {\n        if (sumA % i === 0) {\n            const candidates = [i, sumA / i];\n            for (let x of candidates) {\n                const opsNeeded = A.reduce((acc, num) => acc + (x - num % x) % x, 0);\n                if (opsNeeded / 2 <= K) {\n                    maxGCD = Math.max(maxGCD, x);\n                }\n            }\n        }\n    }\n    return maxGCD;\n}",
+    "timestamp": "2025-08-13 12:26:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxDivisor(A, K) {\n    const N = A.length;\n    let totalSum = A.reduce((a, b) => a + b, 0);\n    \n    if (totalSum % N !== 0) return 1;\n    \n    let avgValue = totalSum / N;\n    let remainingOperations = K;\n    let differences = A.map(val => val - avgValue);\n    \n    let positiveTotal = differences.filter(d => d > 0).reduce((a, b) => a + b, 0);\n    let negativeTotal = -differences.filter(d => d < 0).reduce((a, b) => a + b, 0);\n    \n    let maxOpsPossible = Math.min(positiveTotal, negativeTotal, K);\n    \n    for (let div = N; div >= 1; div--) {\n        if (totalSum % div === 0) {\n            let isValid = differences.every(diff => Math.abs(diff) <= maxOpsPossible);\n            if (isValid) return div;\n        }\n    }\n    \n    return 1;\n}",
+    "timestamp": "2025-08-13 12:26:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N, K;\n    let A = [];\n\n    rl.on('line', (line) => {\n        if (typeof N === 'undefined') {\n            [N, K] = line.split(' ').map(Number);\n        } else {\n            A = line.split(' ').map(Number);\n            rl.close();\n        }\n    });\n\n    rl.on('close', () => {\n        const sum = A.reduce((acc, val) => acc + val, 0);\n        const divisors = [];\n        \n        for (let i = 1; i * i <= sum; i++) {\n            if (sum % i === 0) {\n                divisors.push(i);\n                if (i !== sum / i) {\n                    divisors.push(sum / i);\n                }\n            }\n        }\n        \n        divisors.sort((a, b) => b - a);\n        \n        for (const d of divisors) {\n            let mods = A.map(a => a % d).filter(mod => mod !== 0);\n            mods.sort((a, b) => a - b);\n            if (mods.length === 0) {\n                console.log(d);\n                return;\n            }\n            const totalMod = mods.reduce((acc, val) => acc + val, 0);\n            if (totalMod % d !== 0) continue;\n            let requiredOps = 0;\n            const m = mods.length;\n            const k = totalMod / d;\n            for (let i = 0; i < m - k; i++) {\n                requiredOps += mods[i];\n            }\n            if (requiredOps <= K) {\n                console.log(d);\n                return;\n            }\n        }\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:27:08"
+  }
+]

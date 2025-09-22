@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nvoid shellSort(int *A, int n, int *G, int *m) {\n    int cnt = 0;\n    int h = 1;\n    *m = 0;\n\n    while (h <= n) {\n        G[(*m)++] = h;\n        h = 3*h + 1;\n    }\n\n    for (int i = *m - 1; i >= 0; i--) {\n        int gap = G[i];\n        for (int j = gap; j < n; j++) {\n            int tmp = A[j];\n            int k;\n            for (k = j; k >= gap && A[k-gap] > tmp; k -= gap) {\n                A[k] = A[k-gap];\n                cnt++;\n            }\n            A[k] = tmp;\n            if (k != j) cnt++;\n        }\n    }\n\n    printf(\"%d\\n\", *m);\n    for (int i = *m - 1; i >= 0; i--) {\n        printf(\"%d\", G[i]);\n        if (i > 0) printf(\" \");\n    }\n    printf(\"\\n%d\\n\", cnt);\n    for (int i = 0; i < n; i++) {\n        printf(\"%d\", A[i]);\n        if (i < n - 1) printf(\" \");\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int *A = malloc(n * sizeof(int));\n    int *G = malloc(n * sizeof(int));\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int m;\n    shellSort(A, n, G, &m);\n    \n    free(A);\n    free(G);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint insertionSort(int A[], int n, int g, int *cnt) {\n    for (int i = g; i < n; i++) {\n        int v = A[i];\n        int j = i - g;\n        while (j >= 0 && A[j] > v) {\n            A[j + g] = A[j];\n            j -= g;\n            (*cnt)++;\n        }\n        A[j + g] = v;\n    }\n}\n\nvoid shellSort(int A[], int n) {\n    int cnt = 0;\n    int m = 0;\n    int G[100];\n    \n    for (int h = 1; ; ) {\n        if (h > n) break;\n        G[m] = h;\n        m++;\n        h = 3 * h + 1;\n    }\n    \n    printf(\"%d\\n\", m);\n    \n    for (int i = m - 1; i >= 0; i--) {\n        printf(\"%d\", G[i]);\n        if (i != 0) printf(\" \");\n    }\n    printf(\"\\n\");\n    \n    for (int i = m - 1; i >= 0; i--) {\n        insertionSort(A, n, G[i], &cnt);\n    }\n    \n    printf(\"%d\\n\", cnt);\n    for (int i = 0; i < n; i++) {\n        printf(\"%d\\n\", A[i]);\n    }\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int *A = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    shellSort(A, n);\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\nusing namespace std;\n\nvoid insertionSort(vector<int>& A, int n, int g, int& cnt) {\n    for (int i = g; i < n; ++i) {\n        int v = A[i];\n        int j = i - g;\n        while (j >= 0 && A[j] > v) {\n            A[j + g] = A[j];\n            j -= g;\n            cnt++;\n        }\n        A[j + g] = v;\n    }\n}\n\nvoid shellSort(vector<int>& A, int n, vector<int>& G, int& cnt) {\n    cnt = 0;\n    for (int h = 1; ; ) {\n        if (h > n) break;\n        G.push_back(h);\n        h = 3 * h + 1;\n    }\n    for (int i = G.size() - 1; i >= 0; --i) {\n        insertionSort(A, n, G[i], cnt);\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> A(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> A[i];\n    }\n\n    vector<int> G;\n    int cnt;\n    shellSort(A, n, G, cnt);\n\n    cout << G.size() << endl;\n    for (int i = G.size() - 1; i >= 0; --i) {\n        cout << G[i];\n        if (i != 0) cout << \" \";\n    }\n    cout << endl;\n    cout << cnt << endl;\n    for (int i = 0; i < n; ++i) {\n        cout << A[i] << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class ShellSort {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] A = new int[n];\n        for (int i = 0; i < n; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        List<Integer> G = new ArrayList<>();\n        int h = 1;\n        while (h <= n) {\n            G.add(h);\n            h = 3 * h + 1;\n        }\n\n        int m = G.size();\n        System.out.println(m);\n\n        for (int i = m - 1; i >= 0; i--) {\n            System.out.print(G.get(i));\n            if (i != 0) {\n                System.out.print(\" \");\n            }\n        }\n        System.out.println();\n\n        int cnt = 0;\n        for (int i = m - 1; i >= 0; i--) {\n            int g = G.get(i);\n            for (int j = g; j < n; j++) {\n                int v = A[j];\n                int k = j - g;\n                while (k >= 0 && A[k] > v) {\n                    A[k + g] = A[k];\n                    k -= g;\n                    cnt++;\n                }\n                A[k + g] = v;\n            }\n        }\n\n        System.out.println(cnt);\n        for (int i = 0; i < n; i++) {\n            System.out.println(A[i]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:11:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.ArrayList;\nimport java.util.Scanner;\n\npublic class ShellSort {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int[] A = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        ArrayList<Integer> G = new ArrayList<>();\n        int cnt = shellSort(A, G);\n        \n        System.out.println(G.size());\n        for (int i = G.size() - 1; i >= 0; i--) {\n            System.out.print(G.get(i) + \" \");\n        }\n        System.out.println();\n        \n        System.out.println(cnt);\n        \n        for (int num : A) {\n            System.out.println(num);\n        }\n        \n        scanner.close();\n    }\n    \n    public static int shellSort(int[] A, ArrayList<Integer> G) {\n        int n = A.length;\n        int cnt = 0;\n        \n        // Generate gap sequence\n        for (int h = 1; ; ) {\n            if (h > n) break;\n            G.add(h);\n            h = 3 * h + 1;\n        }\n        \n        // Shell sort\n        for (int k = G.size() - 1; k >= 0; k--) {\n            int h = G.get(k);\n            \n            for (int i = h; i < n; i++) {\n                int v = A[i];\n                int j = i - h;\n                \n                while (j >= 0 && A[j] > v) {\n                    A[j + h] = A[j];\n                    j -= h;\n                    cnt++;\n                }\n                \n                A[j + h] = v;\n            }\n        }\n        \n        return cnt;\n    }\n}",
+    "timestamp": "2025-08-05 22:11:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nvoid shellSort(vector<int>& A) {\n    int n = A.size();\n    vector<int> gaps;\n    int cnt = 0;\n\n    // Generate gaps\n    for (int h = 1; h <= n; h = 3 * h + 1) {\n        gaps.push_back(h);\n    }\n    reverse(gaps.begin(), gaps.end());\n\n    for (int gap : gaps) {\n        for (int i = gap; i < n; i++) {\n            int temp = A[i];\n            int j;\n            for (j = i; j >= gap && A[j - gap] > temp; j -= gap) {\n                A[j] = A[j - gap];\n                cnt++;\n            }\n            A[j] = temp;\n        }\n    }\n\n    // Output\n    cout << gaps.size() << endl;\n    for (int gap : gaps) {\n        cout << gap << \" \";\n    }\n    cout << endl;\n    cout << cnt << endl;\n    for (int x : A) {\n        cout << x << \" \";\n    }\n    cout << endl;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> A(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> A[i];\n    }\n\n    shellSort(A);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:11:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef shell_sort(n, A):\n    # Generate gap sequence using 3^k - 1 / 2 that satisfy cnt constraint\n    gaps = []\n    k = 1\n    while True:\n        gap = (3**k - 1) // 2\n        if gap > n:\n            break\n        gaps.append(gap)\n        k += 1\n\n    # Perform shell sort using generated gaps\n    cnt = 0\n    for gap in reversed(gaps):\n        for i in range(gap, n):\n            temp = A[i]\n            j = i\n            while j >= gap and A[j - gap] > temp:\n                A[j] = A[j - gap]\n                j -= gap\n                cnt += 1\n            A[j] = temp\n    \n    # Output format\n    print(len(gaps))\n    print(*gaps)\n    print(cnt)\n    print(*A)\n\n# Example of using the function\nn = int(input().strip())\nA = list(map(int, input().split()))\nshell_sort(n, A)",
+    "timestamp": "2025-08-13 09:23:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class ShellSort {\n\n    public static void shellSort(int[] A) {\n        int n = A.length;\n        List<Integer> gaps = new ArrayList<>();\n        \n        // Generate gap sequence based on n\n        for (int h = 1; h <= n; h = 3 * h + 1) {\n            gaps.add(0, h);\n        }\n        \n        // Perform Shell Sort\n        int cnt = 0;\n        for (int gap : gaps) {\n            for (int i = gap; i < n; i++) {\n                int temp = A[i];\n                int j = i;\n                while (j >= gap && A[j - gap] > temp) {\n                    A[j] = A[j - gap];\n                    j -= gap;\n                    cnt++;\n                }\n                A[j] = temp;\n            }\n        }\n        \n        // Output the result\n        System.out.println(gaps.size());\n        for (int gap : gaps) {\n            System.out.print(gap + \" \");\n        }\n        System.out.println();\n        System.out.println(cnt);\n        for (int i : A) {\n            System.out.print(i + \" \");\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int[] A = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        shellSort(A);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 09:23:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nvoid shellSort(int n, int A[]) {\n    int m = 0, cnt = 0;\n    int G[30]; // Assume max 30 gap values for practical purposes\n    // Generate gap sequence using the method as described: 2^k-1\n    for (int k = 1; (1 << k) - 1 < n; ++k) {\n        G[m++] = (1 << k) - 1;\n    }\n    \n    // Perform Shell Sort using the generated gap sequence\n    for (int k = m - 1; k >= 0; --k) {\n        int gap = G[k];\n        for (int i = gap; i < n; ++i) {\n            int temp = A[i];\n            int j = i;\n            while (j >= gap && A[j - gap] > temp) {\n                A[j] = A[j - gap];\n                j -= gap;\n                cnt++;\n            }\n            A[j] = temp;\n            cnt++;\n        }\n    }\n    \n    // Output the results\n    printf(\"%d\\n\", m);\n    for (int i = 0; i < m; ++i) {\n        printf(\"%d \", G[i]);\n    }\n    printf(\"\\n%d\\n\", cnt);\n    for (int i = 0; i < n; ++i) {\n        printf(\"%d \", A[i]);\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int A[n];\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    shellSort(n, A);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:23:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def shell_sort(A):\n    n = len(A)\n    gaps = []\n    \n    # Generate gaps\n    h = 1\n    while h <= n // 3:\n        gaps.append(h)\n        h = 3 * h + 1\n    gaps = gaps[::-1]\n    \n    m = len(gaps)\n    cnt = 0\n    \n    for gap in gaps:\n        for i in range(gap, n):\n            temp = A[i]\n            j = i\n            \n            while j >= gap and A[j - gap] > temp:\n                A[j] = A[j - gap]\n                j -= gap\n                cnt += 1\n            \n            A[j] = temp\n    \n    return m, gaps, cnt, A\n\ndef main():\n    n = int(input())\n    A = list(map(int, input().split()))\n    \n    m, G, cnt, sorted_A = shell_sort(A)\n    \n    print(m)\n    print(*G)\n    print(cnt)\n    print(*sorted_A)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:24:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def shell_sort(n, A):\n    A = A.copy()\n    G = []\n    g = 1\n    while g <= n:\n        G.append(g)\n        g = 3 * g + 1\n    G = G[::-1]\n    m = len(G)\n    cnt = 0\n    \n    for g in G:\n        for i in range(g, n):\n            v = A[i]\n            j = i - g\n            while j >= 0 and A[j] > v:\n                A[j + g] = A[j]\n                j -= g\n                cnt += 1\n            A[j + g] = v\n    \n    print(m)\n    print(' '.join(map(str, G)))\n    print(cnt)\n    print('\\n'.join(map(str, A)))\n\nn = int(input())\nA = [int(input()) for _ in range(n)]\nshell_sort(n, A)",
+    "timestamp": "2025-08-13 09:24:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nstd::vector<int> generateGaps(int n) {\n    std::vector<int> gaps;\n    int gap = 1;\n    while (gap < n) {\n        gaps.push_back(gap);\n        gap = 3 * gap + 1;\n    }\n    std::reverse(gaps.begin(), gaps.end());\n    return gaps;\n}\n\nvoid shellSort(int n, std::vector<int> &A, int &cnt) {\n    std::vector<int> gaps = generateGaps(n);\n    int m = gaps.size();\n    cnt = 0;\n\n    for (int g : gaps) {\n        for (int i = g; i < n; ++i) {\n            int temp = A[i];\n            int j = i;\n            while (j >= g && A[j - g] > temp) {\n                A[j] = A[j - g];\n                j -= g;\n                ++cnt;\n            }\n            A[j] = temp;\n        }\n    }\n    \n    std::cout << m << \"\\n\";\n    for (int g : gaps) {\n        std::cout << g << \" \";\n    }\n    std::cout << \"\\n\";\n    std::cout << cnt << \"\\n\";\n    for (int i = 0; i < n; ++i) {\n        std::cout << A[i] << (i == n - 1 ? \"\\n\" : \" \");\n    }\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    std::vector<int> A(n);\n    for (int i = 0; i < n; ++i) {\n        std::cin >> A[i];\n    }\n\n    int cnt;\n    shellSort(n, A, cnt);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:51:11"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint solve(int n, int m, int p, int q, int a, int b) {\n    int min_walk = INT_MAX;\n    for (int k = 0; k < n; k++) {\n        int stations = p;\n        for (int i = 0; i < k; i++) {\n            stations *= a;\n            if (stations > m) break;\n        }\n        stations += q;\n        for (int i = 0; i < k; i++) {\n            stations *= b;\n            if (stations > m) break;\n        }\n        if (stations > m) continue;\n        int walk = abs(m - stations);\n        if (walk < min_walk) {\n            min_walk = walk;\n        }\n    }\n    return min_walk;\n}\n\nint main() {\n    int n, m, p, q, a, b;\n    scanf(\"%d %d %d %d %d %d\", &n, &m, &p, &q, &a, &b);\n    printf(\"%d\\n\", solve(n, m, p, q, a, b));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:16:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\nusing namespace std;\n\nint solve(int n, int m, int p, int q, int a, int b) {\n    vector<long long> a_pows(n, 1);\n    vector<long long> b_pows(n, 1);\n    \n    for (int k = 1; k < n; ++k) {\n        a_pows[k] = a_pows[k - 1] * a;\n        b_pows[k] = b_pows[k - 1] * b;\n    }\n    \n    int min_walk = INT_MAX;\n    \n    for (int mask = 0; mask < (1 << n); ++mask) {\n        long long total = 0;\n        for (int k = 0; k < n; ++k) {\n            if (mask & (1 << k)) {\n                total += p * a_pows[k] + q * b_pows[k];\n            }\n        }\n        if (total <= m) {\n            min_walk = min(min_walk, (int)(m - total));\n        }\n    }\n    \n    return min_walk;\n}\n\nint main() {\n    int n, m, p, q, a, b;\n    cin >> n >> m >> p >> q >> a >> b;\n    cout << solve(n, m, p, q, a, b) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:16:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RabbitTickets {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        int p = scanner.nextInt();\n        int q = scanner.nextInt();\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        \n        int minWalk = m;\n        \n        for (int mask = 0; mask < (1 << n); mask++) {\n            int total = 0;\n            for (int k = 0; k < n; k++) {\n                if ((mask & (1 << k)) != 0) {\n                    total += p * (int) Math.pow(a, k) + q * (int) Math.pow(b, k);\n                }\n            }\n            int walk = Math.abs(m - total);\n            if (walk < minWalk) {\n                minWalk = walk;\n            }\n        }\n        \n        System.out.println(minWalk);\n    }\n}",
+    "timestamp": "2025-08-05 21:16:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class RabbitTrainTickets {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        int p = scanner.nextInt();\n        int q = scanner.nextInt();\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        \n        int minWalk = Integer.MAX_VALUE;\n        \n        for (int k = 0; k < n; k++) {\n            int trainDistance = p * (int)Math.pow(a, k) + q * (int)Math.pow(b, k);\n            int walk = Math.abs(m - trainDistance);\n            minWalk = Math.min(minWalk, walk);\n        }\n        \n        System.out.println(minWalk);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:16:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n#include <math.h>\n\nint minimumWalk(int n, int m, int p, int q, int a, int b) {\n    int minWalk = INT_MAX;\n    \n    for (int k = 0; k < n; k++) {\n        int trainStations = p * pow(a, k) + q * pow(b, k);\n        int walk = abs(m - trainStations);\n        \n        if (walk < minWalk) {\n            minWalk = walk;\n        }\n    }\n    \n    return minWalk;\n}\n\nint main() {\n    int n, m, p, q, a, b;\n    scanf(\"%d %d %d %d %d %d\", &n, &m, &p, &q, &a, &b);\n    \n    int result = minimumWalk(n, m, p, q, a, b);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int n, m, p, q, a, b;\n    cin >> n >> m >> p >> q >> a >> b;\n\n    int minWalk = INT_MAX;\n    for (int k = 0; k < n; k++) {\n        int stations = p * pow(a, k) + q * pow(b, k);\n        int walk = abs(m - stations);\n        minWalk = min(minWalk, walk);\n    }\n\n    cout << minWalk << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_walk(n, p, a, q, b, m):\n    min_walk_distance = float('inf')\n    \n    for k in range(n):\n        travel_distance = p * (a ** k) + q * (b ** k)\n        \n        if travel_distance <= m:  # Only consider tickets that get us closer to or exactly m stations away\n            walk_distance = m - travel_distance\n            min_walk_distance = min(min_walk_distance, walk_distance)\n    \n    return min_walk_distance\n\n# Example usage:\n# rabbit_tickets = 5\n# rabbit_p = 2\n# rabbit_a = 3\n# rabbit_q = 1\n# rabbit_b = 2\n# carrot_buffet_m = 10\n#\n# print(min_walk(rabbit_tickets, rabbit_p, rabbit_a, rabbit_q, rabbit_b, carrot_buffet_m))",
+    "timestamp": "2025-08-13 05:49:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.LinkedList;\nimport java.util.Queue;\nimport java.util.Set;\n\npublic class RabbitTravel {\n\n    public static int minWalkingDistance(int n, int p, int a, int q, int b, int m) {\n        // Use BFS to find the minimal walking distance\n        Queue<Integer> queue = new LinkedList<>();\n        Set<Integer> seen = new HashSet<>();\n        \n        queue.add(0);\n        seen.add(0);\n        \n        int distance = 0;\n        \n        while (!queue.isEmpty()) {\n            int size = queue.size();\n            \n            for (int i = 0; i < size; i++) {\n                int currentStation = queue.poll();\n                \n                // Check if the buffet is reached\n                if (currentStation == m) {\n                    return distance;\n                }\n                \n                // Try all possible tickets\n                for (int k = 0; k < n; k++) {\n                    int nextStation = currentStation + (p * (int)Math.pow(a, k)) + (q * (int)Math.pow(b, k));\n                    \n                    if (!seen.contains(nextStation) && nextStation <= m) {\n                        queue.add(nextStation);\n                        seen.add(nextStation);\n                    }\n                }\n            }\n            distance++;\n        }\n        \n        // If the buffet cannot be reached exactly, return the closest station\n        int closestStation = Math.max(0, m);\n        for (int s : seen) {\n            if (Math.abs(s - m) < Math.abs(closestStation - m)) {\n                closestStation = s;\n            }\n        }\n        return Math.abs(closestStation - m);\n    }\n}",
+    "timestamp": "2025-08-13 05:49:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minWalkingDistance(int n, int p, int a, int q, int b, int m) {\n    int minDistance = INT_MAX;\n    \n    for (int k = 0; k < n; k++) {\n        int travelDistance = p * pow(a, k) + q * pow(b, k);\n        int walkingDistance = abs(m - travelDistance);\n        \n        if (walkingDistance < minDistance) {\n            minDistance = walkingDistance;\n        }\n    }\n    \n    return minDistance;\n}\n\nint main() {\n    int n = 5; // number of tickets\n    int p = 2, a = 3, q = 4, b = 5, m = 100; // example values\n    int result = minWalkingDistance(n, p, a, q, b, m);\n    printf(\"Minimum walking distance: %d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:49:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_min_walking_distance(n, m, p, q, a, b):\n    min_walking = float('inf')\n    \n    for k in range(n):\n        stations_traveled = p * (a ** k) + q * (b ** k)\n        walking_distance = abs(m - stations_traveled)\n        min_walking = min(min_walking, walking_distance)\n    \n    return min_walking",
+    "timestamp": "2025-08-13 05:49:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import heapq\n\ndef min_walking_distance(n, a, b, p, q, m):\n    max_k = n - 1\n    heap = []\n    visited = set()\n    \n    # We use a max-heap by pushing negative distances\n    heapq.heappush(heap, (0, 0))  # (current_sum, k_used)\n    visited.add(0)\n    \n    min_walk = abs(m)\n    \n    while heap:\n        current_neg_sum, k_used = heapq.heappop(heap)\n        current_sum = -current_neg_sum\n        \n        if current_sum == m:\n            return 0\n        \n        current_walk = abs(m - current_sum)\n        if current_walk < min_walk:\n            min_walk = current_walk\n        \n        if k_used >= max_k:\n            continue\n        \n        next_k = k_used + 1\n        delta = p * (a ** next_k) + q * (b ** next_k)\n        new_sum = current_sum + delta\n        \n        if new_sum not in visited:\n            visited.add(new_sum)\n            heapq.heappush(heap, (-new_sum, next_k))\n        \n        # Also consider not using any further tickets\n        if current_sum not in visited:\n            visited.add(current_sum)\n            heapq.heappush(heap, (-current_sum, max_k))\n    \n    return min_walk",
+    "timestamp": "2025-08-13 05:49:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int n, m, p, q, a, b;\n    cin >> n >> m >> p >> q >> a >> b;\n\n    int min_walk_distance = INT_MAX;\n\n    for (int k = 0; k < n; ++k) {\n        int train_distance = p * pow(a, k) + q * pow(b, k);\n        int walk_distance = m - train_distance;\n        if (walk_distance >= 0 && walk_distance < min_walk_distance) {\n            min_walk_distance = walk_distance;\n        }\n    }\n\n    cout << min_walk_distance << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:28:23"
+  }
+]

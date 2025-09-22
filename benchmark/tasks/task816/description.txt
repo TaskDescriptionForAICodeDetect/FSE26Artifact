@@ -1,0 +1,1 @@
+In Dwango Co., Ltd., there is a content distribution system named 'Dwango Media Cluster' (DMC). Define the k-DMC number of a string S, which is the number of triples (a, b, c) such that: 0 <= a < b < c <= N - 1, S[a] = 'D', S[b] = 'M', S[c] = 'C', and c - a < k. Given a string S of length N and multiple integer values k, calculate the k_i-DMC number for each k_i where k_i >= 3.

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint solve(int N, int A, int B) {\n    long long dp[N+1];\n    memset(dp, 0, sizeof(dp));\n    dp[0] = 1;\n\n    for (int i = 1; i <= N; i++) {\n        if (i >= A) {\n            dp[i] = (dp[i] + dp[i-A]) % MOD;\n        }\n        if (i >= B) {\n            dp[i] = (dp[i] + dp[i-B]) % MOD;\n        }\n    }\n\n    return dp[N];\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    printf(\"%d\\n\", solve(N, A, B));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:30:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nlong long dp[1000001];\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    \n    memset(dp, 0, sizeof(dp));\n    dp[0] = 1;\n    \n    for (int i = 1; i <= N; ++i) {\n        if (i >= A) {\n            dp[i] = (dp[i] + dp[i - A]) % MOD;\n        }\n        if (i >= B) {\n            dp[i] = (dp[i] + dp[i - B]) % MOD;\n        }\n    }\n    \n    long long total = 0;\n    for (int i = 1; i <= N; ++i) {\n        int max_zeros = i / A;\n        int max_ones = (N - i) / B;\n        if (i % A == 0 && (N - i) % B == 0 && i <= N) {\n            total = (total + dp[i] * dp[N - i] % MOD) % MOD;\n        }\n    }\n    \n    printf(\"%lld\\n\", total);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    \n    vector<int> dp0(N + 1, 0), dp1(N + 1, 0), dp(N + 1, 0);\n    dp0[0] = 1;\n    dp1[0] = 1;\n    dp[0] = 1;\n    \n    for (int i = 1; i <= N; ++i) {\n        if (i >= A) {\n            dp0[i] = dp1[i - A];\n        }\n        if (i >= B) {\n            dp1[i] = dp0[i - B];\n        }\n        dp[i] = (dp0[i] + dp1[i]) % MOD;\n        \n        for (int j = max(0, i - A + 1); j < i; ++j) {\n            dp0[i] = (dp0[i] + dp1[j]) % MOD;\n        }\n        for (int j = max(0, i - B + 1); j < i; ++j) {\n            dp1[i] = (dp1[i] + dp0[j]) % MOD;\n        }\n    }\n    \n    cout << dp[N] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = (int)1e9 + 7;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int A = sc.nextInt();\n        int B = sc.nextInt();\n\n        long[] dp0 = new long[N + 1];\n        long[] dp1 = new long[N + 1];\n        long[] sum0 = new long[N + 1];\n        long[] sum1 = new long[N + 1];\n\n        dp0[0] = 1;\n        sum0[0] = 1;\n\n        for (int i = 1; i <= N; i++) {\n            // Transition from dp1 to dp0 (using operation A)\n            if (i >= A) {\n                dp0[i] = sum1[i - A];\n            }\n\n            // Transition from dp0 to dp1 (using operation B)\n            if (i >= B) {\n                dp1[i] = sum0[i - B];\n            }\n\n            sum0[i] = (sum0[i - 1] + dp0[i]) % MOD;\n            sum1[i] = (sum1[i - 1] + dp1[i]) % MOD;\n        }\n\n        long result = (sum0[N] + sum1[N]) % MOD;\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:31:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SnukeStringProblem {\n    public static int countStrings(int N, int A, int B) {\n        final int MOD = 1000000007;\n        Set<String> uniqueStrings = new HashSet<>();\n        \n        // Generate all possible 2^N strings\n        for (int mask = 0; mask < (1 << N); mask++) {\n            char[] x = new char[N];\n            Arrays.fill(x, '0');\n            \n            // Try 0 to 1 replacements\n            for (int i = 0; i <= N - B; i++) {\n                if (canReplace(x, i, B, '1')) {\n                    replace(x, i, B, '1');\n                }\n            }\n            \n            // Try 1 to 0 replacements\n            for (int i = 0; i <= N - A; i++) {\n                if (canReplace(x, i, A, '0')) {\n                    replace(x, i, A, '0');\n                }\n            }\n            \n            uniqueStrings.add(new String(x));\n        }\n        \n        return uniqueStrings.size() % MOD;\n    }\n    \n    private static boolean canReplace(char[] x, int start, int length, char value) {\n        for (int i = start; i < start + length; i++) {\n            if (x[i] != value) {\n                return true;\n            }\n        }\n        return false;\n    }\n    \n    private static void replace(char[] x, int start, int length, char value) {\n        for (int i = start; i < start + length; i++) {\n            x[i] = value;\n        }\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        System.out.println(countStrings(N, A, B));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:31:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nclass Solution {\npublic:\n    int numDistinctStrings(int N, int A, int B) {\n        vector<bool> possible(1 << N, false);\n        possible[0] = true;\n        \n        for (int mask = 0; mask < (1 << N); mask++) {\n            if (!possible[mask]) continue;\n            \n            // Zero operation for A consecutive characters\n            for (int start = 0; start + A <= N; start++) {\n                int newMask = mask;\n                bool canReplace = true;\n                \n                // Check if we can replace A consecutive 1s with 0s\n                for (int i = start; i < start + A; i++) {\n                    if ((mask & (1 << i)) == 0) {\n                        canReplace = false;\n                        break;\n                    }\n                    newMask &= ~(1 << i);\n                }\n                \n                if (canReplace) {\n                    possible[newMask] = true;\n                }\n            }\n            \n            // One operation for B consecutive characters\n            for (int start = 0; start + B <= N; start++) {\n                int newMask = mask;\n                bool canReplace = true;\n                \n                // Check if we can replace B consecutive 0s with 1s\n                for (int i = start; i < start + B; i++) {\n                    if ((mask & (1 << i)) != 0) {\n                        canReplace = false;\n                        break;\n                    }\n                    newMask |= (1 << i);\n                }\n                \n                if (canReplace) {\n                    possible[newMask] = true;\n                }\n            }\n        }\n        \n        int distinctCount = 0;\n        for (bool p : possible) {\n            if (p) distinctCount++;\n        }\n        \n        return distinctCount % MOD;\n    }\n};\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    \n    Solution sol;\n    cout << sol.numDistinctStrings(N, A, B) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef count_strings(N, A, B):\n    dp = [[0] * (N + 1) for _ in range(2)]\n    dp[0][0] = 1\n    \n    for i in range(1, N + 1):\n        if i >= A:\n            dp[0][i] = (dp[0][i - A] + dp[1][i - A]) % MOD\n        else:\n            dp[0][i] = dp[0][i - 1]\n        \n        if i >= B:\n            dp[1][i] = (dp[0][i - B] + dp[1][i - B]) % MOD\n        else:\n            dp[1][i] = dp[1][i - 1]\n\n    return (dp[0][N] + dp[1][N]) % MOD\n\n# Example usage\nN, A, B = map(int, input().strip().split())\nprint(count_strings(N, A, B))",
+    "timestamp": "2025-08-13 11:07:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SnukeOperations {\n    static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        scanner.close();\n\n        System.out.println(countDifferentStrings(N, A, B));\n    }\n\n    private static int countDifferentStrings(int N, int A, int B) {\n        if (A > B) {\n            int temp = A;\n            A = B;\n            B = temp;\n        }\n        \n        if (A == 1) {\n            return powMod(B, N);\n        }\n\n        long[][] dp = new long[N + 1][2];\n        dp[0][0] = 1;\n\n        for (int i = 1; i <= N; ++i) {\n            if (i >= A) {\n                dp[i][0] = (dp[i - A][0] + dp[i - A][1]) % MOD;\n            }\n            if (i >= B) {\n                dp[i][1] = (dp[i - B][0] + dp[i - B][1]) % MOD;\n            }\n        }\n        return (int) ((dp[N][0] + dp[N][1]) % MOD);\n    }\n\n    private static int powMod(int base, int exp) {\n        long result = 1;\n        long b = base;\n        \n        while (exp > 0) {\n            if ((exp & 1) == 1) {\n                result = (result * b) % MOD;\n            }\n            b = (b * b) % MOD;\n            exp >>= 1;\n        }\n        return (int) result;\n    }\n}",
+    "timestamp": "2025-08-13 11:07:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n\nlong long mod_exponentiation(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n\n    if (A > B) {\n        int temp = A;\n        A = B;\n        B = temp;\n    }\n\n    if (B == A) {\n        printf(\"2\\n\");\n        return 0;\n    }\n\n    long long limit = (N - A + 1) / (B - A) + 1;\n    long long result = mod_exponentiation(2, limit, MOD);\n    printf(\"%lld\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:08:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countStrings(N, A, B) {\n  const MOD = 1000000007;\n\n  function modPow(base, exponent, mod) {\n    let result = 1;\n    while (exponent > 0) {\n      if (exponent % 2 === 1) {\n        result = (result * base) % mod;\n      }\n      base = (base * base) % mod;\n      exponent = Math.floor(exponent / 2);\n    }\n    return result;\n  }\n\n  const aMinusB = Math.abs(A - B);\n  const gcdAminusB = (aMinusB === 0) ? A : gcd(aMinusB, A);\n\n  function gcd(x, y) {\n    while (y !== 0) {\n      [x, y] = [y, x % y];\n    }\n    return x;\n  }\n\n  const mA = Math.floor(N / gcdAminusB);\n  const mB = Math.floor(N / gcd(aMinusB === 0 ? B : gcdAminusB, B));\n\n  const countA = modPow(2, mA, MOD) - 1;\n  const countB = modPow(2, mB, MOD) - 1;\n  \n  return (((countA + MOD) % MOD) * ((countB + MOD) % MOD)) % MOD;\n}",
+    "timestamp": "2025-08-13 11:08:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, A, B):\n    MOD = 10**9 + 7\n    dp = [[0] * (1 << N) for _ in range(2)]\n    \n    dp[0][0] = 1\n    curr, next = 0, 1\n    \n    for mask in range(1 << N):\n        dp[next] = [0] * (1 << N)\n        \n        # Clear A consecutive bits\n        for start in range(N - A + 1):\n            new_mask = mask\n            valid = True\n            for j in range(start, start + A):\n                if (mask & (1 << j)) == 0:\n                    valid = False\n                    break\n                new_mask &= ~(1 << j)\n            \n            if valid:\n                dp[next][new_mask] = (dp[next][new_mask] + dp[curr][mask]) % MOD\n        \n        # Set B consecutive bits\n        for start in range(N - B + 1):\n            new_mask = mask\n            valid = True\n            for j in range(start, start + B):\n                if (mask & (1 << j)) != 0:\n                    valid = False\n                    break\n                new_mask |= (1 << j)\n            \n            if valid:\n                dp[next][new_mask] = (dp[next][new_mask] + dp[curr][mask]) % MOD\n        \n        curr, next = next, curr\n    \n    result = 0\n    for mask in range(1 << N):\n        result = (result + dp[curr][mask]) % MOD\n    \n    return result",
+    "timestamp": "2025-08-13 11:08:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, A, B) {\n    const MOD = 1e9 + 7;\n    const dp = new Array(N + 1).fill(0);\n    dp[0] = 1;\n\n    for (let i = 1; i <= N; i++) {\n        if (i >= A) {\n            dp[i] = (dp[i] + dp[i - A]) % MOD;\n        }\n        if (i >= B) {\n            dp[i] = (dp[i] + dp[i - B]) % MOD;\n        }\n    }\n\n    return dp[N];\n}",
+    "timestamp": "2025-08-13 11:08:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    N, A, B = map(int, input().split())\n    \n    # We'll use dynamic programming where dp[i] represents the number of distinct strings of length i\n    dp = [0] * (N + 1)\n    dp[0] = 1  # empty string\n    \n    for i in range(1, N + 1):\n        # Add the possibility of ending with a 0 block of length >=A\n        if i >= A:\n            dp[i] += dp[i - A]\n            dp[i] %= MOD\n        # Add the possibility of ending with a 1 block of length >=B\n        if i >= B:\n            dp[i] += dp[i - B]\n            dp[i] %= MOD\n    \n    print(dp[N] % MOD)\n\nsolve()",
+    "timestamp": "2025-08-13 11:08:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve() {\n    const [N, A, B] = readline().split(' ').map(Number);\n    const dp = new Array(N + 1).fill(0);\n    const sum = new Array(N + 1).fill(0);\n    dp[0] = 1;\n    sum[0] = 1;\n    \n    for (let i = 1; i <= N; i++) {\n        let res = 0;\n        if (i >= A) {\n            res = (res + sum[i - A]) % MOD;\n        }\n        if (i >= B) {\n            res = (res + sum[i - B]) % MOD;\n        }\n        dp[i] = res;\n        sum[i] = (sum[i - 1] + dp[i]) % MOD;\n    }\n    \n    let total = 0;\n    for (let i = 0; i < N; i++) {\n        const left = i;\n        const right = N - i - 1;\n        if (left >= A || right >= B) {\n            total = (total + dp[i]) % MOD;\n        }\n    }\n    \n    let all = 1;\n    for (let i = 0; i < N; i++) {\n        all = (all * 2) % MOD;\n    }\n    \n    const ans = (all - total + MOD) % MOD;\n    console.log(ans);\n}\n\nfunction readline() {\n    // Mock readline function for the purpose of this solution\n    return '3 1 1'; // Example input, replace with actual input reading logic\n}\n\nsolve();",
+    "timestamp": "2025-08-13 11:08:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MOD = 1000000007;\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    \n    vector<int> dp(N + 1, 0), prefixSum(N + 1, 0);\n    dp[0] = 1;\n    prefixSum[0] = 1;\n\n    for (int i = 1; i <= N; i++) {\n        if (i >= A) {\n            dp[i] = (dp[i] + prefixSum[i - A]) % MOD;\n        }\n        if (i >= B) {\n            dp[i] = (dp[i] + prefixSum[i - B]) % MOD;\n        }\n        prefixSum[i] = (prefixSum[i - 1] + dp[i]) % MOD;\n    }\n\n    cout << prefixSum[N] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:30"
+  }
+]

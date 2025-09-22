@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_TEXT_LENGTH 1000\n#define MAX_PATTERN_LENGTH 100\n\nbool contains_pattern(char* text, char* pattern) {\n    int text_len = strlen(text);\n    int pattern_len = strlen(pattern);\n\n    for (int i = 0; i <= text_len - pattern_len; i++) {\n        int j;\n        for (j = 0; j < pattern_len; j++) {\n            if (text[i + j] != pattern[j]) {\n                break;\n            }\n        }\n        if (j == pattern_len) {\n            return true;\n        }\n    }\n    return false;\n}\n\nint main() {\n    char text[MAX_TEXT_LENGTH];\n    char pattern[MAX_PATTERN_LENGTH];\n    int Q;\n\n    scanf(\"%s\", text);\n    scanf(\"%d\", &Q);\n\n    for (int i = 0; i < Q; i++) {\n        scanf(\"%s\", pattern);\n        printf(\"%s\\n\", contains_pattern(text, pattern) ? \"YES\" : \"NO\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_TEXT_LENGTH 1000000\n#define MAX_PATTERN_LENGTH 1000000\n\nchar T[MAX_TEXT_LENGTH + 1];\nchar P[MAX_PATTERN_LENGTH + 1];\n\nint main() {\n    scanf(\"%s\", T);\n    int text_len = strlen(T);\n    int q;\n    scanf(\"%d\", &q);\n    \n    while (q--) {\n        scanf(\"%s\", P);\n        int pattern_len = strlen(P);\n        int found = 0;\n        \n        for (int i = 0; i <= text_len - pattern_len; ++i) {\n            int j;\n            for (j = 0; j < pattern_len; ++j) {\n                if (T[i + j] != P[j]) {\n                    break;\n                }\n            }\n            if (j == pattern_len) {\n                found = 1;\n                break;\n            }\n        }\n        \n        printf(\"%s\\n\", found ? \"Yes\" : \"No\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nvector<int> computeLPS(const string &pattern) {\n    int m = pattern.size();\n    vector<int> lps(m, 0);\n    int len = 0;\n    int i = 1;\n    while (i < m) {\n        if (pattern[i] == pattern[len]) {\n            len++;\n            lps[i] = len;\n            i++;\n        } else {\n            if (len != 0) {\n                len = lps[len - 1];\n            } else {\n                lps[i] = 0;\n                i++;\n            }\n        }\n    }\n    return lps;\n}\n\nbool KMPSearch(const string &text, const string &pattern) {\n    int n = text.size();\n    int m = pattern.size();\n    if (m == 0) return true;\n    if (n == 0) return false;\n\n    vector<int> lps = computeLPS(pattern);\n    int i = 0, j = 0;\n    while (i < n) {\n        if (text[i] == pattern[j]) {\n            i++;\n            j++;\n            if (j == m) {\n                return true;\n            }\n        } else {\n            if (j != 0) {\n                j = lps[j - 1];\n            } else {\n                i++;\n            }\n        }\n    }\n    return false;\n}\n\nint main() {\n    string T;\n    int Q;\n    cin >> T >> Q;\n    while (Q--) {\n        string P;\n        cin >> P;\n        if (KMPSearch(T, P)) {\n            cout << \"YES\\n\";\n        } else {\n            cout << \"NO\\n\";\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class PatternMatching {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String T = scanner.nextLine();\n        int Q = scanner.nextInt();\n        scanner.nextLine(); // consume the newline\n        \n        for (int i = 0; i < Q; i++) {\n            String P = scanner.nextLine();\n            if (T.contains(P)) {\n                System.out.println(\"YES\");\n            } else {\n                System.out.println(\"NO\");\n            }\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:10:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PatternMatching {\n    public static boolean containsPattern(String text, String pattern) {\n        int[] lps = computeLPS(pattern);\n        int i = 0, j = 0;\n\n        while (i < text.length()) {\n            if (pattern.charAt(j) == text.charAt(i)) {\n                i++;\n                j++;\n            }\n\n            if (j == pattern.length()) {\n                return true;\n            }\n\n            if (i < text.length() && pattern.charAt(j) != text.charAt(i)) {\n                if (j != 0) {\n                    j = lps[j - 1];\n                } else {\n                    i++;\n                }\n            }\n        }\n        return false;\n    }\n\n    private static int[] computeLPS(String pattern) {\n        int[] lps = new int[pattern.length()];\n        int len = 0;\n        int i = 1;\n\n        while (i < pattern.length()) {\n            if (pattern.charAt(i) == pattern.charAt(len)) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else {\n                if (len != 0) {\n                    len = lps[len - 1];\n                } else {\n                    lps[i] = 0;\n                    i++;\n                }\n            }\n        }\n        return lps;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String text = scanner.nextLine();\n        int q = scanner.nextInt();\n        scanner.nextLine();\n\n        for (int k = 0; k < q; k++) {\n            String pattern = scanner.nextLine();\n            System.out.println(containsPattern(text, pattern) ? \"YES\" : \"NO\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:10:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nclass StringMatcher {\nprivate:\n    string text;\n    \n    vector<int> computeLPS(const string& pattern) {\n        int m = pattern.length();\n        vector<int> lps(m, 0);\n        int len = 0;\n        int i = 1;\n        \n        while (i < m) {\n            if (pattern[i] == pattern[len]) {\n                len++;\n                lps[i] = len;\n                i++;\n            } else {\n                if (len != 0) {\n                    len = lps[len - 1];\n                } else {\n                    lps[i] = 0;\n                    i++;\n                }\n            }\n        }\n        return lps;\n    }\n    \npublic:\n    StringMatcher(const string& t) : text(t) {}\n    \n    bool contains(const string& pattern) {\n        int n = text.length();\n        int m = pattern.length();\n        \n        vector<int> lps = computeLPS(pattern);\n        \n        int i = 0, j = 0;\n        while (i < n) {\n            if (pattern[j] == text[i]) {\n                i++;\n                j++;\n            }\n            \n            if (j == m) return true;\n            \n            if (i < n && pattern[j] != text[i]) {\n                if (j != 0) {\n                    j = lps[j - 1];\n                } else {\n                    i++;\n                }\n            }\n        }\n        \n        return false;\n    }\n};\n\nint main() {\n    string text;\n    int q;\n    \n    getline(cin, text);\n    cin >> q;\n    cin.ignore();\n    \n    StringMatcher matcher(text);\n    \n    for (int i = 0; i < q; i++) {\n        string pattern;\n        getline(cin, pattern);\n        \n        cout << (matcher.contains(pattern) ? \"YES\" : \"NO\") << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def pattern_search(text, patterns):\n    results = []\n    for pattern in patterns:\n        if pattern in text:\n            results.append(True)\n        else:\n            results.append(False)\n    return results\n\n# Example usage:\ntext = \"This is a sample text for pattern matching.\"\nqueries = [\"sample\", \"pattern\", \"missing\"]\nresults = pattern_search(text, queries)\nprint(results)  # Output: [True, True, False]",
+    "timestamp": "2025-08-13 09:22:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.ArrayList;\nimport java.util.List;\n\npublic class TextPatternMatch {\n\n    private static boolean containsPattern(String text, String pattern) {\n        return text.contains(pattern);\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        // Input the text T\n        String text = scanner.nextLine().trim();\n\n        // Input the number of queries\n        int q = Integer.parseInt(scanner.nextLine().trim());\n\n        // Input each query and check if the pattern is in the text\n        List<Boolean> results = new ArrayList<>();\n        for (int i = 0; i < q; i++) {\n            String pattern = scanner.nextLine().trim();\n            results.add(containsPattern(text, pattern));\n        }\n\n        // Output the results for each query\n        for (Boolean result : results) {\n            System.out.println(result ? \"YES\" : \"NO\");\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 09:22:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_TEXT_LENGTH 1000\n#define MAX_PATTERN_LENGTH 100\n\nint patternExists(char *T, char *P) {\n    int lenT = strlen(T);\n    int lenP = strlen(P);\n\n    for (int i = 0; i <= lenT - lenP; i++) {\n        int j;\n        for (j = 0; j < lenP; j++) {\n            if (T[i + j] != P[j]) {\n                break;\n            }\n        }\n        if (j == lenP) {\n            return 1;\n        }\n    }\n    return 0;\n}\n\nint main() {\n    char text[MAX_TEXT_LENGTH];\n    char pattern[MAX_PATTERN_LENGTH];\n    int q;\n\n    // Read the text T\n    printf(\"Enter the text: \");\n    fgets(text, MAX_TEXT_LENGTH, stdin);\n    text[strcspn(text, \"\\n\")] = '\\0'; // Remove newline character\n\n    // Read the number of queries\n    printf(\"Enter the number of queries: \");\n    scanf(\"%d\", &q);\n    getchar(); // Consume the newline after the number input\n\n    for (int i = 0; i < q; i++) {\n        printf(\"Enter pattern %d: \", i + 1);\n        fgets(pattern, MAX_PATTERN_LENGTH, stdin);\n        pattern[strcspn(pattern, \"\\n\")] = '\\0';\n\n        if (patternExists(text, pattern)) {\n            printf(\"Pattern '%s' found in the text.\\n\", pattern);\n        } else {\n            printf(\"Pattern '%s' not found in the text.\\n\", pattern);\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:22:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class Solution:\n    def search(self, pattern, text):\n        # KMP algorithm for pattern matching\n        def compute_lps(pattern):\n            m = len(pattern)\n            lps = [0] * m\n            length = 0\n            i = 1\n\n            while i < m:\n                if pattern[i] == pattern[length]:\n                    length += 1\n                    lps[i] = length\n                    i += 1\n                else:\n                    if length != 0:\n                        length = lps[length - 1]\n                    else:\n                        lps[i] = 0\n                        i += 1\n            return lps\n\n        def kmp_search(text, pattern):\n            n, m = len(text), len(pattern)\n            lps = compute_lps(pattern)\n            \n            i = j = 0\n            while i < n:\n                if pattern[j] == text[i]:\n                    i += 1\n                    j += 1\n                \n                if j == m:\n                    return True\n                \n                elif i < n and pattern[j] != text[i]:\n                    if j != 0:\n                        j = lps[j - 1]\n                    else:\n                        i += 1\n            \n            return False\n\n        return kmp_search(text, pattern)\n\n# Example usage\nsolution = Solution()\ntext = input().strip()\nq = int(input())\n\nfor _ in range(q):\n    pattern = input().strip()\n    print('Yes' if solution.search(pattern, text) else 'No')",
+    "timestamp": "2025-08-13 09:22:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def build_lps(pattern):\n    lps = [0] * len(pattern)\n    length = 0\n    i = 1\n    while i < len(pattern):\n        if pattern[i] == pattern[length]:\n            length += 1\n            lps[i] = length\n            i += 1\n        else:\n            if length != 0:\n                length = lps[length - 1]\n            else:\n                lps[i] = 0\n                i += 1\n    return lps\n\ndef kmp_search(text, pattern):\n    lps = build_lps(pattern)\n    i = j = 0\n    while i < len(text):\n        if text[i] == pattern[j]:\n            i += 1\n            j += 1\n            if j == len(pattern):\n                return True\n        else:\n            if j != 0:\n                j = lps[j - 1]\n            else:\n                i += 1\n    return False\n\nT = input().strip()\nQ = int(input())\nfor _ in range(Q):\n    P = input().strip()\n    if kmp_search(T, P):\n        print(\"YES\")\n    else:\n        print(\"NO\")",
+    "timestamp": "2025-08-13 09:22:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nvoid solveQueries(const std::string &T, const std::vector<std::string> &queries) {\n    for (const auto &P : queries) {\n        if (T.find(P) != std::string::npos) {\n            std::cout << \"Pattern '\" << P << \"' is found in the text.\\n\";\n        } else {\n            std::cout << \"Pattern '\" << P << \"' is not found in the text.\\n\";\n        }\n    }\n}\n\nint main() {\n    std::string T;\n    int Q;\n    std::cin >> T >> Q;\n\n    std::vector<std::string> queries(Q);\n    for (int i = 0; i < Q; ++i) {\n        std::cin >> queries[i];\n    }\n\n    solveQueries(T, queries);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:50:52"
+  }
+]

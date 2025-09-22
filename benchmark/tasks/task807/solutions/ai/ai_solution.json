@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint solve(int K, int D) {\n    const int MOD = 1000000007;\n    int dp[K+1][D];\n    \n    // Initialize dp array\n    for (int i = 0; i < K+1; i++) {\n        for (int j = 0; j < D; j++) {\n            dp[i][j] = 0;\n        }\n    }\n    \n    // Base case\n    dp[0][0] = 1;\n    \n    // Dynamic programming computation\n    for (int i = 1; i <= K; i++) {\n        for (int j = 0; j < D; j++) {\n            for (int digit = 0; digit <= 9; digit++) {\n                if (i >= digit) {\n                    dp[i][(j + digit) % D] = \n                        (dp[i][(j + digit) % D] + dp[i - digit][j]) % MOD;\n                }\n            }\n        }\n    }\n    \n    // Sum up results for numbers divisible by D\n    int result = 0;\n    for (int i = 1; i <= K; i++) {\n        result = (result + dp[i][0]) % MOD;\n    }\n    \n    return result;\n}\n\nint main() {\n    int K, D;\n    scanf(\"%d %d\", &K, &D);\n    printf(\"%d\\n\", solve(K, D));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#define MOD 1000000007\n\nlong long dp[10005][105][2];\nchar K[10005];\nint D, len;\n\nlong long solve(int pos, int sum, int tight) {\n    if (pos == len) {\n        return (sum % D == 0) ? 1 : 0;\n    }\n    if (dp[pos][sum][tight] != -1) {\n        return dp[pos][sum][tight];\n    }\n    long long res = 0;\n    int limit = tight ? (K[pos] - '0') : 9;\n    for (int digit = 0; digit <= limit; digit++) {\n        int new_tight = tight && (digit == limit);\n        int new_sum = (sum + digit) % D;\n        res = (res + solve(pos + 1, new_sum, new_tight)) % MOD;\n    }\n    dp[pos][sum][tight] = res;\n    return res;\n}\n\nint main() {\n    scanf(\"%s\", K);\n    scanf(\"%d\", &D);\n    len = strlen(K);\n    memset(dp, -1, sizeof(dp));\n    long long ans = (solve(0, 0, 1) - 1 + MOD) % MOD;\n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cstring>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nstring K;\nint D;\nint dp[10005][105][2];\n\nint solve(int pos, int sum, int tight, const string &s) {\n    if (pos == s.size()) {\n        return (sum == 0);\n    }\n    if (dp[pos][sum][tight] != -1) {\n        return dp[pos][sum][tight];\n    }\n    int limit = tight ? (s[pos] - '0') : 9;\n    int res = 0;\n    for (int d = 0; d <= limit; ++d) {\n        int new_tight = tight && (d == limit);\n        int new_sum = (sum + d) % D;\n        res = (res + solve(pos + 1, new_sum, new_tight, s)) % MOD;\n    }\n    dp[pos][sum][tight] = res;\n    return res;\n}\n\nint main() {\n    cin >> K >> D;\n    memset(dp, -1, sizeof(dp));\n    int ans = solve(0, 0, 1, K);\n    ans = (ans - 1 + MOD) % MOD;\n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = (int)1e9 + 7;\n    static String K;\n    static int D;\n    static int[][][] dp;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        K = sc.next();\n        D = sc.nextInt();\n        sc.close();\n\n        int n = K.length();\n        dp = new int[n][D][2];\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < D; j++) {\n                Arrays.fill(dp[i][j], -1);\n            }\n        }\n\n        int res = (solve(0, 0, 1) - 1 + MOD) % MOD;\n        System.out.println(res);\n    }\n\n    static int solve(int pos, int sum, int tight) {\n        if (pos == K.length()) {\n            return sum % D == 0 ? 1 : 0;\n        }\n        if (dp[pos][sum][tight] != -1) {\n            return dp[pos][sum][tight];\n        }\n\n        int limit = tight == 1 ? K.charAt(pos) - '0' : 9;\n        long ans = 0;\n\n        for (int digit = 0; digit <= limit; digit++) {\n            int newTight = (tight == 1 && digit == limit) ? 1 : 0;\n            int newSum = (sum + digit) % D;\n            ans += solve(pos + 1, newSum, newTight);\n            ans %= MOD;\n        }\n\n        return dp[pos][sum][tight] = (int)ans;\n    }\n}",
+    "timestamp": "2025-08-05 22:59:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int count(int K, int D) {\n        final int MOD = 1000000007;\n        int[][] dp = new int[K + 1][D];\n        dp[0][0] = 1;\n        \n        for (int i = 1; i <= K; i++) {\n            for (int j = 0; j < D; j++) {\n                for (int digit = 0; digit <= 9; digit++) {\n                    if (i >= digit) {\n                        int prevRem = (j - digit + D) % D;\n                        dp[i][j] = (dp[i][j] + dp[i - digit][prevRem]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        int result = 0;\n        for (int i = 1; i <= K; i++) {\n            result = (result + dp[i][0]) % MOD;\n        }\n        \n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 22:59:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int count(int K, int D) {\n        const int MOD = 1e9 + 7;\n        vector<vector<vector<vector<int>>>> dp(\n            20, vector<vector<vector<int>>>(\n                2, vector<vector<int>>(\n                    2, vector<int>(200, 0)\n                )\n            )\n        );\n        \n        string s = to_string(K);\n        int n = s.length();\n        \n        dp[0][0][0][0] = 1;\n        \n        for (int i = 0; i < n; i++) {\n            for (int tight = 0; tight < 2; tight++) {\n                for (int nonzero = 0; nonzero < 2; nonzero++) {\n                    for (int sum = 0; sum < D; sum++) {\n                        if (dp[i][tight][nonzero][sum] == 0) continue;\n                        \n                        int limit = tight ? s[i] - '0' : 9;\n                        \n                        for (int digit = 0; digit <= limit; digit++) {\n                            int newTight = tight && (digit == limit);\n                            int newNonzero = nonzero || digit > 0;\n                            int newSum = (sum + digit) % D;\n                            \n                            dp[i+1][newTight][newNonzero][newSum] = \n                                (dp[i+1][newTight][newNonzero][newSum] + \n                                 dp[i][tight][nonzero][sum]) % MOD;\n                        }\n                    }\n                }\n            }\n        }\n        \n        int result = 0;\n        for (int tight = 0; tight < 2; tight++) {\n            result = (result + dp[n][tight][1][0]) % MOD;\n        }\n        \n        return result;\n    }\n};",
+    "timestamp": "2025-08-05 23:00:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_numbers(K, D):\n    MOD = 10**9 + 7\n    \n    def sum_digits(n):\n        return sum(int(digit) for digit in str(n))\n    \n    count = 0\n    for i in range(1, K + 1):\n        if sum_digits(i) % D == 0:\n            count += 1\n    \n    return count % MOD\n\n# Example usage:\n# K = 1000\n# D = 3\n# result = count_numbers(K, D)\n# print(result)",
+    "timestamp": "2025-08-13 13:12:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class DigitSumMultiple {\n    private static final int MOD = 1000000007;\n\n    private static int countNumbers(int K, int D) {\n        int[][][] dp = new int[101][901][2];\n        dp[0][0][0] = 1;\n\n        for (int i = 0; i < 100; i++) {\n            for (int sum = 0; sum < 900; sum++) {\n                for (int tight = 0; tight < 2; tight++) {\n                    for (int digit = 0; digit < 10; digit++) {\n                        if (tight == 1 && digit > (K / (int) Math.pow(10, i)) % 10) {\n                            break;\n                        }\n                        dp[i + 1][sum + digit][tight & (digit == (K / (int) Math.pow(10, i)) % 10 ? 1 : 0)] += dp[i][sum][tight] % MOD;\n                        dp[i + 1][sum + digit][tight & (digit == (K / (int) Math.pow(10, i)) % 10 ? 1 : 0)] %= MOD;\n                    }\n                }\n            }\n        }\n\n        int result = 0;\n        for (int sum = D; sum < 900; sum += D) {\n            result += dp[100][sum][0] + dp[100][sum][1];\n            result %= MOD;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int K = scanner.nextInt();\n        int D = scanner.nextInt();\n        scanner.close();\n\n        System.out.println(countNumbers(K, D));\n    }\n}",
+    "timestamp": "2025-08-13 13:12:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint dp[10001][101][2];\n\n// Helper function to count numbers with given constraints.\nint countNumbers(char *num, int n, int d, int sum, int tight) {\n    if (n == -1) {\n        return sum % d == 0;\n    }\n\n    if (dp[n][sum][tight] != -1) {\n        return dp[n][sum][tight];\n    }\n\n    int limit = tight ? num[strlen(num) - n - 1] - '0' : 9;\n    int res = 0;\n    for (int i = 0; i <= limit; i++) {\n        res = (res + countNumbers(num, n - 1, d, sum + i, tight && (i == limit))) % MOD;\n    }\n\n    return dp[n][sum][tight] = res;\n}\n\n// Main function to solve the problem for range 1 to K with sum of digits divisible by D.\nint solve(int k, int d) {\n    char num[11];\n    sprintf(num, \"%d\", k);\n    int n = strlen(num);\n    \n    memset(dp, -1, sizeof(dp));\n    return countNumbers(num, n - 1, d, 0, 1);\n}\n\nint main() {\n    int K, D;\n    scanf(\"%d %d\", &K, &D);\n    printf(\"%d\\n\", solve(K, D));\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:12:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint countDivisibleByD(int K, int D) {\n    string limit = to_string(K);\n    int n = limit.size();\n    vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(D, vector<int>(2, 0)));\n    dp[0][0][0] = 1;\n\n    for (int i = 0; i < n; ++i) {\n        for (int sumD = 0; sumD < D; ++sumD) {\n            for (int tight = 0; tight < 2; ++tight) {\n                int limitDigit = tight ? limit[i] - '0' : 9;\n                for (int digit = 0; digit <= limitDigit; ++digit) {\n                    dp[i + 1][(sumD + digit) % D][tight && (digit == limitDigit)] \n                        = (dp[i + 1][(sumD + digit) % D][tight && (digit == limitDigit)] \n                        + dp[i][sumD][tight]) % MOD;\n                }\n            }\n        }\n    }\n    \n    int result = (dp[n][0][0] + dp[n][0][1] - 1 + MOD) % MOD;\n    return result;\n}\n\nint main() {\n    int K, D;\n    cin >> K >> D;\n    cout << countDivisibleByD(K, D) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:12:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(K, D):\n    MOD = 10**9 + 7\n    \n    # dp[i][j][tight][sum] represents:\n    # i: current digit position\n    # j: current digit sum modulo D\n    # tight: whether the number is constrained by K's digits\n    # sum: whether a non-zero digit has been used\n    dp = [[[[-1 for _ in range(2)] for _ in range(D)] for _ in range(2)] for _ in range(20)]\n    \n    def digit_dp(pos, rem, tight, sum_zero, num_str):\n        if pos == len(num_str):\n            return 1 if rem == 0 and sum_zero else 0\n        \n        if dp[pos][rem][tight][sum_zero] != -1:\n            return dp[pos][rem][tight][sum_zero]\n        \n        result = 0\n        up = int(num_str[pos]) if tight else 9\n        \n        for digit in range(up + 1):\n            new_tight = tight and (digit == int(num_str[pos]))\n            new_sum_zero = sum_zero or (digit > 0)\n            new_rem = (rem * 10 + digit) % D\n            \n            result += digit_dp(pos + 1, new_rem, new_tight, new_sum_zero, num_str)\n            result %= MOD\n        \n        dp[pos][rem][tight][sum_zero] = result\n        return result\n    \n    return digit_dp(0, 0, 1, 0, str(K))",
+    "timestamp": "2025-08-13 13:12:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    K = input().strip()\n    D = int(input())\n    n = len(K)\n    \n    # dp[pos][sum][tight] = number of ways\n    dp = [[[0] * 2 for _ in range(D)] for __ in range(n+1)]\n    dp[0][0][1] = 1  # empty number, sum 0, tight\n    \n    for pos in range(n):\n        for sum_d in range(D):\n            for tight in [0, 1]:\n                if dp[pos][sum_d][tight] == 0:\n                    continue\n                max_digit = int(K[pos]) if tight else 9\n                for d in range(max_digit + 1):\n                    new_tight = 1 if (tight and d == max_digit) else 0\n                    new_sum = (sum_d + d) % D\n                    dp[pos+1][new_sum][new_tight] += dp[pos][sum_d][tight]\n                    dp[pos+1][new_sum][new_tight] %= MOD\n    \n    total = (dp[n][0][0] + dp[n][0][1] - 1) % MOD  # subtract 1 for 0\n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 13:12:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countIntegersWithDigitSumDivisibleByD(K, D) {\n    const MOD = 1_000_000_007;\n    \n    // Helper function to calculate the number of integers up to 'limit'\n    function countDigitsDivisibleByD(limit) {\n        const s = limit.toString();\n        const n = s.length;        \n        const dp = Array.from({ length: n + 1 }, () => Array.from({ length: D }, () => Array(2).fill(0))); \n\n        dp[0][0][1] = 1;\n\n        for (let i = 0; i < n; i++) {\n            for (let sum = 0; sum < D; sum++) {\n                for (let isTight = 0; isTight < 2; isTight++) {\n                    const maxDigit = isTight ? s[i].charCodeAt(0) - '0'.charCodeAt(0) : 9;\n                    for (let digit = 0; digit <= maxDigit; digit++) {\n                        const nextTight = isTight && (digit === maxDigit);\n                        dp[i + 1][(sum + digit) % D][nextTight] = (dp[i + 1][(sum + digit) % D][nextTight] + dp[i][sum][isTight]) % MOD;\n                    }\n                }\n            }\n        }\n\n        return (dp[n][0][0] + dp[n][0][1]) % MOD;\n    }\n    \n    return countDigitsDivisibleByD(K);\n}\n\n// Example usage: countIntegersWithDigitSumDivisibleByD(1000, 3);",
+    "timestamp": "2025-08-13 13:13:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function digitSumMultiples(K, D) {\n    const MOD = 1e9 + 7;\n    const dp = Array.from({ length: K + 1 }, () => Array(D).fill(0));\n    \n    dp[0][0] = 1;\n    \n    for (let i = 1; i <= K; i++) {\n        for (let j = 0; j < D; j++) {\n            for (let digit = 0; digit <= 9; digit++) {\n                if (i >= digit) {\n                    dp[i][(j + digit) % D] = (dp[i][(j + digit) % D] + dp[i - digit][j]) % MOD;\n                }\n            }\n        }\n    }\n    \n    let result = 0;\n    for (let i = 1; i <= K; i++) {\n        result = (result + dp[i][0]) % MOD;\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 13:13:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve(K, D) {\n    const s = K.toString();\n    const n = s.length;\n    const memo = new Array(n).fill().map(() => new Array(D).fill().map(() => new Array(2).fill(-1)));\n\n    function dp(pos, sum, tight) {\n        if (pos === n) return sum === 0 ? 1 : 0;\n        if (memo[pos][sum][tight] !== -1) return memo[pos][sum][tight];\n\n        const limit = tight ? parseInt(s[pos]) : 9;\n        let res = 0;\n\n        for (let d = 0; d <= limit; d++) {\n            const newTight = tight && (d === limit);\n            const newSum = (sum + d) % D;\n            res = (res + dp(pos + 1, newSum, newTight)) % MOD;\n        }\n\n        memo[pos][sum][tight] = res;\n        return res;\n    }\n\n    const total = dp(0, 0, true);\n    return (total - 1 + MOD) % MOD; // subtract 1 to exclude 0 if K >= 1\n}",
+    "timestamp": "2025-08-13 13:13:26"
+  }
+]

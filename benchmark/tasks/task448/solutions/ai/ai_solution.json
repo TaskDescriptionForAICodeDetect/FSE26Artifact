@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    int min_len;\n    int max_len;\n    int score;\n} Phrase;\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint solve(int melody_len, Phrase* phrases, int phrases_count) {\n    int* dp = (int*)malloc((melody_len + 1) * sizeof(int));\n    for (int i = 0; i <= melody_len; i++) {\n        dp[i] = -1;\n    }\n    dp[0] = 0;\n\n    for (int i = 1; i <= melody_len; i++) {\n        for (int j = 0; j < phrases_count; j++) {\n            if (phrases[j].min_len <= i && phrases[j].max_len >= i) {\n                if (dp[i - i] != -1) {\n                    dp[i] = max(dp[i], dp[i - i] + phrases[j].score);\n                }\n            }\n            if (i >= phrases[j].min_len && i - phrases[j].min_len >= 0 && dp[i - phrases[j].min_len] != -1) {\n                if (phrases[j].max_len >= phrases[j].min_len) {\n                    dp[i] = max(dp[i], dp[i - phrases[j].min_len] + phrases[j].score);\n                }\n            }\n        }\n    }\n\n    int result = dp[melody_len];\n    free(dp);\n    return (result != -1) ? result : -1;\n}\n\nint main() {\n    int melody_len, phrases_count;\n    scanf(\"%d %d\", &melody_len, &phrases_count);\n\n    Phrase* phrases = (Phrase*)malloc(phrases_count * sizeof(Phrase));\n    for (int i = 0; i < phrases_count; i++) {\n        scanf(\"%d %d %d\", &phrases[i].min_len, &phrases[i].max_len, &phrases[i].score);\n    }\n\n    int result = solve(melody_len, phrases, phrases_count);\n    printf(\"%d\\n\", result);\n\n    free(phrases);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:35:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint maxScore(int melodyLength, vector<vector<int>>& phrases) {\n    vector<int> dp(melodyLength + 1, -1);\n    dp[0] = 0;\n\n    for (int i = 1; i <= melodyLength; ++i) {\n        for (const auto& phrase : phrases) {\n            int minLen = phrase[0];\n            int maxLen = phrase[1];\n            int score = phrase[2];\n            if (i >= minLen && i <= maxLen) {\n                if (dp[i] < score) {\n                    dp[i] = score;\n                }\n            }\n            if (i - minLen >= 0 && dp[i - minLen] != -1) {\n                int newScore = dp[i - minLen] + score;\n                if (newScore > dp[i]) {\n                    dp[i] = newScore;\n                }\n            }\n        }\n    }\n\n    return dp[melodyLength] == 0 ? -1 : dp[melodyLength];\n}",
+    "timestamp": "2025-08-05 21:35:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class VocalAndroid {\n    public static int maxScore(int melodyLength, int[][] phrases) {\n        int[] dp = new int[melodyLength + 1];\n        Arrays.fill(dp, -1);\n        dp[0] = 0;\n\n        for (int i = 1; i <= melodyLength; i++) {\n            for (int[] phrase : phrases) {\n                int start = phrase[0];\n                int end = phrase[1];\n                int score = phrase[2];\n                if (i >= start && i <= end) {\n                    for (int j = 0; j <= i - start; j++) {\n                        if (dp[j] != -1) {\n                            if (dp[i] < dp[j] + score) {\n                                dp[i] = dp[j] + score;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n\n        return dp[melodyLength];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int melodyLength = scanner.nextInt();\n        int n = scanner.nextInt();\n        int[][] phrases = new int[n][3];\n        for (int i = 0; i < n; i++) {\n            phrases[i][0] = scanner.nextInt();\n            phrases[i][1] = scanner.nextInt();\n            phrases[i][2] = scanner.nextInt();\n        }\n        System.out.println(maxScore(melodyLength, phrases));\n    }\n}",
+    "timestamp": "2025-08-05 21:36:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Solution {\n    public int maxScoreSongs(int melodyLength, int[] phraseLengths, int[] phraseScores) {\n        int n = phraseLengths.length;\n        int[][] dp = new int[melodyLength + 1][n + 1];\n        \n        for (int[] row : dp) {\n            Arrays.fill(row, -1);\n        }\n        dp[0][0] = 0;\n        \n        for (int len = 0; len <= melodyLength; len++) {\n            for (int i = 0; i < n; i++) {\n                if (dp[len][i] == -1) continue;\n                \n                for (int j = 0; j < n; j++) {\n                    int newLen = len + phraseLengths[j];\n                    if (newLen <= melodyLength) {\n                        dp[newLen][j + 1] = Math.max(\n                            dp[newLen][j + 1] == -1 ? -1 : dp[len][i] + phraseScores[j],\n                            dp[newLen][j + 1]\n                        );\n                    }\n                }\n            }\n        }\n        \n        int maxScore = -1;\n        for (int i = 0; i <= n; i++) {\n            if (dp[melodyLength][i] != -1) {\n                maxScore = Math.max(maxScore, dp[melodyLength][i]);\n            }\n        }\n        \n        return maxScore;\n    }\n}",
+    "timestamp": "2025-08-05 21:36:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_PHRASES 100\n#define MAX_MELODY_LENGTH 1000\n\nint dp[MAX_MELODY_LENGTH + 1];\nint phrase_lengths[MAX_PHRASES];\nint phrase_scores[MAX_PHRASES];\nint num_phrases;\n\nint max_score_melody_fill(int melody_length) {\n    memset(dp, -1, sizeof(dp));\n    dp[0] = 0;\n\n    for (int i = 0; i <= melody_length; i++) {\n        if (dp[i] == -1) continue;\n\n        for (int j = 0; j < num_phrases; j++) {\n            int new_length = i + phrase_lengths[j];\n            if (new_length <= melody_length) {\n                int new_score = dp[i] + phrase_scores[j];\n                if (new_score > dp[new_length]) {\n                    dp[new_length] = new_score;\n                }\n            }\n        }\n    }\n\n    return dp[melody_length] == -1 ? -1 : dp[melody_length];\n}\n\nint main() {\n    int melody_length;\n    scanf(\"%d %d\", &melody_length, &num_phrases);\n\n    for (int i = 0; i < num_phrases; i++) {\n        scanf(\"%d %d\", &phrase_lengths[i], &phrase_scores[i]);\n    }\n\n    int result = max_score_melody_fill(melody_length);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:36:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n#include <climits>\n\nclass VocalAndroid {\npublic:\n    int maxScoreCombination(int melodyLength, std::vector<int>& phraseLengths, std::vector<int>& phraseScores) {\n        std::vector<int> dp(melodyLength + 1, INT_MIN);\n        dp[0] = 0;\n\n        for (int i = 0; i <= melodyLength; ++i) {\n            for (int j = 0; j < phraseLengths.size(); ++j) {\n                int phraseLength = phraseLengths[j];\n                int phraseScore = phraseScores[j];\n\n                if (i >= phraseLength && dp[i - phraseLength] != INT_MIN) {\n                    dp[i] = std::max(dp[i], dp[i - phraseLength] + phraseScore);\n                }\n            }\n        }\n\n        return dp[melodyLength] == INT_MIN ? -1 : dp[melodyLength];\n    }\n};",
+    "timestamp": "2025-08-05 21:36:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_best_combinations(melody_length, phrases):\n    # Create a table to store max scores\n    dp = [-1] * (melody_length + 1)\n    dp[0] = 0  # Base case: no length, no score\n\n    # Process each unit of the melody length\n    for current_length in range(1, melody_length + 1):\n        for phrase in phrases:\n            phrase_min, phrase_max, phrase_score = phrase\n\n            # Check if using this phrase is possible\n            if phrase_min <= current_length:\n                remaining_length = current_length - phrase_min\n                if phrase_max >= current_length and dp[remaining_length] != -1:\n                    dp[current_length] = max(dp[current_length], dp[remaining_length] + phrase_score)\n\n    return dp[melody_length]\n\ndef combine_melodies_with_phrases(melodies, phrases):\n    results = []\n    for melody_length in melodies:\n        best_score = find_best_combinations(melody_length, phrases)\n        results.append(best_score if best_score > 0 else -1)\n    return results\n\n# Example Usage:\n# melody_lengths = [5, 10, 3]\n# phrases = [(1, 2, 10), (2, 3, 15), (4, 5, 20)]\n# print(combine_melodies_with_phrases(melody_lengths, phrases))",
+    "timestamp": "2025-08-13 07:13:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\nclass VocalAndroid {\n    static class Phrase {\n        int minLength;\n        int maxLength;\n        int score;\n\n        Phrase(int minLength, int maxLength, int score) {\n            this.minLength = minLength;\n            this.maxLength = maxLength;\n            this.score = score;\n        }\n    }\n\n    public static int maxScore(int melodyLength, List<Phrase> phrases) {\n        int[] dp = new int[melodyLength + 1];\n        Arrays.fill(dp, -1);\n        dp[0] = 0;\n\n        for (int length = 1; length <= melodyLength; length++) {\n            for (Phrase phrase : phrases) {\n                if (length >= phrase.minLength && length <= phrase.maxLength) {\n                    if (dp[length - phrase.minLength] != -1) {\n                        dp[length] = Math.max(dp[length], dp[length - phrase.minLength] + phrase.score);\n                    }\n                }\n            }\n        }\n        return dp[melodyLength];\n    }\n\n    public static void main(String[] args) {\n        List<Phrase> phrases = Arrays.asList(\n            new Phrase(1, 3, 10),\n            new Phrase(2, 5, 15),\n            new Phrase(4, 6, 20)\n        );\n\n        int melodyLength = 7;\n        int result = maxScore(melodyLength, phrases);\n        System.out.println(result);  // Output: 30\n    }\n}",
+    "timestamp": "2025-08-13 07:13:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_PHRASES 100\n#define MAX_MELODY_LENGTH 1000\n\ntypedef struct {\n    int minLength;\n    int maxLength;\n    int score;\n} Phrase;\n\nint dp[MAX_MELODY_LENGTH + 1];\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint maximizeScore(int melodyLength, Phrase phrases[], int phraseCount) {\n    memset(dp, -1, sizeof(dp));\n    dp[0] = 0;\n\n    for (int i = 0; i <= melodyLength; i++) {\n        if (dp[i] == -1)\n            continue;\n\n        for (int j = 0; j < phraseCount; j++) {\n            for (int len = phrases[j].minLength; len <= phrases[j].maxLength; len++) {\n                if (i + len <= melodyLength) {\n                    dp[i + len] = max(dp[i + len], dp[i] + phrases[j].score);\n                }\n            }\n        }\n    }\n\n    return dp[melodyLength] == -1 ? -1 : dp[melodyLength];\n}\n\nint main() {\n    int melodyLength;\n    int phraseCount;\n    Phrase phrases[MAX_PHRASES];\n\n    // Example input\n    melodyLength = 7;\n    phraseCount = 3;\n    phrases[0] = (Phrase){2, 3, 10};\n    phrases[1] = (Phrase){1, 2, 5};\n    phrases[2] = (Phrase){4, 5, 8};\n\n    int result = maximizeScore(melodyLength, phrases, phraseCount);\n    printf(\"Maximized Score: %d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:13:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_score_phrases(melody_length, phrases):\n    # Sort phrases by score in descending order\n    phrases.sort(key=lambda x: x[2], reverse=True)\n    \n    # Dynamic programming to find optimal combination\n    dp = [float('-inf')] * (melody_length + 1)\n    dp[0] = 0\n    \n    for length in range(1, melody_length + 1):\n        for start, end, score in phrases:\n            if start <= length <= end and dp[length - start] != float('-inf'):\n                dp[length] = max(dp[length], dp[length - start] + score)\n    \n    return dp[melody_length] if dp[melody_length] != float('-inf') else -1",
+    "timestamp": "2025-08-13 07:13:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_score_phrases(melody_length, phrases):\n    # phrases is a list of tuples (min_len, max_len, score)\n    # We need to select phrases such that the sum of their lengths equals melody_length\n    # The length of each selected phrase must be within its min and max\n    # We want to maximize the total score\n    \n    # Initialize DP array where dp[i] is the max score for length i\n    dp = [-1] * (melody_length + 1)\n    dp[0] = 0  # base case: score 0 for length 0\n    \n    for l in range(1, melody_length + 1):\n        for min_len, max_len, score in phrases:\n            # Check if we can use this phrase to reach length l\n            # The phrase's length can be any between min_len and max_len\n            # So we need to check if there's a previous length l - k where k is between min_len and max_len\n            # and dp[l - k] is not -1\n            start = max(0, l - max_len)\n            end = l - min_len\n            if end < 0:\n                continue\n            # Iterate through possible previous lengths\n            for prev_l in range(start, end + 1):\n                if dp[prev_l] != -1:\n                    if dp[l] < dp[prev_l] + score:\n                        dp[l] = dp[prev_l] + score\n    return dp[melody_length] if dp[melody_length] != -1 else -1",
+    "timestamp": "2025-08-13 07:13:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Phrase {\n    int minLength;\n    int maxLength;\n    int score;\n};\n\nint maximizeScore(int melodyLength, vector<Phrase>& phrases, vector<int>& dp) {\n    if (dp[melodyLength] != -2) return dp[melodyLength];\n    \n    dp[melodyLength] = -1;\n    for (const Phrase& phrase : phrases) {\n        for (int len = phrase.minLength; len <= phrase.maxLength; ++len) {\n            if (melodyLength >= len) {\n                int subScore = maximizeScore(melodyLength - len, phrases, dp);\n                if (subScore != -1) {\n                    dp[melodyLength] = max(dp[melodyLength], subScore + phrase.score);\n                }\n            }\n        }\n    }\n    \n    return dp[melodyLength];\n}\n\nint main() {\n    int melodyLength = 10; // Example melody length\n    vector<Phrase> phrases = { // Example phrases\n        {1, 3, 5},\n        {2, 5, 8},\n        {3, 4, 7}\n    };\n    \n    vector<int> dp(melodyLength + 1, -2);\n    dp[0] = 0;\n    int result = maximizeScore(melodyLength, phrases, dp);\n    \n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:36:37"
+  }
+]

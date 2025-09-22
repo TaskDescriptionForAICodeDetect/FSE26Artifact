@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n#include <stdlib.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble distance(Point a, Point b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\ndouble minimal_wall_distance(double *diameters, int n) {\n    if (n == 0) return 0.0;\n    \n    Point *centers = (Point *)malloc(n * sizeof(Point));\n    double *radii = (double *)malloc(n * sizeof(double));\n    \n    for (int i = 0; i < n; i++) {\n        radii[i] = diameters[i] / 2.0;\n    }\n    \n    centers[0].x = radii[0];\n    centers[0].y = radii[0];\n    \n    for (int i = 1; i < n; i++) {\n        double max_x = radii[i];\n        for (int j = 0; j < i; j++) {\n            double dx = sqrt(pow(radii[i] + radii[j], 2) - pow(centers[j].y - radii[i], 2));\n            double x = centers[j].x + dx;\n            if (x > max_x) {\n                max_x = x;\n            }\n        }\n        centers[i].x = max_x;\n        centers[i].y = radii[i];\n    }\n    \n    double max_right = 0.0;\n    for (int i = 0; i < n; i++) {\n        double right = centers[i].x + radii[i];\n        if (right > max_right) {\n            max_right = right;\n        }\n    }\n    \n    free(centers);\n    free(radii);\n    \n    return max_right;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    double *diameters = (double *)malloc(n * sizeof(double));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf\", &diameters[i]);\n    }\n    printf(\"%.3lf\\n\", minimal_wall_distance(diameters, n));\n    free(diameters);\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:55:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n#include <iomanip>\n\nusing namespace std;\n\ndouble calculateMinWidth(const vector<double>& diameters) {\n    int n = diameters.size();\n    if (n == 0) return 0.0;\n    if (n == 1) return diameters[0];\n\n    vector<double> prefixSum(n, 0.0);\n    prefixSum[0] = diameters[0];\n    for (int i = 1; i < n; ++i) {\n        prefixSum[i] = prefixSum[i - 1] + diameters[i];\n    }\n\n    double maxChain = diameters[0];\n    for (int i = 1; i < n; ++i) {\n        double current = diameters[i];\n        double maxPrev = 0.0;\n        for (int j = 0; j < i; ++j) {\n            double sum = prefixSum[i] - (j > 0 ? prefixSum[j - 1] : 0);\n            double minDiameter = *min_element(diameters.begin() + j, diameters.begin() + i + 1);\n            double maxDiameter = *max_element(diameters.begin() + j, diameters.begin() + i + 1);\n            double width = sum - minDiameter + maxDiameter;\n            if (width > maxPrev) {\n                maxPrev = width;\n            }\n        }\n        if (maxPrev > maxChain) {\n            maxChain = maxPrev;\n        }\n    }\n\n    return maxChain;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<double> diameters(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> diameters[i];\n    }\n    cout << fixed << setprecision(3) << calculateMinWidth(diameters) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:55:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class CylinderWallDistance {\n    public static double calculateMinimumWidth(int[] diameters) {\n        int n = diameters.length;\n        if (n == 0) return 0;\n        if (n == 1) return diameters[0];\n        \n        double[] centers = new double[n];\n        centers[0] = diameters[0] / 2.0;\n        \n        for (int i = 1; i < n; i++) {\n            double maxCenter = diameters[i] / 2.0;\n            for (int j = 0; j < i; j++) {\n                double distance = Math.sqrt(Math.pow(diameters[i] + diameters[j], 2) - Math.pow(diameters[i] - diameters[j], 2)) / 2.0;\n                double candidateCenter = centers[j] + distance;\n                if (candidateCenter > maxCenter) {\n                    maxCenter = candidateCenter;\n                }\n            }\n            centers[i] = maxCenter;\n        }\n        \n        double maxRight = 0;\n        for (int i = 0; i < n; i++) {\n            double right = centers[i] + diameters[i] / 2.0;\n            if (right > maxRight) {\n                maxRight = right;\n            }\n        }\n        \n        return maxRight;\n    }\n    \n    public static void main(String[] args) {\n        int[] diameters = {5, 10, 5};\n        System.out.println(calculateMinimumWidth(diameters));\n    }\n}",
+    "timestamp": "2025-08-05 20:55:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CylinderArrangement {\n    public static double minimumWallDistance(double[] diameters) {\n        int n = diameters.length;\n        double minDistance = Double.MAX_VALUE;\n        \n        for (int rotation = 0; rotation < n; rotation++) {\n            double currentDistance = 0;\n            \n            // Adjust rotation of cylinders\n            double[] rotatedDiameters = new double[n];\n            for (int i = 0; i < n; i++) {\n                rotatedDiameters[i] = diameters[(i + rotation) % n];\n            }\n            \n            // Calculate minimum distance for this rotation\n            for (int i = 0; i < n; i++) {\n                currentDistance += rotatedDiameters[i];\n            }\n            \n            minDistance = Math.min(minDistance, currentDistance);\n        }\n        \n        return minDistance;\n    }\n\n    public static void main(String[] args) {\n        double[] cylinders = {1.5, 2.0, 3.0};\n        System.out.println(minimumWallDistance(cylinders));\n    }\n}",
+    "timestamp": "2025-08-05 20:55:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\n#define MAX_CYLINDERS 100\n\ndouble calculate_min_distance(double diameters[], int n) {\n    double min_distance = 0;\n    \n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            double center_distance = diameters[i] / 2 + diameters[j] / 2;\n            \n            if (center_distance > min_distance) {\n                min_distance = center_distance;\n            }\n        }\n    }\n    \n    return min_distance;\n}\n\nint main() {\n    int n;\n    double diameters[MAX_CYLINDERS];\n    \n    scanf(\"%d\", &n);\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf\", &diameters[i]);\n    }\n    \n    double result = calculate_min_distance(diameters, n);\n    printf(\"%.2f\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 20:55:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n#include <iomanip>\n\ndouble calculateMinDistance(std::vector<double>& diameters) {\n    int n = diameters.size();\n    std::sort(diameters.begin(), diameters.end());\n    \n    double minDistance = 0;\n    for (int i = 0; i < n; ++i) {\n        minDistance += diameters[i];\n    }\n    \n    return minDistance;\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    \n    std::vector<double> diameters(n);\n    for (int i = 0; i < n; ++i) {\n        std::cin >> diameters[i];\n    }\n    \n    double result = calculateMinDistance(diameters);\n    \n    std::cout << std::fixed << std::setprecision(6) << result << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 20:55:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef min_distance(cylinder_diameters):\n    n = len(cylinder_diameters)\n    if n == 0:\n        return 0\n    if n == 1:\n        return cylinder_diameters[0]\n\n    dp = [[0] * n for _ in range(n)]\n    # Minimum distance starting from cylinder i to cylinder j\n    for i in range(n):\n        dp[i][i] = cylinder_diameters[i]\n\n    # Precompute pairwise touching distances\n    touch_distances = [[0] * n for _ in range(n)]\n    for i in range(n):\n        for j in range(i+1, n):\n            touch_distances[i][j] = math.sqrt((cylinder_diameters[i] + cylinder_diameters[j])**2 - (cylinder_diameters[i] - cylinder_diameters[j])**2) / 2\n\n    # Calculate minimum enclosing length for every subsequence\n    for length in range(2, n+1):\n        for i in range(n-length+1):\n            j = i + length - 1\n            dp[i][j] = float('inf')\n            for k in range(i, j):\n                dp[i][j] = min(dp[i][j], dp[i][k] + touch_distances[k][k+1] + dp[k+1][j])\n\n    return dp[0][n-1]\n\n# Example usage:\ncylinder_diameters = [4, 3, 2, 1]\nprint(min_distance(cylinder_diameters))",
+    "timestamp": "2025-08-13 04:07:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class CylinderSqueeze {\n\n    public static double findMinimumDistance(int[] diameters) {\n        int n = diameters.length;\n        double[] centers = new double[n];\n        \n        // Start first cylinder at its radius away from the left wall\n        centers[0] = diameters[0] / 2.0;\n        \n        // Place each subsequent cylinder at minimum possible distance \n        for (int i = 1; i < n; i++) {\n            centers[i] = centers[i - 1] + (diameters[i - 1] / 2.0) + (diameters[i] / 2.0);\n        }\n        \n        // Distance between the two walls is the distance from the first to the last center + last cylinder's radius\n        double minDistance = centers[n - 1] + (diameters[n - 1] / 2.0);\n        \n        return minDistance;\n    }\n\n    public static void main(String[] args) {\n        int[] diameters = {4, 6, 3, 5}; // Example input\n        double result = findMinimumDistance(diameters);\n        System.out.printf(\"%.6f\\n\", result);  // Print the result with 6 decimal places\n    }\n}",
+    "timestamp": "2025-08-13 04:07:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ndouble findMinimumDistance(int n, double diameters[]) {\n    if (n == 0) return 0.0;\n    double totalDistance = diameters[0];\n\n    for (int i = 1; i < n; i++) {\n        totalDistance += sqrt(diameters[i-1] * diameters[i]) + diameters[i];\n    }\n\n    return totalDistance - diameters[n-1];\n}\n\nint main() {\n    int n;\n    printf(\"Enter the number of cylinders: \");\n    scanf(\"%d\", &n);\n\n    double diameters[n];\n    printf(\"Enter the diameters of the cylinders:\\n\");\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf\", &diameters[i]);\n    }\n\n    printf(\"Minimum possible distance: %lf\\n\", findMinimumDistance(n, diameters));\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:07:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_wall_distance(diameters):\n    # Sort diameters in ascending order\n    diameters = sorted(diameters)\n    n = len(diameters)\n    \n    # Initialize minimum distance as sum of smallest and largest diameter\n    min_dist = diameters[0] + diameters[-1]\n    \n    # Try all possible pairings\n    for i in range(n):\n        for j in range(i+1, n):\n            # Calculate current configuration's wall distance\n            curr_dist = max(diameters[i], diameters[j])\n            min_dist = min(min_dist, curr_dist)\n    \n    return min_dist",
+    "timestamp": "2025-08-13 04:08:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef min_wall_distance(radii):\n    if not radii:\n        return 0.0\n    n = len(radii)\n    if n == 1:\n        return 2 * radii[0]\n    \n    # Calculate the centers of the circles in a line\n    centers = [0.0] * n\n    centers[0] = radii[0]\n    for i in range(1, n):\n        prev_radius = radii[i-1]\n        current_radius = radii[i]\n        centers[i] = centers[i-1] + math.sqrt((prev_radius + current_radius)**2 - (prev_radius - current_radius)**2)\n    \n    # The minimal distance is the maximum of the last center + its radius or any intermediate circle touching the opposite wall\n    max_distance = centers[-1] + radii[-1]\n    \n    # Check if any intermediate circle protrudes beyond the last one\n    for i in range(n):\n        distance = centers[i] + radii[i]\n        if distance > max_distance:\n            max_distance = distance\n    \n    return max_distance\n\n# Example usage:\n# print(min_wall_distance([10, 20, 30]))  # Replace with actual input",
+    "timestamp": "2025-08-13 04:08:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\ndouble minDistanceBetweenWalls(const std::vector<double>& diameters) {\n    double minDistance = 0.0;\n    int n = diameters.size();\n    if (n == 1) {\n        return diameters[0];\n    }\n\n    for (int i = 0; i < n - 1; ++i) {\n        double distance = sqrt(diameters[i] * diameters[i] + diameters[i + 1] * diameters[i + 1]);\n        minDistance += distance;\n    }\n\n    minDistance += diameters[0];\n    minDistance += diameters[n - 1];\n\n    return minDistance;\n}\n\nint main() {\n    int n;\n    std::cout << \"Enter number of cylinders: \";\n    std::cin >> n;\n    std::vector<double> diameters(n);\n\n    std::cout << \"Enter the diameters of the cylinders: \";\n    for (int i = 0; i < n; ++i) {\n        std::cin >> diameters[i];\n    }\n\n    std::cout << \"Minimum distance between the walls: \" << minDistanceBetweenWalls(diameters) << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:17:23"
+  }
+]

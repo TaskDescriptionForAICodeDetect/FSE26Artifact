@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def is_palindrome(s):\n    return s == s[::-1]\n\ndef solve(s):\n    n = len(s)\n    max_non_palindrome_length = 0\n    \n    for l in range(n):\n        for r in range(l, n):\n            substring = s[l:r+1]\n            if not is_palindrome(substring):\n                max_non_palindrome_length = max(max_non_palindrome_length, len(substring))\n    \n    return max_non_palindrome_length\n\n# Read input\ns = input().strip()\n\n# Output result\nprint(solve(s))",
+    "timestamp": "2025-08-05 17:31:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "s = input().strip()\nn = len(s)\nmax_len = 0\n\nfor l in range(n):\n    for r in range(l, n):\n        substring = s[l:r+1]\n        if substring != substring[::-1]:\n            current_len = r - l + 1\n            if current_len > max_len:\n                max_len = current_len\n\nprint(max_len)",
+    "timestamp": "2025-08-05 17:31:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longest_non_palindrome_substring(s):\n    def is_palindrome(sub):\n        return sub == sub[::-1]\n    \n    n = len(s)\n    \n    # Check if the whole string is already a palindrome, if so we need special handling\n    if is_palindrome(s):\n        # Check if not all characters are the same\n        if len(set(s)) == 1:  # All characters are the same\n            return 0\n        else:  # Remove one character makes it non-palindromic for sure\n            return n - 1\n\n    # If the whole string isn't a palindrome, its length is the answer\n    return n\n\ns = input().strip()\nprint(longest_non_palindrome_substring(s))",
+    "timestamp": "2025-08-12 21:40:26"
+  }
+]

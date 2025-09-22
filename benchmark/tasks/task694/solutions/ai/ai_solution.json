@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MOD 998244353\n\ntypedef struct {\n    int x;\n    int d;\n} Robot;\n\nint compare(const void* a, const void* b) {\n    Robot* r1 = (Robot*)a;\n    Robot* r2 = (Robot*)b;\n    return r1->x - r2->x;\n}\n\nint solve(int N, Robot* robots) {\n    qsort(robots, N, sizeof(Robot), compare);\n    \n    long long result = 0;\n    for (int mask = 0; mask < (1 << N); mask++) {\n        bool valid = true;\n        bool activated[N];\n        \n        for (int i = 0; i < N; i++) {\n            activated[i] = false;\n        }\n        \n        for (int i = 0; i < N; i++) {\n            if (!(mask & (1 << i))) continue;\n            \n            if (activated[i]) {\n                valid = false;\n                break;\n            }\n            \n            activated[i] = true;\n            int end = robots[i].x + robots[i].d;\n            \n            for (int j = i + 1; j < N; j++) {\n                if (!(mask & (1 << j))) continue;\n                \n                if (robots[j].x < end) {\n                    if (activated[j]) {\n                        valid = false;\n                        break;\n                    }\n                    activated[j] = true;\n                } else {\n                    break;\n                }\n            }\n            \n            if (!valid) break;\n        }\n        \n        if (valid) {\n            result++;\n        }\n    }\n    \n    return result % MOD;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    Robot robots[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &robots[i].x, &robots[i].d);\n    }\n    \n    int result = solve(N, robots);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 998244353\n\ntypedef struct {\n    int x;\n    int d;\n} Robot;\n\nint compare(const void *a, const void *b) {\n    Robot *r1 = (Robot *)a;\n    Robot *r2 = (Robot *)b;\n    return r1->x - r2->x;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Robot robots[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &robots[i].x, &robots[i].d);\n    }\n    qsort(robots, N, sizeof(Robot), compare);\n\n    int stack[N], top = -1;\n    int right[N];\n    for (int i = N - 1; i >= 0; i--) {\n        int bound = robots[i].x + robots[i].d;\n        right[i] = i;\n        while (top != -1 && robots[stack[top]].x < bound) {\n            right[i] = right[stack[top]];\n            top--;\n        }\n        stack[++top] = i;\n    }\n\n    long long dp[N + 1];\n    dp[N] = 1;\n    for (int i = N - 1; i >= 0; i--) {\n        dp[i] = (dp[i + 1] + dp[right[i] + 1]) % MOD;\n    }\n    printf(\"%lld\\n\", dp[0]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <stack>\n#include <utility>\n#include <cassert>\n\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, int>> robots(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> robots[i].first >> robots[i].second;\n    }\n    sort(robots.begin(), robots.end());\n\n    vector<int> next(N);\n    stack<int> st;\n    for (int i = N - 1; i >= 0; --i) {\n        next[i] = i;\n        int bound = robots[i].first + robots[i].second;\n        while (!st.empty() && robots[st.top()].first < bound) {\n            next[i] = max(next[i], next[st.top()]);\n            st.pop();\n        }\n        st.push(i);\n    }\n\n    vector<int> dp(N + 1);\n    dp[N] = 1;\n    for (int i = N - 1; i >= 0; --i) {\n        dp[i] = (dp[i + 1] + dp[next[i] + 1]) % MOD;\n    }\n\n    cout << dp[0] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine());\n        int[][] robots = new int[N][2];\n        for (int i = 0; i < N; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            robots[i][0] = Integer.parseInt(st.nextToken());\n            robots[i][1] = Integer.parseInt(st.nextToken());\n        }\n        Arrays.sort(robots, (a, b) -> Integer.compare(a[0], b[0]));\n\n        int[] x = new int[N];\n        int[] d = new int[N];\n        for (int i = 0; i < N; i++) {\n            x[i] = robots[i][0];\n            d[i] = robots[i][1];\n        }\n\n        int[] right = new int[N];\n        Stack<Integer> stack = new Stack<>();\n        for (int i = N - 1; i >= 0; i--) {\n            right[i] = i;\n            while (!stack.isEmpty() && x[stack.peek()] < x[i] + d[i]) {\n                right[i] = right[stack.peek()];\n                stack.pop();\n            }\n            stack.push(i);\n        }\n\n        long[] dp = new long[N + 1];\n        dp[N] = 1;\n        for (int i = N - 1; i >= 0; i--) {\n            dp[i] = (dp[i + 1] + dp[right[i] + 1]) % MOD;\n        }\n\n        System.out.println(dp[0]);\n    }\n}",
+    "timestamp": "2025-08-05 22:36:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RobotRemoval {\n    private static final int MOD = 998244353;\n\n    public static int countRemainingRobots(int N, int[] X, int[] D) {\n        List<Robot> robots = new ArrayList<>();\n        for (int i = 0; i < N; i++) {\n            robots.add(new Robot(X[i], X[i] + D[i]));\n        }\n        \n        Collections.sort(robots, (a, b) -> a.start - b.start);\n        \n        long result = 0;\n        int[] dp = new int[1 << N];\n        dp[0] = 1;\n        \n        for (int mask = 1; mask < (1 << N); mask++) {\n            for (int i = 0; i < N; i++) {\n                if ((mask & (1 << i)) == 0) continue;\n                \n                int prevMask = mask ^ (1 << i);\n                boolean valid = true;\n                \n                for (int j = 0; j < N; j++) {\n                    if ((prevMask & (1 << j)) == 0) continue;\n                    \n                    if (canActivate(robots.get(i), robots.get(j))) {\n                        valid = false;\n                        break;\n                    }\n                }\n                \n                if (valid) {\n                    dp[mask] = (dp[mask] + dp[prevMask]) % MOD;\n                }\n            }\n            \n            result = (result + dp[mask]) % MOD;\n        }\n        \n        return (int)result;\n    }\n    \n    private static boolean canActivate(Robot a, Robot b) {\n        return a.start < b.end && b.start < a.end;\n    }\n    \n    private static class Robot {\n        int start, end;\n        \n        Robot(int start, int end) {\n            this.start = start;\n            this.end = end;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] X = new int[N];\n        int[] D = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            X[i] = scanner.nextInt();\n            D[i] = scanner.nextInt();\n        }\n        \n        System.out.println(countRemainingRobots(N, X, D));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:36:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\nconst int MOD = 998244353;\n\nclass Solution {\npublic:\n    int countRemainingRobots(int N, vector<int>& X, vector<int>& D) {\n        vector<pair<int, int>> robots(N);\n        for (int i = 0; i < N; i++) {\n            robots[i] = {X[i], X[i] + D[i]};\n        }\n        \n        sort(robots.begin(), robots.end());\n        \n        vector<int> dp(1 << N, 0);\n        dp[0] = 1;\n        \n        for (int mask = 0; mask < (1 << N); mask++) {\n            for (int i = 0; i < N; i++) {\n                if (mask & (1 << i)) continue;\n                \n                bool canActivate = true;\n                for (int j = 0; j < N; j++) {\n                    if (mask & (1 << j)) {\n                        if (robots[j].first < robots[i].second && robots[j].second > robots[i].first) {\n                            canActivate = false;\n                            break;\n                        }\n                    }\n                }\n                \n                if (canActivate) {\n                    dp[mask | (1 << i)] = (dp[mask | (1 << i)] + dp[mask]) % MOD;\n                }\n            }\n        }\n        \n        int totalSets = 0;\n        for (int mask = 0; mask < (1 << N); mask++) {\n            totalSets = (totalSets + dp[mask]) % MOD;\n        }\n        \n        return totalSets;\n    }\n};\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> X(N), D(N);\n    for (int i = 0; i < N; i++) {\n        cin >> X[i] >> D[i];\n    }\n    \n    Solution solution;\n    cout << solution.countRemainingRobots(N, X, D) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:36:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef count_remaining_sets(N, X, D):\n    event_points = []\n    \n    for i in range(N):\n        event_points.append((X[i], 1))  # robot starts\n        event_points.append((X[i] + D[i], -1))  # robot end\n\n    # sort event points, with the end point coming before the start if they are same\n    event_points.sort(key=lambda x: (x[0], x[1]))\n\n    current_moving = 0\n    possible_settings = 1\n    for point, typ in event_points:\n        if typ == 1:\n            current_moving += 1\n        else:\n            # typ == -1 means a robot's range ends here\n            possible_settings = (possible_settings * 2) % MOD\n            current_moving -= 1\n\n    return (possible_settings - 1 + MOD) % MOD\n\n# Example usage\n# N = ... (number of robots)\n# X = [...] (coordinates of robots)\n# D = [...] (distances robots can travel)\n# print(count_remaining_sets(N, X, D))",
+    "timestamp": "2025-08-13 11:42:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class RobotActivation {\n    private static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        Robot[] robots = new Robot[N];\n\n        for (int i = 0; i < N; i++) {\n            int x = scanner.nextInt();\n            int d = scanner.nextInt();\n            robots[i] = new Robot(x, d);\n        }\n\n        Arrays.sort(robots, Comparator.comparingInt(r -> r.x));\n\n        int[] dp = new int[N + 1];\n        dp[0] = 1;\n        int reach = 0;\n\n        for (int i = 0; i < N; i++) {\n            while (reach < N && robots[reach].x < robots[i].x + robots[i].d) {\n                reach++;\n            }\n            dp[reach] = (dp[reach] + dp[i]) % MOD;\n        }\n\n        long result = 0;\n        for (int i = 0; i <= N; i++) {\n            result = (result + dp[i]) % MOD;\n        }\n\n        result = (result - 1 + MOD) % MOD;\n        System.out.println(result);\n        scanner.close();\n    }\n\n    private static class Robot {\n        int x, d;\n        Robot(int x, int d) {\n            this.x = x;\n            this.d = d;\n        }\n    }\n}",
+    "timestamp": "2025-08-13 11:42:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 998244353\n\ntypedef struct {\n    int position;\n    int distance;\n} Robot;\n\nint compare(const void* a, const void* b) {\n    return ((Robot*)a)->position - ((Robot*)b)->position;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    Robot robots[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &robots[i].position, &robots[i].distance);\n    }\n\n    qsort(robots, N, sizeof(Robot), compare);\n\n    int dp[N+1];\n    dp[0] = 1;\n    for (int i = 1; i <= N; i++) {\n        dp[i] = dp[i-1];\n        int j;\n        // Find the last j where the current robot can connect or on itself\n        for (j = i-1; j >= 0; j--) {\n            if (robots[j].position + robots[j].distance >= robots[i-1].position) {\n                break;\n            }\n        }\n        dp[i] = (dp[i] + dp[j]) % MOD;\n    }\n\n    printf(\"%d\\n\", dp[N]);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:42:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countRemainingSets(N, X, D) {\n  const MOD = 998244353;\n\n  let robotsEndAt = [];\n  for (let i = 0; i < N; i++) {\n    robotsEndAt.push([X[i], X[i] + D[i]]);\n  }\n  \n  robotsEndAt.sort((a, b) => a[0] - b[0]);\n  \n  let dp = new Array(N + 1).fill(0);\n  dp[0] = 1;\n\n  for (let i = 1; i <= N; i++) {\n    dp[i] = dp[i - 1];\n    let j = i - 1;\n    while (j >= 0 && robotsEndAt[j][1] > robotsEndAt[i - 1][0]) {\n      dp[i] += dp[j];\n      dp[i] %= MOD;\n      j--;\n    }\n  }\n\n  return dp[N];\n}\n\n// Example usage:\nconst N = 3;\nconst X = [1, 2, 3];\nconst D = [3, 2, 1];\nconsole.log(countRemainingSets(N, X, D)); // Outputs the number of possible sets",
+    "timestamp": "2025-08-13 11:42:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, X, D):\n    MOD = 998244353\n    states = set([(0, 1 << N)])\n    \n    def can_activate(current_state, robot_idx):\n        remaining = current_state[1]\n        if not (remaining & (1 << robot_idx)):\n            return False\n        \n        x_pos = X[robot_idx]\n        move_dist = D[robot_idx]\n        \n        for other_idx in range(N):\n            if other_idx == robot_idx:\n                continue\n            if (remaining & (1 << other_idx)) and X[other_idx] >= x_pos and X[other_idx] < x_pos + move_dist:\n                remaining |= 1 << other_idx\n        \n        return (x_pos, remaining)\n    \n    seen = set()\n    while states:\n        new_states = set()\n        for state in states:\n            if state in seen:\n                continue\n            seen.add(state)\n            \n            for robot_idx in range(N):\n                if state[1] & (1 << robot_idx):\n                    activated = can_activate(state, robot_idx)\n                    if activated:\n                        new_states.add(activated)\n            \n            new_states.add(state)\n        \n        states = new_states\n    \n    return len(seen) % MOD\n\ndef main():\n    N = int(input())\n    X = list(map(int, input().split()))\n    D = list(map(int, input().split()))\n    print(solve(N, X, D))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 11:42:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, X, D) {\n    const MOD = 998244353;\n    const sets = new Set();\n\n    function backtrack(activated, remaining) {\n        if (remaining.length === 0) {\n            sets.add(activated.sort((a, b) => a - b).join(','));\n            return;\n        }\n\n        for (let i = 0; i < remaining.length; i++) {\n            const robot = remaining[i];\n            const newActivated = [...activated, robot];\n            const newRemaining = remaining.filter((_, idx) => idx !== i)\n                .filter(r => X[r] >= X[robot] + D[robot]);\n\n            backtrack(newActivated, newRemaining);\n        }\n    }\n\n    backtrack([], Array.from({length: N}, (_, i) => i + 1));\n\n    return sets.size % MOD;\n}",
+    "timestamp": "2025-08-13 11:42:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    N = int(sys.stdin.readline())\n    robots = []\n    for _ in range(N):\n        X, D = map(int, sys.stdin.readline().split())\n        robots.append((X, D))\n    robots.sort()\n    X = [robots[i][0] for i in range(N)]\n    D = [robots[i][1] for i in range(N)]\n    \n    right_limits = [0] * N\n    stack = []\n    for i in range(N-1, -1, -1):\n        limit = X[i] + D[i]\n        while stack and X[stack[-1]] < limit:\n            limit = max(limit, right_limits[stack[-1]])\n            stack.pop()\n        right_limits[i] = limit\n        stack.append(i)\n    \n    dp = [1] * (N + 1)\n    for i in range(N-1, -1, -1):\n        low = i + 1\n        high = N\n        # Find the smallest j where X[j] >= right_limits[i]\n        left, right = i + 1, N\n        j = N\n        while left <= right:\n            mid = (left + right) // 2\n            if mid < N and X[mid] < right_limits[i]:\n                left = mid + 1\n            else:\n                j = mid\n                right = mid - 1\n        dp[i] = (dp[i+1] + dp[j]) % MOD\n    print(dp[0])\n\nsolve()",
+    "timestamp": "2025-08-13 11:42:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const input = require('fs').readFileSync(0, 'utf8').trim().split('\\n');\n    const N = parseInt(input[0], 10);\n    const robots = [];\n    for (let i = 1; i <= N; i++) {\n        const [x, d] = input[i].split(' ').map(Number);\n        robots.push({ x, d });\n    }\n    robots.sort((a, b) => a.x - b.x);\n\n    const X = robots.map(r => r.x);\n    const D = robots.map(r => r.d);\n    const stack = [];\n    const right = new Array(N).fill(N);\n    \n    for (let i = N - 1; i >= 0; i--) {\n        const limit = X[i] + D[i];\n        while (stack.length > 0 && X[stack[stack.length - 1]] < limit) {\n            stack.pop();\n        }\n        if (stack.length > 0) {\n            right[i] = stack[stack.length - 1];\n        }\n        stack.push(i);\n    }\n\n    const dp = new Array(N + 1).fill(0);\n    dp[N] = 1;\n    for (let i = N - 1; i >= 0; i--) {\n        dp[i] = (dp[i + 1] + dp[right[i]]) % MOD;\n    }\n    console.log(dp[0]);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 11:42:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nstruct Robot {\n    int x, d;\n};\n\nint main() {\n    int N;\n    cin >> N;\n    vector<Robot> robots(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> robots[i].x >> robots[i].d;\n    }\n    \n    sort(robots.begin(), robots.end(), [](const Robot &a, const Robot &b) {\n        return a.x < b.x;\n    });\n\n    vector<int> dp(N + 1);\n    dp[0] = 1;\n\n    for (int i = 0; i < N; ++i) {\n        int reach = robots[i].x + robots[i].d;\n        dp[i + 1] = dp[i];\n        int end = lower_bound(robots.begin(), robots.end(), reach, [](const Robot &r, int val){\n            return r.x < val;\n        }) - robots.begin();\n\n        dp[end] = (dp[end] + dp[i]) % MOD;\n    }\n\n    int result = dp[N];\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:04:35"
+  }
+]

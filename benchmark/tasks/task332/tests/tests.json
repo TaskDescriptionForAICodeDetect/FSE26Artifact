@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "5 4\n9 2 8 3 7 4 6 5",
+      "output": "18"
+    },
+    {
+      "input": "A J\nK Q J T 9 8 7 6",
+      "output": "blackjack"
+    },
+    {
+      "input": "T 4\n7 J A 6 Q T K 7",
+      "output": "21"
+    },
+    {
+      "input": "2 2\n2 3 4 K 2 3 4 K",
+      "output": "bust"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Given an integer N, find the minimum possible positive integer k such that the sum of the first k positive integers (1+2+...+k) is a multiple of N. It can be proven that such a positive integer k always exists.

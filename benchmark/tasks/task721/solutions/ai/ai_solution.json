@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nlong long dp[2][2][2][2][31];\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    dp[0][0][0][0][0] = 1;\n\n    for (int i = 0; i < N; i++) {\n        memset(dp[1], 0, sizeof(dp[1]));\n\n        for (int a = 0; a < 2; a++) {\n            for (int b = 0; b < 2; b++) {\n                for (int c = 0; c < 2; c++) {\n                    for (int used = 0; used < 2; used++) {\n                        if (dp[0][a][b][c][used] == 0) continue;\n\n                        // Add A\n                        dp[1][1][b][c][used] = (dp[1][1][b][c][used] + dp[0][a][b][c][used]) % MOD;\n\n                        // Add B\n                        dp[1][a][1][c][used] = (dp[1][a][1][c][used] + dp[0][a][b][c][used]) % MOD;\n\n                        // Add C\n                        dp[1][a][b][1][used] = (dp[1][a][b][1][used] + dp[0][a][b][c][used]) % MOD;\n                    }\n                }\n            }\n        }\n\n        memcpy(dp[0], dp[1], sizeof(dp[0]));\n    }\n\n    long long result = 0;\n    for (int a = 0; a < 2; a++) {\n        for (int b = 0; b < 2; b++) {\n            for (int c = 0; c < 2; c++) {\n                result = (result + dp[0][a][b][c][0]) % MOD;\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAXN 2000000\n\nlong long dp[MAXN + 1];\n\nvoid precompute() {\n    dp[0] = 1;\n    for (int i = 2; i <= MAXN; i += 2) {\n        dp[i] = (dp[i - 2] * 2) % MOD;\n        if (i >= 4) {\n            dp[i] = (dp[i] + dp[i - 4]) % MOD;\n        }\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    precompute();\n    printf(\"%lld\\n\", dp[N]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 998244353;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<long long> dp(N + 1, 0);\n    dp[0] = 1;\n    \n    for (int i = 2; i <= N; i += 2) {\n        dp[i] = (dp[i - 2] * 2) % MOD;\n    }\n    \n    long long ans = 1;\n    for (int i = 0; i < N / 2; ++i) {\n        ans = (ans * 2) % MOD;\n    }\n    \n    ans = (ans + dp[N]) % MOD;\n    ans = (ans * 333333336) % MOD; // 333333336 is the modular inverse of 3 mod 998244353\n    \n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        sc.close();\n\n        long[] dp = new long[N + 1];\n        dp[0] = 1;\n        for (int i = 2; i <= N; i += 2) {\n            dp[i] = (dp[i - 2] * 2) % MOD;\n            for (int j = 2; j < i; j += 2) {\n                dp[i] = (dp[i] + dp[j - 2] * dp[i - j]) % MOD;\n            }\n        }\n        System.out.println(dp[N]);\n    }\n}",
+    "timestamp": "2025-08-05 22:42:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    private static final int MOD = 998244353;\n\n    public int countStrings(int N) {\n        long[][][] dp = new long[N + 1][3][3];\n        \n        // Base case: empty string\n        dp[0][0][0] = 1;\n        \n        for (int len = 1; len <= N; len++) {\n            for (int last1 = 0; last1 < 3; last1++) {\n                for (int last2 = 0; last2 < 3; last2++) {\n                    for (int next = 0; next < 3; next++) {\n                        // Forbidden combinations for erasure\n                        if ((last1 == 0 && last2 == 1) || (last1 == 1 && last2 == 0)) {\n                            continue;\n                        }\n                        \n                        // Compute new state\n                        dp[len][last2][next] = (dp[len][last2][next] + dp[len - 1][last1][last2]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        // Sum all possible final states\n        long result = 0;\n        for (int last1 = 0; last1 < 3; last1++) {\n            for (int last2 = 0; last2 < 3; last2++) {\n                result = (result + dp[N][last1][last2]) % MOD;\n            }\n        }\n        \n        return (int) result;\n    }\n}",
+    "timestamp": "2025-08-05 22:42:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nconst int MOD = 998244353;\n\nll solve(int N) {\n    vector<vector<ll>> dp(N + 1, vector<ll>(8, 0));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < N; i++) {\n        for (int mask = 0; mask < 8; mask++) {\n            if (dp[i][mask] == 0) continue;\n\n            // Add A\n            dp[i+1][mask | 1] = (dp[i+1][mask | 1] + dp[i][mask]) % MOD;\n\n            // Add B\n            dp[i+1][mask | 2] = (dp[i+1][mask | 2] + dp[i][mask]) % MOD;\n\n            // Add C\n            dp[i+1][mask | 4] = (dp[i+1][mask | 4] + dp[i][mask]) % MOD;\n        }\n    }\n\n    ll total = 0;\n    for (int mask = 0; mask < 8; mask++) {\n        if (mask == 3 || mask == 5 || mask == 6) continue;\n        total = (total + dp[N][mask]) % MOD;\n    }\n\n    return total;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    cout << solve(N) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef count_strings(N):\n    # If N is odd, return 0 because it's impossible to fully erase the string\n    if N % 2 != 0:\n        return 0\n\n    # Create a memoization table\n    dp = [[0 for _ in range(N+1)] for _ in range(N+1)]\n\n    # Base case: the empty string is already empty\n    dp[0][0] = 1\n\n    # Fill dp table\n    for length in range(2, N+1, 2):  # Only even lengths make sense\n        for open_a in range(length+1):\n            if open_a > 0:\n                # Remove 'AA' or 'CC'\n                dp[length][open_a] += dp[length-2][open_a-1]\n            if open_a + 2 <= length:\n                # Remove 'AC' or 'CA' without changing open A's\n                dp[length][open_a] += dp[length-2][open_a + 2]\n\n            # Apply modulo for each step\n            dp[length][open_a] %= MOD\n\n    return dp[N][0]\n\n# Example usage:\nn = 4  # The number can be changed as desired\nprint(count_strings(n))",
+    "timestamp": "2025-08-13 12:11:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class EraseToEnd {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n\n        if (N % 2 != 0) {\n            System.out.println(0);\n            return;\n        }\n\n        long[][] dp = new long[N + 1][N + 1];\n        dp[0][0] = 1;\n\n        for (int i = 1; i <= N; i++) {\n            for (int j = 0; j <= i; j++) {\n                dp[i][j] = dp[i - 1][j]; // Add 'C', neutral character\n                if (j > 0) dp[i][j] = (dp[i][j] + dp[i - 1][j - 1]) % MOD; // Add 'A'\n                if (j < i) dp[i][j] = (dp[i][j] + dp[i - 1][j + 1]) % MOD; // Add 'B'\n            }\n        }\n\n        System.out.println(dp[N][0]);\n    }\n}",
+    "timestamp": "2025-08-13 12:11:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nlong long power(long long x, long long y, long long p) {\n    long long res = 1;\n    x = x % p;\n    while (y > 0) {\n        if (y & 1)\n            res = (res * x) % p;\n        y = y >> 1;\n        x = (x * x) % p;\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    if (N % 2 != 0) {\n        printf(\"0\\n\");\n        return 0;\n    }\n\n    long long result = power(2, N / 2, MOD);\n    printf(\"%lld\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:11:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N;\n    cin >> N;\n\n    if (N % 2 != 0) {\n        cout << 0 << endl;\n        return 0;\n    }\n\n    vector<vector<long long>> dp(N + 1, vector<long long>(N + 1, 0));\n    dp[0][0] = 1;\n\n    for (int len = 2; len <= N; len += 2) {\n        for (int open = 0; open <= len; open++) {\n            if (open > 0)\n                dp[len][open] = dp[len - 1][open - 1];\n\n            if (open < len)\n                dp[len][open] = (dp[len][open] + dp[len - 1][open + 1]) % MOD;\n\n            if (open >= 2)\n                dp[len][open] = (dp[len][open] + dp[len - 2][open - 2]) % MOD;\n        }\n    }\n\n    cout << dp[N][0] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:11:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N):\n    MOD = 998244353\n    \n    # State: [A count, B count, C count]\n    dp = [[[0 for _ in range(N+1)] for _ in range(N+1)] for _ in range(N+1)]\n    dp[0][0][0] = 1\n    \n    for a in range(N+1):\n        for b in range(N+1):\n            for c in range(N+1):\n                if a + b + c > N or dp[a][b][c] == 0:\n                    continue\n                \n                # Add A\n                if a + 1 <= N:\n                    dp[a+1][b][c] = (dp[a+1][b][c] + dp[a][b][c]) % MOD\n                \n                # Add B\n                if b + 1 <= N:\n                    dp[a][b+1][c] = (dp[a][b+1][c] + dp[a][b][c]) % MOD\n                \n                # Add C\n                if c + 1 <= N:\n                    dp[a][b][c+1] = (dp[a][b][c+1] + dp[a][b][c]) % MOD\n                \n                # Erase two A's\n                if a >= 2:\n                    dp[a-2][b][c] = (dp[a-2][b][c] + dp[a][b][c]) % MOD\n                \n                # Erase two C's\n                if c >= 2:\n                    dp[a][b][c-2] = (dp[a][b][c-2] + dp[a][b][c]) % MOD\n    \n    return dp[0][0][0]\n\nN = int(input())\nprint(solve(N))",
+    "timestamp": "2025-08-13 12:12:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 998244353\n\ndef solve():\n    N = int(input())\n    if N == 0:\n        print(1)\n        return\n    # dp[i][j] where j is the balance (count of A - count of B)\n    # We can observe that the maximum absolute balance is N, but in practice, it's less\n    max_balance = N\n    dp_prev = {}\n    # Initial state: empty string, balance 0\n    dp_prev[0] = 1\n    \n    for _ in range(N):\n        dp_next = {}\n        for balance, count in dp_prev.items():\n            # Add 'A'\n            new_balance = balance + 1\n            dp_next[new_balance] = (dp_next.get(new_balance, 0) + count) % MOD\n            # Add 'B'\n            new_balance = balance - 1\n            dp_next[new_balance] = (dp_next.get(new_balance, 0) + count) % MOD\n            # Add 'C'\n            dp_next[balance] = (dp_next.get(balance, 0) + count) % MOD\n        dp_prev = dp_next\n    \n    # The answer is the count of strings with balance 0 and no forbidden pairs left\n    # However, the problem allows erasing any pairs except AB and BA, so we need to count\n    # strings that can be reduced to empty by erasing CC, AC, CA, BC, CB, but not AB or BA.\n    # This is equivalent to counting strings where the number of A's equals the number of B's,\n    # and the string can be reduced to empty by erasing pairs (but not AB or BA).\n    # The key observation is that any such string must have a balance of 0 at the end,\n    # and the erasures must not leave any AB or BA pairs.\n    # The solution is to count the number of strings with equal A's and B's, and subtract\n    # those that cannot be reduced due to AB or BA constraints.\n    # However, this is complex, so we can use dynamic programming with memoization of the balance.\n    \n    # The answer is the number of strings where the total balance is 0, minus those that have\n    # some prefix with balance 0 and the remaining part has balance 0, but contains AB or BA.\n    # This is similar to Dyck paths with restrictions.\n    \n    # Alternatively, the answer is the number of balanced strings (A's = B's) that can be reduced,\n    # which is equal to the number of such strings where no prefix has more B's than A's or vice versa.\n    # This is the Catalan number for the count of A's and B's, multiplied by 3^C_count.\n    \n    # The total number of valid strings is sum_{k=0}^{N/2} [ C(N, 2k) * Catalan(k) * 3^{N-2k} ]\n    \n    # Precompute factorial, inverse factorial for combinations\n    fact = [1] * (N + 1)\n    inv_fact = [1] * (N + 1)\n    for i in range(1, N + 1):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[N] = pow(fact[N], MOD-2, MOD)\n    for i in range(N-1, -1, -1):\n        inv_fact[i] = inv_fact[i+1] * (i+1) % MOD\n    \n    def comb(n, k):\n        if k < 0 or k > n:\n            return 0\n        return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD\n    \n    def catalan(k):\n        if k == 0:\n            return 1\n        return comb(2 * k, k) * pow(k + 1, MOD - 2, MOD) % MOD\n    \n    res = 0\n    for k in range(0, N // 2 + 1):\n        c = comb(N, 2 * k) * catalan(k) % MOD\n        remaining = N - 2 * k\n        c = c * pow(3, remaining, MOD) % MOD\n        res = (res + c) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 12:12:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function numberOfStrings(N) {\n    const MOD = 998244353;\n    const mat_mult = (a, b) => [\n        [((a[0][0] * b[0][0] + a[0][1] * b[1][0] + a[0][2] * b[2][0]) % MOD),\n         ((a[0][0] * b[0][1] + a[0][1] * b[1][1] + a[0][2] * b[2][1]) % MOD),\n         ((a[0][0] * b[0][2] + a[0][1] * b[1][2] + a[0][2] * b[2][2]) % MOD)],\n        [((a[1][0] * b[0][0] + a[1][1] * b[1][0] + a[1][2] * b[2][0]) % MOD),\n         ((a[1][0] * b[0][1] + a[1][1] * b[1][1] + a[1][2] * b[2][1]) % MOD),\n         ((a[1][0] * b[0][2] + a[1][1] * b[1][2] + a[1][2] * b[2][2]) % MOD)],\n        [((a[2][0] * b[0][0] + a[2][1] * b[1][0] + a[2][2] * b[2][0]) % MOD),\n         ((a[2][0] * b[0][1] + a[2][1] * b[1][1] + a[2][2] * b[2][1]) % MOD),\n         ((a[2][0] * b[0][2] + a[2][1] * b[1][2] + a[2][2] * b[2][2]) % MOD)]\n    ];\n    \n    const mat_pow = (mat, exp) => {\n        let res = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];\n        while (exp > 0) {\n            if (exp % 2 === 1) res = mat_mult(res, mat);\n            mat = mat_mult(mat, mat);\n            exp = Math.floor(exp / 2);\n        }\n        return res;\n    };\n\n    const transitionMatrix = [\n        [1, 1, 1],\n        [1, 0, 1],\n        [1, 1, 0]\n    ];\n\n    const resultMatrix = mat_pow(transitionMatrix, N / 2);\n    return resultMatrix[0][0];\n}\n\n// Example usage:\nconsole.log(numberOfStrings(2));  // Output: 3",
+    "timestamp": "2025-08-13 12:12:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countStrings(N) {\n    const MOD = 998244353;\n    const dp = new Array(N + 1).fill(0).map(() => new Array(4).fill(0));\n    \n    dp[0][0] = 1;\n    \n    for (let i = 0; i < N; i++) {\n        for (let mask = 0; mask < 4; mask++) {\n            if (dp[i][mask] === 0) continue;\n            \n            // Add A\n            dp[i+1][mask | 1] = (dp[i+1][mask | 1] + dp[i][mask]) % MOD;\n            \n            // Add B\n            dp[i+1][mask | 2] = (dp[i+1][mask | 2] + dp[i][mask]) % MOD;\n            \n            // Add C\n            dp[i+1][mask] = (dp[i+1][mask] + dp[i][mask]) % MOD;\n        }\n    }\n    \n    return dp[N][0];\n}",
+    "timestamp": "2025-08-13 12:12:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const N = parseInt(readline());\n    let dp = new Array(N + 1).fill(0);\n    dp[0] = 1;\n    \n    for (let i = 2; i <= N; i += 2) {\n        dp[i] = dp[i - 2] * 2 % MOD;\n    }\n    \n    let res = 1;\n    for (let i = 0; i < N / 2; i++) {\n        res = res * 3 % MOD;\n    }\n    \n    let ans = (res - dp[N] + MOD) % MOD;\n    console.log(ans);\n}\n\n// For testing purposes, you can replace readline() with actual input\n// Example:\n// const readline = () => \"4\";\n// solve();",
+    "timestamp": "2025-08-13 12:12:48"
+  }
+]

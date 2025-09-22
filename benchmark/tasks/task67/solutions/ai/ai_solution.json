@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nint count = 0;\n\nvoid backtrack(int n, int s, int pos, int sum, bool used[]) {\n    if (pos > n) {\n        if (sum == s) {\n            count++;\n        }\n        return;\n    }\n    for (int i = 0; i <= 9; i++) {\n        if (!used[i]) {\n            used[i] = true;\n            backtrack(n, s, pos + 1, sum + pos * i, used);\n            used[i] = false;\n        }\n    }\n}\n\nint main() {\n    int n, s;\n    scanf(\"%d %d\", &n, &s);\n    bool used[10] = {false};\n    backtrack(n, s, 1, 0, used);\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class UniqueSequences {\n    public static void count(int n, int s) {\n        System.out.println(solve(n, s));\n    }\n\n    private static int solve(int n, int s) {\n        return backtrack(n, s, 0, 0, 0, new boolean[10]);\n    }\n\n    private static int backtrack(int n, int s, int index, int currentSum, int used, boolean[] visited) {\n        if (index == n) {\n            return currentSum == s ? 1 : 0;\n        }\n\n        int count = 0;\n        for (int i = 0; i < 10; i++) {\n            if (!visited[i]) {\n                visited[i] = true;\n                count += backtrack(n, s, index + 1, currentSum + (index + 1) * i, used | (1 << i), visited);\n                visited[i] = false;\n            }\n        }\n        return count;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int s = scanner.nextInt();\n        count(n, s);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:26:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint count = 0;\n\nvoid backtrack(int n, int s, int pos, int current_sum, vector<bool>& used) {\n    if (pos > n) {\n        if (current_sum == s) {\n            count++;\n        }\n        return;\n    }\n    \n    for (int digit = 0; digit <= 9; digit++) {\n        if (!used[digit]) {\n            used[digit] = true;\n            backtrack(n, s, pos + 1, current_sum + pos * digit, used);\n            used[digit] = false;\n        }\n    }\n}\n\nint main() {\n    int n, s;\n    cin >> n >> s;\n    vector<bool> used(10, false);\n    backtrack(n, s, 1, 0, used);\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint sequence[10];\nint used[10];\nint count = 0;\n\nvoid backtrack(int index, int n, int sum, int target) {\n    if (index == n) {\n        if (sum == target) {\n            count++;\n        }\n        return;\n    }\n\n    for (int i = 0; i < 10; i++) {\n        if (!used[i]) {\n            sequence[index] = i;\n            used[i] = 1;\n            backtrack(index + 1, n, sum + (index + 1) * i, target);\n            used[i] = 0;\n        }\n    }\n}\n\nint main() {\n    int n, s;\n    scanf(\"%d %d\", &n, &s);\n\n    count = 0;\n    memset(used, 0, sizeof(used));\n    backtrack(0, n, 0, s);\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n\nusing namespace std;\n\nint countSequences(int n, int s) {\n    int count = 0;\n    \n    vector<int> sequence(n);\n    set<int> used;\n    \n    function<void(int, int)> backtrack = [&](int index, int currentSum) {\n        if (index == n) {\n            if (currentSum == s) {\n                count++;\n            }\n            return;\n        }\n        \n        for (int num = 0; num <= 9; num++) {\n            if (used.find(num) == used.end()) {\n                sequence[index] = num;\n                used.insert(num);\n                \n                backtrack(index + 1, currentSum + (index + 1) * num);\n                \n                used.erase(num);\n            }\n        }\n    };\n    \n    backtrack(0, 0);\n    \n    return count;\n}\n\nint main() {\n    int n, s;\n    cin >> n >> s;\n    \n    int result = countSequences(n, s);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class UniqueSequences {\n    private static int count = 0;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int s = scanner.nextInt();\n        boolean[] used = new boolean[10];\n        calculateSequences(n, s, 0, 0, used);\n        System.out.println(count);\n    }\n\n    private static void calculateSequences(int n, int s, int pos, int currentSum, boolean[] used) {\n        if (pos == n) {\n            if (currentSum == s) {\n                count++;\n            }\n            return;\n        }\n\n        for (int digit = 0; digit <= 9; digit++) {\n            if (!used[digit]) {\n                used[digit] = true;\n                calculateSequences(n, s, pos + 1, currentSum + (pos + 1) * digit, used);\n                used[digit] = false;\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:26:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import permutations\n\ndef count_unique_sequences(n, s):\n    digits = list(range(10))\n    count = 0\n\n    for perm in permutations(digits, n):\n        sum_value = sum((i+1) * perm[i] for i in range(n))\n        if sum_value == s:\n            count += 1\n    \n    return count\n\n# Example usage:\nn = int(input(\"Enter n: \"))\ns = int(input(\"Enter s: \"))\nresult = count_unique_sequences(n, s)\nprint(result)",
+    "timestamp": "2025-08-12 23:14:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Scanner;\nimport java.util.Set;\n\npublic class UniqueSequences {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int s = scanner.nextInt();\n        scanner.close();\n\n        System.out.println(countSequences(n, s, new boolean[10], 0, 0));\n    }\n\n    private static int countSequences(int n, int s, boolean[] used, int currentIndex, int currentSum) {\n        if (currentIndex == n) {\n            return currentSum == s ? 1 : 0;\n        }\n\n        int count = 0;\n        for (int digit = 0; digit <= 9; digit++) {\n            if (!used[digit]) {\n                used[digit] = true;\n                count += countSequences(n, s, used, currentIndex + 1, currentSum + (currentIndex + 1) * digit);\n                used[digit] = false;\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-12 23:14:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint isUnique(int arr[], int len) {\n    int freq[10] = {0}; // Digits 0-9\n    for (int i = 0; i < len; i++) {\n        if (freq[arr[i]] > 0) return 0;\n        freq[arr[i]]++;\n    }\n    return 1;\n}\n\nint countSequences(int index, int n, int s, int currentSum, int usedDigits[], int sequence[]) {\n    if (index > n) {\n        if (currentSum == s && isUnique(sequence, n)) {\n            return 1;\n        }\n        return 0;\n    }\n\n    int count = 0;\n    for (int i = 0; i <= 9; i++) {\n        if (!usedDigits[i]) {\n            usedDigits[i] = 1;\n            sequence[index - 1] = i;\n            count += countSequences(index + 1, n, s, currentSum + index * i, usedDigits, sequence);\n            usedDigits[i] = 0;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n, s;\n    scanf(\"%d %d\", &n, &s);\n\n    int usedDigits[10] = {0};\n    int sequence[n];\n\n    int result = countSequences(1, n, s, 0, usedDigits, sequence);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:14:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_sequences(n, s):\n    def backtrack(index, current_sum, used_digits):\n        if index == n:\n            return 1 if current_sum == s else 0\n        \n        count = 0\n        for digit in range(10):\n            if digit not in used_digits:\n                new_sum = current_sum + (index + 1) * digit\n                if new_sum <= s:\n                    count += backtrack(index + 1, new_sum, used_digits | {digit})\n        \n        return count\n\n    return backtrack(0, 0, set())\n\nn, s = map(int, input().split())\nprint(count_sequences(n, s))",
+    "timestamp": "2025-08-12 23:14:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import itertools\n\nn, s = map(int, input().split())\ndigits = list(range(10))\ncount = 0\n\nfor perm in itertools.permutations(digits, n):\n    total = 0\n    for i in range(n):\n        total += (i + 1) * perm[i]\n    if total == s:\n        count += 1\n\nprint(count)",
+    "timestamp": "2025-08-12 23:15:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nclass UniqueSequenceCounter {\npublic:\n    int countSequences(int n, int s) {\n        return backtrack(n, s, 1, unordered_set<int>());\n    }\n\nprivate:\n    int backtrack(int n, int remaining, int start, unordered_set<int> used) {\n        if (n == 0) {\n            return remaining == 0 ? 1 : 0;\n        }\n        \n        int count = 0;\n        for (int digit = start; digit <= 9; ++digit) {\n            if (used.find(digit) == used.end()) {\n                used.insert(digit);\n                count += backtrack(n - 1, remaining - n * digit, digit + 1, used);\n                used.erase(digit);\n            }\n        }\n        return count;\n    }\n};\n\nint main() {\n    int n, s;\n    cin >> n >> s;\n    UniqueSequenceCounter counter;\n    cout << counter.countSequences(n, s) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:49:20"
+  }
+]

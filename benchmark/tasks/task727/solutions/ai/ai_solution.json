@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint are_coprime(int a, int b) {\n    return gcd(a, b) == 1;\n}\n\nint count_coprime_divisors(int a, int b) {\n    int count = 0;\n    int min = (a < b) ? a : b;\n    \n    for (int i = 1; i <= min; i++) {\n        if (a % i == 0 && b % i == 0) {\n            int is_coprime = 1;\n            for (int j = 1; j < i; j++) {\n                if (i % j == 0 && a % j == 0 && b % j == 0) {\n                    if (!are_coprime(j, i / j)) {\n                        is_coprime = 0;\n                        break;\n                    }\n                }\n            }\n            if (is_coprime) {\n                count++;\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int A, B;\n    scanf(\"%d %d\", &A, &B);\n    printf(\"%d\\n\", count_coprime_divisors(A, B));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint count_coprime_common_divisors(int A, int B) {\n    int g = gcd(A, B);\n    int count = 0;\n    \n    for (int i = 1; i * i <= g; ++i) {\n        if (g % i == 0) {\n            int d1 = i;\n            int d2 = g / i;\n            \n            if (d1 == d2) {\n                count++;\n            } else {\n                count += 2;\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int A, B;\n    scanf(\"%d %d\", &A, &B);\n    printf(\"%d\\n\", count_coprime_common_divisors(A, B));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <algorithm>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nvector<int> getDivisors(int x) {\n    vector<int> divisors;\n    for (int i = 1; i * i <= x; ++i) {\n        if (x % i == 0) {\n            divisors.push_back(i);\n            if (i != x / i) {\n                divisors.push_back(x / i);\n            }\n        }\n    }\n    return divisors;\n}\n\nint maxCoprimeCommonDivisors(int A, int B) {\n    int g = gcd(A, B);\n    vector<int> divisors = getDivisors(g);\n    vector<int> primes;\n    for (int d : divisors) {\n        if (d == 1) continue;\n        bool isPrime = true;\n        for (int p : primes) {\n            if (d % p == 0) {\n                isPrime = false;\n                break;\n            }\n        }\n        if (isPrime) {\n            primes.push_back(d);\n        }\n    }\n    return primes.size() + (g != 1 ? 1 : 0);\n}\n\nint main() {\n    int A, B;\n    cin >> A >> B;\n    cout << maxCoprimeCommonDivisors(A, B) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        System.out.println(maxCoprimeCommonDivisors(A, B));\n    }\n\n    public static int maxCoprimeCommonDivisors(int A, int B) {\n        int gcd = gcd(A, B);\n        Set<Integer> primeFactors = getPrimeFactors(gcd);\n        return primeFactors.size();\n    }\n\n    public static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    public static Set<Integer> getPrimeFactors(int n) {\n        Set<Integer> factors = new HashSet<>();\n        if (n == 1) {\n            return factors;\n        }\n        for (int i = 2; i * i <= n; i++) {\n            while (n % i == 0) {\n                factors.add(i);\n                n /= i;\n            }\n        }\n        if (n > 1) {\n            factors.add(n);\n        }\n        return factors;\n    }\n}",
+    "timestamp": "2025-08-05 22:43:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int maxCoprimeCommonDivisors(int A, int B) {\n        List<Integer> commonDivisors = findCommonDivisors(A, B);\n        int maxCoprimeDivisors = 0;\n        \n        for (int subset = 1; subset < (1 << commonDivisors.size()); subset++) {\n            if (isValidCoprimeDivisorSet(commonDivisors, subset)) {\n                maxCoprimeDivisors = Math.max(maxCoprimeDivisors, Integer.bitCount(subset));\n            }\n        }\n        \n        return maxCoprimeDivisors;\n    }\n    \n    private static List<Integer> findCommonDivisors(int A, int B) {\n        int gcd = findGCD(A, B);\n        List<Integer> divisors = new ArrayList<>();\n        \n        for (int i = 1; i <= Math.sqrt(gcd); i++) {\n            if (gcd % i == 0) {\n                divisors.add(i);\n                if (i != gcd / i) {\n                    divisors.add(gcd / i);\n                }\n            }\n        }\n        \n        Collections.sort(divisors);\n        return divisors;\n    }\n    \n    private static boolean isValidCoprimeDivisorSet(List<Integer> divisors, int subset) {\n        List<Integer> selectedDivisors = new ArrayList<>();\n        \n        for (int i = 0; i < divisors.size(); i++) {\n            if ((subset & (1 << i)) != 0) {\n                selectedDivisors.add(divisors.get(i));\n            }\n        }\n        \n        for (int i = 0; i < selectedDivisors.size(); i++) {\n            for (int j = i + 1; j < selectedDivisors.size(); j++) {\n                if (findGCD(selectedDivisors.get(i), selectedDivisors.get(j)) != 1) {\n                    return false;\n                }\n            }\n        }\n        \n        return true;\n    }\n    \n    private static int findGCD(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n}",
+    "timestamp": "2025-08-05 22:43:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nbool areCoprime(int a, int b) {\n    return gcd(a, b) == 1;\n}\n\nint maxCoprimeCommonDivisors(int A, int B) {\n    int g = gcd(A, B);\n    vector<int> divisors;\n    \n    for (int i = 1; i * i <= g; ++i) {\n        if (g % i == 0) {\n            divisors.push_back(i);\n            if (i != g / i) {\n                divisors.push_back(g / i);\n            }\n        }\n    }\n    \n    sort(divisors.begin(), divisors.end());\n    \n    int maxCoprime = 0;\n    vector<int> selected;\n    \n    for (int d : divisors) {\n        bool canAdd = true;\n        for (int s : selected) {\n            if (!areCoprime(d, s)) {\n                canAdd = false;\n                break;\n            }\n        }\n        \n        if (canAdd) {\n            selected.push_back(d);\n            maxCoprime++;\n        }\n    }\n    \n    return maxCoprime;\n}\n\nint main() {\n    int A, B;\n    cin >> A >> B;\n    cout << maxCoprimeCommonDivisors(A, B) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef maximum_coprime_common_divisors(A, B):\n    def gcd(x, y):\n        while y:\n            x, y = y, x % y\n        return x\n\n    def prime_factors(n):\n        factors = set()\n        while n % 2 == 0:\n            factors.add(2)\n            n //= 2\n        for i in range(3, int(math.sqrt(n)) + 1, 2):\n            while n % i == 0:\n                factors.add(i)\n                n //= i\n        if n > 2:\n            factors.add(n)\n        return factors\n\n    g = gcd(A, B)\n    factors = prime_factors(g)\n\n    def is_coprime(x):\n        return gcd(x, g) == 1\n\n    coprime_choices = [1]  # 1 is always coprime with any number.\n    for factor in factors:\n        test_divisor = g // factor\n        if test_divisor <= g and is_coprime(test_divisor):\n            coprime_choices.append(test_divisor)\n\n    return len(coprime_choices)\n\n# Example usage:\n# A = 12, B = 18\n# print(maximum_coprime_common_divisors(A, B))",
+    "timestamp": "2025-08-13 12:15:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class CoprimeCommonDivisors {\n\n    public static void main(String[] args) {\n        int A = 12;\n        int B = 15;\n        int result = maximumCoprimeCommonDivisors(A, B);\n        System.out.println(result);\n    }\n\n    public static int maximumCoprimeCommonDivisors(int A, int B) {\n        int gcd = gcd(A, B);\n        List<Integer> divisors = getDivisors(gcd);\n        int count = 0;\n        for (int divisor : divisors) {\n            if (areCoprime(divisor, gcd)) {\n                count++;\n            }\n        }\n        return count;\n    }\n\n    private static int gcd(int a, int b) {\n        if (b == 0) {\n            return a;\n        }\n        return gcd(b, a % b);\n    }\n\n    private static List<Integer> getDivisors(int n) {\n        List<Integer> divisors = new ArrayList<>();\n        for (int i = 1; i <= n; i++) {\n            if (n % i == 0) {\n                divisors.add(i);\n            }\n        }\n        return divisors;\n    }\n\n    private static boolean areCoprime(int x, int y) {\n        return gcd(x, y) == 1;\n    }\n}",
+    "timestamp": "2025-08-13 12:15:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int A, B;\n    scanf(\"%d %d\", &A, &B);\n    int commonGCD = gcd(A, B);\n    int maxCoprimeCommonDivisors = 0;\n\n    for (int i = 1; i * i <= commonGCD; i++) {\n        if (commonGCD % i == 0) {\n            if (gcd(i, commonGCD / i) == 1) {\n                maxCoprimeCommonDivisors++;\n            }\n            if (i != commonGCD / i) {\n                if (gcd(commonGCD / i, i) == 1) {\n                    maxCoprimeCommonDivisors++;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", maxCoprimeCommonDivisors);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:15:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function gcd(a, b) {\n    while (b !== 0) {\n        [a, b] = [b, a % b];\n    }\n    return a;\n}\n\nfunction maxCoprimeCommonDivisors(A, B) {\n    const gcdValue = gcd(A, B);\n    \n    function gcdCoprimePairsCount(n) {\n        let count = 0;\n        for (let i = 1; i * i <= n; i++) {\n            if (n % i === 0) {\n                if (gcd(i, n / i) === 1) {\n                    count += 1;\n                }\n                if (i !== n / i && gcd(n / i, i) === 1) {\n                    count += 1;\n                }\n            }\n        }\n        return count;\n    }\n\n    return gcdCoprimePairsCount(gcdValue);\n}",
+    "timestamp": "2025-08-13 12:15:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\ndef count_coprime_common_divisors(A, B):\n    def get_divisors(n):\n        divisors = []\n        i = 1\n        while i * i <= n:\n            if n % i == 0:\n                divisors.append(i)\n                if i != n // i:\n                    divisors.append(n // i)\n            i += 1\n        return sorted(divisors)\n    \n    def is_coprime(x, y):\n        return gcd(x, y) == 1\n    \n    common_divisors = [d for d in get_divisors(gcd(A, B)) if A % d == 0 and B % d == 0]\n    \n    max_coprime = 0\n    selected = []\n    \n    def backtrack(index, current_selected):\n        nonlocal max_coprime\n        \n        if index == len(common_divisors):\n            max_coprime = max(max_coprime, len(current_selected))\n            return\n        \n        # Skip current divisor\n        backtrack(index + 1, current_selected)\n        \n        # Try to include current divisor\n        can_include = all(is_coprime(common_divisors[index], x) for x in current_selected)\n        \n        if can_include:\n            current_selected.append(common_divisors[index])\n            backtrack(index + 1, current_selected)\n            current_selected.pop()\n    \n    backtrack(0, [])\n    return max_coprime",
+    "timestamp": "2025-08-13 12:16:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxCoprimeCommonDivisors(A, B) {\n    function gcd(a, b) {\n        while (b !== 0) {\n            let temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    function areCoprimes(a, b) {\n        return gcd(a, b) === 1;\n    }\n\n    let commonDivisors = [];\n    let maxDivisor = Math.min(A, B);\n\n    for (let i = 1; i <= maxDivisor; i++) {\n        if (A % i === 0 && B % i === 0) {\n            commonDivisors.push(i);\n        }\n    }\n\n    let maxCoprimes = 0;\n    let n = commonDivisors.length;\n\n    for (let mask = 1; mask < (1 << n); mask++) {\n        let selectedDivisors = [];\n        for (let j = 0; j < n; j++) {\n            if (mask & (1 << j)) {\n                selectedDivisors.push(commonDivisors[j]);\n            }\n        }\n\n        let isCoprime = true;\n        for (let k = 0; k < selectedDivisors.length; k++) {\n            for (let l = k + 1; l < selectedDivisors.length; l++) {\n                if (!areCoprimes(selectedDivisors[k], selectedDivisors[l])) {\n                    isCoprime = false;\n                    break;\n                }\n            }\n            if (!isCoprime) break;\n        }\n\n        if (isCoprime) {\n            maxCoprimes = Math.max(maxCoprimes, selectedDivisors.length);\n        }\n    }\n\n    return maxCoprimes;\n}",
+    "timestamp": "2025-08-13 12:16:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef max_coprime_common_divisors(A, B):\n    def get_prime_factors(x):\n        factors = set()\n        if x % 2 == 0:\n            factors.add(2)\n            while x % 2 == 0:\n                x //= 2\n        i = 3\n        while i * i <= x:\n            if x % i == 0:\n                factors.add(i)\n                while x % i == 0:\n                    x //= i\n            i += 2\n        if x > 1:\n            factors.add(x)\n        return factors\n    \n    gcd_val = math.gcd(A, B)\n    prime_factors = get_prime_factors(gcd_val)\n    return len(prime_factors)",
+    "timestamp": "2025-08-13 12:16:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function gcd(a, b) {\n    while (b !== 0) {\n        let temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nfunction maxCoprimeCommonDivisors(A, B) {\n    let g = gcd(A, B);\n    if (g === 1) return 1;\n    \n    let count = 0;\n    for (let i = 2; i * i <= g; i++) {\n        if (g % i === 0) {\n            count++;\n            while (g % i === 0) {\n                g = Math.floor(g / i);\n            }\n        }\n    }\n    if (g > 1) count++;\n    return count;\n}",
+    "timestamp": "2025-08-13 12:16:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\n// Function to calculate gcd\nint gcd(int a, int b) {\n    while (b != 0) {\n        int t = b;\n        b = a % b;\n        a = t;\n    }\n    return a;\n}\n\n// Function to get all divisors of a number\nvector<int> getDivisors(int n) {\n    vector<int> divisors;\n    for (int i = 1; i * i <= n; ++i) {\n        if (n % i == 0) {\n            divisors.push_back(i);\n            if (i != n / i) {\n                divisors.push_back(n / i);\n            }\n        }\n    }\n    return divisors;\n}\n\n// Main coprime common divisors solver\nint maxCoprimeCommonDivisors(int A, int B) {\n    int gcdAB = gcd(A, B);\n    vector<int> commonDivisors = getDivisors(gcdAB);\n    \n    int maxCoprimeCount = 0;\n    for (int i = 0; i < commonDivisors.size(); ++i) {\n        bool isCoprime = true;\n        for (int j = 0; j < i; ++j) {\n            if (gcd(commonDivisors[i], commonDivisors[j]) != 1) {\n                isCoprime = false;\n                break;\n            }\n        }\n        if (isCoprime) {\n            ++maxCoprimeCount;\n        }\n    }\n    return maxCoprimeCount;\n}\n\nint main() {\n    int A, B;\n    cin >> A >> B;\n    cout << maxCoprimeCommonDivisors(A, B) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:33:50"
+  }
+]

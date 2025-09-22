@@ -1,0 +1,1 @@
+For a given polygon g and target points t, print '2' if g contains t, '1' if t is on a segment of g, '0' otherwise. g is represented by a sequence of points p1, p2,..., pn where line segments connecting pi and pi+1 (1 ≤ i ≤ n-1) are sides of the polygon. The line segment connecting pn and p1 is also a side of the polygon. Note that the polygon is not necessarily convex.

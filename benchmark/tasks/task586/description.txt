@@ -1,0 +1,1 @@
+For given three points p1, p2, and p, find the projection point x of p onto the line defined by points p1 and p2.

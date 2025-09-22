@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint minOperations(int* initial, int* target, int n) {\n    int operations = 0;\n    for (int i = 0; i < n; ) {\n        if (initial[i] == target[i]) {\n            i++;\n            continue;\n        }\n        int delta = target[i] - initial[i];\n        if (delta < 0) {\n            delta += 9; // Assuming the maximum value is 9 (as per the problem description)\n        }\n        operations += delta;\n        for (int j = i; j < n && initial[j] != target[j]; j++) {\n            initial[j] = (initial[j] + delta - 1) % 9 + 1;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int* initial = (int*)malloc(n * sizeof(int));\n    int* target = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &initial[i]);\n    }\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &target[i]);\n    }\n    printf(\"%d\\n\", minOperations(initial, target, n));\n    free(initial);\n    free(target);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint minOperations(vector<int>& current, vector<int>& target) {\n    int n = current.size();\n    int operations = 0;\n    for (int i = 0; i < n; ++i) {\n        int diff = (target[i] - current[i] + 9) % 9; // +9 to handle negative mod\n        if (diff != 0) {\n            operations += diff;\n            for (int j = i + 1; j < n; ++j) {\n                current[j] = (current[j] + diff) % 9;\n                if (current[j] == 0) current[j] = 9;\n            }\n        }\n    }\n    return operations;\n}",
+    "timestamp": "2025-08-05 21:04:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TallyCounters {\n    public static int minOperations(int[] initial, int[] target, int max) {\n        int n = initial.length;\n        int operations = 0;\n        \n        for (int i = 0; i < n; ) {\n            if (initial[i] == target[i]) {\n                i++;\n                continue;\n            }\n            \n            int delta = (target[i] - initial[i] + max) % max;\n            int j = i;\n            while (j < n && (target[j] - initial[j] + max) % max == delta) {\n                initial[j] = target[j];\n                j++;\n            }\n            operations++;\n        }\n        \n        return operations;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int max = scanner.nextInt();\n        int[] initial = new int[n];\n        int[] target = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            initial[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < n; i++) {\n            target[i] = scanner.nextInt();\n        }\n        \n        System.out.println(minOperations(initial, target, max));\n    }\n}",
+    "timestamp": "2025-08-05 21:04:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int minOperations(int[] initial, int[] target, int maxValue) {\n        int n = initial.length;\n        int operations = 0;\n        \n        for (int i = 0; i < n; i++) {\n            int diff = (target[i] - initial[i] + maxValue) % maxValue;\n            if (diff > 0) {\n                if (i > 0 && operations > 0) {\n                    int prevDiff = (target[i-1] - initial[i-1] + maxValue) % maxValue;\n                    if (prevDiff > 0) {\n                        int gcd = calculateGCD(diff, prevDiff);\n                        operations = Math.max(operations, (diff + prevDiff - gcd) / gcd);\n                    } else {\n                        operations = Math.max(operations, diff);\n                    }\n                } else {\n                    operations = Math.max(operations, diff);\n                }\n            }\n        }\n        \n        return operations;\n    }\n    \n    private int calculateGCD(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n}",
+    "timestamp": "2025-08-05 21:05:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint min_operations(int* initial, int* target, int n, int max_value) {\n    int** dp = malloc(n * sizeof(int*));\n    for (int i = 0; i < n; i++) {\n        dp[i] = malloc(max_value * sizeof(int));\n        for (int j = 0; j < max_value; j++) {\n            dp[i][j] = INT_MAX;\n        }\n    }\n\n    for (int j = 0; j < max_value; j++) {\n        int diff = (target[0] - initial[0] + max_value - j) % max_value;\n        dp[0][j] = diff;\n    }\n\n    for (int i = 1; i < n; i++) {\n        for (int j = 0; j < max_value; j++) {\n            for (int k = 0; k < max_value; k++) {\n                int diff = (target[i] - initial[i] + max_value - j) % max_value;\n                int prev_diff = (j - k + max_value) % max_value;\n                \n                if (dp[i-1][k] != INT_MAX) {\n                    dp[i][j] = fmin(dp[i][j], dp[i-1][k] + diff + prev_diff);\n                }\n            }\n        }\n    }\n\n    int min_ops = INT_MAX;\n    for (int j = 0; j < max_value; j++) {\n        min_ops = fmin(min_ops, dp[n-1][j]);\n    }\n\n    for (int i = 0; i < n; i++) {\n        free(dp[i]);\n    }\n    free(dp);\n\n    return min_ops;\n}\n\nint main() {\n    int n, max_value;\n    scanf(\"%d %d\", &n, &max_value);\n\n    int* initial = malloc(n * sizeof(int));\n    int* target = malloc(n * sizeof(int));\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &initial[i]);\n    }\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &target[i]);\n    }\n\n    int result = min_operations(initial, target, n, max_value);\n    printf(\"%d\\n\", result);\n\n    free(initial);\n    free(target);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:05:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <algorithm>\n#include <climits>\n\nclass Solution {\npublic:\n    int minimumMoves(std::vector<int>& current, std::vector<int>& target, int maxCount) {\n        int n = current.size();\n        std::vector<std::vector<int>> dp(n + 1, std::vector<int>(n + 1, INT_MAX));\n        dp[0][0] = 0;\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j <= i; j++) {\n                if (dp[i-1][j] == INT_MAX) continue;\n\n                // Option 1: Do not press current counter\n                dp[i][j] = std::min(dp[i][j], dp[i-1][j]);\n\n                // Option 2: Press current counter\n                int requiredMoves = calculateMoves(current[i-1], target[i-1], maxCount);\n                if (j + requiredMoves <= i) {\n                    dp[i][j + requiredMoves] = std::min(dp[i][j + requiredMoves], \n                                                        dp[i-1][j] + 1);\n                }\n            }\n        }\n\n        int minOperations = INT_MAX;\n        for (int j = 0; j <= n; j++) {\n            minOperations = std::min(minOperations, dp[n][j]);\n        }\n\n        return minOperations;\n    }\n\nprivate:\n    int calculateMoves(int current, int target, int maxCount) {\n        int moves = 0;\n        while (current != target) {\n            current = (current % maxCount) + 1;\n            moves++;\n        }\n        return moves;\n    }\n};",
+    "timestamp": "2025-08-05 21:05:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations_to_target(initial, target):\n    n = len(initial)\n    operations = 0\n\n    i = 0\n    while i < n:\n        if initial[i] != target[i]:\n            j = i\n            while j < n and initial[j] != target[j]:\n                initial[j] = target[j]\n                j += 1\n            operations += 1\n            i = j\n        else:\n            i += 1\n    return operations\n\n# Example usage:\ninitial_values = [1, 2, 3, 4]\ntarget_values = [2, 2, 4, 4]\nprint(min_operations_to_target(initial_values, target_values))  # Output: 2",
+    "timestamp": "2025-08-13 04:53:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class TallyCounters {\n    public int minOperations(int[] initial, int[] target, int maxCounterValue) {\n        int n = initial.length;\n        int operations = 0;\n\n        for (int i = 0; i < n; ) {\n            if (initial[i] == target[i]) {\n                i++;\n                continue;\n            }\n\n            int j = i;\n            while (j < n && initial[j] != target[j]) {\n                j++;\n            }\n\n            operations++;\n            for (int k = i; k < j; k++) {\n                initial[k] = (initial[k] % maxCounterValue) + 1;\n            }\n        }\n\n        return operations;\n    }\n}",
+    "timestamp": "2025-08-13 04:53:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint minOperations(int* initial, int* target, int n, int maxVal) {\n    int operations = 0;\n    int i = 0;\n\n    while (i < n) {\n        if (initial[i] != target[i]) {\n            int start = i;\n            while (i < n && initial[i] != target[i]) {\n                initial[i] = (initial[i] + 1) % maxVal;\n                if (initial[i] == 0) {\n                    initial[i] = 1;\n                }\n                i++;\n            }\n            operations++;\n        } else {\n            i++;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int n, maxVal;\n    printf(\"Enter number of counters and max value: \");\n    scanf(\"%d%d\", &n, &maxVal);\n    \n    int* initial = (int*)malloc(n * sizeof(int));\n    int* target = (int*)malloc(n * sizeof(int));\n\n    printf(\"Enter initial values: \");\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &initial[i]);\n    }\n\n    printf(\"Enter target values: \");\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &target[i]);\n    }\n\n    int result = minOperations(initial, target, n, maxVal);\n    printf(\"Minimum operations required: %d\\n\", result);\n\n    free(initial);\n    free(target);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 04:54:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(initial, target):\n    n = len(initial)\n    if len(target) != n:\n        return -1\n    \n    def count_operations(diff):\n        ops = 0\n        for x in diff:\n            if x < 0:\n                return -1\n            ops += x\n        return ops\n    \n    max_counter = max(max(initial), max(target))\n    diff = [(target[i] - initial[i] + max_counter) % max_counter for i in range(n)]\n    \n    return count_operations(diff)",
+    "timestamp": "2025-08-13 04:54:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(initial, target):\n    n = len(initial)\n    operations = 0\n    current_increment = 0\n    \n    for i in range(n):\n        diff = (target[i] - initial[i] - current_increment) % 10\n        if diff < 0:\n            diff += 10\n        operations += diff\n        current_increment += diff\n    \n    return operations",
+    "timestamp": "2025-08-13 04:54:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint minOperationsToTarget(std::vector<int>& initial, std::vector<int>& target, int max_value) {\n    int n = initial.size();\n    int operations = 0;\n\n    for (int i = 0; i < n; ++i) {\n        if (initial[i] != target[i]) {\n            int j = i;\n            int delta = (target[i] - initial[i] + max_value) % max_value;\n            while (j < n && initial[j] != target[j]) {\n                initial[j] = (initial[j] + delta) % max_value;\n                if (initial[j] == 0) initial[j] = max_value;\n                j++;\n            }\n            operations++;\n        }\n    }\n    return operations;\n}\n\nint main() {\n    int n, max_value;\n    std::cin >> n >> max_value;\n    std::vector<int> initial(n), target(n);\n    for (int i = 0; i < n; ++i) std::cin >> initial[i];\n    for (int i = 0; i < n; ++i) std::cin >> target[i];\n\n    std::cout << minOperationsToTarget(initial, target, max_value) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:21:56"
+  }
+]

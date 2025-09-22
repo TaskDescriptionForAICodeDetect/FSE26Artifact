@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "12 1 3 0\nAB\nAC",
+      "output": "Yes\nA\nC"
+    },
+    {
+      "input": "23 1 0 0\nAB\nBC\nAB",
+      "output": "No"
+    },
+    {
+      "input": "31 0 9 0\nAC",
+      "output": "No"
+    },
+    {
+      "input": "48 6 9 1\nAC\nBC\nAB\nBC\nAC\nBC\nAB\nAB",
+      "output": "Yes\nC\nB\nB\nC\nC\nB\nA\nA"
+    }
+  ]
+}

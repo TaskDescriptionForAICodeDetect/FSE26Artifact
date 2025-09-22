@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define ROWS 12\n#define COLS 12\n\nvoid dfs(char grid[ROWS][COLS], int i, int j) {\n    if (i < 0 || i >= ROWS || j < 0 || j >= COLS || grid[i][j] != '1') {\n        return;\n    }\n    grid[i][j] = '0';\n    dfs(grid, i + 1, j);\n    dfs(grid, i - 1, j);\n    dfs(grid, i, j + 1);\n    dfs(grid, i, j - 1);\n}\n\nint countIslands(char grid[ROWS][COLS]) {\n    int count = 0;\n    for (int i = 0; i < ROWS; i++) {\n        for (int j = 0; j < COLS; j++) {\n            if (grid[i][j] == '1') {\n                dfs(grid, i, j);\n                count++;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    char grid[ROWS][COLS];\n    int datasets;\n    scanf(\"%d\", &datasets);\n    getchar(); // consume newline\n\n    for (int d = 0; d < datasets; d++) {\n        for (int i = 0; i < ROWS; i++) {\n            for (int j = 0; j < COLS; j++) {\n                scanf(\" %c\", &grid[i][j]);\n            }\n        }\n        printf(\"%d\\n\", countIslands(grid));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class IslandCounter {\n    public static int countIslands(char[][] grid) {\n        if (grid == null || grid.length == 0) return 0;\n        \n        int islands = 0;\n        for (int r = 0; r < grid.length; r++) {\n            for (int c = 0; c < grid[0].length; c++) {\n                if (grid[r][c] == '1') {\n                    islands++;\n                    dfs(grid, r, c);\n                }\n            }\n        }\n        return islands;\n    }\n    \n    private static void dfs(char[][] grid, int r, int c) {\n        if (r < 0 || r >= grid.length || c < 0 || c >= grid[0].length || grid[r][c] != '1') {\n            return;\n        }\n        \n        grid[r][c] = '0';\n        \n        dfs(grid, r-1, c);\n        dfs(grid, r+1, c);\n        dfs(grid, r, c-1);\n        dfs(grid, r, c+1);\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n        \n        for (int d = 0; d < datasets; d++) {\n            char[][] grid = new char[12][12];\n            \n            for (int r = 0; r < 12; r++) {\n                String row = scanner.next();\n                grid[r] = row.toCharArray();\n            }\n            \n            System.out.println(countIslands(grid));\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:26:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nconst int ROWS = 12;\nconst int COLS = 12;\n\nvoid bfs(int row, int col, vector<vector<char>>& grid, vector<vector<bool>>& visited) {\n    queue<pair<int, int>> q;\n    q.push({row, col});\n    visited[row][col] = true;\n\n    int dr[] = {-1, 1, 0, 0};\n    int dc[] = {0, 0, -1, 1};\n\n    while (!q.empty()) {\n        auto current = q.front();\n        q.pop();\n\n        for (int i = 0; i < 4; ++i) {\n            int newRow = current.first + dr[i];\n            int newCol = current.second + dc[i];\n\n            if (newRow >= 0 && newRow < ROWS && newCol >= 0 && newCol < COLS) {\n                if (grid[newRow][newCol] == '1' && !visited[newRow][newCol]) {\n                    visited[newRow][newCol] = true;\n                    q.push({newRow, newCol});\n                }\n            }\n        }\n    }\n}\n\nint countIslands(vector<vector<char>>& grid) {\n    vector<vector<bool>> visited(ROWS, vector<bool>(COLS, false));\n    int count = 0;\n\n    for (int i = 0; i < ROWS; ++i) {\n        for (int j = 0; j < COLS; ++j) {\n            if (grid[i][j] == '1' && !visited[i][j]) {\n                bfs(i, j, grid, visited);\n                ++count;\n            }\n        }\n    }\n\n    return count;\n}\n\nint main() {\n    vector<vector<char>> grid(ROWS, vector<char>(COLS));\n\n    while (true) {\n        for (int i = 0; i < ROWS; ++i) {\n            for (int j = 0; j < COLS; ++j) {\n                cin >> grid[i][j];\n            }\n        }\n\n        if (cin.eof()) break;\n\n        cout << countIslands(grid) << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define GRID_SIZE 12\n\nvoid dfs(char grid[GRID_SIZE][GRID_SIZE], int row, int col, bool visited[GRID_SIZE][GRID_SIZE]) {\n    if (row < 0 || row >= GRID_SIZE || col < 0 || col >= GRID_SIZE || \n        grid[row][col] == '0' || visited[row][col]) {\n        return;\n    }\n\n    visited[row][col] = true;\n\n    dfs(grid, row-1, col, visited);\n    dfs(grid, row+1, col, visited);\n    dfs(grid, row, col-1, visited);\n    dfs(grid, row, col+1, visited);\n}\n\nint countIslands(char grid[GRID_SIZE][GRID_SIZE]) {\n    bool visited[GRID_SIZE][GRID_SIZE] = {false};\n    int islands = 0;\n\n    for (int row = 0; row < GRID_SIZE; row++) {\n        for (int col = 0; col < GRID_SIZE; col++) {\n            if (grid[row][col] == '1' && !visited[row][col]) {\n                dfs(grid, row, col, visited);\n                islands++;\n            }\n        }\n    }\n\n    return islands;\n}\n\nint main() {\n    int datasets;\n    scanf(\"%d\", &datasets);\n\n    for (int dataset = 1; dataset <= datasets; dataset++) {\n        char grid[GRID_SIZE][GRID_SIZE];\n\n        for (int row = 0; row < GRID_SIZE; row++) {\n            scanf(\"%s\", grid[row]);\n        }\n\n        int result = countIslands(grid);\n        printf(\"Dataset %d: %d\\n\", dataset, result);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid dfs(vector<vector<char>>& grid, int row, int col) {\n    int rows = grid.size();\n    int cols = grid[0].size();\n\n    if (row < 0 || row >= rows || col < 0 || col >= cols || grid[row][col] != 'X') {\n        return;\n    }\n\n    grid[row][col] = 'O';\n\n    dfs(grid, row + 1, col);\n    dfs(grid, row - 1, col);\n    dfs(grid, row, col + 1);\n    dfs(grid, row, col - 1);\n}\n\nint countIslands(vector<vector<char>>& grid) {\n    int rows = grid.size();\n    int cols = grid[0].size();\n    int islands = 0;\n\n    for (int i = 0; i < rows; i++) {\n        for (int j = 0; j < cols; j++) {\n            if (grid[i][j] == 'X') {\n                dfs(grid, i, j);\n                islands++;\n            }\n        }\n    }\n\n    return islands;\n}\n\nint main() {\n    int datasets;\n    cin >> datasets;\n\n    for (int d = 0; d < datasets; d++) {\n        vector<vector<char>> grid(12, vector<char>(12));\n\n        for (int i = 0; i < 12; i++) {\n            for (int j = 0; j < 12; j++) {\n                cin >> grid[i][j];\n            }\n        }\n\n        int result = countIslands(grid);\n        cout << \"Dataset \" << d + 1 << \": \" << result << \" islands\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class IslandCount {\n    private static final int ROWS = 12;\n    private static final int COLS = 12;\n    private static int[][] grid;\n    private static boolean[][] visited;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNext()) {\n            grid = new int[ROWS][COLS];\n            visited = new boolean[ROWS][COLS];\n            \n            for (int i = 0; i < ROWS; i++) {\n                String line = scanner.next();\n                for (int j = 0; j < COLS; j++) {\n                    grid[i][j] = line.charAt(j) == '1' ? 1 : 0;\n                }\n            }\n            \n            int count = 0;\n            for (int i = 0; i < ROWS; i++) {\n                for (int j = 0; j < COLS; j++) {\n                    if (grid[i][j] == 1 && !visited[i][j]) {\n                        dfs(i, j);\n                        count++;\n                    }\n                }\n            }\n            System.out.println(count);\n        }\n        scanner.close();\n    }\n\n    private static void dfs(int i, int j) {\n        if (i < 0 || i >= ROWS || j < 0 || j >= COLS || grid[i][j] == 0 || visited[i][j]) {\n            return;\n        }\n        visited[i][j] = true;\n        dfs(i + 1, j);\n        dfs(i - 1, j);\n        dfs(i, j + 1);\n        dfs(i, j - 1);\n    }\n}",
+    "timestamp": "2025-08-05 18:26:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_islands(grid):\n    def dfs(x, y):\n        stack = [(x, y)]\n        while stack:\n            cx, cy = stack.pop()\n            for nx, ny in [(cx-1, cy), (cx+1, cy), (cx, cy-1), (cx, cy+1)]:\n                if 0 <= nx < 12 and 0 <= ny < 12 and grid[nx][ny] == 'B':\n                    grid[nx][ny] = 'X'\n                    stack.append((nx, ny))\n    \n    islands = 0\n    for i in range(12):\n        for j in range(12):\n            if grid[i][j] == 'B':\n                grid[i][j] = 'X'\n                dfs(i, j)\n                islands += 1\n                \n    return islands\n\nif __name__ == \"__main__\":\n    datasets = []\n    # Read number of datasets\n    num_datasets = int(input())\n    for _ in range(num_datasets):\n        grid = [list(input().strip()) for _ in range(12)]\n        datasets.append(grid)\n    \n    results = [count_islands(grid) for grid in datasets]\n    for result in results:\n        print(result)",
+    "timestamp": "2025-08-12 23:12:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class IslandCounter {\n\n    private static final int SIZE = 12;\n    private static boolean[][] visited;\n    private static char[][] map;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        map = new char[SIZE][SIZE];\n        \n        for (int i = 0; i < SIZE; i++) {\n            String line = scanner.nextLine();\n            for (int j = 0; j < SIZE; j++) {\n                map[i][j] = line.charAt(j);\n            }\n        }\n        \n        visited = new boolean[SIZE][SIZE];\n        int islandCount = 0;\n        \n        for (int i = 0; i < SIZE; i++) {\n            for (int j = 0; j < SIZE; j++) {\n                if (map[i][j] == 'B' && !visited[i][j]) {\n                    dfs(i, j);\n                    islandCount++;\n                }\n            }\n        }\n        \n        System.out.println(islandCount);\n    }\n    \n    private static void dfs(int x, int y) {\n        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE || map[x][y] == 'W' || visited[x][y]) {\n            return;\n        }\n        \n        visited[x][y] = true;\n        \n        dfs(x - 1, y);\n        dfs(x + 1, y);\n        dfs(x, y - 1);\n        dfs(x, y + 1);\n    }\n}",
+    "timestamp": "2025-08-12 23:12:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define ROWS 12\n#define COLS 12\n\nint visited[ROWS][COLS];\nchar map[ROWS][COLS + 1];\n\nvoid dfs(int x, int y) {\n    if (x < 0 || x >= ROWS || y < 0 || y >= COLS || map[x][y] == 'W' || visited[x][y])\n        return;\n    visited[x][y] = 1;\n    dfs(x - 1, y);\n    dfs(x + 1, y);\n    dfs(x, y - 1);\n    dfs(x, y + 1);\n}\n\nint countIslands() {\n    memset(visited, 0, sizeof(visited));\n    int islandCount = 0;\n    for (int i = 0; i < ROWS; i++) {\n        for (int j = 0; j < COLS; j++) {\n            if (map[i][j] == 'B' && !visited[i][j]) {\n                dfs(i, j);\n                islandCount++;\n            }\n        }\n    }\n    return islandCount;\n}\n\nint main() {\n    for (int dataset = 0; dataset < 1; dataset++) {\n        for (int i = 0; i < ROWS; i++) {\n            scanf(\"%s\", map[i]);\n        }\n        printf(\"%d\\n\", countIslands());\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:12:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_islands(grid):\n    if not grid:\n        return 0\n    \n    rows, cols = len(grid), len(grid[0])\n    visited = [[False] * cols for _ in range(rows)]\n    islands = 0\n    \n    def dfs(r, c):\n        if (r < 0 or r >= rows or c < 0 or c >= cols or \n            grid[r][c] == 'W' or visited[r][c]):\n            return\n        \n        visited[r][c] = True\n        \n        # Check 4 adjacent cells\n        dfs(r+1, c)\n        dfs(r-1, c)\n        dfs(r, c+1)\n        dfs(r, c-1)\n    \n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == 'B' and not visited[r][c]:\n                dfs(r, c)\n                islands += 1\n    \n    return islands\n\n# Read input\ndef main():\n    datasets = int(input())\n    \n    for _ in range(datasets):\n        grid = []\n        for _ in range(12):\n            row = list(input().strip())\n            grid.append(row)\n        \n        print(count_islands(grid))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:13:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_islands(grid):\n    if not grid:\n        return 0\n    rows = len(grid)\n    cols = len(grid[0])\n    visited = [[False for _ in range(cols)] for _ in range(rows)]\n    count = 0\n    \n    for i in range(rows):\n        for j in range(cols):\n            if grid[i][j] == '1' and not visited[i][j]:\n                dfs(grid, i, j, visited)\n                count += 1\n    return count\n\ndef dfs(grid, i, j, visited):\n    rows = len(grid)\n    cols = len(grid[0])\n    if i < 0 or i >= rows or j < 0 or j >= cols or grid[i][j] == '0' or visited[i][j]:\n        return\n    visited[i][j] = True\n    dfs(grid, i+1, j, visited)\n    dfs(grid, i-1, j, visited)\n    dfs(grid, i, j+1, visited)\n    dfs(grid, i, j-1, visited)\n\ndef main():\n    import sys\n    input = sys.stdin.read().split()\n    idx = 0\n    while idx < len(input):\n        grid = []\n        for _ in range(12):\n            row = input[idx]\n            grid.append(row)\n            idx += 1\n        print(count_islands(grid))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:13:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvoid dfs(vector<vector<char>>& grid, int x, int y) {\n    if (x < 0 || x >= 12 || y < 0 || y >= 12 || grid[x][y] == 'W') return;\n    grid[x][y] = 'W';\n    dfs(grid, x + 1, y);\n    dfs(grid, x - 1, y);\n    dfs(grid, x, y + 1);\n    dfs(grid, x, y - 1);\n}\n\nint countIslands(vector<vector<char>>& grid) {\n    int islandCount = 0;\n    for (int i = 0; i < 12; ++i) {\n        for (int j = 0; j < 12; ++j) {\n            if (grid[i][j] == 'B') {\n                dfs(grid, i, j);\n                ++islandCount;\n            }\n        }\n    }\n    return islandCount;\n}\n\nint main() {\n    vector<vector<char>> grid(12, vector<char>(12));\n    for (int i = 0; i < 12; ++i) {\n        for (int j = 0; j < 12; ++j) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    int result = countIslands(grid);\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:49:07"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nlong long maxAdjacentDiff(int *arr, int n) {\n    qsort(arr, n, sizeof(int), compare);\n    \n    long long maxSum = 0;\n    \n    // Two possible arrangements: sorted and reversed sorted\n    long long sum1 = 0, sum2 = 0;\n    \n    // Arrangement 1: alternating from smallest/largest\n    for (int i = 0; i < n - 1; i++) {\n        if (i % 2 == 0)\n            sum1 += abs(arr[i] - arr[i+1]);\n        else\n            sum1 += abs(arr[n-1-i] - arr[n-1-(i+1)]);\n    }\n    \n    // Arrangement 2: alternating from largest/smallest\n    for (int i = 0; i < n - 1; i++) {\n        if (i % 2 == 0)\n            sum2 += abs(arr[n-1-i] - arr[n-1-(i+1)]);\n        else\n            sum2 += abs(arr[i] - arr[i+1]);\n    }\n    \n    return (sum1 > sum2) ? sum1 : sum2;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int *arr = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++)\n        scanf(\"%d\", &arr[i]);\n    \n    printf(\"%lld\\n\", maxAdjacentDiff(arr, n));\n    \n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:00:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    qsort(A, N, sizeof(int), compare);\n    \n    int left = 0, right = N - 1;\n    int sum = 0;\n    int prev = A[left];\n    int i = 1;\n    \n    while (left <= right) {\n        if (i % 2 == 1) {\n            sum += abs(A[right] - prev);\n            prev = A[right];\n            right--;\n        } else {\n            sum += abs(A[left] - prev);\n            prev = A[left];\n            left++;\n        }\n        i++;\n    }\n    \n    printf(\"%d\\n\", sum);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:01:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    sort(A.begin(), A.end());\n    vector<int> arranged;\n    int left = 0, right = N - 1;\n    while (left <= right) {\n        if (left == right) {\n            arranged.push_back(A[left]);\n        } else {\n            arranged.push_back(A[left]);\n            arranged.push_back(A[right]);\n        }\n        left++;\n        right--;\n    }\n    int sum = 0;\n    for (int i = 1; i < N; ++i) {\n        sum += abs(arranged[i] - arranged[i-1]);\n    }\n    cout << sum << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:01:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class MaxAbsoluteDifferenceSum {\n    public static int maxSumAbsoluteDifference(int[] A) {\n        Arrays.sort(A);\n        int n = A.length;\n        int[] arranged = new int[n];\n        int left = 0, right = n - 1;\n        for (int i = 0; i < n; i++) {\n            if (i % 2 == 0) {\n                arranged[i] = A[left++];\n            } else {\n                arranged[i] = A[right--];\n            }\n        }\n        int sum = 0;\n        for (int i = 1; i < n; i++) {\n            sum += Math.abs(arranged[i] - arranged[i - 1]);\n        }\n        return sum;\n    }\n\n    public static void main(String[] args) {\n        int[] A = {4, 2, 1, 8};\n        System.out.println(maxSumAbsoluteDifference(A));\n    }\n}",
+    "timestamp": "2025-08-05 23:01:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int maxAdjacentDifferences(int[] arr) {\n        Arrays.sort(arr);\n        int maxSum = 0;\n        \n        for (int i = 1; i < arr.length; i++) {\n            maxSum += Math.abs(arr[i] - arr[i-1]);\n        }\n        \n        return maxSum;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] arr = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            arr[i] = scanner.nextInt();\n        }\n        \n        System.out.println(maxAdjacentDifferences(arr));\n    }\n}",
+    "timestamp": "2025-08-05 23:01:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint maxAbsDifference(vector<int>& A) {\n    int N = A.size();\n    if (N <= 1) return 0;\n    \n    sort(A.begin(), A.end());\n    \n    vector<int> perm1(N), perm2(N);\n    \n    // First permutation: low-high-low-high\n    for (int i = 0; i < N; i += 2) {\n        perm1[i] = A[i/2];\n    }\n    for (int i = 1; i < N; i += 2) {\n        perm1[i] = A[N - 1 - (i-1)/2];\n    }\n    \n    // Second permutation: high-low-high-low\n    for (int i = 0; i < N; i += 2) {\n        perm2[i] = A[N - 1 - i/2];\n    }\n    for (int i = 1; i < N; i += 2) {\n        perm2[i] = A[(i-1)/2];\n    }\n    \n    int sum1 = 0, sum2 = 0;\n    \n    for (int i = 1; i < N; i++) {\n        sum1 += abs(perm1[i] - perm1[i-1]);\n        sum2 += abs(perm2[i] - perm2[i-1]);\n    }\n    \n    return max(sum1, sum2);\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n    \n    cout << maxAbsDifference(A) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:01:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_absolute_difference_sum(arr):\n    arr.sort()\n    n = len(arr)\n    max_diff_sum = 0\n\n    for i in range(n // 2):\n        max_diff_sum += arr[n - i - 1] - arr[i]\n\n    return 2 * max_diff_sum\n\n# Example usage:\nN = 5\nA = [1, 2, 3, 4, 5]\nprint(max_absolute_difference_sum(A))",
+    "timestamp": "2025-08-13 13:20:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class MaxSumAbsoluteDifferences {\n    public static int maxSumAbsoluteDifferences(int[] A) {\n        Arrays.sort(A);\n        int n = A.length;\n        int[] result = new int[n];\n        int left = 0, right = n - 1;\n        \n        // Arranging the elements alternatively from largest to smallest\n        for (int i = 0; i < n; i++) {\n            if (i % 2 == 0) {\n                result[i] = A[right--];\n            } else {\n                result[i] = A[left++];\n            }\n        }\n        \n        // Calculating the maximum possible sum of absolute differences\n        int maxSum = 0;\n        for (int i = 1; i < n; i++) {\n            maxSum += Math.abs(result[i] - result[i - 1]);\n        }\n        \n        return maxSum;\n    }\n\n    public static void main(String[] args) {\n        int[] A = {1, 3, 5, 6, 8, 10};\n        System.out.println(maxSumAbsoluteDifferences(A)); // Output\n    }\n}",
+    "timestamp": "2025-08-13 13:20:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    return *(int*)a - *(int*)b;\n}\n\nint maxAbsoluteDifferenceSum(int* A, int N) {\n    qsort(A, N, sizeof(int), cmp);\n    int* result = (int*)malloc(N * sizeof(int));\n    int left = 0, right = N - 1;\n    for(int i = 0; i < N; i++) {\n        if(i % 2 == 0)\n            result[left++] = A[i];\n        else\n            result[right--] = A[i];\n    }\n    int maxSum = 0;\n    for(int i = 1; i < N; i++) {\n        maxSum += abs(result[i] - result[i - 1]);\n    }\n    free(result);\n    return maxSum;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int* A = (int*)malloc(N * sizeof(int));\n    for(int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    int result = maxAbsoluteDifferenceSum(A, N);\n    printf(\"%d\\n\", result);\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:20:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint maxAbsoluteDifferenceSum(std::vector<int>& A) {\n    std::sort(A.begin(), A.end());\n    \n    int left = 0;\n    int right = A.size() - 1;\n    int maxSum = 0;\n    \n    std::vector<int> arranged;\n    bool flag = true;  // flag to control alternation between left and right\n    \n    while (left <= right) {\n        if (flag) {\n            arranged.push_back(A[left]);\n            left++;\n        } else {\n            arranged.push_back(A[right]);\n            right--;\n        }\n        flag = !flag;\n    }\n    \n    for (int i = 0; i < arranged.size() - 1; ++i) {\n        maxSum += std::abs(arranged[i] - arranged[i + 1]);\n    }\n    \n    return maxSum;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> A[i];\n    }\n    \n    std::cout << maxAbsoluteDifferenceSum(A) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:20:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_adjacent_abs_diff_sum(A):\n    A.sort()\n    max_sum = 0\n    for i in range(len(A) - 1):\n        max_sum += abs(A[i] - A[i+1])\n    return max_sum\n\ndef solve():\n    N = int(input())\n    A = list(map(int, input().split()))\n    print(max_adjacent_abs_diff_sum(A))\n\nsolve()",
+    "timestamp": "2025-08-13 13:20:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_absolute_difference_sum(N, A):\n    A_sorted = sorted(A)\n    res = 0\n    left, right = 0, N - 1\n    prev = A_sorted[0]\n    for i in range(N):\n        if i % 2 == 0:\n            current = A_sorted[right]\n            right -= 1\n        else:\n            current = A_sorted[left]\n            left += 1\n        res += abs(current - prev)\n        prev = current\n    # Also check the reverse pattern\n    res2 = 0\n    left, right = 0, N - 1\n    prev = A_sorted[-1]\n    for i in range(N):\n        if i % 2 == 0:\n            current = A_sorted[left]\n            left += 1\n        else:\n            current = A_sorted[right]\n            right -= 1\n        res2 += abs(current - prev)\n        prev = current\n    return max(res, res2)\n\n# Sample usage:\n# N = int(input())\n# A = list(map(int, input().split()))\n# print(max_absolute_difference_sum(N, A))",
+    "timestamp": "2025-08-13 13:20:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxAbsDiffSum(N, A) {\n    A.sort((a, b) => a - b);\n    let left = 0, right = N - 1;\n    let maxSum = 0;\n    let arranged = [];\n    \n    while (left <= right) {\n        if (left === right) {\n            arranged.push(A[left]);\n            break;\n        }\n        arranged.push(A[left]);\n        left++;\n        if (left <= right) {\n            arranged.push(A[right]);\n            right--;\n        }\n    }\n    \n    for (let i = 1; i < N; i++) {\n        maxSum += Math.abs(arranged[i] - arranged[i - 1]);\n    }\n    \n    return maxSum;\n}",
+    "timestamp": "2025-08-13 13:20:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxSumOfAdjacentDifferences(N, A) {\n    A.sort((a, b) => a - b);\n    let maxDiff = 0;\n    \n    for (let i = 0; i < N - 1; i++) {\n        maxDiff += Math.abs(A[i] - A[i+1]);\n    }\n    \n    return maxDiff;\n}",
+    "timestamp": "2025-08-13 13:21:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxAbsoluteDifferenceSum(arr) {\n    arr.sort((a, b) => a - b);\n    let sum = 0;\n    let left = 0, right = arr.length - 1;\n    let prev = arr[left];\n    let toggle = true;\n    \n    while (left <= right) {\n        let current;\n        if (toggle) {\n            current = arr[right--];\n        } else {\n            current = arr[left++];\n        }\n        sum += Math.abs(current - prev);\n        prev = current;\n        toggle = !toggle;\n    }\n    return sum;\n}\n\n// Example usage:\n// const arr = [1, 2, 4, 8];\n// console.log(maxAbsoluteDifferenceSum(arr));",
+    "timestamp": "2025-08-13 13:21:12"
+  }
+]

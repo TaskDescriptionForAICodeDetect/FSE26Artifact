@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "aab",
+      "output": "1\n1"
+    },
+    {
+      "input": "bcbc",
+      "output": "2\n3"
+    },
+    {
+      "input": "ddd",
+      "output": "3\n1"
+    }
+  ]
+}

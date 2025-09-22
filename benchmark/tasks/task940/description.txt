@@ -1,0 +1,1 @@
+Takahashi has a series of cylindrical devices that can be in one of two states, A or B. When a ball is introduced from the leftmost device, it triggers a sequence of responses based on the current state of each device. Write a program to determine the final state of each device after processing K balls, starting with an initial configuration given by a string S.

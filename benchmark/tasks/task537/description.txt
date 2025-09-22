@@ -1,0 +1,1 @@
+You received a card with an integer S and a multiplication table of infinite size. You need to count the number of integer tuples (a, b, c, d) such that 1 ≤ a ≤ b, 1 ≤ c ≤ d and the sum of the numbers in the rectangle defined by these tuples equals S. The elements of the table are defined as A_{i,j} = i * j where i, j are positive integers.

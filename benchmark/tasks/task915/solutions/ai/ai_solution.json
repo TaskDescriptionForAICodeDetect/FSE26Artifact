@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        long long sum = 0;\n        for (int j = i; j < N; j++) {\n            sum += a[j];\n            double mean = (double)sum / (j - i + 1);\n            if (mean >= K) {\n                count++;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:19:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        long long sum = 0;\n        for (int j = i; j < N; j++) {\n            sum += a[j];\n            if (sum >= (long long)K * (j - i + 1)) {\n                count++;\n            }\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:19:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n        a[i] -= K;\n    }\n\n    vector<int> prefix(N + 1, 0);\n    for (int i = 0; i < N; ++i) {\n        prefix[i + 1] = prefix[i] + a[i];\n    }\n\n    long long count = 0;\n    vector<int> fenwick(N + 2, 0);\n\n    vector<int> sorted_prefix = prefix;\n    sort(sorted_prefix.begin(), sorted_prefix.end());\n    sorted_prefix.erase(unique(sorted_prefix.begin(), sorted_prefix.end()), sorted_prefix.end());\n\n    auto get_rank = [&](int x) {\n        return lower_bound(sorted_prefix.begin(), sorted_prefix.end(), x) - sorted_prefix.begin() + 1;\n    };\n\n    for (int i = N; i >= 0; --i) {\n        int x = get_rank(prefix[i]);\n        for (int j = x; j > 0; j -= j & -j) {\n            count += fenwick[j];\n        }\n        x = get_rank(prefix[i]);\n        for (int j = x; j <= N + 1; j += j & -j) {\n            fenwick[j]++;\n        }\n    }\n\n    cout << count << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:19:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            long sum = 0;\n            for (int j = i; j < N; j++) {\n                sum += a[j];\n                int length = j - i + 1;\n                if (sum >= (long) K * length) {\n                    count++;\n                }\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 23:19:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class ArithmeticMeanSubsequences {\n    public static int countSubsequences(int[] arr, int k) {\n        int n = arr.length;\n        int count = 0;\n\n        for (int start = 0; start < n; start++) {\n            long sum = 0;\n            for (int end = start; end < n; end++) {\n                sum += arr[end];\n                double mean = (double) sum / (end - start + 1);\n                if (mean >= k) {\n                    count++;\n                }\n            }\n        }\n\n        return count;\n    }\n\n    public static void main(String[] args) {\n        int[] arr = {1, 2, 3, 4, 5};\n        int k = 3;\n        System.out.println(countSubsequences(arr, k));\n    }\n}",
+    "timestamp": "2025-08-05 23:19:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nlong long countSubsequences(vector<int>& arr, int K) {\n    int N = arr.size();\n    long long count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        long long sum = 0;\n        for (int j = i; j < N; j++) {\n            sum += arr[j];\n            \n            if ((double)sum / (j - i + 1) >= K) {\n                count++;\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> arr(N);\n    for (int i = 0; i < N; i++) {\n        cin >> arr[i];\n    }\n    \n    cout << countSubsequences(arr, K) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:20:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_subsequences_with_mean_ge_k(n, a, k):\n    count = 0\n    for start in range(n):\n        sum_subseq = 0\n        for end in range(start, n):\n            sum_subseq += a[end]\n            length_subseq = end - start + 1\n            if sum_subseq >= k * length_subseq:\n                count += 1\n    return count\n\n# Example usage\nN = 5\na = [1, 3, 2, 5, 4]\nK = 3\nresult = count_subsequences_with_mean_ge_k(N, a, K)\nprint(result)",
+    "timestamp": "2025-08-13 14:48:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SubsequenceMean {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        int K = scanner.nextInt();\n        \n        System.out.println(countSubsequencesWithMeanGreaterThanOrEqualK(a, N, K));\n    }\n\n    private static int countSubsequencesWithMeanGreaterThanOrEqualK(int[] a, int N, int K) {\n        int count = 0;\n        \n        for (int i = 0; i < N; i++) {\n            int sum = 0;\n            for (int j = i; j < N; j++) {\n                sum += a[j];\n                // Calculate mean without using floating-point arithmetic to avoid precision issues\n                if (sum >= K * (j - i + 1)) {\n                    count++;\n                }\n            }\n        }\n        \n        return count;\n    }\n}",
+    "timestamp": "2025-08-13 14:48:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int a[N];\n    for(int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int count = 0;\n    \n    for(int start = 0; start < N; start++) {\n        int sum = 0;\n        for(int end = start; end < N; end++) {\n            sum += a[end];\n            int length = end - start + 1;\n            if((double)sum / length >= K) {\n                count++;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:48:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    int N, K;\n    std::cin >> N >> K;\n    std::vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> a[i];\n    }\n\n    int count = 0;\n    for (int start = 0; start < N; ++start) {\n        int sum = 0;\n        for (int end = start; end < N; ++end) {\n            sum += a[end];\n            int length = end - start + 1;\n            double mean = static_cast<double>(sum) / length;\n            if (mean >= K) {\n                ++count;\n            }\n        }\n    }\n\n    std::cout << count << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:48:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_subsequences(arr, K):\n    N = len(arr)\n    count = 0\n    \n    for i in range(N):\n        curr_sum = 0\n        for j in range(i, N):\n            curr_sum += arr[j]\n            curr_len = j - i + 1\n            \n            if curr_sum / curr_len >= K:\n                count += 1\n    \n    return count",
+    "timestamp": "2025-08-13 14:48:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, K = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    \n    # Compute the prefix sums of (a_i - K)\n    prefix = [0] * (N + 1)\n    for i in range(1, N + 1):\n        prefix[i] = prefix[i - 1] + (a[i - 1] - K)\n    \n    # Binary Indexed Tree (Fenwick Tree) for counting inversions\n    class FenwickTree:\n        def __init__(self, size):\n            self.size = size\n            self.tree = [0] * (self.size + 1)\n        \n        def update(self, index):\n            while index <= self.size:\n                self.tree[index] += 1\n                index += index & -index\n        \n        def query(self, index):\n            res = 0\n            while index > 0:\n                res += self.tree[index]\n                index -= index & -index\n            return res\n    \n    # Coordinate compression\n    sorted_prefix = sorted(prefix)\n    rank = {v: i + 1 for i, v in enumerate(sorted_prefix)}\n    \n    ft = FenwickTree(len(rank))\n    res = 0\n    for num in prefix:\n        compressed = rank[num]\n        res += ft.query(compressed)\n        ft.update(compressed)\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 14:49:03"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n#include <stdbool.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble distance(Point a, Point b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\nbool canCollectAll(Point hero, Point demon, Point crystals[], int n) {\n    double max_hero_time = 0;\n    for (int i = 0; i < n; i++) {\n        double dist = distance(hero, crystals[i]);\n        if (dist > max_hero_time) {\n            max_hero_time = dist;\n        }\n    }\n\n    for (int i = 0; i < n; i++) {\n        double dist = distance(demon, crystals[i]);\n        if (dist <= max_hero_time) {\n            return false;\n        }\n    }\n\n    return true;\n}\n\nint main() {\n    Point hero, demon;\n    int n;\n    scanf(\"%lf %lf\", &hero.x, &hero.y);\n    scanf(\"%lf %lf\", &demon.x, &demon.y);\n    scanf(\"%d\", &n);\n    Point crystals[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &crystals[i].x, &crystals[i].y);\n    }\n\n    if (canCollectAll(hero, demon, crystals, n)) {\n        printf(\"YES\\n\");\n    } else {\n        printf(\"NO\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:05:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n};\n\ndouble euclideanDistance(Point a, Point b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\nbool canCollectAllCrystals(Point hero, Point demonLord, vector<Point> crystals) {\n    vector<double> heroDistances;\n    vector<double> miasmaDistances;\n\n    for (const auto& crystal : crystals) {\n        double heroDist = euclideanDistance(hero, crystal);\n        heroDistances.push_back(heroDist);\n        double miasmaDist = euclideanDistance(demonLord, crystal);\n        miasmaDistances.push_back(miasmaDist);\n    }\n\n    for (size_t i = 0; i < heroDistances.size(); ++i) {\n        if (heroDistances[i] >= miasmaDistances[i]) {\n            return false;\n        }\n    }\n\n    return true;\n}\n\nint main() {\n    Point hero, demonLord;\n    int n;\n    cin >> hero.x >> hero.y;\n    cin >> demonLord.x >> demonLord.y;\n    cin >> n;\n    vector<Point> crystals(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> crystals[i].x >> crystals[i].y;\n    }\n\n    if (canCollectAllCrystals(hero, demonLord, crystals)) {\n        cout << \"YES\" << endl;\n    } else {\n        cout << \"NO\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:05:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class HeroJourney {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int heroX = scanner.nextInt();\n        int heroY = scanner.nextInt();\n        int demonX = scanner.nextInt();\n        int demonY = scanner.nextInt();\n        int n = scanner.nextInt();\n        int[][] crystals = new int[n][2];\n        for (int i = 0; i < n; i++) {\n            crystals[i][0] = scanner.nextInt();\n            crystals[i][1] = scanner.nextInt();\n        }\n\n        boolean possible = true;\n        for (int[] crystal : crystals) {\n            int cx = crystal[0];\n            int cy = crystal[1];\n            double heroDistance = Math.sqrt(Math.pow(cx - heroX, 2) + Math.pow(cy - heroY, 2));\n            double demonDistance = Math.sqrt(Math.pow(cx - demonX, 2) + Math.pow(cy - demonY, 2));\n            if (heroDistance >= demonDistance) {\n                possible = false;\n                break;\n            }\n        }\n\n        System.out.println(possible ? \"YES\" : \"NO\");\n    }\n}",
+    "timestamp": "2025-08-05 21:06:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CrystalQuest {\n    public static boolean canCollectCrystals(double heroX, double heroY, double demonX, double demonY, double[][] crystals) {\n        double totalDistance = 0;\n        \n        // Sort crystals by distance from hero\n        Arrays.sort(crystals, (a, b) -> {\n            double distA = Math.sqrt(Math.pow(a[0] - heroX, 2) + Math.pow(a[1] - heroY, 2));\n            double distB = Math.sqrt(Math.pow(b[0] - heroX, 2) + Math.pow(b[1] - heroY, 2));\n            return Double.compare(distA, distB);\n        });\n        \n        double currentX = heroX;\n        double currentY = heroY;\n        \n        for (double[] crystal : crystals) {\n            double crystalX = crystal[0];\n            double crystalY = crystal[1];\n            \n            double distanceToCrystal = Math.sqrt(Math.pow(crystalX - currentX, 2) + Math.pow(crystalY - currentY, 2));\n            double distanceToDemon = Math.sqrt(Math.pow(crystalX - demonX, 2) + Math.pow(crystalY - demonY, 2));\n            \n            totalDistance += distanceToCrystal;\n            \n            if (totalDistance > distanceToDemon) {\n                return false;\n            }\n            \n            currentX = crystalX;\n            currentY = crystalY;\n        }\n        \n        return true;\n    }\n\n    public static void main(String[] args) {\n        double heroX = 0, heroY = 0;\n        double demonX = 10, demonY = 10;\n        double[][] crystals = {{1,1}, {2,2}, {3,3}, {4,4}};\n        \n        System.out.println(canCollectCrystals(heroX, heroY, demonX, demonY, crystals));\n    }\n}",
+    "timestamp": "2025-08-05 21:06:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <stdbool.h>\n\n#define MAX_CRYSTALS 100\n\ntypedef struct {\n    double x;\n    double y;\n} Point;\n\ndouble euclidean_distance(Point a, Point b) {\n    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));\n}\n\nbool can_collect_crystals(Point hero, Point demon, Point crystals[], int crystal_count, int days) {\n    for (int i = 0; i < crystal_count; i++) {\n        double hero_distance = euclidean_distance(hero, crystals[i]);\n        double demon_distance = euclidean_distance(demon, crystals[i]);\n        \n        if (hero_distance > days || demon_distance <= days) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int crystal_count;\n    Point hero, demon;\n    Point crystals[MAX_CRYSTALS];\n    int days;\n\n    scanf(\"%d\", &crystal_count);\n    scanf(\"%lf %lf\", &hero.x, &hero.y);\n    scanf(\"%lf %lf\", &demon.x, &demon.y);\n    \n    for (int i = 0; i < crystal_count; i++) {\n        scanf(\"%lf %lf\", &crystals[i].x, &crystals[i].y);\n    }\n    \n    scanf(\"%d\", &days);\n\n    bool result = can_collect_crystals(hero, demon, crystals, crystal_count, days);\n    printf(\"%s\\n\", result ? \"YES\" : \"NO\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:06:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n#include <limits>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n};\n\ndouble distance(const Point& a, const Point& b) {\n    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));\n}\n\nbool canCollectCrystals(Point hero, Point demonLord, vector<Point>& crystals) {\n    int n = crystals.size();\n    vector<bool> collected(n, false);\n    \n    for (int day = 0; ; day++) {\n        double miasmaRadius = day;\n        \n        // Find closest uncollected crystal\n        double minDist = numeric_limits<double>::max();\n        int closestCrystal = -1;\n        \n        for (int i = 0; i < n; i++) {\n            if (!collected[i]) {\n                double heroDist = distance(hero, crystals[i]);\n                double demonDist = distance(demonLord, crystals[i]);\n                \n                if (heroDist + day < demonDist && heroDist < minDist) {\n                    minDist = heroDist;\n                    closestCrystal = i;\n                }\n            }\n        }\n        \n        // Check if all crystals collected\n        if (closestCrystal == -1) {\n            bool allCollected = true;\n            for (bool c : collected) {\n                if (!c) {\n                    allCollected = false;\n                    break;\n                }\n            }\n            return allCollected;\n        }\n        \n        // Move to and collect crystal\n        hero = crystals[closestCrystal];\n        collected[closestCrystal] = true;\n    }\n}\n\nint main() {\n    int n;\n    Point hero, demonLord;\n    \n    cin >> hero.x >> hero.y;\n    cin >> demonLord.x >> demonLord.y;\n    \n    cin >> n;\n    vector<Point> crystals(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> crystals[i].x >> crystals[i].y;\n    }\n    \n    cout << (canCollectCrystals(hero, demonLord, crystals) ? \"YES\" : \"NO\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:06:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from math import sqrt\n\ndef can_collect_all_crystals(hero_start, demon_lord_location, crystals):\n    # Calculate the initial distance between the hero and each crystal\n    hero_to_crystals = [sqrt((hero_start[0] - x)**2 + (hero_start[1] - y)**2) for x, y in crystals]\n    \n    # Calculate the initial distance between the demon lord and each crystal\n    demon_lord_to_crystals = [sqrt((demon_lord_location[0] - x)**2 + (demon_lord_location[1] - y)**2) for x, y in crystals]\n    \n    # Check if the hero can reach each crystal before the dark miasma\n    for i in range(len(crystals)):\n        if hero_to_crystals[i] >= demon_lord_to_crystals[i]:\n            return False\n    \n    return True\n\n# Example usage:\nhero_start = (0, 0)\ndemon_lord_location = (10, 10)\ncrystals = [(1, 0), (2, 2), (3, 3)]\nprint(can_collect_all_crystals(hero_start, demon_lord_location, crystals))  # Output: True or False depending on positions",
+    "timestamp": "2025-08-13 04:59:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class CrystalCollection {\n\n    static class Point {\n        double x, y;\n\n        Point(double x, double y) {\n            this.x = x;\n            this.y = y;\n        }\n\n        double distance(Point other) {\n            return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));\n        }\n    }\n    \n    public static boolean canCollectAllCrystals(Point heroStart, Point demonLord, List<Point> crystals) {\n        for (Point crystal : crystals) {\n            double heroDistance = heroStart.distance(crystal);\n            double demonDistance = demonLord.distance(crystal);\n            if (heroDistance >= demonDistance) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        Point heroStart = new Point(0, 0);\n        Point demonLord = new Point(5, 5);\n        List<Point> crystals = Arrays.asList(new Point(1, 1), new Point(2, 2), new Point(3, 3));\n        \n        boolean result = canCollectAllCrystals(heroStart, demonLord, crystals);\n        System.out.println(result ? \"The hero can collect all crystals.\" : \"The hero cannot collect all crystals.\");\n    }\n}",
+    "timestamp": "2025-08-13 04:59:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\n#define MAX_CRYSTALS 100\n\n// Function to calculate the Euclidean distance between two points\ndouble euclideanDistance(double x1, double y1, double x2, double y2) {\n    return sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));\n}\n\nint main() {\n    double heroX, heroY, demonX, demonY;\n    int n;\n    double crystals[MAX_CRYSTALS][2];\n\n    // Read hero's starting position and demon lord's position\n    scanf(\"%lf %lf %lf %lf\", &heroX, &heroY, &demonX, &demonY);\n\n    // Read number of crystals\n    scanf(\"%d\", &n);\n\n    // Read positions of the crystals\n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf %lf\", &crystals[i][0], &crystals[i][1]);\n    }\n\n    // Check if each crystal can be collected before miasma reaches it\n    for (int i = 0; i < n; i++) {\n        double heroToCrystal = euclideanDistance(heroX, heroY, crystals[i][0], crystals[i][1]);\n        double demonToCrystal = euclideanDistance(demonX, demonY, crystals[i][0], crystals[i][1]);\n\n        // If the hero takes more time than the miasma to reach the crystal\n        if (heroToCrystal >= demonToCrystal) {\n            printf(\"NO\\n\");\n            return 0;\n        }\n    }\n\n    printf(\"YES\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:59:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef can_collect_crystals(hero_pos, demon_lord_pos, crystal_positions):\n    def distance(p1, p2):\n        return math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)\n    \n    def is_reachable(start, end, day):\n        hero_dist = distance(start, end)\n        miasma_dist = day\n        return hero_dist <= day and hero_dist + miasma_dist >= distance(demon_lord_pos, end)\n    \n    collected_crystals = []\n    current_pos = hero_pos\n    day = 0\n    \n    while crystal_positions:\n        best_crystal = None\n        min_total_dist = float('inf')\n        \n        for crystal in crystal_positions:\n            travel_dist = distance(current_pos, crystal)\n            if is_reachable(current_pos, crystal, day):\n                total_dist = travel_dist\n                if total_dist < min_total_dist:\n                    min_total_dist = total_dist\n                    best_crystal = crystal\n        \n        if best_crystal is None:\n            return False\n        \n        current_pos = best_crystal\n        collected_crystals.append(best_crystal)\n        crystal_positions.remove(best_crystal)\n        day += min_total_dist\n    \n    return True",
+    "timestamp": "2025-08-13 05:00:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef can_collect_all_crystals(hero_pos, demon_pos, crystals):\n    if not crystals:\n        return True\n    \n    # Calculate the initial distance from hero to demon lord\n    hx, hy = hero_pos\n    dx, dy = demon_pos\n    initial_dist = math.sqrt((hx - dx)**2 + (hy - dy)**2)\n    \n    # The miasma starts spreading from day 0, so the hero has 'initial_dist' days before miasma reaches hero\n    \n    # For each crystal, compute the time needed for hero to reach it and the time when miasma reaches it\n    for crystal in crystals:\n        cx, cy = crystal\n        # Time for hero to reach the crystal\n        hero_time = math.sqrt((hx - cx)**2 + (hy - cy)**2)\n        # Time for miasma to reach the crystal\n        miasma_time = math.sqrt((dx - cx)**2 + (dy - cy)**2)\n        \n        # Hero must reach the crystal strictly before miasma does\n        if hero_time >= miasma_time:\n            return False\n    \n    return True",
+    "timestamp": "2025-08-13 05:00:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <queue>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n    Point(double x, double y) : x(x), y(y) {}\n};\n\ndouble distance(const Point& a, const Point& b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\nbool canCollectAllCrystals(Point hero, Point demon, vector<Point>& crystals) {\n    queue<Point> q;\n    vector<bool> collected(crystals.size(), false);\n    \n    q.push(hero);\n\n    while (!q.empty()) {\n        Point current = q.front();\n        q.pop();\n\n        for (int i = 0; i < crystals.size(); ++i) {\n            if (!collected[i] && distance(current, crystals[i]) <= distance(demon, crystals[i])) {\n                collected[i] = true;\n                q.push(crystals[i]);\n            }\n        }\n    }\n\n    for (bool flag : collected) {\n        if (!flag) return false;\n    }\n    \n    return true;\n}\n\nint main() {\n    Point hero(0, 0); // example position\n    Point demon(5, 5); // example position\n    vector<Point> crystals = {Point(1, 2), Point(2, 3), Point(3, 4)}; // example crystals\n    \n    if (canCollectAllCrystals(hero, demon, crystals)) {\n        cout << \"All crystals can be collected by the hero.\" << endl;\n    } else {\n        cout << \"Not all crystals can be collected by the hero.\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:22:29"
+  }
+]

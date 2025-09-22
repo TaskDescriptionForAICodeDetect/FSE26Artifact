@@ -1,0 +1,1 @@
+You are given a permutation of N integers from 1 to N. You can perform an operation reverse(i, j) which reverses the order of the numbers in the interval [i, j] (1 ≤ i ≤ j ≤ N). For example, applying reverse(2, 4) to [1, 2, 3, 4, 5] results in [1, 4, 3, 2, 5]. Calculate the minimum number of operations needed to sort the permutation in ascending order.

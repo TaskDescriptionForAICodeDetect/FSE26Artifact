@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "14\n2 3 4 1\n",
+      "output": "POSSIBLE"
+    },
+    {
+      "input": "23\n2 3 1\n",
+      "output": "IMPOSSIBLE"
+    },
+    {
+      "input": "34\n2 3 1 1\n",
+      "output": "POSSIBLE"
+    },
+    {
+      "input": "46\n4 5 6 5 6 4\n",
+      "output": "IMPOSSIBLE"
+    }
+  ]
+}

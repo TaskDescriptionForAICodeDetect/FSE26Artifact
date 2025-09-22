@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nint main() {\n    int a, b, c, d, e, n;\n    scanf(\"%d %d %d %d %d\", &a, &b, &c, &d, &e);\n    scanf(\"%d\", &n);\n    \n    int *movies = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        int type;\n        scanf(\"%d\", &type);\n        if (type == 0) movies[i] = a;\n        else if (type == 1) movies[i] = b;\n        else movies[i] = c;\n    }\n    \n    qsort(movies, n, sizeof(int), compare);\n    \n    int total = 0;\n    for (int i = 0; i < n; i++) {\n        total += movies[i];\n    }\n    \n    int min_cost = total;\n    \n    if (n >= d) {\n        int set_cost = n * e;\n        if (total > set_cost) {\n            min_cost = set_cost;\n        }\n    } else {\n        int set_cost = d * e;\n        if (total > set_cost) {\n            min_cost = set_cost;\n        }\n    }\n    \n    printf(\"%d\\n\", min_cost);\n    free(movies);\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:58:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int a, b, c, d, e, n;\n    cin >> a >> b >> c >> d >> e >> n;\n    \n    vector<int> movies(n);\n    for (int i = 0; i < n; ++i) {\n        int type;\n        cin >> type;\n        if (type == 0) movies[i] = a;\n        else if (type == 1) movies[i] = b;\n        else movies[i] = c;\n    }\n    \n    int total = 0;\n    for (int m : movies) {\n        total += m;\n    }\n    \n    int regular = total;\n    int set_price1 = (n >= d) ? n * e : d * e;\n    int set_price2 = (n < d && total > d * e) ? d * e : total;\n    \n    int optimal = min(regular, min(set_price1, set_price2));\n    cout << optimal << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 20:59:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        int c = scanner.nextInt();\n        int d = scanner.nextInt();\n        int e = scanner.nextInt();\n        int n = scanner.nextInt();\n        int[] movies = new int[n];\n        for (int i = 0; i < n; i++) {\n            movies[i] = scanner.nextInt();\n        }\n\n        int total = 0;\n        for (int movie : movies) {\n            switch (movie) {\n                case 0: total += a; break;\n                case 1: total += b; break;\n                case 2: total += c; break;\n            }\n        }\n\n        int setPrice;\n        if (n >= d) {\n            setPrice = n * e;\n        } else {\n            setPrice = d * e;\n        }\n\n        System.out.println(Math.min(total, setPrice));\n    }\n}",
+    "timestamp": "2025-08-05 20:59:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DVDRental {\n    public static int calculateOptimalRentalCost(int[] types, int a, int b, int c, int d, int e) {\n        int totalCost = 0;\n        int[] prices = {a, b, c};\n        \n        for (int type : types) {\n            totalCost += prices[type];\n        }\n        \n        int numDVDs = types.length;\n        \n        if (numDVDs >= d && totalCost >= numDVDs * e) {\n            return numDVDs * e;\n        }\n        \n        if (numDVDs < d && totalCost >= d * e) {\n            return d * e;\n        }\n        \n        return totalCost;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int a = scanner.nextInt(); // old movies price\n        int b = scanner.nextInt(); // new releases price\n        int c = scanner.nextInt(); // recent releases price\n        int d = scanner.nextInt(); // set rental minimum DVDs\n        int e = scanner.nextInt(); // set rental price per DVD\n        \n        int n = scanner.nextInt(); // number of DVDs\n        int[] types = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            types[i] = scanner.nextInt();\n        }\n        \n        int optimalCost = calculateOptimalRentalCost(types, a, b, c, d, e);\n        System.out.println(optimalCost);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 20:59:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int a, b, c, d, e;\n    int old_count, new_count, recent_count;\n    \n    scanf(\"%d %d %d %d %d\", &a, &b, &c, &d, &e);\n    scanf(\"%d %d %d\", &old_count, &new_count, &recent_count);\n    \n    int total_count = old_count + new_count + recent_count;\n    int total_price = old_count * a + new_count * b + recent_count * c;\n    \n    int min_price;\n    \n    if (total_count >= d && total_price >= total_count * e) {\n        min_price = total_count * e;\n    } else if (total_count < d && total_price >= d * e) {\n        min_price = d * e;\n    } else {\n        min_price = total_price;\n    }\n    \n    printf(\"%d\\n\", min_price);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 20:59:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int a, b, c, d, e;\n    cin >> a >> b >> c >> d >> e;\n\n    int n;\n    cin >> n;\n\n    vector<int> movies(n);\n    for (int i = 0; i < n; i++) {\n        cin >> movies[i];\n    }\n\n    int total_cost = 0;\n    for (int movie : movies) {\n        if (movie == 1) total_cost += a;\n        else if (movie == 2) total_cost += b;\n        else total_cost += c;\n    }\n\n    int optimal_cost = total_cost;\n\n    for (int num_dvds = d; num_dvds <= n; num_dvds++) {\n        int set_cost = num_dvds * e;\n        int remaining_cost = 0;\n\n        vector<int> remaining_movies = movies;\n        sort(remaining_movies.begin(), remaining_movies.end(), greater<int>());\n        remaining_movies.resize(n - num_dvds);\n\n        for (int movie : remaining_movies) {\n            if (movie == 1) remaining_cost += a;\n            else if (movie == 2) remaining_cost += b;\n            else remaining_cost += c;\n        }\n\n        optimal_cost = min(optimal_cost, set_cost + remaining_cost);\n    }\n\n    cout << optimal_cost << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:59:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_optimal_rental_cost(old_count, new_count, recent_count, a, b, c, d, e):\n    # Calculate the regular cost\n    regular_cost = old_count * a + new_count * b + recent_count * c\n    num_selected = old_count + new_count + recent_count\n    \n    # If no DVDs are selected, cost is zero\n    if num_selected == 0:\n        return 0\n\n    cost_options = []\n\n    # Check the first condition\n    if num_selected >= d and regular_cost > num_selected * e:\n        cost_options.append(num_selected * e)\n\n    # Check the second condition\n    if num_selected < d and regular_cost > d * e:\n        cost_options.append(d * e)\n\n    # Always include the regular cost\n    cost_options.append(regular_cost)\n\n    # Return the minimum cost from all options\n    return min(cost_options)\n\n# Example usage:\n# cost = calculate_optimal_rental_cost(3, 2, 1, 100, 200, 150, 4, 180)",
+    "timestamp": "2025-08-13 04:24:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class DVDRentalShop {\n    public static int calculateOptimalRates(int a, int b, int c, int d, int e, int old, int newRelease, int recent) {\n        int totalRegularPrice = old * a + newRelease * b + recent * c;\n        int totalCount = old + newRelease + recent;\n\n        // Calculate cost with the special discount\n        int discountedPrice1 = Integer.MAX_VALUE;\n        int discountedPrice2 = Integer.MAX_VALUE;\n\n        if (totalCount >= d) {\n            int cost = totalCount * e;\n            if (totalRegularPrice > cost) {\n                discountedPrice1 = cost;\n            }\n        }\n\n        if (totalCount < d) {\n            int cost = d * e;\n            if (totalRegularPrice > cost) {\n                discountedPrice2 = cost;\n            }\n        }\n\n        // Find the minimal valid price\n        return Math.min(totalRegularPrice, Math.min(discountedPrice1, discountedPrice2));\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        // Read rental prices for old movies, new releases, and recent releases\n        System.out.print(\"Enter rental price for old movies: \");\n        int a = scanner.nextInt();\n        System.out.print(\"Enter rental price for new releases: \");\n        int b = scanner.nextInt();\n        System.out.print(\"Enter rental price for recent releases: \");\n        int c = scanner.nextInt();\n\n        // Read the conditions for the discount\n        System.out.print(\"Enter the minimum number of DVDs for discount (d): \");\n        int d = scanner.nextInt();\n        System.out.print(\"Enter the discounted price per DVD (e): \");\n        int e = scanner.nextInt();\n\n        // Read number of each type of DVD rented\n        System.out.print(\"Enter number of old movies rented: \");\n        int old = scanner.nextInt();\n        System.out.print(\"Enter number of new releases rented: \");\n        int newRelease = scanner.nextInt();\n        System.out.print(\"Enter number of recent releases rented: \");\n        int recent = scanner.nextInt();\n\n        int optimalRate = calculateOptimalRates(a, b, c, d, e, old, newRelease, recent);\n        System.out.println(\"The optimal rental rate is: \" + optimalRate + \" yen\");\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 04:24:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint calculateOptimalCost(int old_count, int new_count, int recent_count, int a, int b, int c, int d, int e) {\n    int total_count = old_count + new_count + recent_count;\n    int regular_cost = old_count * a + new_count * b + recent_count * c;\n    \n    // If total DVDs equal or exceed d\n    if (total_count >= d) {\n        int set_cost = total_count * e;\n        if (regular_cost > set_cost) {\n            return set_cost;\n        }\n    } else {\n        int set_cost = d * e;\n        if (regular_cost > set_cost) {\n            return set_cost;\n        }\n    }\n    \n    return regular_cost;\n}\n\nint main() {\n    int a, b, c, d, e;\n    int old_count, new_count, recent_count;\n    \n    printf(\"Enter the prices for old movies, new releases, recent releases:\\n\");\n    scanf(\"%d %d %d\", &a, &b, &c);\n    \n    printf(\"Enter the number of DVDs for old, new, and recent:\\n\");\n    scanf(\"%d %d %d\", &old_count, &new_count, &recent_count);\n    \n    printf(\"Enter d and e for set rental calculation:\\n\");\n    scanf(\"%d %d\", &d, &e);\n    \n    int optimal_cost = calculateOptimalCost(old_count, new_count, recent_count, a, b, c, d, e);\n    printf(\"The optimal rental cost is: %d yen\\n\", optimal_cost);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 04:24:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_optimal_rental_cost(a, b, c, d, e, old_count, new_count, recent_count):\n    # Calculate regular total cost\n    regular_cost = a * old_count + b * new_count + c * recent_count\n    \n    # If total DVD count is less than d, no set rental\n    if old_count + new_count + recent_count < d:\n        return regular_cost\n    \n    # Try both set rental conditions\n    total_dvds = old_count + new_count + recent_count\n    \n    # Condition 1: Total DVDs >= d and total cost exceeds (total_dvds * e)\n    cost1 = total_dvds * e if regular_cost >= total_dvds * e else regular_cost\n    \n    # Condition 2: Total DVDs < d and total cost exceeds (d * e)\n    cost2 = d * e if regular_cost >= d * e else regular_cost\n    \n    # Return the minimum cost\n    return min(regular_cost, cost1, cost2)",
+    "timestamp": "2025-08-13 04:24:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_optimal_price(a, b, c, d, e, old, new, recent):\n    total_dvds = old + new + recent\n    regular_price = old * a + new * b + recent * c\n    \n    if total_dvds >= d:\n        set_price = total_dvds * e\n        if regular_price > set_price:\n            optimal_price = set_price\n        else:\n            optimal_price = regular_price\n    else:\n        if regular_price > d * e:\n            optimal_price = d * e\n        else:\n            optimal_price = regular_price\n    \n    return optimal_price\n\n# Example usage:\n# a, b, c = 100, 200, 300\n# d, e = 5, 150\n# old, new, recent = 2, 1, 3\n# print(calculate_optimal_price(a, b, c, d, e, old, new, recent))",
+    "timestamp": "2025-08-13 04:24:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint calculateMinCost(int old, int newR, int recentR, int a, int b, int c, int d, int e) {\n    vector<int> prices;\n    for (int i = 0; i < old; ++i) prices.push_back(a);\n    for (int i = 0; i < newR; ++i) prices.push_back(b);\n    for (int i = 0; i < recentR; ++i) prices.push_back(c);\n\n    sort(prices.begin(), prices.end(), greater<int>());\n\n    int minCost = INT32_MAX, n = prices.size();\n    \n    for (int i = 0; i <= n; ++i) {\n        int regularCost = 0, setCost = 0;\n        \n        for (int j = 0; j < i; ++j) regularCost += prices[j];\n        \n        for (int j = i; j < n; ++j) setCost += prices[j];\n        \n        if ((n - i) >= d) setCost = min(setCost, (n - i) * e);\n        else if (setCost > d * e) setCost = d * e;\n        \n        minCost = min(minCost, regularCost + setCost);\n    }\n    \n    return minCost;\n}\n\nint main() {\n    int old, newR, recentR, a, b, c, d, e;\n    cout << \"Enter the number of old, new, and recent releases: \";\n    cin >> old >> newR >> recentR;\n    cout << \"Enter prices for old, new, and recent releases: \";\n    cin >> a >> b >> c;\n    cout << \"Enter the values for d and e: \";\n    cin >> d >> e;\n    \n    int result = calculateMinCost(old, newR, recentR, a, b, c, d, e);\n    cout << \"The minimal cost is: \" << result << \" yen\" << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:19:29"
+  }
+]

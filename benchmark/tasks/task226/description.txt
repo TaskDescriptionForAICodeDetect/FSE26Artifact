@@ -1,0 +1,1 @@
+Write a computer program that calculates the maximum number of discs that can be removed from a table during a game, where discs can only be removed in pairs of the same color and only if neither disc is covered by another disc.

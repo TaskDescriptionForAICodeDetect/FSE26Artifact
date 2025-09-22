@@ -1,0 +1,1 @@
+Determine how many ways a given positive integer can be expressed as a sum of one or more consecutive prime numbers. For each input integer, report the number of such representations, with the input ending when a zero is encountered.

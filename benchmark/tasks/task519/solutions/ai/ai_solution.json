@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int scores[N + 1];\n    int max_score = INT_MIN;\n    int max_count = 0;\n    \n    for (int i = 1; i <= N; i++) {\n        scores[i] = 0;\n    }\n    \n    for (int i = 1; i <= M; i++) {\n        int contestant, points;\n        scanf(\"%d %d\", &contestant, &points);\n        scores[contestant] += points;\n    }\n    \n    for (int i = 1; i <= N; i++) {\n        if (scores[i] > max_score) {\n            max_score = scores[i];\n            max_count = 1;\n        } else if (scores[i] == max_score) {\n            max_count++;\n        }\n    }\n    \n    if (max_count > 1) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    \n    int min_points = INT_MAX;\n    for (int i = 1; i <= N; i++) {\n        if (i != 0 && scores[i] != max_score) {\n            int points_needed = max_score - scores[i] + 1;\n            if (points_needed < min_points) {\n                min_points = points_needed;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", min_points);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:59:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int *S = (int *)malloc(M * sizeof(int));\n    for (int i = 0; i < M; i++) {\n        scanf(\"%d\", &S[i]);\n    }\n    \n    int *current_scores = (int *)calloc(N + 1, sizeof(int));\n    for (int i = 0; i < M; i++) {\n        int winner;\n        scanf(\"%d\", &winner);\n        current_scores[winner] += S[i];\n    }\n    \n    int max_score = 0;\n    for (int i = 1; i <= N; i++) {\n        if (current_scores[i] > max_score) {\n            max_score = current_scores[i];\n        }\n    }\n    \n    int min_SM1 = 0;\n    for (int i = 1; i <= N; i++) {\n        int needed = max_score - current_scores[i] + 1;\n        if (needed > min_SM1) {\n            min_SM1 = needed;\n        }\n    }\n    \n    printf(\"%d\\n\", min_SM1);\n    \n    free(S);\n    free(current_scores);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:00:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> S(M);\n    for (int i = 0; i < M; ++i) {\n        cin >> S[i];\n    }\n    vector<int> scores(N, 0);\n    vector<int> max_scores(M + 1, 0);\n    for (int i = 0; i < M; ++i) {\n        int c;\n        cin >> c;\n        --c;\n        if (scores[c] == 0) {\n            scores[c] += S[i];\n        }\n        int current_max = *max_element(scores.begin(), scores.end());\n        max_scores[i] = current_max;\n    }\n    \n    int max_before = max_scores[M - 1];\n    int max_score = 0;\n    for (int i = 0; i < N; ++i) {\n        int needed = max_before - scores[i] + 1;\n        max_score = max(max_score, needed);\n    }\n    \n    cout << max_score << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:00:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int[] scores = new int[N + 1];\n        \n        for (int i = 0; i < M; i++) {\n            int a = sc.nextInt();\n            scores[a] += sc.nextInt();\n        }\n        \n        int maxScore = 0;\n        for (int i = 1; i <= N; i++) {\n            if (scores[i] > maxScore) {\n                maxScore = scores[i];\n            }\n        }\n        \n        List<Integer> maxContestants = new ArrayList<>();\n        for (int i = 1; i <= N; i++) {\n            if (scores[i] == maxScore) {\n                maxContestants.add(i);\n            }\n        }\n        \n        int minSM1 = 0;\n        if (maxContestants.size() > 1) {\n            minSM1 = 1;\n        } else {\n            int currentMax = maxScore;\n            int secondMax = 0;\n            for (int i = 1; i <= N; i++) {\n                if (scores[i] != currentMax && scores[i] > secondMax) {\n                    secondMax = scores[i];\n                }\n            }\n            minSM1 = currentMax - secondMax + 1;\n        }\n        \n        System.out.println(minSM1);\n    }\n}",
+    "timestamp": "2025-08-05 22:01:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class QuizShowScoring {\n    public static int findMinimumLastQuestionScore(int N, int M, int[] previousScores) {\n        int[] maxPointsForContestants = new int[N + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            maxPointsForContestants[i] = previousScores[i - 1];\n        }\n        \n        int maxScore = Arrays.stream(maxPointsForContestants).max().getAsInt();\n        \n        int minScore = Integer.MAX_VALUE;\n        for (int i = 1; i <= N; i++) {\n            int scoreNeededToWin = maxScore - maxPointsForContestants[i] + 1;\n            minScore = Math.min(minScore, scoreNeededToWin);\n        }\n        \n        return minScore;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        \n        int[] previousScores = new int[N];\n        for (int i = 0; i < N; i++) {\n            previousScores[i] = scanner.nextInt();\n        }\n        \n        int result = findMinimumLastQuestionScore(N, M, previousScores);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:01:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<int> scores(N + 1, 0);\n    vector<int> question_points(M + 1);\n    \n    for (int i = 1; i <= M; ++i) {\n        cin >> question_points[i];\n    }\n    \n    for (int i = 1; i <= M; ++i) {\n        int winner;\n        cin >> winner;\n        if (winner != 0) {\n            scores[winner] += question_points[i];\n        }\n    }\n    \n    int max_score = *max_element(scores.begin() + 1, scores.end());\n    int min_last_points = INT_MAX;\n    \n    for (int j = 1; j <= N; ++j) {\n        int potential_total = scores[j] + question_points[M + 1];\n        int max_other_score = 0;\n        \n        for (int k = 1; k <= N; ++k) {\n            if (k != j) {\n                max_other_score = max(max_other_score, scores[k]);\n            }\n        }\n        \n        if (potential_total > max_other_score) {\n            min_last_points = min(min_last_points, max(0, max_other_score - scores[j] + 1));\n        }\n    }\n    \n    cout << (min_last_points == INT_MAX ? 0 : min_last_points) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_min_score_for_last_question(N, M, scores, results):\n    current_scores = [0] * N\n\n    for question in range(M):\n        winner = results[question]\n        if winner != -1:  # -1 indicates no correct answer for that question\n            current_scores[winner - 1] += scores[question]\n\n    max_score = max(current_scores)\n    max_count = current_scores.count(max_score)\n\n    if max_count > 1:\n        # If there's a tie, any contestant can win the next question\n        needed_score = max_score + 1\n    else:\n        # If there's a single leader, ensure all current non-leaders can potentially tie\n        contenders = [score for score in current_scores if score != max_score]\n        if contenders:\n            needed_score = (max_score - min(contenders)) + 1\n        else:\n            needed_score = 0\n\n    return max(needed_score, 0)\n\n# Example of usage:\nN = 3\nM = 4\nscores = [10, 20, 30, 40]\nresults = [1, 2, 3, -1]  # -1 means no one answered correctly\n\nprint(find_min_score_for_last_question(N, M, scores, results))  # Output: 31",
+    "timestamp": "2025-08-13 08:30:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class QuizShow {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // Reading inputs\n        int N = scanner.nextInt(); // Number of contestants\n        int M = scanner.nextInt(); // Number of questions before the last\n        int[] scores = new int[N]; // Scores of each contestant after M questions\n        \n        // Fill in the scores array with initial scores\n        for (int i = 0; i < N; ++i) {\n            scores[i] = scanner.nextInt();\n        }\n        \n        // Finds the maximum score amongst contestants after M questions\n        int maxScore = scores[0];\n        for (int i = 1; i < N; ++i) {\n            if (scores[i] > maxScore) {\n                maxScore = scores[i];\n            }\n        }\n        \n        // Calculates the minimum score S_M+1\n        int SMplus1 = Integer.MAX_VALUE;\n        for (int i = 0; i < N; ++i) {\n            int pointsNeeded = (maxScore - scores[i] + 1);\n            if (pointsNeeded < SMplus1) {\n                SMplus1 = pointsNeeded;\n            }\n        }\n        \n        // Output the result, if no contestant needs points, output at least 1 point\n        System.out.println(Math.max(SMplus1, 1));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 08:30:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, M, i, j;\n    scanf(\"%d %d\", &N, &M);\n    \n    int scores[N];\n    for (i = 0; i < N; i++) {\n        scores[i] = 0;\n    }\n    \n    for (i = 0; i < M; i++) {\n        int contestant, score;\n        scanf(\"%d %d\", &contestant, &score);\n        scores[contestant - 1] += score;\n    }\n    \n    int max_score = 0;\n    for (i = 0; i < N; i++) {\n        if (scores[i] > max_score) {\n            max_score = scores[i];\n        }\n    }\n    \n    int second_max_score = 0;\n    for (i = 0; i < N; i++) {\n        if (scores[i] > second_max_score && scores[i] < max_score) {\n            second_max_score = scores[i];\n        }\n    }\n    \n    int SM_plus_1 = max_score - second_max_score + 1;\n    printf(\"%d\\n\", SM_plus_1);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 08:30:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_min_last_question_score(N, M, previous_scores):\n    max_score = max(max(contestant) for contestant in previous_scores)\n    min_scores = [max_score - sum(contestant) for contestant in previous_scores]\n    \n    return max(min_scores)\n\ndef main():\n    # Read input\n    N, M = map(int, input().split())\n    \n    # Read previous scores\n    previous_scores = []\n    for _ in range(N):\n        contestant_scores = list(map(int, input().split()))\n        previous_scores.append(contestant_scores)\n    \n    # Calculate minimum score for last question\n    result = find_min_last_question_score(N, M, previous_scores)\n    \n    # Output the result\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 08:30:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_min_last_question_score(N, M, S, A):\n    max_scores = [0] * N\n    for i in range(M):\n        contestant = A[i] - 1\n        max_scores[contestant] += S[i]\n    \n    max_current = max(max_scores)\n    candidates = [i for i in range(N) if max_scores[i] == max_current]\n    \n    if len(candidates) > 1:\n        return 0\n    \n    max_score = max_current\n    other_max = 0\n    for score in max_scores:\n        if score != max_score and score > other_max:\n            other_max = score\n    \n    required = max_score - other_max + 1\n    return max(required, 0)\n\n# Read input\nN, M = map(int, input().split())\nS = list(map(int, input().split()))\nA = list(map(int, input().split()))\n\n# Compute and print the result\nprint(find_min_last_question_score(N, M, S, A))",
+    "timestamp": "2025-08-13 08:30:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n    \n    std::vector<int> scores(N, 0);\n    for (int i = 0; i < M; ++i) {\n        int contestant, points;\n        std::cin >> contestant >> points;\n        scores[contestant - 1] += points;\n    }\n    \n    // Find the maximum score before the last question\n    int maxScore = *std::max_element(scores.begin(), scores.end());\n    \n    // Determine the minimum score for the last question\n    int minScoreNeeded = INT_MAX;\n    for (int i = 0; i < N; ++i) {\n        if (scores[i] != maxScore) {\n            int scoreNeeded = maxScore - scores[i] + 1;\n            minScoreNeeded = std::min(minScoreNeeded, scoreNeeded);\n        }\n    }\n    \n    std::cout << minScoreNeeded << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:46:20"
+  }
+]

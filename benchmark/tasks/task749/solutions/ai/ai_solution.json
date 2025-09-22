@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint calculateOddness(int* perm, int n) {\n    int oddness = 0;\n    for (int i = 0; i < n; i++) {\n        oddness += abs(i + 1 - perm[i]);\n    }\n    return oddness;\n}\n\nvoid swap(int* a, int* b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nvoid generatePermutations(int* perm, int start, int n, int k, int* count) {\n    if (start == n) {\n        if (calculateOddness(perm, n) == k) {\n            (*count)++;\n        }\n        return;\n    }\n\n    for (int i = start; i < n; i++) {\n        swap(&perm[start], &perm[i]);\n        generatePermutations(perm, start + 1, n, k, count);\n        swap(&perm[start], &perm[i]);\n    }\n}\n\nint countPermutationsWithOddness(int n, int k) {\n    int* perm = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        perm[i] = i + 1;\n    }\n\n    int count = 0;\n    generatePermutations(perm, 0, n, k, &count);\n\n    free(perm);\n    return count;\n}\n\nint main(int argc, char* argv[]) {\n    if (argc != 3) {\n        printf(\"Usage: %s <n> <k>\\n\", argv[0]);\n        return 1;\n    }\n\n    int n = atoi(argv[1]);\n    int k = atoi(argv[2]);\n\n    int result = countPermutationsWithOddness(n, k);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid swap(int *a, int *b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nvoid calculate_oddness(int *perm, int n, int *count, int k) {\n    int sum = 0;\n    for (int i = 0; i < n; i++) {\n        sum += abs(perm[i] - (i + 1));\n    }\n    if (sum == k) {\n        (*count)++;\n    }\n}\n\nvoid permute(int *perm, int start, int end, int *count, int k) {\n    if (start == end) {\n        calculate_oddness(perm, end + 1, count, k);\n    } else {\n        for (int i = start; i <= end; i++) {\n            swap(&perm[start], &perm[i]);\n            permute(perm, start + 1, end, count, k);\n            swap(&perm[start], &perm[i]);\n        }\n    }\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    int *perm = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        perm[i] = i + 1;\n    }\n    int count = 0;\n    permute(perm, 0, n - 1, &count, k);\n    printf(\"%d\\n\", count);\n    free(perm);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    \n    vector<vector<int>> dp(n + 1, vector<int>(k + 1, 0));\n    dp[1][0] = 1;\n    \n    for (int i = 2; i <= n; ++i) {\n        for (int j = 0; j <= k; ++j) {\n            for (int m = 0; m < i && j - m >= 0; ++m) {\n                dp[i][j] += dp[i - 1][j - m];\n            }\n        }\n    }\n    \n    cout << dp[n][k] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PermutationOddness {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        scanner.close();\n\n        long[][] dp = new long[n + 1][k + 1];\n        dp[0][0] = 1;\n\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j <= k; j++) {\n                dp[i][j] = 0;\n                if (j >= 0) {\n                    dp[i][j] += dp[i - 1][j];\n                }\n                if (j >= 1) {\n                    dp[i][j] += dp[i - 1][j - 1] * 2;\n                }\n                if (j >= 2 && i >= 2) {\n                    dp[i][j] += dp[i - 2][j - 2] * (i - 1);\n                }\n                if (j >= 1 && i >= 1) {\n                    dp[i][j] -= dp[i - 1][j - 1] * (i - 1);\n                }\n            }\n        }\n\n        System.out.println(dp[n][k]);\n    }\n}",
+    "timestamp": "2025-08-05 22:46:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int countPermutations(int n, int k) {\n        int MOD = 1_000_000_007;\n        long[][][] dp = new long[n + 1][k + 1][2];\n        \n        dp[0][0][0] = 1;\n        \n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j <= k; j++) {\n                for (int used = 0; used < (1 << i); used++) {\n                    for (int last = 0; last < i; last++) {\n                        if ((used & (1 << last)) > 0) continue;\n                        \n                        int newDiff = Math.abs(i - (last + 1));\n                        \n                        if (j >= newDiff) {\n                            dp[i][j][1] = (dp[i][j][1] + dp[i-1][j-newDiff][0]) % MOD;\n                            dp[i][j][0] = (dp[i][j][0] + dp[i-1][j-newDiff][1]) % MOD;\n                        }\n                    }\n                }\n            }\n        }\n        \n        return (int)(dp[n][k][1]);\n    }\n}",
+    "timestamp": "2025-08-05 22:47:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countPermutations(int n, int k) {\n        const int MOD = 1e9 + 7;\n        vector<vector<int>> dp(n + 1, vector<int>(k + 1, 0));\n        dp[0][0] = 1;\n        \n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j <= k; j++) {\n                for (int val = 1; val <= i; val++) {\n                    int diff = abs(i - val);\n                    if (j >= diff) {\n                        dp[i][j] = (dp[i][j] + dp[i-1][j-diff]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        return dp[n][k];\n    }\n};",
+    "timestamp": "2025-08-05 22:47:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_permutations_with_oddness(n, k):\n    from itertools import permutations\n\n    def calculate_oddness(perm):\n        return sum(abs(i + 1 - perm[i]) for i in range(len(perm)))\n\n    count = 0\n    for perm in permutations(range(1, n + 1)):\n        if calculate_oddness(perm) == k:\n            count += 1\n\n    return count\n\n# Example Usage:\nn = 3\nk = 2\nresult = count_permutations_with_oddness(n, k)\nprint(result)",
+    "timestamp": "2025-08-13 12:30:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class OddnessPermutations {\n    public static void main(String[] args) {\n        int n = 4; // For example, use n = 4\n        int k = 3; // For example, use k = 3\n        System.out.println(countPermutationsWithOddness(n, k));\n    }\n\n    private static int countPermutationsWithOddness(int n, int k) {\n        int[][] dp = new int[n + 1][k + 1];\n        int MOD = 1000000007;\n\n        dp[0][0] = 1;\n        for (int i = 1; i <= n; i++) {\n            for (int j = 0; j <= k; j++) {\n                for (int d = 0; d < i && j >= Math.abs(d - (i - 1)); d++) {\n                    dp[i][j] = (dp[i][j] + dp[i - 1][j - Math.abs(d - (i - 1))]) % MOD;\n                }\n            }\n        }\n        return dp[n][k];\n    }\n}",
+    "timestamp": "2025-08-13 12:31:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 20\n\nint dp[MAX_N + 1][2 * MAX_N * MAX_N];\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n\n    dp[0][0] = 1;\n\n    for (int i = 1; i <= n; i++) {\n        for (int j = 0; j <= i * (i - 1); j++) {\n            dp[i][j] = dp[i - 1][abs(j - (i - 1))] + (i > 1 ? dp[i - 1][abs(j - (i - 2))] : 0);\n        }\n    }\n\n    printf(\"%d\\n\", dp[n][k]);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:31:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1000000007;\n\nint main() {\n    int n, k;\n    std::cin >> n >> k;\n\n    // dp[i][j] = number of permutations of {1, ..., i} with oddness j\n    std::vector<std::vector<int>> dp(n + 1, std::vector<int>(k + 1, 0));\n    dp[0][0] = 1;\n\n    for (int i = 1; i <= n; ++i) {\n        for (int j = 0; j <= k; ++j) {\n            for (int v = 0; v < i; ++v) {\n                int oddness = std::abs(i - 1 - v);\n                if (j >= oddness) {\n                    dp[i][j] = (dp[i][j] + dp[i - 1][j - oddness]) % MOD;\n                }\n            }\n        }\n    }\n\n    std::cout << dp[n][k] << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:31:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_permutations_with_oddness(n, k):\n    def calc_oddness(perm):\n        return sum(abs(i+1 - perm[i]) for i in range(len(perm)))\n    \n    def backtrack(perm, used):\n        if len(perm) == n:\n            return 1 if calc_oddness(perm) == k else 0\n        \n        total = 0\n        for num in range(1, n+1):\n            if num not in used:\n                perm.append(num)\n                used.add(num)\n                total += backtrack(perm, used)\n                perm.pop()\n                used.remove(num)\n        \n        return total\n    \n    return backtrack([], set())",
+    "timestamp": "2025-08-13 12:31:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom functools import lru_cache\n\ndef solve():\n    n, k = map(int, sys.stdin.readline().split())\n    MOD = 10**9 + 7\n\n    @lru_cache(maxsize=None)\n    def dp(pos, remaining_k, mask):\n        if pos == n:\n            return 1 if remaining_k == 0 else 0\n        res = 0\n        for num in range(1, n + 1):\n            if not (mask & (1 << (num - 1))):\n                diff = abs((pos + 1) - num)\n                if remaining_k >= diff:\n                    res += dp(pos + 1, remaining_k - diff, mask | (1 << (num - 1)))\n                    res %= MOD\n        return res % MOD\n\n    total = dp(0, k, 0)\n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 12:31:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countPermutationsWithOddness(n, k) {\n    function factorial(x) {\n        let result = 1;\n        for (let i = 2; i <= x; i++) result *= i;\n        return result;\n    }\n    \n    function countOddness(dp, n, k) {\n        if (k < 0) return 0;\n        if (n === 0) return k === 0 ? 1 : 0;\n        if (dp[n][k] !== -1) return dp[n][k];\n        \n        let sum = 0;\n        for (let i = 0; i < n; i++) {\n            sum += countOddness(dp, n - 1, k - Math.abs(n - 1 - i));\n        }\n        \n        dp[n][k] = sum;\n        return sum;\n    }\n\n    let dp = Array.from({ length: n + 1 }, () => Array(k + 1).fill(-1));\n    return countOddness(dp, n, k);\n}",
+    "timestamp": "2025-08-13 12:31:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countPermutationsWithOddness(n, k) {\n    const MOD = 1e9 + 7;\n    const dp = Array.from({ length: n + 1 }, () => \n        Array.from({ length: n * n + 1 }, () => 0)\n    );\n    \n    dp[0][0] = 1;\n    \n    for (let i = 1; i <= n; i++) {\n        for (let j = 0; j <= n * n; j++) {\n            for (let x = 1; x <= i; x++) {\n                const newOddness = j + Math.abs(i - x);\n                if (newOddness <= n * n) {\n                    dp[i][newOddness] = (dp[i][newOddness] + dp[i-1][j]) % MOD;\n                }\n            }\n        }\n    }\n    \n    return dp[n][k];\n}",
+    "timestamp": "2025-08-13 12:31:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countPermutations(n, k) {\n    const MOD = 1e9 + 7;\n    let dp = Array.from({ length: n + 1 }, () => new Array(k + 1).fill(0));\n    dp[0][0] = 1;\n    \n    for (let i = 1; i <= n; i++) {\n        for (let j = 0; j <= k; j++) {\n            for (let m = 1; m <= i; m++) {\n                const cost = Math.abs(i - m);\n                if (j >= cost) {\n                    dp[i][j] = (dp[i][j] + dp[i - 1][j - cost]) % MOD;\n                }\n            }\n        }\n    }\n    \n    return dp[n][k];\n}",
+    "timestamp": "2025-08-13 12:31:53"
+  }
+]

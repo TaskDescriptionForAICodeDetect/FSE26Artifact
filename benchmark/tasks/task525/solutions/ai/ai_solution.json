@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <float.h>\n\nint longestSubsequence(double* arr, int N, double K) {\n    int maxLen = 0;\n    int left = 0;\n    double currProduct = 1.0;\n\n    for (int right = 0; right < N; right++) {\n        currProduct *= arr[right];\n\n        while (currProduct > K && left <= right) {\n            currProduct /= arr[left];\n            left++;\n        }\n\n        maxLen = (right - left + 1 > maxLen) ? right - left + 1 : maxLen;\n    }\n\n    return maxLen;\n}\n\nint main() {\n    int N;\n    double K;\n    scanf(\"%d %lf\", &N, &K);\n\n    double* arr = malloc(N * sizeof(double));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lf\", &arr[i]);\n    }\n\n    int result = longestSubsequence(arr, N, K);\n    printf(\"%d\\n\", result);\n\n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint maxLength(double arr[], int n, double K) {\n    int max_len = 0;\n    double product;\n    \n    for (int i = 0; i < n; i++) {\n        product = 1.0;\n        for (int j = i; j < n; j++) {\n            product *= arr[j];\n            if (product <= K) {\n                if (j - i + 1 > max_len) {\n                    max_len = j - i + 1;\n                }\n            } else {\n                break;\n            }\n        }\n    }\n    \n    return max_len;\n}\n\nint main() {\n    int N;\n    double K;\n    scanf(\"%d %lf\", &N, &K);\n    double arr[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lf\", &arr[i]);\n    }\n    printf(\"%d\\n\", maxLength(arr, N, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint maxSubsequenceLength(const vector<double>& sequence, double K) {\n    int n = sequence.size();\n    if (n == 0) return 0;\n\n    int max_len = 0;\n    double product = 1.0;\n    int left = 0;\n\n    for (int right = 0; right < n; ++right) {\n        product *= sequence[right];\n        while (left <= right && product > K) {\n            product /= sequence[left];\n            left++;\n        }\n        if (product <= K) {\n            max_len = max(max_len, right - left + 1);\n        }\n    }\n\n    return max_len;\n}\n\nint main() {\n    int N;\n    double K;\n    cin >> N >> K;\n    vector<double> sequence(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> sequence[i];\n    }\n    cout << maxSubsequenceLength(sequence, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class Solution {\n    public static int maxSubsequenceLength(double[] nums, double K) {\n        if (nums == null || nums.length == 0 || K < 0) {\n            return 0;\n        }\n        \n        int maxLen = 0;\n        double product = 1;\n        int left = 0;\n        \n        for (int right = 0; right < nums.length; right++) {\n            product *= nums[right];\n            \n            while (left <= right && product > K) {\n                product /= nums[left];\n                left++;\n            }\n            \n            if (product <= K) {\n                maxLen = Math.max(maxLen, right - left + 1);\n            }\n        }\n        \n        return maxLen;\n    }\n}",
+    "timestamp": "2025-08-05 22:02:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int longestSubsequence(double[] nums, double k) {\n        int n = nums.length;\n        int maxLen = 0;\n        int left = 0;\n        double currProduct = 1.0;\n\n        for (int right = 0; right < n; right++) {\n            currProduct *= nums[right];\n\n            while (currProduct > k && left <= right) {\n                currProduct /= nums[left];\n                left++;\n            }\n\n            if (currProduct <= k) {\n                maxLen = Math.max(maxLen, right - left + 1);\n            }\n        }\n\n        return maxLen;\n    }\n}",
+    "timestamp": "2025-08-05 22:02:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int longestSubsequence(vector<double>& nums, double K) {\n        int n = nums.size();\n        int maxLen = 0;\n        int left = 0;\n        double currProduct = 1.0;\n\n        for (int right = 0; right < n; right++) {\n            currProduct *= nums[right];\n\n            while (currProduct > K && left <= right) {\n                currProduct /= nums[left];\n                left++;\n            }\n\n            maxLen = max(maxLen, right - left + 1);\n        }\n\n        return maxLen;\n    }\n};",
+    "timestamp": "2025-08-05 22:02:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longest_subsequence(sequence, K):\n    if K <= 0:\n        return 0\n    \n    n = len(sequence)\n    max_length = 0\n    product = 1\n    start = 0\n    \n    for end in range(n):\n        product *= sequence[end]\n        \n        while start <= end and product > K:\n            product /= sequence[start]\n            start += 1\n            \n        max_length = max(max_length, end - start + 1)\n    \n    return max_length",
+    "timestamp": "2025-08-13 08:36:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class LongestSubsequence {\n    public static int findLongestSubsequence(double[] sequence, double K) {\n        int maxLen = 0;\n        int left = 0;\n        double prod = 1.0;\n\n        for (int right = 0; right < sequence.length; right++) {\n            prod *= sequence[right];\n\n            while (prod > K && left <= right) {\n                prod /= sequence[left++];\n            }\n\n            if (prod <= K) {\n                maxLen = Math.max(maxLen, right - left + 1);\n            }\n        }\n\n        return maxLen;\n    }\n\n    public static void main(String[] args) {\n        double[] sequence = {1.5, 2.0, 0.5, 4.0};\n        double K = 10.0;\n        System.out.println(findLongestSubsequence(sequence, K)); // Example usage\n    }\n}",
+    "timestamp": "2025-08-13 08:36:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    double K;\n    scanf(\"%d %lf\", &N, &K);\n\n    double sequence[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lf\", &sequence[i]);\n    }\n\n    int max_length = 0;\n    int start = 0;\n    double product = 1.0;\n\n    for (int end = 0; end < N; end++) {\n        product *= sequence[end];\n\n        while (product > K && start <= end) {\n            product /= sequence[start++];\n        }\n\n        if (product <= K) {\n            int current_length = end - start + 1;\n            if (current_length > max_length) {\n                max_length = current_length;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", max_length);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:36:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_longest_subsequence(arr, K):\n    n = len(arr)\n    max_length = 0\n    left = 0\n    current_product = 1\n\n    for right in range(n):\n        current_product *= arr[right]\n\n        while current_product > K and left <= right:\n            current_product /= arr[left]\n            left += 1\n\n        if current_product <= K:\n            max_length = max(max_length, right - left + 1)\n\n    return max_length",
+    "timestamp": "2025-08-13 08:37:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_subsequence_length(sequence, K):\n    if K < 0:\n        return 0\n    max_len = 0\n    product = 1\n    left = 0\n    for right in range(len(sequence)):\n        product *= sequence[right]\n        while left <= right and product > K:\n            product /= sequence[left]\n            left += 1\n        max_len = max(max_len, right - left + 1)\n    return max_len if max_len != 0 or K >= 0 else 0",
+    "timestamp": "2025-08-13 08:37:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N;\n    double K;\n    cin >> N >> K;\n    vector<double> sequence(N);\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> sequence[i];\n    }\n    \n    int max_length = 0, start = 0;\n    double product = 1.0;\n    \n    for (int end = 0; end < N; ++end) {\n        product *= sequence[end];\n        \n        while (start <= end && product > K) {\n            product /= sequence[start];\n            ++start;\n        }\n        \n        if (product <= K) {\n            max_length = max(max_length, end - start + 1);\n        }\n    }\n    \n    cout << max_length << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:08"
+  }
+]

@@ -1,0 +1,1 @@
+Takahashi wants to maximize the number of shopping trips he can take from his house to a series of stores before they close. He spends one unit of time traveling to a store and has to wait in line based on a formula that depends on the time he arrives and store-specific parameters. You need to calculate the maximum number of times he can shop before the stores close.

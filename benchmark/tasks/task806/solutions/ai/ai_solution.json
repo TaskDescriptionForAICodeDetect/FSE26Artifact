@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_N 5000\n\nint main() {\n    int N;\n    int h[MAX_N], a[MAX_N];\n    int dp[MAX_N];\n    int max_beauty = 0;\n\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &h[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        dp[i] = a[i];\n        for (int j = 0; j < i; j++) {\n            if (h[j] < h[i]) {\n                dp[i] = (dp[j] + a[i] > dp[i]) ? dp[j] + a[i] : dp[i];\n            }\n        }\n        max_beauty = (dp[i] > max_beauty) ? dp[i] : max_beauty;\n    }\n\n    printf(\"%d\\n\", max_beauty);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:58:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 200000\n\ntypedef struct {\n    int h;\n    long long a;\n} Flower;\n\nint N;\nFlower flowers[MAX_N];\nlong long dp[MAX_N + 1];\nlong long bit[MAX_N + 1];\n\nlong long max(long long a, long long b) {\n    return a > b ? a : b;\n}\n\nvoid update(int idx, long long val) {\n    while (idx <= N) {\n        bit[idx] = max(bit[idx], val);\n        idx += idx & -idx;\n    }\n}\n\nlong long query(int idx) {\n    long long res = 0;\n    while (idx > 0) {\n        res = max(res, bit[idx]);\n        idx -= idx & -idx;\n    }\n    return res;\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &flowers[i].h);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &flowers[i].a);\n    }\n\n    long long max_sum = 0;\n    for (int i = 0; i < N; i++) {\n        long long current_max = query(flowers[i].h - 1);\n        dp[flowers[i].h] = current_max + flowers[i].a;\n        update(flowers[i].h, dp[flowers[i].h]);\n        max_sum = max(max_sum, dp[flowers[i].h]);\n    }\n\n    printf(\"%lld\\n\", max_sum);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:58:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nconst int MAX_N = 2e5 + 5;\nlong long bit[MAX_N];\n\nvoid update(int idx, long long val, int n) {\n    while (idx <= n) {\n        bit[idx] = max(bit[idx], val);\n        idx += idx & -idx;\n    }\n}\n\nlong long query(int idx) {\n    long long res = 0;\n    while (idx > 0) {\n        res = max(res, bit[idx]);\n        idx -= idx & -idx;\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> h(N), a(N);\n    for (int i = 0; i < N; ++i) cin >> h[i];\n    for (int i = 0; i < N; ++i) cin >> a[i];\n\n    vector<int> sorted_h = h;\n    sort(sorted_h.begin(), sorted_h.end());\n    sorted_h.erase(unique(sorted_h.begin(), sorted_h.end()), sorted_h.end());\n    int m = sorted_h.size();\n\n    vector<int> compressed_h(N);\n    for (int i = 0; i < N; ++i) {\n        compressed_h[i] = lower_bound(sorted_h.begin(), sorted_h.end(), h[i]) - sorted_h.begin() + 1;\n    }\n\n    long long ans = 0;\n    for (int i = 0; i < N; ++i) {\n        long long current_max = query(compressed_h[i] - 1);\n        long long total = current_max + a[i];\n        ans = max(ans, total);\n        update(compressed_h[i], total, m);\n    }\n\n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:58:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class FlowerArrangement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] h = new int[N];\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            h[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        int maxH = 0;\n        for (int num : h) {\n            maxH = Math.max(maxH, num);\n        }\n\n        int size = 1;\n        while (size < maxH) {\n            size <<= 1;\n        }\n\n        long[] tree = new long[2 * size];\n        Arrays.fill(tree, 0);\n\n        for (int i = 0; i < N; i++) {\n            int x = h[i];\n            long currentMax = query(1, x - 1, tree, size);\n            update(x, currentMax + a[i], tree, size);\n        }\n\n        System.out.println(query(1, size, tree, size));\n    }\n\n    private static long query(int l, int r, long[] tree, int size) {\n        long res = 0;\n        l += size - 1;\n        r += size - 1;\n        while (l <= r) {\n            if (l % 2 == 1) {\n                res = Math.max(res, tree[l]);\n                l++;\n            }\n            if (r % 2 == 0) {\n                res = Math.max(res, tree[r]);\n                r--;\n            }\n            l /= 2;\n            r /= 2;\n        }\n        return res;\n    }\n\n    private static void update(int pos, long val, long[] tree, int size) {\n        pos += size - 1;\n        tree[pos] = Math.max(tree[pos], val);\n        pos /= 2;\n        while (pos >= 1) {\n            tree[pos] = Math.max(tree[2 * pos], tree[2 * pos + 1]);\n            pos /= 2;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:59:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int maxBeauty(int N, int[] heights, int[] beauties) {\n        int[][] dp = new int[N + 1][N + 1];\n        \n        for (int i = 0; i < N; i++) {\n            Arrays.fill(dp[i], -1);\n        }\n        \n        return solve(0, -1, N, heights, beauties, dp);\n    }\n    \n    private static int solve(int index, int prevHeight, int N, int[] heights, int[] beauties, int[][] dp) {\n        if (index == N) {\n            return 0;\n        }\n        \n        if (prevHeight != -1 && dp[index][prevHeight] != -1) {\n            return dp[index][prevHeight];\n        }\n        \n        int skip = solve(index + 1, prevHeight, N, heights, beauties, dp);\n        \n        int take = -1;\n        if (prevHeight == -1 || heights[index] > prevHeight) {\n            take = beauties[index] + solve(index + 1, heights[index], N, heights, beauties, dp);\n        }\n        \n        int result = Math.max(skip, take);\n        \n        if (prevHeight != -1) {\n            dp[index][prevHeight] = result;\n        }\n        \n        return result;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] heights = new int[N];\n        int[] beauties = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            heights[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            beauties[i] = scanner.nextInt();\n        }\n        \n        int maxBeautySum = maxBeauty(N, heights, beauties);\n        System.out.println(maxBeautySum);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:59:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> h(N), a(N);\n    for (int i = 0; i < N; i++) {\n        cin >> h[i];\n    }\n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n    }\n    \n    vector<vector<int>> dp(N, vector<int>(N, 0));\n    \n    for (int len = 1; len <= N; len++) {\n        for (int start = 0; start + len <= N; start++) {\n            int end = start + len - 1;\n            \n            for (int k = start; k <= end; k++) {\n                int currentBeauty = a[k];\n                bool valid = true;\n                \n                for (int left = start; left < k; left++) {\n                    if (h[left] >= h[k]) {\n                        valid = false;\n                        break;\n                    }\n                }\n                \n                for (int right = k + 1; right <= end; right++) {\n                    if (h[right] <= h[k]) {\n                        valid = false;\n                        break;\n                    }\n                }\n                \n                if (valid) {\n                    int leftSum = (start < k) ? dp[start][k-1] : 0;\n                    int rightSum = (k < end) ? dp[k+1][end] : 0;\n                    \n                    dp[start][end] = max(dp[start][end], leftSum + currentBeauty + rightSum);\n                }\n            }\n        }\n    }\n    \n    cout << dp[0][N-1] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:59:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_beauty(N, flowers):\n    dp = [0] * (N + 1)\n    segment_tree = [0] * (4 * N)\n    \n    def update_tree(index, value, node=1, node_l=1, node_r=N):\n        if node_l == node_r:\n            segment_tree[node] = max(segment_tree[node], value)\n        else:\n            mid = (node_l + node_r) // 2\n            if index <= mid:\n                update_tree(index, value, node*2, node_l, mid)\n            else:\n                update_tree(index, value, node*2+1, mid+1, node_r)\n            segment_tree[node] = max(segment_tree[node*2], segment_tree[node*2+1])\n\n    def query_tree(l, r, node=1, node_l=1, node_r=N):\n        if r < node_l or l > node_r:\n            return 0\n        if l <= node_l and node_r <= r:\n            return segment_tree[node]\n        mid = (node_l + node_r) // 2\n        left_query = query_tree(l, r, node*2, node_l, mid)\n        right_query = query_tree(l, r, node*2+1, mid+1, node_r)\n        return max(left_query, right_query)\n\n    flowers.sort()  # ensure flowers are processed in order of height\n\n    for h, a in flowers:\n        max_beauty_with_less_height = query_tree(1, h - 1)\n        max_beauty_with_current = max_beauty_with_less_height + a\n        update_tree(h, max_beauty_with_current)\n    \n    return query_tree(1, N)\n\n# Input processing and function usage example\nN = 5\nflowers = [(1, 5), (3, 2), (2, 4), (5, 6), (4, 7)]\nprint(max_beauty(N, flowers))",
+    "timestamp": "2025-08-13 13:12:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class FlowerBeauty {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] heights = new int[N];\n        int[] beauties = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            heights[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            beauties[i] = scanner.nextInt();\n        }\n        \n        scanner.close();\n        \n        long[] dp = new long[N];\n        long maxBeautySum = 0;\n        \n        for (int i = 0; i < N; i++) {\n            dp[i] = beauties[i];\n            for (int j = 0; j < i; j++) {\n                if (heights[j] < heights[i]) {\n                    dp[i] = Math.max(dp[i], dp[j] + beauties[i]);\n                }\n            }\n            maxBeautySum = Math.max(maxBeautySum, dp[i]);\n        }\n        \n        System.out.println(maxBeautySum);\n    }\n}",
+    "timestamp": "2025-08-13 13:12:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100000\n\ntypedef struct {\n    int height;\n    int beauty;\n} Flower;\n\nint compare(const void *a, const void *b) {\n    const Flower *flowerA = (Flower *)a;\n    const Flower *flowerB = (Flower *)b;\n    return flowerA->height - flowerB->height;\n}\n\nlong long max(long long a, long long b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    Flower flowers[MAXN];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &flowers[i].height);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &flowers[i].beauty);\n    }\n\n    qsort(flowers, N, sizeof(Flower), compare);\n\n    long long dp[MAXN + 1];\n    long long maxBeauty[MAXN + 1];\n    for (int i = 0; i <= N; i++) {\n        dp[i] = 0;\n        maxBeauty[i] = 0;\n    }\n\n    long long result = 0;\n    for (int i = 0; i < N; i++) {\n        dp[i + 1] = flowers[i].beauty;\n        if (flowers[i].height > flowers[0].height) {\n            dp[i + 1] = max(dp[i + 1], flowers[i].beauty + maxBeauty[i]);\n        }\n        maxBeauty[i + 1] = max(maxBeauty[i], dp[i + 1]);\n        result = max(result, dp[i + 1]);\n    }\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:12:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxBeauty(flowers) {\n    const dp = [];\n    const N = flowers.length;\n    let maxBeautySum = 0;\n\n    for (let i = 0; i < N; i++) {\n        dp[i] = flowers[i].beauty;\n        for (let j = 0; j < i; j++) {\n            if (flowers[j].height < flowers[i].height) {\n                dp[i] = Math.max(dp[i], dp[j] + flowers[i].beauty);\n            }\n        }\n        maxBeautySum = Math.max(maxBeautySum, dp[i]);\n    }\n\n    return maxBeautySum;\n}\n\nconst flowersArr = [\n    { height: 3, beauty: 4 },\n    { height: 2, beauty: 5 },\n    { height: 4, beauty: 6 },\n    { height: 5, beauty: 3 },\n];\n\nconsole.log(maxBeauty(flowersArr));",
+    "timestamp": "2025-08-13 13:12:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_beauty_remaining_flowers(N, heights, beauties):\n    # Create dp table to store max beauty for each possible arrangement\n    dp = [[0] * (N+1) for _ in range(N+1)]\n    \n    # Iterate through all possible last flowers\n    for last in range(1, N+1):\n        for prev_max in range(last):\n            # Check if current flower can be placed\n            if prev_max == 0 or heights[last-1] > heights[prev_max-1]:\n                # Try to extend previous arrangements\n                for k in range(prev_max):\n                    dp[last][prev_max] = max(dp[last][prev_max], \n                                             dp[last-1][k] + beauties[last-1])\n    \n    # Return maximum beauty achievable\n    return max(dp[N])\n\n# Read input\nN = int(input())\nheights = list(map(int, input().split()))\nbeauties = list(map(int, input().split()))\n\n# Print result\nprint(max_beauty_remaining_flowers(N, heights, beauties))",
+    "timestamp": "2025-08-13 13:12:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxBeautyFlowers(N, heights, beauties) {\n    const dp = new Array(N).fill(-Infinity);\n    dp[0] = beauties[0];\n\n    for (let i = 1; i < N; i++) {\n        dp[i] = beauties[i];\n        for (let j = 0; j < i; j++) {\n            if (heights[j] < heights[i]) {\n                dp[i] = Math.max(dp[i], dp[j] + beauties[i]);\n            }\n        }\n    }\n\n    return Math.max(...dp);\n}",
+    "timestamp": "2025-08-13 13:12:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import bisect\n    N = int(input())\n    h = list(map(int, input().split()))\n    a = list(map(int, input().split()))\n    \n    # We'll use a Fenwick Tree (Binary Indexed Tree) to keep track of max values\n    class FenwickTree:\n        def __init__(self, size):\n            self.size = size\n            self.tree = [0] * (self.size + 2)\n        \n        def update(self, index, value):\n            while index <= self.size:\n                if self.tree[index] < value:\n                    self.tree[index] = value\n                else:\n                    break\n                index += index & -index\n        \n        def query(self, index):\n            res = 0\n            while index > 0:\n                res = max(res, self.tree[index])\n                index -= index & -index\n            return res\n    \n    # Coordinate compression for h_i\n    sorted_h = sorted(set(h))\n    rank = {v: i+1 for i, v in enumerate(sorted_h)}\n    max_rank = len(sorted_h)\n    \n    ft = FenwickTree(max_rank)\n    res = 0\n    for i in range(N):\n        current_h = h[i]\n        current_rank = rank[current_h]\n        max_val = ft.query(current_rank - 1)\n        total = max_val + a[i]\n        ft.update(current_rank, total)\n        res = max(res, total)\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 13:12:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N = 0;\n    let h = [];\n    let a = [];\n    let linesRead = 0;\n\n    rl.on('line', (line) => {\n        if (linesRead === 0) {\n            N = parseInt(line.trim(), 10);\n            linesRead++;\n        } else if (linesRead === 1) {\n            h = line.trim().split(' ').map(Number);\n            linesRead++;\n        } else if (linesRead === 2) {\n            a = line.trim().split(' ').map(Number);\n            rl.close();\n        }\n    });\n\n    rl.on('close', () => {\n        const maxH = Math.max(...h);\n        const size = 1;\n        while (size <= maxH) {\n            size <<= 1;\n        }\n        const tree = new Array(2 * size).fill(0);\n\n        function update(pos, value) {\n            pos += size;\n            tree[pos] = value;\n            pos >>= 1;\n            while (pos >= 1) {\n                tree[pos] = Math.max(tree[2 * pos], tree[2 * pos + 1]);\n                pos >>= 1;\n            }\n        }\n\n        function query(l, r) {\n            let res = 0;\n            l += size;\n            r += size;\n            while (l <= r) {\n                if (l % 2 === 1) {\n                    res = Math.max(res, tree[l]);\n                    l++;\n                }\n                if (r % 2 === 0) {\n                    res = Math.max(res, tree[r]);\n                    r--;\n                }\n                l >>= 1;\n                r >>= 1;\n            }\n            return res;\n        }\n\n        const dp = new Array(N).fill(0);\n        for (let i = 0; i < N; i++) {\n            const currentH = h[i];\n            const maxPrev = query(0, currentH - 1);\n            dp[i] = maxPrev + a[i];\n            update(currentH, dp[i]);\n        }\n\n        console.log(Math.max(...dp));\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:13:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Flower {\n    int height;\n    int beauty;\n};\n\nint main() {\n    int N;\n    cin >> N;\n    vector<Flower> flowers(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> flowers[i].height >> flowers[i].beauty;\n    }\n\n    vector<long long> dp(N, 0);\n    long long maxBeauty = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        dp[i] = flowers[i].beauty;\n        for (int j = 0; j < i; ++j) {\n            if (flowers[j].height < flowers[i].height) {\n                dp[i] = max(dp[i], dp[j] + flowers[i].beauty);\n            }\n        }\n        maxBeauty = max(maxBeauty, dp[i]);\n    }\n\n    cout << maxBeauty << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:38:33"
+  }
+]

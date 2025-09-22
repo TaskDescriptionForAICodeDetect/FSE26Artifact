@@ -1,0 +1,1 @@
+We have an H-by-W matrix where each element is a lowercase English letter. Snuke wants to create another H-by-W matrix, A', by freely rearranging the elements in the original matrix, such that every row and column in A' can be read as a palindrome. Determine if it's possible to create such a matrix.

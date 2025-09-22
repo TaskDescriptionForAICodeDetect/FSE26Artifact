@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 1000\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint compare_x(const void* a, const void* b) {\n    return ((Point*)a)->x - ((Point*)b)->x;\n}\n\nint compare_y(const void* a, const void* b) {\n    return ((Point*)a)->y - ((Point*)b)->y;\n}\n\nint max_friendly_pairs(Point* red, Point* blue, int N) {\n    qsort(red, N, sizeof(Point), compare_x);\n    qsort(blue, N, sizeof(Point), compare_x);\n    \n    int used_red[MAX_N] = {0};\n    int used_blue[MAX_N] = {0};\n    int pairs = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            if (!used_red[i] && !used_blue[j] && \n                red[i].x < blue[j].x && red[i].y < blue[j].y) {\n                pairs++;\n                used_red[i] = 1;\n                used_blue[j] = 1;\n                break;\n            }\n        }\n    }\n    \n    return pairs;\n}\n\nint main() {\n    int N;\n    Point red[MAX_N], blue[MAX_N];\n    \n    scanf(\"%d\", &N);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &red[i].x, &red[i].y);\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &blue[i].x, &blue[i].y);\n    }\n    \n    printf(\"%d\\n\", max_friendly_pairs(red, blue, N));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint compare_red(const void *a, const void *b) {\n    Point *p1 = (Point *)a;\n    Point *p2 = (Point *)b;\n    if (p1->x != p2->x) return p1->x - p2->x;\n    return p1->y - p2->y;\n}\n\nint compare_blue(const void *a, const void *b) {\n    Point *p1 = (Point *)a;\n    Point *p2 = (Point *)b;\n    if (p1->x != p2->x) return p1->x - p2->x;\n    return p1->y - p2->y;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Point red[N], blue[N];\n    for (int i = 0; i < N; i++) scanf(\"%d %d\", &red[i].x, &red[i].y);\n    for (int i = 0; i < N; i++) scanf(\"%d %d\", &blue[i].x, &blue[i].y);\n\n    qsort(red, N, sizeof(Point), compare_red);\n    qsort(blue, N, sizeof(Point), compare_blue);\n\n    int used[N];\n    for (int i = 0; i < N; i++) used[i] = 0;\n\n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        int max_y = -1, idx = -1;\n        for (int j = 0; j < N; j++) {\n            if (!used[j] && red[j].x < blue[i].x && red[j].y < blue[i].y) {\n                if (red[j].y > max_y) {\n                    max_y = red[j].y;\n                    idx = j;\n                }\n            }\n        }\n        if (idx != -1) {\n            used[idx] = 1;\n            count++;\n        }\n    }\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nstruct Point {\n    int x, y;\n    bool operator<(const Point &other) const {\n        return x < other.x;\n    }\n};\n\nint main() {\n    int N;\n    cin >> N;\n    vector<Point> red(N), blue(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> red[i].x >> red[i].y;\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> blue[i].x >> blue[i].y;\n    }\n    \n    sort(red.begin(), red.end());\n    sort(blue.begin(), blue.end());\n    \n    vector<bool> used(N, false);\n    int res = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        int max_y = -1;\n        int best_j = -1;\n        for (int j = 0; j < N; ++j) {\n            if (!used[j] && red[j].x < blue[i].x && red[j].y < blue[i].y) {\n                if (red[j].y > max_y) {\n                    max_y = red[j].y;\n                    best_j = j;\n                }\n            }\n        }\n        if (best_j != -1) {\n            used[best_j] = true;\n            res++;\n        }\n    }\n    \n    cout << res << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        List<Point> redPoints = new ArrayList<>();\n        List<Point> bluePoints = new ArrayList<>();\n        \n        for (int i = 0; i < N; i++) {\n            int a = sc.nextInt();\n            int b = sc.nextInt();\n            redPoints.add(new Point(a, b));\n        }\n        \n        for (int i = 0; i < N; i++) {\n            int c = sc.nextInt();\n            int d = sc.nextInt();\n            bluePoints.add(new Point(c, d));\n        }\n        \n        Collections.sort(redPoints, (p1, p2) -> p1.x - p2.x);\n        Collections.sort(bluePoints, (p1, p2) -> p1.x - p2.x);\n        \n        int count = 0;\n        TreeSet<Point> candidates = new TreeSet<>((p1, p2) -> p1.y - p2.y);\n        int redIndex = 0;\n        \n        for (Point blue : bluePoints) {\n            while (redIndex < N && redPoints.get(redIndex).x < blue.x) {\n                candidates.add(redPoints.get(redIndex));\n                redIndex++;\n            }\n            \n            Point bestRed = null;\n            for (Point red : candidates) {\n                if (red.y < blue.y) {\n                    if (bestRed == null || red.y > bestRed.y) {\n                        bestRed = red;\n                    }\n                }\n            }\n            \n            if (bestRed != null) {\n                candidates.remove(bestRed);\n                count++;\n            }\n        }\n        \n        System.out.println(count);\n    }\n    \n    static class Point {\n        int x, y;\n        Point(int x, int y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:09:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class FriendlyPairs {\n    public static int maxFriendlyPairs(int[] redX, int[] redY, int[] blueX, int[] blueY) {\n        int n = redX.length;\n        List<int[]> redPoints = new ArrayList<>();\n        List<int[]> bluePoints = new ArrayList<>();\n        \n        for (int i = 0; i < n; i++) {\n            redPoints.add(new int[]{redX[i], redY[i]});\n            bluePoints.add(new int[]{blueX[i], blueY[i]});\n        }\n        \n        Collections.sort(redPoints, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);\n        Collections.sort(bluePoints, (a, b) -> a[0] == b[0] ? a[1] - b[1] : a[0] - b[0]);\n        \n        int pairs = 0;\n        boolean[] usedRed = new boolean[n];\n        boolean[] usedBlue = new boolean[n];\n        \n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                if (!usedRed[i] && !usedBlue[j] && \n                    redPoints.get(i)[0] < bluePoints.get(j)[0] && \n                    redPoints.get(i)[1] < bluePoints.get(j)[1]) {\n                    pairs++;\n                    usedRed[i] = true;\n                    usedBlue[j] = true;\n                    break;\n                }\n            }\n        }\n        \n        return pairs;\n    }\n}",
+    "timestamp": "2025-08-05 23:09:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint maxFriendlyPairs(vector<pair<int,int>>& red, vector<pair<int,int>>& blue) {\n    int n = red.size();\n    \n    // Sort red points by x coordinate \n    sort(red.begin(), red.end());\n    \n    // Sort blue points by x coordinate\n    sort(blue.begin(), blue.end());\n    \n    vector<int> dp(n + 1, 0);\n    \n    for (int i = 0; i < n; i++) {\n        dp[i + 1] = dp[i];\n        for (int j = 0; j < n; j++) {\n            if (red[i].first < blue[j].first && red[i].second < blue[j].second) {\n                dp[i + 1] = max(dp[i + 1], dp[j] + 1);\n            }\n        }\n    }\n    \n    return dp[n];\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<pair<int,int>> red(n), blue(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> red[i].first >> red[i].second;\n    }\n    \n    for (int i = 0; i < n; i++) {\n        cin >> blue[i].first >> blue[i].second;\n    }\n    \n    cout << maxFriendlyPairs(red, blue) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:09:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_friendly_pairs(N, red_points, blue_points):\n    # Sort red points by y-coordinate ascending, x-coordinate ascending as tie-breaker\n    red_points.sort(key=lambda x: (x[1], x[0]))\n    # Sort blue points by y-coordinate ascending, x-coordinate ascending as tie-breaker\n    blue_points.sort(key=lambda x: (x[1], x[0]))\n    \n    # Greedily pair the red and blue points\n    count = 0\n    j = 0\n    used_blue = [False] * N\n    for i in range(N):\n        r_x, r_y = red_points[i]\n        while j < N:\n            b_x, b_y = blue_points[j]\n            if b_x > r_x and b_y > r_y:  # Valid pair found\n                count += 1\n                used_blue[j] = True\n                j += 1  # Move to the next blue point\n                break\n            j += 1\n            \n    return count\n\n# Read points\nN = int(input())\nred_points = []\nblue_points = []\nfor _ in range(N):\n    a, b = map(int, input().split())\n    red_points.append((a, b))\nfor _ in range(N):\n    c, d = map(int, input().split())\n    blue_points.append((c, d))\n\n# Get output\nresult = max_friendly_pairs(N, red_points, blue_points)\nprint(result)",
+    "timestamp": "2025-08-13 13:47:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Comparator;\n\npublic class FriendlyPairs {\n\n    static class Point {\n        int x;\n        int y;\n        boolean isRed;\n\n        Point(int x, int y, boolean isRed) {\n            this.x = x;\n            this.y = y;\n            this.isRed = isRed;\n        }\n    }\n\n    public static int maxFriendlyPairs(int[] a, int[] b, int[] c, int[] d) {\n        int n = a.length;\n        Point[] points = new Point[2 * n];\n        \n        for (int i = 0; i < n; i++) {\n            points[i] = new Point(a[i], b[i], true);\n            points[n + i] = new Point(c[i], d[i], false);\n        }\n\n        Arrays.sort(points, Comparator.comparingInt(p -> p.x));\n\n        int result = 0;\n        boolean[] usedRed = new boolean[n];\n        boolean[] usedBlue = new boolean[n];\n\n        for (Point p : points) {\n            if (p.isRed) {\n                for (int i = 0; i < n; i++) {\n                    if (!usedBlue[i] && p.x < c[i] && p.y < d[i]) {\n                        usedRed[p.y] = true;\n                        usedBlue[i] = true;\n                        result++;\n                        break;\n                    }\n                }\n            }\n        }\n        \n        return result;\n    }\n\n    public static void main(String[] args) {\n        int[] a = {1, 2};\n        int[] b = {3, 4};\n        int[] c = {5, 6};\n        int[] d = {7, 8};\n\n        System.out.println(maxFriendlyPairs(a, b, c, d));\n    }\n}",
+    "timestamp": "2025-08-13 13:47:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint comparePoints(const void *p1, const void *p2) {\n    Point *point1 = (Point *)p1;\n    Point *point2 = (Point *)p2;\n    if (point1->x != point2->x) {\n        return point1->x - point2->x;\n    }\n    return point1->y - point2->y;\n}\n\nint findPairs(Point *red, Point *blue, int N) {\n    int pairs = 0;\n    int used[N];\n    \n    for (int i = 0; i < N; i++) {\n        used[i] = 0;\n    }\n    \n    qsort(red, N, sizeof(Point), comparePoints);\n    qsort(blue, N, sizeof(Point), comparePoints);\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            if (!used[j] && red[i].x < blue[j].x && red[i].y < blue[j].y) {\n                pairs++;\n                used[j] = 1;\n                break;\n            }\n        }\n    }\n    return pairs;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    Point red[N], blue[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &red[i].x, &red[i].y);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &blue[i].x, &blue[i].y);\n    }\n\n    int maxPairs = findPairs(red, blue, N);\n    printf(\"%d\\n\", maxPairs);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:47:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Point {\n    int x, y;\n    bool operator<(const Point& other) const {\n        if (x == other.x) return y < other.y;\n        return x < other.x;\n    }\n};\n\nint main() {\n    int N;\n    cin >> N;\n    vector<Point> red(N), blue(N);\n\n    for (int i = 0; i < N; ++i) {\n        cin >> red[i].x >> red[i].y;\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> blue[i].x >> blue[i].y;\n    }\n\n    sort(red.begin(), red.end());\n    sort(blue.begin(), blue.end());\n\n    int count = 0;\n    vector<bool> used(N, false);\n    \n    for (int i = 0; i < N; ++i) {\n        int idx = -1;\n        for (int j = 0; j < N; ++j) {\n            if (!used[j] && red[i].x < blue[j].x && red[i].y < blue[j].y) {\n                if (idx == -1 || blue[j].x < blue[idx].x) {\n                    idx = j;\n                }\n            }\n        }\n        if (idx != -1) {\n            used[idx] = true;\n            count++;\n        }\n    }\n\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:47:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_friendly_pairs(red_points, blue_points):\n    red_points.sort()\n    blue_points.sort()\n    \n    n = len(red_points)\n    used_red = [False] * n\n    used_blue = [False] * n\n    friendly_pairs = 0\n    \n    for i in range(n):\n        for j in range(n):\n            if (not used_red[i] and not used_blue[j] and \n                red_points[i][0] < blue_points[j][0] and \n                red_points[i][1] < blue_points[j][1]):\n                friendly_pairs += 1\n                used_red[i] = True\n                used_blue[j] = True\n                break\n    \n    return friendly_pairs\n\n# Example usage\nN = int(input())\nred_points = []\nblue_points = []\n\nfor _ in range(N):\n    a, b = map(int, input().split())\n    red_points.append((a, b))\n\nfor _ in range(N):\n    c, d = map(int, input().split())\n    blue_points.append((c, d))\n\nprint(max_friendly_pairs(red_points, blue_points))",
+    "timestamp": "2025-08-13 13:48:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    N = int(data[idx])\n    idx += 1\n    \n    red = []\n    for _ in range(N):\n        a = int(data[idx])\n        b = int(data[idx + 1])\n        red.append((a, b))\n        idx += 2\n    \n    blue = []\n    for _ in range(N):\n        c = int(data[idx])\n        d = int(data[idx + 1])\n        blue.append((c, d))\n        idx += 2\n    \n    # Sort blue points by x-coordinate\n    blue.sort()\n    # Sort red points by y-coordinate in descending order\n    red.sort(key=lambda x: -x[1])\n    \n    used = [False] * N\n    count = 0\n    \n    for c, d in blue:\n        best_red = -1\n        best_y = -1\n        for i in range(N):\n            if not used[i] and red[i][0] < c and red[i][1] < d:\n                if red[i][1] > best_y:\n                    best_y = red[i][1]\n                    best_red = i\n        if best_red != -1:\n            used[best_red] = True\n            count += 1\n    \n    print(count)\n\nsolve()",
+    "timestamp": "2025-08-13 13:48:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxFriendlyPairs(redPoints, bluePoints) {\n    redPoints.sort((p1, p2) => p1[0] - p2[0]);\n    bluePoints.sort((p1, p2) => p1[0] - p2[0]);\n    \n    let friendlyPairCount = 0;\n\n    for (let blueIndex = 0; blueIndex < bluePoints.length; blueIndex++) {\n        const bluePoint = bluePoints[blueIndex];\n\n        for (let redIndex = 0; redIndex < redPoints.length; redIndex++) {\n            const redPoint = redPoints[redIndex];\n\n            if (redPoint && bluePoint[0] > redPoint[0] && bluePoint[1] > redPoint[1]) {\n                friendlyPairCount++;\n                redPoints[redIndex] = null; // Remove red point from further consideration.\n                break;\n            }\n        }\n    }\n\n    return friendlyPairCount;\n}",
+    "timestamp": "2025-08-13 13:48:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxFriendlyPairs(redPoints, bluePoints) {\n    redPoints.sort((p1, p2) => p1[0] - p2[0] || p1[1] - p2[1]);\n    bluePoints.sort((p1, p2) => p1[0] - p2[0] || p1[1] - p2[1]);\n    \n    let friendlyPairs = 0;\n    let redIndex = 0;\n    let blueIndex = 0;\n    \n    while (redIndex < redPoints.length && blueIndex < bluePoints.length) {\n        if (redPoints[redIndex][0] < bluePoints[blueIndex][0] && \n            redPoints[redIndex][1] < bluePoints[blueIndex][1]) {\n            friendlyPairs++;\n            redIndex++;\n            blueIndex++;\n        } else if (redPoints[redIndex][0] >= bluePoints[blueIndex][0] || \n                   redPoints[redIndex][1] >= bluePoints[blueIndex][1]) {\n            blueIndex++;\n        } else {\n            redIndex++;\n        }\n    }\n    \n    return friendlyPairs;\n}",
+    "timestamp": "2025-08-13 13:48:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N;\n    let redPoints = [];\n    let bluePoints = [];\n    let lineCount = 0;\n\n    rl.on('line', (line) => {\n        if (lineCount === 0) {\n            N = parseInt(line);\n            lineCount++;\n        } else {\n            const parts = line.split(' ').map(Number);\n            if (redPoints.length < N) {\n                redPoints.push({ x: parts[0], y: parts[1] });\n            } else {\n                bluePoints.push({ x: parts[0], y: parts[1] });\n            }\n            if (redPoints.length === N && bluePoints.length === N) {\n                rl.close();\n            }\n        }\n    });\n\n    rl.on('close', () => {\n        // Sort blue points by x-coordinate\n        bluePoints.sort((a, b) => a.x - b.x);\n        // Sort red points by y-coordinate in descending order\n        redPoints.sort((a, b) => b.y - a.y);\n\n        let used = new Array(N).fill(false);\n        let count = 0;\n\n        for (let i = 0; i < N; i++) {\n            let bestRedIndex = -1;\n            for (let j = 0; j < N; j++) {\n                if (!used[j] && redPoints[j].x < bluePoints[i].x && redPoints[j].y < bluePoints[i].y) {\n                    if (bestRedIndex === -1 || redPoints[j].y > redPoints[bestRedIndex].y) {\n                        bestRedIndex = j;\n                    }\n                }\n            }\n            if (bestRedIndex !== -1) {\n                used[bestRedIndex] = true;\n                count++;\n            }\n        }\n\n        console.log(count);\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:48:34"
+  }
+]

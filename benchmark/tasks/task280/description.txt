@@ -1,0 +1,1 @@
+You need to reorder a given bit string as specified. The only allowed operation is swapping adjacent bit pairs. Write a program to calculate the minimum number of swaps required to transform the initial bit string into one that matches a specified run-length code. The run-length code indicates the lengths of maximal consecutive sequences of zeros or ones in the bit string.

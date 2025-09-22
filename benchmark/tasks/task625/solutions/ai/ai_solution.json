@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_NODES 100001\n\nint parent[MAX_NODES];\nlong long weight[MAX_NODES];\nlong long pathSum[MAX_NODES];\n\nvoid initialize(int n) {\n    for (int i = 0; i < n; i++) {\n        parent[i] = i;\n        weight[i] = 0;\n        pathSum[i] = 0;\n    }\n}\n\nvoid add(int v, long long w) {\n    while (v != parent[v]) {\n        weight[v] += w;\n        pathSum[v] += w;\n        v = parent[v];\n    }\n}\n\nlong long getSum(int u) {\n    long long sum = 0;\n    while (u != parent[u]) {\n        sum += pathSum[u];\n        u = parent[u];\n    }\n    return sum;\n}\n\nint main() {\n    int n, q;\n    scanf(\"%d %d\", &n, &q);\n    \n    initialize(n);\n    \n    for (int i = 0; i < q; i++) {\n        int op, v;\n        long long w;\n        scanf(\"%d\", &op);\n        \n        if (op == 1) {\n            scanf(\"%d %lld\", &v, &w);\n            add(v, w);\n        } else {\n            scanf(\"%d\", &v);\n            printf(\"%lld\\n\", getSum(v));\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:21:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct Node {\n    int parent;\n    int weight;\n} Node;\n\nNode *tree;\nint *sumCache;\n\nvoid add(int v, int w) {\n    tree[v].weight += w;\n    for (int i = 0; i < v; i++) {\n        if (tree[i].parent == v || (tree[i].parent != -1 && tree[tree[i].parent].weight != sumCache[tree[i].parent])) {\n            sumCache[i] = sumCache[tree[i].parent] + tree[i].weight;\n        }\n    }\n}\n\nint getSum(int u) {\n    if (u == 0) return 0;\n    if (sumCache[u] != -1) return sumCache[u];\n    sumCache[u] = getSum(tree[u].parent) + tree[u].weight;\n    return sumCache[u];\n}\n\nint main() {\n    int n, q;\n    scanf(\"%d %d\", &n, &q);\n    \n    tree = (Node *)malloc(n * sizeof(Node));\n    sumCache = (int *)malloc(n * sizeof(int));\n    \n    tree[0].parent = -1;\n    tree[0].weight = 0;\n    sumCache[0] = 0;\n    \n    for (int i = 1; i < n; i++) {\n        scanf(\"%d\", &tree[i].parent);\n        tree[i].weight = 0;\n        sumCache[i] = -1;\n    }\n    \n    char op[10];\n    int v, w, u;\n    \n    while (q--) {\n        scanf(\"%s\", op);\n        if (op[0] == 'a') {\n            scanf(\"%d %d\", &v, &w);\n            add(v, w);\n        } else {\n            scanf(\"%d\", &u);\n            printf(\"%d\\n\", getSum(u));\n        }\n    }\n    \n    free(tree);\n    free(sumCache);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:22:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass WeightedRootedTree {\nprivate:\n    vector<int> parent;\n    vector<int> weight;\n    vector<int> sum;\n\npublic:\n    WeightedRootedTree(int n) {\n        parent.resize(n);\n        weight.resize(n, 0);\n        sum.resize(n, 0);\n        parent[0] = -1; // root has no parent\n    }\n\n    void setParent(int v, int p) {\n        parent[v] = p;\n    }\n\n    void add(int v, int w) {\n        weight[v] += w;\n        // Update sum for all descendants of v\n        for (int u = 0; u < parent.size(); ++u) {\n            if (isDescendant(u, v)) {\n                sum[u] += w;\n            }\n        }\n    }\n\n    int getSum(int u) {\n        return sum[u];\n    }\n\nprivate:\n    bool isDescendant(int u, int v) {\n        while (u != -1) {\n            if (u == v) return true;\n            u = parent[u];\n        }\n        return false;\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int n, m;\n    cin >> n >> m;\n\n    WeightedRootedTree tree(n);\n    for (int i = 1; i < n; ++i) {\n        int p;\n        cin >> p;\n        tree.setParent(i, p);\n    }\n\n    while (m--) {\n        string op;\n        cin >> op;\n        if (op == \"add\") {\n            int v, w;\n            cin >> v >> w;\n            tree.add(v, w);\n        } else if (op == \"getSum\") {\n            int u;\n            cin >> u;\n            cout << tree.getSum(u) << '\\n';\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:22:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass WeightedRootedTree {\n    private int[] parent;\n    private int[] weight;\n    private int n;\n\n    public WeightedRootedTree(int n) {\n        this.n = n;\n        parent = new int[n];\n        weight = new int[n];\n        Arrays.fill(parent, -1);\n        Arrays.fill(weight, 0);\n    }\n\n    public void setParent(int v, int p) {\n        parent[v] = p;\n    }\n\n    public void add(int v, int w) {\n        if (parent[v] != -1) {\n            weight[v] += w;\n        }\n    }\n\n    public int getSum(int u) {\n        int sum = 0;\n        while (u != -1) {\n            sum += weight[u];\n            u = parent[u];\n        }\n        return sum;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        WeightedRootedTree tree = new WeightedRootedTree(n);\n\n        for (int i = 0; i < n; i++) {\n            int p = scanner.nextInt();\n            tree.setParent(i, p);\n        }\n\n        int q = scanner.nextInt();\n        for (int i = 0; i < q; i++) {\n            String op = scanner.next();\n            if (op.equals(\"add\")) {\n                int v = scanner.nextInt();\n                int w = scanner.nextInt();\n                tree.add(v, w);\n            } else if (op.equals(\"getSum\")) {\n                int u = scanner.nextInt();\n                System.out.println(tree.getSum(u));\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:22:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass WeightedTree {\n    private int n;\n    private int[] parent;\n    private int[] weight;\n    private int[] subtreeSum;\n\n    public WeightedTree(int n) {\n        this.n = n;\n        parent = new int[n];\n        weight = new int[n];\n        subtreeSum = new int[n];\n        \n        Arrays.fill(parent, -1);\n    }\n\n    public void add(int v, int w) {\n        if (parent[v] == -1) return;\n        weight[v] += w;\n        updateSubtreeSum(v, w);\n    }\n\n    private void updateSubtreeSum(int node, int w) {\n        while (node != -1) {\n            subtreeSum[node] += w;\n            node = parent[node];\n        }\n    }\n\n    public int getSum(int u) {\n        return subtreeSum[u];\n    }\n\n    public void setParent(int child, int p) {\n        parent[child] = p;\n    }\n}",
+    "timestamp": "2025-08-05 22:22:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <unordered_map>\n\nclass WeightedTree {\nprivate:\n    std::vector<int> parent;\n    std::unordered_map<int, int> weights;\n\npublic:\n    WeightedTree(int n) : parent(n, -1) {}\n\n    void add(int v, int w) {\n        while (v != -1) {\n            weights[v] += w;\n            v = parent[v];\n        }\n    }\n\n    int getSum(int u) {\n        int total = 0;\n        while (u != -1) {\n            total += weights[u];\n            u = parent[u];\n        }\n        return total;\n    }\n\n    void setParent(int child, int p) {\n        parent[child] = p;\n    }\n};",
+    "timestamp": "2025-08-05 22:22:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class WeightedRootedTree:\n    def __init__(self, n):\n        self.parent = [-1] * n\n        self.weights = [0] * n\n        self.sum_weights = [0] * n\n\n    def add_edge(self, u, p):\n        self.parent[u] = p\n\n    def add(self, v, w):\n        self.weights[v] += w\n        current = v\n        while current != -1:\n            self.sum_weights[current] += w\n            current = self.parent[current]\n\n    def getSum(self, u):\n        return self.sum_weights[u]\n\n# Example usage:\ntree = WeightedRootedTree(n=5)\ntree.add_edge(1, 0)\ntree.add_edge(2, 0)\ntree.add_edge(3, 1)\ntree.add_edge(4, 1)\n\ntree.add(1, 5)\ntree.add(3, 3)\n\nprint(tree.getSum(3))  # Output: 8\nprint(tree.getSum(4))  # Output: 5",
+    "timestamp": "2025-08-13 10:14:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class WeightedTree {\n    private Map<Integer, Integer> parent;  // Node to Parent map\n    private Map<Integer, Integer> weight;  // Edge weight map\n\n    public WeightedTree(int n) {\n        parent = new HashMap<>();\n        weight = new HashMap<>();\n\n        // Initialize the tree structure and weights\n        for (int i = 0; i < n; i++) {\n            parent.put(i, -1);  // -1 indicates it's a root or undefined parent\n            weight.put(i, 0);   // Initialize all weights to zero\n        }\n    }\n\n    public void setParent(int child, int par) {\n        parent.put(child, par);\n    }\n\n    public void add(int v, int w) {\n        weight.put(v, weight.get(v) + w);\n    }\n\n    public int getSum(int u) {\n        int sum = 0;\n        while (u != -1) {\n            sum += weight.get(u);\n            u = parent.get(u);\n        }\n        return sum;\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int n = 5;\n\n        WeightedTree tree = new WeightedTree(n);\n\n        tree.setParent(1, 0);\n        tree.setParent(2, 0);\n        tree.setParent(3, 1);\n        tree.setParent(4, 1);\n\n        tree.add(1, 5);\n        tree.add(3, 3);\n        tree.add(4, 2);\n\n        System.out.println(tree.getSum(3));  // Output: 8\n        System.out.println(tree.getSum(4));  // Output: 7\n        System.out.println(tree.getSum(2));  // Output: 0\n    }\n}",
+    "timestamp": "2025-08-13 10:15:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_NODES 1000\n\ntypedef struct {\n    int parent;\n    int weight;\n} Node;\n\nNode tree[MAX_NODES];\nint n;  // Number of nodes in the tree\n\nvoid add(int v, int w) {\n    tree[v].weight += w;\n}\n\nint getSum(int u) {\n    int sum = 0;\n    while (u != -1) {\n        sum += tree[u].weight;\n        u = tree[u].parent;\n    }\n    return sum;\n}\n\nint main() {\n    int i;\n    \n    // Initialization\n    for (i = 0; i < MAX_NODES; i++) {\n        tree[i].parent = -1; // Set parent to -1 indicating no parent (root)\n        tree[i].weight = 0; // Initialize weight to zero\n    }\n    \n    // Define your tree structure\n    // Example: Manually setting up a tree\n    n = 5; // assuming we have 5 nodes\n    tree[0].parent = -1; // root\n    tree[1].parent = 0;\n    tree[2].parent = 0;\n    tree[3].parent = 1;\n    tree[4].parent = 1;\n    \n    // Example operations\n    add(1, 5);\n    add(3, 3);\n    printf(\"Sum to node 3: %d\\n\", getSum(3)); // Output: 8\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:15:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class WeightedTree:\n    def __init__(self, n):\n        self.n = n\n        self.parent = list(range(n))\n        self.weights = [0] * n\n        self.path_sum = [0] * n\n\n    def add(self, v, w):\n        while v != self.parent[v]:\n            self.weights[v] += w\n            self.path_sum[v] += w\n            v = self.parent[v]\n        \n        self.weights[v] += w\n        self.path_sum[v] += w\n\n    def getSum(self, u):\n        total_sum = 0\n        while u != self.parent[u]:\n            total_sum += self.weights[u]\n            u = self.parent[u]\n        \n        total_sum += self.weights[u]\n        return total_sum",
+    "timestamp": "2025-08-13 10:15:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class WeightedRootedTree:\n    def __init__(self, n, root=0):\n        self.n = n\n        self.root = root\n        self.parent = [ -1 ] * n\n        self.children = [ [] for _ in range(n) ]\n        self.weights = [ 0 ] * n  # weights[v] is the weight of edge (parent[v], v)\n        self.path_sums = [ 0 ] * n  # path_sums[v] is sum from root to v\n\n    def add_child(self, parent, child, weight=0):\n        self.parent[child] = parent\n        self.children[parent].append(child)\n        self.weights[child] = weight\n        self.path_sums[child] = self.path_sums[parent] + weight\n\n    def add(self, v, w):\n        self.weights[v] += w\n        stack = [v]\n        while stack:\n            u = stack.pop()\n            for child in self.children[u]:\n                self.path_sums[child] += w\n                stack.append(child)\n\n    def getSum(self, u):\n        return self.path_sums[u]",
+    "timestamp": "2025-08-13 10:15:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nclass WeightedTree {\npublic:\n    WeightedTree(int n) : n(n), parent(n, -1), weights(n, 0), sumWeights(n, 0) {}\n\n    void add(int v, int w) {\n        weights[v] += w;\n        sumWeights[v] += w;\n        updateSum(v);\n    }\n\n    int getSum(int u) {\n        return sumWeights[u];\n    }\n\n    void setParent(int v, int p) {\n        parent[v] = p;\n        updateSum(v);\n    }\n\nprivate:\n    int n;\n    std::vector<int> parent;\n    std::vector<int> weights;\n    std::vector<int> sumWeights;\n\n    void updateSum(int v) {\n        if (parent[v] != -1) {\n            sumWeights[v] = weights[v] + sumWeights[parent[v]];\n        }\n    }\n};\n\nint main() {\n    int n = 5; // Example tree size\n    WeightedTree tree(n);\n\n    tree.setParent(1, 0);\n    tree.setParent(2, 0);\n    tree.setParent(3, 1);\n    tree.setParent(4, 1);\n\n    tree.add(1, 4);\n    tree.add(3, 3);\n\n    std::cout << tree.getSum(3) << std::endl; // Output: 7\n    std::cout << tree.getSum(4) << std::endl; // Output: 4\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:57:47"
+  }
+]

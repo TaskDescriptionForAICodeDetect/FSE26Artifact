@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "3 10\n0\n1 1\n2 2 3\n",
+      "output": "9\n"
+    },
+    {
+      "input": "4 20\n2 1 2\n1 3\n1 4\n2 5\n2 1 2\n0\n0\n",
+      "output": "3\n"
+    },
+    {
+      "input": "3 3\n0\n1 1\n2 2 3\n",
+      "output": "0\n"
+    },
+    {
+      "input": "0 0\n",
+      "output": "-1\n"
+    }
+  ]
+}

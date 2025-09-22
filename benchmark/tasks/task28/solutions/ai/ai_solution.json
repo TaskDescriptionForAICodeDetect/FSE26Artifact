@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def count_inversions(arr):\n    inv_count = 0\n    for i in range(len(arr)):\n        for j in range(i+1, len(arr)):\n            if arr[i] > arr[j]:\n                inv_count += 1\n    return inv_count\n\ndef max_messiness(n, k):\n    # Initial arrangement\n    arr = list(range(1, n+1))\n    max_mess = count_inversions(arr)\n    \n    # Maximum possible inversions is n(n-1)/2\n    max_possible = n * (n-1) // 2\n    \n    # If we can swap all cows\n    if k >= n-1:\n        return max_possible\n    \n    # If we can do k swaps\n    else:\n        # Maximize inversions by swapping strategically\n        for _ in range(k):\n            # Swap first and last to maximize inversions\n            arr[0], arr[-1] = arr[-1], arr[0]\n            max_mess = max(max_mess, count_inversions(arr))\n    \n    return max_mess\n\n# Read input\nn, k = map(int, input().split())\n\n# Output maximum messiness\nprint(max_messiness(n, k))",
+    "timestamp": "2025-08-05 17:32:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, k = map(int, input().split())\n\nmax_pairs = n * (n - 1) // 2\n\nif k >= n // 2:\n    print(max_pairs)\nelse:\n    print(k * (2 * n - 2 * k - 1) // 2)",
+    "timestamp": "2025-08-05 17:32:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_messiness(n, k):\n    return min(n*(n-1)//2, k*2)\n\nn, k = map(int, input().split())\nprint(max_messiness(n, k))",
+    "timestamp": "2025-08-12 21:53:30"
+  }
+]

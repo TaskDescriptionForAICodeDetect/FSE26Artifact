@@ -1,0 +1,19 @@
+Directionally Challenged Reindeer
+
+Problem
+
+This year, Santa Claus has come from the sky to JOI Town. As every house in JOI Town has children, Santa must distribute presents to all the houses in the town. However, this year, the reindeer accompanying him is a bit directionally challenged and can only land on rooftops, so the route for delivering presents needs to be carefully planned.
+
+JOI Town is organized in a grid, with each plot being either a house, a church, or an empty lot. There is only one church in JOI Town. Following the rules, Santa and the reindeer start from the church and must deliver presents to each house exactly once before returning to the church.
+
+Due to the reindeer's directional challenges, it can only fly straight in one of the cardinal directions (north, south, east, west) and cannot change direction while in the air.
+
+They can freely pass over houses that have not yet received presents and can land on them. When they land on a house, they must deliver presents, and afterward, they must take off in one of the cardinal directions.
+
+In JOI Town, houses do not light their fireplaces until Santa arrives on Christmas Eve, so they can only start their fireplaces after he leaves. Lighting the fireplace causes smoke to rise, making it impossible to pass over houses that have already received presents.
+
+They can freely pass over the church but cannot land until they have delivered all the presents.
+
+They can also freely pass over empty lots, but they cannot land on them.
+
+Given the structure of the town as input, create a program to determine how many different routes Santa and the reindeer can take to deliver presents.

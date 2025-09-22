@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n\nvoid sortDescending(int* arr, int n) {\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = 0; j < n - i - 1; j++) {\n            if (arr[j] < arr[j + 1]) {\n                int temp = arr[j];\n                arr[j] = arr[j + 1];\n                arr[j + 1] = temp;\n            }\n        }\n    }\n}\n\nint main() {\n    int N, M, V, P;\n    scanf(\"%d %d %d %d\", &N, &M, &V, &P);\n    \n    int scores[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &scores[i]);\n    }\n    \n    sortDescending(scores, N);\n    \n    int candidates = P;\n    for (int i = P; i < N; i++) {\n        int maxVotesPossible = M * V;\n        int currentScore = scores[i];\n        int maxPossibleScore = scores[P - 1];\n        \n        if (currentScore + maxVotesPossible < maxPossibleScore) {\n            break;\n        }\n        \n        candidates++;\n    }\n    \n    printf(\"%d\\n\", candidates);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:39:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nint main() {\n    int N, M, V, P;\n    scanf(\"%d %d %d %d\", &N, &M, &V, &P);\n    \n    int *A = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    qsort(A, N, sizeof(int), compare);\n    \n    int left = 0, right = N;\n    while (left < right) {\n        int mid = (left + right) / 2;\n        long long total = 0;\n        int threshold = A[mid] + M;\n        int count = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (A[i] > threshold) {\n                count++;\n            } else if (i >= mid && A[i] + M >= threshold) {\n                total += threshold - A[i];\n            }\n        }\n        \n        if (count >= P) {\n            left = mid + 1;\n        } else {\n            int remaining = (V - (N - mid)) * M;\n            if (remaining <= 0) {\n                if (count + (mid - count) < P) {\n                    right = mid;\n                } else {\n                    left = mid + 1;\n                }\n            } else {\n                if (total >= remaining) {\n                    if (count + (mid - count) < P) {\n                        right = mid;\n                    } else {\n                        left = mid + 1;\n                    }\n                } else {\n                    left = mid + 1;\n                }\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", N - left);\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:40:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M, V, P;\n    cin >> N >> M >> V >> P;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    sort(A.begin(), A.end(), greater<int>());\n    \n    int left = P;\n    int right = N;\n    while (left < right) {\n        int mid = (left + right) / 2;\n        long long total = 0;\n        bool possible = true;\n        if (A[mid] + M < A[P-1]) {\n            possible = false;\n        } else {\n            total = (long long)M * V;\n            total -= (long long)M * (P - 1);\n            total -= (long long)M * (N - mid);\n            for (int i = P-1; i < mid; ++i) {\n                total -= min(M, A[mid] + M - A[i]);\n                if (total <= 0) break;\n            }\n            if (total > 0) possible = false;\n        }\n        if (possible) {\n            left = mid + 1;\n        } else {\n            right = mid;\n        }\n    }\n    cout << left << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ContestProblems {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int V = scanner.nextInt();\n        int P = scanner.nextInt();\n        int[] scores = new int[N];\n        for (int i = 0; i < N; i++) {\n            scores[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(scores);\n        int[] prefix = new int[N + 1];\n        for (int i = 0; i < N; i++) {\n            prefix[i + 1] = prefix[i] + scores[i];\n        }\n        \n        int left = 0;\n        int right = N - 1;\n        while (left <= right) {\n            int mid = (left + right) / 2;\n            long total = (long) M * V;\n            long currentScore = scores[mid] + M;\n            int count = 0;\n            long sum = 0;\n            for (int i = N - 1; i >= 0; i--) {\n                if (scores[i] > currentScore) {\n                    count++;\n                    sum += currentScore;\n                } else {\n                    sum += scores[i] + M;\n                }\n                if (count >= P) {\n                    break;\n                }\n            }\n            if (count >= P || sum < currentScore * (N - (P - 1))) {\n                left = mid + 1;\n            } else {\n                right = mid - 1;\n            }\n        }\n        \n        System.out.println(N - left);\n    }\n}",
+    "timestamp": "2025-08-05 22:41:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ContestProblemSelection {\n    public static int selectProblems(int N, int M, int V, int P) {\n        int[] scores = new int[N];\n        \n        // Initial vote processing\n        for (int i = 0; i < M; i++) {\n            for (int j = 0; j < V; j++) {\n                scores[j]++;\n            }\n        }\n        \n        // Sort scores in descending order\n        Integer[] indexedScores = new Integer[N];\n        for (int i = 0; i < N; i++) {\n            indexedScores[i] = i;\n        }\n        \n        Arrays.sort(indexedScores, (a, b) -> {\n            if (scores[b] != scores[a]) {\n                return Integer.compare(scores[b], scores[a]);\n            }\n            return Integer.compare(a, b);\n        });\n        \n        // Count selectable problems\n        int selectedProblems = P;\n        \n        for (int i = P; i < N; i++) {\n            int currentIndex = indexedScores[i];\n            \n            // Check if problem can potentially be selected\n            if (scores[currentIndex] + M * V >= scores[indexedScores[P-1]]) {\n                selectedProblems++;\n            } else {\n                break;\n            }\n        }\n        \n        return selectedProblems;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int V = scanner.nextInt();\n        int P = scanner.nextInt();\n        \n        System.out.println(selectProblems(N, M, V, P));\n    }\n}",
+    "timestamp": "2025-08-05 22:41:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M, V, P;\n    cin >> N >> M >> V >> P;\n\n    vector<int> problems(N);\n    for (int i = 0; i < N; i++) {\n        cin >> problems[i];\n    }\n\n    vector<int> votes(N, 0);\n    int potentialProblems = 0;\n\n    for (int i = 0; i < N; i++) {\n        int currentVotes = 0;\n        for (int j = 0; j < M; j++) {\n            if (V > 0 && problems[i] + votes[i] + 1 > problems[0]) {\n                votes[i]++;\n                V--;\n            }\n        }\n    }\n\n    sort(problems.begin(), problems.end(), greater<int>());\n    sort(votes.begin(), votes.end(), greater<int>());\n\n    for (int i = 0; i < N; i++) {\n        if (i < P || problems[i] + votes[i] > problems[P-1]) {\n            potentialProblems++;\n        } else {\n            break;\n        }\n    }\n\n    cout << potentialProblems << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_potentially_selected_problems(N, M, V, P, scores):\n    initial_scores = scores[:]\n    score_updates = [0] * N\n    total_votes = M * V\n    \n    for i in range(N):\n        for j in range(N):\n            if total_votes > 0 and j != i:\n                score_updates[j] += 1\n                total_votes -= 1\n    \n    final_scores = [initial_scores[i] + score_updates[i] for i in range(N)]\n    final_scores.sort(reverse=True)\n    \n    min_score_to_beat = final_scores[P - 1]\n    potential_selected_count = sum(1 for score in final_scores if score >= min_score_to_beat)\n\n    return potential_selected_count\n\n# Example usage:\nN = 5\nM = 3\nV = 1\nP = 2\nscores = [0, 0, 0, 0, 0]\n\nprint(count_potentially_selected_problems(N, M, V, P, scores))",
+    "timestamp": "2025-08-13 12:04:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class ProblemSelection {\n\n    public static int countPotentialProblems(int N, int P, int[] scores, int M, int V) {\n        int[] problems = Arrays.copyOf(scores, N);\n        int maxPotentialSelected = 0;\n\n        for (int mask = 0; mask < (1 << (M * V)); mask++) {\n            int[] currentScores = Arrays.copyOf(problems, N);\n            int[] votes = new int[N];\n\n            for (int j = 0; j < M * V; j++) {\n                int problemIndex = (mask / (int) Math.pow(N, (j) % N)) % N;\n                votes[problemIndex]++;\n            }\n\n            for (int i = 0; i < N; i++) {\n                currentScores[i] += votes[i];\n            }\n\n            Arrays.sort(currentScores);\n            int thresholdScore = currentScores[N - P];\n            int count = 0;\n\n            for (int i = 0; i < N; i++) {\n                if (problems[i] + votes[i] >= thresholdScore) {\n                    count++;\n                }\n            }\n\n            maxPotentialSelected = Math.max(maxPotentialSelected, count);\n        }\n\n        return maxPotentialSelected;\n    }\n\n    public static void main(String[] args) {\n        // Example Usage\n        int N = 5;\n        int P = 3;\n        int[] scores = {0, 0, 1, 2, 3};\n        int M = 2;\n        int V = 2;\n        \n        int result = countPotentialProblems(N, P, scores, M, V);\n        System.out.println(\"Maximum Potential Problems Selected: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 12:04:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)b - *(int*)a);\n}\n\nint main() {\n    int N, M, V, P;\n    scanf(\"%d %d %d %d\", &N, &M, &V, &P);\n\n    int scores[N];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &scores[i]);\n    }\n\n    int votes[M][V];\n    for (int i = 0; i < M; ++i) {\n        for (int j = 0; j < V; ++j) {\n            scanf(\"%d\", &votes[i][j]);\n            scores[votes[i][j] - 1]++; // assuming problem indices are 1-based\n        }\n    }\n\n    qsort(scores, N, sizeof(int), compare);\n\n    int chosen = 0;\n    for (int i = 0; i < N; ++i) {\n        if (scores[i] > 0) {\n            chosen++;\n        }\n    }\n\n    printf(\"%d\\n\", chosen < P ? chosen : P);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:04:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function getSelectedProblemsCount(N, M, V, P, initialScores) {\n    const votes = Array(N).fill(0);\n\n    for (let i = 0; i < M * V; i++) {\n        votes[i % N] += 1;\n    }\n\n    const finalScores = initialScores.map((score, index) => score + votes[index]);\n    finalScores.sort((a, b) => b - a);\n\n    let potentialSelections = 0;\n    for (let i = 0; i < N; i++) {\n        if (finalScores[i] >= finalScores[P - 1]) {\n            potentialSelections++;\n        }\n    }\n\n    return potentialSelections;\n}",
+    "timestamp": "2025-08-13 12:04:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_problems_in_problemset(N, M, V, P):\n    scores = [0] * N\n    \n    # Simulate voting\n    for _ in range(M):\n        vote_vector = sorted(range(N), key=lambda i: -scores[i])[:V]\n        for idx in vote_vector:\n            scores[idx] += 1\n    \n    # Sort problems by final score in descending order\n    sorted_problems = sorted(enumerate(scores), key=lambda x: (-x[1], x[0]))\n    \n    # First P problems are definitely selected\n    selected = P\n    \n    # Check remaining problems\n    for i in range(P, N):\n        problem_score = sorted_problems[i][1]\n        top_score = sorted_problems[P-1][1]\n        \n        # Check if current problem can potentially be selected\n        if problem_score + M >= top_score:\n            selected += 1\n        else:\n            break\n    \n    return selected\n\n# Example usage\nN, M, V, P = map(int, input().split())\nresult = max_problems_in_problemset(N, M, V, P)\nprint(result)",
+    "timestamp": "2025-08-13 12:04:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function selectProblems(N, M, V, initialScores) {\n    const scores = [...initialScores];\n    \n    for (let i = 0; i < M; i++) {\n        const votedProblems = new Set();\n        \n        while (votedProblems.size < V) {\n            let maxScore = -Infinity;\n            let maxIndex = -1;\n            \n            for (let j = 0; j < N; j++) {\n                if (!votedProblems.has(j) && scores[j] > maxScore) {\n                    maxScore = scores[j];\n                    maxIndex = j;\n                }\n            }\n            \n            votedProblems.add(maxIndex);\n            scores[maxIndex]++;\n        }\n    }\n    \n    scores.sort((a, b) => b - a);\n    \n    let potentiallySelected = 0;\n    for (let i = 0; i < P; i++) {\n        potentiallySelected++;\n    }\n    \n    return potentiallySelected;\n}",
+    "timestamp": "2025-08-13 12:04:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    idx = 0\n    N, M, V, P = map(int, data[idx:idx+4])\n    idx +=4\n    A = list(map(int, data[idx:idx+N]))\n    idx +=N\n    \n    A.sort()\n    \n    low = 0\n    high = N - 1\n    res = 0\n    \n    while low <= high:\n        mid = (low + high) // 2\n        total_votes = M * V\n        remaining_votes = total_votes - (P - 1) - (N - mid - 1)\n        if remaining_votes <= 0:\n            res = N - mid\n            high = mid - 1\n            continue\n        \n        threshold = A[mid] + M\n        possible = True\n        sum_needed = 0\n        for i in range(mid, N - (P - 1)):\n            if A[i] > threshold:\n                possible = False\n                break\n            sum_needed += threshold - A[i]\n        \n        if possible and sum_needed <= remaining_votes * M:\n            res = N - mid\n            high = mid - 1\n        else:\n            low = mid + 1\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 12:05:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, initialScores, M, V, P) {\n    initialScores.sort((a, b) => b - a);\n    const threshold = initialScores[P - 1];\n    let left = 0;\n    let right = N - 1;\n    \n    while (left <= right) {\n        const mid = Math.floor((left + right) / 2);\n        const current = initialScores[mid];\n        let total = current + M;\n        \n        if (mid < P) {\n            left = mid + 1;\n            continue;\n        }\n        \n        if (total < threshold) {\n            right = mid - 1;\n            continue;\n        }\n        \n        let sum = 0;\n        for (let i = 0; i < N; i++) {\n            if (i < P - 1 || i >= mid) {\n                sum += Math.max(0, total - initialScores[i]);\n            }\n        }\n        \n        if (sum >= M * V) {\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    return left;\n}",
+    "timestamp": "2025-08-13 12:05:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M, V, P;\n    cin >> N >> M >> V >> P;\n\n    vector<int> scores(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> scores[i];\n    }\n\n    // Sort scores in descending order\n    sort(scores.begin(), scores.end(), greater<int>());\n\n    auto canBeSelected = [&](int index) -> bool {\n        long long requiredVotes = 0;\n        for (int i = 0; i < M; ++i) {\n            for (int j = 0; j < V; ++j) {\n                if (index+j < N && scores[index+j] + 1 > scores[index]) {\n                    requiredVotes++;\n                }\n            }\n        }\n        return requiredVotes <= M * V;\n    };\n\n    int left = 0, right = N - 1, result = 0;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (canBeSelected(mid)) {\n            result = mid + 1;\n            left = mid + 1;\n        } else {\n            right = mid - 1;\n        }\n    }\n    \n    cout << max(result, P) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:06:52"
+  }
+]

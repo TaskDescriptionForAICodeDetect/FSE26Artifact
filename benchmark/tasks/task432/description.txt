@@ -1,0 +1,26 @@
+The Lost Numbers
+
+In the year 3xxx, a highly developed civilization has entered a stagnation period. Historians decided to learn from the wisdom of the past to break this situation. They focused on documents left by the genius of the early computer era. These documents contain mathematical expressions, and they want to know the results of these calculations, but unfortunately, some characters have faded and are unreadable. Therefore, they decided to find the largest possible number as the calculation result.
+
+The mathematical expressions are written in binary, and the operations are addition, subtraction, and multiplication. Parentheses are used, but the content inside the parentheses is not limited to numbers only. It must follow the grammar defined by the following BNF:
+
+<expression> ::= <number> | <expression> <operation> <expression> | (<expression> <operation> <expression>)
+<number> ::= <digit> | <number> <digit>
+<operation> ::= + | - | *
+<digit> ::= 0 | 1
+
+Due to the limitations of computer processing capabilities at the time, numbers are integers in the range of 0 to less than 210, and calculations must not exceed this range. However, calculations within parentheses are performed first, and multiplication is performed before addition and subtraction. For other cases, calculations are performed from left to right.
+
+Input
+
+The input consists of a single line containing one mathematical expression to be deciphered. The expression has a length of at least 1 and at most 100 characters. Up to 5 characters in a given expression may be unreadable, represented by a '.' character. The characters in the provided expression can include '0', '1', '+', '-', '*', '(', ')', and '.'.
+
+Constraints
+
+The expression has a length of at least 1 and at most 100 characters.
+All characters, excluding new lines, are from the set '0', '1', '+', '-', '*', '(', ')', and '.'.
+The number of '.' characters is at most 5.
+
+Output
+
+Find the maximum calculation result among all valid interpretations of the original expression and output it in decimal notation. If it is impossible to form a valid expression regardless of how the unreadable characters are filled, output -1.

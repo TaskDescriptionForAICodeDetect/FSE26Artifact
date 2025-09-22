@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "13 3\n631\n4#2\n516\n",
+      "output": "YES"
+    },
+    {
+      "input": "23 3\n6#1\n##2\n516\n",
+      "output": "NO"
+    },
+    {
+      "input": "35 5\n61244\n2#5#3\n14641\n5#5#5\n63126\n",
+      "output": "YES"
+    }
+  ]
+}

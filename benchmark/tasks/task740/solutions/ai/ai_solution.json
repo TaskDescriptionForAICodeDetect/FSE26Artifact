@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_N 100\n#define MAX_K 100\n#define MAX_L 100\n\nint dp[MAX_K + 1][MAX_N + 1];\n\nint solve(int n, int k, int l) {\n    memset(dp, 0, sizeof(dp));\n    \n    // Base case for level 1\n    for (int i = 0; i < n; i++) {\n        if (n == 1) {\n            dp[1][i] = 1;\n        }\n    }\n    \n    // Dynamic programming \n    for (int level = 2; level <= k; level++) {\n        for (int i = 0; i < n; i++) {\n            int count = 0;\n            for (int j = 0; j < i; j++) {\n                count += dp[level - 1][j];\n                if (count >= l) {\n                    dp[level][i] += dp[level - 1][j];\n                }\n            }\n        }\n    }\n    \n    // Sum total subsequences at target level\n    int total = 0;\n    for (int i = 0; i < n; i++) {\n        total += dp[k][i];\n    }\n    \n    return total;\n}\n\nint main() {\n    int n, k, l;\n    scanf(\"%d %d %d\", &n, &k, &l);\n    printf(\"%d\\n\", solve(n, k, l));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 1000\n#define MAX_L 1000\n\nint dp[MAX_N][MAX_N];\nint a[MAX_N];\n\nint main() {\n    int n, L;\n    scanf(\"%d %d\", &n, &L);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    memset(dp, 0, sizeof(dp));\n    int total = 0;\n\n    for (int i = 0; i < n; i++) {\n        if (a[i] == 1) {\n            dp[i][i] = 1;\n            total++;\n        }\n    }\n\n    for (int len = 2; len <= n; len++) {\n        for (int i = 0; i <= n - len; i++) {\n            int j = i + len - 1;\n            for (int k = i; k < j; k++) {\n                if (dp[i][k] && dp[k+1][j] && (a[i] == a[k+1] + 1)) {\n                    if (dp[i][k] >= L || dp[k+1][j] >= L) {\n                        dp[i][j] = dp[i][k] + dp[k+1][j];\n                        total++;\n                        break;\n                    }\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", total);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\nusing namespace std;\n\nint countSubsequences(const vector<int>& sequence, int L) {\n    unordered_map<int, int> prevLevel;\n    unordered_map<int, int> currentLevel;\n    int total = 0;\n\n    for (int num : sequence) {\n        if (num == 1) {\n            currentLevel[1]++;\n            total++;\n        }\n\n        if (prevLevel.find(num - 1) != prevLevel.end()) {\n            int count = prevLevel[num - 1];\n            currentLevel[num] += count;\n            if (count >= L) {\n                total += count;\n            }\n        }\n    }\n\n    return total;\n}\n\nint main() {\n    int N, L;\n    cin >> N >> L;\n    vector<int> sequence(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> sequence[i];\n    }\n    cout << countSubsequences(sequence, L) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:45:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LevelSubsequences {\n    public static int countLevelSubsequences(int[] sequence, int L) {\n        Map<Integer, Integer>[] dp = new HashMap[sequence.length];\n        for (int i = 0; i < dp.length; i++) {\n            dp[i] = new HashMap<>();\n        }\n\n        int result = 0;\n        for (int i = 0; i < sequence.length; i++) {\n            if (sequence[i] == 1) {\n                dp[i].put(1, 1);\n                result++;\n            }\n            for (int j = 0; j < i; j++) {\n                for (Map.Entry<Integer, Integer> entry : dp[j].entrySet()) {\n                    int k = entry.getKey();\n                    int count = entry.getValue();\n                    if (sequence[i] == k + 1) {\n                        dp[i].merge(k + 1, count, Integer::sum);\n                    }\n                }\n            }\n            for (Map.Entry<Integer, Integer> entry : dp[i].entrySet()) {\n                int k = entry.getKey();\n                int count = entry.getValue();\n                if (count >= L && k > 1) {\n                    result += count;\n                }\n            }\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int L = scanner.nextInt();\n        int[] sequence = new int[N];\n        for (int i = 0; i < N; i++) {\n            sequence[i] = scanner.nextInt();\n        }\n        System.out.println(countLevelSubsequences(sequence, L));\n    }\n}",
+    "timestamp": "2025-08-05 22:45:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LevelSubsequences {\n    private static final int MOD = 1_000_000_007;\n\n    public static int countLevelSubsequences(int[] nums, int L) {\n        int maxNum = Arrays.stream(nums).max().getAsInt();\n        int[][] dp = new int[maxNum + 1][51];\n        Map<Integer, Integer> freq = new HashMap<>();\n\n        for (int num : nums) {\n            freq.put(num, freq.getOrDefault(num, 0) + 1);\n        }\n\n        for (int num : freq.keySet()) {\n            if (num == 1) {\n                dp[1][1] = freq.get(1);\n            }\n        }\n\n        for (int k = 2; k <= maxNum; k++) {\n            for (int l = 1; l <= 50; l++) {\n                int count = 0;\n                for (int prevNum = 1; prevNum < k; prevNum++) {\n                    if (dp[prevNum][k - 1] > 0) {\n                        int subsequencesAtPrevLevel = dp[prevNum][k - 1];\n                        int currentLevelCount = freq.getOrDefault(k, 0);\n                        \n                        count = (int)(((long)count + (long)subsequencesAtPrevLevel * \n                                (currentLevelCount >= l ? currentLevelCount : 0)) % MOD);\n                    }\n                }\n                dp[k][l] = count;\n            }\n        }\n\n        int totalSubsequences = 0;\n        for (int k = 1; k <= maxNum; k++) {\n            totalSubsequences = (totalSubsequences + dp[k][L]) % MOD;\n        }\n\n        return totalSubsequences;\n    }\n}",
+    "timestamp": "2025-08-05 22:45:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst int MOD = 1e9 + 7;\n\nclass Solution {\npublic:\n    int findSubsequences(vector<int>& nums, int L) {\n        int n = nums.size();\n        vector<vector<vector<ll>>> dp(51, vector<vector<ll>>(n + 1, vector<ll>(L + 1, 0)));\n        \n        // Initialize level 1\n        for(int i = 0; i < n; i++) {\n            if(nums[i] == 1) {\n                dp[1][i][1] = 1;\n            }\n        }\n        \n        // Compute for each level\n        for(int k = 2; k <= 50; k++) {\n            for(int i = 0; i < n; i++) {\n                for(int j = 0; j < i; j++) {\n                    if(nums[i] > nums[j]) {\n                        for(int count = 1; count <= L; count++) {\n                            dp[k][i][1] = (dp[k][i][1] + dp[k-1][j][count]) % MOD;\n                        }\n                    }\n                }\n                \n                // Compute concatenation with multiple subsequences\n                for(int count = 2; count <= L; count++) {\n                    for(int j = 0; j < i; j++) {\n                        if(nums[i] > nums[j]) {\n                            for(int prevCount = 1; prevCount <= L; prevCount++) {\n                                dp[k][i][count] = (dp[k][i][count] + dp[k-1][j][prevCount]) % MOD;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n        \n        // Sum all valid subsequences\n        ll result = 0;\n        for(int k = 1; k <= 50; k++) {\n            for(int i = 0; i < n; i++) {\n                for(int count = 1; count <= L; count++) {\n                    result = (result + dp[k][i][count]) % MOD;\n                }\n            }\n        }\n        \n        return result;\n    }\n};",
+    "timestamp": "2025-08-05 22:45:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def num_subsequences(seq, L):\n    def count_levels(k, l):\n        if k == 1:\n            return sum(1 for x in seq if x == 1)\n        levels = [0] * (len(seq) + 1)\n        count = 0\n        for i in range(len(seq)):\n            if seq[i] == k:\n                count += 1\n                for j in range(i - 1, -1, -1):\n                    if seq[j] == k - 1:\n                        levels[j + 1] += levels[j]\n                levels[i + 1] += 1\n                if levels[i + 1] >= l:\n                    count += levels[i + 1] // l\n        return count\n\n    max_k = max(seq)\n    total_count = 0\n    for k in range(1, max_k + 1):\n        total_count += count_levels(k, L)\n    \n    return total_count\n\n# Example usage:\nsequence = [1, 2, 1, 2, 3]\nL_value = 2\nresult = num_subsequences(sequence, L_value)\nprint(result)",
+    "timestamp": "2025-08-13 12:25:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LevelSubsequences {\n    static int countSubsequences(int[] sequence, int L) {\n        int n = sequence.length;\n        Map<Integer, List<List<Integer>>> levels = new HashMap<>();\n        \n        levels.put(1, new ArrayList<>());\n        for (int i = 0; i < n; i++) {\n            if (sequence[i] == 1) {\n                levels.get(1).add(Arrays.asList(i));\n            }\n        }\n\n        int result = levels.get(1).size();\n        \n        for (int k = 2; ; k++) {\n            List<List<Integer>> prevLevel = levels.get(k - 1);\n            List<List<Integer>> currentLevel = new ArrayList<>();\n            \n            if (prevLevel == null || prevLevel.size() < L) break;\n\n            int prevSize = prevLevel.size();\n            int[] dp = new int[prevSize + 1];\n            \n            for (int j = 0; j < prevSize; j++) {\n                dp[j + 1] = dp[j] + 1;\n                for (int i = 0; i < j; i++) {\n                    if (prevLevel.get(i).get(prevLevel.get(i).size() - 1) < prevLevel.get(j).get(0)) {\n                        dp[j + 1] += dp[i + 1];\n                    }\n                }\n            }\n            \n            for (int j = L - 1; j < prevSize; j++) {\n                List<Integer> newSeq = new ArrayList<>();\n                for (int i = j - L + 1; i <= j; i++) {\n                    newSeq.addAll(prevLevel.get(i));\n                }\n                currentLevel.add(newSeq);\n            }\n\n            levels.put(k, currentLevel);\n            result += currentLevel.size();\n        }\n\n        return result;\n    }\n\n    public static void main(String[] args) {\n        int[] sequence = {1, 2, 1, 1, 2, 1, 1, 1};\n        int L = 2;\n        System.out.println(countSubsequences(sequence, L));\n    }\n}",
+    "timestamp": "2025-08-13 12:25:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX 1000\n\nint countLevelSubsequences(int sequence[], int n, int L) {\n    int dp[MAX][MAX] = {0};\n    int count = 0;\n\n    for (int i = 0; i < n; i++) {\n        if (sequence[i] == 1) {\n            dp[1][i] = 1;\n        }\n    }\n\n    for (int k = 2; k <= MAX; k++) {\n        for (int i = 0; i < n; i++) {\n            int sum = 0;\n            for (int j = 0; j < i; j++) {\n                sum += dp[k-1][j];\n            }\n            dp[k][i] = sum >= L ? 1 : 0;\n        }\n    }\n\n    for (int k = 1; k <= MAX; k++) {\n        for (int i = 0; i < n; i++) {\n            if (dp[k][i]) {\n                count++;\n            }\n        }\n    }\n\n    return count;\n}\n\nint main() {\n    int sequence[] = {1, 2, 1, 1, 2};\n    int n = sizeof(sequence) / sizeof(sequence[0]);\n    int L = 2;\n    \n    int result = countLevelSubsequences(sequence, n, L);\n    printf(\"Number of subsequences at level (K, %d): %d\\n\", L, result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:25:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countLevelSequences(sequence, L) {\n    const n = sequence.length;\n    const dp = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));\n    const prefixSum = Array.from({ length: n + 1 }, () => Array(n + 1).fill(0));\n    \n    dp[0][0] = 1;\n    for (let i = 1; i <= n; i++) {\n        for (let k = 0; k <= n; k++) {\n            dp[i][k] = dp[i - 1][k];\n            if (sequence[i - 1] === 1 && k === 1) dp[i][k]++;\n            if (k >= 1) {\n                dp[i][k] += prefixSum[i - 1][k - 1];\n            }\n        }\n        \n        for (let k = 0; k <= n; k++) {\n            prefixSum[i][k] = prefixSum[i - 1][k] + dp[i][k];\n        }\n    }\n    \n    let result = 0;\n    for (let k = 1; k <= n; k++) {\n        if (prefixSum[n][k - 1] >= L) {\n            result += dp[n][k];\n        }\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 12:25:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_level_subsequences(arr, L):\n    n = len(arr)\n    MOD = 10**9 + 7\n    \n    # Initialize 3D DP table\n    dp = [[[0 for _ in range(L+1)] for _ in range(n+1)] for _ in range(51)]\n    \n    # Level 1 initialization\n    for i in range(n):\n        if arr[i] == 1:\n            dp[1][i+1][1] = 1\n    \n    # Fill the DP table\n    for k in range(2, 51):\n        for i in range(1, n+1):\n            for j in range(1, L+1):\n                for prev in range(i):\n                    # Check concatenation conditions\n                    if dp[k-1][prev][j] > 0:\n                        count = 0\n                        cur_sum = 0\n                        for m in range(prev, i):\n                            cur_sum += arr[m]\n                            count += 1\n                            if cur_sum == k:\n                                dp[k][i][j] = (dp[k][i][j] + dp[k-1][prev][j-1]) % MOD\n    \n    # Sum up total subsequences\n    total = 0\n    for k in range(1, 51):\n        for i in range(1, n+1):\n            for j in range(1, L+1):\n                total = (total + dp[k][i][j]) % MOD\n    \n    return total",
+    "timestamp": "2025-08-13 12:25:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countSubsequences(arr, L) {\n    const n = arr.length;\n    const MOD = 1e9 + 7;\n    const dp = new Array(51).fill(0).map(() => new Array(n + 1).fill(0).map(() => new Array(n + 1).fill(0)));\n\n    for (let j = 0; j < n; j++) {\n        if (arr[j] === 1) {\n            dp[1][j][1] = 1;\n        }\n    }\n\n    for (let k = 2; k <= 50; k++) {\n        for (let j = 0; j < n; j++) {\n            for (let len = 1; len <= n; len++) {\n                for (let prevJ = 0; prevJ < j; prevJ++) {\n                    for (let prevLen = 1; prevLen <= len - 1; prevLen++) {\n                        if (dp[k-1][prevJ][prevLen] > 0 && arr[j] === k) {\n                            dp[k][j][len] = (dp[k][j][len] + dp[k-1][prevJ][prevLen]) % MOD;\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    let total = 0;\n    for (let k = 1; k <= 50; k++) {\n        let count = 0;\n        for (let j = 0; j < n; j++) {\n            for (let len = L; len <= n; len++) {\n                count = (count + dp[k][j][len]) % MOD;\n            }\n        }\n        total = (total + count) % MOD;\n    }\n\n    return total;\n}",
+    "timestamp": "2025-08-13 12:26:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_level_sequences(sequence, L):\n    from collections import defaultdict\n\n    max_k = max(sequence) if sequence else 0\n    dp = [defaultdict(int) for _ in range(len(sequence))]\n    total = 0\n\n    for i in range(len(sequence)):\n        num = sequence[i]\n        if num == 1:\n            dp[i][1] += 1\n            total += 1\n        for j in range(i):\n            for k in dp[j]:\n                if num == k + 1:\n                    dp[i][k + 1] += dp[j][k]\n        for k in dp[i]:\n            if k > 1 and dp[i][k] >= L:\n                total += dp[i][k]\n    \n    return total",
+    "timestamp": "2025-08-13 12:26:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countLevelSubsequences(sequence, L) {\n    const n = sequence.length;\n    const dp = Array.from({ length: n }, () => new Array(n).fill(0));\n    let count = 0;\n\n    for (let i = 0; i < n; i++) {\n        if (sequence[i] === 1) {\n            dp[i][i] = 1;\n            count++;\n        }\n    }\n\n    for (let len = 2; len <= n; len++) {\n        for (let i = 0; i <= n - len; i++) {\n            const j = i + len - 1;\n            for (let k = i; k < j; k++) {\n                if (dp[i][k] > 0 && dp[k+1][j] > 0 && dp[i][k] === dp[k+1][j]) {\n                    dp[i][j] = dp[i][k] + 1;\n                    break;\n                }\n            }\n            if (dp[i][j] > 0) {\n                const K = dp[i][j];\n                let ways = 0;\n                for (let m = i; m < j; ) {\n                    if (dp[i][m] === K - 1) {\n                        let cnt = 0;\n                        let start = m;\n                        while (m < j && dp[i][m] === K - 1) {\n                            cnt++;\n                            m++;\n                        }\n                        if (cnt >= L) {\n                            ways += Math.floor(cnt / L);\n                        }\n                    } else {\n                        m++;\n                    }\n                }\n                if (ways >= 1) {\n                    dp[i][j] = K;\n                    count += ways;\n                } else {\n                    dp[i][j] = 0;\n                }\n            }\n        }\n    }\n\n    return count;\n}",
+    "timestamp": "2025-08-13 12:26:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n\nusing namespace std;\n\nint countLevelSequences(const vector<int>& seq, int L) {\n    int n = seq.size();\n    vector<vector<long long>> dp(n + 1, vector<long long>(n + 1, 0));\n    \n    map<int, int> levelCounter;\n    levelCounter[1] = 0;\n    \n    for (int i = 0; i < n; ++i) {\n        if (seq[i] == 1) {\n            dp[i + 1][1] = 1;\n            levelCounter[1]++;\n        }\n    }\n    \n    for (int len = 2; len <= n; ++len) {\n        for (int j = 0; j <= n - len; ++j) {\n            for (int k = j + 1; k < j + len; ++k) {\n                dp[j + len][len] += dp[j + len - (k - j)][len - 1] * dp[k][1];\n            }\n        }\n    }\n    \n    long long count = 0;\n    for (auto it : levelCounter) {\n        count += (it.second >= L) ? 1 : 0;\n    }\n    \n    return count;\n}\n\nint main() {\n    vector<int> sequence = {1, 1, 2, 1}; // Example sequence.\n    int L = 2; // Example L value.\n    \n    cout << countLevelSequences(sequence, L) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:34:37"
+  }
+]

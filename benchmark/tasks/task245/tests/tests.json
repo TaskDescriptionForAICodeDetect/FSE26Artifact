@@ -1,0 +1,36 @@
+{
+  "examples": [
+    {
+      "input": "1 1 1 1 1 1 1 1 8",
+      "output": "0"
+    },
+    {
+      "input": "3 2 3 2 3 2 3 2 6",
+      "output": "2"
+    },
+    {
+      "input": "3 4 4 7 7 b a 2 2e",
+      "output": "6"
+    },
+    {
+      "input": "e1 13 ce 28 ca 6 ab 46 a6d",
+      "output": "1c6"
+    },
+    {
+      "input": "b08 49e2 6128 f27 8cf2 bc50 7380 7fe1 723b",
+      "output": "4924afc7"
+    },
+    {
+      "input": "4eba eb4 a352 fd14 6ac1 eed1 dd06 bb83 392bc",
+      "output": "ffff95c5"
+    },
+    {
+      "input": "ef593c08 847e522f 74c02b9c 26f3a4e1 e2720a01 6fe66007 7a4e96ad 6ee5cef6 3853cd88",
+      "output": "546991d"
+    },
+    {
+      "input": "60202fb8 757d6d66 9c3a9525 fbcd7983 82b9571c ddc54bab 853e52da 22047c88 e5524401",
+      "output": "901c4a16"
+    }
+  ]
+}

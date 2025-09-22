@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    char **grid = (char **)malloc(H * sizeof(char *));\n    for (int i = 0; i < H; i++) {\n        grid[i] = (char *)malloc((W + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n\n    int *rowJ = (int *)calloc(H, sizeof(int));\n    int *rowO = (int *)calloc(H, sizeof(int));\n    int *rowI = (int *)calloc(H, sizeof(int));\n    int *colJ = (int *)calloc(W, sizeof(int));\n    int *colO = (int *)calloc(W, sizeof(int));\n    int *colI = (int *)calloc(W, sizeof(int));\n\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] == 'J') {\n                rowJ[i]++;\n                colJ[j]++;\n            } else if (grid[i][j] == 'O') {\n                rowO[i]++;\n                colO[j]++;\n            } else if (grid[i][j] == 'I') {\n                rowI[i]++;\n                colI[j]++;\n            }\n        }\n    }\n\n    long long result = 0;\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] == 'J') {\n                result += rowO[i] * colI[j];\n            }\n        }\n    }\n\n    printf(\"%lld\\n\", result);\n\n    for (int i = 0; i < H; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    free(rowJ);\n    free(rowO);\n    free(rowI);\n    free(colJ);\n    free(colO);\n    free(colI);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BitaroMagic {\n    public static int calculateMagicPower(char[][] grid) {\n        int H = grid.length;\n        int W = grid[0].length;\n        int maxPower = 0;\n\n        for (int j = 0; j < W; j++) {\n            for (int l = j + 1; l < W; l++) {\n                boolean jewelFound = false;\n                boolean orbFound = false;\n                boolean ingotFound = false;\n\n                for (int i = 0; i < H; i++) {\n                    if (grid[i][j] == 'J') {\n                        jewelFound = true;\n                    }\n                    if (grid[i][l] == 'O') {\n                        orbFound = true;\n                    }\n                }\n\n                for (int k = 0; k < H; k++) {\n                    if (grid[k][j] == 'I') {\n                        ingotFound = true;\n                    }\n                }\n\n                if (jewelFound && orbFound && ingotFound) {\n                    maxPower = Math.max(maxPower, Math.abs(j - l));\n                }\n            }\n        }\n\n        return maxPower;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        \n        char[][] grid = new char[H][W];\n        \n        for (int i = 0; i < H; i++) {\n            String row = scanner.next();\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = row.charAt(j);\n            }\n        }\n        \n        int result = calculateMagicPower(grid);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:55:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_map>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<string> grid(H);\n    for (int i = 0; i < H; ++i) {\n        cin >> grid[i];\n    }\n\n    unordered_map<int, int> row_j; // Maps row index to count of 'J's in that row\n    unordered_map<int, int> col_j; // Maps column index to count of 'J's in that column\n    unordered_map<int, int> row_o; // Maps row index to count of 'O's in that row\n    unordered_map<int, int> col_i; // Maps column index to count of 'I's in that column\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (grid[i][j] == 'J') {\n                row_j[i]++;\n                col_j[j]++;\n            } else if (grid[i][j] == 'O') {\n                row_o[i]++;\n            } else if (grid[i][j] == 'I') {\n                col_i[j]++;\n            }\n        }\n    }\n\n    long long magic_power = 0;\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (grid[i][j] == 'J') {\n                magic_power += row_o[i] * col_i[j];\n            }\n        }\n    }\n\n    cout << magic_power << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:55:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_H 100\n#define MAX_W 100\n\nint main() {\n    int H, W;\n    char grid[MAX_H][MAX_W];\n    \n    scanf(\"%d %d\", &H, &W);\n    \n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n    \n    int magic_power = 0;\n    \n    for (int j = 0; j < W; j++) {\n        bool jewel_found = false, orb_found = false, ingot_found = false;\n        int jewel_row = -1, orb_row = -1, ingot_row = -1;\n        \n        for (int i = 0; i < H; i++) {\n            if (grid[i][j] == 'J') {\n                jewel_found = true;\n                jewel_row = i;\n            }\n            if (grid[i][j] == 'O') {\n                orb_found = true;\n                orb_row = i;\n            }\n            if (grid[i][j] == 'I') {\n                ingot_found = true;\n                ingot_row = i;\n            }\n        }\n        \n        if (jewel_found && orb_found && ingot_found) {\n            magic_power++;\n        }\n    }\n    \n    printf(\"%d\\n\", magic_power);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:55:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nusing namespace std;\n\nint calculateMagicPower(vector<vector<char>>& grid) {\n    int H = grid.size();\n    int W = grid[0].size();\n    int maxPower = 0;\n\n    for (int j = 0; j < W; j++) {\n        int jewelRow = -1;\n        int ingotRow = -1;\n        int orbCol = -1;\n\n        for (int i = 0; i < H; i++) {\n            if (grid[i][j] == 'J') {\n                jewelRow = i;\n            }\n            if (grid[i][j] == 'I') {\n                ingotRow = i;\n            }\n        }\n\n        for (int l = 0; l < W; l++) {\n            for (int k = 0; k < H; k++) {\n                if (grid[k][l] == 'O') {\n                    orbCol = l;\n                    if (jewelRow != -1 && ingotRow != -1 && orbCol != j) {\n                        maxPower = max(maxPower, abs(jewelRow - ingotRow));\n                    }\n                }\n            }\n        }\n    }\n\n    return maxPower;\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n\n    vector<vector<char>> grid(H, vector<char>(W));\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cin >> grid[i][j];\n        }\n    }\n\n    int result = calculateMagicPower(grid);\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:56:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MagicPower {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        scanner.nextLine(); // consume newline\n\n        char[][] grid = new char[H][W];\n        for (int i = 0; i < H; i++) {\n            String line = scanner.nextLine();\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = line.charAt(j);\n            }\n        }\n\n        // Precompute row counts for 'O' and column counts for 'I'\n        int[] rowO = new int[H];\n        int[] colI = new int[W];\n\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (grid[i][j] == 'O') {\n                    rowO[i]++;\n                }\n            }\n        }\n\n        for (int j = 0; j < W; j++) {\n            for (int i = 0; i < H; i++) {\n                if (grid[i][j] == 'I') {\n                    colI[j]++;\n                }\n            }\n        }\n\n        long total = 0;\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (grid[i][j] == 'J') {\n                    total += (long) rowO[i] * colI[j];\n                }\n            }\n        }\n\n        System.out.println(total);\n    }\n}",
+    "timestamp": "2025-08-05 18:56:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_magic_power(grid):\n    H = len(grid)\n    W = len(grid[0]) if H > 0 else 0\n    \n    # Track positions of jewels, orbs and ingots\n    jewel_positions = []\n    orb_positions = set()\n    ingot_positions = set()\n    \n    for i in range(H):\n        for j in range(W):\n            if grid[i][j] == 'J':\n                jewel_positions.append((i, j))\n            elif grid[i][j] == 'O':\n                orb_positions.add((i, j))\n            elif grid[i][j] == 'I':\n                ingot_positions.add((i, j))\n    \n    # Calculate magic power\n    magic_power = 0\n    for i, j in jewel_positions:\n        # Check every possible column for orbs starting from this row\n        for l in range(W):\n            if l != j and (i, l) in orb_positions:\n                # Check every possible row for ingots starting from this column\n                for k in range(H):\n                    if k != i and (k, j) in ingot_positions:\n                        magic_power += 1\n    \n    return magic_power\n\n# Example usage:\ngrid = [\n    ['J', 'O', 'I'],\n    ['J', 'I', 'O'],\n    ['O', 'J', 'I']\n]\nprint(calculate_magic_power(grid))  # Output the magic power based on grid",
+    "timestamp": "2025-08-13 01:24:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MagicPowerCalculator {\n    public static void main(String[] args) {\n        char[][] grid = {\n            {'J', 'O', 'I', 'J'},\n            {'I', 'J', 'O', 'I'},\n            {'O', 'I', 'J', 'O'},\n            {'J', 'O', 'I', 'J'}\n        };\n        System.out.println(calculateMagicPower(grid));\n    }\n\n    public static int calculateMagicPower(char[][] grid) {\n        int H = grid.length;\n        int W = grid[0].length;\n        \n        Map<Integer, List<Integer>> jewelRows = new HashMap<>();\n        Map<Integer, List<Integer>> orbColumns = new HashMap<>();\n        Map<Integer, List<Integer>> ingotRows = new HashMap<>();\n        \n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                switch (grid[i][j]) {\n                    case 'J':\n                        jewelRows.computeIfAbsent(i, k -> new ArrayList<>()).add(j);\n                        break;\n                    case 'O':\n                        orbColumns.computeIfAbsent(j, k -> new ArrayList<>()).add(i);\n                        break;\n                    case 'I':\n                        ingotRows.computeIfAbsent(i, k -> new ArrayList<>()).add(j);\n                        break;\n                }\n            }\n        }\n        \n        int magicPower = 0;\n        for (Integer jRow : jewelRows.keySet()) {\n            for (Integer jCol : jewelRows.get(jRow)) {\n                if (orbColumns.containsKey(jCol) && ingotRows.containsKey(jRow)) {\n                    magicPower += orbColumns.get(jCol).size() * ingotRows.get(jRow).size();\n                }\n            }\n        }\n        \n        return magicPower;\n    }\n}",
+    "timestamp": "2025-08-13 01:24:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_H 100\n#define MAX_W 100\n\nint main() {\n    int H, W;\n    char grid[MAX_H][MAX_W];\n    int jewelCount[MAX_H] = {0};\n    int orbCount[MAX_W] = {0};\n    int ingotCount[MAX_H] = {0};\n    int magicPower = 0;\n\n    // Read grid dimensions\n    scanf(\"%d %d\", &H, &W);\n\n    // Read grid\n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    // Calculate jewelCount and ingotCount for each row\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] == 'J') {\n                jewelCount[i]++;\n            } else if (grid[i][j] == 'I') {\n                ingotCount[i]++;\n            }\n        }\n    }\n\n    // Calculate orbCount for each column\n    for (int j = 0; j < W; j++) {\n        for (int i = 0; i < H; i++) {\n            if (grid[i][j] == 'O') {\n                orbCount[j]++;\n            }\n        }\n    }\n\n    // Calculate magic power\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (grid[i][j] == 'J' || grid[i][j] == 'I') {\n                magicPower += jewelCount[i] * orbCount[j] * ingotCount[i];\n            }\n        }\n    }\n\n    // Output result\n    printf(\"%d\\n\", magicPower);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:24:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_magic_power(grid):\n    H, W = len(grid), len(grid[0])\n    max_power = 0\n\n    for j in range(W):\n        for l in range(W):\n            if j == l:\n                continue\n            \n            for i in range(H):\n                for k in range(H):\n                    if grid[i][j] == 'J' and grid[i][l] == 'O' and grid[k][j] == 'I':\n                        max_power = max(max_power, abs(i - k))\n\n    return max_power\n\n# Input handling\nH, W = map(int, input().split())\ngrid = [list(input().strip()) for _ in range(H)]\n\n# Calculate and print magic power\nprint(calculate_magic_power(grid))",
+    "timestamp": "2025-08-13 01:24:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "h, w = map(int, input().split())\ngrid = [input().strip() for _ in range(h)]\n\nj_rows = [set() for _ in range(h)]\no_cols = [set() for _ in range(w)]\ni_cols = [set() for _ in range(w)]\n\nfor i in range(h):\n    for j in range(w):\n        cell = grid[i][j]\n        if cell == 'J':\n            j_rows[i].add(j)\n        elif cell == 'O':\n            o_cols[j].add(i)\n        elif cell == 'I':\n            i_cols[j].add(i)\n\ncount = 0\n\nfor i in range(h):\n    for j in range(w):\n        if grid[i][j] == 'J':\n            for l in range(w):\n                if l != j and grid[i][l] == 'O':\n                    for k in range(h):\n                        if k != i and grid[k][j] == 'I':\n                            count += 1\n\nprint(count)",
+    "timestamp": "2025-08-13 01:25:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint calculateMagicPower(int H, int W, vector<string>& grid) {\n    vector<int> jewelRowCount(H, 0);\n    vector<int> ingotColCount(W, 0);\n    vector<int> orbRowPresence(H, 0);\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (grid[i][j] == 'J') {\n                jewelRowCount[i]++;\n            } else if (grid[i][j] == 'I') {\n                ingotColCount[j]++;\n            } else if (grid[i][j] == 'O') {\n                orbRowPresence[i] = 1;\n            }\n        }\n    }\n\n    int magicPower = 0;\n\n    for (int i = 0; i < H; ++i) {\n        if (orbRowPresence[i]) {\n            for (int j = 0; j < H; ++j) {\n                if (i != j && jewelRowCount[j] > 0) {\n                    magicPower += jewelRowCount[j] * orbRowPresence[i];\n                }\n            }\n        }\n    }\n\n    for (int j = 0; j < W; ++j) {\n        if (ingotColCount[j] > 0) {\n            for (int i = 0; i < H; ++i) {\n                if (orbRowPresence[i]) {\n                    magicPower += ingotColCount[j];\n                }\n            }\n        }\n    }\n\n    return magicPower;\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n\n    vector<string> grid(H);\n    for (int i = 0; i < H; ++i) {\n        cin >> grid[i];\n    }\n\n    cout << calculateMagicPower(H, W, grid) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:00:01"
+  }
+]

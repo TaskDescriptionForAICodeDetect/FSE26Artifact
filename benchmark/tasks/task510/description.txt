@@ -1,0 +1,1 @@
+Determine if a given string is a Miko Mi string. A string S can be written in the form ABABA where A and B are non-empty strings. If S can be expressed in this format, output 'Love AB!' where A and B are the smallest possible strings. If not, output 'mitomerarenaiWA'.

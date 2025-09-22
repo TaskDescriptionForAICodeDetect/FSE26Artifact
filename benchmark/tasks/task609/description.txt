@@ -1,0 +1,1 @@
+You have n indistinguishable balls and k indistinguishable boxes. Find the number of ways to distribute the balls into the boxes under the conditions that each box must contain at least one ball, and all balls must be placed in the boxes. The result should be printed modulo 10^9+7.

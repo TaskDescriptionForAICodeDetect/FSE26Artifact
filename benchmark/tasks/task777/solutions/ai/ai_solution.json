@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n\n    long long dp[N+1][X+1];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < X; j++) {\n            for (int k = 0; k < 3; k++) {\n                int newSum = j + k;\n                if (newSum < X) {\n                    dp[i+1][newSum] = (dp[i+1][newSum] + dp[i][j]) % MOD;\n                }\n            }\n        }\n    }\n\n    long long result = 0;\n    for (int j = 0; j < X; j++) {\n        result = (result + dp[N][j]) % MOD;\n    }\n\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n    \n    long long dp[N+1][X+1];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n    \n    for (int i = 1; i <= N; ++i) {\n        for (int s = 0; s <= X; ++s) {\n            for (int d = 0; d <= 2; ++d) {\n                if (s + d <= X) {\n                    dp[i][s + d] = (dp[i][s + d] + dp[i-1][s]) % MOD;\n                }\n            }\n        }\n    }\n    \n    long long total = 1;\n    for (int i = 0; i < N; ++i) {\n        total = total * 3 % MOD;\n    }\n    \n    long long invalid = 0;\n    for (int s = 0; s <= X; ++s) {\n        invalid = (invalid + dp[N][s]) % MOD;\n    }\n    \n    long long result = (total - invalid + MOD) % MOD;\n    printf(\"%lld\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 998244353;\n\nint solve(int N, int X) {\n    if (X == 0) {\n        long long res = 1;\n        for (int i = 0; i < N; ++i) {\n            res = res * 2 % MOD;\n        }\n        return res;\n    }\n\n    vector<vector<long long>> dp(N + 1, vector<long long>(X + 1, 0));\n    dp[0][0] = 1;\n\n    for (int i = 1; i <= N; ++i) {\n        for (int s = 0; s <= X; ++s) {\n            for (int d = 0; d <= 2; ++d) {\n                if (s + d > X) continue;\n                if (s + d == X) continue;\n                if (s + d < X) {\n                    dp[i][s + d] = (dp[i][s + d] + dp[i - 1][s]) % MOD;\n                }\n            }\n        }\n    }\n\n    long long total = 1;\n    for (int i = 0; i < N; ++i) {\n        total = total * 3 % MOD;\n    }\n\n    long long bad = 0;\n    for (int s = 0; s <= X; ++s) {\n        bad = (bad + dp[N][s]) % MOD;\n    }\n\n    return (total - bad + MOD) % MOD;\n}\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n    cout << solve(N, X) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int X = sc.nextInt();\n        sc.close();\n\n        long[][][] dp = new long[N + 1][3][3];\n        if (X == 0) {\n            System.out.println(0);\n            return;\n        }\n\n        for (int a = 0; a < 3; a++) {\n            for (int b = 0; b < 3; b++) {\n                if (a + b == X) continue;\n                dp[2][a][b] = 1;\n            }\n        }\n\n        for (int i = 3; i <= N; i++) {\n            long[][][] newDp = new long[N + 1][3][3];\n            for (int a = 0; a < 3; a++) {\n                for (int b = 0; b < 3; b++) {\n                    if (dp[i - 1][a][b] == 0) continue;\n                    for (int c = 0; c < 3; c++) {\n                        if (b + c == X || a + b + c == X) continue;\n                        newDp[i][b][c] = (newDp[i][b][c] + dp[i - 1][a][b]) % MOD;\n                    }\n                }\n            }\n            dp[i] = newDp[i];\n        }\n\n        long result = 0;\n        for (int a = 0; a < 3; a++) {\n            for (int b = 0; b < 3; b++) {\n                result = (result + dp[N][a][b]) % MOD;\n            }\n        }\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:53:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 998244353;\n    \n    public static int countSequences(int N, int X) {\n        long[][][] dp = new long[N + 1][X + 1][3];\n        dp[0][0][0] = 1;\n        \n        for (int i = 0; i < N; i++) {\n            for (int sum = 0; sum <= X; sum++) {\n                for (int last = 0; last < 3; last++) {\n                    if (dp[i][sum][last] == 0) continue;\n                    \n                    for (int current = 0; current < 3; current++) {\n                        int newSum = sum + current;\n                        if (newSum > X) break;\n                        \n                        dp[i + 1][newSum][current] = (dp[i + 1][newSum][current] + \n                            dp[i][sum][last]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        long result = 0;\n        for (int sum = 0; sum < X; sum++) {\n            for (int last = 0; last < 3; last++) {\n                result = (result + dp[N][sum][last]) % MOD;\n            }\n        }\n        \n        return (int)result;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int X = scanner.nextInt();\n        System.out.println(countSequences(N, X));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:53:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint solve(int N, int X) {\n    vector<vector<int>> dp(N + 1, vector<int>(X + 1, 0));\n    dp[0][0] = 1;\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j <= X; j++) {\n            if (dp[i][j] == 0) continue;\n            \n            for (int k = 0; k <= 2; k++) {\n                int newSum = j + k;\n                if (newSum <= X) {\n                    dp[i + 1][newSum] = (dp[i + 1][newSum] + dp[i][j]) % MOD;\n                }\n            }\n        }\n    }\n\n    int total = 0;\n    for (int j = 0; j < X; j++) {\n        total = (total + dp[N][j]) % MOD;\n    }\n\n    return total;\n}\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n    cout << solve(N, X) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_sequences(N, X):\n    MOD = 998244353\n\n    # dp[i][j] = number of sequences of length i\n    # where the sum of the sequence is congruent to j mod X\n    dp = [[0] * X for _ in range(N + 1)]\n    dp[0][0] = 1\n\n    for i in range(1, N + 1):\n        for j in range(X):\n            for digit in range(3):\n                dp[i][(j + digit) % X] = (dp[i][(j + digit) % X] + dp[i - 1][j]) % MOD\n\n    total_sequences = pow(3, N, MOD)\n    invalid_sequences = dp[N][0]\n    \n    result = (total_sequences - invalid_sequences + MOD) % MOD\n    return result\n\n# Example usage - replace with the desired N and X values\nN = 5  # Example sequence length\nX = 3  # Example sum to avoid\nprint(count_sequences(N, X))",
+    "timestamp": "2025-08-13 12:51:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SequenceCount {\n    private static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int X = scanner.nextInt();\n        scanner.close();\n\n        System.out.println(findSequences(N, X));\n    }\n\n    private static int findSequences(int n, int x) {\n        if (x == 0) {\n            return 0;\n        }\n        int[][] dp = new int[n + 1][x];\n        dp[0][0] = 1;\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < x; j++) {\n                for (int d = 0; d <= 2; d++) {\n                    dp[i + 1][(j + d) % x] = (dp[i + 1][(j + d) % x] + dp[i][j]) % MOD;\n                }\n            }\n        }\n\n        return (int) ((modExp(3, n, MOD) - dp[n][0] + MOD) % MOD);\n    }\n\n    private static long modExp(long base, long exp, long mod) {\n        long result = 1;\n        while (exp > 0) {\n            if ((exp & 1) == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp >>= 1;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-13 12:51:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nlong long dp[101][3][3];\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n\n    memset(dp, 0, sizeof(dp));\n    \n    for (int i = 0; i < 3; ++i) {\n        dp[1][i][i] = 1;\n    }\n\n    for (int i = 2; i <= N; ++i) {\n        for (int last1 = 0; last1 < 3; ++last1) {\n            for (int last2 = 0; last2 < 3; ++last2) {\n                for (int cur = 0; cur < 3; ++cur) {\n                    int sum = last1 + last2 + cur;\n                    if (sum != X) {\n                        dp[i][last2][cur] = (dp[i][last2][cur] + dp[i - 1][last1][last2]) % MOD;\n                    }\n                }\n            }\n        }\n    }\n\n    long long answer = 0;\n    for (int last1 = 0; last1 < 3; ++last1) {\n        for (int last2 = 0; last2 < 3; ++last2) {\n            answer = (answer + dp[N][last1][last2]) % MOD;\n        }\n    }\n\n    printf(\"%lld\\n\", answer);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:51:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\n#define MOD 998244353\n\nusing namespace std;\n\nint count_sequences(int N, int X) {\n    vector<vector<vector<int>>> dp(N + 1, vector<vector<int>>(X + 1, vector<int>(3, 0)));\n    \n    for (int j = 0; j < 3; ++j) {\n        if (j != X) dp[1][j][j] = 1;\n    }\n    \n    for (int i = 2; i <= N; ++i) {\n        for (int sum = 0; sum <= X; ++sum) {\n            for (int end = 0; end < 3; ++end) {\n                for (int next = 0; next < 3; ++next) {\n                    int new_sum = sum + next;\n                    if (new_sum != X) {\n                        dp[i][new_sum][next] = (dp[i][new_sum][next] + dp[i - 1][sum][end]) % MOD;\n                    }\n                }\n            }\n        }\n    }\n\n    int result = 0;\n    for (int sum = 0; sum <= X; ++sum) {\n        for (int end = 0; end < 3; ++end) {\n            result = (result + dp[N][sum][end]) % MOD;\n        }\n    }\n\n    return result;\n}\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n    cout << count_sequences(N, X) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:51:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_valid_sequences(N, X):\n    MOD = 998244353\n    \n    # Initialize DP table\n    dp = [[[0 for _ in range(X+1)] for _ in range(3)] for _ in range(N+1)]\n    \n    # Base case: empty sequence\n    for s in range(3):\n        dp[0][s][0] = 1\n    \n    # Dynamic programming\n    for i in range(1, N+1):\n        for last in range(3):\n            for sum_val in range(X+1):\n                for curr in range(3):\n                    new_sum = sum_val + curr\n                    if new_sum > X:\n                        break\n                    \n                    dp[i][curr][new_sum] = (dp[i][curr][new_sum] + dp[i-1][last][sum_val]) % MOD\n    \n    # Sum all valid sequences\n    total = 0\n    for last in range(3):\n        for sum_val in range(X+1):\n            total = (total + dp[N][last][sum_val]) % MOD\n    \n    return total",
+    "timestamp": "2025-08-13 12:51:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    MOD = 998244353\n    N, X = map(int, sys.stdin.readline().split())\n    \n    if X == 0:\n        print(pow(3, N, MOD))\n        return\n    \n    max_sum = 2 * N\n    if X > max_sum:\n        print(pow(3, N, MOD))\n        return\n    \n    # DP[i][s] = number of sequences of length i where the last 's' is the sum of the last few elements (as per constraints)\n    # We need to track sums up to X-1\n    dp = [[0] * X for _ in range(N+1)]\n    dp[0][0] = 1\n    \n    for i in range(1, N+1):\n        new_dp = [[0] * X for _ in range(N+1)]\n        for prev_len in range(i):\n            for s in range(X):\n                if dp[prev_len][s] == 0:\n                    continue\n                # Append 0\n                new_s = 0\n                new_len = 1\n                new_dp[new_len][new_s] = (new_dp[new_len][new_s] + dp[prev_len][s]) % MOD\n                # Append 1\n                new_s = s + 1\n                new_len = prev_len + 1\n                if new_s < X:\n                    new_dp[new_len][new_s] = (new_dp[new_len][new_s] + dp[prev_len][s]) % MOD\n                # Append 2\n                new_s = s + 2\n                new_len = prev_len + 1\n                if new_s < X:\n                    new_dp[new_len][new_s] = (new_dp[new_len][new_s] + dp[prev_len][s]) % MOD\n        dp = new_dp\n    \n    total = 0\n    for l in range(N+1):\n        for s in range(X):\n            total = (total + dp[l][s]) % MOD\n    ans = (pow(3, N, MOD) - total) % MOD\n    print(ans)\n\nsolve()",
+    "timestamp": "2025-08-13 12:51:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countSequences(N, X) {\n    const MOD = 998244353;\n    let dp = new Array(N + 1).fill(0).map(() => new Array(X + 1).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 1; i <= N; i++) {\n        for (let j = 0; j <= X; j++) {\n            for (let k = 0; k <= 2; k++) {\n                if (j + k <= X) {\n                    dp[i][j + k] = (dp[i][j + k] + dp[i - 1][j]) % MOD;\n                }\n            }\n        }\n    }\n\n    let result = 0;\n    for (let j = 0; j < X; j++) {\n        result = (result + dp[N][j]) % MOD;\n    }\n\n    return result;\n}",
+    "timestamp": "2025-08-13 12:52:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countSequences(N, X) {\n    const MOD = 998244353;\n    const dp = new Array(N + 1).fill(0).map(() => new Array(X + 1).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 0; i < N; i++) {\n        for (let j = 0; j <= X; j++) {\n            if (dp[i][j] === 0) continue;\n\n            for (let k = 0; k <= 2; k++) {\n                let newSum = j + k;\n                if (newSum > X) break;\n                dp[i + 1][newSum] = (dp[i + 1][newSum] + dp[i][j]) % MOD;\n            }\n        }\n    }\n\n    let result = 0;\n    for (let j = 0; j < X; j++) {\n        result = (result + dp[N][j]) % MOD;\n    }\n\n    return (3n ** BigInt(N) - result + MOD) % MOD;\n}",
+    "timestamp": "2025-08-13 12:53:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve(N, X) {\n    let dp = new Array(N + 1).fill(0).map(() => new Array(3).fill(0).map(() => new Array(3).fill(0)));\n    dp[0][0][0] = 1;\n    \n    for (let i = 0; i < N; i++) {\n        for (let a = 0; a < 3; a++) {\n            for (let b = 0; b < 3; b++) {\n                if (dp[i][a][b] === 0) continue;\n                for (let c = 0; c < 3; c++) {\n                    let newA = a + c;\n                    let newB = b;\n                    if (newA > X) continue;\n                    if (newA === X) {\n                        newA = 0;\n                        newB = c;\n                    }\n                    dp[i + 1][newA][newB] = (dp[i + 1][newA][newB] + dp[i][a][b]) % MOD;\n                }\n            }\n        }\n    }\n    \n    let res = 0;\n    for (let a = 0; a < 3; a++) {\n        for (let b = 0; b < 3; b++) {\n            res = (res + dp[N][a][b]) % MOD;\n        }\n    }\n    return res;\n}\n\n// Example usage:\n// console.log(solve(3, 2)); // Replace with actual N and X",
+    "timestamp": "2025-08-13 12:53:12"
+  }
+]

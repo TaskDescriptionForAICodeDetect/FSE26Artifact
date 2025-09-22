@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 100005\n\ntypedef struct {\n    int vertex;\n    struct Node* next;\n} Node;\n\nNode* graph[MAX_N];\nint coin[MAX_N];\nint parent[MAX_N];\nint depth[MAX_N];\n\nvoid addEdge(int u, int v) {\n    Node* newNode = malloc(sizeof(Node));\n    newNode->vertex = v;\n    newNode->next = graph[u];\n    graph[u] = newNode;\n}\n\nvoid dfs(int u, int par, int d) {\n    parent[u] = par;\n    depth[u] = d;\n    for (Node* node = graph[u]; node; node = node->next) {\n        if (node->vertex != par) {\n            dfs(node->vertex, u, d + 1);\n        }\n    }\n}\n\nint grundy(int u, int par) {\n    int xorSum = 0;\n    for (Node* node = graph[u]; node; node = node->next) {\n        if (node->vertex != par) {\n            xorSum ^= grundy(node->vertex, u);\n        }\n    }\n    return xorSum ? xorSum : 1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    for (int i = 0; i < N - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        addEdge(a, b);\n        addEdge(b, a);\n    }\n\n    dfs(1, 0, 0);\n\n    int nim = grundy(1, 0);\n    printf(\"%s\\n\", nim ? \"Takahashi\" : \"Aoki\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 200000\n\ntypedef struct {\n    int to;\n    int next;\n} Edge;\n\nEdge edges[2 * MAX_N];\nint head[MAX_N + 1];\nint edge_count = 0;\nint n;\nint grundy[MAX_N + 1];\n\nvoid add_edge(int u, int v) {\n    edges[edge_count].to = v;\n    edges[edge_count].next = head[u];\n    head[u] = edge_count++;\n}\n\nvoid dfs(int u, int parent) {\n    grundy[u] = 0;\n    for (int i = head[u]; i != -1; i = edges[i].next) {\n        int v = edges[i].to;\n        if (v == parent) continue;\n        dfs(v, u);\n        grundy[u] ^= (grundy[v] + 1);\n    }\n}\n\nint main() {\n    scanf(\"%d\", &n);\n    memset(head, -1, sizeof(head));\n    for (int i = 0; i < n - 1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        add_edge(a, b);\n        add_edge(b, a);\n    }\n    dfs(1, -1);\n    if (grundy[1] != 0) {\n        printf(\"Alice\\n\");\n    } else {\n        printf(\"Bob\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nvector<vector<int>> adj;\nvector<int> depth;\n\nvoid dfs(int u, int parent) {\n    for (int v : adj[u]) {\n        if (v != parent) {\n            depth[v] = depth[u] + 1;\n            dfs(v, u);\n        }\n    }\n}\n\nint main() {\n    int N;\n    cin >> N;\n    adj.resize(N + 1);\n    depth.resize(N + 1, 0);\n    for (int i = 0; i < N - 1; ++i) {\n        int a, b;\n        cin >> a >> b;\n        adj[a].push_back(b);\n        adj[b].push_back(a);\n    }\n    dfs(1, -1);\n    int max_depth = 0;\n    for (int i = 1; i <= N; ++i) {\n        if (depth[i] > max_depth) {\n            max_depth = depth[i];\n        }\n    }\n    if (max_depth % 3 != 1) {\n        cout << \"First\" << endl;\n    } else {\n        cout << \"Second\" << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    static List<List<Integer>> tree;\n    static int[] depth;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine());\n        tree = new ArrayList<>();\n        for (int i = 0; i <= N; i++) {\n            tree.add(new ArrayList<>());\n        }\n        for (int i = 0; i < N - 1; i++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            tree.get(a).add(b);\n            tree.get(b).add(a);\n        }\n        depth = new int[N + 1];\n        Arrays.fill(depth, -1);\n        depth[1] = 0;\n        Queue<Integer> q = new LinkedList<>();\n        q.add(1);\n        while (!q.isEmpty()) {\n            int u = q.poll();\n            for (int v : tree.get(u)) {\n                if (depth[v] == -1) {\n                    depth[v] = depth[u] + 1;\n                    q.add(v);\n                }\n            }\n        }\n        int maxDepth = 0;\n        for (int i = 1; i <= N; i++) {\n            if (depth[i] > maxDepth) {\n                maxDepth = depth[i];\n            }\n        }\n        if (maxDepth % 3 != 1) {\n            System.out.println(\"First\");\n        } else {\n            System.out.println(\"Second\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:52:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TreeCoinGame {\n    private static List<List<Integer>> graph;\n    private static int[] coins;\n\n    public static void solve(int N, int[] a, int[] b) {\n        graph = new ArrayList<>(N + 1);\n        for (int i = 0; i <= N; i++) {\n            graph.add(new ArrayList<>());\n        }\n        \n        for (int i = 0; i < N - 1; i++) {\n            graph.get(a[i]).add(b[i]);\n            graph.get(b[i]).add(a[i]);\n        }\n        \n        coins = new int[N + 1];\n        Arrays.fill(coins, 1);\n        \n        int result = grundyNumber(1, 0);\n        \n        System.out.println(result != 0 ? \"Takahashi\" : \"Aoki\");\n    }\n    \n    private static int grundyNumber(int vertex, int parent) {\n        int grundy = 0;\n        \n        for (int child : graph.get(vertex)) {\n            if (child != parent) {\n                grundy ^= grundyNumber(child, vertex);\n            }\n        }\n        \n        return grundy;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] a = new int[N - 1];\n        int[] b = new int[N - 1];\n        \n        for (int i = 0; i < N - 1; i++) {\n            a[i] = scanner.nextInt();\n            b[i] = scanner.nextInt();\n        }\n        \n        solve(N, a, b);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:53:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nvector<vector<int>> graph;\nvector<int> coins;\n\nint dfs(int v, int parent) {\n    int nim_sum = 0;\n    for (int child : graph[v]) {\n        if (child != parent) {\n            nim_sum ^= dfs(child, v);\n        }\n    }\n    \n    if (coins[v] > 0) {\n        nim_sum ^= 1;\n    }\n    \n    return nim_sum;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    \n    graph.resize(N + 1);\n    coins.resize(N + 1, 1);\n    \n    for (int i = 1; i < N; i++) {\n        int a, b;\n        cin >> a >> b;\n        graph[a].push_back(b);\n        graph[b].push_back(a);\n    }\n    \n    int result = dfs(1, 0);\n    \n    cout << (result != 0 ? \"Takahashi\" : \"Aoki\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def dfs(node, graph, visited):\n    visited[node] = True\n    moves = 0\n    for neighbor in graph[node]:\n        if not visited[neighbor]:\n            moves += 1 + dfs(neighbor, graph, visited)\n    return moves\n\ndef find_winner(N, edges):\n    graph = [[] for _ in range(N + 1)]\n    for a, b in edges:\n        graph[a].append(b)\n        graph[b].append(a)\n    \n    visited = [False] * (N + 1)\n    total_moves = dfs(1, graph, visited)\n    \n    # Takahashi moves first; if total_moves is even, ends on Aoki's turn, Takahashi loses.\n    return \"Takahashi\" if total_moves % 2 == 1 else \"Aoki\"\n\n# Example usage:\nN = 3\nedges = [(1, 2), (2, 3)]\nprint(find_winner(N, edges))  # Output: Takahashi",
+    "timestamp": "2025-08-13 12:50:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class TreeGame {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n\n        // If there's only one vertex, Takahashi wins by default\n        if (n == 1) {\n            System.out.println(\"Takahashi\");\n            return;\n        }\n\n        ArrayList<Integer>[] tree = new ArrayList[n];\n        for (int i = 0; i < n; i++) {\n            tree[i] = new ArrayList<>();\n        }\n\n        for (int i = 0; i < n - 1; i++) {\n            int a = sc.nextInt() - 1;\n            int b = sc.nextInt() - 1;\n            tree[a].add(b);\n            tree[b].add(a);\n        }\n\n        int[] distance = new int[n];\n        Arrays.fill(distance, -1);\n\n        Queue<Integer> queue = new LinkedList<>();\n        queue.add(0);\n        distance[0] = 0;\n\n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            for (int neighbor : tree[current]) {\n                if (distance[neighbor] == -1) {\n                    distance[neighbor] = distance[current] + 1;\n                    queue.add(neighbor);\n                }\n            }\n        }\n\n        int farthestNode = 0;\n        for (int i = 0; i < n; i++) {\n            if (distance[i] > distance[farthestNode]) {\n                farthestNode = i;\n            }\n        }\n\n        Arrays.fill(distance, -1);\n        queue.add(farthestNode);\n        distance[farthestNode] = 0;\n\n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            for (int neighbor : tree[current]) {\n                if (distance[neighbor] == -1) {\n                    distance[neighbor] = distance[current] + 1;\n                    queue.add(neighbor);\n                }\n            }\n        }\n\n        int diameter = 0;\n        for (int d : distance) {\n            if (d > diameter) {\n                diameter = d;\n            }\n        }\n\n        if (diameter % 2 == 1) {\n            System.out.println(\"Takahashi\");\n        } else {\n            System.out.println(\"Aoki\");\n        }\n    }\n}",
+    "timestamp": "2025-08-13 12:50:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <vector>\n#include <cstring>\n\nusing namespace std;\n\nconst int MAX_N = 100000;\nvector<int> tree[MAX_N];\nint degree[MAX_N];\nbool visited[MAX_N];\n\nbool dfs(int node) {\n    visited[node] = true;\n    bool winning_position = false;\n\n    for (int neighbor : tree[node]) {\n        if (!visited[neighbor]) {\n            winning_position |= !dfs(neighbor); \n        }\n    }\n    \n    return winning_position;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    memset(degree, 0, sizeof(degree));\n    memset(visited, false, sizeof(visited));\n    \n    for (int i = 0; i < N-1; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n        a--; b--;\n        tree[a].push_back(b);\n        tree[b].push_back(a);\n        degree[a]++;\n        degree[b]++;\n    }\n    \n    int start_node = -1;\n    for (int i = 0; i < N; i++) {\n        if (degree[i] == 1) {\n            start_node = i;\n            break;\n        }\n    }\n    \n    if (dfs(start_node)) {\n        printf(\"Takahashi\\n\");\n    } else {\n        printf(\"Aoki\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:50:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvoid dfs(vector<vector<int>>& tree, vector<int>& coins, int node, int parent, vector<int>& grundy) {\n    int g = 0;\n    for (int child : tree[node]) {\n        if (child != parent) {\n            dfs(tree, coins, child, node, grundy);\n            g ^= (grundy[child] + 1);\n        }\n    }\n    grundy[node] = g;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<vector<int>> tree(N);\n    for (int i = 0; i < N - 1; i++) {\n        int a, b;\n        cin >> a >> b;\n        a--; b--;\n        tree[a].push_back(b);\n        tree[b].push_back(a);\n    }\n\n    vector<int> coins(N, 1);  // Each vertex initially contains one coin\n    vector<int> grundy(N, 0);\n    dfs(tree, coins, 0, -1, grundy);\n\n    if (grundy[0] != 0) {\n        cout << \"Takahashi\" << endl;\n    } else {\n        cout << \"Aoki\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:50:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import defaultdict\n\ndef solve_game(N, edges):\n    # Create adjacency list representation of the tree\n    graph = defaultdict(list)\n    for a, b in edges:\n        graph[a].append(b)\n        graph[b].append(a)\n    \n    # Compute distance from each node\n    def dfs(node, parent):\n        depths = [0] * (N + 1)\n        def traverse(curr, depth):\n            depths[curr] = depth\n            for child in graph[curr]:\n                if child != parent:\n                    traverse(child, depth + 1)\n        traverse(node, 0)\n        return depths\n    \n    # Total game state computation\n    total_depth = [0] * (N + 1)\n    for i in range(1, N + 1):\n        total_depth[i] = sum(dfs(i, 0)[1:])\n    \n    # XOR of all node depths determines winner\n    xor_sum = 0\n    for i in range(1, N + 1):\n        xor_sum ^= total_depth[i]\n    \n    return \"Takahashi\" if xor_sum != 0 else \"Aoki\"\n\n# Input parsing\ndef main():\n    N = int(input())\n    edges = []\n    for _ in range(N-1):\n        a, b = map(int, input().split())\n        edges.append((a, b))\n    \n    print(solve_game(N, edges))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 12:50:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef solve():\n    N = int(sys.stdin.readline())\n    adj = [[] for _ in range(N+1)]\n    for _ in range(N-1):\n        a, b = map(int, sys.stdin.readline().split())\n        adj[a].append(b)\n        adj[b].append(a)\n    \n    if N == 1:\n        print(\"First\")\n        return\n    \n    # Find the longest path (diameter) of the tree\n    def bfs(start):\n        dist = [-1] * (N+1)\n        q = deque()\n        dist[start] = 0\n        q.append(start)\n        while q:\n            u = q.popleft()\n            for v in adj[u]:\n                if dist[v] == -1:\n                    dist[v] = dist[u] + 1\n                    q.append(v)\n        far_node = dist.index(max(dist))\n        return far_node, dist[far_node]\n    \n    u, _ = bfs(1)\n    v, diameter = bfs(u)\n    \n    if diameter % 3 == 1:\n        print(\"Second\")\n    else:\n        print(\"First\")\n\nsolve()",
+    "timestamp": "2025-08-13 12:50:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function determineWinner(N, edges) {\n    const adjList = Array.from({ length: N + 1 }, () => []);\n    for (const [a, b] of edges) {\n        adjList[a].push(b);\n        adjList[b].push(a);\n    }\n\n    let degree = new Array(N + 1).fill(0);\n    for (let i = 1; i <= N; i++) {\n        degree[i] = adjList[i].length;\n    }\n\n    let leaves = [];\n    for (let i = 1; i <= N; i++) {\n        if (degree[i] === 1) {\n            leaves.push(i);\n        }\n    }\n\n    let moves = 0;\n    while (leaves.length > 0) {\n        moves += leaves.length;\n        const newLeaves = [];\n\n        for (const leaf of leaves) {\n            degree[leaf]--;\n            for (const neighbor of adjList[leaf]) {\n                degree[neighbor]--;\n                if (degree[neighbor] === 1) {\n                    newLeaves.push(neighbor);\n                }\n            }\n        }\n        \n        leaves = newLeaves;\n    }\n\n    return moves % 2 === 1 ? \"Takahashi\" : \"Aoki\";\n}",
+    "timestamp": "2025-08-13 12:51:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, edges) {\n    const graph = Array.from({ length: N + 1 }, () => []);\n    for (const [a, b] of edges) {\n        graph[a].push(b);\n        graph[b].push(a);\n    }\n\n    function dfs(v, parent) {\n        let grundy = 0;\n        for (const child of graph[v]) {\n            if (child !== parent) {\n                grundy ^= 1 + dfs(child, v);\n            }\n        }\n        return grundy;\n    }\n\n    const rootGrundy = dfs(1, 0);\n    return rootGrundy !== 0 ? 'Takahashi' : 'Aoki';\n}\n\n// Example usage\nfunction main() {\n    const N = 4;\n    const edges = [[1, 2], [1, 3], [1, 4]];\n    console.log(solve(N, edges));\n}\n\nmain();",
+    "timestamp": "2025-08-13 12:51:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n\nfunction solve() {\n    let ptr = 0;\n    const N = parseInt(input[ptr++], 10);\n    const adj = Array.from({ length: N + 1 }, () => []);\n    for (let i = 0; i < N - 1; i++) {\n        const [a, b] = input[ptr++].split(' ').map(Number);\n        adj[a].push(b);\n        adj[b].push(a);\n    }\n\n    const depth = new Array(N + 1).fill(-1);\n    const queue = [];\n    depth[1] = 0;\n    queue.push(1);\n\n    while (queue.length > 0) {\n        const u = queue.shift();\n        for (const v of adj[u]) {\n            if (depth[v] === -1) {\n                depth[v] = depth[u] + 1;\n                queue.push(v);\n            }\n        }\n    }\n\n    let maxDepth = 0;\n    for (let i = 1; i <= N; i++) {\n        if (depth[i] > maxDepth) {\n            maxDepth = depth[i];\n        }\n    }\n\n    if (maxDepth % 3 === 1) {\n        console.log(\"Second\");\n    } else {\n        console.log(\"First\");\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:52:33"
+  }
+]

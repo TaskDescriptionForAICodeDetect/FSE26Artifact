@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "abcabab\nab",
+      "output": "3"
+    },
+    {
+      "input": "aa\naaaaaaa",
+      "output": "-1"
+    },
+    {
+      "input": "aba\nbaaab",
+      "output": "3"
+    }
+  ]
+}

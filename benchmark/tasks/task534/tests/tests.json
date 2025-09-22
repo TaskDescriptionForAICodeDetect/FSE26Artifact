@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "acpc",
+      "output": "5"
+    },
+    {
+      "input": "z",
+      "output": "1"
+    },
+    {
+      "input": "madokamagica",
+      "output": "28"
+    }
+  ]
+}

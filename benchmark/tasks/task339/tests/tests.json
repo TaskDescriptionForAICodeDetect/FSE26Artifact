@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "10 500",
+      "output": "124"
+    },
+    {
+      "input": "16 A",
+      "output": "2"
+    }
+  ]
+}

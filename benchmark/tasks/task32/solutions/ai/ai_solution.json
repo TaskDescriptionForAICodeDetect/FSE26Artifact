@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "a = int(input())\nb = int(input())\nc = int(input())\n\nmax_compote = min(a, b // 2, c // 4)\n\nprint(max_compote * 7 if max_compote > 0 else 0)",
+    "timestamp": "2025-08-05 17:32:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "a = int(input())\nb = int(input())\nc = int(input())\n\nmax_k = min(a, b // 2, c // 4)\nprint(7 * max_k if max_k >= 0 else 0)",
+    "timestamp": "2025-08-05 17:32:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "a = int(input())\nb = int(input())\nc = int(input())\n\nx = min(a, b // 2, c // 4)\nresult = x + 2 * x + 4 * x\nprint(result)",
+    "timestamp": "2025-08-12 21:53:42"
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "ABCFI\nABCABCABC\nAEI\nEFC\nDEHED\nEEEEE\n",
+      "output": "ABCFI\nEFC\nDEHED\n"
+    }
+  ]
+}

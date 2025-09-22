@@ -1,0 +1,1 @@
+The task is to help a person collect as many 500-yen coins as possible during a trip to various souvenir shops, while minimizing the total expenses incurred. The input consists of the number of shops and their respective souvenir prices. The program should output the maximum number of 500-yen coins that can be collected and the corresponding minimum expenses for each dataset.

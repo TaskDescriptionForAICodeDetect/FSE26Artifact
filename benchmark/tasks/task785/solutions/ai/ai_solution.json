@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid generatePermutation(int* p, int* q, int* result, int N) {\n    for (int i = 0; i < N; i++) {\n        result[i] = q[p[i] - 1];\n    }\n}\n\nvoid copyPermutation(int* source, int* dest, int N) {\n    for (int i = 0; i < N; i++) {\n        dest[i] = source[i];\n    }\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    int* p = malloc(N * sizeof(int));\n    int* q = malloc(N * sizeof(int));\n    int* a_n = malloc(N * sizeof(int));\n    int* a_next = malloc(N * sizeof(int));\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &q[i]);\n    }\n\n    copyPermutation(p, a_n, N);\n    copyPermutation(q, a_next, N);\n\n    for (int i = 2; i < K; i++) {\n        int* temp = a_n;\n        a_n = a_next;\n        a_next = temp;\n        generatePermutation(a_n, a_next, a_next, N);\n    }\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", a_next[i]);\n    }\n    printf(\"\\n\");\n\n    free(p);\n    free(q);\n    free(a_n);\n    free(a_next);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid multiply_permutations(int N, int *a, int *b, int *result) {\n    for (int i = 0; i < N; i++) {\n        result[i] = b[a[i] - 1];\n    }\n}\n\nvoid matrix_pow(int N, int *a, int *b, int K, int *result) {\n    if (K == 1) {\n        for (int i = 0; i < N; i++) {\n            result[i] = a[i];\n        }\n        return;\n    }\n    if (K == 2) {\n        for (int i = 0; i < N; i++) {\n            result[i] = b[i];\n        }\n        return;\n    }\n\n    int *temp1 = (int *)malloc(N * sizeof(int));\n    int *temp2 = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        temp1[i] = a[i];\n        temp2[i] = b[i];\n    }\n\n    for (int k = 3; k <= K; k++) {\n        int *next = (int *)malloc(N * sizeof(int));\n        multiply_permutations(N, temp1, temp2, next);\n        free(temp1);\n        temp1 = temp2;\n        temp2 = next;\n    }\n\n    for (int i = 0; i < N; i++) {\n        result[i] = temp2[i];\n    }\n    free(temp1);\n    free(temp2);\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    int *p = (int *)malloc(N * sizeof(int));\n    int *q = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &q[i]);\n    }\n\n    int *result = (int *)malloc(N * sizeof(int));\n    matrix_pow(N, p, q, K, result);\n\n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", result[i]);\n    }\n    printf(\"\\n\");\n\n    free(p);\n    free(q);\n    free(result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:54:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvector<int> f(const vector<int>& p, const vector<int>& q) {\n    int n = p.size();\n    vector<int> res(n);\n    for (int i = 0; i < n; ++i) {\n        res[p[i] - 1] = q[i];\n    }\n    return res;\n}\n\nvector<int> findPermutation(int N, const vector<int>& p, const vector<int>& q, int K) {\n    vector<int> a = p, b = q;\n    if (K == 1) return a;\n    if (K == 2) return b;\n    K -= 2;\n    while (K > 0) {\n        vector<int> c = f(a, b);\n        a = b;\n        b = c;\n        --K;\n    }\n    return b;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> p(N), q(N);\n    for (int i = 0; i < N; ++i) cin >> p[i];\n    for (int i = 0; i < N; ++i) cin >> q[i];\n    vector<int> res = findPermutation(N, p, q, K);\n    for (int num : res) cout << num << \" \";\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:54:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class PermutationSequence {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] p = new int[N];\n        int[] q = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            q[i] = scanner.nextInt();\n        }\n        \n        int[] result = findKthPermutation(N, K, p, q);\n        for (int num : result) {\n            System.out.print(num + \" \");\n        }\n    }\n    \n    private static int[] findKthPermutation(int N, int K, int[] p, int[] q) {\n        if (K == 1) {\n            return p.clone();\n        }\n        if (K == 2) {\n            return q.clone();\n        }\n        \n        int[][] sequence = new int[6][N];\n        sequence[1] = p.clone();\n        sequence[2] = q.clone();\n        \n        for (int i = 3; i <= 5; i++) {\n            sequence[i] = compose(sequence[i - 2], sequence[i - 1]);\n        }\n        \n        if (K <= 5) {\n            return sequence[K].clone();\n        }\n        \n        int cycleLength = findCycleLength(sequence);\n        int effectiveK = (K - 1) % cycleLength + 1;\n        \n        if (effectiveK == 1) {\n            return sequence[1].clone();\n        } else if (effectiveK == 2) {\n            return sequence[2].clone();\n        } else {\n            int[] a = sequence[1].clone();\n            int[] b = sequence[2].clone();\n            int[] c = new int[N];\n            \n            for (int i = 3; i <= effectiveK; i++) {\n                c = compose(a, b);\n                a = b.clone();\n                b = c.clone();\n            }\n            return b.clone();\n        }\n    }\n    \n    private static int[] compose(int[] a, int[] b) {\n        int[] result = new int[a.length];\n        for (int i = 0; i < a.length; i++) {\n            result[i] = b[a[i] - 1];\n        }\n        return result;\n    }\n    \n    private static int findCycleLength(int[][] sequence) {\n        for (int cycle = 1; cycle <= 5; cycle++) {\n            boolean isCycle = true;\n            for (int i = 1; i <= 5 - cycle; i++) {\n                if (!arraysEqual(sequence[i], sequence[i + cycle])) {\n                    isCycle = false;\n                    break;\n                }\n            }\n            if (isCycle) {\n                return cycle;\n            }\n        }\n        return 0;\n    }\n    \n    private static boolean arraysEqual(int[] a, int[] b) {\n        for (int i = 0; i < a.length; i++) {\n            if (a[i] != b[i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 22:55:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PermutationSequence {\n    public static int[] findKthPermutation(int[] p, int[] q, int K) {\n        if (K <= 2) {\n            return K == 1 ? p : q;\n        }\n        \n        int N = p.length;\n        int[] prev1 = p;\n        int[] prev2 = q;\n        \n        for (int n = 2; n < K; n++) {\n            int[] next = new int[N];\n            for (int i = 0; i < N; i++) {\n                next[i] = prev2[prev1[i] - 1];\n            }\n            prev1 = prev2;\n            prev2 = next;\n        }\n        \n        return prev2;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        \n        int[] p = new int[N];\n        int[] q = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            q[i] = scanner.nextInt();\n        }\n        \n        int[] result = findKthPermutation(p, q, K);\n        \n        for (int val : result) {\n            System.out.print(val + \" \");\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:56:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvector<int> computeNextPermutation(const vector<int>& p, const vector<int>& q) {\n    int N = p.size();\n    vector<int> result(N);\n    for (int i = 0; i < N; i++) {\n        result[p[i] - 1] = q[i];\n    }\n    return result;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> p(N), q(N);\n    \n    for (int i = 0; i < N; i++) {\n        cin >> p[i];\n    }\n    \n    for (int i = 0; i < N; i++) {\n        cin >> q[i];\n    }\n    \n    if (K == 1) {\n        for (int x : p) {\n            cout << x << \" \";\n        }\n        cout << endl;\n        return 0;\n    }\n    \n    if (K == 2) {\n        for (int x : q) {\n            cout << x << \" \";\n        }\n        cout << endl;\n        return 0;\n    }\n    \n    vector<int> current_p = p;\n    vector<int> current_q = q;\n    \n    for (int i = 3; i <= K; i++) {\n        vector<int> next_p = computeNextPermutation(current_p, current_q);\n        current_p = current_q;\n        current_q = next_p;\n    }\n    \n    for (int x : current_q) {\n        cout << x << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_permutation_k(p, q, K):\n    def f(a, b):\n        return [b[a[i] - 1] for i in range(len(a))]\n\n    a_n = p\n    a_n_plus_1 = q\n    if K == 1:\n        return a_n\n    elif K == 2:\n        return a_n_plus_1\n\n    for _ in range(K - 2):\n        a_n_plus_2 = f(a_n, a_n_plus_1)\n        a_n = a_n_plus_1\n        a_n_plus_1 = a_n_plus_2\n\n    return a_n_plus_1\n\n# Example usage:\n# p = [1, 3, 2, 4]\n# q = [4, 1, 3, 2]\n# K = 3\n# print(find_permutation_k(p, q, K))",
+    "timestamp": "2025-08-13 12:56:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class PermutationSequence {\n\n    public static int[] findKthPermutation(int[] p, int[] q, int K) {\n        int N = p.length;\n\n        if (K == 1) return p;\n        if (K == 2) return q;\n\n        int[] a_n_minus_2 = p;\n        int[] a_n_minus_1 = q;\n        int[] a_n = new int[N];\n\n        for (int count = 3; count <= K; count++) {\n            for (int i = 0; i < N; i++) {\n                a_n[p[i] - 1] = a_n_minus_1[i];\n            }\n            a_n_minus_2 = a_n_minus_1;\n            a_n_minus_1 = a_n.clone();\n        }\n        \n        return a_n;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] p = new int[N];\n        int[] q = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            p[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            q[i] = scanner.nextInt();\n        }\n        \n        int K = scanner.nextInt();\n        \n        int[] result = findKthPermutation(p, q, K);\n        \n        for (int num : result) {\n            System.out.print(num + \" \");\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 12:56:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid applyPermutation(int *result, int *p, int *q, int N) {\n    for (int i = 0; i < N; i++) {\n        result[p[i] - 1] = q[i];\n    }\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int *p = (int *)malloc(N * sizeof(int));\n    int *q = (int *)malloc(N * sizeof(int));\n    int *current = (int *)malloc(N * sizeof(int));\n    int *next = (int *)malloc(N * sizeof(int));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &q[i]);\n    }\n    \n    if (K == 1) {\n        for (int i = 0; i < N; i++) {\n            printf(\"%d \", p[i]);\n        }\n    } else if (K == 2) {\n        for (int i = 0; i < N; i++) {\n            printf(\"%d \", q[i]);\n        }\n    } else {\n        for (int i = 0; i < N; i++) {\n            current[i] = p[i];\n            next[i] = q[i];\n        }\n        \n        for (int i = 3; i <= K; i++) {\n            int *tmp = (int *)malloc(N * sizeof(int));\n            applyPermutation(tmp, current, next, N);\n            \n            for (int j = 0; j < N; j++) {\n                current[j] = next[j];\n                next[j] = tmp[j];\n            }\n            \n            free(tmp);\n        }\n        \n        for (int i = 0; i < N; i++) {\n            printf(\"%d \", next[i]);\n        }\n    }\n    \n    printf(\"\\n\");\n    \n    free(p);\n    free(q);\n    free(current);\n    free(next);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:56:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\n// Function to generate the permutation f(p, q)\nvector<int> f(const vector<int>& p, const vector<int>& q) {\n    int N = p.size();\n    vector<int> result(N);\n    for(int i = 0; i < N; ++i) {\n        result[p[i] - 1] = q[i];\n    }\n    return result;\n}\n\n// Function to find the K-th permutation a_K\nvector<int> findPermutation(const vector<int>& p, const vector<int>& q, int K) {\n    if (K == 1) return p;\n    if (K == 2) return q;\n\n    vector<int> a_prev = p;\n    vector<int> a_curr = q;\n    for (int i = 3; i <= K; ++i) {\n        vector<int> a_next = f(a_prev, a_curr);\n        a_prev = a_curr;\n        a_curr = a_next;\n    }\n    return a_curr;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> p(N), q(N);\n    for (int i = 0; i < N; ++i) cin >> p[i];\n    for (int i = 0; i < N; ++i) cin >> q[i];\n\n    vector<int> result = findPermutation(p, q, K);\n    for (int i = 0; i < N; ++i) {\n        cout << result[i] << (i < N - 1 ? \" \" : \"\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:57:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def generate_permutation(p, q, K):\n    N = len(p)\n    a = [p, q]\n    \n    if K <= 2:\n        return a[K-1]\n    \n    for _ in range(K-2):\n        next_perm = [0] * N\n        for i in range(N):\n            next_perm[p[i]-1] = q[i]\n        a.append(next_perm)\n        p, q = q, next_perm\n    \n    return a[-1]\n\n# Example usage\nN = int(input())\np = list(map(int, input().split()))\nq = list(map(int, input().split()))\nK = int(input())\n\nresult = generate_permutation(p, q, K)\nprint(*result)",
+    "timestamp": "2025-08-13 12:57:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, K = map(int, sys.stdin.readline().split())\n    p = list(map(int, sys.stdin.readline().split()))\n    q = list(map(int, sys.stdin.readline().split()))\n    \n    # Convert to 0-based index for easier manipulation\n    p = [x - 1 for x in p]\n    q = [x - 1 for x in q]\n    \n    # Precompute the mapping: f(p, q)[i] = q[p^{-1}[i]]\n    # So, f(p, q) is q composed with p^{-1}\n    # We need to find p^{-1}, the inverse permutation of p\n    p_inv = [0] * N\n    for i in range(N):\n        p_inv[p[i]] = i\n    \n    # f(p, q) is q composed with p_inv: f_pq[i] = q[p_inv[i]]\n    f_pq = [0] * N\n    for i in range(N):\n        f_pq[i] = q[p_inv[i]]\n    \n    # Now, the sequence is a1 = p, a2 = q, a3 = f_pq, a4 = f(q, f_pq), etc.\n    # We can model this as a linear recurrence and find the K-th term\n    \n    # The sequence can be periodic, so find the cycle\n    visited = {}\n    sequence = []\n    current = p.copy()\n    for step in range(K):\n        key = tuple(current)\n        if key in visited:\n            loop_start = visited[key]\n            loop_length = step - loop_start\n            remaining = (K - loop_start) % loop_length\n            current = sequence[loop_start + remaining]\n            break\n        visited[key] = step\n        sequence.append(current.copy())\n        # Compute next term: a_{n+2} = f(a_n, a_{n+1})\n        # So for step 'step', current is a_{step+1}\n        if step + 2 > K:\n            break\n        if step == 0:\n            next_term = q.copy()\n        elif step == 1:\n            next_term = f_pq.copy()\n        else:\n            # For n >= 2, a_{n+2} = f(a_n, a_{n+1})\n            # a_n is sequence[step-1], a_{n+1} is current\n            a_n = sequence[step-1]\n            a_n_inv = [0] * N\n            for i in range(N):\n                a_n_inv[a_n[i]] = i\n            next_term = [0] * N\n            for i in range(N):\n                next_term[i] = current[a_n_inv[i]]\n        # Update sequence and current\n        sequence.append(next_term.copy())\n        current = next_term.copy()\n    else:\n        current = sequence[K-1]\n    \n    # Convert back to 1-based index\n    result = [x + 1 for x in current]\n    print(' '.join(map(str, result)))\n\nsolve()",
+    "timestamp": "2025-08-13 12:57:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findPermutation(p, q, K) {\n    const f = (p, q) => {\n        const n = p.length;\n        const result = new Array(n);\n        for (let i = 0; i < n; i++) {\n            result[p[i] - 1] = q[i];\n        }\n        return result;\n    };\n\n    let a_n = p;\n    let a_n1 = q;\n\n    for (let i = 3; i <= K; i++) {\n        [a_n, a_n1] = [a_n1, f(a_n, a_n1)];\n    }\n\n    return K === 1 ? a_n : a_n1;\n}\n\n// Example usage:\nconst p = [1, 2, 3, 4];\nconst q = [2, 1, 4, 3];\nconst K = 3;\nconsole.log(findPermutation(p, q, K)); // Output the permutation a_K",
+    "timestamp": "2025-08-13 12:57:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findPermutation(p, q, K) {\n    if (K === 1) return p;\n    if (K === 2) return q;\n    \n    let a_n = p;\n    let a_n_plus_1 = q;\n    \n    for (let n = 3; n <= K; n++) {\n        let a_n_plus_2 = new Array(p.length);\n        \n        for (let i = 0; i < p.length; i++) {\n            a_n_plus_2[a_n[i] - 1] = a_n_plus_1[i];\n        }\n        \n        a_n = a_n_plus_1;\n        a_n_plus_1 = a_n_plus_2;\n    }\n    \n    return a_n_plus_1;\n}",
+    "timestamp": "2025-08-13 12:57:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findPermutation(N, p, q, K) {\n    let current = [...p];\n    let next = [...q];\n    \n    if (K === 1) return current;\n    if (K === 2) return next;\n    \n    const seen = new Map();\n    const sequence = [];\n    \n    for (let i = 0; i < K; i++) {\n        const key = current.join(',');\n        if (seen.has(key)) {\n            const loopStart = seen.get(key);\n            const loopLength = i - loopStart;\n            const remaining = (K - loopStart) % loopLength;\n            return sequence[loopStart + remaining - 1];\n        }\n        seen.set(key, i);\n        sequence.push([...current]);\n        \n        const newPerm = new Array(N);\n        for (let j = 0; j < N; j++) {\n            newPerm[current[j] - 1] = next[j];\n        }\n        \n        current = next;\n        next = newPerm;\n    }\n    \n    return current;\n}",
+    "timestamp": "2025-08-13 12:58:02"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool check_pattern(int H, int W, int R, int C, int grid[H][W], int pattern[R][C], int start_i, int start_j) {\n    for (int i = 0; i < R; i++) {\n        for (int j = 0; j < C; j++) {\n            if (grid[start_i + i][start_j + j] != pattern[i][j]) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nvoid find_pattern(int H, int W, int R, int C, int grid[H][W], int pattern[R][C]) {\n    for (int i = 0; i <= H - R; i++) {\n        for (int j = 0; j <= W - C; j++) {\n            if (check_pattern(H, W, R, C, grid, pattern, i, j)) {\n                printf(\"Pattern found at (%d, %d)\\n\", i, j);\n            }\n        }\n    }\n}\n\nint main() {\n    int H, W, R, C;\n    scanf(\"%d %d %d %d\", &H, &W, &R, &C);\n    \n    int grid[H][W];\n    int pattern[R][C];\n    \n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n    \n    for (int i = 0; i < R; i++) {\n        for (int j = 0; j < C; j++) {\n            scanf(\"%d\", &pattern[i][j]);\n        }\n    }\n    \n    find_pattern(H, W, R, C, grid, pattern);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nvoid findPattern(int H, int W, char region[H][W], int R, int C, char pattern[R][C]) {\n    for (int i = 0; i <= H - R; i++) {\n        for (int j = 0; j <= W - C; j++) {\n            int match = 1;\n            for (int k = 0; k < R; k++) {\n                for (int l = 0; l < C; l++) {\n                    if (region[i + k][j + l] != pattern[k][l]) {\n                        match = 0;\n                        break;\n                    }\n                }\n                if (!match) break;\n            }\n            if (match) {\n                printf(\"%d %d\\n\", i, j);\n            }\n        }\n    }\n}\n\nint main() {\n    int H, W, R, C;\n    scanf(\"%d %d\", &H, &W);\n    char region[H][W];\n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", region[i]);\n    }\n    scanf(\"%d %d\", &R, &C);\n    char pattern[R][C];\n    for (int i = 0; i < R; i++) {\n        scanf(\"%s\", pattern[i]);\n    }\n    findPattern(H, W, region, R, C, pattern);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nvoid solve() {\n    int H, W;\n    cin >> H >> W;\n    vector<string> region(H);\n    for (int i = 0; i < H; ++i) {\n        cin >> region[i];\n    }\n\n    int R, C;\n    cin >> R >> C;\n    vector<string> pattern(R);\n    for (int i = 0; i < R; ++i) {\n        cin >> pattern[i];\n    }\n\n    for (int i = 0; i <= H - R; ++i) {\n        for (int j = 0; j <= W - C; ++j) {\n            bool match = true;\n            for (int k = 0; k < R; ++k) {\n                for (int l = 0; l < C; ++l) {\n                    if (region[i + k][j + l] != pattern[k][l]) {\n                        match = false;\n                        break;\n                    }\n                }\n                if (!match) break;\n            }\n            if (match) {\n                cout << i << \" \" << j << endl;\n            }\n        }\n    }\n}\n\nint main() {\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:10:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class PatternSearch {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        char[][] region = new char[H][W];\n        for (int i = 0; i < H; i++) {\n            region[i] = scanner.next().toCharArray();\n        }\n        \n        int R = scanner.nextInt();\n        int C = scanner.nextInt();\n        char[][] pattern = new char[R][C];\n        for (int i = 0; i < R; i++) {\n            pattern[i] = scanner.next().toCharArray();\n        }\n        \n        for (int i = 0; i <= H - R; i++) {\n            for (int j = 0; j <= W - C; j++) {\n                boolean match = true;\n                for (int k = 0; k < R; k++) {\n                    for (int l = 0; l < C; l++) {\n                        if (region[i + k][j + l] != pattern[k][l]) {\n                            match = false;\n                            break;\n                        }\n                    }\n                    if (!match) break;\n                }\n                if (match) {\n                    System.out.println(i + \" \" + j);\n                }\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:10:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PatternFinder {\n    public static void findPattern(int[][] region, int[][] pattern) {\n        int H = region.length;\n        int W = region[0].length;\n        int R = pattern.length;\n        int C = pattern[0].length;\n        \n        for (int i = 0; i <= H - R; i++) {\n            for (int j = 0; j <= W - C; j++) {\n                if (matchPattern(region, pattern, i, j)) {\n                    System.out.println(\"Pattern found at (\" + i + \", \" + j + \")\");\n                }\n            }\n        }\n    }\n    \n    private static boolean matchPattern(int[][] region, int[][] pattern, int startRow, int startCol) {\n        for (int r = 0; r < pattern.length; r++) {\n            for (int c = 0; c < pattern[0].length; c++) {\n                if (region[startRow + r][startCol + c] != pattern[r][c]) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }\n    \n    public static void main(String[] args) {\n        int[][] region = {\n            {1, 2, 3, 4},\n            {5, 6, 7, 8},\n            {9, 10, 11, 12}\n        };\n        \n        int[][] pattern = {\n            {6, 7},\n            {10, 11}\n        };\n        \n        findPattern(region, pattern);\n    }\n}",
+    "timestamp": "2025-08-05 22:11:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nbool matchPattern(const vector<vector<int>>& grid, const vector<vector<int>>& pattern, int row, int col) {\n    int R = pattern.size();\n    int C = pattern[0].size();\n    \n    for (int i = 0; i < R; i++) {\n        for (int j = 0; j < C; j++) {\n            if (grid[row + i][col + j] != pattern[i][j]) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nvoid findPatternLocations(const vector<vector<int>>& grid, const vector<vector<int>>& pattern) {\n    int H = grid.size();\n    int W = grid[0].size();\n    int R = pattern.size();\n    int C = pattern[0].size();\n    \n    for (int i = 0; i <= H - R; i++) {\n        for (int j = 0; j <= W - C; j++) {\n            if (matchPattern(grid, pattern, i, j)) {\n                cout << \"Pattern found at (\" << i << \", \" << j << \")\" << endl;\n            }\n        }\n    }\n}\n\nint main() {\n    int H, W, R, C;\n    cin >> H >> W >> R >> C;\n    \n    vector<vector<int>> grid(H, vector<int>(W));\n    vector<vector<int>> pattern(R, vector<int>(C));\n    \n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    for (int i = 0; i < R; i++) {\n        for (int j = 0; j < C; j++) {\n            cin >> pattern[i][j];\n        }\n    }\n    \n    findPatternLocations(grid, pattern);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:11:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_pattern_in_region(region, pattern):\n    H, W = len(region), len(region[0])\n    R, C = len(pattern), len(pattern[0])\n    matches = []\n\n    for i in range(H - R + 1):\n        for j in range(W - C + 1):\n            match = True\n            for x in range(R):\n                for y in range(C):\n                    if region[i + x][j + y] != pattern[x][y]:\n                        match = False\n                        break\n                if not match:\n                    break\n            if match:\n                matches.append((i, j))\n\n    for match in matches:\n        print(match)\n\n# Example usage:\nregion = [\n    [1, 2, 3, 4],\n    [5, 1, 2, 3],\n    [9, 5, 1, 2],\n    [8, 9, 5, 1]\n]\n\npattern = [\n    [1, 2],\n    [5, 1]\n]\n\nfind_pattern_in_region(region, pattern)",
+    "timestamp": "2025-08-13 09:21:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class PatternFinder {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // Input: dimensions of the region\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        char[][] region = new char[H][W];\n        \n        // Input: the region\n        for (int i = 0; i < H; i++) {\n            String line = scanner.next();\n            region[i] = line.toCharArray();\n        }\n        \n        // Input: dimensions of the pattern\n        int R = scanner.nextInt();\n        int C = scanner.nextInt();\n        char[][] pattern = new char[R][C];\n        \n        // Input: the pattern\n        for (int i = 0; i < R; i++) {\n            String line = scanner.next();\n            pattern[i] = line.toCharArray();\n        }\n        \n        scanner.close();\n        \n        List<int[]> results = new ArrayList<>();\n        \n        // Search for the pattern in the region\n        for (int i = 0; i <= H - R; i++) {\n            for (int j = 0; j <= W - C; j++) {\n                if (matchesPattern(i, j, region, pattern, R, C)) {\n                    results.add(new int[]{i, j});\n                }\n            }\n        }\n        \n        // Print results\n        for (int[] coordinate : results) {\n            System.out.println(coordinate[0] + \" \" + coordinate[1]);\n        }\n    }\n    \n    private static boolean matchesPattern(int row, int col, char[][] region, char[][] pattern, int R, int C) {\n        for (int i = 0; i < R; i++) {\n            for (int j = 0; j < C; j++) {\n                if (region[row + i][col + j] != pattern[i][j]) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-13 09:21:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_H 1000\n#define MAX_W 1000\n#define MAX_R 100\n#define MAX_C 100\n\nbool matchPattern(char region[MAX_H][MAX_W], char pattern[MAX_R][MAX_C], int startRow, int startCol, int R, int C) {\n    for (int i = 0; i < R; ++i) {\n        for (int j = 0; j < C; ++j) {\n            if (region[startRow + i][startCol + j] != pattern[i][j]) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nvoid findPattern(char region[MAX_H][MAX_W], char pattern[MAX_R][MAX_C], int H, int W, int R, int C) {\n    for (int i = 0; i <= H - R; ++i) {\n        for (int j = 0; j <= W - C; ++j) {\n            if (matchPattern(region, pattern, i, j, R, C)) {\n                printf(\"Pattern found at (%d, %d)\\n\", i, j);\n            }\n        }\n    }\n}\n\nint main() {\n    int H, W, R, C;\n    char region[MAX_H][MAX_W];\n    char pattern[MAX_R][MAX_C];\n\n    // Example for initialization\n    // Replace with actual input method as needed\n    H = 5; W = 5;\n    R = 2; C = 2;\n    \n    char exampleRegion[MAX_H][MAX_W] = {\n        {'A', 'B', 'C', 'D', 'E'},\n        {'F', 'G', 'H', 'I', 'J'},\n        {'K', 'L', 'M', 'N', 'O'},\n        {'P', 'Q', 'R', 'S', 'T'},\n        {'U', 'V', 'W', 'X', 'Y'}\n    };\n    char examplePattern[MAX_R][MAX_C] = {\n        {'G', 'H'},\n        {'L', 'M'}\n    };\n\n    // Copy example values for demonstration purposes\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            region[i][j] = exampleRegion[i][j];\n        }\n    }\n    for (int i = 0; i < R; ++i) {\n        for (int j = 0; j < C; ++j) {\n            pattern[i][j] = examplePattern[i][j];\n        }\n    }\n\n    findPattern(region, pattern, H, W, R, C);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:21:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_pattern(region, pattern):\n    H, W = len(region), len(region[0])\n    R, C = len(pattern), len(pattern[0])\n    \n    matches = []\n    \n    for i in range(H - R + 1):\n        for j in range(W - C + 1):\n            match = True\n            \n            for r in range(R):\n                for c in range(C):\n                    if region[i+r][j+c] != pattern[r][c]:\n                        match = False\n                        break\n                if not match:\n                    break\n            \n            if match:\n                matches.append((i, j))\n    \n    return matches\n\n# Example usage\nregion = [\n    [1, 2, 3, 4, 5],\n    [6, 7, 8, 9, 10],\n    [11, 12, 13, 14, 15],\n    [16, 17, 18, 19, 20]\n]\n\npattern = [\n    [7, 8],\n    [12, 13]\n]\n\nresult = find_pattern(region, pattern)\nfor match in result:\n    print(match)",
+    "timestamp": "2025-08-13 09:21:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_pattern(region, pattern):\n    H = len(region)\n    W = len(region[0]) if H > 0 else 0\n    R = len(pattern)\n    C = len(pattern[0]) if R > 0 else 0\n    \n    result = []\n    \n    for i in range(H - R + 1):\n        for j in range(W - C + 1):\n            match = True\n            for x in range(R):\n                for y in range(C):\n                    if region[i + x][j + y] != pattern[x][y]:\n                        match = False\n                        break\n                if not match:\n                    break\n            if match:\n                result.append((i, j))\n    \n    return result\n\n# Example usage:\n# region = [\n#     [1, 2, 3, 4],\n#     [5, 6, 7, 8],\n#     [9, 10, 11, 12]\n# ]\n# pattern = [\n#     [6, 7],\n#     [10, 11]\n# ]\n# print(find_pattern(region, pattern))  # Output: [(1, 1)]",
+    "timestamp": "2025-08-13 09:22:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nbool patternMatchesAt(const std::vector<std::string>& region, const std::vector<std::string>& pattern, int x, int y, int R, int C) {\n    for (int i = 0; i < R; ++i) {\n        for (int j = 0; j < C; ++j) {\n            if (region[x + i][y + j] != pattern[i][j]) {\n                return false;\n            }\n        }\n    }\n    return true;\n}\n\nstd::vector<std::pair<int, int>> findPatternInRegion(const std::vector<std::string>& region, const std::vector<std::string>& pattern, int H, int W, int R, int C) {\n    std::vector<std::pair<int, int>> coordinates;\n\n    for (int i = 0; i <= H - R; ++i) {\n        for (int j = 0; j <= W - C; ++j) {\n            if (patternMatchesAt(region, pattern, i, j, R, C)) {\n                coordinates.emplace_back(i, j);\n            }\n        }\n    }\n    return coordinates;\n}\n\nint main() {\n    // Example input - Region and Pattern\n    std::vector<std::string> region = {\n        \"123456\",\n        \"456789\",\n        \"123456\",\n        \"456789\",\n        \"987654\",\n        \"123456\"\n    };\n\n    std::vector<std::string> pattern = {\n        \"23\",\n        \"56\"\n    };\n\n    int H = region.size();\n    int W = region[0].size();\n    int R = pattern.size();\n    int C = pattern[0].size();\n\n    std::vector<std::pair<int, int>> result = findPatternInRegion(region, pattern, H, W, R, C);\n\n    for (auto& coord : result) {\n        std::cout << \"Pattern found at: (\" << coord.first << \", \" << coord.second << \")\\n\";\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:50:50"
+  }
+]

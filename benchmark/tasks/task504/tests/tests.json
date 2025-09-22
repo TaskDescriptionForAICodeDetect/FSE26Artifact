@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "b1/1b\n1 1 1 2\n#",
+      "output": "1b/1b"
+    },
+    {
+      "input": "b5/bbbbbb\n2 4 1 4\n#",
+      "output": "b2b2/bbb1bb"
+    },
+    {
+      "input": "b2b2b/7\n1 4 2 4\n#",
+      "output": "b5b/3b3"
+    }
+  ]
+}

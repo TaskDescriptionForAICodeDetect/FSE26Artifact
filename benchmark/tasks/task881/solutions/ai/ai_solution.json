@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MOD 998244353\n#define MAX_N 100000\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n    \n    int A[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    bool possible[X + 1];\n    memset(possible, false, sizeof(possible));\n    \n    for (int i = 0; i < N; i++) {\n        possible[A[i]] = true;\n    }\n    \n    for (int i = 0; i <= X; i++) {\n        if (!possible[i]) continue;\n        \n        // Operation 1: Multiply by 2\n        if (2 * i <= X) {\n            possible[2 * i] = true;\n        }\n        \n        // Operation 2: XOR\n        for (int j = 0; j <= X; j++) {\n            if (possible[j]) {\n                int xor_result = i ^ j;\n                if (xor_result <= X) {\n                    possible[xor_result] = true;\n                }\n            }\n        }\n    }\n    \n    int count = 0;\n    for (int i = 0; i <= X; i++) {\n        if (possible[i]) {\n            count++;\n        }\n    }\n    \n    printf(\"%d\\n\", count % MOD);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_BITS 60\n\ntypedef long long ll;\n\ntypedef struct {\n    ll *vec;\n    int size;\n} Vector;\n\nVector basis[MAX_BITS + 1];\n\nvoid init_basis() {\n    for (int i = 0; i <= MAX_BITS; i++) {\n        basis[i].vec = NULL;\n        basis[i].size = 0;\n    }\n}\n\nvoid add_vector(ll x) {\n    for (int i = MAX_BITS; i >= 0; i--) {\n        if (!(x & (1LL << i))) continue;\n        if (basis[i].size == 0) {\n            basis[i].vec = (ll *)malloc(sizeof(ll));\n            basis[i].vec[0] = x;\n            basis[i].size = 1;\n            break;\n        } else {\n            x ^= basis[i].vec[0];\n        }\n    }\n}\n\nll count_numbers(ll X) {\n    ll res = 0;\n    ll current = 0;\n    for (int i = MAX_BITS; i >= 0; i--) {\n        if (basis[i].size == 0) continue;\n        ll tmp = current ^ basis[i].vec[0];\n        if (tmp <= X) {\n            res = (res + (1LL << (basis[i].size - 1))) % MOD;\n            current = tmp;\n        }\n    }\n    if (current <= X) {\n        res = (res + 1) % MOD;\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    ll X;\n    scanf(\"%d %lld\", &N, &X);\n    ll *A = (ll *)malloc(N * sizeof(ll));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i]);\n    }\n\n    init_basis();\n    for (int i = 0; i < N; i++) {\n        add_vector(A[i]);\n    }\n\n    ll result = count_numbers(X);\n    printf(\"%lld\\n\", result);\n\n    for (int i = 0; i <= MAX_BITS; i++) {\n        if (basis[i].vec != NULL) {\n            free(basis[i].vec);\n        }\n    }\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst int MOD = 998244353;\n\nint solve() {\n    int N;\n    ll X;\n    cin >> N >> X;\n    vector<ll> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    sort(A.begin(), A.end());\n\n    ll res = 0;\n    ll max_val = 0;\n    for (int i = 0; i < N; ++i) {\n        if (A[i] > X) continue;\n        if (A[i] > max_val + 1) break;\n        max_val |= A[i];\n    }\n    max_val = min(max_val, X);\n\n    vector<ll> basis(60, 0);\n    for (int i = 0; i < N; ++i) {\n        ll x = A[i];\n        for (int j = 59; j >= 0; --j) {\n            if ((x >> j) & 1) {\n                if (!basis[j]) {\n                    basis[j] = x;\n                    break;\n                }\n                x ^= basis[j];\n            }\n        }\n    }\n\n    int rank = 0;\n    for (int j = 0; j < 60; ++j) {\n        if (basis[j]) ++rank;\n    }\n\n    ll total = 1LL << rank;\n    total %= MOD;\n\n    if (max_val == X) {\n        res = (X % MOD) * total % MOD;\n        res = (res + 1) % MOD;\n    } else {\n        res = (max_val % MOD + 1) % MOD;\n        res = res * total % MOD;\n    }\n\n    cout << res << endl;\n    return 0;\n}\n\nint main() {\n    ios::sync_with_stdio(false);\n    cin.tie(nullptr);\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.math.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        long X = sc.nextLong();\n        long[] A = new long[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextLong();\n        }\n        Arrays.sort(A);\n\n        long res = 0;\n        long max = 0;\n        for (int i = 0; i < N; i++) {\n            if (A[i] > X) continue;\n            if (A[i] <= max) continue;\n            long newMax = max;\n            long current = A[i];\n            while (current > 0) {\n                if (current <= X) {\n                    newMax = Math.max(newMax, current);\n                }\n                current /= 2;\n            }\n            if (newMax > max) {\n                res = (res + newMax - max) % MOD;\n                max = newMax;\n            }\n        }\n\n        System.out.println(res);\n    }\n}",
+    "timestamp": "2025-08-05 23:14:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Solution {\n    private static final int MOD = 998244353;\n\n    public int countReachableIntegers(int[] A, int X) {\n        Set<Integer> reachable = new HashSet<>();\n        for (int num : A) {\n            reachable.add(num);\n        }\n\n        Queue<Integer> queue = new LinkedList<>(reachable);\n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n\n            // Operation 1: Double the number\n            int doubledNum = current * 2;\n            if (doubledNum <= X && !reachable.contains(doubledNum)) {\n                reachable.add(doubledNum);\n                queue.offer(doubledNum);\n            }\n\n            // Operation 2: XOR with existing numbers\n            for (int num : reachable) {\n                int xorNum = current ^ num;\n                if (xorNum <= X && !reachable.contains(xorNum)) {\n                    reachable.add(xorNum);\n                    queue.offer(xorNum);\n                }\n            }\n        }\n\n        return reachable.size() % MOD;\n    }\n}",
+    "timestamp": "2025-08-05 23:14:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countIntegers(vector<int>& A, int X) {\n        set<int> S;\n        for (int x : A) S.insert(x);\n        \n        bool changed = true;\n        while (changed) {\n            changed = false;\n            vector<int> toAdd;\n            \n            for (int x : S) {\n                // Operation 1: Double x\n                if (x * 2 <= X && S.count(x * 2) == 0) {\n                    toAdd.push_back(x * 2);\n                    changed = true;\n                }\n                \n                // Operation 2: XOR operations\n                for (int y : S) {\n                    int xorResult = x ^ y;\n                    if (xorResult <= X && S.count(xorResult) == 0) {\n                        toAdd.push_back(xorResult);\n                        changed = true;\n                    }\n                }\n            }\n            \n            for (int x : toAdd) {\n                S.insert(x);\n            }\n        }\n        \n        return S.size() % 998244353;\n    }\n};",
+    "timestamp": "2025-08-05 23:14:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_different_integers(N, A, X):\n    mod = 998244353\n\n    max_number = 0\n    for number in A:\n        max_number |= number\n\n    if max_number > X:\n        return pow(2, N, mod)\n\n    dp = [0] * (max_number + 1)\n    dp[0] = 1\n\n    for number in A:\n        for j in range(max_number, -1, -1):\n            if dp[j]:\n                dp[j | number] = (dp[j | number] + dp[j]) % mod\n\n    result = 0\n    for i in range(X + 1):\n        result = (result + dp[i]) % mod\n\n    return result\n\n# Example usage:\n# N = 3\n# A = [1, 2, 3]\n# X = 4\n# print(count_different_integers(N, A, X))  # Output: 8",
+    "timestamp": "2025-08-13 14:10:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Scanner;\nimport java.util.Set;\n\npublic class Main {\n\n    private static int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int limit = scanner.nextInt();\n        \n        int[] a = new int[n];\n        for (int i = 0; i < n; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        System.out.println(countDifferentIntegers(a, limit));\n    }\n\n    private static int countDifferentIntegers(int[] a, int limit) {\n        Set<Integer> possibleIntegers = new HashSet<>();\n        \n        // Add all initial integers to the set\n        for (int num : a) {\n            possibleIntegers.add(num);\n        }\n        \n        // Process possible integers iteratively, growing the set\n        boolean updated = true;\n        while (updated) {\n            updated = false;\n            Set<Integer> newIntegers = new HashSet<>();\n            \n            for (int x : possibleIntegers) {\n                if (x <= limit / 2) {\n                    newIntegers.add(x * 2);\n                }\n                for (int y : possibleIntegers) {\n                    int xor = x ^ y;\n                    if (xor <= limit && possibleIntegers.add(xor)) {\n                        newIntegers.add(xor);\n                    }\n                }\n            }\n            \n            if (!newIntegers.isEmpty()) {\n                possibleIntegers.addAll(newIntegers);\n                updated = true;\n            }\n        }\n\n        int count = 0;\n        \n        for (int num : possibleIntegers) {\n            if (num <= limit) {\n                count++;\n            }\n        }\n        \n        return count % MOD;\n    }\n}",
+    "timestamp": "2025-08-13 14:10:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MOD 998244353\n\nint countDifferentIntegers(int N, int A[], int X) {\n    int maxBits = 31;\n    int maxNum = 1 << maxBits;\n    int reachable[maxNum];\n    \n    for (int i = 0; i < maxNum; i++) {\n        reachable[i] = 0;\n    }\n    \n    reachable[0] = 1;\n    \n    for (int i = 0; i < N; i++) {\n        int num = A[i];\n        for (int j = 0; j < maxNum; j++) {\n            if (reachable[j]) {\n                reachable[j ^ num] = 1;\n            }\n        }\n    }\n    \n    int resultCount = 0;\n    for (int i = 0; i <= X; i++) {\n        if (reachable[i]) {\n            resultCount = (resultCount + 1) % MOD;\n        }\n    }\n    \n    return resultCount;\n}\n\nint main() {\n    int N, X;\n    scanf(\"%d %d\", &N, &X);\n    \n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    printf(\"%d\\n\", countDifferentIntegers(N, A, X));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:10:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countDifferentIntegers(N, A, X) {\n    const MOD = 998244353;\n\n    let possibleIntegers = new Set(A);\n\n    while (true) {\n        let newIntegers = new Set(possibleIntegers);\n\n        for (let x of possibleIntegers) {\n            if (2 * x <= X) {\n                newIntegers.add(2 * x);\n            }\n\n            for (let y of possibleIntegers) {\n                let xor = x ^ y;\n                if (xor <= X) {\n                    newIntegers.add(xor);\n                }\n            }\n        }\n\n        if (newIntegers.size === possibleIntegers.size) {\n            break;\n        }\n\n        possibleIntegers = new Integers;\n    }\n\n    return possibleIntegers.size % MOD;\n}",
+    "timestamp": "2025-08-13 14:11:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(A):\n    possible = set(A)\n    added = True\n    \n    while added:\n        added = False\n        current_possible = set(possible)\n        \n        # Operation 1: Doubling\n        for x in possible:\n            if 2*x <= 10**9 and 2*x not in current_possible:\n                current_possible.add(2*x)\n                added = True\n        \n        # Operation 2: XOR\n        for x in possible:\n            for y in possible:\n                xor_result = x ^ y\n                if xor_result not in current_possible:\n                    current_possible.add(xor_result)\n                    added = True\n        \n        possible = current_possible\n    \n    return len(possible) % 998244353",
+    "timestamp": "2025-08-13 14:11:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countReachableNumbers(A, X) {\n    const MOD = 998244353;\n    const reachable = new Set(A);\n\n    for (let x of A) {\n        reachable.add(x);\n    }\n\n    let changed = true;\n    while (changed) {\n        changed = false;\n        const newReachable = new Set(reachable);\n\n        for (let x of reachable) {\n            // Operation 1: Double\n            if (x * 2 <= X && !reachable.has(x * 2)) {\n                newReachable.add(x * 2);\n                changed = true;\n            }\n\n            // Operation 2: XOR\n            for (let y of reachable) {\n                const xorResult = x ^ y;\n                if (xorResult <= X && !reachable.has(xorResult)) {\n                    newReachable.add(xorResult);\n                    changed = true;\n                }\n            }\n        }\n\n        reachable = newReachable;\n    }\n\n    return reachable.size % MOD;\n}",
+    "timestamp": "2025-08-13 14:11:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N, X = map(int, input[ptr:ptr+2])\n    ptr +=2\n    A = list(map(int, input[ptr:ptr+N]))\n    ptr +=N\n    \n    max_bit = X.bit_length()\n    basis = [0] * max_bit\n    \n    def insert(x):\n        for b in range(max_bit-1, -1, -1):\n            if (x >> b) & 1:\n                if basis[b] == 0:\n                    basis[b] = x\n                    return True\n                else:\n                    x ^= basis[b]\n        return False\n    \n    for num in A:\n        insert(num)\n    \n    basis = [b for b in basis if b != 0]\n    k = len(basis)\n    total = 0\n    \n    for mask in range(1 << k):\n        current = 0\n        for i in range(k):\n            if (mask >> i) & 1:\n                current ^= basis[i]\n        if current <= X:\n            total += 1\n    \n    pow2_duplicates = pow(2, N - k, MOD)\n    ans = (total * pow2_duplicates) % MOD\n    print(ans)\n\nsolve()",
+    "timestamp": "2025-08-13 14:11:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const [N, X] = input[0].split(' ').map(Number);\n    const A = input[1].split(' ').map(Number);\n    \n    let maxBit = 0;\n    while ((1 << maxBit) <= X) {\n        maxBit++;\n    }\n    maxBit--;\n    \n    let dp = Array.from({ length: maxBit + 2 }, () => 0);\n    dp[0] = 1;\n    \n    for (let i = 0; i < N; i++) {\n        let a = A[i];\n        if (a > X) continue;\n        \n        let bit = 0;\n        while ((1 << (bit + 1)) <= a) {\n            bit++;\n        }\n        \n        if (bit > maxBit) continue;\n        \n        for (let j = maxBit; j >= 0; j--) {\n            if (j + bit <= maxBit) {\n                dp[j + bit] = (dp[j + bit] + dp[j]) % MOD;\n            }\n        }\n    }\n    \n    let res = 0;\n    let sum = 0;\n    \n    for (let j = 0; j <= maxBit; j++) {\n        sum = (sum + dp[j]) % MOD;\n        if ((X >> j) & 1) {\n            res = (res + sum) % MOD;\n        }\n    }\n    \n    console.log(res);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:11:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\nusing namespace std;\n\nint countDifferentIntegers(int N, vector<int>& A, int X) {\n    unordered_set<int> written;\n\n    for(int i = 0; i < N; ++i) {\n        if(A[i] <= X) written.insert(A[i]);\n    }\n\n    vector<int> powers_of_two;\n    for(int num : written) {\n        int power = num;\n        while(power <= X) {\n            written.insert(power);\n            powers_of_two.push_back(power);\n            power *= 2;\n        }\n    }\n\n    vector<int> numbers(written.begin(), written.end());\n    for(int num : numbers) {\n        for(int num2 : numbers) {\n            int result = num ^ num2;\n            if(result <= X) written.insert(result);\n        }\n    }\n\n    return written.size() % 998244353;\n}\n\nint main() {\n    int N, X;\n    cin >> N >> X;\n    vector<int> A(N);\n    for(int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n\n    cout << countDifferentIntegers(N, A, X) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:42:28"
+  }
+]

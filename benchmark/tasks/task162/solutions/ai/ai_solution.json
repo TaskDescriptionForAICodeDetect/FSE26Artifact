@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_N 100000\n#define MAX_M 20\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    int toys[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &toys[i]);\n        toys[i]--; // convert to 0-based index\n    }\n\n    int count[MAX_M] = {0};\n    for (int i = 0; i < N; i++) {\n        count[toys[i]]++;\n    }\n\n    int dp[1 << MAX_M];\n    for (int mask = 0; mask < (1 << M); mask++) {\n        dp[mask] = INT_MAX;\n    }\n    dp[0] = 0;\n\n    for (int mask = 0; mask < (1 << M); mask++) {\n        if (dp[mask] == INT_MAX) continue;\n        int pos = 0;\n        for (int i = 0; i < M; i++) {\n            if (mask & (1 << i)) {\n                pos += count[i];\n            }\n        }\n        for (int i = 0; i < M; i++) {\n            if (!(mask & (1 << i))) {\n                int next_mask = mask | (1 << i);\n                int l = pos;\n                int r = l + count[i];\n                int cost = 0;\n                for (int j = l; j < r; j++) {\n                    if (toys[j] != i) {\n                        cost++;\n                    }\n                }\n                if (dp[next_mask] > dp[mask] + cost) {\n                    dp[next_mask] = dp[mask] + cost;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dp[(1 << M) - 1]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class PlushToyArrangement {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        int[] toys = new int[N];\n        st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < N; i++) {\n            toys[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        int[] firstPos = new int[M + 1];\n        int[] lastPos = new int[M + 1];\n        Arrays.fill(firstPos, N);\n        Arrays.fill(lastPos, -1);\n        \n        for (int i = 0; i < N; i++) {\n            int toy = toys[i];\n            firstPos[toy] = Math.min(firstPos[toy], i);\n            lastPos[toy] = Math.max(lastPos[toy], i);\n        }\n        \n        int[] typeCount = new int[M + 1];\n        for (int toy : toys) {\n            typeCount[toy]++;\n        }\n        \n        int result = N;\n        for (int type = 1; type <= M; type++) {\n            int requiredSpace = typeCount[type];\n            int startPos = firstPos[type];\n            int endPos = lastPos[type];\n            \n            int currentCount = 0;\n            for (int i = startPos; i <= endPos; i++) {\n                if (toys[i] == type) {\n                    currentCount++;\n                }\n            }\n            \n            result = Math.min(result, N - currentCount);\n        }\n        \n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 18:52:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <map>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    map<int, int> first_occurrence;\n    map<int, int> last_occurrence;\n    map<int, int> count;\n\n    for (int i = 0; i < N; ++i) {\n        int type = A[i];\n        if (first_occurrence.find(type) == first_occurrence.end()) {\n            first_occurrence[type] = i;\n        }\n        last_occurrence[type] = i;\n        count[type]++;\n    }\n\n    vector<pair<int, int>> intervals;\n    for (auto &p : first_occurrence) {\n        int type = p.first;\n        intervals.emplace_back(p.second, last_occurrence[type]);\n    }\n\n    sort(intervals.begin(), intervals.end());\n\n    int max_overlap = 0;\n    int current_end = -1;\n    int total = 0;\n\n    for (auto &interval : intervals) {\n        if (interval.first > current_end) {\n            total += max_overlap;\n            max_overlap = count[A[interval.first]];\n            current_end = interval.second;\n        } else {\n            max_overlap += count[A[interval.first]];\n            if (interval.second > current_end) {\n                current_end = interval.second;\n            }\n        }\n    }\n    total += max_overlap;\n\n    cout << N - total << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 200000\n#define MAX_M 200000\n\nint main() {\n    int N, M;\n    int toys[MAX_N];\n    int first[MAX_M+1], last[MAX_M+1];\n    int intervals[MAX_N][2];\n    \n    scanf(\"%d %d\", &N, &M);\n    \n    for(int i = 1; i <= M; i++) {\n        first[i] = N + 1;\n        last[i] = 0;\n    }\n    \n    for(int i = 0; i < N; i++) {\n        scanf(\"%d\", &toys[i]);\n        first[toys[i]] = (first[toys[i]] < i+1) ? first[toys[i]] : i+1;\n        last[toys[i]] = (last[toys[i]] > i+1) ? last[toys[i]] : i+1;\n    }\n    \n    int k = 0;\n    for(int i = 1; i <= M; i++) {\n        if(first[i] != N+1) {\n            intervals[k][0] = first[i];\n            intervals[k][1] = last[i];\n            k++;\n        }\n    }\n    \n    int ans = N;\n    for(int mask = 0; mask < (1 << k); mask++) {\n        int curr_removed = 0;\n        int valid = 1;\n        \n        for(int i = 0; i < k; i++) {\n            if(mask & (1 << i)) {\n                curr_removed += intervals[i][1] - intervals[i][0] + 1;\n            }\n        }\n        \n        for(int i = 0; i < k; i++) {\n            if(!(mask & (1 << i))) {\n                for(int j = 0; j < k; j++) {\n                    if(i != j && !(mask & (1 << j)) && \n                       intervals[i][0] <= intervals[j][1] && \n                       intervals[j][0] <= intervals[i][1]) {\n                        valid = 0;\n                        break;\n                    }\n                }\n                if(!valid) break;\n            }\n        }\n        \n        if(valid) {\n            ans = (ans < curr_removed) ? ans : curr_removed;\n        }\n    }\n    \n    printf(\"%d\\n\", ans);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<int> toys(N);\n    for (int i = 0; i < N; i++) {\n        cin >> toys[i];\n    }\n    \n    int result = N;\n    for (int i = 1; i <= M; i++) {\n        vector<int> positions;\n        for (int j = 0; j < N; j++) {\n            if (toys[j] == i) {\n                positions.push_back(j);\n            }\n        }\n        \n        int k = positions.size();\n        int maxConsecutive = 0;\n        \n        for (int j = 0; j < k; j++) {\n            int consecutive = 1;\n            for (int l = j + 1; l < k; l++) {\n                if (positions[l] == positions[l-1] + 1) {\n                    consecutive++;\n                } else {\n                    break;\n                }\n            }\n            maxConsecutive = max(maxConsecutive, consecutive);\n        }\n        \n        result = min(result, N - k + (k - maxConsecutive));\n    }\n    \n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int[] toys = new int[N];\n        for (int i = 0; i < N; i++) {\n            toys[i] = sc.nextInt();\n        }\n\n        int[] first = new int[M + 1];\n        int[] last = new int[M + 1];\n        Arrays.fill(first, -1);\n        Arrays.fill(last, -1);\n\n        for (int i = 0; i < N; i++) {\n            int type = toys[i];\n            if (first[type] == -1) {\n                first[type] = i;\n            }\n            last[type] = i;\n        }\n\n        List<int[]> intervals = new ArrayList<>();\n        for (int type = 1; type <= M; type++) {\n            intervals.add(new int[]{first[type], last[type]});\n        }\n\n        intervals.sort((a, b) -> Integer.compare(a[0], b[0]));\n\n        int count = 0;\n        int end = -1;\n        int maxEnd = -1;\n        for (int[] interval : intervals) {\n            if (interval[0] > end) {\n                count += interval[1] - interval[0] + 1;\n                end = interval[1];\n            } else {\n                if (interval[1] > maxEnd) {\n                    maxEnd = interval[1];\n                }\n            }\n        }\n\n        System.out.println(N - count);\n    }\n}",
+    "timestamp": "2025-08-05 18:53:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_removals_to_group_toys(N, M, toys):\n    from collections import Counter\n\n    # Count occurrences of each toy type\n    toy_count = Counter(toys)\n    \n    # Collect start and end index for each toy type on the shelf\n    toy_indices = {i: [] for i in range(1, M+1)}\n    for idx, toy in enumerate(toys):\n        toy_indices[toy].append(idx)\n    \n    # Calculate minimum removals through dynamic programming\n    dp = [0] * (N + 1)\n    max_count = 0\n    \n    for count in toy_count.values():\n        max_count = max(max_count, count)\n    \n    for i in range(1, N + 1):\n        current_type = toys[i - 1]\n        indices = toy_indices[current_type]\n        \n        for idx in indices:\n            if idx >= i - 1:\n                dp[i] = max(dp[i], dp[idx] + toy_count[current_type])\n            else:\n                dp[i] = max(dp[i], dp[idx] + (indices[indices.index(idx)+1] - idx))\n    \n    return N - max(dp)\n\n# Example usage\nN = 7\nM = 3\ntoys = [1, 2, 2, 3, 3, 1, 3]\nprint(min_removals_to_group_toys(N, M, toys))",
+    "timestamp": "2025-08-13 01:19:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class PlushToyOrganizer {\n    public static int minRemovals(int[] toys, int N, int M) {\n        Map<Integer, List<Integer>> positionMap = new HashMap<>();\n        for (int i = 0; i < N; i++) {\n            positionMap.putIfAbsent(toys[i], new ArrayList<>());\n            positionMap.get(toys[i]).add(i);\n        }\n\n        int minRemovals = Integer.MAX_VALUE;\n        for (List<Integer> positions : positionMap.values()) {\n            int size = positions.size();\n            for (int i = 0; i + size - 1 < positions.size(); i++) {\n                int left = positions.get(i);\n                int right = positions.get(i + size - 1);\n                int removals = right - left + 1 - size;\n                minRemovals = Math.min(minRemovals, removals);\n            }\n        }\n        return minRemovals;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        int[] toys = new int[N];\n        for (int i = 0; i < N; i++) {\n            toys[i] = scanner.nextInt();\n        }\n        scanner.close();\n        System.out.println(minRemovals(toys, N, M));\n    }\n}",
+    "timestamp": "2025-08-13 01:19:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_N 100000\n#define MAX_M 100000\n\nint toys[MAX_N];\nint type_count[MAX_M+1];\nint left[MAX_M+1];\nint right[MAX_M+1];\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &toys[i]);\n    }\n    \n    for (int i = 0; i <= M; i++) {\n        type_count[i] = 0;\n        left[i] = -1;\n        right[i] = -1;\n    }\n    \n    for (int i = 0; i < N; i++) {\n        int type = toys[i];\n        type_count[type]++;\n        if (left[type] == -1) {\n            left[type] = i;\n        }\n        right[type] = i;\n    }\n    \n    int total_remove = N;\n    for (int i = 1; i <= M; i++) {\n        int count = right[i] - left[i] + 1;\n        total_remove = min(total_remove, N - type_count[i]);\n    }\n    \n    printf(\"%d\\n\", total_remove);\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:19:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_removals(N, M, toys):\n    # Count the occurrences of each toy type\n    type_counts = [0] * (M + 1)\n    for toy in toys:\n        type_counts[toy] += 1\n    \n    # Find the maximum consecutive sequence for each toy type\n    min_removals = N\n    for start_type in range(1, M + 1):\n        current_removals = 0\n        consecutive_count = 0\n        \n        for i in range(N):\n            if toys[i] == start_type:\n                consecutive_count += 1\n            elif consecutive_count == 0:\n                current_removals += 1\n            else:\n                current_removals += type_counts[start_type] - consecutive_count\n                consecutive_count = 0\n        \n        if consecutive_count > 0:\n            current_removals += type_counts[start_type] - consecutive_count\n        \n        min_removals = min(min_removals, current_removals)\n    \n    return min_removals\n\n# Read input\nN, M = map(int, input().split())\ntoys = list(map(int, input().split()))\n\n# Print result\nprint(min_removals(N, M, toys))",
+    "timestamp": "2025-08-13 01:19:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, M = map(int, sys.stdin.readline().split())\n    toys = list(map(int, sys.stdin.readline().split()))\n    \n    # Preprocess the first and last occurrence of each type\n    first_occurrence = {}\n    last_occurrence = {}\n    for idx, typ in enumerate(toys):\n        if typ not in first_occurrence:\n            first_occurrence[typ] = idx\n        last_occurrence[typ] = idx\n    \n    # The types are sorted based on their first occurrence to form the left to right order\n    types_order = sorted(first_occurrence.keys(), key=lambda x: first_occurrence[x])\n    \n    # We will process the types in the order of their first occurrence\n    # The idea is to find the maximum last occurrence up to the current type\n    # The answer is N minus the size of the largest \"valid\" sequence\n    \n    max_last = -1\n    res = 0\n    for typ in types_order:\n        if first_occurrence[typ] < max_last:\n            res += (last_occurrence[typ] - first_occurrence[typ] + 1)\n            max_last = max(max_last, last_occurrence[typ])\n        else:\n            max_last = last_occurrence[typ]\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 01:20:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nint main() {\n    int N, M;\n    std::cin >> N >> M;\n    \n    std::vector<int> plushToys(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> plushToys[i];\n    }\n    \n    std::unordered_map<int, std::vector<int>> indexMap;\n    for (int i = 0; i < N; ++i) {\n        indexMap[plushToys[i]].push_back(i);\n    }\n    \n    int minRemoval = N;\n    for (const auto& [type, indices] : indexMap) {\n        int maxConsecutive = 0;\n        int length = indices.size();\n        \n        for (int i = 0; i < length; ++i) {\n            int j = i;\n            while (j < length && indices[j] - indices[i] == j - i) {\n                ++j;\n            }\n            maxConsecutive = std::max(maxConsecutive, j - i);\n        }\n        \n        minRemoval = std::min(minRemoval, N - maxConsecutive);\n    }\n    \n    std::cout << minRemoval << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:59:38"
+  }
+]

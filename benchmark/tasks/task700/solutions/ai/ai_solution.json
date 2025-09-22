@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nint count_nonzero_digits(int num) {\n    int count = 0;\n    while (num > 0) {\n        if (num % 10 != 0) {\n            count++;\n        }\n        num /= 10;\n    }\n    return count;\n}\n\nint solve(int N, int K) {\n    int result = 0;\n    for (int i = 1; i <= N; i++) {\n        if (count_nonzero_digits(i) == K) {\n            result++;\n        }\n    }\n    return result;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    printf(\"%d\\n\", solve(N, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:36:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint countNumbers(int N, int K) {\n    int count = 0;\n    for (int num = 1; num <= N; num++) {\n        int n = num;\n        int nonZeroDigits = 0;\n        while (n > 0) {\n            if (n % 10 != 0) {\n                nonZeroDigits++;\n            }\n            n /= 10;\n        }\n        if (nonZeroDigits == K) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    printf(\"%d\\n\", countNumbers(N, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cstring>\nusing namespace std;\n\nlong long dp[20][20][2];\n\nlong long solve(string &num, int pos, int cnt, int tight) {\n    if (pos == num.size()) {\n        return (cnt == 0) ? 1 : 0;\n    }\n    if (dp[pos][cnt][tight] != -1) {\n        return dp[pos][cnt][tight];\n    }\n    long long res = 0;\n    int limit = tight ? (num[pos] - '0') : 9;\n    for (int d = 0; d <= limit; ++d) {\n        int new_tight = tight && (d == limit);\n        int new_cnt = cnt;\n        if (d != 0) {\n            if (cnt == 0) continue;\n            new_cnt = cnt - 1;\n        }\n        res += solve(num, pos + 1, new_cnt, new_tight);\n    }\n    return dp[pos][cnt][tight] = res;\n}\n\nlong long countNumbers(long long N, int K) {\n    string num = to_string(N);\n    memset(dp, -1, sizeof(dp));\n    return solve(num, 0, K, 1);\n}\n\nint main() {\n    long long N;\n    int K;\n    cin >> N >> K;\n    cout << countNumbers(N, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        long N = scanner.nextLong();\n        int K = scanner.nextInt();\n        System.out.println(countNumbersWithKNonZeroDigits(N, K));\n    }\n\n    private static long countNumbersWithKNonZeroDigits(long N, int K) {\n        String s = Long.toString(N);\n        int len = s.length();\n        long[][][] dp = new long[len + 1][K + 1][2];\n        dp[0][0][0] = 1;\n\n        for (int i = 0; i < len; i++) {\n            int digit = s.charAt(i) - '0';\n            for (int j = 0; j <= K; j++) {\n                for (int tight = 0; tight < 2; tight++) {\n                    if (dp[i][j][tight] == 0) continue;\n                    int maxDigit = tight == 1 ? digit : 9;\n                    for (int d = 0; d <= maxDigit; d++) {\n                        int newTight = (tight == 1 && d == maxDigit) ? 1 : 0;\n                        int newJ = j + (d != 0 ? 1 : 0);\n                        if (newJ <= K) {\n                            dp[i + 1][newJ][newTight] += dp[i][j][tight];\n                        }\n                    }\n                }\n            }\n        }\n        return dp[len][K][0] + dp[len][K][1];\n    }\n}",
+    "timestamp": "2025-08-05 22:37:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int countSpecificNumbers(int N, int K) {\n        return countNumbersWithExactNonZeroDigits(N, K);\n    }\n\n    private int countNumbersWithExactNonZeroDigits(int N, int K) {\n        if (K == 0) return countNumbersWithNoNonZeroDigits(N);\n        if (K > 10) return 0;\n\n        int result = 0;\n        for (int mask = 1; mask < (1 << 10); mask++) {\n            if (Integer.bitCount(mask) == K) {\n                result += countNumbersWithDigitMask(N, mask);\n            }\n        }\n        return result;\n    }\n\n    private int countNumbersWithNoNonZeroDigits(int N) {\n        return (N + 1) / 10;\n    }\n\n    private int countNumbersWithDigitMask(int N, int mask) {\n        List<Integer> digits = new ArrayList<>();\n        while (N > 0) {\n            digits.add(N % 10);\n            N /= 10;\n        }\n        Collections.reverse(digits);\n\n        return countRecursive(digits, mask, 0, true, 0);\n    }\n\n    private int countRecursive(List<Integer> digits, int mask, int index, boolean tight, int nonZeroCount) {\n        if (nonZeroCount > Integer.bitCount(mask)) return 0;\n        if (index == digits.size()) return 1;\n\n        int result = 0;\n        int upper = tight ? digits.get(index) : 9;\n\n        for (int digit = 0; digit <= upper; digit++) {\n            boolean newTight = tight && (digit == digits.get(index));\n            int newNonZeroCount = nonZeroCount + (digit != 0 && ((mask & (1 << digit)) != 0) ? 1 : 0);\n\n            result += countRecursive(digits, mask, index + 1, newTight, newNonZeroCount);\n        }\n\n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 22:37:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countNumbersWithUniqueDigits(int N, int K) {\n        if (K > 10) return 0;\n        if (N < 1) return 0;\n        \n        vector<vector<int>> dp(N + 1, vector<int>(K + 1, 0));\n        \n        // Base cases\n        for (int i = 0; i <= N; i++) {\n            dp[i][0] = 1;\n        }\n        \n        for (int digits = 1; digits <= min(N, 10); digits++) {\n            for (int nonZeroCount = 1; nonZeroCount <= min(digits, K); nonZeroCount++) {\n                for (int firstDigit = 1; firstDigit <= 9; firstDigit++) {\n                    for (int usedMask = 0; usedMask < (1 << 10); usedMask++) {\n                        if (!(usedMask & (1 << firstDigit))) {\n                            int newMask = usedMask | (1 << firstDigit);\n                            int nonZeroDigits = __builtin_popcount(newMask) - 1;\n                            \n                            if (nonZeroDigits == nonZeroCount) {\n                                for (int prevDigit = 0; prevDigit <= 9; prevDigit++) {\n                                    if (prevDigit != firstDigit || usedMask == 0) {\n                                        if (digits > 1 && prevDigit == 0) continue;\n                                        dp[digits][nonZeroCount] += dp[digits-1][nonZeroCount-1];\n                                    }\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n        \n        int result = 0;\n        for (int digits = 1; digits <= min(N, 10); digits++) {\n            for (int nonZeroCount = 1; nonZeroCount <= min(digits, K); nonZeroCount++) {\n                result += dp[digits][nonZeroCount];\n            }\n        }\n        \n        return result;\n    }\n};",
+    "timestamp": "2025-08-05 22:38:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_numbers_with_exactly_k_non_zero_digits(N, K):\n    def count_non_zero_digits(x):\n        return sum(1 for digit in str(x) if digit != '0')\n    \n    count = 0\n    for i in range(1, N+1):\n        if count_non_zero_digits(i) == K:\n            count += 1\n            \n    return count\n\n# Example usage:\nN = 100\nK = 1\nprint(count_numbers_with_exactly_k_non_zero_digits(N, K))",
+    "timestamp": "2025-08-13 11:49:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class NonZeroDigits {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        \n        System.out.println(countNumbersWithKNonZeroDigits(N, K));\n        scanner.close();\n    }\n\n    private static int countNumbersWithKNonZeroDigits(int N, int K) {\n        int count = 0;\n        \n        for (int i = 1; i <= N; i++) {\n            if (countNonZeroDigits(i) == K) {\n                count++;\n            }\n        }\n        \n        return count;\n    }\n\n    private static int countNonZeroDigits(int number) {\n        int nonZeroCount = 0;\n        \n        while (number > 0) {\n            if (number % 10 != 0) {\n                nonZeroCount++;\n            }\n            number /= 10;\n        }\n        \n        return nonZeroCount;\n    }\n}",
+    "timestamp": "2025-08-13 11:49:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint countKNonZeroDigits(int n, int k) {\n    char str[12];\n    sprintf(str, \"%d\", n);\n    int length = strlen(str);\n    int dp[12][1024][12];\n    memset(dp, -1, sizeof(dp));\n\n    int count(int pos, int mask, int nonZero, int tight) {\n        if (pos == length) {\n            return nonZero == k;\n        }\n        if (nonZero > k) return 0;\n        if (dp[pos][mask][nonZero] != -1 && !tight) {\n            return dp[pos][mask][nonZero];\n        }\n\n        int limit = tight ? str[pos] - '0' : 9;\n        int ans = 0;\n        for (int digit = 0; digit <= limit; ++digit) {\n            int newNonZero = nonZero + (digit != 0);\n            ans += count(pos + 1, mask | (1 << digit), newNonZero, tight && (digit == limit));\n        }\n\n        if (!tight) {\n            dp[pos][mask][nonZero] = ans;\n        }\n        \n        return ans;\n    }\n    \n    return count(0, 0, 0, 1);\n}\n\nint main() {\n    int N, K;\n    printf(\"Enter N and K: \");\n    scanf(\"%d %d\", &N, &K);\n    printf(\"Number of integers between 1 and %d with exactly %d non-zero digits: %d\\n\", N, K, countKNonZeroDigits(N, K));\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:49:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countNumbersWithKNonZeroDigits(N, K) {\n    const cache = {};\n\n    function count(pos, nonZero, isTight) {\n        if (pos === digits.length) {\n            return nonZero === K ? 1 : 0;\n        }\n        if (cache[pos] && cache[pos][nonZero] && cache[pos][nonZero][isTight] !== undefined) {\n            return cache[pos][nonZero][isTight];\n        }\n        let limit = isTight ? digits[pos] : 9;\n        let total = 0;\n        for (let digit = 0; digit <= limit; digit++) {\n            total += count(pos + 1, nonZero + (digit !== 0 ? 1 : 0), isTight && (digit === limit));\n        }\n        if (!cache[pos]) cache[pos] = {};\n        if (!cache[pos][nonZero]) cache[pos][nonZero] = {};\n        cache[pos][nonZero][isTight] = total;\n        return total;\n    }\n\n    let digits = N.toString().split('').map(Number);\n    return count(0, 0, true);\n}\n\n// Example usage\nlet N = 100;\nlet K = 1;\nlet result = countNumbersWithKNonZeroDigits(N, K);\nconsole.log(result);",
+    "timestamp": "2025-08-13 11:49:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_numbers_with_k_nonzero_digits(N, K):\n    def count_digits(num):\n        return sum(1 for digit in str(num) if digit != '0')\n    \n    return sum(1 for num in range(1, N + 1) if count_digits(num) == K)",
+    "timestamp": "2025-08-13 11:49:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countNumbersWithKNonZeroDigits(N, K) {\n    const memo = new Array(N + 1).fill(null).map(() => new Array(K + 1).fill(-1));\n    \n    function dp(num, nonZeroCount, isRestricted) {\n        if (nonZeroCount > K) return 0;\n        if (num === 0) return nonZeroCount === K ? 1 : 0;\n        \n        if (!isRestricted && memo[num][nonZeroCount] !== -1) {\n            return memo[num][nonZeroCount];\n        }\n        \n        const limit = isRestricted ? Number(num.toString()[0]) : 9;\n        let result = 0;\n        \n        for (let digit = 0; digit <= limit; digit++) {\n            const newNum = Math.floor(num / 10);\n            const newNonZeroCount = nonZeroCount + (digit !== 0 ? 1 : 0);\n            const newIsRestricted = isRestricted && digit === limit;\n            \n            result += dp(newNum, newNonZeroCount, newIsRestricted);\n        }\n        \n        if (!isRestricted) {\n            memo[num][nonZeroCount] = result;\n        }\n        \n        return result;\n    }\n    \n    return dp(N, 0, true);\n}",
+    "timestamp": "2025-08-13 11:49:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_numbers_with_k_non_zero_digits(N, K):\n    from functools import lru_cache\n\n    s = str(N)\n    n = len(s)\n\n    @lru_cache(maxsize=None)\n    def dp(pos, count, tight):\n        if pos == n:\n            return 1 if count == K else 0\n        limit = int(s[pos]) if tight else 9\n        total = 0\n        for digit in range(0, limit + 1):\n            new_tight = tight and (digit == limit)\n            new_count = count + (1 if digit != 0 else 0)\n            if new_count > K:\n                continue\n            total += dp(pos + 1, new_count, new_tight)\n        return total\n\n    return dp(0, 0, True)",
+    "timestamp": "2025-08-13 11:49:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countNumbersWithKNonZeroDigits(N, K) {\n    const s = N.toString();\n    const len = s.length;\n    const memo = {};\n\n    function dfs(pos, count, tight) {\n        if (pos === len) {\n            return count === K ? 1 : 0;\n        }\n        const key = `${pos},${count},${tight}`;\n        if (memo.hasOwnProperty(key)) {\n            return memo[key];\n        }\n\n        const limit = tight ? parseInt(s[pos]) : 9;\n        let total = 0;\n\n        for (let d = 0; d <= limit; d++) {\n            const newTight = tight && (d === limit);\n            const newCount = count + (d !== 0 ? 1 : 0);\n            if (newCount > K) continue;\n            total += dfs(pos + 1, newCount, newTight);\n        }\n\n        memo[key] = total;\n        return total;\n    }\n\n    return dfs(0, 0, true);\n}",
+    "timestamp": "2025-08-13 11:49:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint countNumbersWithKNonZeroDigits(int N, int K) {\n    string s = to_string(N);\n    int n = s.size();\n    vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(K + 1, vector<int>(2, -1)));\n    \n    function<int(int, int, int, int)> dfs = [&](int pos, int k, int tight, int seen_zero) {\n        if (k < 0) return 0;\n        if (pos == n) return k == 0;\n        if (dp[pos][k][tight] != -1) return dp[pos][k][tight];\n        \n        int limit = tight ? s[pos] - '0' : 9;\n        int res = 0;\n        \n        for (int digit = 0; digit <= limit; ++digit) {\n            int newTight = tight & (digit == limit);\n            int new_seen_zero = seen_zero | (digit > 0);\n            res += dfs(pos + 1, k - (digit != 0 && new_seen_zero), newTight, new_seen_zero);\n        }\n        \n        return dp[pos][k][tight] = res;\n    };\n    \n    return dfs(0, K, 1, 0);\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    cout << countNumbersWithKNonZeroDigits(N, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:05:36"
+  }
+]

@@ -1,0 +1,1 @@
+Takahashi is researching sets of points in a plane and considers a set S of points to be good if the distance between any two points in S is not √D₁ and not √D₂, where D₁ and D₂ are specified positive integers. Given a set X consisting of points (i,j) on a coordinate plane where 0 ≤ i,j < 2N, the task is to find a subset of X of size N² that forms a good set.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canWin(int N, int A, int B) {\n    bool* dp = malloc((N + 1) * sizeof(bool));\n    for (int i = 0; i <= N; i++) {\n        dp[i] = false;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        bool hanako_win = false;\n        for (int j = 1; j <= A && j <= i; j++) {\n            if (!dp[i - j]) {\n                hanako_win = true;\n                break;\n            }\n        }\n        \n        bool jiro_win = false;\n        for (int j = 1; j <= B && j <= i; j++) {\n            if (!dp[i - j]) {\n                jiro_win = true;\n                break;\n            }\n        }\n\n        dp[i] = hanako_win || jiro_win;\n    }\n\n    bool result = dp[N];\n    free(dp);\n    return result;\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    printf(canWin(N, A, B) ? \"Hanako\\n\" : \"Jiro\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint determineWinner(int N, int A, int B) {\n    if (A >= N) {\n        return 1; // Hanako wins immediately\n    }\n    if (A == B) {\n        return N % (A + 1) != 0;\n    }\n    if (A > B) {\n        return 1; // Hanako can always force a win\n    }\n    return 0; // Jiro wins if A < B and Hanako can't win immediately\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    if (determineWinner(N, A, B)) {\n        printf(\"Hanako\\n\");\n    } else {\n        printf(\"Jiro\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\nusing namespace std;\n\nstring determineWinner(int N, int A, int B) {\n    if (A >= N) return \"Hanako\";\n    if (A == B) {\n        if (N % (A + 1) == 0) return \"Jiro\";\n        else return \"Hanako\";\n    }\n    if (A > B) return \"Hanako\";\n    else return \"Jiro\";\n}\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    cout << determineWinner(N, A, B) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class StoneGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n\n        boolean[] dp = new boolean[N + 1];\n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j <= A; j++) {\n                if (i - j >= 0 && !dp[i - j]) {\n                    dp[i] = true;\n                    break;\n                }\n            }\n            if (!dp[i]) {\n                for (int j = 1; j <= B; j++) {\n                    if (i - j >= 0 && !dp[i - j]) {\n                        dp[i] = true;\n                        break;\n                    }\n                }\n            }\n        }\n\n        System.out.println(dp[N] ? \"Hanako\" : \"Jiro\");\n    }\n}",
+    "timestamp": "2025-08-05 21:53:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class StoneGame {\n    public static String determineWinner(int N, int A, int B) {\n        boolean[] dp = new boolean[N + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            // Check if Hanako can win from current stone count\n            if (i <= A && !dp[i]) {\n                dp[i] = true;\n            }\n            \n            // Check if Hanako can win by removing stones\n            for (int j = 1; j <= B && i - j >= 0; j++) {\n                if (!dp[i - j]) {\n                    dp[i] = true;\n                    break;\n                }\n            }\n        }\n        \n        return dp[N] ? \"Hanako\" : \"Jiro\";\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        \n        System.out.println(determineWinner(N, A, B));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:53:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nbool canWin(int N, int A, int B) {\n    vector<bool> dp(N + 1, false);\n    \n    for (int i = 1; i <= N; i++) {\n        // Check if player can win by taking 1 to A stones\n        for (int j = 1; j <= A; j++) {\n            if (i - j >= 0 && !dp[i - j]) {\n                dp[i] = true;\n                break;\n            }\n        }\n        \n        // Check if player can win by taking 1 to B stones\n        if (!dp[i]) {\n            for (int j = 1; j <= B; j++) {\n                if (i - j >= 0 && !dp[i - j]) {\n                    dp[i] = true;\n                    break;\n                }\n            }\n        }\n    }\n    \n    return dp[N];\n}\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    \n    if (canWin(N, A, B)) {\n        cout << \"Hanako\" << endl;\n    } else {\n        cout << \"Jiro\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def determine_winner(N, A, B):\n    dp = [False] * (N + 1)\n    \n    for i in range(1, N + 1):\n        can_win = False\n        for move in range(1, A + 1):\n            if i - move >= 0 and not dp[i - move]:\n                can_win = True\n                break\n        if not can_win:\n            for move in range(1, B + 1):\n                if i - move >= 0 and not dp[i - move]:\n                    can_win = True\n                    break\n                \n        dp[i] = can_win\n    \n    return \"Hanako\" if dp[N] else \"Jiro\"\n\n# Example usage:\nN = 10\nA = 3\nB = 4\nwinner = determine_winner(N, A, B)\nprint(winner)",
+    "timestamp": "2025-08-13 07:57:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class StonesGame {\n\n    public static String findWinner(int N, int A, int B) {\n        boolean[] dp = new boolean[N + 1];\n        dp[0] = false; // Base case: No stones left means 'losing' position\n\n        for (int i = 1; i <= N; i++) {\n            boolean canWin = false;\n            for (int j = 1; j <= A && j <= i; j++) {\n                if (!dp[i - j]) {\n                    canWin = true;\n                    break;\n                }\n            }\n            for (int k = 1; k <= B && k <= i; k++) {\n                if (canWin) break; // No need to check further if Hanako already has winning move\n                if (!dp[i - k]) {\n                    canWin = true;\n                }\n            }\n            dp[i] = canWin;\n        }\n        return dp[N] ? \"Hanako\" : \"Jiro\";\n    }\n\n    public static void main(String[] args) {\n        int N = 10; // Example number of heaps\n        int A = 3;  // Maximum stones Hanako can take\n        int B = 4;  // Maximum stones Jiro can take\n        System.out.println(findWinner(N, A, B));\n    }\n}",
+    "timestamp": "2025-08-13 07:57:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_N 1001\n\nbool dp[MAX_N];\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    \n    // Initialize dp array with false indicating Jiro's win\n    for (int i = 0; i <= N; ++i) dp[i] = false;\n    \n    // Determine win or lose state for each heap size up to N\n    for (int i = 1; i <= N; ++i) {\n        for (int x = 1; x <= A; ++x) {\n            if (i - x >= 0 && !dp[i - x]) {\n                dp[i] = true;\n                break;\n            }\n        }\n    }\n    \n    if (dp[N]) {\n        puts(\"Hanako\");\n    } else {\n        puts(\"Jiro\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 07:57:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def determine_winner(N, A, B):\n    # Initialize dynamic programming array\n    dp = [False] * (N + 1)\n    \n    # Base cases\n    dp[0] = False\n    \n    # Fill dp array\n    for i in range(1, N + 1):\n        # Check if Hanako can force a win\n        hanako_win = False\n        for j in range(1, min(A, i) + 1):\n            if not dp[i - j]:\n                hanako_win = True\n                break\n        \n        # Check if Jiro can force a win\n        if not hanako_win:\n            for j in range(1, min(B, i) + 1):\n                if not dp[i - j]:\n                    hanako_win = True\n                    break\n        \n        dp[i] = hanako_win\n    \n    return \"Hanako\" if dp[N] else \"Jiro\"\n\n# Read input\nN, A, B = map(int, input().split())\n\n# Determine and print the winner\nprint(determine_winner(N, A, B))",
+    "timestamp": "2025-08-13 07:57:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def determine_winner(N, A, B):\n    if N == 0:\n        return \"Jiro\"\n    dp = [False] * (N + 1)\n    for i in range(1, N + 1):\n        if any(not dp[i - j] for j in range(1, A + 1) if i - j >= 0):\n            dp[i] = True\n        else:\n            dp[i] = False\n    return \"Hanako\" if dp[N] else \"Jiro\"",
+    "timestamp": "2025-08-13 07:57:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nenum Player { Hanako, Jiro };\n\nbool canWin(std::vector<int>& heaps, int index, int A, int B, Player currentPlayer) {\n    if (index >= heaps.size()) return false;\n    int stones = heaps[index];\n    \n    if (currentPlayer == Hanako) {\n        for (int i = 1; i <= A; ++i) {\n            if (i > stones) break;\n            heaps[index] -= i;\n            if (!canWin(heaps, index + 1, A, B, Jiro)) {\n                heaps[index] += i;\n                return true;\n            }\n            heaps[index] += i;\n        }\n        return false;\n    } else {\n        for (int i = 1; i <= B; ++i) {\n            if (i > stones) break;\n            heaps[index] -= i;\n            if (!canWin(heaps, index + 1, A, B, Hanako)) {\n                heaps[index] += i;\n                return true;\n            }\n            heaps[index] += i;\n        }\n        return false;\n    }\n}\n\nint main() {\n    int N, A, B;\n    std::cin >> N >> A >> B;\n    \n    std::vector<int> heaps(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> heaps[i];\n    }\n    \n    if (canWin(heaps, 0, A, B, Hanako)) {\n        std::cout << \"Hanako\" << std::endl;\n    } else {\n        std::cout << \"Jiro\" << std::endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:42:11"
+  }
+]

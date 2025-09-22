@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int* heights = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &heights[i]);\n    }\n    \n    long long total_cost = 0;\n    int visible_count = 0;\n    int max_height = 0;\n    \n    for (int i = 0; i < N; i++) {\n        if (heights[i] <= max_height) {\n            long long cost = max_height + 1 - heights[i];\n            total_cost += cost;\n            heights[i] = max_height + 1;\n        }\n        \n        if (heights[i] > max_height) {\n            max_height = heights[i];\n            visible_count++;\n        }\n    }\n    \n    while (visible_count < K) {\n        int max_index = -1;\n        int max_increase = 0;\n        \n        for (int i = 0; i < N; i++) {\n            int potential_increase = max_height + 1 - heights[i];\n            if (potential_increase > max_increase) {\n                max_increase = potential_increase;\n                max_index = i;\n            }\n        }\n        \n        total_cost += max_increase;\n        heights[max_index] = max_height + 1;\n        max_height++;\n        visible_count++;\n    }\n    \n    printf(\"%lld\\n\", total_cost);\n    \n    free(heights);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:22:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nlong long min_cost_to_see_k_buildings(int N, int K, int a[]) {\n    long long total_cost = 0;\n    int max_so_far = a[0];\n    int visible = 1;\n\n    for (int i = 1; i < N && visible < K; i++) {\n        if (a[i] > max_so_far) {\n            max_so_far = a[i];\n            visible++;\n        } else {\n            int required = max_so_far + 1;\n            total_cost += required - a[i];\n            max_so_far = required;\n            visible++;\n        }\n    }\n    return total_cost;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    printf(\"%lld\\n\", min_cost_to_see_k_buildings(N, K, a));\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n\n    long long cost = 0;\n    int visible = 1;\n    int prev_max = a[0];\n\n    for (int i = 1; i < N && visible < K; ++i) {\n        if (a[i] > prev_max) {\n            prev_max = a[i];\n            visible++;\n        } else {\n            int required = prev_max + 1;\n            cost += required - a[i];\n            prev_max = required;\n            visible++;\n        }\n    }\n\n    cout << cost << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        long minCost = Long.MAX_VALUE;\n\n        for (int mask = 0; mask < (1 << N); mask++) {\n            if (Integer.bitCount(mask) != K) {\n                continue;\n            }\n\n            long cost = 0;\n            int maxSoFar = 0;\n            int visibleCount = 0;\n\n            for (int i = 0; i < N; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    if (a[i] > maxSoFar) {\n                        maxSoFar = a[i];\n                        visibleCount++;\n                    } else {\n                        cost += maxSoFar - a[i] + 1;\n                        maxSoFar++;\n                        visibleCount++;\n                    }\n                } else {\n                    if (a[i] > maxSoFar) {\n                        maxSoFar = a[i];\n                    }\n                }\n            }\n\n            if (visibleCount >= K) {\n                if (cost < minCost) {\n                    minCost = cost;\n                }\n            }\n        }\n\n        System.out.println(minCost);\n    }\n}",
+    "timestamp": "2025-08-05 23:23:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class VisibleBuildings {\n    public static void solve(int N, int K, int[] heights) {\n        long totalCost = 0;\n        int visibleCount = 0;\n        int maxHeight = 0;\n\n        for (int i = 0; i < N; i++) {\n            if (heights[i] > maxHeight) {\n                visibleCount++;\n                maxHeight = heights[i];\n            } else {\n                long costToIncrease = maxHeight + 1 - heights[i];\n                totalCost += costToIncrease;\n                heights[i] = maxHeight + 1;\n                visibleCount++;\n            }\n        }\n\n        // If not enough visible buildings, increase the last few buildings\n        while (visibleCount < K) {\n            totalCost += maxHeight + 1;\n            maxHeight++;\n            visibleCount++;\n        }\n\n        System.out.println(totalCost);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int K = Integer.parseInt(st.nextToken());\n        \n        st = new StringTokenizer(br.readLine());\n        int[] heights = new int[N];\n        for (int i = 0; i < N; i++) {\n            heights[i] = Integer.parseInt(st.nextToken());\n        }\n\n        solve(N, K, heights);\n    }\n}",
+    "timestamp": "2025-08-05 23:23:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> heights(N);\n    for (int i = 0; i < N; i++) {\n        cin >> heights[i];\n    }\n    \n    int total_cost = 0;\n    int max_height = 0;\n    int visible_count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        if (heights[i] <= max_height) {\n            int increase_needed = max_height + 1 - heights[i];\n            total_cost += increase_needed;\n            heights[i] += increase_needed;\n        }\n        \n        max_height = max(max_height, heights[i]);\n        visible_count++;\n        \n        if (visible_count >= K) {\n            break;\n        }\n    }\n    \n    cout << total_cost << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:23:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_cost(N, K, heights):\n    # initialize the list for visible buildings\n    visible_heights = []\n\n    # initialize the cost\n    cost = 0\n    \n    for h in heights:\n        # keep only the highest building from the left\n        while visible_heights and visible_heights[-1] <= h:\n            visible_heights.pop()        \n\n        visible_heights.append(h)\n\n        # check if we've already got K visible buildings\n        if len(visible_heights) >= K:\n            return cost\n\n    # calculate the amounts needed to increase\n    while len(visible_heights) < K:\n        needed_height = visible_heights[-1] + 1\n        last_item = visible_heights.pop()\n\n        # find the increase needed\n        increase = max(0, needed_height - last_item)\n        cost += increase\n\n        visible_heights.append(needed_height)\n\n    return cost\n\nheights = [3, 1, 4, 1, 5, 9, 2]\nN = len(heights)\nK = 4\nprint(minimum_cost(N, K, heights))  # Example usage",
+    "timestamp": "2025-08-13 15:03:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class BuildingVisibility {\n    \n    public static int minimumCost(int[] heights, int N, int K) {\n        int cost = 0;\n        int visibleCount = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (visibleCount < K) {\n                // Loop to make building visible by increasing height if necessary\n                while (i > 0 && heights[i] <= heights[i - 1]) {\n                    heights[i]++;\n                    cost++;\n                }\n                visibleCount++;\n            }\n            // Otherwise, check for current visibility\n            else if (i > 0 && heights[i] <= heights[i - 1]) {\n                while (i > 0 && heights[i] <= heights[i - 1]) {\n                    heights[i]++;\n                    cost++;\n                }\n            }\n        }\n        \n        return cost;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        \n        int[] heights = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            heights[i] = scanner.nextInt();\n        }\n        \n        System.out.println(minimumCost(heights, N, K));\n    }\n}",
+    "timestamp": "2025-08-13 15:04:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_N 100000\n\nint main() {\n    int N, K;\n    int a[MAX_N];\n    \n    scanf(\"%d %d\", &N, &K);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int visible = 0;\n    int cost = 0;\n    int max_height = 0;\n    \n    for (int i = 0; i < N; i++) {\n        if (a[i] > max_height) {\n            visible++;\n            max_height = a[i];\n        } else {\n            cost += max_height + 1 - a[i];\n            a[i] = max_height + 1;\n            visible++;\n            max_height = a[i];\n        }\n        \n        if (visible >= K) {\n            break;\n        }\n    }\n    \n    printf(\"%d\\n\", cost);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:04:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> heights(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> heights[i];\n    }\n\n    vector<int> visible_order(N);\n    iota(visible_order.begin(), visible_order.end(), 0);\n    sort(visible_order.begin(), visible_order.end(), [&](int i, int j) {\n        return heights[i] < heights[j];\n    });\n\n    int visible_count = 0;\n    long long cost = 0;\n    set<int> increasing_heights;\n\n    for (int i : visible_order) {\n        if (increasing_heights.size() == 0 || i > *increasing_heights.rbegin()) {\n            increasing_heights.insert(i);\n            visible_count++;\n            continue;\n        }\n\n        int new_height = heights[i];\n        for (auto it = increasing_heights.lower_bound(i); it != increasing_heights.end(); ++it) {\n            new_height = max(new_height, heights[*it] + 1);\n        }\n\n        cost += new_height - heights[i];\n        heights[i] = new_height;\n        increasing_heights.insert(i);\n        visible_count++;\n        \n        if (visible_count >= K) break;\n    }\n\n    cout << cost << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:04:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_visibility_problem(N, K, heights):\n    cost = 0\n    max_height = 0\n    visible_count = 0\n\n    for i in range(N):\n        if heights[i] > max_height:\n            visible_count += 1\n            max_height = heights[i]\n        else:\n            increase_needed = max_height + 1 - heights[i]\n            cost += increase_needed\n            heights[i] = max_height + 1\n            visible_count += 1\n\n        if visible_count >= K:\n            break\n\n    if visible_count < K:\n        return -1\n\n    return cost\n\ndef main():\n    N, K = map(int, input().split())\n    heights = list(map(int, input().split()))\n    \n    result = solve_visibility_problem(N, K, heights)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 15:04:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n, k = map(int, input().split())\na = list(map(int, input().split()))\ncost = 0\n\nvisible = 1\ncurrent_max = a[0]\n\nfor i in range(1, n):\n    if visible >= k:\n        break\n    if a[i] > current_max:\n        visible += 1\n        current_max = a[i]\n    else:\n        pass\n\nwhile visible < k and i < n:\n    required = current_max + 1\n    cost += required - a[i]\n    a[i] = required\n    visible += 1\n    current_max = a[i]\n    i += 1\n\nprint(cost)",
+    "timestamp": "2025-08-13 15:04:23"
+  }
+]

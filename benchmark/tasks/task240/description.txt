@@ -1,0 +1,1 @@
+You need to create a graph representation of a Ninja House based on a sequence of recorded exploration numbers. The graph is defined by rooms and the doors connecting them, with specific rules for how the exploration is noted in the records. Each record ends with zero and the output should be formatted to show each room and its adjacent rooms in ascending order.

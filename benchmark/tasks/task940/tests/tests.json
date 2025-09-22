@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "15 1\nABAAA",
+      "output": "1BBAAA"
+    },
+    {
+      "input": "25 2\nABAAA",
+      "output": "2ABBBA"
+    },
+    {
+      "input": "34 123456789\nAABB",
+      "output": "3BABA"
+    }
+  ]
+}

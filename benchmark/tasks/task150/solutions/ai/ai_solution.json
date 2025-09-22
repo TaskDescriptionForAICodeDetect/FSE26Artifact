@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 1000\n\nint board[MAX_N + 2][MAX_N + 2] = {0};\nint diff[MAX_N + 2][MAX_N + 2] = {0};\n\nvoid update_diff(int a, int b, int x, int val) {\n    diff[a][b] += val;\n    diff[a][b + 1] -= val;\n    diff[a + x][b] -= val;\n    diff[a + x][b + x + 1] += val;\n    diff[a + x][b + x] += val;\n    diff[a + x][b + x + 1] -= val;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 0; i < M; i++) {\n        int a, b, x;\n        scanf(\"%d %d %d\", &a, &b, &x);\n        update_diff(a, b, x, 1);\n    }\n\n    // Apply the difference array to the board\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= i; j++) {\n            board[i][j] = board[i][j - 1] + board[i - 1][j] - board[i - 1][j - 1] + diff[i][j];\n        }\n    }\n\n    int count = 0;\n    for (int i = 1; i <= N; i++) {\n        for (int j = 1; j <= i; j++) {\n            if (board[i][j] > 0) {\n                count++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        boolean[][] enclosed = new boolean[N + 1][N + 1];\n        \n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a1 = Integer.parseInt(st.nextToken());\n            int b1 = Integer.parseInt(st.nextToken());\n            int a2 = Integer.parseInt(st.nextToken());\n            int b2 = Integer.parseInt(st.nextToken());\n            int a3 = Integer.parseInt(st.nextToken());\n            int b3 = Integer.parseInt(st.nextToken());\n            \n            encloseTriangle(enclosed, a1, b1, a2, b2, a3, b3);\n        }\n        \n        int enclosedCount = countEnclosedNails(enclosed);\n        System.out.println(enclosedCount);\n    }\n    \n    static void encloseTriangle(boolean[][] enclosed, int a1, int b1, int a2, int b2, int a3, int b3) {\n        int minRow = Math.min(Math.min(a1, a2), a3);\n        int maxRow = Math.max(Math.max(a1, a2), a3);\n        int minCol = Math.min(Math.min(b1, b2), b3);\n        int maxCol = Math.max(Math.max(b1, b2), b3);\n        \n        for (int row = minRow; row <= maxRow; row++) {\n            for (int col = minCol; col <= maxCol; col++) {\n                if (isInsideTriangle(a1, b1, a2, b2, a3, b3, row, col)) {\n                    enclosed[row][col] = true;\n                }\n            }\n        }\n    }\n    \n    static boolean isInsideTriangle(int a1, int b1, int a2, int b2, int a3, int b3, int row, int col) {\n        double totalArea = triangleArea(a1, b1, a2, b2, a3, b3);\n        double area1 = triangleArea(row, col, a2, b2, a3, b3);\n        double area2 = triangleArea(a1, b1, row, col, a3, b3);\n        double area3 = triangleArea(a1, b1, a2, b2, row, col);\n        \n        return Math.abs(totalArea - (area1 + area2 + area3)) < 1e-9;\n    }\n    \n    static double triangleArea(int a1, int b1, int a2, int b2, int a3, int b3) {\n        return Math.abs(a1 * (b2 - b3) + a2 * (b3 - b1) + a3 * (b1 - b2)) / 2.0;\n    }\n    \n    static int countEnclosedNails(boolean[][] enclosed) {\n        int count = 0;\n        for (int row = 1; row < enclosed.length; row++) {\n            for (int col = 1; col <= row; col++) {\n                if (enclosed[row][col]) {\n                    count++;\n                }\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 18:49:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<bool>> covered(N + 2, vector<bool>(N + 2, false));\n\n    for (int i = 0; i < M; ++i) {\n        int a, b, x;\n        cin >> a >> b >> x;\n        for (int d = 0; d <= x; ++d) {\n            int r = a + d;\n            int c1 = b;\n            int c2 = b + d;\n            for (int c = c1; c <= c2; ++c) {\n                covered[r][c] = true;\n            }\n        }\n    }\n\n    int count = 0;\n    for (int a = 1; a <= N; ++a) {\n        for (int b = 1; b <= a; ++b) {\n            if (covered[a][b]) {\n                count++;\n            }\n        }\n    }\n\n    cout << count << '\\n';\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 500\n\nint board[MAX_N + 1][MAX_N + 1];\nint marked[MAX_N + 1][MAX_N + 1];\n\nvoid mark_triangle(int a, int b, int x) {\n    board[a][b] = 1;\n    board[a + x][b] = 1;\n    board[a + x][b + x] = 1;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    memset(board, 0, sizeof(board));\n    memset(marked, 0, sizeof(marked));\n\n    for (int i = 0; i < M; i++) {\n        int a, b, x;\n        scanf(\"%d %d %d\", &a, &b, &x);\n        mark_triangle(a, b, x);\n    }\n\n    int count = 0;\n    for (int a = 1; a <= N; a++) {\n        for (int b = 1; b <= a; b++) {\n            if (board[a][b] && !marked[a][b]) {\n                marked[a][b] = 1;\n                count++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n\n    vector<vector<bool>> board(N + 1, vector<bool>(N + 1, false));\n    vector<vector<bool>> marked(N + 1, vector<bool>(N + 1, false));\n\n    for (int m = 0; m < M; m++) {\n        int a1, b1, a2, b2, a3, b3;\n        cin >> a1 >> b1 >> a2 >> b2 >> a3 >> b3;\n        \n        board[a1][b1] = true;\n        board[a2][b2] = true;\n        board[a3][b3] = true;\n\n        int minRow = min({a1, a2, a3});\n        int maxRow = max({a1, a2, a3});\n        int minCol = min({b1, b2, b3});\n        int maxCol = max({b1, b2, b3});\n\n        for (int a = minRow; a <= maxRow; a++) {\n            for (int b = minCol; b <= min(a, maxCol); b++) {\n                if (board[a][b]) {\n                    marked[a][b] = true;\n                }\n            }\n        }\n    }\n\n    int count = 0;\n    for (int a = 1; a <= N; a++) {\n        for (int b = 1; b <= a; b++) {\n            if (marked[a][b]) {\n                count++;\n            }\n        }\n    }\n\n    cout << count << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    static class Point {\n        int a, b;\n        Point(int a, int b) {\n            this.a = a;\n            this.b = b;\n        }\n        @Override\n        public boolean equals(Object o) {\n            if (this == o) return true;\n            if (o == null || getClass() != o.getClass()) return false;\n            Point point = (Point) o;\n            return a == point.a && b == point.b;\n        }\n        @Override\n        public int hashCode() {\n            return Objects.hash(a, b);\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n\n        Set<Point> nails = new HashSet<>();\n\n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int a = Integer.parseInt(st.nextToken());\n            int b = Integer.parseInt(st.nextToken());\n            int x = Integer.parseInt(st.nextToken());\n\n            for (int dx = 0; dx <= x; dx++) {\n                for (int dy = 0; dy <= dx; dy++) {\n                    nails.add(new Point(a + dx, b + dy));\n                }\n            }\n        }\n\n        System.out.println(nails.size());\n    }\n}",
+    "timestamp": "2025-08-05 18:50:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_enclosed_nails(N, M, triangles):\n    nails_set = set()\n    \n    for a, b, x in triangles:\n        for i in range(x + 1):\n            for j in range(i + 1):\n                nails_set.add((a + i, b + j))\n    \n    return len(nails_set)\n\n# Input\nN, M = map(int, input().split())\ntriangles = [tuple(map(int, input().split())) for _ in range(M)]\n\n# Calculate the number of enclosed nails\nresult = count_enclosed_nails(N, M, triangles)\nprint(result)",
+    "timestamp": "2025-08-13 01:07:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.HashSet;\n\npublic class TriangleNails {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        \n        HashSet<String> enclosedNails = new HashSet<>();\n        \n        for (int i = 0; i < M; i++) {\n            int a = scanner.nextInt();\n            int b = scanner.nextInt();\n            int x = scanner.nextInt();\n            \n            for (int row = a; row <= a + x; row++) {\n                for (int col = b; col <= Math.min(b + (row - a), row); col++) {\n                    enclosedNails.add(row + \",\" + col);\n                }\n            }\n        }\n        \n        System.out.println(enclosedNails.size());\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 01:07:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXN 100\n\nint grid[MAXN + 1][MAXN + 1];\nint enclosed[MAXN + 1][MAXN + 1];\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    memset(grid, 0, sizeof(grid));\n    memset(enclosed, 0, sizeof(enclosed));\n\n    for (int i = 0; i < M; i++) {\n        int a, b, x;\n        scanf(\"%d %d %d\", &a, &b, &x);\n        \n        grid[a][b]++;\n        grid[a + x][b]--;\n        grid[a + x][b + x]--;\n        grid[a + 2*x][b]++;\n    }\n\n    for (int a = 1; a <= N; a++) {\n        for (int b = 1; b <= a; b++) {\n            if (b > 1) grid[a][b] += grid[a][b - 1];\n        }\n    }\n\n    for (int b = 1; b <= N; b++) {\n        for (int a = b; a <= N; a++) {\n            if (a > b) grid[a][b] += grid[a - 1][b];\n        }\n    }\n\n    int count = 0;\n    for (int a = 1; a <= N; a++) {\n        for (int b = 1; b <= a; b++) {\n            if (grid[a][b] > 0 && !enclosed[a][b]) {\n                enclosed[a][b] = 1;\n                count++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:07:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, M, bands):\n    # Create a set to track nails covered by rubber bands\n    covered_nails = set()\n    \n    # Iterate through each rubber band\n    for band in bands:\n        # Unpack the triangle coordinates\n        a, b, x = band\n        \n        # Generate the three vertices of the good triangle\n        triangle_nails = [\n            (a, b),\n            (a + x, b),\n            (a + x, b + x)\n        ]\n        \n        # Add nails within the triangle to the covered set\n        for row in range(a, a + x + 1):\n            start_col = b + max(0, row - a)\n            end_col = b + row - a\n            for col in range(start_col, end_col + 1):\n                covered_nails.add((row, col))\n    \n    # Return the total number of unique covered nails\n    return len(covered_nails)\n\n# Read input\nN, M = map(int, input().split())\nbands = []\nfor _ in range(M):\n    a, b, x = map(int, input().split())\n    bands.append((a, b, x))\n\n# Print the result\nprint(solve(N, M, bands))",
+    "timestamp": "2025-08-13 01:08:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N = int(input[ptr])\n    ptr += 1\n    M = int(input[ptr])\n    ptr += 1\n\n    # Initialize a 2D array to mark covered nails\n    # The board has N rows, row a has a nails (1-based)\n    covered = [[False for _ in range(a+1)] for a in range(N+1)]\n\n    for _ in range(M):\n        a = int(input[ptr])\n        ptr += 1\n        b = int(input[ptr])\n        ptr += 1\n        x = int(input[ptr])\n        ptr += 1\n\n        # Mark all nails in the triangle (a, b), (a+x, b), (a+x, b+x)\n        for i in range(x + 1):\n            current_a = a + i\n            for j in range(i + 1):\n                current_b = b + j\n                if current_b <= current_a:\n                    covered[current_a][current_b] = True\n\n    # Count all marked nails\n    count = 0\n    for a in range(1, N+1):\n        for b in range(1, a+1):\n            if covered[a][b]:\n                count += 1\n    print(count)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 01:08:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n\n    set<pair<int, int>> enclosedNails;\n    for (int i = 0; i < M; ++i) {\n        int a, b, x;\n        cin >> a >> b >> x;\n\n        // Add nails enclosed by current rubber band\n        for (int row = 0; row <= x; ++row) {\n            for (int col = 0; col <= row; ++col) {\n                enclosedNails.insert({a + row, b + col});\n            }\n        }\n    }\n    \n    cout << enclosedNails.size() << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:58:26"
+  }
+]

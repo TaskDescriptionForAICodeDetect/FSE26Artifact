@@ -1,0 +1,1 @@
+Determine whether a text T includes a pattern P. Your program should answer for given queries consisting of P_i.

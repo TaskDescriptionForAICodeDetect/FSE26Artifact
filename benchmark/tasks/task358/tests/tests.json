@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "4\n0 0 x\n2 0 x\n0 1 x\n2 1 x\n",
+      "output": "Yes\n"
+    },
+    {
+      "input": "4\n1 0 x\n0 1 x\n2 1 x\n1 2 x\n",
+      "output": "No\n"
+    },
+    {
+      "input": "4\n0 0 x\n2 0 y\n0 1 y\n1 2 x\n",
+      "output": "Yes\n"
+    }
+  ]
+}

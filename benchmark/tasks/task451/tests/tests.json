@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "6\nAIZU 10\nLINER 6\nLINE 4\nALL 2\nAS 1\nCIEL 10\nASLA\nCILI\nIRZN\nELEU\n21",
+      "output": "40"
+    }
+  ]
+}

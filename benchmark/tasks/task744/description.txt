@@ -1,0 +1,1 @@
+Given a string S consisting of digits (0-9) and '?', determine how many integers can be formed by replacing each '?' with any digit such that the resulting integer has a remainder of 5 when divided by 13. An integer may begin with 0. Return the count modulo 10^9 + 7.

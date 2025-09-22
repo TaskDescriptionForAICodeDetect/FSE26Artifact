@@ -1,0 +1,65 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        String s = scanner.next();\n        \n        int minOperations = n;\n        \n        for (int copyLength = 1; copyLength <= n / 2; copyLength++) {\n            if (n % copyLength == 0) {\n                String prefix = s.substring(0, copyLength);\n                boolean canCopy = true;\n                \n                for (int i = copyLength; i < n; i += copyLength) {\n                    String segment = s.substring(i, Math.min(i + copyLength, n));\n                    if (!segment.equals(prefix)) {\n                        canCopy = false;\n                        break;\n                    }\n                }\n                \n                if (canCopy) {\n                    int operations = copyLength + 1;\n                    minOperations = Math.min(minOperations, operations);\n                }\n            }\n        }\n        \n        System.out.println(minOperations);\n    }\n}",
+    "timestamp": "2025-08-05 17:25:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def min_operations(n, s):\n    min_ops = float('inf')\n    for i in range(1, n + 1):\n        if n % i == 0:\n            repeat = n // i\n            candidate = i + (1 if n != i * repeat else 0)\n            if s == s[:i] * repeat:\n                min_ops = min(min_ops, candidate)\n    return min(min_ops, n)\n\nn = int(input())\ns = input()\nprint(min_operations(n, s))",
+    "timestamp": "2025-08-05 17:25:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint solve(char* s) {\n    int n = strlen(s);\n    int min_ops = n;\n    \n    for (int copy_len = 1; copy_len <= n/2; copy_len++) {\n        int prefix_ops = 0;\n        int remaining_ops = 0;\n        int repeat_flag = 1;\n        \n        // Check if this prefix can be copied effectively\n        for (int i = 0; i < copy_len; i++) {\n            if (s[i] != s[copy_len + i]) {\n                repeat_flag = 0;\n                break;\n            }\n        }\n        \n        if (repeat_flag) {\n            prefix_ops = copy_len + 1; // type prefix + copy\n            \n            // Check remaining characters \n            for (int i = 2 * copy_len; i < n; i++) {\n                if (s[i] != s[i % copy_len]) {\n                    remaining_ops++;\n                }\n            }\n            \n            min_ops = min(min_ops, prefix_ops + remaining_ops);\n        }\n    }\n    \n    return min_ops;\n}\n\nint main() {\n    int n;\n    char s[101];\n    \n    scanf(\"%d\", &n);\n    scanf(\"%s\", s);\n    \n    printf(\"%d\\n\", solve(s));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 17:25:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    string s;\n    cin >> n >> s;\n    \n    int minOps = n;\n    \n    for (int copyLen = 1; copyLen <= n / 2; ++copyLen) {\n        string prefix = s.substr(0, copyLen);\n        int ops = copyLen;\n        \n        string current = prefix;\n        \n        while (current.length() < n) {\n            current += current;\n        }\n        \n        current = current.substr(0, n);\n        \n        if (current == s) {\n            ops += 1;  // for copy operation\n            ops += n - 2 * copyLen;\n            minOps = min(minOps, ops);\n        }\n    }\n    \n    cout << minOps << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 17:26:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        String s = scanner.next();\n        int minOperations = n; // default case: no copy operation\n        \n        for (int i = 1; i <= n / 2; i++) {\n            if (s.substring(0, i).equals(s.substring(i, 2 * i))) {\n                int operations = i + 1 + (n - 2 * i);\n                if (operations < minOperations) {\n                    minOperations = operations;\n                }\n            }\n        }\n        \n        System.out.println(minOperations);\n    }\n}",
+    "timestamp": "2025-08-05 17:26:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\ns = input().strip()\nmin_operations = n  # default is typing all characters\n\nfor i in range(1, n // 2 + 1):\n    if s[:i] == s[i:2*i]:\n        operations = i + 1 + (n - 2*i)\n        if operations < min_operations:\n            min_operations = operations\n\nprint(min_operations)",
+    "timestamp": "2025-08-05 17:26:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int n;\n    char s[101];\n    scanf(\"%d\", &n);\n    scanf(\"%s\", s);\n    \n    int min_operations = n; // default is typing all characters\n    \n    for (int i = 1; i <= n / 2; i++) {\n        if (strncmp(s, s + i, i) == 0) {\n            int operations = i + 1 + (n - 2 * i);\n            if (operations < min_operations) {\n                min_operations = operations;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", min_operations);\n    return 0;\n}",
+    "timestamp": "2025-08-05 17:26:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    string s;\n    cin >> n >> s;\n    int min_operations = n; // default is typing all characters\n    \n    for (int l = 1; l <= n / 2; ++l) {\n        if (s.substr(0, l) == s.substr(l, l)) {\n            int operations = l + 1 + (n - 2 * l);\n            if (operations < min_operations) {\n                min_operations = operations;\n            }\n        }\n    }\n    \n    cout << min_operations << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 17:26:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_operations(n, s):\n    # Find the longest prefix which is also a suffix\n    max_prefix_suffix = 0\n    for i in range(1, n):\n        if s[:i] == s[-i:]:\n            max_prefix_suffix = i\n    \n    # Calculate minimum operations\n    if max_prefix_suffix > 0:\n        # Type the prefix once, copy, and type the rest\n        result = max_prefix_suffix + 1 + (n - 2 * max_prefix_suffix)\n    else:\n        # No prefix suffix match, type all individually\n        result = n\n\n    return result\n\n# Read inputs\nn = int(input().strip())\ns = input().strip()\n\n# Print result\nprint(minimum_operations(n, s))",
+    "timestamp": "2025-08-12 21:40:14"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve_test_case(n, x, s):\n    # Calculate balance of the original string\n    initial_balance = s.count('0') - s.count('1')\n    \n    # If the entire repeating string balance is 0\n    if initial_balance == 0:\n        # If x is 0, there are infinite prefixes\n        return -1 if x == 0 else 0\n    \n    # Track balance changes\n    count = 0\n    current_balance = 0\n    seen_balances = {}\n    \n    for length in range(2 * n):\n        # Simulate extending prefix\n        current_char = s[length % n]\n        current_balance += 1 if current_char == '0' else -1\n        \n        # If current balance matches target\n        if current_balance == x:\n            count += 1\n        \n        # Check for repeating pattern\n        if length >= n:\n            if current_balance in seen_balances:\n                # If balance repeats before 2n, check if cycles infinitely\n                if (x - seen_balances[current_balance]) % abs(initial_balance) == 0:\n                    return -1\n            seen_balances[current_balance] = length\n    \n    return count\n\ndef main():\n    T = int(input())\n    \n    for _ in range(T):\n        n, x = map(int, input().split())\n        s = input()\n        \n        print(solve_test_case(n, x, s))\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-05 17:31:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import sys\nfrom collections import defaultdict\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    T = int(input[ptr])\n    ptr += 1\n    for _ in range(T):\n        n, x = map(int, input[ptr:ptr+2])\n        ptr +=2\n        s = input[ptr]\n        ptr +=1\n        \n        total_balance = 0\n        balance_counts = defaultdict(int)\n        balance_counts[0] = 1  # empty prefix\n        res = 0\n        \n        for c in s:\n            if c == '0':\n                total_balance += 1\n            else:\n                total_balance -= 1\n            balance_counts[total_balance] += 1\n        \n        if total_balance == 0:\n            if x in balance_counts:\n                print(-1)\n            else:\n                print(0)\n        else:\n            res = 0\n            for b in balance_counts:\n                # We need to find k such that b + k * total_balance == x\n                # => k = (x - b) / total_balance\n                # k must be >=0 and integer\n                if (x - b) % total_balance == 0:\n                    k = (x - b) // total_balance\n                    if k >=0:\n                        res += balance_counts[b]\n            print(res)\n\nsolve()",
+    "timestamp": "2025-08-05 17:31:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n\n    data = input().strip().split()\n    index = 0\n\n    T = int(data[index])\n    index += 1\n    results = []\n\n    for _ in range(T):\n        n, x = int(data[index]), int(data[index + 1])\n        index += 2\n        s = data[index]\n        index += 1\n\n        cnt0 = s.count('0')\n        cnt1 = s.count('1')\n        balance_s = cnt0 - cnt1\n\n        if balance_s == 0:\n            # We check if the balance 0 can be achieved and if already x is 0\n            cnt = 0\n            current_balance = 0\n            for char in s:\n                if current_balance == x:\n                    cnt += 1\n                if char == '0':\n                    current_balance += 1\n                else:\n                    current_balance -= 1\n            if x == 0:  # If we need balance 0\n                results.append(cnt + 1)  # Including the empty prefix\n            else:\n                results.append(cnt)\n        else:\n            current_balance = 0\n            cnt = 0\n            for char in s:\n                if current_balance == x:\n                    cnt += 1\n                if char == '0':\n                    current_balance += 1\n                else:\n                    current_balance -= 1\n\n            if (x - current_balance) % balance_s == 0 and (x - current_balance) // balance_s >= 0:\n                cnt += 1\n\n            if ((x > 0 and balance_s > 0) or (x < 0 and balance_s < 0)) or cnt > 0:\n                results.append(-1)\n            else:\n                results.append(cnt)\n\n    for result in results:\n        print(result)\n\nsolve()",
+    "timestamp": "2025-08-12 21:41:28"
+  }
+]

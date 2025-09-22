@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_FACTORS 100\n\nlong long count_numbers(char* factorization) {\n    int factors[MAX_FACTORS];\n    int factor_count = 0;\n    long long result = 1;\n    \n    char* token = strtok(factorization, \" \");\n    while (token != NULL) {\n        factors[factor_count++] = atoi(token);\n        token = strtok(NULL, \" \");\n    }\n    \n    for (int i = 0; i < factor_count; i++) {\n        int current_factor = factors[i];\n        int exponent = 1;\n        \n        while (i + 1 < factor_count && factors[i + 1] == current_factor) {\n            exponent++;\n            i++;\n        }\n        \n        result = (result * (exponent + 1)) % MOD;\n    }\n    \n    return result;\n}\n\nint main() {\n    char factorization[1000];\n    fgets(factorization, sizeof(factorization), stdin);\n    factorization[strcspn(factorization, \"\\n\")] = 0;\n    \n    long long answer = count_numbers(factorization);\n    printf(\"%lld\\n\", answer);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#define MOD 1000000007\n\ntypedef struct {\n    int prime;\n    int count;\n} Factor;\n\nFactor factors[1000];\nint factor_count = 0;\n\nvoid parse_input(char *s) {\n    char *token = strtok(s, \" \");\n    while (token != NULL) {\n        int prime = atoi(token);\n        token = strtok(NULL, \" \");\n        int count = 1;\n        if (token != NULL && isdigit(token[0])) {\n            count = atoi(token);\n            token = strtok(NULL, \" \");\n        }\n        factors[factor_count].prime = prime;\n        factors[factor_count].count = count;\n        factor_count++;\n    }\n}\n\nlong long power(long long base, long long exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    char input[10000];\n    fgets(input, sizeof(input), stdin);\n    input[strcspn(input, \"\\n\")] = 0;\n    \n    parse_input(input);\n    \n    long long result = 1;\n    for (int i = 0; i < factor_count; ) {\n        int current_prime = factors[i].prime;\n        int total_count = factors[i].count;\n        i++;\n        while (i < factor_count && factors[i].prime == current_prime) {\n            total_count += factors[i].count;\n            i++;\n        }\n        result = (result * (total_count + 1)) % MOD;\n    }\n    \n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst ll MOD = 1e9 + 7;\n\nll mod_pow(ll base, ll exp, ll mod) {\n    ll result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nll solve() {\n    string line;\n    unordered_map<ll, ll> primes;\n    while (getline(cin, line)) {\n        if (line.empty()) continue;\n        istringstream iss(line);\n        ll p, e;\n        while (iss >> p >> e) {\n            primes[p] += e;\n        }\n    }\n    if (primes.empty()) return 0;\n    ll result = 1;\n    for (auto& [p, e] : primes) {\n        result = (result * (e + 1)) % MOD;\n    }\n    return result;\n}\n\nint main() {\n    cout << solve() << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    static final int MOD = 1000000007;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String[] parts = br.readLine().split(\"\\\\s+\");\n        Map<Integer, Integer> primeCounts = new HashMap<>();\n        \n        for (String part : parts) {\n            if (part.isEmpty()) continue;\n            int prime = Integer.parseInt(part);\n            primeCounts.put(prime, primeCounts.getOrDefault(prime, 0) + 1);\n        }\n        \n        long result = 1;\n        for (int count : primeCounts.values()) {\n            result = (result * (count + 1)) % MOD;\n        }\n        \n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:03:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class DiversityOfPrimeFactorization {\n    static final int MOD = 1_000_000_007;\n\n    public static int countPossibleNumbers(String factorization) {\n        String[] parts = factorization.trim().split(\"\\\\s+\");\n        long result = 1;\n        \n        for (String part : parts) {\n            int count = 0;\n            for (char c : part.toCharArray()) {\n                if (Character.isDigit(c)) {\n                    count++;\n                }\n            }\n            result = (result * (count + 1)) % MOD;\n        }\n        \n        return (int) result;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String input = br.readLine();\n        System.out.println(countPossibleNumbers(input));\n    }\n}",
+    "timestamp": "2025-08-05 22:03:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_map>\n#include <sstream>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nclass Solution {\npublic:\n    int diversityOfPrimeFactorization(string factorization) {\n        stringstream ss(factorization);\n        unordered_map<int, int> primeFreq;\n        int prime, power;\n        \n        while (ss >> prime >> power) {\n            primeFreq[prime] = power;\n        }\n        \n        long long result = 1;\n        for (auto& entry : primeFreq) {\n            result = (result * (entry.second + 1)) % MOD;\n        }\n        \n        return result;\n    }\n};\n\nint main() {\n    Solution sol;\n    string input;\n    getline(cin, input);\n    cout << sol.diversityOfPrimeFactorization(input) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef count_numbers_from_output(output):\n    from collections import Counter\n    import functools\n    import operator\n    \n    # Parse the output to get unique prime factors and their counts\n    factors = output.split()\n    factor_counts = Counter(factors)\n    \n    # The product of (count + 1) for each prime factor will give us the number of factors\n    factor_count_product = functools.reduce(operator.mul,\n                                            (count + 1 for count in factor_counts.values()), \n                                            1)\n    \n    # Return the result modulo 10^9 + 7\n    return factor_count_product % MOD\n\n# Example usage:\n# output = \"2 2 3\"  -> means M = 12 = 2^2 * 3\n# The numbers that have the same prime factorization form as 12 would be 12, 48, etc.\n# There are (2+1) * (1+1) = 6 such numbers: 12, 24, 36, 48, 60, 72\n# print(count_numbers_from_output(\"2 2 3\"))    # Should return 6",
+    "timestamp": "2025-08-13 08:42:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class DiversityOfPrimeFactorization {\n    private static final int MOD = 1_000_000_007;\n\n    public long countNumbers(String output) {\n        Map<Integer, Integer> primeCounts = parseOutput(output);\n        return distinctNumbersFromFactors(primeCounts);\n    }\n\n    private Map<Integer, Integer> parseOutput(String output) {\n        String[] elements = output.trim().split(\"\\\\s+\");\n        Map<Integer, Integer> primeCounts = new HashMap<>();\n\n        for (int i = 0; i < elements.length; i += 2) {\n            int prime = Integer.parseInt(elements[i]);\n            int count = Integer.parseInt(elements[i + 1]);\n            primeCounts.put(prime, count);\n        }\n\n        return primeCounts;\n    }\n\n    private long distinctNumbersFromFactors(Map<Integer, Integer> primeCounts) {\n        long result = 1;\n        for (int count : primeCounts.values()) {\n            result = (result * (count + 1)) % MOD;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        DiversityOfPrimeFactorization solution = new DiversityOfPrimeFactorization();\n        String output = \"2 3 3 2\"; // Example: Represents the number with factorization 2^3 * 3^2\n        System.out.println(solution.countNumbers(output));  // Should print the number of distinct natural numbers from such a factorization\n    }\n}",
+    "timestamp": "2025-08-13 08:42:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MOD 1000000007\n#define MAX_FACTORS 1000\n#define MAX_PRIME 1000\n\nint countNumbers(char *output) {\n    int len = strlen(output);\n    bool used[MAX_FACTORS] = {false}, hasNumber = false;\n    int primeCount[MAX_PRIME] = {0};\n    \n    for (int i = 0; i < len; ++i) {\n        if (output[i] == ' ') continue;\n        int num = 0;\n        while (i < len && output[i] != ' ') {\n            num = num * 10 + (output[i] - '0');\n            i++;\n        }\n        if (num > 1) {\n            if (!used[num]) {\n                used[num] = true;\n                hasNumber = true;\n            }\n            int factor = num;\n            for (int j = 2; j * j <= factor; j++) {\n                while (factor % j == 0) {\n                    primeCount[j]++;\n                    factor /= j;\n                }\n            }\n            if (factor > 1) primeCount[factor]++;\n        }\n    }\n    \n    if (!hasNumber) return 0;\n\n    long long totalCount = 1;\n    for (int i = 2; i < MAX_PRIME; i++) {\n        if (primeCount[i]) {\n            totalCount = (totalCount * (primeCount[i] + 1)) % MOD;\n        }\n    }\n    \n    return (int)totalCount;\n}\n\nint main() {\n    char output[MAX_FACTORS * 11]; // assuming enough space for all factor numbers\n    fgets(output, sizeof(output), stdin);\n\n    int result = countNumbers(output);\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:42:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(output):\n    MOD = 10**9 + 7\n    output = output.split()\n    \n    def is_valid_factorization(factors):\n        # Check if factors are valid (non-zero and sorted)\n        return all(int(f) > 0 for f in factors) and \\\n               all(int(factors[i]) <= int(factors[i+1]) for i in range(len(factors)-1))\n    \n    def construct_number(factors):\n        # Construct number from prime factorization\n        result = 1\n        for f in factors:\n            result *= int(f)\n        return result\n    \n    def backtrack(current_factors, remaining_output):\n        # Base case: used all output numbers \n        if not remaining_output:\n            return 1\n        \n        count = 0\n        for i in range(len(remaining_output)):\n            # Try adding this number to factors\n            new_factors = current_factors + [remaining_output[i]]\n            \n            # Check if factorization is valid\n            if is_valid_factorization(new_factors):\n                # Recursive call with remaining numbers\n                sub_count = backtrack(new_factors, \n                                      remaining_output[:i] + remaining_output[i+1:])\n                count = (count + sub_count) % MOD\n        \n        return count\n    \n    # Start backtracking\n    return backtrack([], output)",
+    "timestamp": "2025-08-13 08:42:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import defaultdict\nMOD = 10**9 + 7\n\ndef solve():\n    input = sys.stdin.read().split()\n    freq = defaultdict(int)\n    for num in input:\n        freq[int(num)] += 1\n    \n    # The answer is the product of (count + 1) for each prime\n    result = 1\n    for prime in freq:\n        result = (result * (freq[prime] + 1)) % MOD\n    print(result)\n\nsolve()",
+    "timestamp": "2025-08-13 08:42:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <map>\n#include <vector>\n#include <algorithm>\n\nconst int MOD = 1000000007;\n\n// Compute prime numbers up to n using Sieve of Eratosthenes\nstd::vector<int> sieve(int n) {\n    std::vector<bool> is_prime(n + 1, true);\n    std::vector<int> primes;\n\n    for (int p = 2; p * p <= n; ++p) {\n        if (is_prime[p]) {\n            for (int i = p * p; i <= n; i += p)\n                is_prime[i] = false;\n        }\n    }\n\n    for (int p = 2; p <= n; ++p) {\n        if (is_prime[p]) {\n            primes.push_back(p);\n        }\n    }\n\n    return primes;\n}\n\n// Factorizes M and returns the diversity of its prime factorization\nint factorizationDiversity(const std::string& output) {\n    std::map<int, int> prime_count;\n    std::string number = \"\";\n    for (char ch : output) {\n        if (ch == ' ') {\n            if (!number.empty()) {\n                int num = std::stoi(number);\n                prime_count[num]++;\n                number = \"\";\n            }\n        } else {\n            number += ch;\n        }\n    }\n\n    if (!number.empty()) {\n        int num = std::stoi(number);\n        prime_count[num]++;\n    }\n\n    int max_prime = 0;\n    for (const auto& pair : prime_count) {\n        max_prime = std::max(max_prime, pair.first);\n    }\n\n    std::vector<int> primes = sieve(max_prime);\n\n    // Calculate the number of corresponding natural numbers\n    long long total = 1;\n    for (const auto& pair : prime_count) {\n        int prime = pair.first;\n        int count = pair.second;\n        \n        if (std::find(primes.begin(), primes.end(), prime) != primes.end()) {\n            total = (total * (count + 1)) % MOD;\n        }\n    }\n\n    return total;\n}\n\nint main() {\n    std::string machine_output;\n    std::getline(std::cin, machine_output);\n\n    int result = factorizationDiversity(machine_output);\n    std::cout << result << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:36"
+  }
+]

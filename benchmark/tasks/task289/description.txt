@@ -1,0 +1,1 @@
+Cover the Polygon with Your Disk. A convex polygon is drawn on a flat paper sheet. You are trying to place a disk in your hands to cover as large an area of the polygon as possible. In other words, the intersection area of the polygon and the disk should be maximized.

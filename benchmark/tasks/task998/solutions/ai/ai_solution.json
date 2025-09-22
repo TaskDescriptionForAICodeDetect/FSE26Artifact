@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_N 100\n#define MAX_LEN 100\n\nchar strings[MAX_N][MAX_LEN + 1];\nchar result[MAX_LEN + 1];\n\nvoid solve(int N, int K) {\n    // Initialize result with lexicographically largest possible string\n    for (int i = 0; i < K; i++) {\n        result[i] = 'z' + 1;\n    }\n    result[K] = '\\0';\n\n    // Try all possible subsequences\n    for (int mask = 1; mask < (1 << N); mask++) {\n        char current[MAX_LEN + 1] = \"\";\n        \n        // Concatenate selected strings\n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                strcat(current, strings[i]);\n            }\n        }\n\n        // If concatenated string is too long, skip\n        if (strlen(current) > K) continue;\n\n        // If concatenated string is too short, pad with smallest lexicographic prefix\n        while (strlen(current) < K) {\n            char smallest[MAX_LEN + 1] = \"z\";\n            for (int i = 0; i < N; i++) {\n                if (mask & (1 << i)) {\n                    if (strcmp(strings[i], smallest) < 0) {\n                        strcpy(smallest, strings[i]);\n                    }\n                }\n            }\n            strcat(current, smallest);\n        }\n\n        // Update result if current is lexicographically smaller\n        if (strcmp(current, result) < 0) {\n            strcpy(result, current);\n        }\n    }\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", strings[i]);\n    }\n\n    solve(N, K);\n    printf(\"%s\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_N 100\n#define MAX_LEN 100\n#define MAX_TOTAL_LEN 10000\n\ntypedef struct {\n    char str[MAX_LEN + 1];\n    int len;\n} String;\n\nString s[MAX_N];\nint N, K;\nchar result[MAX_TOTAL_LEN + 1];\nint result_len = 0;\n\nvoid dfs(int index, char *current, int current_len) {\n    if (current_len == K) {\n        if (result_len == 0 || strcmp(current, result) < 0) {\n            strcpy(result, current);\n            result_len = current_len;\n        }\n        return;\n    }\n    if (index >= N || current_len > K) {\n        return;\n    }\n    // Option 1: skip current string\n    dfs(index + 1, current, current_len);\n    // Option 2: take current string if it fits\n    if (current_len + s[index].len <= K) {\n        char new_current[MAX_TOTAL_LEN + 1];\n        strcpy(new_current, current);\n        strcat(new_current, s[index].str);\n        dfs(index + 1, new_current, current_len + s[index].len);\n    }\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &K);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", s[i].str);\n        s[i].len = strlen(s[i].str);\n    }\n    char current[MAX_TOTAL_LEN + 1] = \"\";\n    dfs(0, current, 0);\n    printf(\"%s\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nstring solve(int N, int K, vector<string>& s) {\n    sort(s.begin(), s.end());\n    vector<vector<string>> dp(N + 1, vector<string>(K + 1, string(K, 'z' + 1)));\n    dp[0][0] = \"\";\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j <= K; ++j) {\n            if (dp[i][j].size() != j) continue;\n            if (dp[i + 1][j] > dp[i][j]) {\n                dp[i + 1][j] = dp[i][j];\n            }\n            int new_len = j + s[i].size();\n            if (new_len <= K) {\n                string new_str = dp[i][j] + s[i];\n                if (new_str < dp[i + 1][new_len]) {\n                    dp[i + 1][new_len] = new_str;\n                }\n            }\n        }\n    }\n    return dp[N][K];\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<string> s(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> s[i];\n    }\n    cout << solve(N, K, s) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:37:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LexSmallestConcatenation {\n    public static String solve(int N, int K, String[] s) {\n        String[][] dp = new String[N + 1][K + 1];\n        for (int i = 0; i <= N; i++) {\n            Arrays.fill(dp[i], null);\n        }\n        dp[0][0] = \"\";\n        \n        for (int i = 1; i <= N; i++) {\n            String current = s[i - 1];\n            int len = current.length();\n            for (int j = 0; j <= K; j++) {\n                if (dp[i - 1][j] != null) {\n                    // Not take current string\n                    if (dp[i][j] == null || dp[i - 1][j].compareTo(dp[i][j]) < 0) {\n                        dp[i][j] = dp[i - 1][j];\n                    }\n                    // Take current string\n                    if (j + len <= K) {\n                        String newStr = dp[i - 1][j] + current;\n                        if (dp[i][j + len] == null || newStr.compareTo(dp[i][j + len]) < 0) {\n                            dp[i][j + len] = newStr;\n                        }\n                    }\n                }\n            }\n        }\n        \n        return dp[N][K] != null ? dp[N][K] : \"\";\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        scanner.nextLine(); // consume newline\n        String[] s = new String[N];\n        for (int i = 0; i < N; i++) {\n            s[i] = scanner.nextLine();\n        }\n        System.out.println(solve(N, K, s));\n    }\n}",
+    "timestamp": "2025-08-05 23:38:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class IrohaStringConcatenation {\n    public static String findLexicographicallySmallestString(String[] strings, int K) {\n        int N = strings.length;\n        String[][] dp = new String[N + 1][K + 1];\n        \n        // Initialize base cases\n        for (int i = 0; i < N + 1; i++) {\n            for (int j = 0; j < K + 1; j++) {\n                dp[i][j] = \"\";\n            }\n        }\n        \n        // Dynamic programming to find lexicographically smallest string\n        for (int i = 1; i <= N; i++) {\n            for (int j = 0; j <= K; j++) {\n                // Skip current string\n                dp[i][j] = dp[i-1][j];\n                \n                // Try to include current string\n                int currentLength = strings[i-1].length();\n                if (j >= currentLength) {\n                    String candidate = dp[i-1][j-currentLength] + strings[i-1];\n                    if (candidate.length() == K && \n                        (dp[i][j].isEmpty() || candidate.compareTo(dp[i][j]) < 0)) {\n                        dp[i][j] = candidate;\n                    }\n                }\n            }\n        }\n        \n        // Find lexicographically smallest string of length K\n        String result = \"\";\n        for (int j = 0; j <= N; j++) {\n            if (dp[j][K].length() == K && \n                (result.isEmpty() || dp[j][K].compareTo(result) < 0)) {\n                result = dp[j][K];\n            }\n        }\n        \n        return result;\n    }\n    \n    public static void main(String[] args) {\n        // Example usage\n        String[] strings = {\"abc\", \"def\", \"ghi\"};\n        int K = 6;\n        System.out.println(findLexicographicallySmallestString(strings, K));\n    }\n}",
+    "timestamp": "2025-08-05 23:38:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nstring solve(vector<string>& strings, int K) {\n    int N = strings.size();\n    vector<vector<string>> dp(K + 1);\n    dp[0] = {\"\"};\n\n    for (int len = 1; len <= K; len++) {\n        for (int i = 0; i < N; i++) {\n            for (const string& prev : dp[len - 1]) {\n                string candidate = prev + strings[i];\n                if (candidate.length() <= K) {\n                    dp[len].push_back(candidate);\n                }\n            }\n            \n            if (dp[len].empty()) {\n                dp[len].push_back(strings[i]);\n            }\n        }\n        \n        sort(dp[len].begin(), dp[len].end());\n        dp[len].erase(unique(dp[len].begin(), dp[len].end()), dp[len].end());\n    }\n\n    return *min_element(dp[K].begin(), dp[K].end());\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<string> strings(N);\n    for (int i = 0; i < N; i++) {\n        cin >> strings[i];\n    }\n    \n    cout << solve(strings, K) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:38:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import combinations\n\ndef lexicographically_smallest_concatenation(N, K, sequence):\n    min_string = None\n\n    for r in range(1, N + 1):\n        for combination in combinations(sequence, r):\n            concatenated = ''.join(combination)\n            if len(concatenated) >= K:\n                candidate = concatenated[:K]\n                if min_string is None or candidate < min_string:\n                    min_string = candidate\n\n    return min_string\n\n# Example Usage\nN = 3\nK = 5\nsequence = [\"abc\", \"de\", \"fgh\"]\nprint(lexicographically_smallest_concatenation(N, K, sequence))",
+    "timestamp": "2025-08-13 16:28:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LexicographicallySmallestString {\n    public static String findSmallestString(int N, int K, String[] strings) {\n        String result = null;\n        \n        // Generate all combinations of strings of length not exceeding K\n        for (int i = 0; i < (1 << N); i++) {\n            StringBuilder builder = new StringBuilder();\n            \n            for (int j = 0; j < N; j++) {\n                if ((i & (1 << j)) != 0) {\n                    builder.append(strings[j]);\n                }\n            }\n            \n            if (builder.length() == K) {\n                String candidate = builder.toString();\n                \n                if (result == null || candidate.compareTo(result) < 0) {\n                    result = candidate;\n                }\n            }\n        }\n        \n        return result;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        scanner.nextLine();\n        String[] strings = new String[N];\n        \n        for (int i = 0; i < N; i++) {\n            strings[i] = scanner.nextLine();\n        }\n        \n        String result = findSmallestString(N, K, strings);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 16:28:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_STRINGS 100\n#define MAX_LENGTH 100\n\nchar result[MAX_LENGTH * MAX_STRINGS + 1];\n\nvoid findLexicographicallySmallestString(char strings[MAX_STRINGS][MAX_LENGTH], int n, int k) {\n    char temp[MAX_LENGTH * MAX_STRINGS + 1];\n    result[0] = '\\0';\n    for (int i = 0; i < (1 << n); i++) {\n        int totalLength = 0;\n        temp[0] = '\\0';\n        for (int j = 0; j < n; j++) {\n            if (i & (1 << j)) {\n                if (totalLength + strlen(strings[j]) > k) break;\n                strcat(temp, strings[j]);\n                totalLength += strlen(strings[j]);\n            }\n        }\n        if (totalLength == k && (strlen(result) == 0 || strcmp(temp, result) < 0)) {\n            strcpy(result, temp);\n        }\n    }\n}\n\nint main() {\n    int n, k;\n    char strings[MAX_STRINGS][MAX_LENGTH];\n\n    scanf(\"%d %d\", &n, &k);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%s\", strings[i]);\n    }\n\n    findLexicographicallySmallestString(strings, n, k);\n    printf(\"%s\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:28:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<string> s(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> s[i];\n    }\n\n    // Sort the strings lexicographically\n    sort(s.begin(), s.end());\n\n    string result;\n    // Concatenate the smallest K strings\n    for (int i = 0; i < N && K > 0; ++i) {\n        if (result.length() + s[i].length() <= K) {\n            result += s[i];\n        } else {\n            // Add as much as possible from the last string to reach length K\n            result += s[i].substr(0, K - result.length());\n        }\n        if (result.length() == K) {\n            break;\n        }\n    }\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:28:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, K, strings):\n    # Create a 2D DP table to store lexicographically smallest strings\n    dp = [[None] * (K + 1) for _ in range(N + 1)]\n    \n    # Initialize base case\n    dp[0][0] = \"\"\n    \n    # Iterate through strings and possible lengths\n    for i in range(1, N + 1):\n        for j in range(K + 1):\n            # Skip current string\n            if dp[i-1][j] is not None:\n                dp[i][j] = dp[i-1][j]\n            \n            # Take current string if possible\n            curr_str = strings[i-1]\n            curr_len = len(curr_str)\n            \n            if j >= curr_len:\n                prev_str = dp[i-1][j-curr_len]\n                if prev_str is not None:\n                    candidate = prev_str + curr_str\n                    if (dp[i][j] is None or \n                        candidate < dp[i][j]):\n                        dp[i][j] = candidate\n    \n    # Find lexicographically smallest string of length K\n    result = None\n    for i in range(1, N + 1):\n        if dp[i][K] is not None:\n            if result is None or dp[i][K] < result:\n                result = dp[i][K]\n    \n    return result\n\n# Read input\nN, K = map(int, input().split())\nstrings = []\nfor _ in range(N):\n    strings.append(input().strip())\n\n# Print result\nprint(solve(N, K, strings))",
+    "timestamp": "2025-08-13 16:28:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom functools import lru_cache\n\ndef solve():\n    N, K = map(int, sys.stdin.readline().split())\n    strings = [sys.stdin.readline().strip() for _ in range(N)]\n    \n    # Precompute the lengths of the strings\n    lengths = [len(s) for s in strings]\n    \n    # We'll use dynamic programming to find the minimal string\n    # dp[i][k] = the minimal string of length k using strings from i to N-1\n    # To optimize space and time, we'll memoize using a dictionary or similar\n    \n    # Since N and K can be up to 50, we need an efficient way\n    # We'll use memoization with indices and remaining length\n    \n    @lru_cache(maxsize=None)\n    def dfs(i, remaining):\n        if remaining == 0:\n            return \"\"\n        if i == N:\n            return None  # invalid\n        # Option 1: skip current string\n        res = dfs(i + 1, remaining)\n        # Option 2: take current string if possible\n        if lengths[i] <= remaining:\n            candidate = strings[i] + dfs(i + 1, remaining - lengths[i]) if dfs(i + 1, remaining - lengths[i]) is not None else None\n            if candidate is not None:\n                if res is None or candidate < res:\n                    res = candidate\n        return res\n    \n    result = dfs(0, K)\n    print(result if result is not None else \"\")\n\nsolve()",
+    "timestamp": "2025-08-13 16:28:43"
+  }
+]

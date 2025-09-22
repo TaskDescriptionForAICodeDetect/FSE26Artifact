@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    int color;\n    int covered;\n} Disc;\n\nint maxRemovedDiscs(Disc discs[], int n) {\n    int removed = 0;\n    int *stack = (int *)malloc(n * sizeof(int));\n    int top = -1;\n\n    for (int i = 0; i < n; i++) {\n        if (discs[i].covered == 0) {\n            if (top != -1 && discs[stack[top]].color == discs[i].color) {\n                removed += 2;\n                top--;\n            } else {\n                stack[++top] = i;\n            }\n        }\n    }\n\n    free(stack);\n    return removed;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    Disc *discs = (Disc *)malloc(n * sizeof(Disc));\n\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &discs[i].color, &discs[i].covered);\n    }\n\n    printf(\"%d\\n\", maxRemovedDiscs(discs, n));\n    free(discs);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:09:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DiscRemoval {\n    public static int maxDiscsRemoved(int[] colors) {\n        Map<Integer, Integer> colorCount = new HashMap<>();\n        for (int color : colors) {\n            colorCount.put(color, colorCount.getOrDefault(color, 0) + 1);\n        }\n        \n        int maxRemoved = 0;\n        for (int count : colorCount.values()) {\n            maxRemoved += count / 2;\n        }\n        \n        return maxRemoved;\n    }\n    \n    public static void main(String[] args) {\n        int[] discs1 = {1, 2, 3, 3, 2, 1};\n        System.out.println(maxDiscsRemoved(discs1));  // Output: 3\n        \n        int[] discs2 = {1, 1, 1, 1};\n        System.out.println(maxDiscsRemoved(discs2));  // Output: 2\n    }\n}",
+    "timestamp": "2025-08-05 19:09:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\n#include <algorithm>\n\nusing namespace std;\n\nint maxDiscsRemoved(vector<pair<int, char>>& discs) {\n    stack<char> s;\n    int count = 0;\n    \n    for (auto& disc : discs) {\n        if (!s.empty() && s.top() == disc.second) {\n            s.pop();\n            count += 2;\n        } else {\n            s.push(disc.second);\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, char>> discs(N);\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> discs[i].first >> discs[i].second;\n    }\n    \n    sort(discs.begin(), discs.end());\n    \n    cout << maxDiscsRemoved(discs) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:09:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_DISCS 1000\n\ntypedef struct {\n    int color;\n    bool covered;\n} Disc;\n\nint max_removable_discs(Disc discs[], int n) {\n    int removed = 0;\n    bool changed;\n\n    do {\n        changed = false;\n        for (int i = 0; i < n; i++) {\n            if (discs[i].covered) continue;\n            \n            for (int j = i + 1; j < n; j++) {\n                if (discs[j].covered) continue;\n                \n                if (discs[i].color == discs[j].color) {\n                    discs[i].covered = true;\n                    discs[j].covered = true;\n                    removed += 2;\n                    changed = true;\n                    break;\n                }\n            }\n        }\n    } while (changed);\n\n    return removed;\n}\n\nint main() {\n    int n;\n    Disc discs[MAX_DISCS];\n\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &discs[i].color);\n        discs[i].covered = false;\n    }\n\n    printf(\"%d\\n\", max_removable_discs(discs, n));\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:10:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nint maxDiscsRemoved(vector<int>& colors) {\n    int n = colors.size();\n    unordered_map<int, int> colorCount;\n    \n    // Count frequencies of each color\n    for (int color : colors) {\n        colorCount[color]++;\n    }\n    \n    // Check if paired discs can be removed\n    int maxRemoved = 0;\n    for (auto& pair : colorCount) {\n        maxRemoved += pair.second / 2;\n    }\n    \n    return maxRemoved;\n}\n\nint main() {\n    vector<int> colors1 = {1, 2, 3, 3, 2, 1};\n    vector<int> colors2 = {1, 1, 2, 2, 3, 3};\n    \n    cout << \"Max discs removed (Test 1): \" << maxDiscsRemoved(colors1) << endl;\n    cout << \"Max discs removed (Test 2): \" << maxDiscsRemoved(colors2) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:10:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DiscRemoval {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] colors = new int[n];\n        for (int i = 0; i < n; i++) {\n            colors[i] = scanner.nextInt();\n        }\n        scanner.close();\n\n        Stack<Integer> stack = new Stack<>();\n        int removedPairs = 0;\n\n        for (int color : colors) {\n            if (!stack.isEmpty() && stack.peek() == color) {\n                stack.pop();\n                removedPairs++;\n            } else {\n                stack.push(color);\n            }\n        }\n\n        System.out.println(removedPairs * 2);\n    }\n}",
+    "timestamp": "2025-08-05 19:10:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_discs_removed(piles):\n    from collections import Counter\n    \n    # Count each color's discs\n    disc_count = Counter(piles)\n    \n    # Calculate the maximum number of pairs that can be removed\n    max_pairs = sum(count // 2 for count in disc_count.values())\n    \n    return max_pairs\n\n# Example usage\npiles = ['red', 'blue', 'red', 'blue', 'green', 'green', 'red']\nprint(max_discs_removed(piles))  # Output will be the number of pairs that can be removed",
+    "timestamp": "2025-08-13 02:52:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Stack;\n\npublic class DiscGame {\n    \n    static class Disc {\n        char color;\n        int index;\n        \n        public Disc(char color, int index) {\n            this.color = color;\n            this.index = index;\n        }\n    }\n\n    public static int maxRemovableDiscs(char[] discs) {\n        Stack<Disc> stack = new Stack<>();\n        int removablePairs = 0;\n        \n        for (int i = discs.length - 1; i >= 0; i--) {\n            if (!stack.isEmpty() && stack.peek().color == discs[i]) {\n                stack.pop();\n                removablePairs++;\n            } else {\n                stack.push(new Disc(discs[i], i));\n            }\n        }\n        \n        return removablePairs * 2;\n    }\n\n    public static void main(String[] args) {\n        char[] discs = {'R', 'G', 'B', 'R', 'G', 'B'};\n        \n        int result = maxRemovableDiscs(discs);\n        System.out.println(\"Maximum number of discs that can be removed: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 02:52:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n// Function to remove the discs recursively\nint removeDiscs(int numDiscs, int colors[], int top) {\n    int removed = 0;\n    int pairFound = 0;\n    \n    for (int i = 0; i < numDiscs; i++) {\n        if (top & (1 << i)) {\n            continue;\n        }\n        for (int j = i + 1; j < numDiscs; j++) {\n            if ((top & (1 << j)) || colors[i] != colors[j]) {\n                continue;\n            }\n            top |= (1 << i);\n            top |= (1 << j);\n            pairFound = 1;\n            int result = removeDiscs(numDiscs, colors, top);\n            if (result + 2 > removed) {\n                removed = result + 2;\n            }\n            top &= ~(1 << i);\n            top &= ~(1 << j);\n        }\n    }\n    \n    if (!pairFound) {\n        return removed;\n    }\n    return removed;\n}\n\nint main() {\n    int numDiscs;\n    printf(\"Enter number of discs: \");\n    scanf(\"%d\", &numDiscs);\n    \n    int colors[numDiscs];\n    printf(\"Enter colors of discs: \");\n    for (int i = 0; i < numDiscs; i++) {\n        scanf(\"%d\", &colors[i]);\n    }\n    \n    int maxRemoved = removeDiscs(numDiscs, colors, 0);\n    printf(\"Maximum number of discs that can be removed: %d\\n\", maxRemoved);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 02:52:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_removable_discs(discs):\n    n = len(discs)\n    graph = [[] for _ in range(n)]\n    \n    # Build graph of overlapping discs\n    for i in range(n):\n        for j in range(i + 1, n):\n            if is_overlapping(discs[i], discs[j]):\n                graph[i].append(j)\n                graph[j].append(i)\n    \n    # Maximum matching in graph\n    match = [-1] * n\n    used = [False] * n\n    \n    def dfs(v):\n        used[v] = True\n        for u in graph[v]:\n            w = match[u]\n            if w == -1 or (not used[w] and dfs(w)):\n                match[v] = u\n                match[u] = v\n                return True\n        return False\n    \n    matching_count = 0\n    for i in range(n):\n        if not used[i] and discs[i][2] == 1:  # Only try matching red discs\n            used = [False] * n\n            if dfs(i):\n                matching_count += 1\n    \n    return matching_count * 2\n\ndef is_overlapping(disc1, disc2):\n    x1, y1, color1 = disc1\n    x2, y2, color2 = disc2\n    \n    if color1 != color2:\n        return False\n    \n    distance = ((x1 - x2)**2 + (y1 - y2)**2)**0.5\n    return distance <= 2  # Assuming disc radius is 1\n\n# Example usage\ndiscs = [(1,1,1), (2,2,1), (3,3,2), (4,4,2)]\nprint(max_removable_discs(discs))",
+    "timestamp": "2025-08-13 02:53:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_removed_discs(discs):\n    stack = []\n    count = 0\n    for disc in discs:\n        if stack and stack[-1] == disc:\n            stack.pop()\n            count += 2\n        else:\n            stack.append(disc)\n    return count",
+    "timestamp": "2025-08-13 02:53:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Disc {\n    int x, y, color;\n};\n\nbool compare(const Disc& a, const Disc& b) {\n    if (a.x == b.x) return a.y < b.y;\n    return a.x < b.x;\n}\n\nint maxRemovablePairs(std::vector<Disc>& discs) {\n    std::sort(discs.begin(), discs.end(), compare);\n    std::vector<bool> removed(discs.size(), false);\n    int maxPairs = 0;\n\n    for (size_t i = 0; i < discs.size(); ++i) {\n        if (removed[i]) continue;\n        for (size_t j = i + 1; j < discs.size(); ++j) {\n            if (!removed[j] && discs[i].color == discs[j].color) {\n                // Check for overlapping discs\n                bool covered = false;\n                for (size_t k = i + 1; k < j; ++k) {\n                    if (!removed[k] && discs[k].x > discs[i].x && discs[k].y < discs[j].y) {\n                        covered = true;\n                        break;\n                    }\n                }\n                if (!covered) {\n                    removed[i] = removed[j] = true;\n                    ++maxPairs;\n                    break;\n                }\n            }\n        }\n    }\n    return maxPairs;\n}\n\nint main() {\n    std::vector<Disc> discs = {\n        {0, 0, 1}, {1, 0, 2}, {2, 0, 1}, {3, 0, 2},\n        {4, 0, 1}, {5, 0, 1}, {6, 1, 2}, {7, 0, 2}\n    };\n\n    int result = maxRemovablePairs(discs);\n    std::cout << \"Maximum number of pairs: \" << result << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:08:05"
+  }
+]

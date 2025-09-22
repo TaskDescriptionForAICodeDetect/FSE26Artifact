@@ -1,0 +1,1 @@
+Cubic wants to paint an X × Y × Z rectangular parallelepiped made up of 1 × 1 × 1 cubes using N colors. The color of each cube depends on its Manhattan distance from a designated origin cube (A, B, C). Your task is to calculate how many cubes will be painted with each color based on the distance between them and the origin cube, where the color is determined by the formula D % N.

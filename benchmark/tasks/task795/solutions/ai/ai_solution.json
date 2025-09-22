@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n\nint main() {\n    int N;\n    char S[505];\n    scanf(\"%d %s\", &N, S);\n\n    int red[505], blue[505];\n    for (int i = 0; i < N; i++) {\n        if (S[i] == '0') {\n            red[i] = 2;\n            blue[i] = 0;\n        } else if (S[i] == '1') {\n            red[i] = 1;\n            blue[i] = 1;\n        } else {\n            red[i] = 0;\n            blue[i] = 2;\n        }\n    }\n\n    long long ways = 1;\n    for (int round = 0; round < 2 * N; round++) {\n        int total_red = 0, total_blue = 0;\n        for (int i = 0; i < N; i++) {\n            total_red += red[i];\n            total_blue += blue[i];\n        }\n\n        if (total_red + total_blue == 0) break;\n\n        long long round_ways = 0;\n        for (int i = 0; i < N; i++) {\n            if (red[i] > 0) {\n                round_ways++;\n            }\n            if (blue[i] > 0) {\n                round_ways++;\n            }\n        }\n\n        ways = (ways * round_ways) % MOD;\n\n        int new_red[505] = {0}, new_blue[505] = {0};\n        for (int i = 0; i < N; i++) {\n            if (i > 0) {\n                if (red[i] > 0) {\n                    new_red[i-1]++;\n                    red[i]--;\n                }\n                if (blue[i] > 0) {\n                    new_blue[i-1]++;\n                    blue[i]--;\n                }\n            }\n        }\n\n        for (int i = 0; i < N; i++) {\n            red[i] += new_red[i];\n            blue[i] += new_blue[i];\n        }\n    }\n\n    printf(\"%lld\\n\", ways);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_N 2000\n\nint N;\nchar S[MAX_N + 1];\nint dp[MAX_N + 1][MAX_N + 1];\n\nint main() {\n    scanf(\"%d\", &N);\n    scanf(\"%s\", S);\n    \n    dp[0][0] = 1;\n    for (int i = 0; i < 2 * N; ++i) {\n        for (int j = 0; j <= N; ++j) {\n            if (dp[i][j] == 0) continue;\n            if (j < N) {\n                int c = S[j] - '0';\n                if (c >= 1) {\n                    dp[i + 1][j + 1] = (dp[i + 1][j + 1] + dp[i][j]) % MOD;\n                }\n                if (c >= 2) {\n                    dp[i + 1][j] = (dp[i + 1][j] + dp[i][j]) % MOD;\n                }\n            }\n            if (j > 0) {\n                dp[i + 1][j - 1] = (dp[i + 1][j - 1] + dp[i][j]) % MOD;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", dp[2 * N][0]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 998244353;\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n    \n    vector<vector<int>> dp(N + 1, vector<int>(N + 1, 0));\n    dp[0][0] = 1;\n    \n    for (int i = 0; i < N; ++i) {\n        vector<vector<int>> new_dp(N + 1, vector<int>(N + 1, 0));\n        for (int r = 0; r <= i; ++r) {\n            for (int b = 0; b <= i; ++b) {\n                if (dp[r][b] == 0) continue;\n                if (S[i] == '0') {\n                    new_dp[r + 1][b] = (new_dp[r + 1][b] + dp[r][b]) % MOD;\n                    new_dp[r + 1][b] = (new_dp[r + 1][b] + dp[r][b]) % MOD;\n                } else if (S[i] == '1') {\n                    new_dp[r + 1][b] = (new_dp[r + 1][b] + dp[r][b]) % MOD;\n                    new_dp[r][b + 1] = (new_dp[r][b + 1] + dp[r][b]) % MOD;\n                } else if (S[i] == '2') {\n                    new_dp[r][b + 1] = (new_dp[r][b + 1] + dp[r][b]) % MOD;\n                    new_dp[r][b + 1] = (new_dp[r][b + 1] + dp[r][b]) % MOD;\n                }\n            }\n        }\n        dp = move(new_dp);\n    }\n    \n    int result = 0;\n    for (int r = 0; r <= N; ++r) {\n        for (int b = 0; b <= N; ++b) {\n            if (r + b == 2 * N) {\n                result = (result + dp[r][b]) % MOD;\n            }\n        }\n    }\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        String S = sc.next();\n        sc.close();\n\n        long[][] dp = new long[N + 1][3];\n        dp[0][0] = 1;\n\n        for (int i = 0; i < N; i++) {\n            long[][] newDp = new long[N + 1][3];\n            char c = S.charAt(i);\n            int maxBalls = (c == '0') ? 0 : (c == '1') ? 1 : 2;\n\n            for (int j = 0; j <= N; j++) {\n                for (int k = 0; k < 3; k++) {\n                    if (dp[j][k] == 0) continue;\n                    for (int l = 0; l <= maxBalls; l++) {\n                        int newK = k + l;\n                        int newJ = j + (maxBalls - l);\n                        if (newK >= 3) continue;\n                        if (newJ > N) continue;\n                        newDp[newJ][newK] = (newDp[newJ][newK] + dp[j][k]) % MOD;\n                    }\n                }\n            }\n            dp = newDp;\n        }\n\n        long result = 0;\n        for (int j = 0; j <= N; j++) {\n            for (int k = 0; k < 3; k++) {\n                if (k == 0) {\n                    result = (result + dp[j][k]) % MOD;\n                }\n            }\n        }\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:57:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    static final int MOD = 998244353;\n\n    public static int solve(String S) {\n        int N = S.length();\n        long[][][] dp = new long[N + 1][N + 1][N + 1];\n        dp[0][0][0] = 1;\n\n        for (int i = 0; i < N; i++) {\n            for (int r = 0; r <= N; r++) {\n                for (int b = 0; b <= N; b++) {\n                    if (dp[i][r][b] == 0) continue;\n\n                    int[] balls = getBalls(S.charAt(i));\n                    int redBalls = balls[0];\n                    int blueBalls = balls[1];\n\n                    // Red ball possibilities\n                    for (int jr = 0; jr < redBalls; jr++) {\n                        dp[i + 1][r + jr][b] = (dp[i + 1][r + jr][b] + dp[i][r][b]) % MOD;\n                    }\n\n                    // Blue ball possibilities\n                    for (int jb = 0; jb < blueBalls; jb++) {\n                        dp[i + 1][r][b + jb] = (dp[i + 1][r][b + jb] + dp[i][r][b]) % MOD;\n                    }\n                }\n            }\n        }\n\n        long result = 0;\n        for (int r = 0; r <= N; r++) {\n            for (int b = 0; b <= N; b++) {\n                result = (result + dp[N][r][b]) % MOD;\n            }\n        }\n\n        return (int) result;\n    }\n\n    static int[] getBalls(char ch) {\n        switch(ch) {\n            case '0': return new int[]{2, 0};\n            case '1': return new int[]{1, 1};\n            case '2': return new int[]{0, 2};\n            default: return new int[]{0, 0};\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String S = br.readLine();\n        System.out.println(solve(S));\n    }\n}",
+    "timestamp": "2025-08-05 22:57:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\nconst int MOD = 998244353;\n\nint main() {\n    int N;\n    string S;\n    cin >> N >> S;\n\n    vector<vector<int>> balls(N);\n    for (int i = 0; i < N; i++) {\n        if (S[i] == '0') {\n            balls[i] = {1, 1};\n        } else if (S[i] == '1') {\n            balls[i] = {1, 2};\n        } else {\n            balls[i] = {2, 2};\n        }\n    }\n\n    long long ways = 1;\n    for (int round = 0; round < 2 * N; round++) {\n        bool found = false;\n        for (int i = 0; i < N; i++) {\n            if (!balls[i].empty()) {\n                int color_index = rand() % balls[i].size();\n                balls[i].erase(balls[i].begin() + color_index);\n                \n                if (balls[i].empty() && i > 0) {\n                    ways = (ways * (balls[i-1].size())) % MOD;\n                }\n                found = true;\n                break;\n            }\n        }\n        \n        if (!found) break;\n    }\n\n    cout << ways << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:57:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_possible_sequences(S):\n    MOD = 998244353\n    n = len(S)\n    dp = [0] * (n + 1)\n    dp[0] = 1\n\n    for c in S:\n        ndp = [0] * (n + 1)\n        if c == '0':\n            for k in range(n):\n                ndp[k + 1] = (ndp[k + 1] + dp[k]) % MOD\n        elif c == '1':\n            for k in range(n + 1):\n                ndp[k] = (ndp[k] + dp[k]) % MOD\n                if k > 0:\n                    ndp[k - 1] = (ndp[k - 1] + dp[k]) % MOD\n        elif c == '2':\n            for k in range(n + 1):\n                if k > 0:\n                    ndp[k - 1] = (ndp[k - 1] + dp[k]) % MOD\n                if k > 1:\n                    ndp[k - 2] = (ndp[k - 2] + dp[k]) % MOD\n        dp = ndp\n\n    return dp[0]\n\n# Example usage\nS = \"012\"\nprint(count_possible_sequences(S))",
+    "timestamp": "2025-08-13 13:04:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class SnukeBallSequence {\n    private static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = Integer.parseInt(scanner.nextLine());\n        String S = scanner.nextLine();\n        scanner.close();\n\n        // dp[i][j] represents the number of sequences possible with first i Snukes and j balls handed to Takahashi\n        int[][] dp = new int[N + 1][2 * N + 1];\n        dp[0][0] = 1;\n\n        // Iterate over each Snuke\n        for (int i = 0; i < N; i++) {\n            int balls = 0;\n            if (S.charAt(i) == '0') balls = 2;\n            if (S.charAt(i) == '1') balls = 1;\n            if (S.charAt(i) == '2') balls = 0;\n            \n            for (int j = 0; j <= 2 * i; j++) {\n                // For each number of balls handed to Takahashi until now\n                \n                if (S.charAt(i) == '0') {\n                    dp[i + 1][j + 1] = (dp[i + 1][j + 1] + dp[i][j] * 2) % MOD;\n                    dp[i + 1][j + 2] = (dp[i + 1][j + 2] + dp[i][j]) % MOD;\n                } else if (S.charAt(i) == '1') {\n                    dp[i + 1][j + 1] = (dp[i + 1][j + 1] + dp[i][j]) % MOD;\n                }\n            }\n        }\n\n        long result = 0;\n        for (int j = 0; j <= 2 * N; j++) {\n            result = (result + dp[N][j]) % MOD;\n        }\n\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 13:04:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nint main() {\n    int N;\n    char S[100001];\n    scanf(\"%d %s\", &N, S);\n\n    long long dp[100001][3] = {0};\n    dp[0][0] = 1;\n\n    for (int i = 0; i < N; i++) {\n        int red_balls = (S[i] == '0' ? 2 : (S[i] == '1' ? 1 : 0));\n        int blue_balls = (S[i] == '0' ? 0 : (S[i] == '1' ? 1 : 2));\n        \n        for (int j = 0; j <= i; j++) {\n            for (int rb = 0; rb <= red_balls; rb++) {\n                for (int bb = 0; bb <= blue_balls; bb++) {\n                    if (rb + bb <= 2) {\n                        dp[i + 1][(j + bb - rb + 3) % 3] = (dp[i + 1][(j + bb - rb + 3) % 3] + dp[i][j]) % MOD;\n                    }\n                }\n            }\n        }\n    }\n\n    long long result = dp[N][0];\n    printf(\"%lld\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:05:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateSequences(S) {\n    const MOD = 998244353;\n    const N = S.length;\n    \n    let dp = Array(N + 1).fill(0).map(() => Array(N + 1).fill(0));\n    dp[0][0] = 1;\n    \n    for (let i = 0; i < N; i++) {\n        let red = (S[i] === '0' || S[i] === '1') ? 1 : 0;\n        let blue = (S[i] === '1' || S[i] === '2') ? 1 : 0;\n        \n        for (let j = 0; j <= i; j++) {\n            if (red > 0) {\n                dp[i + 1][j + 1] = (dp[i + 1][j + 1] + dp[i][j] * red) % MOD;\n            }\n            if (blue > 0) {\n                dp[i + 1][j] = (dp[i + 1][j] + dp[i][j] * blue) % MOD;\n            }\n        }\n    }\n    \n    let result = dp[N][N];\n    return result;\n}\n\n// Example usage:\nconst S = \"012\";\nconsole.log(calculateSequences(S)); // Output will be determined by S",
+    "timestamp": "2025-08-13 13:05:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, S):\n    MOD = 998244353\n    \n    # Initialize the number of red and blue balls for each Snuke\n    red = [0] * N\n    blue = [0] * N\n    \n    for i in range(N):\n        if S[i] == '0':\n            red[i] = 2\n        elif S[i] == '1':\n            red[i] = 1\n            blue[i] = 1\n        else:\n            blue[i] = 2\n    \n    # Dynamic programming to count the number of ways\n    dp = [1]\n    \n    for turn in range(2 * N):\n        new_dp = [0] * (len(dp) + 1)\n        \n        for i in range(len(dp)):\n            # Try passing a red ball from any Snuke\n            for j in range(N):\n                if red[j] > 0:\n                    red[j] -= 1\n                    new_dp[i + 1] = (new_dp[i + 1] + dp[i]) % MOD\n                    red[j] += 1\n            \n            # Try passing a blue ball from any Snuke\n            for j in range(N):\n                if blue[j] > 0:\n                    blue[j] -= 1\n                    new_dp[i + 1] = (new_dp[i + 1] + dp[i]) % MOD\n                    blue[j] += 1\n        \n        dp = new_dp\n    \n    return sum(dp) % MOD\n\n# Read input\nN = int(input())\nS = input()\n\n# Solve and print the result\nprint(solve(N, S))",
+    "timestamp": "2025-08-13 13:05:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, S) {\n    const MOD = 998244353;\n    \n    let dp = new Array(1 << (2 * N)).fill(0n);\n    dp[0] = 1n;\n    \n    for (let step = 0; step < 2 * N; step++) {\n        let newDp = new Array(1 << (2 * N)).fill(0n);\n        \n        for (let mask = 0; mask < (1 << (2 * N)); mask++) {\n            if (dp[mask] === 0n) continue;\n            \n            for (let i = 0; i < N; i++) {\n                let redCount = (mask >> (2 * i)) & 1;\n                let blueCount = (mask >> (2 * i + 1)) & 1;\n                \n                if (S[i] === '0' && redCount === 2) {\n                    let newMask = mask ^ (1 << (2 * i)) ^ (1 << (2 * i + 1));\n                    newDp[newMask] = (newDp[newMask] + dp[mask]) % MOD;\n                }\n                else if (S[i] === '1' && redCount === 1 && blueCount === 1) {\n                    let newMask = mask ^ (1 << (2 * i)) ^ (1 << (2 * i + 1));\n                    newDp[newMask] = (newDp[newMask] + dp[mask]) % MOD;\n                }\n                else if (S[i] === '2' && blueCount === 2) {\n                    let newMask = mask ^ (1 << (2 * i)) ^ (1 << (2 * i + 1));\n                    newDp[newMask] = (newDp[newMask] + dp[mask]) % MOD;\n                }\n            }\n        }\n        \n        dp = newDp;\n    }\n    \n    let result = 0n;\n    for (let mask = 0; mask < (1 << (2 * N)); mask++) {\n        if (mask === 0) {\n            result = (result + dp[mask]) % MOD;\n        }\n    }\n    \n    return Number(result);\n}",
+    "timestamp": "2025-08-13 13:05:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    S = sys.stdin.readline().strip()\n    N = len(S)\n    dp = [0] * (N + 2)\n    dp[0] = 1\n    for c in S:\n        new_dp = [0] * (N + 2)\n        if c == '0':\n            for i in range(N + 1):\n                new_dp[i] = (new_dp[i] + dp[i]) % MOD\n                if i + 1 <= N:\n                    new_dp[i + 1] = (new_dp[i + 1] + dp[i]) % MOD\n        elif c == '1':\n            for i in range(N + 1):\n                new_dp[i] = (new_dp[i] + 2 * dp[i]) % MOD\n                if i + 1 <= N:\n                    new_dp[i + 1] = (new_dp[i + 1] + dp[i]) % MOD\n        elif c == '2':\n            for i in range(N + 1):\n                new_dp[i] = (new_dp[i] + dp[i]) % MOD\n                if i + 1 <= N:\n                    new_dp[i + 1] = (new_dp[i + 1] + 2 * dp[i]) % MOD\n        dp = new_dp\n    total = 0\n    for i in range(N + 1):\n        total = (total + dp[i]) % MOD\n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 13:05:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve() {\n    const S = require('fs').readFileSync('/dev/stdin', 'utf8').trim();\n    const N = S.length;\n    let dp = new Array(N + 2).fill(0).map(() => new Array(N + 2).fill(0));\n    dp[0][0] = 1;\n\n    for (let i = 0; i < 2 * N; i++) {\n        let newDp = new Array(N + 2).fill(0).map(() => new Array(N + 2).fill(0));\n        for (let r = 0; r <= N; r++) {\n            for (let b = 0; b <= N; b++) {\n                if (dp[r][b] === 0) continue;\n                if (r < N) {\n                    const c = S[r];\n                    if (c === '0' || c === '1') {\n                        newDp[r + 1][b] = (newDp[r + 1][b] + dp[r][b]) % MOD;\n                    }\n                }\n                if (b < N) {\n                    const c = S[b];\n                    if (c === '1' || c === '2') {\n                        newDp[r][b + 1] = (newDp[r][b + 1] + dp[r][b]) % MOD;\n                    }\n                }\n            }\n        }\n        dp = newDp;\n    }\n\n    console.log(dp[N][N] % MOD);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:05:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nconst int MOD = 998244353;\n\nint solve(const std::string& S) {\n    int N = S.size();\n    \n    std::vector<std::vector<int>> dp(2 * N + 1, std::vector<int>(2 * N + 1, 0));\n    dp[0][0] = 1;\n    \n    for (int step = 0; step < 2 * N; ++step) {\n        int c0 = 0, c1 = 0, c2 = 0;\n        for (int i = 0; i < N; ++i) {\n            if (S[i] == '0') c0++;\n            else if (S[i] == '1') c1++;\n            else c2++;\n        }\n        \n        for (int r0 = 0; r0 <= c0; ++r0) {\n            for (int r1 = 0; r1 <= c1; ++r1) {\n                if (dp[r0][r1] == 0) continue;\n                int r2 = step - r0 - r1;\n                if (r2 < 0 || r2 > c2) continue;\n                \n                if (r0 < c0) dp[r0 + 1][r1] = (dp[r0 + 1][r1] + dp[r0][r1] * (c0 - r0) % MOD) % MOD;\n                if (r1 < c1) dp[r0][r1 + 1] = (dp[r0][r1 + 1] + dp[r0][r1] * (c1 - r1) % MOD) % MOD;\n                if (r2 < c2) dp[r0][r1] = (dp[r0][r1] + dp[r0][r1] * (c2 - r2) % MOD) % MOD;\n            }\n        }\n    }\n    \n    int result = 0;\n    for (int r0 = 0; r0 <= 2 * N; ++r0) {\n        int r1 = 2 * N - r0;\n        if (r1 < 0 || r1 > 2 * N) continue;\n        result = (result + dp[r0][r1]) % MOD;\n    }\n    \n    return result;\n}\n\nint main() {\n    std::string S;\n    std::cin >> S;\n    std::cout << solve(S) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:38:04"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(d, k, a, b, t):\n    if d <= k:\n        return d * a\n\n    full_trips = d // k\n    remaining_dist = d % k\n\n    options = [\n        # Walk entire distance\n        d * b,\n        \n        # Full car trips + walk remaining\n        full_trips * (k * a + t) + remaining_dist * b,\n        \n        # Full car trips - 1 + walk remaining\n        (full_trips - 1) * (k * a + t) + k * a + remaining_dist * b if full_trips > 0 else float('inf'),\n        \n        # Full car trips + repair + partial car trip\n        full_trips * (k * a + t) + min(remaining_dist * a, remaining_dist * b)\n    ]\n\n    return min(options)\n\nd, k, a, b, t = map(int, input().split())\nprint(solve(d, k, a, b, t))",
+    "timestamp": "2025-08-05 17:31:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "d, k, a, b, t = map(int, input().split())\n\nif d <= k:\n    print(d * a)\nelse:\n    # Calculate the full cycles and remaining distance\n    full_cycles = (d - 1) // k\n    remaining = d - full_cycles * k\n    \n    # Option 1: Drive full cycles and then walk the remaining\n    time1 = full_cycles * (k * a + t) - t + remaining * b\n    \n    # Option 2: Drive full cycles and then drive the remaining (if better than walking)\n    time2 = full_cycles * (k * a + t) + (remaining * a)\n    \n    # Option 3: Drive only the first k kilometers and walk the rest\n    time3 = k * a + (d - k) * b\n    \n    # Option 4: Drive as much as possible without the last repair if remaining is <=k\n    if full_cycles >= 1:\n        time4 = (full_cycles - 1) * (k * a + t) + k * a + (d - full_cycles * k) * a\n    else:\n        time4 = float('inf')\n    \n    min_time = min(time1, time2, time3, time4)\n    print(min_time)",
+    "timestamp": "2025-08-05 17:31:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimal_time_to_post_office(d, k, a, b, t):\n    if d <= k:\n        return d * a\n    time = k * a\n    distance_left = d - k\n    while distance_left > 0:\n        if distance_left <= k:\n            time += min(distance_left * a, distance_left * b)\n            break\n        else:\n            # Decide whether to repair or to walk the next k kilometers\n            drive_and_repair_time = k * a + t\n            walk_time = k * b\n            if drive_and_repair_time <= walk_time:\n                time += drive_and_repair_time\n            else:\n                time += walk_time\n                break\n            distance_left -= k\n    return time\n\n# Example inputs\nprint(minimal_time_to_post_office(5, 2, 1, 4, 10)) # Output should be 14\nprint(minimal_time_to_post_office(5, 2, 1, 4, 5))  # Output should be 13",
+    "timestamp": "2025-08-12 21:40:33"
+  }
+]

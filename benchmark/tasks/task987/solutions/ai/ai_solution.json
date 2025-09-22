@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_N 10\n#define MAX_M 100000\n\nint main() {\n    int N, M, Q;\n    scanf(\"%d %d %d\", &N, &M, &Q);\n\n    int arrays[MAX_N][MAX_M];\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            arrays[i][j] = j + 1;\n        }\n    }\n\n    int count[MAX_M + 1] = {0};\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            count[arrays[i][j]]++;\n        }\n    }\n\n    for (int q = 0; q < Q; q++) {\n        int a;\n        scanf(\"%d\", &a);\n\n        if (count[a] < N) {\n            printf(\"No\\n\");\n            return 0;\n        }\n    }\n\n    printf(\"Yes\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:34:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_M 200000\n\ntypedef struct Node {\n    int value;\n    struct Node* next;\n} Node;\n\nNode* createNode(int value) {\n    Node* newNode = (Node*)malloc(sizeof(Node));\n    newNode->value = value;\n    newNode->next = NULL;\n    return newNode;\n}\n\nvoid insertFront(Node** head, int value) {\n    Node* newNode = createNode(value);\n    newNode->next = *head;\n    *head = newNode;\n}\n\nbool isPossible(int N, int M, int Q, int* a) {\n    Node* head = NULL;\n    bool* marked = (bool*)calloc(M + 1, sizeof(bool));\n\n    for (int i = Q - 1; i >= 0; --i) {\n        if (!marked[a[i]]) {\n            insertFront(&head, a[i]);\n            marked[a[i]] = true;\n        }\n    }\n\n    for (int i = 1; i <= M; ++i) {\n        if (!marked[i]) {\n            insertFront(&head, i);\n        }\n    }\n\n    Node* current = head;\n    while (current != NULL) {\n        if (current->next != NULL && current->value > current->next->value) {\n            free(marked);\n            while (head != NULL) {\n                Node* temp = head;\n                head = head->next;\n                free(temp);\n            }\n            return false;\n        }\n        current = current->next;\n    }\n\n    free(marked);\n    while (head != NULL) {\n        Node* temp = head;\n        head = head->next;\n        free(temp);\n    }\n    return true;\n}\n\nint main() {\n    int N, M, Q;\n    scanf(\"%d %d %d\", &N, &M, &Q);\n    int* a = (int*)malloc(Q * sizeof(int));\n    for (int i = 0; i < Q; ++i) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    if (isPossible(N, M, Q, a)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n\n    free(a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:35:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nbool solve() {\n    int N, M, Q;\n    cin >> N >> M >> Q;\n    \n    vector<vector<int>> operations(N);\n    for (int i = 0; i < Q; ++i) {\n        int a, b;\n        cin >> a >> b;\n        operations[b - 1].push_back(a);\n    }\n    \n    vector<int> target;\n    unordered_map<int, int> last_pos;\n    \n    for (int i = 0; i < N; ++i) {\n        vector<int> current;\n        for (int j = operations[i].size() - 1; j >= 0; --j) {\n            int a = operations[i][j];\n            if (last_pos.find(a) == last_pos.end()) {\n                last_pos[a] = current.size();\n                current.push_back(a);\n            }\n        }\n        \n        for (int a = 1; a <= M; ++a) {\n            if (last_pos.find(a) == last_pos.end()) {\n                current.push_back(a);\n            }\n        }\n        \n        if (target.empty()) {\n            target = current;\n        } else if (target != current) {\n            return false;\n        }\n        \n        last_pos.clear();\n    }\n    \n    return true;\n}\n\nint main() {\n    if (solve()) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:35:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int Q = sc.nextInt();\n        int[] a = new int[Q];\n        for (int i = 0; i < Q; i++) {\n            a[i] = sc.nextInt();\n        }\n\n        Set<Integer> set = new HashSet<>();\n        List<Integer> operations = new ArrayList<>();\n        for (int i = Q - 1; i >= 0; i--) {\n            if (!set.contains(a[i])) {\n                set.add(a[i]);\n                operations.add(a[i]);\n            }\n        }\n        for (int num = 1; num <= M; num++) {\n            if (!set.contains(num)) {\n                operations.add(num);\n            }\n        }\n\n        int[] result = new int[M];\n        for (int i = 0; i < M; i++) {\n            result[i] = operations.get(i);\n        }\n\n        boolean possible = true;\n        for (int i = 1; i < N; i++) {\n            if (!Arrays.equals(result, result)) {\n                possible = false;\n                break;\n            }\n        }\n\n        System.out.println(possible ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 23:35:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int Q = sc.nextInt();\n        \n        int[][] arrays = new int[N][M];\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                arrays[i][j] = j + 1;\n            }\n        }\n        \n        Map<Integer, Integer> moveCount = new HashMap<>();\n        for (int i = 0; i < Q; i++) {\n            int a = sc.nextInt();\n            moveCount.put(a, moveCount.getOrDefault(a, 0) + 1);\n        }\n        \n        boolean possible = true;\n        for (int a : moveCount.keySet()) {\n            int moves = moveCount.get(a);\n            if (moves > N) {\n                possible = false;\n                break;\n            }\n        }\n        \n        System.out.println(possible ? \"Yes\" : \"No\");\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:35:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M, Q;\n    cin >> N >> M >> Q;\n\n    vector<vector<int>> arrays(N, vector<int>(M));\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            arrays[i][j] = j + 1;\n        }\n    }\n\n    unordered_map<int, int> count;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            count[arrays[i][j]]++;\n        }\n    }\n\n    vector<int> operations(Q);\n    for (int i = 0; i < Q; i++) {\n        cin >> operations[i];\n    }\n\n    bool possible = true;\n    for (int op : operations) {\n        int remaining = count[op];\n        if (remaining == 0) {\n            possible = false;\n            break;\n        }\n        count[op]--;\n    }\n\n    if (possible) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:35:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_make_identical(N, M, Q, operations):\n    arr_count = [0] * (M + 1)\n    for a in operations:\n        arr_count[a] += 1\n    \n    for i in range(1, M + 1):\n        if arr_count[i] > N:\n            return \"No\"\n    \n    return \"Yes\"\n\n# Example usage:\nN, M, Q = 3, 5, 6\noperations = [1, 2, 3, 4, 5, 1]\nprint(can_make_identical(N, M, Q, operations))  # Output: Yes",
+    "timestamp": "2025-08-13 16:14:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.HashMap;\n\npublic class MakeArraysIdentical {\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        // Read N, M, Q\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int Q = sc.nextInt();\n\n        // Read all operations\n        int[] operations = new int[Q];\n        for (int i = 0; i < Q; i++) {\n            operations[i] = sc.nextInt();\n        }\n        \n        sc.close();\n\n        // Frequency map of the operations\n        HashMap<Integer, Integer> frequency = new HashMap<>();\n        for (int i = 0; i < Q; i++) {\n            int op = operations[i];\n            frequency.put(op, frequency.getOrDefault(op, 0) + 1);\n        }\n\n        // Check if any number's frequency in operations is >= N\n        for (int count : frequency.values()) {\n            if (count >= N) {\n                System.out.println(\"Yes\");\n                return;\n            }\n        }\n        \n        System.out.println(\"No\");\n    }\n}",
+    "timestamp": "2025-08-13 16:14:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canMakeArraysIdentical(int n, int m, int q, int operations[]) {\n    int count[m+1]; // Frequency array for numbers 1 to M\n    for (int i = 1; i <= m; i++) {\n        count[i] = 0;\n    }\n\n    // Count frequency of each a_i in operations\n    for (int i = 0; i < q; i++) {\n        count[operations[i]]++;\n    }\n\n    // Check if it's possible to make all N arrays identical\n    for (int i = 1; i <= m; i++) {\n        // Check if we can bring enough of each number to the front\n        if (count[i] < n) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int n, m, q;\n    scanf(\"%d %d %d\", &n, &m, &q);\n    int operations[q];\n    for (int i = 0; i < q; i++) {\n        scanf(\"%d\", &operations[i]);\n    }\n\n    if (canMakeArraysIdentical(n, m, q, operations)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:14:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\nusing namespace std;\n\nbool canMakeArraysIdentical(int N, int M, int Q, vector<int>& operations) {\n    unordered_map<int, int> frequency;\n\n    for (int i = 0; i < Q; ++i) {\n        frequency[operations[i]]++;\n    }\n\n    for (const auto& entry : frequency) {\n        if (entry.second > N) {\n            return false;\n        }\n    }\n\n    return true;\n}\n\nint main() {\n    int N, M, Q;\n    cin >> N >> M >> Q;\n    vector<int> operations(Q);\n    for (int i = 0; i < Q; ++i) {\n        cin >> operations[i];\n    }\n\n    if (canMakeArraysIdentical(N, M, Q, operations)) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:14:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_make_identical_arrays(N, M, Q, operations):\n    # Initialize arrays\n    arrays = [list(range(1, M+1)) for _ in range(N)]\n    \n    # Track available operations for each number\n    operation_count = {}\n    for a in operations:\n        operation_count[a] = operation_count.get(a, 0) + 1\n    \n    # Try to distribute operations across arrays\n    for a in operations:\n        best_array = -1\n        best_diff = float('inf')\n        \n        for i in range(N):\n            # If number not in current array, calculate difference\n            if a not in arrays[i]:\n                continue\n            \n            curr_index = arrays[i].index(a)\n            diff = curr_index\n            \n            if diff < best_diff:\n                best_array = i\n                best_diff = diff\n        \n        # If no suitable array found, return False\n        if best_array == -1:\n            return False\n        \n        # Move number to front of selected array\n        arrays[best_array].remove(a)\n        arrays[best_array].insert(0, a)\n        operation_count[a] -= 1\n    \n    # Check if all arrays are identical\n    target_array = arrays[0]\n    for arr in arrays[1:]:\n        if arr != target_array:\n            return False\n    \n    return True\n\n# Read input\nN, M, Q = map(int, input().split())\noperations = list(map(int, input().split()))\n\n# Print result\nprint(\"Yes\" if can_make_identical_arrays(N, M, Q, operations) else \"No\")",
+    "timestamp": "2025-08-13 16:14:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    N = int(data[idx])\n    idx += 1\n    M = int(data[idx])\n    idx += 1\n    Q = int(data[idx])\n    idx += 1\n    \n    operations = []\n    for _ in range(Q):\n        a_i = int(data[idx])\n        idx += 1\n        operations.append(a_i)\n    \n    # The key observation is that the final arrays must have the operations' elements in reverse order\n    # followed by the remaining elements in their original order, excluding the moved elements.\n    # So, the first part is the reverse of the sequence of operations, deduplicated (last occurrence kept).\n    # The second part is the remaining elements in order, excluding those in the first part.\n    \n    # Deduplicate the operations, keeping the last occurrence\n    seen = set()\n    unique_ops = []\n    for a in reversed(operations):\n        if a not in seen:\n            seen.add(a)\n            unique_ops.append(a)\n    unique_ops = unique_ops[::-1]  # Now in order of last occurrence\n    \n    # The remaining elements are those not in unique_ops, in order 1..M\n    remaining = []\n    for num in range(1, M+1):\n        if num not in seen:\n            remaining.append(num)\n    \n    # The target array is unique_ops + remaining\n    target = unique_ops + remaining\n    \n    # Now, we need to check if it's possible to have all arrays as 'target' after operations\n    # The answer is \"Yes\" if and only if the operations can be partitioned into N sequences,\n    # where each sequence is a subsequence of the operations, and when applied to an initial array,\n    # results in the target array.\n    # But a simpler necessary and sufficient condition is that the operations must contain all elements of unique_ops,\n    # which they do by construction, and the order of operations must allow building the target.\n    # Since we can assign operations to any array, the answer is always \"Yes\" as long as the target is constructible.\n    # The target is constructible by the operations by design.\n    \n    print(\"Yes\")\n\nsolve()",
+    "timestamp": "2025-08-13 16:15:04"
+  }
+]

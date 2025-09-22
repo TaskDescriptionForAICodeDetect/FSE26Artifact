@@ -1,0 +1,1 @@
+In a game, you have a 4x4 grid with uppercase letters and a dictionary of words with scores. You need to find as many words as possible within a given time limit T, tracing them on the grid following specific movement rules. Identify the maximum score you can achieve within the time limit by tracing unique words from the dictionary.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint solve(int remainders[], int n) {\n    int x = 0, mod = 2;\n    \n    while (mod <= 10000) {\n        int valid = 1;\n        for (int i = 0; i < n; i++) {\n            if (x % mod != remainders[i]) {\n                valid = 0;\n                break;\n            }\n        }\n        \n        if (valid) {\n            return x;\n        }\n        \n        x++;\n        mod++;\n    }\n    \n    return -1;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int remainders[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &remainders[i]);\n    }\n    \n    int result = solve(remainders, n);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:51:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint find_max_chopsticks(int n, int days[n][2]) {\n    int max_chopsticks = INT_MAX;\n    int min_remainder = -1;\n\n    for (int i = 0; i < n; i++) {\n        int divisor = days[i][0];\n        int remainder = days[i][1];\n\n        if (divisor <= remainder) {\n            return -1;\n        }\n\n        if (remainder > min_remainder) {\n            min_remainder = remainder;\n        }\n\n        if (divisor < max_chopsticks) {\n            max_chopsticks = divisor;\n        }\n    }\n\n    if (min_remainder >= max_chopsticks) {\n        return -1;\n    }\n\n    for (int i = 0; i < n; i++) {\n        int divisor = days[i][0];\n        int remainder = days[i][1];\n\n        if (min_remainder % divisor != remainder) {\n            return -1;\n        }\n    }\n\n    return max_chopsticks - 1;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int days[n][2];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &days[i][0], &days[i][1]);\n    }\n    int result = find_max_chopsticks(n, days);\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint findMaxChopsticks(const vector<pair<int, int>>& remainders) {\n    if (remainders.empty()) return -1;\n    \n    int max_chopsticks = remainders[0].second;\n    int mod = remainders[0].first;\n    \n    for (size_t i = 1; i < remainders.size(); ++i) {\n        int a1 = max_chopsticks;\n        int m1 = mod;\n        int a2 = remainders[i].second;\n        int m2 = remainders[i].first;\n        \n        bool found = false;\n        int new_max = -1;\n        for (int x = a1; x <= a1 + m1 * m2; x += m1) {\n            if (x % m2 == a2) {\n                if (found) {\n                    // Multiple solutions, take the LCM\n                    int lcm = m1 * m2 / __gcd(m1, m2);\n                    new_max = x % lcm;\n                    mod = lcm;\n                    break;\n                }\n                found = true;\n                new_max = x;\n                mod = m1 * m2 / __gcd(m1, m2);\n            }\n        }\n        \n        if (!found) return -1;\n        max_chopsticks = new_max;\n    }\n    \n    return max_chopsticks;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, int>> remainders(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> remainders[i].first >> remainders[i].second;\n    }\n    \n    int result = findMaxChopsticks(remainders);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ChopsticksProblem {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        List<int[]> constraints = new ArrayList<>();\n        for (int i = 0; i < n; i++) {\n            int divisor = scanner.nextInt();\n            int remainder = scanner.nextInt();\n            constraints.add(new int[]{divisor, remainder});\n        }\n        \n        long result = 1;\n        long currentMod = 0;\n        boolean possible = true;\n        \n        for (int[] constraint : constraints) {\n            int divisor = constraint[0];\n            int remainder = constraint[1];\n            long newMod = -1;\n            for (long k = 0; k < divisor; k++) {\n                long candidate = currentMod + k * result;\n                if (candidate % divisor == remainder) {\n                    newMod = candidate;\n                    break;\n                }\n            }\n            if (newMod == -1) {\n                possible = false;\n                break;\n            }\n            currentMod = newMod;\n            result = lcm(result, divisor);\n        }\n        \n        if (possible) {\n            System.out.println(currentMod);\n        } else {\n            System.out.println(-1);\n        }\n    }\n    \n    private static long gcd(long a, long b) {\n        while (b != 0) {\n            long temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n    \n    private static long lcm(long a, long b) {\n        return a / gcd(a, b) * b;\n    }\n}",
+    "timestamp": "2025-08-05 21:52:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ChopsticksProblem {\n    public static int findMaxChopsticks(int[] remainders) {\n        int n = remainders.length;\n        \n        for (int totalChopsticks = 1; totalChopsticks <= 1000000; totalChopsticks++) {\n            boolean valid = true;\n            for (int i = 0; i < n - 1; i++) {\n                if (totalChopsticks % (i + 2) != remainders[i]) {\n                    valid = false;\n                    break;\n                }\n            }\n            \n            if (valid && totalChopsticks % (n + 1) == remainders[n - 1]) {\n                return totalChopsticks;\n            }\n        }\n        \n        return -1;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] remainders = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            remainders[i] = scanner.nextInt();\n        }\n        \n        System.out.println(findMaxChopsticks(remainders));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:53:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint solve(vector<int>& remainders) {\n    int n = remainders.size();\n    for (int x = 0; x <= 1000; x++) {\n        bool valid = true;\n        for (int i = 1; i < n; i++) {\n            if ((x % remainders[i-1]) != remainders[i]) {\n                valid = false;\n                break;\n            }\n        }\n        if (valid) return x;\n    }\n    return -1;\n}\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int k;\n        cin >> k;\n        vector<int> remainders(k);\n        for (int i = 0; i < k; i++) {\n            cin >> remainders[i];\n        }\n        cout << solve(remainders) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_chopsticks(remainders):\n    max_possible = -1\n    for n in range(1, 101):\n        consistent = True\n        current_max = -1\n        for r, m in remainders:\n            if current_max == -1:\n                current_max = (n * r + m - r) % m\n            elif (n * r + m - r) % m != current_max:\n                consistent = False\n                break\n        if consistent:\n            if max_possible == -1 or n * current_max > n * max_possible:\n                max_possible = current_max\n    return max_possible\n\n# Example usage:\n# remainders = [(2, 3), (3, 5), (2, 7)]\n# print(max_chopsticks(remainders))  # replace with actual remainder pairs",
+    "timestamp": "2025-08-13 07:53:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\nimport java.util.List;\nimport java.util.Map;\n\npublic class Chopsticks {\n\n    public static int findMaxChopsticks(List<RemainderRecord> records) {\n        Map<Integer, Integer> remainderMap = new HashMap<>();\n\n        for (RemainderRecord record : records) {\n            int mod = record.modulus;\n            int remainder = record.remainder;\n\n            if (remainderMap.containsKey(mod)) {\n                int existingRemainder = remainderMap.get(mod);\n                if (existingRemainder != remainder) {\n                    return -1; // Inconsistent data\n                }\n            } else {\n                remainderMap.put(mod, remainder);\n            }\n        }\n\n        int maxChopsticks = -1;\n\n        for (Map.Entry<Integer, Integer> entry : remainderMap.entrySet()) {\n            int mod = entry.getKey();\n            int remainder = entry.getValue();\n            int candidate = remainder;\n\n            while (true) {\n                boolean consistent = true;\n                for (Map.Entry<Integer, Integer> checkEntry : remainderMap.entrySet()) {\n                    int checkMod = checkEntry.getKey();\n                    int checkRemainder = checkEntry.getValue();\n                    if (candidate % checkMod != checkRemainder) {\n                        consistent = false;\n                        break;\n                    }\n                }\n\n                if (consistent) {\n                    maxChopsticks = Math.max(maxChopsticks, candidate);\n                }\n\n                candidate += mod;\n            }\n        }\n\n        return maxChopsticks;\n    }\n\n    static class RemainderRecord {\n        int modulus;\n        int remainder;\n\n        RemainderRecord(int modulus, int remainder) {\n            this.modulus = modulus;\n            this.remainder = remainder;\n        }\n    }\n}",
+    "timestamp": "2025-08-13 07:53:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint find_max_chopsticks(int remainders[], int divisors[], int length) {\n    for (int max_chopsticks = 1000000; max_chopsticks >= 0; --max_chopsticks) {\n        int consistent = 1;\n        for (int i = 0; i < length; ++i) {\n            if (max_chopsticks % divisors[i] != remainders[i]) {\n                consistent = 0;\n                break;\n            }\n        }\n        if (consistent) {\n            return max_chopsticks;\n        }\n    }\n    return -1;\n}\n\nint main() {\n    int remainders[] = {1, 2, 0}; // Example data\n    int divisors[] = {2, 3, 5};   // Example data\n    int length = sizeof(remainders) / sizeof(remainders[0]);\n    \n    int result = find_max_chopsticks(remainders, divisors, length);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 07:53:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_chopsticks(remainders):\n    n = len(remainders)\n    for total in range(1000001):\n        valid = True\n        for i in range(n):\n            if total % (i + 2) != remainders[i]:\n                valid = False\n                break\n        if valid:\n            return total\n    return -1",
+    "timestamp": "2025-08-13 07:54:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef solve_chopsticks(remainders):\n    if not remainders:\n        return -1\n    \n    current_a, current_m = 0, 1\n    \n    for a, m in remainders:\n        # Solve the system: x ≡ current_a mod current_m\n        #                  x ≡ a mod m\n        # Find x ≡ new_a mod new_m\n        \n        g = math.gcd(current_m, m)\n        if (current_a - a) % g != 0:\n            return -1\n        \n        lcm = current_m // g * m\n        # Find x = current_a + k * current_m\n        # such that x ≡ a mod m\n        # => current_a + k * current_m ≡ a mod m\n        # => k * current_m ≡ (a - current_a) mod m\n        # Let current_m' = current_m / g, m' = m / g\n        # => k * (current_m' * g) ≡ (a - current_a) mod (m' * g)\n        # => k * current_m' ≡ ((a - current_a)/g) mod m'\n        # Compute modular inverse of current_m' mod m'\n        current_m_reduced = current_m // g\n        m_reduced = m // g\n        rhs = (a - current_a) // g\n        \n        try:\n            inv = pow(current_m_reduced, -1, m_reduced)\n        except ValueError:\n            return -1\n        \n        k0 = (rhs * inv) % m_reduced\n        new_a = current_a + k0 * current_m\n        current_a, current_m = new_a, lcm\n    \n    return current_a",
+    "timestamp": "2025-08-13 07:54:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\n// Function to find the greatest common divisor\nint gcd(int a, int b) {\n    return b == 0 ? a : gcd(b, a % b);\n}\n\n// Function to find the least common multiple\nint lcm(int a, int b) {\n    return a / gcd(a, b) * b;\n}\n\n// Extended Euclidean algorithm to find modular inverses\nint extendedEuclidean(int a, int b, int &x, int &y) {\n    if (b == 0) {\n        x = 1;\n        y = 0;\n        return a;\n    }\n    int x1, y1;\n    int gcd = extendedEuclidean(b, a % b, x1, y1);\n    x = y1;\n    y = x1 - (a / b) * y1;\n    return gcd;\n}\n\n// Function to solve a system of congruences using the Chinese Remainder Theorem\nint chineseRemainderTheorem(const vector<int> &remainders, const vector<int> &mods) {\n    int n = remainders.size();\n    int result = 0;\n    int lcm_val = 1;\n    \n    for (int i = 0; i < n; ++i) {\n        lcm_val = lcm(lcm_val, mods[i]);\n    }\n    \n    for (int i = 0; i < n; ++i) {\n        int M = lcm_val / mods[i];\n        int x, y;\n        int gcd = extendedEuclidean(M, mods[i], x, y);\n        if (gcd != 1) return -1;  // Inconsistency detected\n\n        result = (result + remainders[i] * M * x) % lcm_val;\n    }\n    \n    result = (result + lcm_val) % lcm_val; // Ensure positive result\n    return result;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> remainders(n), mods(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> mods[i] >> remainders[i];\n    }\n    \n    int result = chineseRemainderTheorem(remainders, mods);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:41:27"
+  }
+]

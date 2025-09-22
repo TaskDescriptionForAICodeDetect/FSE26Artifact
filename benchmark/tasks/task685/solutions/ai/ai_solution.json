@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint solve(int N) {\n    int count = 0;\n    \n    for (int K = 2; K <= N; K++) {\n        int current = N;\n        \n        while (current > 1) {\n            if (current % K == 0) {\n                current /= K;\n            } else {\n                current -= K;\n            }\n        }\n        \n        if (current == 1) {\n            count++;\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    printf(\"%d\\n\", solve(N));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:33:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint countKChoices(int N) {\n    int count = 0;\n    for (int K = 2; K <= N; K++) {\n        int current = N;\n        while (current > 1) {\n            if (current % K == 0) {\n                current /= K;\n            } else {\n                current -= K;\n            }\n        }\n        if (current == 1) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    printf(\"%d\\n\", countKChoices(N));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:33:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\nusing namespace std;\n\nint countK(int N) {\n    int res = 0;\n    for (int K = 2; K <= N; ++K) {\n        int n = N;\n        while (n > 1) {\n            if (n % K == 0) {\n                n /= K;\n            } else {\n                n -= K;\n            }\n            if (n < 1) break;\n        }\n        if (n == 1) ++res;\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    cout << countK(N) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:33:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int count = 0;\n        for (int K = 2; K <= N; K++) {\n            int current = N;\n            while (current > 1) {\n                if (current % K == 0) {\n                    current /= K;\n                } else {\n                    current -= K;\n                }\n            }\n            if (current == 1) {\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:34:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int countWays(int N) {\n        int count = 0;\n        for (int K = 2; K <= N; K++) {\n            int currentN = N;\n            while (currentN > 1) {\n                if (currentN % K == 0) {\n                    currentN /= K;\n                } else {\n                    currentN -= K;\n                }\n            }\n            if (currentN == 1) {\n                count++;\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 22:34:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countWays(int N) {\n        int count = 0;\n        for (int K = 2; K <= N; K++) {\n            int currentN = N;\n            while (currentN > 1) {\n                if (currentN % K == 0) {\n                    currentN /= K;\n                } else {\n                    currentN -= K;\n                }\n            }\n            if (currentN == 1) {\n                count++;\n            }\n        }\n        return count;\n    }\n};",
+    "timestamp": "2025-08-05 22:34:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_ways_to_one(N):\n    def can_reduce_to_one(N, K):\n        while N > 1:\n            if N % K == 0:\n                N //= K\n            else:\n                N -= K\n            if N < 1:\n                return False\n        return N == 1\n\n    count = 0\n    for K in range(2, N + 1):\n        if can_reduce_to_one(N, K):\n            count += 1\n    return count\n\n# Example usage:\nN = 10\nprint(count_ways_to_one(N))",
+    "timestamp": "2025-08-13 11:25:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class Solution {\n    public static int countChoices(int N) {\n        int count = 0;\n\n        for (int K = 2; K <= N; K++) {\n            int temp = N;\n            while (temp > 1) {\n                if (temp % K == 0) {\n                    temp /= K;\n                } else {\n                    temp -= K;\n                }\n            }\n            if (temp == 1) {\n                count++;\n            }\n        }\n\n        return count;\n    }\n\n    public static void main(String[] args) {\n        int N = 10; // Example input\n        System.out.println(countChoices(N)); // Example output\n    }\n}",
+    "timestamp": "2025-08-13 11:25:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint countWaysToOne(int N) {\n    int count = 0;\n    for (int K = 2; K <= N; K++) {\n        int temp = N;\n        while (temp > 1) {\n            if (temp % K == 0) {\n                temp /= K;\n            } else {\n                temp -= K;\n            }\n            if (temp <= 0) {\n                break;\n            }\n        }\n        if (temp == 1) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    printf(\"%d\\n\", countWaysToOne(N));\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:25:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countChoices(N) {\n    function canReduceToOne(N, K) {\n        while (N !== 1) {\n            if (N % K === 0) {\n                N /= K;\n            } else {\n                N -= K;\n            }\n            if (N < 1) {\n                return false;\n            }\n        }\n        return true;\n    }\n    \n    let count = 0;\n    for (let K = 2; K <= N; K++) {\n        if (canReduceToOne(N, K)) {\n            count++;\n        }\n    }\n    return count;\n}",
+    "timestamp": "2025-08-13 11:25:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_ways_to_one(N):\n    ways = 0\n    for K in range(2, N + 1):\n        current_N = N\n        while current_N > 1:\n            if current_N % K == 0:\n                current_N //= K\n            else:\n                current_N -= K\n        \n        if current_N == 1:\n            ways += 1\n    \n    return ways\n\n# Example usage\nN = int(input())\nresult = count_ways_to_one(N)\nprint(result)",
+    "timestamp": "2025-08-13 11:25:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countWaysToReduceToOne(N) {\n    let count = 0;\n    \n    for (let K = 2; K <= N; K++) {\n        let currentN = N;\n        \n        while (currentN > 1) {\n            if (currentN % K === 0) {\n                currentN /= K;\n            } else {\n                currentN -= K;\n            }\n        }\n        \n        if (currentN === 1) {\n            count++;\n        }\n    }\n    \n    return count;\n}",
+    "timestamp": "2025-08-13 11:25:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_choices(N):\n    count = 0\n    for K in range(2, N + 1):\n        current = N\n        while current >= 1:\n            if current == 1:\n                count += 1\n                break\n            if K == 1:\n                break\n            if current % K == 0:\n                current = current // K\n            else:\n                current -= K\n    return count",
+    "timestamp": "2025-08-13 11:25:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countKChoices(N) {\n    let count = 0;\n    for (let K = 2; K <= N; K++) {\n        let current = N;\n        while (current > 1) {\n            if (current % K === 0) {\n                current /= K;\n            } else {\n                current -= K;\n            }\n        }\n        if (current === 1) {\n            count++;\n        }\n    }\n    return count;\n}",
+    "timestamp": "2025-08-13 11:25:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\n\nbool leadsToOne(int N, int K) {\n    while (N > 1) {\n        if (N % K == 0) {\n            N /= K;\n        } else {\n            N -= K;\n        }\n    }\n    return N == 1;\n}\n\nint countChoices(int N) {\n    int count = 0;\n    for (int K = 2; K <= N; K++) {\n        if (leadsToOne(N, K)) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    cout << countChoices(N) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:03:35"
+  }
+]

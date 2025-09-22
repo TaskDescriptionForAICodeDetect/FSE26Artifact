@@ -1,0 +1,1 @@
+You need to write a program that calculates the maximized flow from crossing S to crossing T in a city with one-way roads, by allowing some roads to be reversed. The program should also provide a list of the roads that were reversed to achieve this maximum flow.

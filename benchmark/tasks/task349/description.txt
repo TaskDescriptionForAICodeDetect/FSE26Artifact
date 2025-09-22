@@ -1,0 +1,1 @@
+Calculate the area each liege lord can gain on Voronoi Island, based on the coordinates of the vertices and the castles. The island has a convex shape, and for each lord, the area assigned to them is determined by the method of Voronoi Division.

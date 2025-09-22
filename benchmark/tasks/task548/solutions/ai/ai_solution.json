@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\nint minimumDays(int N, int* P, int* Q) {\n    int* original = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        original[i] = P[i];\n    }\n    \n    int days = 0;\n    bool* visited = calloc(N, sizeof(bool));\n    \n    while (true) {\n        bool sorted = true;\n        for (int i = 1; i < N; i++) {\n            if (P[i] < P[i-1]) {\n                sorted = false;\n                break;\n            }\n        }\n        \n        if (sorted) {\n            free(original);\n            free(visited);\n            return days;\n        }\n        \n        if (days > N) {\n            free(original);\n            free(visited);\n            return -1;\n        }\n        \n        int* temp = malloc(N * sizeof(int));\n        for (int i = 0; i < N; i++) {\n            temp[i] = P[Q[i] - 1];\n        }\n        \n        for (int i = 0; i < N; i++) {\n            P[i] = temp[i];\n        }\n        \n        free(temp);\n        days++;\n    }\n}",
+    "timestamp": "2025-08-05 22:05:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\nint findMinDays(int N, int P[], int Q[]) {\n    int *visited = (int *)calloc(N, sizeof(int));\n    int min_days = -1;\n\n    for (int i = 0; i < N; i++) {\n        if (!visited[i]) {\n            int current = i;\n            int cycle_length = 0;\n            bool is_valid = true;\n\n            while (!visited[current]) {\n                visited[current] = 1;\n                current = Q[current] - 1; // Assuming Q is 1-based, adjust if 0-based\n                cycle_length++;\n            }\n\n            current = i;\n            int pos_in_cycle = 0;\n            int target_pos = -1;\n\n            while (true) {\n                if (P[current] == current + 1) { // Assuming P is 1-based, adjust if 0-based\n                    target_pos = pos_in_cycle;\n                    break;\n                }\n                current = Q[current] - 1;\n                pos_in_cycle++;\n                if (current == i) {\n                    is_valid = false;\n                    break;\n                }\n            }\n\n            if (!is_valid) {\n                free(visited);\n                return -1;\n            }\n\n            if (min_days == -1) {\n                min_days = target_pos;\n            } else {\n                // Find the smallest d that satisfies d ≡ target_pos mod cycle_length for all cycles\n                int gcd = 1;\n                int a = min_days;\n                int b = cycle_length;\n                while (b != 0) {\n                    int temp = b;\n                    b = a % b;\n                    a = temp;\n                }\n                gcd = a;\n\n                int lcm = (min_days * cycle_length) / gcd;\n                int k = 0;\n                while (true) {\n                    int candidate = min_days + k * cycle_length;\n                    if (candidate % cycle_length == target_pos % cycle_length) {\n                        min_days = candidate;\n                        break;\n                    }\n                    k++;\n                }\n            }\n        }\n    }\n\n    free(visited);\n    return min_days;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *P = (int *)malloc(N * sizeof(int));\n    int *Q = (int *)malloc(N * sizeof(int));\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &Q[i]);\n    }\n\n    int result = findMinDays(N, P, Q);\n    printf(\"%d\\n\", result);\n\n    free(P);\n    free(Q);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <vector>\n#include <unordered_set>\n#include <algorithm>\n\nusing namespace std;\n\nint findMinDays(vector<int>& P, vector<int>& Q) {\n    int N = P.size();\n    vector<int> sortedP = P;\n    sort(sortedP.begin(), sortedP.end());\n    if (P == sortedP) {\n        return 0;\n    }\n\n    vector<int> Q_inv(N);\n    for (int i = 0; i < N; ++i) {\n        Q_inv[Q[i]] = i;\n    }\n\n    unordered_set<int> visited;\n    int min_d = -1;\n\n    for (int i = 0; i < N; ++i) {\n        if (visited.find(i) != visited.end()) {\n            continue;\n        }\n\n        vector<int> cycle;\n        int current = i;\n        while (visited.find(current) == visited.end()) {\n            visited.insert(current);\n            cycle.push_back(current);\n            current = Q_inv[current];\n        }\n\n        bool valid = true;\n        for (int pos : cycle) {\n            if (P[pos] != sortedP[cycle[0]]) {\n                valid = false;\n                break;\n            }\n        }\n\n        if (!valid) {\n            continue;\n        }\n\n        int cycle_len = cycle.size();\n        if (min_d == -1) {\n            min_d = cycle_len;\n        } else {\n            int gcd_val = __gcd(min_d, cycle_len);\n            min_d = (min_d / gcd_val) * cycle_len;\n        }\n    }\n\n    if (min_d == -1) {\n        return -1;\n    }\n\n    vector<int> temp = P;\n    for (int d = 1; d <= min_d; ++d) {\n        vector<int> new_temp(N);\n        for (int i = 0; i < N; ++i) {\n            new_temp[i] = Q[temp[i]];\n        }\n        temp = new_temp;\n        if (temp == sortedP) {\n            return d;\n        }\n    }\n\n    return -1;\n}",
+    "timestamp": "2025-08-05 22:06:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int findMinimumDays(int N, int[] P, int[] Q) {\n        int[] target = new int[N];\n        for (int i = 0; i < N; i++) {\n            target[i] = i + 1;\n        }\n        \n        int[] current = P.clone();\n        if (Arrays.equals(current, target)) {\n            return 0;\n        }\n        \n        Set<String> seen = new HashSet<>();\n        seen.add(Arrays.toString(current));\n        \n        int days = 0;\n        while (true) {\n            int[] next = new int[N];\n            for (int i = 0; i < N; i++) {\n                next[i] = Q[current[i] - 1];\n            }\n            days++;\n            if (Arrays.equals(next, target)) {\n                return days;\n            }\n            String key = Arrays.toString(next);\n            if (seen.contains(key)) {\n                return -1;\n            }\n            seen.add(key);\n            current = next;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:06:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int minDaysToSort(int[] P, int[] Q) {\n        int N = P.length;\n        int[] original = P.clone();\n        \n        for (int days = 0; days <= N; days++) {\n            if (isSorted(P)) return days;\n            P = transform(P, Q);\n        }\n        \n        return -1;\n    }\n    \n    private int[] transform(int[] P, int[] Q) {\n        int[] next = new int[P.length];\n        for (int i = 0; i < P.length; i++) {\n            next[i] = P[Q[i] - 1];\n        }\n        return next;\n    }\n    \n    private boolean isSorted(int[] arr) {\n        for (int i = 1; i < arr.length; i++) {\n            if (arr[i] < arr[i-1]) return false;\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 22:06:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int minOperations(vector<int>& P, vector<int>& Q) {\n        int N = P.size();\n        vector<int> current = P;\n        vector<int> original = P;\n        \n        for (int day = 0; day < N * N; day++) {\n            // Check if current is sorted\n            if (is_sorted(current.begin(), current.end())) {\n                return day;\n            }\n            \n            // Transform current sequence\n            vector<int> next(N);\n            for (int i = 0; i < N; i++) {\n                next[i] = current[Q[i] - 1];\n            }\n            current = next;\n            \n            // Check for cycle\n            if (current == original) {\n                return -1;\n            }\n        }\n        \n        return -1;\n    }\n};",
+    "timestamp": "2025-08-05 22:06:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_days_to_sort(N, P, Q):\n    def is_sorted(array):\n        return all(array[i] <= array[i + 1] for i in range(len(array) - 1))\n\n    max_iterations = 2 * N  # Limit the iterations to prevent infinite loops\n    for d in range(max_iterations):\n        if is_sorted(P):\n            return d\n        P = [Q[x] for x in P]\n    return -1",
+    "timestamp": "2025-08-13 08:59:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class PermutationSortDays {\n    \n    public static int minDaysToSort(int[] P, int[] Q) {\n        int N = P.length;\n        \n        int[] original = Arrays.copyOf(P, N);\n        int dayCount = 0;\n        \n        while (!isSorted(P)) {\n            int[] next = new int[N];\n            for (int i = 0; i < N; i++) {\n                next[i] = Q[P[i]];\n            }\n            P = next;\n            dayCount++;\n            \n            if (Arrays.equals(P, original)) {\n                return -1;\n            }\n        }\n        \n        return dayCount;\n    }\n    \n    private static boolean isSorted(int[] P) {\n        for (int i = 1; i < P.length; i++) {\n            if (P[i - 1] > P[i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n    \n    public static void main(String[] args) {\n        int[] P = {2, 0, 1};\n        int[] Q = {2, 0, 1};\n        \n        System.out.println(minDaysToSort(P, Q)); // Output: 2\n    }\n}",
+    "timestamp": "2025-08-13 08:59:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\nint findMinDaysToSort(int N, int P[], int Q[]) {\n    bool visited[N];\n    bool sorted = false;\n    int days = 0;\n    \n    while (!sorted) {\n        sorted = true;\n        for (int i = 1; i < N; i++) {\n            if (P[i - 1] > P[i]) {\n                sorted = false;\n                break;\n            }\n        }\n        if (sorted) {\n            return days;\n        }\n        \n        memset(visited, false, sizeof(visited));\n        for (int i = 0; i < N; i++) {\n            int cycle_size = 0;\n            int current = i;\n            while (!visited[current]) {\n                visited[current] = true;\n                current = Q[P[current]];\n                cycle_size++;\n            }\n            if (cycle_size > 1) {\n                return -1;\n            }\n        }\n\n        int nextP[N];\n        for (int i = 0; i < N; i++) {\n            nextP[i] = Q[P[i]];\n        }\n        memcpy(P, nextP, sizeof(P));\n        days++;\n    }\n\n    return days;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int P[N], Q[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &P[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &Q[i]);\n    }\n\n    int minimumDays = findMinDaysToSort(N, P, Q);\n    printf(\"%d\\n\", minimumDays);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:59:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_days_to_sort(P, Q):\n    N = len(P)\n    visited = [False] * N\n    max_cycle_length = 0\n\n    for i in range(N):\n        if not visited[i]:\n            cycle_length = 0\n            j = i\n            while not visited[j]:\n                visited[j] = True\n                j = P[j] - 1\n                cycle_length += 1\n            max_cycle_length = max(max_cycle_length, cycle_length)\n\n    sorted_P = sorted(P)\n    if sorted_P == P:\n        return 0\n\n    if len(set(Q)) != N:\n        return -1\n\n    return max_cycle_length",
+    "timestamp": "2025-08-13 08:59:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_min_days(P, Q):\n    n = len(P)\n    Q_inv = [0] * n\n    for i in range(n):\n        Q_inv[Q[i]] = i\n    \n    visited = [False] * n\n    min_d = -1\n    \n    for i in range(n):\n        if not visited[i]:\n            cycle = []\n            current = i\n            while not visited[current]:\n                visited[current] = True\n                cycle.append(current)\n                current = Q_inv[current]\n            \n            positions = [P[x] for x in cycle]\n            sorted_positions = sorted(positions)\n            \n            for d_candidate in range(1, len(cycle) + 1):\n                valid = True\n                for j in range(len(cycle)):\n                    if positions[(j + d_candidate) % len(cycle)] != sorted_positions[j]:\n                        valid = False\n                        break\n                if valid:\n                    if min_d == -1:\n                        min_d = d_candidate\n                    else:\n                        min_d = min(min_d, d_candidate)\n                    break\n    \n    return min_d",
+    "timestamp": "2025-08-13 08:59:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint minDaysToSort(const vector<int>& P, const vector<int>& Q) {\n    int N = P.size();\n    vector<int> current(P);\n    vector<int> target(N);\n    for (int i = 0; i < N; ++i) {\n        target[i] = i + 1;\n    }\n\n    for (int d = 0; d <= N; ++d) {\n        if (current == target) return d;\n        vector<int> next(N);\n        for (int i = 0; i < N; ++i) {\n            next[i] = Q[current[i] - 1];\n        }\n        current = next;\n    }\n    \n    return -1;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> P(N), Q(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> P[i];\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> Q[i];\n    }\n\n    cout << minDaysToSort(P, Q) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:52"
+  }
+]

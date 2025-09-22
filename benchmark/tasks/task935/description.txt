@@ -1,0 +1,1 @@
+You are given N items. The value of the i-th item (1 ≤ i ≤ N) is v_i. You have to select at least A and at most B of these items. Under this condition, find the maximum possible arithmetic mean of the values of the selected items. Additionally, find the number of ways to select items so that the mean of the values of the selected items is maximized.

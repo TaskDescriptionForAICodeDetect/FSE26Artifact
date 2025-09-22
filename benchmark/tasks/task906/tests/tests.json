@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "? 1\n? 32\n? 1010\n? 999\n! 123\n",
+      "output": "Y\nN\nN\nY\n"
+    }
+  ]
+}

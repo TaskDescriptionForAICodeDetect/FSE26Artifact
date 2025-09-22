@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <stdlib.h>\n\nvoid solve(int N, int* a, int* b) {\n    int** results = malloc(N * N * sizeof(int*));\n    int resultCount = 0;\n\n    for (int k = 0; k < N; k++) {\n        for (int x = 0; x < 1024; x++) {\n            bool match = true;\n            for (int i = 0; i < N; i++) {\n                int transformed = a[(i + k) % N] ^ x;\n                if (transformed != b[i]) {\n                    match = false;\n                    break;\n                }\n            }\n            if (match) {\n                results[resultCount] = malloc(2 * sizeof(int));\n                results[resultCount][0] = k;\n                results[resultCount][1] = x;\n                resultCount++;\n            }\n        }\n    }\n\n    // Sort results\n    for (int i = 0; i < resultCount - 1; i++) {\n        for (int j = 0; j < resultCount - i - 1; j++) {\n            if (results[j][0] > results[j+1][0] || \n                (results[j][0] == results[j+1][0] && results[j][1] > results[j+1][1])) {\n                int* temp = results[j];\n                results[j] = results[j+1];\n                results[j+1] = temp;\n            }\n        }\n    }\n\n    // Print results\n    printf(\"%d\\n\", resultCount);\n    for (int i = 0; i < resultCount; i++) {\n        printf(\"%d %d\\n\", results[i][0], results[i][1]);\n    }\n\n    // Free memory\n    for (int i = 0; i < resultCount; i++) {\n        free(results[i]);\n    }\n    free(results);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* a = malloc(N * sizeof(int));\n    int* b = malloc(N * sizeof(int));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &b[i]);\n    }\n    \n    solve(N, a, b);\n    \n    free(a);\n    free(b);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:38:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int *a = (int *)malloc(N * sizeof(int));\n    int *b = (int *)malloc(N * sizeof(int));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &b[i]);\n    }\n    \n    int max_pairs = N;\n    int *k_list = (int *)malloc(max_pairs * sizeof(int));\n    int *x_list = (int *)malloc(max_pairs * sizeof(int));\n    int count = 0;\n    \n    for (int k = 0; k < N; k++) {\n        int x = a[k] ^ b[0];\n        int valid = 1;\n        for (int i = 0; i < N; i++) {\n            int idx = (i + k) % N;\n            if ((a[idx] ^ x) != b[i]) {\n                valid = 0;\n                break;\n            }\n        }\n        if (valid) {\n            k_list[count] = k;\n            x_list[count] = x;\n            count++;\n        }\n    }\n    \n    for (int i = 0; i < count; i++) {\n        for (int j = i + 1; j < count; j++) {\n            if (k_list[i] > k_list[j] || (k_list[i] == k_list[j] && x_list[i] > x_list[j])) {\n                int temp_k = k_list[i];\n                int temp_x = x_list[i];\n                k_list[i] = k_list[j];\n                x_list[i] = x_list[j];\n                k_list[j] = temp_k;\n                x_list[j] = temp_x;\n            }\n        }\n    }\n    \n    for (int i = 0; i < count; i++) {\n        printf(\"%d %d\\n\", k_list[i], x_list[i]);\n    }\n    \n    free(a);\n    free(b);\n    free(k_list);\n    free(x_list);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:39:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N), b(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> b[i];\n    }\n\n    map<int, set<int>> solutions;\n\n    for (int k = 0; k < N; ++k) {\n        int x = a[k] ^ b[0];\n        bool valid = true;\n        for (int i = 0; i < N; ++i) {\n            if ((a[(i + k) % N] ^ x) != b[i]) {\n                valid = false;\n                break;\n            }\n        }\n        if (valid) {\n            solutions[k].insert(x);\n        }\n    }\n\n    for (auto& entry : solutions) {\n        int k = entry.first;\n        set<int>& xs = entry.second;\n        for (int x : xs) {\n            cout << k << \" \" << x << endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:39:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        int[] b = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n        \n        List<int[]> result = new ArrayList<>();\n        \n        for (int k = 0; k < N; k++) {\n            int x = a[k] ^ b[0];\n            boolean valid = true;\n            for (int i = 0; i < N; i++) {\n                int idx = (i + k) % N;\n                if ((a[idx] ^ x) != b[i]) {\n                    valid = false;\n                    break;\n                }\n            }\n            if (valid) {\n                result.add(new int[]{k, x});\n            }\n        }\n        \n        result.sort((o1, o2) -> {\n            if (o1[0] != o2[0]) {\n                return Integer.compare(o1[0], o2[0]);\n            } else {\n                return Integer.compare(o1[1], o2[1]);\n            }\n        });\n        \n        for (int[] pair : result) {\n            System.out.println(pair[0] + \" \" + pair[1]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:40:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        \n        int[] a = new int[N];\n        int[] b = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n        \n        List<int[]> result = new ArrayList<>();\n        \n        for (int k = 0; k < N; k++) {\n            for (int x = 0; x < (1 << 30); x++) {\n                if (checkTransformation(a, b, k, x)) {\n                    result.add(new int[]{k, x});\n                }\n            }\n        }\n        \n        Collections.sort(result, (p1, p2) -> {\n            if (p1[0] != p2[0]) return Integer.compare(p1[0], p2[0]);\n            return Integer.compare(p1[1], p2[1]);\n        });\n        \n        System.out.println(result.size());\n        for (int[] pair : result) {\n            System.out.println(pair[0] + \" \" + pair[1]);\n        }\n    }\n    \n    private static boolean checkTransformation(int[] a, int[] b, int k, int x) {\n        for (int i = 0; i < a.length; i++) {\n            if (a[(i + k) % a.length] ^ x != b[i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 22:40:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <set>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N), b(N);\n    for (int i = 0; i < N; i++) cin >> a[i];\n    for (int i = 0; i < N; i++) cin >> b[i];\n    \n    set<pair<int, int>> results;\n    \n    for (int k = 0; k < N; k++) {\n        for (int x = 0; x < (1 << 30); x++) {\n            vector<int> a_transformed(N);\n            bool match = true;\n            \n            for (int i = 0; i < N; i++) {\n                a_transformed[i] = a[(i + k) % N] ^ x;\n                if (a_transformed[i] != b[i]) {\n                    match = false;\n                    break;\n                }\n            }\n            \n            if (match) {\n                results.insert({k, x});\n            }\n        }\n    }\n    \n    cout << results.size() << endl;\n    for (const auto& [k, x] : results) {\n        cout << k << \" \" << x << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:40:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_transform_pairs(a, b):\n    N = len(a)\n    result = []\n\n    for k in range(N):\n        valid_xs = set()\n        for i in range(N):\n            shifted_index = (i + k) % N\n            x = a[shifted_index] ^ b[i]\n            valid_xs.add(x)\n\n        for x in valid_xs:\n            transformed_a = [(a[(i + k) % N] ^ x) for i in range(N)]\n            if transformed_a == b:\n                result.append((k, x))\n\n    result.sort()\n    for res in result:\n        print(res)\n\n# Example usage:\n# a = [1, 2, 3]\n# b = [3, 0, 1]\n# find_transform_pairs(a, b)",
+    "timestamp": "2025-08-13 11:59:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class SequenceTransformation {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        int[] b = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n\n        List<int[]> result = new ArrayList<>();\n\n        for (int k = 0; k < N; k++) {\n            int x = a[0] ^ b[k];\n            boolean match = true;\n\n            for (int i = 0; i < N; i++) {\n                if ((a[(i + k) % N] ^ x) != b[i]) {\n                    match = false;\n                    break;\n                }\n            }\n\n            if (match) {\n                result.add(new int[]{k, x});\n            }\n        }\n\n        result.sort((pair1, pair2) -> {\n            if (pair1[0] != pair2[0]) {\n                return Integer.compare(pair1[0], pair2[0]);\n            } else {\n                return Integer.compare(pair1[1], pair2[1]);\n            }\n        });\n\n        for (int[] pair : result) {\n            System.out.println(pair[0] + \" \" + pair[1]);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 11:59:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MAX_N 100\n\nint main() {\n    int N, a[MAX_N], b[MAX_N];\n    int foundPair = 0;\n    \n    // Read N\n    scanf(\"%d\", &N);\n\n    // Read sequence a\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    // Read sequence b\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &b[i]);\n    }\n\n    // Iterate over possible values for k\n    for (int k = 0; k < N; k++) {\n        // Calculate x for this k\n        int x = a[k] ^ b[0];\n        int valid = 1;\n        \n        // Check if this x makes transformed a equal to b\n        for (int i = 0; i < N; i++) {\n            if ((a[(i + k) % N] ^ x) != b[i]) {\n                valid = 0;\n                break;\n            }\n        }\n        \n        // If valid, output the pair (k, x)\n        if (valid) {\n            printf(\"%d %d\\n\", k, x);\n            foundPair = 1;\n        }\n    }\n    \n    // If no pair is found, output a specific result to indicate absence\n    if (!foundPair) {\n        printf(\"No valid pairs\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:00:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findTransformationPairs(a, b) {\n    const N = a.length;\n    const pairs = [];\n\n    for (let k = 0; k < N; k++) {\n        let validX = null;\n\n        for (let i = 0; i < N; i++) {\n            const ai = a[(i + k) % N];\n            const bi = b[i];\n\n            const currentX = ai ^ bi;\n\n            if (validX === null) {\n                validX = currentX;\n            } else if (validX !== currentX) {\n                validX = null;\n                break;\n            }\n        }\n\n        if (validX !== null) {\n            pairs.push([k, validX]);\n        }\n    }\n\n    return pairs;\n}\n\n// Example usage:\n// const a = [1, 2, 3];\n// const b = [3, 4, 5];\n// console.log(findTransformationPairs(a, b)); // Output all valid pairs",
+    "timestamp": "2025-08-13 12:00:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_transformations(a, b):\n    N = len(a)\n    result = []\n    \n    for k in range(N):\n        for x in range(256):  # Assuming 8-bit integers\n            transformed = [0] * N\n            \n            for i in range(N):\n                transformed[i] = a[(i+k) % N] ^ x\n            \n            if transformed == b:\n                result.append((k, x))\n    \n    result.sort()\n    return result\n\n# Example usage:\n# a = [1, 2, 3, 4]\n# b = [3, 4, 1, 2]\n# print(find_transformations(a, b))",
+    "timestamp": "2025-08-13 12:00:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findTransformations(a, b) {\n    const N = a.length;\n    const result = [];\n\n    for (let k = 0; k < N; k++) {\n        for (let x = 0; x < (1 << 20); x++) {\n            let match = true;\n            for (let i = 0; i < N; i++) {\n                if (a[(i + k) % N] ^ x !== b[i]) {\n                    match = false;\n                    break;\n                }\n            }\n            if (match) {\n                result.push([k, x]);\n            }\n        }\n    }\n\n    return result.sort((a, b) => a[0] - b[0] || a[1] - b[1]);\n}",
+    "timestamp": "2025-08-13 12:00:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    N = int(sys.stdin.readline())\n    a = list(map(int, sys.stdin.readline().split()))\n    b = list(map(int, sys.stdin.readline().split()))\n    \n    # Precompute the XOR x candidates from the first element\n    x_candidates = set()\n    x0 = a[0] ^ b[0]\n    x1 = a[0] ^ b[-1]\n    x_candidates.add(x0)\n    x_candidates.add(x1)\n    \n    # Also check x from a[1] and b[0], a[1] and b[1], etc. to cover all possibilities\n    for i in range(1, min(N, 2)):\n        x = a[i] ^ b[(0 - i) % N]\n        x_candidates.add(x)\n        x = a[i] ^ b[(1 - i) % N]\n        x_candidates.add(x)\n    \n    results = []\n    for x in x_candidates:\n        # Check for all possible k\n        for k in range(N):\n            valid = True\n            for i in range(N):\n                if (a[(i + k) % N] ^ x) != b[i]:\n                    valid = False\n                    break\n            if valid:\n                results.append((k, x))\n    \n    # Sort the results\n    results.sort()\n    \n    # Output the results\n    print(len(results))\n    for k, x in results:\n        print(k, x)\n\nsolve()",
+    "timestamp": "2025-08-13 12:00:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N;\n    let a = [];\n    let b = [];\n    let lineCount = 0;\n\n    rl.on('line', (line) => {\n        if (lineCount === 0) {\n            N = parseInt(line);\n            lineCount++;\n        } else if (lineCount === 1) {\n            a = line.split(' ').map(Number);\n            lineCount++;\n        } else if (lineCount === 2) {\n            b = line.split(' ').map(Number);\n            rl.close();\n        }\n    });\n\n    rl.on('close', () => {\n        const result = [];\n        const bSet = new Set(b);\n        const possibleX = new Set();\n\n        // Generate all possible x candidates from the first element\n        for (let i = 0; i < N; i++) {\n            const x = a[i] ^ b[0];\n            possibleX.add(x);\n        }\n\n        // Check each possible k and x\n        for (let k = 0; k < N; k++) {\n            for (const x of possibleX) {\n                let valid = true;\n                for (let i = 0; i < N; i++) {\n                    const idx = (i + k) % N;\n                    if ((a[idx] ^ x) !== b[i]) {\n                        valid = false;\n                        break;\n                    }\n                }\n                if (valid) {\n                    result.push([k, x]);\n                }\n            }\n        }\n\n        // Sort the result\n        result.sort((a, b) => {\n            if (a[0] !== b[0]) {\n                return a[0] - b[0];\n            } else {\n                return a[1] - b[1];\n            }\n        });\n\n        // Output the result\n        console.log(result.length);\n        for (const [k, x] of result) {\n            console.log(k + ' ' + x);\n        }\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:00:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N), b(N);\n    for (int i = 0; i < N; i++) cin >> a[i];\n    for (int i = 0; i < N; i++) cin >> b[i];\n    \n    vector<pair<int, int>> results;\n    \n    for (int k = 0; k < N; k++) {\n        int x = a[k] ^ b[0];\n        bool isValid = true;\n        \n        for (int i = 0; i < N; i++) {\n            if ((a[(i + k) % N] ^ x) != b[i]) {\n                isValid = false;\n                break;\n            }\n        }\n        \n        if (isValid) {\n            results.emplace_back(k, x);\n        }\n    }\n    \n    sort(results.begin(), results.end());\n    \n    for (const auto& res : results) {\n        cout << res.first << \" \" << res.second << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:06:34"
+  }
+]

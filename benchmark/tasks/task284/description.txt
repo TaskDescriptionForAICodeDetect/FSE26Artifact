@@ -1,0 +1,1 @@
+Given a number of heavy metal cylinders with varying diameters and the same length, your task is to calculate the minimum possible distance between two parallel walls when the cylinders are squeezed together as much as possible. The cylinders cannot be lifted or reordered, but they can be rolled and may touch each other and the walls.

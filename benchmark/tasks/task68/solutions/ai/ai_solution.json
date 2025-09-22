@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int parent;\n    int rank;\n} Node;\n\nNode *nodes;\n\nint find(int u) {\n    if (nodes[u].parent != u) {\n        nodes[u].parent = find(nodes[u].parent);\n    }\n    return nodes[u].parent;\n}\n\nvoid union_sets(int u, int v) {\n    int root_u = find(u);\n    int root_v = find(v);\n    if (root_u == root_v) return;\n    if (nodes[root_u].rank < nodes[root_v].rank) {\n        nodes[root_u].parent = root_v;\n    } else if (nodes[root_u].rank > nodes[root_v].rank) {\n        nodes[root_v].parent = root_u;\n    } else {\n        nodes[root_v].parent = root_u;\n        nodes[root_u].rank++;\n    }\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    nodes = (Node *)malloc((N + 1) * sizeof(Node));\n    for (int i = 1; i <= N; i++) {\n        nodes[i].parent = i;\n        nodes[i].rank = 0;\n    }\n    \n    for (int i = 0; i < M; i++) {\n        int u, v, distance;\n        scanf(\"%d %d %d\", &u, &v, &distance);\n        int lanterns = distance / 100;\n        if (lanterns >= 1) {\n            union_sets(u, v);\n        }\n    }\n    \n    int components = 0;\n    for (int i = 1; i <= N; i++) {\n        if (find(i) == i) {\n            components++;\n        }\n    }\n    \n    printf(\"%d\\n\", components);\n    free(nodes);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class HistoricalSiteLanterns {\n    static class Site implements Comparable<Site> {\n        int location;\n        \n        Site(int location) {\n            this.location = location;\n        }\n        \n        public int compareTo(Site other) {\n            return Integer.compare(this.location, other.location);\n        }\n    }\n    \n    public static int minimumLanterns(List<Site> sites) {\n        if (sites == null || sites.isEmpty()) return 0;\n        \n        Collections.sort(sites);\n        int lanterns = 0;\n        int lastLanternLocation = Integer.MIN_VALUE;\n        \n        for (int i = 0; i < sites.size(); i++) {\n            if (lastLanternLocation < sites.get(i).location - 200) {\n                int newLanternLocation = sites.get(i).location - 100;\n                lanterns++;\n                lastLanternLocation = newLanternLocation + 100;\n            }\n        }\n        \n        return lanterns;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        \n        List<Site> sites = new ArrayList<>();\n        for (int i = 0; i < n; i++) {\n            sites.add(new Site(scanner.nextInt()));\n        }\n        \n        System.out.println(minimumLanterns(sites));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:26:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nvector<vector<int>> adj;\nvector<bool> visited;\n\nvoid bfs(int start) {\n    queue<int> q;\n    q.push(start);\n    visited[start] = true;\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (int v : adj[u]) {\n            if (!visited[v]) {\n                visited[v] = true;\n                q.push(v);\n            }\n        }\n    }\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    adj.resize(n);\n    visited.resize(n, false);\n\n    for (int i = 0; i < m; ++i) {\n        int u, v, d;\n        cin >> u >> v >> d;\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n\n    int lanterns = 0;\n    for (int i = 0; i < n; ++i) {\n        if (!visited[i]) {\n            bfs(i);\n            lanterns++;\n        }\n    }\n\n    cout << lanterns << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <limits.h>\n\n#define MAX_SITES 1000\n#define MAX_ROADS 10000\n\ntypedef struct {\n    int start;\n    int end;\n} Road;\n\nint compare(const void* a, const void* b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint solve(int* sites, int siteCount, Road* roads, int roadCount) {\n    qsort(sites, siteCount, sizeof(int), compare);\n    \n    int lanterns = 0;\n    int currentPos = INT_MIN;\n    \n    for (int i = 0; i < siteCount; i++) {\n        if (currentPos < sites[i] - 100) {\n            currentPos = sites[i] + 100;\n            lanterns++;\n        }\n    }\n    \n    return lanterns;\n}\n\nint main() {\n    int siteCount, roadCount;\n    scanf(\"%d %d\", &siteCount, &roadCount);\n    \n    int sites[MAX_SITES];\n    Road roads[MAX_ROADS];\n    \n    for (int i = 0; i < siteCount; i++) {\n        scanf(\"%d\", &sites[i]);\n    }\n    \n    for (int i = 0; i < roadCount; i++) {\n        scanf(\"%d %d\", &roads[i].start, &roads[i].end);\n    }\n    \n    int result = solve(sites, siteCount, roads, roadCount);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint minLanterns(vector<int>& sites) {\n    int n = sites.size();\n    sort(sites.begin(), sites.end());\n    \n    int lanterns = 0;\n    int lastLantern = -200;\n    \n    for (int site : sites) {\n        if (site - lastLantern >= 200) {\n            lanterns++;\n            lastLantern = site + 100;\n        }\n    }\n    \n    return lanterns;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<int> sites(n);\n    for (int i = 0; i < n; i++) {\n        cin >> sites[i];\n    }\n    \n    int result = minLanterns(sites);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:26:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass HistoricalSite {\n    int id;\n    List<Road> roads;\n\n    HistoricalSite(int id) {\n        this.id = id;\n        this.roads = new ArrayList<>();\n    }\n}\n\nclass Road {\n    HistoricalSite to;\n    int distance;\n\n    Road(HistoricalSite to, int distance) {\n        this.to = to;\n        this.distance = distance;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n\n        HistoricalSite[] sites = new HistoricalSite[N + 1];\n        for (int i = 1; i <= N; i++) {\n            sites[i] = new HistoricalSite(i);\n        }\n\n        for (int i = 0; i < M; i++) {\n            int A = scanner.nextInt();\n            int B = scanner.nextInt();\n            int D = scanner.nextInt();\n            sites[A].roads.add(new Road(sites[B], D));\n            sites[B].roads.add(new Road(sites[A], D));\n        }\n\n        boolean[] visited = new boolean[N + 1];\n        int lanterns = 0;\n\n        for (int i = 1; i <= N; i++) {\n            if (!visited[i]) {\n                lanterns++;\n                Queue<HistoricalSite> queue = new LinkedList<>();\n                queue.add(sites[i]);\n                visited[i] = true;\n\n                while (!queue.isEmpty()) {\n                    HistoricalSite current = queue.poll();\n                    for (Road road : current.roads) {\n                        if (!visited[road.to.id]) {\n                            visited[road.to.id] = true;\n                            queue.add(road.to);\n                        }\n                    }\n                }\n            }\n        }\n\n        System.out.println(lanterns);\n    }\n}",
+    "timestamp": "2025-08-05 18:27:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_lanterns(hist_sites, roads):\n    def lanterns_needed(distance):\n        return (distance // 100) + 1 if distance % 100 != 0 else distance // 100\n    \n    total_lanterns = 0\n    for road in roads:\n        site1, site2, distance = road\n        if site1 in hist_sites and site2 in hist_sites:\n            total_lanterns += lanterns_needed(distance)\n    \n    return total_lanterns\n\nif __name__ == \"__main__\":\n    historical_sites = {1, 2, 3, 4}\n    roads = [\n        (1, 2, 250),\n        (2, 3, 350),\n        (3, 4, 400),\n        (1, 4, 500)\n    ]\n\n    print(min_lanterns(historical_sites, roads))",
+    "timestamp": "2025-08-12 23:15:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LanternPlacement {\n    static class Road {\n        int start, end, length;\n\n        Road(int start, int end, int length) {\n            this.start = start;\n            this.end = end;\n            this.length = length;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int sites = scanner.nextInt();\n        int roads = scanner.nextInt();\n\n        Map<Integer, List<Road>> graph = new HashMap<>();\n        for (int i = 0; i < roads; i++) {\n            int start = scanner.nextInt();\n            int end = scanner.nextInt();\n            int length = scanner.nextInt();\n            graph.computeIfAbsent(start, k -> new ArrayList<>()).add(new Road(start, end, length));\n            graph.computeIfAbsent(end, k -> new ArrayList<>()).add(new Road(end, start, length));\n        }\n\n        boolean[] visited = new boolean[sites + 1];\n        int totalLanterns = 0;\n\n        for (int site = 1; site <= sites; site++) {\n            if (!visited[site]) {\n                totalLanterns += dfs(site, graph, visited);\n            }\n        }\n\n        System.out.println(totalLanterns);\n    }\n\n    private static int dfs(int site, Map<Integer, List<Road>> graph, boolean[] visited) {\n        visited[site] = true;\n        int lanterns = 0;\n\n        for (Road road : graph.getOrDefault(site, Collections.emptyList())) {\n            if (!visited[road.end]) {\n                lanterns += (road.length / 100) + dfs(road.end, graph, visited);\n            }\n        }\n\n        return lanterns;\n    }\n}",
+    "timestamp": "2025-08-12 23:15:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int from;\n    int to;\n    int distance;\n} Road;\n\nint compareRoads(const void* a, const void* b) {\n    return ((Road*)a)->distance - ((Road*)b)->distance;\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    \n    Road* roads = (Road*) malloc(m * sizeof(Road));\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d %d\", &roads[i].from, &roads[i].to, &roads[i].distance);\n    }\n    \n    qsort(roads, m, sizeof(Road), compareRoads);\n    \n    int totalLanterns = 0;\n    for (int i = 0; i < m; i++) {\n        totalLanterns += roads[i].distance / 100;\n    }\n    \n    printf(\"%d\\n\", totalLanterns);\n    \n    free(roads);\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:15:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import defaultdict\n\ndef min_lanterns(sites, roads):\n    # Create graph of road connections\n    graph = defaultdict(list)\n    for road in roads:\n        graph[road[0]].append(road[1])\n        graph[road[1]].append(road[0])\n    \n    # Sort sites\n    sites.sort()\n    \n    # Track visited sites and lantern placements\n    visited = set()\n    lanterns = 0\n    \n    for site in sites:\n        if site not in visited:\n            # Find furthest connected site that covers this site\n            max_coverage = site + 200\n            \n            # Find road connections and potential coverage\n            for neighbor in graph[site]:\n                if neighbor not in visited and abs(neighbor - site) <= 200:\n                    max_coverage = max(max_coverage, neighbor + 200)\n            \n            # Place lantern\n            lantern_pos = max_coverage - 100\n            lanterns += 1\n            \n            # Mark sites covered by this lantern\n            for s in sites:\n                if abs(s - lantern_pos) <= 100:\n                    visited.add(s)\n    \n    return lanterns\n\n# Example usage\nsites = [50, 250, 450, 700]\nroads = [(50, 250), (250, 450), (450, 700)]\nprint(min_lanterns(sites, roads))",
+    "timestamp": "2025-08-12 23:15:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N = int(input[ptr])\n    ptr += 1\n    M = int(input[ptr])\n    ptr += 1\n    \n    adj = [[] for _ in range(N)]\n    for _ in range(M):\n        u = int(input[ptr]) - 1\n        ptr += 1\n        v = int(input[ptr]) - 1\n        ptr += 1\n        d = int(input[ptr])\n        ptr += 1\n        adj[u].append((v, d))\n        adj[v].append((u, d))\n    \n    visited = [False] * N\n    res = 0\n    \n    for i in range(N):\n        if not visited[i]:\n            res += 1\n            q = deque()\n            q.append(i)\n            visited[i] = True\n            while q:\n                u = q.popleft()\n                for (v, d) in adj[u]:\n                    if not visited[v] and d <= 200:\n                        visited[v] = True\n                        q.append(v)\n    print(res)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:15:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <limits>\n#include <algorithm>\n\nstruct Road {\n    int from;\n    int to;\n    int distance;\n};\n\nint find(int i, std::vector<int>& parent) {\n    if (parent[i] == i) {\n        return i;\n    }\n    return parent[i] = find(parent[i], parent);\n}\n\nvoid unionSets(int i, int j, std::vector<int>& parent, std::vector<int>& rank) {\n    int rootI = find(i, parent);\n    int rootJ = find(j, parent);\n\n    if (rank[rootI] < rank[rootJ]) {\n        parent[rootI] = rootJ;\n    } else if (rank[rootI] > rank[rootJ]) {\n        parent[rootJ] = rootI;\n    } else {\n        parent[rootJ] = rootI;\n        rank[rootI]++;\n    }\n}\n\nint main() {\n    int numSites, numRoads;\n    std::cin >> numSites >> numRoads;\n    std::vector<Road> roads(numRoads);\n\n    for (int i = 0; i < numRoads; ++i) {\n        std::cin >> roads[i].from >> roads[i].to >> roads[i].distance;\n    }\n\n    std::sort(roads.begin(), roads.end(), [](const Road& a, const Road& b) {\n        return a.distance < b.distance;\n    });\n\n    std::vector<int> parent(numSites);\n    std::vector<int> rank(numSites, 0);\n    for (int i = 0; i < numSites; ++i) {\n        parent[i] = i;\n    }\n\n    int lanternCount = 0;\n\n    for (const auto& road : roads) {\n        if (find(road.from, parent) != find(road.to, parent)) {\n            unionSets(road.from, road.to, parent, rank);\n            lanternCount += road.distance / 100;\n        }\n    }\n\n    std::cout << lanternCount << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:49:24"
+  }
+]

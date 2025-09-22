@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "2\n?sum??mer\nc??a??mp",
+      "output": "703286064"
+    },
+    {
+      "input": "3\nsnuje\n????e\nsnule",
+      "output": "1"
+    }
+  ]
+}

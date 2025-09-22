@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "rbgrg\nrbbgbbr\nbgr\nbgrbrgbr\nbggrgbgrr\ngbrggrbggr\nrrrrr\nbgbr\n0",
+      "output": "5\n7\n1\n6\nNA\n8\n0\n4"
+    }
+  ]
+}

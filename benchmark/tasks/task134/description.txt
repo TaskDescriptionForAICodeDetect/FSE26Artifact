@@ -1,0 +1,7 @@
+Digital K
+
+At the Aizu Akabeko shop, unique lottery tickets called 'Digital K' are sold. Each ticket has N digits arranged from left to right. The digits are between 1 and 9.
+
+The buyer of the lottery can erase K digits from these numbers, and the remaining N-K digits, arranged in order from left to right, yield points. For example, if K=3 and the ticket has the number 1414213, by removing the leftmost 1, 1, and 2, the points would be 4413.
+
+Given a sequence of digits and an integer K, write a program to output the maximum points that can be obtained.

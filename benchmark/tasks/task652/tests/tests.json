@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "13\nabcxyx\ncyx\nabc\n",
+      "output": "11\n"
+    },
+    {
+      "input": "26\nb\na\nabc\nc\nd\nab\n",
+      "output": "25\n"
+    }
+  ]
+}

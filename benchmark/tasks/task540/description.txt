@@ -1,0 +1,48 @@
+Location Guessing Game
+
+Problem
+AOR Squid and Sosuusa are playing a location guessing game using a graph.
+
+Initially, AOR Squid specifies an integer N, and Sosuusa generates an undirected graph with N vertices. The N vertices are numbered from 1 to N. They will play K games using this undirected graph.
+
+At the start of each game, AOR Squid chooses one vertex, and Sosuusa has to guess that vertex.
+
+Sosuusa can ask up to 10 questions to AOR Squid. When Sosuusa communicates a vertex number to AOR Squid, AOR Squid will respond with one of the following:
+
+- 'Yes': The guessed vertex is correct.
+- 'Near': The guessed vertex is not correct, but one of its adjacent vertices is the correct one.
+- 'No': The guessed vertex is incorrect and not adjacent to the correct vertex.
+
+If Sosuusa can guess the vertex in 10 questions or less in all K games, Sosuusa wins. To ensure victory, Sosuusa has asked you to create a program that can guarantee a win.
+
+Input/Output
+First, the number of vertices N and the number of games K are provided in the format:
+N K
+
+Next, the generated undirected graph is output in the following format:
+M
+A1 B1
+...
+AM BM
+
+Where M is the number of edges in the generated undirected graph, and A_i, B_i indicate that the i-th edge connects vertex A_i and vertex B_i.
+Note that the generated undirected graph must satisfy 0 ≤ M ≤ (N(N-1))/2 and 1 ≤ A_i, B_i ≤ N.
+
+Following this, your program will ask a series of questions in the format:
+Num
+
+Where Num is a vertex number between 1 and N. Based on this question, the response will be 'Yes', 'Near', or 'No'.
+If 'Yes' is received, the game ends in victory. After one game ends, the next game begins immediately. Each game must be won within a maximum of 10 questions.
+
+All K games must be won; otherwise, the answer will be incorrect.
+
+After all games, your program must terminate immediately. If it does not terminate, the judgement is undefined. Additionally, outputting in formats other than specified can also lead to undefined judgment.
+
+Note that there can be a TLE if you do not flush after sending graph information or questions to the responder program. To flush in C, use:
+fflush(stdout);
+In C++, you can flush with:
+std::cout;
+Including stdio.h allows the use of fflush().
+
+Constraints
+1 ≤ N, K ≤ 200

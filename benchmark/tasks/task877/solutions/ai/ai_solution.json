@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_LENGTH 100005\n\nchar s[MAX_LENGTH];\nint n;\n\nchar next_char(char c) {\n    return (c == 'z') ? 'a' : c + 1;\n}\n\nbool is_palindrome(char* str) {\n    int len = strlen(str);\n    for (int i = 0; i < len / 2; i++) {\n        if (str[i] != str[len - 1 - i]) {\n            return false;\n        }\n    }\n    return true;\n}\n\nbool can_make_palindrome(int l[], int r[], int operations) {\n    for (int mask = 0; mask < (1 << operations); mask++) {\n        char temp[MAX_LENGTH];\n        strcpy(temp, s);\n        \n        for (int j = 0; j < operations; j++) {\n            if (mask & (1 << j)) {\n                for (int k = l[j] - 1; k < r[j]; k++) {\n                    temp[k] = next_char(temp[k]);\n                }\n            }\n        }\n        \n        if (is_palindrome(temp)) {\n            return true;\n        }\n    }\n    return false;\n}\n\nint main() {\n    int t;\n    scanf(\"%d\", &t);\n    \n    while (t--) {\n        scanf(\"%s\", s);\n        scanf(\"%d\", &n);\n        \n        int l[n], r[n];\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d %d\", &l[i], &r[i]);\n        }\n        \n        printf(\"%s\\n\", can_make_palindrome(l, r, n) ? \"YES\" : \"NO\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_N 100000\n#define MAX_LEN 100000\n\nint main() {\n    char S[MAX_LEN + 1];\n    int N;\n    scanf(\"%s\", S);\n    scanf(\"%d\", &N);\n    int L[MAX_N], R[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &L[i], &R[i]);\n    }\n\n    int len = strlen(S);\n    int diff[MAX_LEN + 2] = {0};\n\n    for (int i = 0; i < N; i++) {\n        int l = L[i] - 1;\n        int r = R[i] - 1;\n        diff[l]++;\n        if (r + 1 < len) {\n            diff[r + 1]--;\n        }\n    }\n\n    int current = 0;\n    for (int i = 0; i < len; i++) {\n        current += diff[i];\n        S[i] = (S[i] - 'a' + current) % 26 + 'a';\n    }\n\n    bool possible = true;\n    for (int i = 0; i < len / 2; i++) {\n        if (S[i] != S[len - 1 - i]) {\n            possible = false;\n            break;\n        }\n    }\n\n    printf(possible ? \"YES\\n\" : \"NO\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    string S;\n    int N;\n    cin >> S >> N;\n    vector<int> diff(S.size(), 0);\n    \n    for (int i = 0; i < N; ++i) {\n        int L, R;\n        cin >> L >> R;\n        L--; R--; // converting to 0-based index\n        diff[L]++;\n        if (R + 1 < S.size()) {\n            diff[R + 1]--;\n        }\n    }\n    \n    // Compute prefix sum to get the total operations for each character\n    vector<int> ops(S.size(), 0);\n    ops[0] = diff[0];\n    for (int i = 1; i < S.size(); ++i) {\n        ops[i] = ops[i - 1] + diff[i];\n    }\n    \n    bool possible = true;\n    for (int i = 0; i < S.size() / 2; ++i) {\n        int j = S.size() - 1 - i;\n        int ci = S[i] - 'a';\n        int cj = S[j] - 'a';\n        int total_i = ci + ops[i];\n        int total_j = cj + ops[j];\n        if ((total_i - total_j) % 26 != 0) {\n            possible = false;\n            break;\n        }\n    }\n    \n    cout << (possible ? \"YES\" : \"NO\") << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String S = sc.next();\n        int N = sc.nextInt();\n        int[] L = new int[N];\n        int[] R = new int[N];\n        for (int i = 0; i < N; i++) {\n            L[i] = sc.nextInt() - 1;\n            R[i] = sc.nextInt() - 1;\n        }\n\n        int len = S.length();\n        int[] diff = new int[len + 1];\n\n        for (int i = 0; i < N; i++) {\n            diff[L[i]]++;\n            diff[R[i] + 1]--;\n        }\n\n        int[] ops = new int[len];\n        int current = 0;\n        for (int i = 0; i < len; i++) {\n            current += diff[i];\n            ops[i] = current;\n        }\n\n        boolean possible = true;\n        for (int i = 0; i < len / 2; i++) {\n            int j = len - 1 - i;\n            int a = S.charAt(i) - 'a';\n            int b = S.charAt(j) - 'a';\n            int totalOps = ops[i] + ops[j];\n            if ((a + totalOps - b) % 26 != 0 && (b + totalOps - a) % 26 != 0) {\n                possible = false;\n                break;\n            }\n        }\n\n        System.out.println(possible ? \"YES\" : \"NO\");\n    }\n}",
+    "timestamp": "2025-08-05 23:13:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static String canFormPalindrome(String S, int N, int[][] operations) {\n        char[] chars = S.toCharArray();\n        int length = chars.length;\n        \n        // Check if transformations can make palindrome\n        for (int i = 0; i < N; i++) {\n            int L = operations[i][0] - 1;\n            int R = operations[i][1] - 1;\n            \n            for (int j = L; j <= R; j++) {\n                chars[j] = nextChar(chars[j]);\n            }\n        }\n        \n        // Check palindrome condition\n        for (int i = 0; i < length / 2; i++) {\n            if (chars[i] != chars[length - 1 - i]) {\n                return \"No\";\n            }\n        }\n        \n        return \"Yes\";\n    }\n    \n    private static char nextChar(char c) {\n        return c == 'z' ? 'a' : (char)(c + 1);\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        String S = scanner.next();\n        int N = scanner.nextInt();\n        \n        int[][] operations = new int[N][2];\n        for (int i = 0; i < N; i++) {\n            operations[i][0] = scanner.nextInt();\n            operations[i][1] = scanner.nextInt();\n        }\n        \n        System.out.println(canFormPalindrome(S, N, operations));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:13:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canMakePalindrome(string S, vector<vector<int>>& operations) {\n        int n = S.length();\n        \n        // Try all possible transformations\n        for (int mask = 0; mask < (1 << operations.size()); mask++) {\n            string temp = S;\n            \n            // Apply selected operations\n            for (int i = 0; i < operations.size(); i++) {\n                if (mask & (1 << i)) {\n                    int L = operations[i][0] - 1;\n                    int R = operations[i][1] - 1;\n                    \n                    // Transform substring\n                    for (int j = L; j <= R; j++) {\n                        temp[j] = (temp[j] == 'z') ? 'a' : temp[j] + 1;\n                    }\n                }\n            }\n            \n            // Check if transformed string is palindrome\n            if (isPalindrome(temp)) {\n                return true;\n            }\n        }\n        \n        return false;\n    }\n    \nprivate:\n    bool isPalindrome(string& s) {\n        int left = 0, right = s.length() - 1;\n        while (left < right) {\n            if (s[left] != s[right]) {\n                return false;\n            }\n            left++;\n            right--;\n        }\n        return true;\n    }\n};\n\nint main() {\n    Solution sol;\n    string S;\n    int N;\n    cin >> S >> N;\n    \n    vector<vector<int>> operations(N, vector<int>(2));\n    for (int i = 0; i < N; i++) {\n        cin >> operations[i][0] >> operations[i][1];\n    }\n    \n    cout << (sol.canMakePalindrome(S, operations) ? \"Yes\" : \"No\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_form_palindrome(n, operations, s):\n    changes = [0] * len(s)\n    \n    for l, r in operations:\n        changes[l - 1] += 1\n        if r < len(s):\n            changes[r] -= 1\n    \n    for i in range(1, len(changes)):\n        changes[i] += changes[i - 1]\n        \n    mapped_s = [(ord(c) - ord('a') + changes[i]) % 26 for i, c in enumerate(s)]\n    \n    def is_palindrome(lst):\n        return lst == lst[::-1]\n    \n    return is_palindrome(mapped_s)\n\n# Test the function\nn = 2\noperations = [(1, 3), (2, 4)]\ns = \"abca\"\nprint(can_form_palindrome(n, operations, s))  # Expected output: True or False",
+    "timestamp": "2025-08-13 14:07:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class PalindromeTransformation {\n    public static boolean canTransformToPalindrome(String S, int[][] operations) {\n        int n = S.length();\n        int[] currentShift = new int[n];\n        \n        for (int[] op : operations) {\n            int left = op[0] - 1;\n            int right = op[1] - 1;\n            for (int i = left; i <= right; i++) {\n                currentShift[i]++;\n            }\n        }\n\n        for (int i = 0; i < n / 2; i++) {\n            int j = n - i - 1;\n            int shiftI = currentShift[i] % 26;\n            int shiftJ = currentShift[j] % 26;\n            \n            char charI = (char) ((S.charAt(i) - 'a' + shiftI) % 26 + 'a');\n            char charJ = (char) ((S.charAt(j) - 'a' + shiftJ) % 26 + 'a');\n            \n            if (charI != charJ) {\n                return false;\n            }\n        }\n\n        return true;\n    }\n\n    public static void main(String[] args) {\n        String S = \"abcca\";\n        int[][] operations = {{1, 3}, {2, 4}};\n        System.out.println(canTransformToPalindrome(S, operations)); // Example usage\n    }\n}",
+    "timestamp": "2025-08-13 14:07:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint canTransformToPalindrome(char *s, int length) {\n    int freq[26] = {0};\n\n    for (int i = 0; i < length; i++) {\n        freq[s[i] - 'a']++;\n    }\n\n    int oddCount = 0;\n    for (int i = 0; i < 26; i++) {\n        if (freq[i] % 2 != 0) {\n            oddCount++;\n        }\n    }\n    \n    return oddCount <= 1;\n}\n\nint main() {\n    char S[1001];\n    int N, L, R;\n    scanf(\"%s\", S);\n    int length = strlen(S);\n    scanf(\"%d\", &N);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &L, &R);\n    }\n\n    if (canTransformToPalindrome(S, length)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:07:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nbool isPalindrome(const string &s) {\n    int len = s.size();\n    for (int i = 0; i < len / 2; ++i) {\n        if (s[i] != s[len - i - 1]) {\n            return false;\n        }\n    }\n    return true;\n}\n\nbool canBecomePalindrome(string s, int n, vector<int> &L, vector<int> &R) {\n    int len = s.size();\n    vector<int> requirement(len, 0);\n\n    for (int i = 0; i < len / 2; ++i) {\n        int a = s[i] - 'a', b = s[len - i - 1] - 'a';\n        int diff = (b - a + 26) % 26;\n        requirement[i] = diff;\n        requirement[len - i - 1] = diff;\n    }\n\n    vector<int> operations(len, 0);\n    for (int j = 0; j < n; ++j) {\n        for (int k = L[j] - 1; k < R[j]; ++k) {\n            operations[k] = (operations[k] + 1) % 26;\n        }\n    }\n\n    for (int i = 0; i < len; ++i) {\n        if (operations[i] != requirement[i]) {\n            return false;\n        }\n    }\n\n    return true;\n}\n\nint main() {\n    string S;\n    int N;\n    cin >> S >> N;\n    vector<int> L(N), R(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> L[i] >> R[i];\n    }\n\n    if (isPalindrome(S) || canBecomePalindrome(S, N, L, R)) {\n        cout << \"YES\" << endl;\n    } else {\n        cout << \"NO\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:07:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_palindrome_possible(S, N, operations):\n    # Convert string to list for manipulation\n    s_list = list(S)\n    \n    # Try all possible operations\n    for _ in range(2 * len(S)):  # Limit iterations to prevent infinite loop\n        # Check if current string is a palindrome\n        if s_list == s_list[::-1]:\n            return \"Yes\"\n        \n        # Try each operation\n        for l, r in operations:\n            # Modify substring according to operation\n            for i in range(l-1, r):\n                # Move to next letter, wrapping around from 'z' to 'a'\n                if s_list[i] == 'z':\n                    s_list[i] = 'a'\n                else:\n                    s_list[i] = chr(ord(s_list[i]) + 1)\n    \n    # Check final state\n    if s_list == s_list[::-1]:\n        return \"Yes\"\n    \n    return \"No\"\n\n# Read input\ndef main():\n    # Input parsing\n    S = input().strip()\n    N = int(input())\n    \n    # Read operations\n    operations = []\n    for _ in range(N):\n        l, r = map(int, input().split())\n        operations.append((l, r))\n    \n    # Print result\n    print(is_palindrome_possible(S, N, operations))\n\n# Run main function\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 14:07:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    S = data[idx]\n    idx += 1\n    N = int(data[idx])\n    idx += 1\n    operations = []\n    for _ in range(N):\n        L = int(data[idx]) - 1  # converting to 0-based\n        R = int(data[idx + 1]) - 1\n        operations.append((L, R))\n        idx += 2\n    \n    # For each character, track the number of times it's been incremented mod 26\n    n = len(S)\n    delta = [0] * (n + 1)\n    \n    for L, R in operations:\n        delta[L] += 1\n        if R + 1 < n:\n            delta[R + 1] -= 1\n    \n    # Compute prefix sum to get the total increments for each position\n    for i in range(1, n):\n        delta[i] += delta[i - 1]\n    \n    # Apply the increments to each character\n    s_list = list(S)\n    for i in range(n):\n        increment = delta[i] % 26\n        original = ord(s_list[i]) - ord('a')\n        new_char = (original + increment) % 26\n        s_list[i] = chr(ord('a') + new_char)\n    \n    modified_S = ''.join(s_list)\n    \n    # Check if it's a palindrome\n    left, right = 0, len(modified_S) - 1\n    is_palindrome = True\n    while left < right:\n        if modified_S[left] != modified_S[right]:\n            is_palindrome = False\n            break\n        left += 1\n        right -= 1\n    \n    print(\"YES\" if is_palindrome else \"NO\")\n\nsolve()",
+    "timestamp": "2025-08-13 14:08:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canFormPalindrome(S, operations) {\n    const n = S.length;\n    let start = Array(n).fill(0);\n    let end = Array(n).fill(0);\n\n    operations.forEach(([L, R]) => {\n        start[L - 1]++;\n        if (R < n) end[R]++;\n    });\n\n    let balance = 0;\n    let transformed = '';\n    for (let i = 0; i < n; i++) {\n        balance += start[i];\n        transformed += String.fromCharCode(((S.charCodeAt(i) - 97 + balance) % 26) + 97);\n        balance -= end[i];\n    }\n\n    return isPalindrome(transformed);\n}\n\nfunction isPalindrome(str) {\n    const len = str.length;\n    for (let i = 0; i < Math.floor(len / 2); i++) {\n        if (str[i] !== str[len - 1 - i]) {\n            return false;\n        }\n    }\n    return true;\n}\n\n// Example usage:\n// const S = \"abccba\";\n// const operations = [[1, 3], [4, 6]];\n// console.log(canFormPalindrome(S, operations));  // Output: true or false",
+    "timestamp": "2025-08-13 14:08:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canFormPalindrome(S, N, operations) {\n    let chars = S.split('');\n    \n    for (let op of operations) {\n        let [L, R] = op;\n        \n        for (let i = L - 1; i < R; i++) {\n            chars[i] = String.fromCharCode((chars[i].charCodeAt(0) - 97 + 1) % 26 + 97);\n        }\n    }\n    \n    for (let i = 0; i < chars.length / 2; i++) {\n        if (chars[i] !== chars[chars.length - 1 - i]) {\n            return false;\n        }\n    }\n    \n    return true;\n}",
+    "timestamp": "2025-08-13 14:09:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(S, operations) {\n    const n = S.length;\n    const diff = new Array(n + 2).fill(0);\n\n    for (const [L, R] of operations) {\n        diff[L] += 1;\n        diff[R + 1] -= 1;\n    }\n\n    const ops = new Array(n + 1).fill(0);\n    for (let i = 1; i <= n; i++) {\n        ops[i] = ops[i - 1] + diff[i];\n    }\n\n    for (let i = 1; i <= n / 2; i++) {\n        const j = n - i + 1;\n        const a = S.charCodeAt(i - 1) - 97;\n        const b = S.charCodeAt(j - 1) - 97;\n        const delta = (a + ops[i] - (b + ops[j])) % 26;\n        if (delta !== 0 && (delta + 26) % 26 !== 0) {\n            return false;\n        }\n    }\n    return true;\n}",
+    "timestamp": "2025-08-13 14:09:12"
+  }
+]

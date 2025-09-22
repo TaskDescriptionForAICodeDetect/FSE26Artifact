@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\nint is_gochiusa_number(int num) {\n    char str[20];\n    sprintf(str, \"%d\", num);\n    \n    for (int i = 0; i <= strlen(str) - 4; i++) {\n        if (str[i] == '5' && str[i+1] == '1' && \n            (str[i+2] >= '0' && str[i+2] <= '9') && \n            str[i+3] == '3') {\n            return 1;\n        }\n    }\n    \n    return 0;\n}\n\nint count_gochiusa_numbers(int N) {\n    int count = 0;\n    \n    for (int i = 1; i <= N; i++) {\n        if (is_gochiusa_number(i)) {\n            count++;\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    printf(\"%d\\n\", count_gochiusa_numbers(N));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool isGochiusaNumber(long long num) {\n    while (num >= 513) {\n        if (num % 10000 / 10 == 513) {\n            return true;\n        }\n        num /= 10;\n    }\n    return false;\n}\n\nlong long countGochiusaNumbers(long long N) {\n    long long count = 0;\n    for (long long i = 1; i <= N; ++i) {\n        if (isGochiusaNumber(i)) {\n            ++count;\n        }\n    }\n    return count;\n}\n\nint main() {\n    long long N;\n    scanf(\"%lld\", &N);\n    printf(\"%lld\\n\", countGochiusaNumbers(N));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nbool isGochiusaNumber(long long num) {\n    string s = to_string(num);\n    for (int i = 0; i + 3 < s.size(); ++i) {\n        if (s[i] == '5' && s[i+1] == '1' && s[i+3] == '3') {\n            return true;\n        }\n    }\n    return false;\n}\n\nint countGochiusaNumbers(long long N) {\n    int count = 0;\n    for (long long i = 1; i <= N; ++i) {\n        if (isGochiusaNumber(i)) {\n            ++count;\n        }\n    }\n    return count;\n}\n\nint main() {\n    long long N;\n    cin >> N;\n    cout << countGochiusaNumbers(N) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class GochiusaNumber {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        long N = scanner.nextLong();\n        int count = 0;\n        \n        for (long i = 1; i <= N; i++) {\n            String s = Long.toString(i);\n            if (s.contains(\"5103\") || s.contains(\"5113\") || s.contains(\"5123\") || \n                s.contains(\"5133\") || s.contains(\"5143\") || s.contains(\"5153\") || \n                s.contains(\"5163\") || s.contains(\"5173\") || s.contains(\"5183\") || \n                s.contains(\"5193\")) {\n                count++;\n            }\n        }\n        \n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:03:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class GochiusaNumberCounter {\n    public static int countGochiusaNumbers(int N) {\n        int count = 0;\n        \n        for (int num = 1; num <= N; num++) {\n            String numStr = String.valueOf(num);\n            \n            for (int replace = 0; replace <= 9; replace++) {\n                String pattern = \"51\" + replace + \"3\";\n                if (numStr.contains(pattern)) {\n                    count++;\n                    break;\n                }\n            }\n        }\n        \n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 22:03:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint countGochiusaNumbers(int N) {\n    int count = 0;\n    for (int num = 1; num <= N; num++) {\n        string numStr = to_string(num);\n        for (int digit = 0; digit <= 9; digit++) {\n            string pattern = \"51\" + to_string(digit) + \"3\";\n            if (numStr.find(pattern) != string::npos) {\n                count++;\n                break;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    cout << countGochiusaNumbers(N) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_gochiusa_numbers(N):\n    count = 0\n    for num in range(5103, N + 1):\n        num_str = str(num)\n        if '51' in num_str and '3' in num_str and num_str.find('51') < num_str.find('3'):\n            if num_str[num_str.find('51') + 2:num_str.find('3')].isdigit():\n                count += 1\n    return count\n\n# Example usage:\nN = 100000\nprint(count_gochiusa_numbers(N))",
+    "timestamp": "2025-08-13 08:43:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class GochiusaNumber {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        long N = scanner.nextLong();\n        scanner.close();\n        \n        System.out.println(countGochiusaNumbers(N));\n    }\n    \n    private static int countGochiusaNumbers(long N) {\n        int count = 0;\n        for (long i = 5103; i <= N; i++) {\n            if (containsPattern(i)) {\n                count++;\n            }\n        }\n        return count;\n    }\n    \n    private static boolean containsPattern(long number) {\n        String numStr = Long.toString(number);\n        return numStr.contains(\"51\") && numStr.indexOf(\"51\") + 3 < numStr.length() \n               && numStr.charAt(numStr.indexOf(\"51\") + 2) == '3';\n    }\n}",
+    "timestamp": "2025-08-13 08:43:08"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint countGochiusaNumbers(int N) {\n    int count = 0;\n    for (int i = 0; i <= N; i++) {\n        int num = i;\n        int found = 0;\n        while (num > 0) {\n            if (num % 10000 / 10 == 513) {\n                found = 1;\n                break;\n            }\n            num /= 10;\n        }\n        if (found) count++;\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int result = countGochiusaNumbers(N);\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:43:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_gochiusa_numbers(N):\n    count = 0\n    for num in range(1, N + 1):\n        if '51' in str(num) and '3' in str(num):\n            for digit in range(10):\n                if str(num).replace('?', str(digit)).count('513') > 0:\n                    count += 1\n                    break\n    return count",
+    "timestamp": "2025-08-13 08:43:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_gochiusa_numbers(N):\n    count = 0\n    for num in range(1, N + 1):\n        s = str(num)\n        for i in range(len(s) - 3):\n            if s[i] == '5' and s[i+1] == '1' and s[i+3] == '3' and s[i+2].isdigit():\n                count += 1\n                break\n    return count",
+    "timestamp": "2025-08-13 08:43:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nbool isGochiusaNumber(int num) {\n    std::string numStr = std::to_string(num);\n    return numStr.find(\"51\") != std::string::npos &&\n           numStr.find(\"3\", numStr.find(\"51\") + 2) != std::string::npos;\n}\n\nint countGochiusaNumbers(int N) {\n    int count = 0;\n    for (int i = 0; i <= N; ++i) {\n        if (isGochiusaNumber(i)) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N;\n    std::cout << \"Enter a number: \";\n    std::cin >> N;\n    std::cout << \"Number of Gochiusa numbers <= \" << N << \": \" << countGochiusaNumbers(N) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:39"
+  }
+]

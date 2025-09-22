@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_PROCESSES 100\n#define MAX_NAME_LENGTH 50\n\ntypedef struct {\n    char name[MAX_NAME_LENGTH];\n    int execution_time;\n} Process;\n\nvoid round_robin_scheduling(Process processes[], int n, int time_quantum) {\n    int remaining_time[MAX_PROCESSES];\n    int total_time = 0;\n    int completed_processes = 0;\n\n    for (int i = 0; i < n; i++) {\n        remaining_time[i] = processes[i].execution_time;\n    }\n\n    while (completed_processes < n) {\n        for (int i = 0; i < n; i++) {\n            if (remaining_time[i] > 0) {\n                int execute_time = (remaining_time[i] < time_quantum) ? remaining_time[i] : time_quantum;\n                remaining_time[i] -= execute_time;\n                total_time += execute_time;\n\n                printf(\"Process %s executed for %d time units. Remaining time: %d\\n\", \n                       processes[i].name, execute_time, remaining_time[i]);\n\n                if (remaining_time[i] == 0) {\n                    completed_processes++;\n                    printf(\"Process %s completed at time %d\\n\", processes[i].name, total_time);\n                }\n            }\n        }\n    }\n\n    printf(\"Total execution time: %d\\n\", total_time);\n}\n\nint main() {\n    int n, time_quantum;\n    Process processes[MAX_PROCESSES];\n\n    printf(\"Enter number of processes: \");\n    scanf(\"%d\", &n);\n\n    printf(\"Enter time quantum: \");\n    scanf(\"%d\", &time_quantum);\n\n    for (int i = 0; i < n; i++) {\n        printf(\"Enter process %d name: \", i + 1);\n        scanf(\"%s\", processes[i].name);\n\n        printf(\"Enter process %d execution time: \", i + 1);\n        scanf(\"%d\", &processes[i].execution_time);\n    }\n\n    round_robin_scheduling(processes, n, time_quantum);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:11:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct Process {\n    char name[100];\n    int time;\n} Process;\n\ntypedef struct Node {\n    Process process;\n    struct Node* next;\n} Node;\n\ntypedef struct Queue {\n    Node* front;\n    Node* rear;\n} Queue;\n\nQueue* createQueue() {\n    Queue* q = (Queue*)malloc(sizeof(Queue));\n    q->front = q->rear = NULL;\n    return q;\n}\n\nvoid enqueue(Queue* q, Process p) {\n    Node* newNode = (Node*)malloc(sizeof(Node));\n    newNode->process = p;\n    newNode->next = NULL;\n    if (q->rear == NULL) {\n        q->front = q->rear = newNode;\n        return;\n    }\n    q->rear->next = newNode;\n    q->rear = newNode;\n}\n\nProcess dequeue(Queue* q) {\n    if (q->front == NULL) {\n        Process empty = {\"\", 0};\n        return empty;\n    }\n    Node* temp = q->front;\n    Process p = temp->process;\n    q->front = q->front->next;\n    if (q->front == NULL) {\n        q->rear = NULL;\n    }\n    free(temp);\n    return p;\n}\n\nint isEmpty(Queue* q) {\n    return q->front == NULL;\n}\n\nvoid roundRobin(Queue* q, int quantum) {\n    int totalTime = 0;\n    while (!isEmpty(q)) {\n        Process p = dequeue(q);\n        if (p.time > quantum) {\n            totalTime += quantum;\n            p.time -= quantum;\n            enqueue(q, p);\n        } else {\n            totalTime += p.time;\n            printf(\"%s %d\\n\", p.name, totalTime);\n        }\n    }\n}\n\nint main() {\n    int n, quantum;\n    scanf(\"%d %d\", &n, &quantum);\n    Queue* q = createQueue();\n    for (int i = 0; i < n; i++) {\n        Process p;\n        scanf(\"%s %d\", p.name, &p.time);\n        enqueue(q, p);\n    }\n    roundRobin(q, quantum);\n    free(q);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:11:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <queue>\n#include <string>\n\nusing namespace std;\n\nstruct Process {\n    string name;\n    int time;\n};\n\nint main() {\n    int n, quantum;\n    cin >> n >> quantum;\n    queue<Process> q;\n\n    for (int i = 0; i < n; ++i) {\n        Process p;\n        cin >> p.name >> p.time;\n        q.push(p);\n    }\n\n    int total_time = 0;\n    while (!q.empty()) {\n        Process current = q.front();\n        q.pop();\n        if (current.time <= quantum) {\n            total_time += current.time;\n            cout << current.name << \" \" << total_time << endl;\n        } else {\n            current.time -= quantum;\n            total_time += quantum;\n            q.push(current);\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:11:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.LinkedList;\nimport java.util.Queue;\nimport java.util.Scanner;\n\nclass Process {\n    String name;\n    int time;\n\n    public Process(String name, int time) {\n        this.name = name;\n        this.time = time;\n    }\n}\n\npublic class RoundRobinScheduling {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int quantum = scanner.nextInt();\n        Queue<Process> queue = new LinkedList<>();\n\n        for (int i = 0; i < n; i++) {\n            String name = scanner.next();\n            int time = scanner.nextInt();\n            queue.add(new Process(name, time));\n        }\n\n        int totalTime = 0;\n        while (!queue.isEmpty()) {\n            Process current = queue.poll();\n            if (current.time <= quantum) {\n                totalTime += current.time;\n                System.out.println(current.name + \" \" + totalTime);\n            } else {\n                totalTime += quantum;\n                current.time -= quantum;\n                queue.add(current);\n            }\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:11:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Process {\n    String name;\n    int executionTime;\n\n    Process(String name, int executionTime) {\n        this.name = name;\n        this.executionTime = executionTime;\n    }\n}\n\npublic class RoundRobinScheduler {\n    public static void simulateRoundRobin(List<Process> processes, int timeQuantum) {\n        Queue<Process> queue = new LinkedList<>(processes);\n        int currentTime = 0;\n\n        while (!queue.isEmpty()) {\n            Process currentProcess = queue.poll();\n            \n            if (currentProcess.executionTime <= timeQuantum) {\n                currentTime += currentProcess.executionTime;\n                System.out.println(\"Process \" + currentProcess.name + \" completed at time \" + currentTime);\n            } else {\n                currentTime += timeQuantum;\n                currentProcess.executionTime -= timeQuantum;\n                queue.offer(currentProcess);\n                System.out.println(\"Process \" + currentProcess.name + \" partially executed at time \" + currentTime);\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        List<Process> processes = new ArrayList<>();\n        processes.add(new Process(\"P1\", 10));\n        processes.add(new Process(\"P2\", 5));\n        processes.add(new Process(\"P3\", 8));\n\n        int timeQuantum = 3;\n        simulateRoundRobin(processes, timeQuantum);\n    }\n}",
+    "timestamp": "2025-08-05 22:11:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <queue>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nclass Process {\npublic:\n    string name;\n    int executionTime;\n\n    Process(string n, int time) : name(n), executionTime(time) {}\n};\n\nvoid roundRobinScheduling(vector<Process>& processes, int timeQuantum) {\n    queue<Process> processQueue;\n    for (Process& p : processes) {\n        processQueue.push(p);\n    }\n\n    int currentTime = 0;\n    while (!processQueue.empty()) {\n        Process currentProcess = processQueue.front();\n        processQueue.pop();\n\n        int executeTime = min(timeQuantum, currentProcess.executionTime);\n        currentTime += executeTime;\n        currentProcess.executionTime -= executeTime;\n\n        if (currentProcess.executionTime > 0) {\n            processQueue.push(currentProcess);\n        } else {\n            cout << \"Process \" << currentProcess.name << \" completed at time \" << currentTime << endl;\n        }\n    }\n}\n\nint main() {\n    vector<Process> processes = {\n        Process(\"P1\", 10),\n        Process(\"P2\", 5),\n        Process(\"P3\", 8)\n    };\n    int timeQuantum = 3;\n\n    roundRobinScheduling(processes, timeQuantum);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:12:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def round_robin_scheduling(n, time_quantum, processes):\n    queue = processes.copy()\n    time_elapsed = 0\n    executed_processes = []\n\n    while queue:\n        process = queue.pop(0)\n        process_name, execution_time = process\n        if execution_time <= time_quantum:\n            time_elapsed += execution_time\n            executed_processes.append((process_name, time_elapsed))\n        else:\n            time_elapsed += time_quantum\n            queue.append((process_name, execution_time - time_quantum))\n    \n    return executed_processes\n\n# Example usage\nn = 3\ntime_quantum = 4\nprocesses = [(\"p1\", 5), (\"p2\", 8), (\"p3\", 12)]\nresult = round_robin_scheduling(n, time_quantum, processes)\nfor process_name, finish_time in result:\n    print(f\"Process {process_name} finished at time {finish_time}\")",
+    "timestamp": "2025-08-13 09:24:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.LinkedList;\nimport java.util.Queue;\nimport java.util.Scanner;\n\nclass Process {\n    String name;\n    int executionTime;\n\n    public Process(String name, int executionTime) {\n        this.name = name;\n        this.executionTime = executionTime;\n    }\n}\n\npublic class RoundRobinScheduling {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        Queue<Process> queue = new LinkedList<>();\n\n        System.out.print(\"Enter the number of processes: \");\n        int n = scanner.nextInt();\n        System.out.print(\"Enter the time quantum: \");\n        int timeQuantum = scanner.nextInt();\n\n        for (int i = 0; i < n; i++) {\n            System.out.print(\"Enter process name: \");\n            String name = scanner.next();\n            System.out.print(\"Enter process execution time: \");\n            int executionTime = scanner.nextInt();\n            queue.add(new Process(name, executionTime));\n        }\n\n        scanner.close();\n\n        int currentTime = 0;\n\n        while (!queue.isEmpty()) {\n            Process currentProcess = queue.poll();\n            int timeSpent = Math.min(currentProcess.executionTime, timeQuantum);\n            currentProcess.executionTime -= timeSpent;\n            currentTime += timeSpent;\n\n            System.out.printf(\"Process %s executed for %d units.\\n\", currentProcess.name, timeSpent);\n\n            if (currentProcess.executionTime > 0) {\n                queue.add(currentProcess);\n            } else {\n                System.out.printf(\"Process %s finished at time %d.\\n\", currentProcess.name, currentTime);\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-13 09:24:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_PROCESSES 100\n#define MAX_NAME_LEN 50\n\ntypedef struct {\n    char name[MAX_NAME_LEN];\n    int remaining_time;\n} Process;\n\nint main() {\n    int n, time_quantum;\n    Process processes[MAX_PROCESSES];\n    int total_time = 0;\n    \n    printf(\"Enter number of processes: \");\n    scanf(\"%d\", &n);\n    printf(\"Enter time quantum: \");\n    scanf(\"%d\", &time_quantum);\n    \n    for (int i = 0; i < n; i++) {\n        printf(\"Enter process name and execution time for process %d: \", i+1);\n        scanf(\"%s %d\", processes[i].name, &processes[i].remaining_time);\n    }\n    \n    int completed_count = 0;\n    \n    while (completed_count < n) {\n        for (int i = 0; i < n; i++) {\n            if (processes[i].remaining_time > 0) {\n                if (processes[i].remaining_time > time_quantum) {\n                    total_time += time_quantum;\n                    processes[i].remaining_time -= time_quantum;\n                    printf(\"Process %s executed for %d units; %d remaining.\\n\", processes[i].name, time_quantum, processes[i].remaining_time);\n                } else {\n                    total_time += processes[i].remaining_time;\n                    printf(\"Process %s executed for %d units; Process completed.\\n\", processes[i].name, processes[i].remaining_time);\n                    processes[i].remaining_time = 0;\n                    completed_count++;\n                }\n            }\n        }\n    }\n    \n    printf(\"Total execution time: %d\\n\", total_time);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:24:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import deque\n\nclass Process:\n    def __init__(self, name, execution_time):\n        self.name = name\n        self.execution_time = execution_time\n\ndef round_robin_scheduling(processes, time_quantum):\n    queue = deque(processes)\n    completed_processes = []\n    total_time = 0\n\n    while queue:\n        current_process = queue.popleft()\n        \n        if current_process.execution_time <= time_quantum:\n            total_time += current_process.execution_time\n            completed_processes.append((current_process.name, total_time))\n        else:\n            total_time += time_quantum\n            current_process.execution_time -= time_quantum\n            queue.append(current_process)\n\n    return completed_processes\n\ndef main():\n    n = int(input(\"Enter number of processes: \"))\n    time_quantum = int(input(\"Enter time quantum: \"))\n    \n    processes = []\n    for i in range(n):\n        name = input(f\"Enter name of process {i+1}: \")\n        execution_time = int(input(f\"Enter execution time for process {i+1}: \"))\n        processes.append(Process(name, execution_time))\n\n    result = round_robin_scheduling(processes, time_quantum)\n    \n    print(\"\\nScheduling Order:\")\n    for process, completion_time in result:\n        print(f\"Process {process} completed at time {completion_time}\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:24:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import deque\n\nn, quantum = map(int, input().split())\nqueue = deque()\n\nfor _ in range(n):\n    name, time = input().split()\n    queue.append((name, int(time)))\n\ntotal_time = 0\nwhile queue:\n    name, time = queue.popleft()\n    if time <= quantum:\n        total_time += time\n        print(f\"{name} {total_time}\")\n    else:\n        total_time += quantum\n        queue.append((name, time - quantum))",
+    "timestamp": "2025-08-13 09:25:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <queue>\n#include <string>\n\nstruct Process {\n    std::string name;\n    int time;\n};\n\nint main() {\n    int n, quantum;\n    std::cin >> n >> quantum;\n\n    std::queue<Process> processQueue;\n    \n    for (int i = 0; i < n; ++i) {\n        Process p;\n        std::cin >> p.name >> p.time;\n        processQueue.push(p);\n    }\n\n    int currentTime = 0;\n\n    while (!processQueue.empty()) {\n        Process current = processQueue.front();\n        processQueue.pop();\n\n        int timeSpent = (current.time > quantum) ? quantum : current.time;\n        currentTime += timeSpent;\n        current.time -= timeSpent;\n\n        if (current.time > 0) {\n            processQueue.push(current);\n        } else {\n            std::cout << current.name << \" \" << currentTime << std::endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:51:16"
+  }
+]

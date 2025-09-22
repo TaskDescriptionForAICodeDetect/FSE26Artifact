@@ -1,0 +1,1 @@
+Given an undirected connected graph with N vertices, where the lengths of all edges are 1. For each vertex i (1≤i≤N), the distance from vertex 1 to vertex i is A_i, and the distance from vertex 2 to vertex i is B_i. Determine if such a graph can exist and if yes, find the minimum number of edges required. If it cannot exist, return -1.

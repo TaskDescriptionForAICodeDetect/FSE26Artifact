@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(x, y, l, r):\n    unlucky = set()\n    max_power_x = 0\n    max_power_y = 0\n    \n    while x**max_power_x <= r:\n        max_power_x += 1\n    max_power_x -= 1\n    \n    while y**max_power_y <= r:\n        max_power_y += 1\n    max_power_y -= 1\n    \n    for a in range(max_power_x + 1):\n        for b in range(max_power_y + 1):\n            curr = x**a + y**b\n            if l <= curr <= r:\n                unlucky.add(curr)\n    \n    if len(unlucky) == r - l + 1:\n        return 0\n    \n    nums = sorted(list(unlucky))\n    max_golden_age = 0\n    prev = l - 1\n    \n    for num in nums:\n        if num > r:\n            break\n        max_golden_age = max(max_golden_age, num - prev - 1)\n        prev = num\n    \n    max_golden_age = max(max_golden_age, r - prev)\n    \n    return max_golden_age\n\nx, y, l, r = map(int, input().split())\nprint(solve(x, y, l, r))",
+    "timestamp": "2025-08-05 17:32:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import math\n\ndef find_unlucky_years(x, y, l, r):\n    unlucky = set()\n    max_a = 0\n    if x != 1:\n        max_a = math.floor(math.log(r, x)) + 2\n    max_b = 0\n    if y != 1:\n        max_b = math.floor(math.log(r, y)) + 2\n    \n    for a in range(0, max_a + 1):\n        x_pow = pow(x, a)\n        if x_pow > r:\n            break\n        for b in range(0, max_b + 1):\n            y_pow = pow(y, b)\n            s = x_pow + y_pow\n            if l <= s <= r:\n                unlucky.add(s)\n            if s > r:\n                break\n    return sorted(unlucky)\n\ndef solve():\n    x, y, l, r = map(int, input().split())\n    unlucky = find_unlucky_years(x, y, l, r)\n    unlucky = sorted(unlucky)\n    \n    max_gap = 0\n    prev = l - 1\n    for year in unlucky:\n        start = prev + 1\n        end = year - 1\n        if start <= end:\n            gap = end - start + 1\n            if gap > max_gap:\n                max_gap = gap\n        prev = year\n    # Check the segment after the last unlucky year\n    start = prev + 1\n    end = r\n    if start <= end:\n        gap = end - start + 1\n        if gap > max_gap:\n            max_gap = gap\n    \n    if not unlucky:\n        max_gap = r - l + 1\n    \n    print(max_gap)\n\nsolve()",
+    "timestamp": "2025-08-05 17:32:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_max_unlucky_interval(x, y, l, r):\n    from itertools import product\n    limits = 65\n    powers_x = [x**i for i in range(limits) if x**i <= r]\n    powers_y = [y**i for i in range(limits) if y**i <= r]\n\n    unlucky_years = set()\n    for a, b in product(powers_x, powers_y):\n        if l <= a + b <= r:\n            unlucky_years.add(a + b)\n\n    unlucky_years = sorted(list(unlucky_years))\n    unlucky_years.append(r + 1)\n\n    # Calculate maximum length of The Golden Age\n    max_gap = 0\n    previous_year = l - 1\n\n    for year in unlucky_years:\n        max_gap = max(max_gap, year - previous_year - 1)\n        previous_year = year\n\n    return max_gap\n\n# Example usage:\nx, y, l, r = map(int, input().split())\nprint(find_max_unlucky_interval(x, y, l, r))",
+    "timestamp": "2025-08-12 21:53:40"
+  }
+]

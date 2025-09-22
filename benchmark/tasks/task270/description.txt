@@ -1,0 +1,1 @@
+A taxi driver, Nakamura, needs to find the best route from the current city to the destination city without running out of gas, considering the locations of LPG stations and the capacity of the gas tank. You are to write a program that calculates the shortest possible journey distance based on the provided road and LPG station information.

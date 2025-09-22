@@ -1,0 +1,1 @@
+Given real variables x_1, x_2, ..., x_N that satisfy the conditions: 0 ≤ x_i ≤ 1 (for 1 ≤ i ≤ N) and w_1x_1 + w_2x_2 + ... + w_Nx_N ≤ W, determine the maximum value of v_1x_1 + v_2x_2 + ... + v_Nx_N. It is known that such a maximum value exists.

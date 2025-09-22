@@ -1,0 +1,1 @@
+Nagase, a top high school student, is analyzing properties of special sets of positive integers. A set S = {a1, a2, ..., aN} is called special if for all 1 ≤ i ≤ N, the gcd (greatest common divisor) of ai and the sum of the remaining elements of S is not 1. You are tasked to find a special set of size N such that the gcd of all elements is 1 and all elements do not exceed 30000.

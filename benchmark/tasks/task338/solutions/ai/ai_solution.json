@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool canPayAll(int coins[], int n) {\n    for (int i = 1; i < n; i++) {\n        if (coins[i] > 2 * coins[i - 1]) {\n            return false;\n        }\n    }\n    return true;\n}\n\nbool isGreedyOptimal(int coins[], int n) {\n    for (int k = 3; k < coins[n - 1] + coins[n - 2]; k++) {\n        int amount = k;\n        int greedyCount = 0;\n        int temp = amount;\n        for (int i = n - 1; i >= 0; i--) {\n            greedyCount += temp / coins[i];\n            temp %= coins[i];\n        }\n        \n        int optimalCount = 0;\n        temp = amount;\n        for (int i = n - 1; i >= 0; i--) {\n            if (temp >= coins[i]) {\n                optimalCount += temp / coins[i];\n                temp %= coins[i];\n            }\n        }\n        \n        if (greedyCount != optimalCount) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    \n    while (T--) {\n        int n;\n        scanf(\"%d\", &n);\n        int coins[n];\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &coins[i]);\n        }\n        \n        bool allPayable = canPayAll(coins, n);\n        bool greedyOptimal = isGreedyOptimal(coins, n);\n        \n        if (allPayable && greedyOptimal) {\n            printf(\"satisfactory\\n\");\n        } else {\n            printf(\"unsatisfactory\\n\");\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:08:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool canPayAnyAmount(const vector<int>& coins) {\n    if (coins.empty() || coins[0] != 1) {\n        return false;\n    }\n    int max_reachable = 1;\n    for (size_t i = 1; i < coins.size(); ++i) {\n        if (coins[i] > max_reachable + 1) {\n            return false;\n        }\n        max_reachable += coins[i];\n    }\n    return true;\n}\n\nbool isGreedyOptimal(const vector<int>& coins) {\n    for (size_t i = 0; i < coins.size(); ++i) {\n        int remaining = coins[i] - 1;\n        int j = i - 1;\n        while (remaining > 0 && j >= 0) {\n            if (coins[j] <= remaining) {\n                remaining -= coins[j];\n            }\n            --j;\n        }\n        if (remaining != 0) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int N;\n        cin >> N;\n        vector<int> coins(N);\n        for (int i = 0; i < N; ++i) {\n            cin >> coins[i];\n        }\n        sort(coins.begin(), coins.end());\n        if (coins[0] != 1) {\n            cout << \"not satisfactory\" << endl;\n            continue;\n        }\n        bool canPay = canPayAnyAmount(coins);\n        bool greedy = isGreedyOptimal(coins);\n        if (!canPay) {\n            cout << \"not satisfactory\" << endl;\n        } else if (greedy) {\n            cout << \"satisfactory and greedy optimal\" << endl;\n        } else {\n            cout << \"satisfactory but not greedy optimal\" << endl;\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:08:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class CoinSetChecker {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int T = scanner.nextInt();\n        for (int t = 0; t < T; t++) {\n            int N = scanner.nextInt();\n            int[] coins = new int[N];\n            for (int i = 0; i < N; i++) {\n                coins[i] = scanner.nextInt();\n            }\n            Arrays.sort(coins);\n            boolean canPayAll = true;\n            int sum = 1;\n            if (coins[0] != 1) {\n                canPayAll = false;\n            } else {\n                for (int i = 1; i < N && canPayAll; i++) {\n                    if (coins[i] > sum + 1) {\n                        canPayAll = false;\n                    }\n                    sum += coins[i];\n                }\n            }\n            System.out.println(canPayAll ? \"YES\" : \"NO\");\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:08:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoinSet {\n    public static void solve(int[] coins) {\n        Arrays.sort(coins);\n        int maxCovered = 0;\n        \n        for (int coin : coins) {\n            if (coin > maxCovered + 1) {\n                System.out.println(\"No\");\n                return;\n            }\n            maxCovered += coin;\n        }\n        \n        System.out.println(\"Yes\");\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int t = scanner.nextInt();\n        \n        for (int i = 0; i < t; i++) {\n            int n = scanner.nextInt();\n            int[] coins = new int[n];\n            \n            for (int j = 0; j < n; j++) {\n                coins[j] = scanner.nextInt();\n            }\n            \n            solve(coins);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:08:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <limits.h>\n\n#define MAX_COINS 100\n\nvoid solve(int coins[], int n) {\n    int max_amount = 0;\n    int i, j;\n\n    // Sort coins in ascending order\n    for (i = 0; i < n - 1; i++) {\n        for (j = 0; j < n - i - 1; j++) {\n            if (coins[j] > coins[j + 1]) {\n                int temp = coins[j];\n                coins[j] = coins[j + 1];\n                coins[j + 1] = temp;\n            }\n        }\n    }\n\n    // Check if coins can pay any amount\n    for (i = 0; i < n; i++) {\n        if (coins[i] > max_amount + 1) {\n            printf(\"non-canonical\\n\");\n            return;\n        }\n        max_amount += coins[i];\n    }\n\n    printf(\"canonical\\n\");\n}\n\nint main() {\n    int t, n, coins[MAX_COINS];\n    scanf(\"%d\", &t);\n\n    while (t--) {\n        scanf(\"%d\", &n);\n        for (i = 0; i < n; i++) {\n            scanf(\"%d\", &coins[i]);\n        }\n        solve(coins, n);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:09:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <set>\n\nusing namespace std;\n\nbool canPay(vector<int>& coins) {\n    sort(coins.begin(), coins.end());\n    \n    int maxReach = 0;\n    for (int coin : coins) {\n        if (coin > maxReach + 1) {\n            return false;\n        }\n        maxReach += coin;\n    }\n    \n    return true;\n}\n\nint main() {\n    int t;\n    cin >> t;\n    \n    while (t--) {\n        int n;\n        cin >> n;\n        \n        vector<int> coins(n);\n        for (int i = 0; i < n; i++) {\n            cin >> coins[i];\n        }\n        \n        if (canPay(coins)) {\n            cout << \"Satisfactory\" << endl;\n        } else {\n            cout << \"Unsatisfactory\" << endl;\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:09:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_satisfactory(coins):\n    coins = sorted(coins, reverse=True)\n    \n    # Check if 1-unit coin is present\n    if 1 not in coins:\n        return False\n    \n    # Check if greedy algorithm is efficient\n    for i in range(len(coins) - 1):\n        if coins[i] % coins[i + 1] != 0:\n            break\n    else:\n        return False\n    \n    # Try to represent each number from 1 up the maximum value\n    max_val = max(coins)\n    dp = [False] * (max_val + 1)\n    dp[0] = True  # 0 can always be represented by zero coins\n    for value in range(1, max_val + 1):\n        for coin in coins:\n            if value >= coin and dp[value - coin]:\n                dp[value] = True\n                break\n    \n    if not all(dp[1:]):\n        return False\n    \n    return True\n\n# Example test cases:\nn = int(input())\nfor _ in range(n):\n    coins = list(map(int, input().split()))\n    if is_satisfactory(coins):\n        print(\"Satisfactory\")\n    else:\n        print(\"Unsatisfactory\")",
+    "timestamp": "2025-08-13 05:10:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class CoinSet {\n    public static boolean isSatisfactorySet(int[] coins) {\n        Arrays.sort(coins);\n        if (coins[0] != 1) {\n            return false;\n        }\n        int sum = 1;\n        for (int i = 1; i < coins.length; i++) {\n            if (coins[i] > sum + 1) {\n                return false;\n            }\n            sum += coins[i];\n        }\n        return true;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int numberOfTestCases = scanner.nextInt();\n        \n        for (int t = 0; t < numberOfTestCases; t++) {\n            int numberOfCoins = scanner.nextInt();\n            int[] coins = new int[numberOfCoins];\n            \n            for (int i = 0; i < numberOfCoins; i++) {\n                coins[i] = scanner.nextInt();\n            }\n            \n            if (isSatisfactorySet(coins)) {\n                System.out.println(\"Satisfactory\");\n            } else {\n                System.out.println(\"Not Satisfactory\");\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-13 05:10:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint cmp(const void *a, const void *b) {\n    return *(int *)b - *(int *)a;\n}\n\nint gcd(int a, int b) {\n    return b == 0 ? a : gcd(b, a % b);\n}\n\nint can_pay_any_amount(int *coins, int n) {\n    if (coins[0] != 1) {\n        return 0; // Cannot form 1 using these coins.\n    }\n    \n    for (int i = 1; i < n; i++) {\n        if (gcd(coins[i], coins[i - 1]) != 1) {\n            return 0;\n        }\n    }\n\n    return 1;\n}\n\nint can_greedy_be_used(int *coins, int n) {\n    for (int i = 0; i < n - 1; i++) {\n        if (coins[i] % coins[i + 1] != 0) {\n            return 0;\n        }\n    }\n    return 1;\n}\n\nint main() {\n    int t;\n    scanf(\"%d\", &t);\n    while (t--) {\n        int n;\n        scanf(\"%d\", &n);\n\n        int *coins = (int *)malloc(n * sizeof(int));\n\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &coins[i]);\n        }\n        \n        qsort(coins, n, sizeof(int), cmp);\n\n        if (can_pay_any_amount(coins, n)) {\n            printf(\"Satisfactory\\n\");\n        } else if (can_greedy_be_used(coins, n)) {\n            printf(\"Satisfactory\\n\");\n        } else {\n            printf(\"Unsatisfactory\\n\");\n        }\n\n        free(coins);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:10:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_coin_problem():\n    # Read number of test cases\n    T = int(input())\n    \n    # Process each test case\n    for _ in range(T):\n        # Read number of coin values\n        N = int(input())\n        \n        # Read coin values\n        coins = list(map(int, input().split()))\n        \n        # Sort coins in ascending order\n        coins.sort()\n        \n        # Check if greedy algorithm works\n        max_reachable = 0\n        for coin in coins:\n            # If current coin cannot be created by previous coins, check if it can extend the range\n            if coin > max_reachable + 1:\n                print(\"No\")\n                break\n            \n            # Update max reachable amount\n            max_reachable += coin\n        else:\n            print(\"Yes\")\n\n# Run the solver\nsolve_coin_problem()",
+    "timestamp": "2025-08-13 05:10:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_greedy_possible(coins):\n    for i in range(1, len(coins)):\n        if coins[i] % coins[i-1] != 0:\n            return False\n    return True\n\ndef can_pay_all(coins):\n    max_check = coins[-1] + coins[-2] if len(coins) >= 2 else coins[-1] + 1\n    possible = [False] * (max_check + 1)\n    possible[0] = True\n    for coin in coins:\n        for amount in range(coin, max_check + 1):\n            if possible[amount - coin]:\n                possible[amount] = True\n    for amount in range(1, max_check + 1):\n        if not possible[amount]:\n            return False\n    return True\n\nt = int(input())\nfor _ in range(t):\n    coins = list(map(int, input().split()))\n    coins.sort()\n    if can_pay_all(coins):\n        if is_greedy_possible(coins):\n            print(\"satisfactory\")\n        else:\n            print(\"canonical\")\n    else:\n        print(\"unsatisfactory\")",
+    "timestamp": "2025-08-13 05:10:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nbool isSatisfactory(const vector<int>& coins) {\n    int n = coins.size();\n    if (n == 0 || coins[0] != 1) return false;\n    int sum = 0;\n    for (int c : coins) {\n        if (c > sum + 1) return false;\n        sum += c;\n    }\n    return true;\n}\n\nint main() {\n    int t; // number of test cases\n    cin >> t;\n    while (t--) {\n        int n; // number of coin types\n        cin >> n;\n        vector<int> coins(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> coins[i];\n        }\n        sort(coins.begin(), coins.end());\n\n        if (isSatisfactory(coins)) {\n            cout << \"Satisfactory\\n\";\n        } else {\n            cout << \"Not Satisfactory\\n\";\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:23:25"
+  }
+]

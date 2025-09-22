@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid maxPoints(char* digits, int K) {\n    int n = strlen(digits);\n    char stack[n];\n    int top = -1;\n    int remove = K;\n\n    for (int i = 0; i < n; ++i) {\n        while (top != -1 && stack[top] < digits[i] && remove > 0) {\n            top--;\n            remove--;\n        }\n        stack[++top] = digits[i];\n    }\n\n    stack[top + 1 - remove] = '\\0';\n    printf(\"%s\\n\", stack);\n}\n\nint main() {\n    char digits[100001];\n    int K;\n    scanf(\"%s %d\", digits, &K);\n    maxPoints(digits, K);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DigitalK {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String number = scanner.next();\n        int k = scanner.nextInt();\n        \n        System.out.println(findMaxPoints(number, k));\n        scanner.close();\n    }\n    \n    public static String findMaxPoints(String number, int k) {\n        StringBuilder sb = new StringBuilder(number);\n        \n        for (int i = 0; i < k; i++) {\n            int j = 0;\n            while (j < sb.length() - 1 && sb.charAt(j) <= sb.charAt(j + 1)) {\n                j++;\n            }\n            sb.deleteCharAt(j);\n        }\n        \n        return sb.toString();\n    }\n}",
+    "timestamp": "2025-08-05 18:46:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nstring maxPoints(string num, int k) {\n    vector<char> stack;\n    int remove = k;\n    for (char c : num) {\n        while (!stack.empty() && stack.back() < c && remove > 0) {\n            stack.pop_back();\n            remove--;\n        }\n        stack.push_back(c);\n    }\n    while (remove > 0) {\n        stack.pop_back();\n        remove--;\n    }\n    return string(stack.begin(), stack.end());\n}\n\nint main() {\n    string num;\n    int k;\n    cin >> num >> k;\n    cout << maxPoints(num, k) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nchar* findMaxNumber(char* num, int k) {\n    int len = strlen(num);\n    int remainLen = len - k;\n    static char result[10001];\n    int top = 0;\n\n    for (int i = 0; i < len; i++) {\n        while (top > 0 && k > 0 && result[top-1] < num[i]) {\n            top--;\n            k--;\n        }\n        result[top++] = num[i];\n    }\n\n    result[remainLen] = '\\0';\n    return result;\n}\n\nint main() {\n    char num[10001];\n    int k;\n    \n    scanf(\"%s %d\", num, &k);\n    \n    printf(\"%s\\n\", findMaxNumber(num, k));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nstring getMaxNumber(string num, int k) {\n    while (k > 0) {\n        bool removed = false;\n        for (int i = 0; i < num.length() - 1; i++) {\n            if (num[i] < num[i + 1]) {\n                num.erase(num.begin() + i);\n                k--;\n                removed = true;\n                break;\n            }\n        }\n        \n        if (!removed) {\n            num.erase(num.end() - 1);\n            k--;\n        }\n    }\n    \n    return num;\n}\n\nint main() {\n    string ticket;\n    int k;\n    \n    cin >> ticket >> k;\n    \n    string result = getMaxNumber(ticket, k);\n    \n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\nimport java.util.Stack;\n\npublic class DigitalK {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String numStr = scanner.next();\n        int K = scanner.nextInt();\n        int digitsToKeep = numStr.length() - K;\n        Stack<Character> stack = new Stack<>();\n\n        for (int i = 0; i < numStr.length(); i++) {\n            char c = numStr.charAt(i);\n            while (!stack.isEmpty() && stack.peek() < c && K > 0) {\n                stack.pop();\n                K--;\n            }\n            stack.push(c);\n        }\n\n        StringBuilder result = new StringBuilder();\n        for (int i = 0; i < digitsToKeep; i++) {\n            result.append(stack.get(i));\n        }\n        System.out.println(result.toString());\n    }\n}",
+    "timestamp": "2025-08-05 18:46:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_points(sequence, K):\n    stack = []\n    to_remove = K\n\n    for digit in sequence:\n        while stack and to_remove > 0 and stack[-1] < digit:\n            stack.pop()\n            to_remove -= 1\n        stack.append(digit)\n\n    return ''.join(stack[:len(sequence) - K])\n\n# Example usage:\nsequence = \"1414213\"\nK = 3\nprint(max_points(sequence, K))  # Output: 4413",
+    "timestamp": "2025-08-13 00:51:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.Stack;\n\npublic class DigitalK {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String digits = scanner.next();\n        int K = scanner.nextInt();\n        scanner.close();\n\n        int N = digits.length();\n        int newLength = N - K;\n        Stack<Character> stack = new Stack<>();\n\n        for (int i = 0; i < N; i++) {\n            char current = digits.charAt(i);\n            while (!stack.isEmpty() && stack.size() + (N - i) > newLength && stack.peek() < current) {\n                stack.pop();\n            }\n            if (stack.size() < newLength) {\n                stack.push(current);\n            }\n        }\n\n        StringBuilder result = new StringBuilder();\n        for (char c : stack) {\n            result.append(c);\n        }\n\n        System.out.println(result.toString());\n    }\n}",
+    "timestamp": "2025-08-13 00:51:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid findMaxPoints(char *digits, int N, int K) {\n    int stack[N];\n    int top = -1;\n    int remaining = N - K;\n\n    for (int i = 0; i < N; i++) {\n        while (top >= 0 && stack[top] < digits[i] - '0' && K > 0) {\n            top--;\n            K--;\n        }\n        if (top < remaining - 1) {\n            stack[++top] = digits[i] - '0';\n        } else {\n            K--;\n        }\n    }\n\n    for (int i = 0; i < remaining; i++) {\n        printf(\"%d\", stack[i]);\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    char digits[101];\n    int N, K;\n\n    scanf(\"%d %d\", &N, &K);\n    scanf(\"%s\", digits);\n\n    findMaxPoints(digits, N, K);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:51:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_points(N, K, digits):\n    stack = []\n    for digit in digits:\n        while K > 0 and stack and stack[-1] < digit:\n            stack.pop()\n            K -= 1\n        stack.append(digit)\n    \n    while K > 0:\n        stack.pop()\n        K -= 1\n    \n    return int(''.join(map(str, stack)))\n\n# Read input\nN, K = map(int, input().split())\ndigits = list(map(int, list(input().strip())))\n\n# Output result\nprint(max_points(N, K, digits))",
+    "timestamp": "2025-08-13 00:52:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_points(s, k):\n    stack = []\n    for digit in s:\n        while k > 0 and stack and stack[-1] < digit:\n            stack.pop()\n            k -= 1\n        stack.append(digit)\n    if k > 0:\n        stack = stack[:-k]\n    return ''.join(stack)\n\nn, k = map(int, input().split())\ns = input().strip()\nprint(max_points(s, k))",
+    "timestamp": "2025-08-13 00:52:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <deque>\nusing namespace std;\n\nstring maximizePoints(string number, int K) {\n    int numLength = number.length();\n    int keep = numLength - K;\n    deque<char> dq;\n\n    for (int i = 0; i < numLength; ++i) {\n        while (!dq.empty() && K > 0 && dq.back() < number[i]) {\n            dq.pop_back();\n            --K;\n        }\n        dq.push_back(number[i]);\n    }\n\n    string result = \"\";\n    while (keep-- > 0 && !dq.empty()) {\n        result += dq.front();\n        dq.pop_front();\n    }\n\n    return result;\n}\n\nint main() {\n    string number;\n    int K;\n    cin >> number >> K;\n    cout << maximizePoints(number, K) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:56:21"
+  }
+]

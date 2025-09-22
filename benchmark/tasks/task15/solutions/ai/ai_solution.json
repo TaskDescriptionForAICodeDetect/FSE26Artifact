@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, a, b):\n    door_sides = 2 * (2 * a + b)\n    return (door_sides + n - 1) // n\n\nn = int(input())\na = int(input())\nb = int(input())\nprint(solve(n, a, b))",
+    "timestamp": "2025-08-05 17:31:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\na = int(input())\nb = int(input())\n\ntotal_needed = 4 * a + 2 * b\n\nif total_needed <= n:\n    print(1)\nelse:\n    # Calculate how many bars are needed by trying to fit as much as possible into each bar\n    bars = 0\n    remaining = total_needed\n    while remaining > 0:\n        # Try to fit the largest possible side first\n        # The approach is to fit the largest remaining piece into the current bar\n        # Since sides must be solid, we can't combine parts\n        # So the minimal bars is ceil(total_needed / n)\n        bars += 1\n        remaining -= n\n    print(bars)",
+    "timestamp": "2025-08-05 17:31:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimal_wooden_bars(n, a, b):\n    required_length = 4 * a + 2 * b\n    return (required_length + n - 1) // n\n\nn = int(input().strip())\na = int(input().strip())\nb = int(input().strip())\n\nprint(minimal_wooden_bars(n, a, b))",
+    "timestamp": "2025-08-12 21:41:06"
+  }
+]

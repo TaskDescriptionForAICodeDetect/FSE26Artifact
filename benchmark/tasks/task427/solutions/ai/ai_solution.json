@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_N 200\n\nint w[MAX_N + 1];\nint prefix[MAX_N + 1];\nint dp[MAX_N + 1][MAX_N + 1];\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &w[i]);\n        prefix[i] = prefix[i - 1] + w[i];\n    }\n\n    for (int len = 2; len <= N; len++) {\n        for (int i = 1; i <= N - len + 1; i++) {\n            int j = i + len - 1;\n            dp[i][j] = INT_MAX;\n            for (int k = i; k < j; k++) {\n                int cost = dp[i][k] + dp[k + 1][j] + prefix[j] - prefix[i - 1];\n                if (cost < dp[i][j]) {\n                    dp[i][j] = cost;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dp[1][N]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:29:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nusing namespace std;\n\nlong long solve(int N, vector<long long>& w) {\n    vector<long long> prefix(N + 1, 0);\n    for (int i = 1; i <= N; ++i) {\n        prefix[i] = prefix[i - 1] + w[i - 1];\n    }\n\n    vector<vector<long long>> dp(N, vector<long long>(N, 0));\n    vector<vector<int>> opt(N, vector<int>(N, 0));\n\n    for (int i = 0; i < N; ++i) {\n        opt[i][i] = i;\n    }\n\n    for (int len = 2; len <= N; ++len) {\n        for (int i = 0; i <= N - len; ++i) {\n            int j = i + len - 1;\n            dp[i][j] = LLONG_MAX;\n            int left = opt[i][j - 1];\n            int right = opt[i + 1][j];\n            for (int k = left; k <= right && k < j; ++k) {\n                long long cost = dp[i][k] + dp[k + 1][j] + prefix[j + 1] - prefix[i];\n                if (cost < dp[i][j]) {\n                    dp[i][j] = cost;\n                    opt[i][j] = k;\n                }\n            }\n        }\n    }\n\n    return dp[0][N - 1];\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> w(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> w[i];\n    }\n    cout << solve(N, w) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Sashimi {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] w = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            w[i] = scanner.nextInt();\n        }\n\n        long[] prefixSum = new long[N + 1];\n        for (int i = 1; i <= N; i++) {\n            prefixSum[i] = prefixSum[i - 1] + w[i];\n        }\n\n        long[][] dp = new long[N + 1][N + 1];\n        for (int len = 2; len <= N; len++) {\n            for (int i = 1; i + len - 1 <= N; i++) {\n                int j = i + len - 1;\n                dp[i][j] = Long.MAX_VALUE;\n                for (int k = i; k < j; k++) {\n                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k + 1][j] + prefixSum[j] - prefixSum[i - 1]);\n                }\n            }\n        }\n\n        System.out.println(dp[1][N]);\n    }\n}",
+    "timestamp": "2025-08-05 21:30:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Sashimi {\n    public static int minimumCutCost(int N, int[] weights) {\n        int[][] dp = new int[N + 1][N + 1];\n        int[] prefixSum = new int[N + 1];\n\n        for (int i = 1; i <= N; i++) {\n            prefixSum[i] = prefixSum[i - 1] + weights[i - 1];\n        }\n\n        for (int len = 2; len <= N; len++) {\n            for (int i = 1; i + len - 1 <= N; i++) {\n                int j = i + len - 1;\n                dp[i][j] = Integer.MAX_VALUE;\n                for (int k = i; k < j; k++) {\n                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k + 1][j] + prefixSum[j] - prefixSum[i - 1]);\n                }\n            }\n        }\n\n        return dp[1][N];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] weights = new int[N];\n        for (int i = 0; i < N; i++) {\n            weights[i] = scanner.nextInt();\n        }\n        System.out.println(minimumCutCost(N, weights));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:30:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_LENGTH 501\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint main() {\n    int N;\n    int weights[MAX_LENGTH];\n    int prefixSum[MAX_LENGTH] = {0};\n    int dp[MAX_LENGTH][MAX_LENGTH] = {0};\n\n    scanf(\"%d\", &N);\n    \n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &weights[i]);\n        prefixSum[i] = prefixSum[i-1] + weights[i];\n    }\n\n    for (int len = 2; len <= N; len++) {\n        for (int i = 1; i + len - 1 <= N; i++) {\n            int j = i + len - 1;\n            dp[i][j] = INT_MAX;\n            \n            for (int k = i; k < j; k++) {\n                int cost = dp[i][k] + dp[k+1][j] + prefixSum[j] - prefixSum[i-1];\n                dp[i][j] = min(dp[i][j], cost);\n            }\n        }\n    }\n\n    printf(\"%d\\n\", dp[1][N]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> weights(N+1);\n    vector<int> prefixSum(N+1, 0);\n    \n    for (int i = 1; i <= N; i++) {\n        cin >> weights[i];\n        prefixSum[i] = prefixSum[i-1] + weights[i];\n    }\n    \n    vector<vector<int>> dp(N+1, vector<int>(N+1, INT_MAX));\n    \n    for (int i = 1; i <= N; i++) {\n        dp[i][i] = 0;\n    }\n    \n    for (int len = 2; len <= N; len++) {\n        for (int i = 1; i + len - 1 <= N; i++) {\n            int j = i + len - 1;\n            \n            for (int k = i; k < j; k++) {\n                int segmentCost = prefixSum[j] - prefixSum[i-1];\n                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + segmentCost);\n            }\n        }\n    }\n    \n    cout << dp[1][N] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minCost(w):\n    N = len(w)\n    dp = [[float('inf')] * N for _ in range(N)]\n\n    # Calculate prefix sums for quick range sum calculation\n    prefix_sum = [0] * (N + 1)\n    for i in range(1, N + 1):\n        prefix_sum[i] = prefix_sum[i - 1] + w[i - 1]\n\n    # Base cases, single element segments cost 0 to cut\n    for i in range(N):\n        dp[i][i] = 0\n\n    # Calculate minimum cost for all segments\n    for length in range(2, N + 1):  # Segment length from 2 to N\n        for i in range(N - length + 1):\n            j = i + length - 1\n            segment_sum = prefix_sum[j + 1] - prefix_sum[i]  # w[i] + w[i+1] + ... + w[j]\n            for k in range(i, j):\n                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + segment_sum)\n\n    return dp[0][N - 1]\n\n# Example usage\nweights = [1, 2, 3, 4]\nresult = minCost(weights)\nprint(result)",
+    "timestamp": "2025-08-13 06:45:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Sashimi {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] weights = new int[N+1];\n        \n        for (int i = 1; i <= N; i++) {\n            weights[i] = scanner.nextInt();\n        }\n\n        scanner.close();\n        \n        int[][] dp = new int[N+1][N+1];\n        int[] prefixSum = new int[N+1];\n        \n        for (int i = 1; i <= N; i++) {\n            prefixSum[i] = prefixSum[i-1] + weights[i];\n        }\n        \n        for (int length = 2; length <= N; length++) {\n            for (int i = 1; i <= N - length + 1; i++) {\n                int j = i + length - 1;\n                dp[i][j] = Integer.MAX_VALUE;\n                \n                for (int k = i; k < j; k++) {\n                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k+1][j] + (prefixSum[j] - prefixSum[i-1]));\n                }\n            }\n        }\n        \n        System.out.println(dp[1][N]);\n    }\n}",
+    "timestamp": "2025-08-13 06:45:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minCutCost(int weights[], int N) {\n    int sum[N + 1];\n    sum[0] = 0;\n    for (int i = 1; i <= N; i++) {\n        sum[i] = sum[i - 1] + weights[i - 1];\n    }\n\n    int dp[N + 1][N + 1];\n    for (int length = 2; length <= N; length++) {\n        for (int i = 1; i <= N - length + 1; i++) {\n            int j = i + length - 1;\n            dp[i][j] = INT_MAX;\n            for (int k = i; k < j; k++) {\n                dp[i][j] = dp[i][j] < dp[i][k] + dp[k + 1][j] + sum[j] - sum[i - 1] ? dp[i][j] : dp[i][k] + dp[k + 1][j] + sum[j] - sum[i - 1];\n            }\n        }\n    }\n\n    int totalCost = 0;\n    for (int i = 1; i < N; i++) {\n        totalCost += dp[i][i + 1];\n    }\n    return totalCost;\n}\n\nint main() {\n    int weights[] = {3, 1, 2, 4};  // example weights\n    int N = sizeof(weights) / sizeof(weights[0]);\n    printf(\"%d\\n\", minCutCost(weights, N));\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:45:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_sashimi(N, weights):\n    # Dynamic programming solution\n    # dp[i][j] represents the minimum cost to cut a fish segment from index i to j\n    dp = [[float('inf')] * (N+1) for _ in range(N+1)]\n    \n    # Prefix sum for efficient weight calculation\n    prefix_sum = [0] * (N+1)\n    for i in range(1, N+1):\n        prefix_sum[i] = prefix_sum[i-1] + weights[i-1]\n    \n    # Initialize single segment base cases\n    for i in range(1, N+1):\n        dp[i][i] = 0\n    \n    # Try all possible segment lengths\n    for length in range(2, N+1):\n        for start in range(1, N-length+2):\n            end = start + length - 1\n            \n            # Try all possible cutting points\n            for cut in range(start, end):\n                curr_cost = prefix_sum[end] - prefix_sum[start-1]\n                dp[start][end] = min(dp[start][end], \n                                     dp[start][cut] + dp[cut+1][end] + curr_cost)\n    \n    return dp[1][N]\n\n# Input reading\nN = int(input())\nweights = list(map(int, input().split()))\n\n# Output result\nprint(solve_sashimi(N, weights))",
+    "timestamp": "2025-08-13 06:45:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    w = list(map(int, data[1:N+1]))\n    \n    # Precompute prefix sums\n    prefix = [0] * (N + 1)\n    for i in range(N):\n        prefix[i+1] = prefix[i] + w[i]\n    \n    # Initialize DP table\n    dp = [[0] * N for _ in range(N)]\n    \n    for length in range(2, N+1):\n        for i in range(N - length + 1):\n            j = i + length - 1\n            dp[i][j] = float('inf')\n            total = prefix[j+1] - prefix[i]\n            for k in range(i, j):\n                cost = dp[i][k] + dp[k+1][j] + total\n                if cost < dp[i][j]:\n                    dp[i][j] = cost\n    \n    print(dp[0][N-1])\n\nsolve()",
+    "timestamp": "2025-08-13 06:45:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> weights(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> weights[i];\n    }\n\n    vector<vector<int>> dp(N + 1, vector<int>(N + 1, INT_MAX));\n    vector<int> prefixSum(N + 1, 0);\n\n    for (int i = 1; i <= N; ++i) {\n        prefixSum[i] = prefixSum[i - 1] + weights[i];\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        dp[i][i] = 0; // No cost to cut a single piece\n    }\n\n    for (int len = 2; len <= N; ++len) {\n        for (int i = 1; i <= N - len + 1; ++i) {\n            int j = i + len - 1;\n            int segmentWeight = prefixSum[j] - prefixSum[i - 1];\n            for (int k = i; k < j; ++k) {\n                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + segmentWeight);\n            }\n        }\n    }\n\n    cout << dp[1][N] << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:34:02"
+  }
+]

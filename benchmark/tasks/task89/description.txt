@@ -1,0 +1,5 @@
+Tetris is a game where falling blocks are arranged on a board and removed. Here, we consider a slightly modified version of the game. The board is 5 units wide and has enough height to fit all the falling blocks. The falling blocks are in a straight line and can be horizontal or vertical, with lengths ranging from 1 to 5 units.
+
+When a block is dropped, if any part of the block gets caught on blocks already stacked below, it will stop at that position. If a row on the game board becomes fully occupied with blocks as a result of the dropped block, that row will be removed, and any blocks above the removed row will fall down one row. 
+
+The game consists of no more than 1000 blocks falling in sequence. The input consists of information about the blocks that fall in order, and the program should output the number of blocks remaining once all blocks have fallen.

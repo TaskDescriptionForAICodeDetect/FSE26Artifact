@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_ELEVATORS 10\n#define MAX_FLOORS 10000\n\nint main() {\n    int datasets, num_elevators;\n    scanf(\"%d\", &datasets);\n\n    while (datasets--) {\n        scanf(\"%d\", &num_elevators);\n        \n        int floors[MAX_FLOORS + 1] = {0};\n        \n        for (int i = 0; i < num_elevators; i++) {\n            int low, high;\n            scanf(\"%d %d\", &low, &high);\n            \n            for (int j = low; j <= high; j++) {\n                floors[j] = 1;\n            }\n        }\n        \n        int unique_floors = 0;\n        for (int k = 1; k <= MAX_FLOORS; k++) {\n            if (floors[k]) {\n                unique_floors++;\n            }\n        }\n        \n        printf(\"%d\\n\", unique_floors);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:47:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    \n    for (int t = 0; t < T; t++) {\n        int N;\n        scanf(\"%d\", &N);\n        \n        int *low = (int *)malloc(N * sizeof(int));\n        int *high = (int *)malloc(N * sizeof(int));\n        \n        for (int i = 0; i < N; i++) {\n            scanf(\"%d %d\", &low[i], &high[i]);\n        }\n        \n        int min_low = low[0];\n        int max_high = high[0];\n        \n        for (int i = 1; i < N; i++) {\n            if (low[i] < min_low) {\n                min_low = low[i];\n            }\n            if (high[i] > max_high) {\n                max_high = high[i];\n            }\n        }\n        \n        int *count = (int *)calloc(max_high - min_low + 1, sizeof(int));\n        \n        for (int i = 0; i < N; i++) {\n            for (int j = low[i]; j <= high[i]; j++) {\n                count[j - min_low] = 1;\n            }\n        }\n        \n        int unique = 0;\n        for (int i = 0; i <= max_high - min_low; i++) {\n            if (count[i] == 1) {\n                unique++;\n            }\n        }\n        \n        printf(\"%d\\n\", unique);\n        \n        free(low);\n        free(high);\n        free(count);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:47:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int N;\n        cin >> N;\n        unordered_set<int> numbers;\n        for (int i = 0; i < N; ++i) {\n            int A, B;\n            cin >> A >> B;\n            for (int num = A; num <= B; ++num) {\n                numbers.insert(num);\n            }\n        }\n        cout << numbers.size() << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:47:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.HashSet;\nimport java.util.Scanner;\nimport java.util.Set;\n\npublic class ElevatorDisplay {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int T = scanner.nextInt();\n        for (int t = 0; t < T; t++) {\n            int N = scanner.nextInt();\n            Set<Integer> uniqueFloors = new HashSet<>();\n            for (int n = 0; n < N; n++) {\n                int low = scanner.nextInt();\n                int high = scanner.nextInt();\n                for (int floor = low; floor <= high; floor++) {\n                    uniqueFloors.add(floor);\n                }\n            }\n            System.out.println(uniqueFloors.size());\n        }\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:47:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ElevatorDisplayNumbers {\n    public static int countDistinctNumbers(int[][] elevators) {\n        Set<Integer> distinctNumbers = new HashSet<>();\n        \n        for (int[] elevator : elevators) {\n            int low = elevator[0];\n            int high = elevator[1];\n            \n            for (int floor = low; floor <= high; floor++) {\n                distinctNumbers.add(floor);\n            }\n        }\n        \n        return distinctNumbers.size();\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int numDatasets = scanner.nextInt();\n        \n        for (int i = 0; i < numDatasets; i++) {\n            int numElevators = scanner.nextInt();\n            int[][] elevators = new int[numElevators][2];\n            \n            for (int j = 0; j < numElevators; j++) {\n                elevators[j][0] = scanner.nextInt();\n                elevators[j][1] = scanner.nextInt();\n            }\n            \n            System.out.println(countDistinctNumbers(elevators));\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:47:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint countDistinctFloors(vector<pair<int, int>>& elevators) {\n    set<int> distinctFloors;\n    \n    for (const auto& elevator : elevators) {\n        for (int floor = elevator.first; floor <= elevator.second; floor++) {\n            distinctFloors.insert(floor);\n        }\n    }\n    \n    return distinctFloors.size();\n}\n\nint main() {\n    int numDatasets;\n    cin >> numDatasets;\n    \n    for (int dataset = 0; dataset < numDatasets; dataset++) {\n        int numElevators;\n        cin >> numElevators;\n        \n        vector<pair<int, int>> elevators(numElevators);\n        \n        for (int i = 0; i < numElevators; i++) {\n            cin >> elevators[i].first >> elevators[i].second;\n        }\n        \n        int result = countDistinctFloors(elevators);\n        cout << result << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:47:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_distinct_numbers(datasets):\n    results = []\n    for dataset in datasets:\n        distinct_numbers = set()\n        for elevator in dataset:\n            low, high = elevator\n            for floor in range(low, high + 1):\n                distinct_numbers.add(floor)\n        results.append(len(distinct_numbers))\n    return results\n\n# Example usage:\ndatasets = [\n    [(1, 5), (3, 7), (10, 15)],\n    [(2, 4), (6, 8)],\n    [(1, 2), (2, 3), (3, 5)]\n]\n\nprint(count_distinct_numbers(datasets))  # Output: [12, 6, 5]",
+    "timestamp": "2025-08-13 07:30:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Scanner;\nimport java.util.Set;\n\npublic class ElevatorDisplay {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n        \n        while (datasets-- > 0) {\n            int elevators = scanner.nextInt();\n            Set<Integer> uniqueFloors = new HashSet<>();\n            \n            for (int i = 0; i < elevators; i++) {\n                int low = scanner.nextInt();\n                int high = scanner.nextInt();\n                \n                for (int floor = low; floor <= high; floor++) {\n                    uniqueFloors.add(floor);\n                }\n            }\n            \n            System.out.println(uniqueFloors.size());\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 07:30:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int t, n, low, high;\n    scanf(\"%d\", &t); // Number of test cases\n    \n    while(t--) {\n        scanf(\"%d\", &n); // Number of elevators\n        int *floors = (int *)calloc(10001, sizeof(int)); // Assumption: floor numbers are in range from 0 to 10000\n        int low, high;\n        \n        for(int i = 0; i < n; i++) {\n            scanf(\"%d %d\", &low, &high);\n            for (int j = low; j <= high; j++) {\n                floors[j] = 1;\n            }\n        }\n        \n        int uniqueFloors = 0;\n        for (int i = 0; i <= 10000; i++) {\n            if (floors[i] == 1) {\n                uniqueFloors++;\n            }\n        }\n\n        printf(\"%d\\n\", uniqueFloors);\n        free(floors);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 07:30:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_unique_floors(elevators):\n    unique_floors = set()\n    \n    for low, high in elevators:\n        unique_floors.update(range(low, high + 1))\n    \n    return len(unique_floors)\n\n# Read number of test cases\nT = int(input())\n\n# Process each test case\nfor _ in range(T):\n    # Read number of elevators\n    N = int(input())\n    \n    # Read elevator ranges\n    elevators = []\n    for _ in range(N):\n        low, high = map(int, input().split())\n        elevators.append((low, high))\n    \n    # Calculate and print unique floors\n    print(count_unique_floors(elevators))",
+    "timestamp": "2025-08-13 07:30:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_unique_floors(elevators):\n    unique_floors = set()\n    for elevator in elevators:\n        low, high = elevator\n        unique_floors.update(range(low, high + 1))\n    return len(unique_floors)\n\ndef main():\n    import sys\n    input = sys.stdin.read().split()\n    idx = 0\n    T = int(input[idx])\n    idx += 1\n    for _ in range(T):\n        N = int(input[idx])\n        idx += 1\n        elevators = []\n        for _ in range(N):\n            low = int(input[idx])\n            high = int(input[idx + 1])\n            elevators.append((low, high))\n            idx += 2\n        print(count_unique_floors(elevators))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 07:30:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <set>\nusing namespace std;\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        set<int> uniqueFloors;\n        while (n--) {\n            int low, high;\n            cin >> low >> high;\n            for (int i = low; i <= high; ++i) {\n                uniqueFloors.insert(i);\n            }\n        }\n        cout << uniqueFloors.size() << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:39:01"
+  }
+]

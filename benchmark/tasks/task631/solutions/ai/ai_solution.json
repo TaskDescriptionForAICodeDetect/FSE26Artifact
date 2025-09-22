@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX(a, b) ((a) > (b) ? (a) : (b))\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int dp[N];\n    memset(dp, 0, sizeof(dp));\n    \n    for (int i = 0; i < N; i++) {\n        dp[i] = 1;\n        for (int j = 0; j < i; j++) {\n            if (abs(A[i] - A[j]) <= K) {\n                dp[i] = MAX(dp[i], dp[j] + 1);\n            }\n        }\n    }\n    \n    int max_length = 0;\n    for (int i = 0; i < N; i++) {\n        max_length = MAX(max_length, dp[i]);\n    }\n    \n    printf(\"%d\\n\", max_length);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:22:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int A[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    int dp[MAX_N] = {0};\n    int max_len = 0;\n\n    for (int i = 0; i < N; i++) {\n        dp[i] = 1;\n        for (int j = 0; j < i; j++) {\n            if (abs(A[i] - A[j]) <= K) {\n                if (dp[j] + 1 > dp[i]) {\n                    dp[i] = dp[j] + 1;\n                }\n            }\n        }\n        if (dp[i] > max_len) {\n            max_len = dp[i];\n        }\n    }\n\n    printf(\"%d\\n\", max_len);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:22:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    vector<int> dp(N, 1);\n    for (int i = 1; i < N; ++i) {\n        for (int j = 0; j < i; ++j) {\n            if (abs(A[i] - A[j]) <= K) {\n                dp[i] = max(dp[i], dp[j] + 1);\n            }\n        }\n    }\n\n    cout << *max_element(dp.begin(), dp.end()) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:23:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        int[] dp = new int[N];\n        Arrays.fill(dp, 1);\n        int maxLen = 1;\n        \n        for (int i = 1; i < N; i++) {\n            for (int j = 0; j < i; j++) {\n                if (Math.abs(A[i] - A[j]) <= K) {\n                    dp[i] = Math.max(dp[i], dp[j] + 1);\n                }\n            }\n            maxLen = Math.max(maxLen, dp[i]);\n        }\n        \n        System.out.println(maxLen);\n    }\n}",
+    "timestamp": "2025-08-05 22:23:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void solve(int[] A, int K) {\n        int N = A.length;\n        int[][] dp = new int[N][N];\n        \n        // Initialize each single element as a valid subsequence\n        for (int i = 0; i < N; i++) {\n            dp[i][i] = 1;\n        }\n        \n        // Iterate through all possible subsequences\n        for (int len = 2; len <= N; len++) {\n            for (int i = 0; i < N - len + 1; i++) {\n                int j = i + len - 1;\n                \n                // Option 1: Don't include the last element\n                dp[i][j] = dp[i][j-1];\n                \n                // Option 2: Try to extend an existing subsequence with the last element\n                for (int k = i; k < j; k++) {\n                    if (Math.abs(A[k] - A[j]) <= K) {\n                        dp[i][j] = Math.max(dp[i][j], dp[i][k] + 1);\n                    }\n                }\n            }\n        }\n        \n        // Find the maximum subsequence length\n        int maxLen = 0;\n        for (int i = 0; i < N; i++) {\n            for (int j = i; j < N; j++) {\n                maxLen = Math.max(maxLen, dp[i][j]);\n            }\n        }\n        \n        System.out.println(maxLen);\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        \n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        solve(A, K);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:23:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxLengthSubsequence(vector<int>& A, int K) {\n    int N = A.size();\n    vector<int> dp(N, 1);\n    \n    for (int i = 1; i < N; i++) {\n        for (int j = 0; j < i; j++) {\n            if (abs(A[i] - A[j]) <= K) {\n                dp[i] = max(dp[i], dp[j] + 1);\n            }\n        }\n    }\n    \n    return *max_element(dp.begin(), dp.end());\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n    \n    cout << maxLengthSubsequence(A, K) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:23:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_sequence_length(N, K, A):\n    A.sort()\n    max_len = 0\n    current_len = 1\n    \n    for i in range(1, N):\n        if abs(A[i] - A[i - 1]) <= K:\n            current_len += 1\n        else:\n            max_len = max(max_len, current_len)\n            current_len = 1\n    \n    max_len = max(max_len, current_len)\n    return max_len\n\n# Input reading part\nN, K = map(int, input().split())\nA = list(map(int, input().split()))\n\nprint(max_sequence_length(N, K, A))",
+    "timestamp": "2025-08-13 10:20:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MaximumSubsequenceLength {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        System.out.println(findMaxSubsequenceLength(A, K));\n        scanner.close();\n    }\n\n    private static int findMaxSubsequenceLength(int[] A, int K) {\n        int N = A.length;\n        int[] dp = new int[N];\n        int maxLength = 0;\n\n        for (int i = 0; i < N; i++) {\n            dp[i] = 1;\n            for (int j = 0; j < i; j++) {\n                if (Math.abs(A[i] - A[j]) <= K) {\n                    dp[i] = Math.max(dp[i], dp[j] + 1);\n                }\n            }\n            maxLength = Math.max(maxLength, dp[i]);\n        }\n        \n        return maxLength;\n    }\n}",
+    "timestamp": "2025-08-13 10:20:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n// Comparison function for qsort\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint maxLengthKSubsequence(int A[], int N, int K) {\n    qsort(A, N, sizeof(int), compare);\n\n    int maxLength = 0;\n    int count = 0;\n    int lastIncluded = A[0] - K - 1; // Initialize to a value outside K range\n\n    for (int i = 0; i < N; i++) {\n        if (A[i] - lastIncluded <= K) {\n            count++;\n            lastIncluded = A[i];\n        }\n        if (count > maxLength) {\n            maxLength = count;\n        }\n    }\n    return maxLength;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    printf(\"%d\\n\", maxLengthKSubsequence(A, N, K));\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:20:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_subsequence_length(A, K):\n    N = len(A)\n    dp = [1] * N\n    \n    for i in range(1, N):\n        for j in range(i):\n            if abs(A[i] - A[j]) <= K:\n                dp[i] = max(dp[i], dp[j] + 1)\n    \n    return max(dp)\n\n# Read input\nN, K = map(int, input().split())\nA = list(map(int, input().split()))\n\n# Print result\nprint(max_subsequence_length(A, K))",
+    "timestamp": "2025-08-13 10:21:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_subsequence_length(N, K, A):\n    dp = [1] * N\n    for i in range(1, N):\n        for j in range(i):\n            if abs(A[i] - A[j]) <= K:\n                if dp[j] + 1 > dp[i]:\n                    dp[i] = dp[j] + 1\n    return max(dp)\n\n# Read input\nN, K = map(int, input().split())\nA = list(map(int, input().split()))\n\n# Output the result\nprint(max_subsequence_length(N, K, A))",
+    "timestamp": "2025-08-13 10:21:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int N, K;\n    std::cin >> N >> K;\n    std::vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> A[i];\n    }\n\n    std::vector<int> dp(N, 1);\n    for (int i = 1; i < N; ++i) {\n        for (int j = 0; j < i; ++j) {\n            if (std::abs(A[i] - A[j]) <= K) {\n                dp[i] = std::max(dp[i], dp[j] + 1);\n            }\n        }\n    }\n\n    int maxLength = *std::max_element(dp.begin(), dp.end());\n    std::cout << maxLength << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:58:35"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint min_effort(int weights[], int n) {\n    int *sorted = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        sorted[i] = weights[i];\n    }\n    qsort(sorted, n, sizeof(int), compare);\n    \n    int effort = 0;\n    for (int i = 0; i < n; i++) {\n        if (weights[i] != sorted[i]) {\n            effort += weights[i];\n        }\n    }\n    \n    free(sorted);\n    return effort;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int *weights = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &weights[i]);\n    }\n    \n    printf(\"%d\\n\", min_effort(weights, n));\n    free(weights);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:31:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> weights(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> weights[i];\n    }\n    \n    vector<int> sorted = weights;\n    sort(sorted.begin(), sorted.end());\n    \n    int total_effort = 0;\n    for (int i = 0; i < n; ++i) {\n        if (weights[i] != sorted[i]) {\n            total_effort += weights[i];\n        }\n    }\n    \n    cout << total_effort << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:31:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class MinimumEffort {\n    public static int calculateMinimumEffort(int[] weights) {\n        int[] sortedWeights = weights.clone();\n        Arrays.sort(sortedWeights);\n        \n        int effort = 0;\n        for (int i = 0; i < weights.length; i++) {\n            if (weights[i] != sortedWeights[i]) {\n                effort += weights[i];\n            }\n        }\n        return effort;\n    }\n\n    public static void main(String[] args) {\n        int[] weights = {5, 2, 4, 3, 1};\n        System.out.println(calculateMinimumEffort(weights));\n    }\n}",
+    "timestamp": "2025-08-05 21:31:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TaroMovingItems {\n    public static long minimumEffort(int[] weights) {\n        Arrays.sort(weights);\n        long totalEffort = 0;\n        \n        for (int i = 0; i < weights.length; i++) {\n            totalEffort += (long) weights[i] * (i + 1);\n        }\n        \n        return totalEffort;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] weights = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            weights[i] = scanner.nextInt();\n        }\n        \n        long result = minimumEffort(weights);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:31:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid swap(int* a, int* b) {\n    int temp = *a;\n    *a = *b;\n    *b = temp;\n}\n\nint partition(int arr[], int low, int high) {\n    int pivot = arr[high];\n    int i = low - 1;\n\n    for (int j = low; j < high; j++) {\n        if (arr[j] < pivot) {\n            i++;\n            swap(&arr[i], &arr[j]);\n        }\n    }\n    swap(&arr[i + 1], &arr[high]);\n    return i + 1;\n}\n\nvoid quickSort(int arr[], int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi - 1);\n        quickSort(arr, pi + 1, high);\n    }\n}\n\nlong long calculateMinEffort(int weights[], int n) {\n    quickSort(weights, 0, n - 1);\n    long long totalEffort = 0;\n    long long currentSum = 0;\n\n    for (int i = 0; i < n; i++) {\n        currentSum += weights[i];\n        totalEffort += currentSum;\n    }\n\n    return totalEffort;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n\n    int weights[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &weights[i]);\n    }\n\n    long long minEffort = calculateMinEffort(weights, n);\n    printf(\"%lld\\n\", minEffort);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:31:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nlong long minimumEffort(vector<int>& weights) {\n    int n = weights.size();\n    if (n <= 1) return 0;\n    \n    sort(weights.begin(), weights.end());\n    \n    long long totalEffort = 0;\n    long long currentSum = weights[0];\n    \n    for (int i = 1; i < n; i++) {\n        totalEffort += currentSum;\n        currentSum += weights[i];\n    }\n    \n    return totalEffort;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<int> weights(n);\n    for (int i = 0; i < n; i++) {\n        cin >> weights[i];\n    }\n    \n    cout << minimumEffort(weights) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:31:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_total_effort(weights):\n    sorted_weights = sorted(weights)\n    total_effort = sum(sorted_weights)\n    return total_effort\n\n# Example usage:\nweights = [3, 1, 4, 5, 2]\nresult = minimum_total_effort(weights)\nprint(result)  # Output: 15",
+    "timestamp": "2025-08-13 06:58:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.Arrays;\n\npublic class TaroMovingItems {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] weights = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            weights[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(weights);\n        \n        int totalEffort = 0;\n        for (int weight : weights) {\n            totalEffort += weight;\n        }\n        \n        System.out.println(totalEffort);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 06:58:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n;\n    printf(\"Enter the number of items: \");\n    scanf(\"%d\", &n);\n\n    int weights[n];\n    printf(\"Enter the weights of the items: \");\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &weights[i]);\n    }\n\n    // Sort the weights array\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = i + 1; j < n; j++) {\n            if (weights[i] > weights[j]) {\n                int temp = weights[i];\n                weights[i] = weights[j];\n                weights[j] = temp;\n            }\n        }\n    }\n\n    // Calculate the total effort\n    int totalEffort = 0;\n    for (int i = 0; i < n; i++) {\n        totalEffort += weights[i];\n    }\n\n    printf(\"Minimum total effort required: %d\\n\", totalEffort);\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:58:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_effort_to_arrange(weights):\n    weights.sort()\n    total_effort = 0\n    current_sum = 0\n    \n    for weight in weights:\n        total_effort += current_sum\n        current_sum += weight\n    \n    return total_effort\n\n# Example usage\n# weights = [1, 3, 5, 4, 2]\n# print(min_effort_to_arrange(weights))",
+    "timestamp": "2025-08-13 06:59:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_effort(weights):\n    sorted_weights = sorted(weights)\n    effort = 0\n    for i in range(len(weights)):\n        if weights[i] != sorted_weights[i]:\n            effort += weights[i]\n    return effort",
+    "timestamp": "2025-08-13 06:59:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int n;\n    std::cin >> n;  // Number of items\n    std::vector<int> weights(n);\n\n    for (int i = 0; i < n; ++i) {\n        std::cin >> weights[i];  // Input weights of the items\n    }\n\n    std::sort(weights.begin(), weights.end());  // Sort weights in ascending order\n\n    int totalEffort = 0;\n\n    for (int i = 0; i < n; ++i) {\n        totalEffort += weights[i]; // Calculate total effort required by adding weights\n    }\n\n    std::cout << totalEffort << std::endl;  // Output the minimum total effort required\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:34:54"
+  }
+]

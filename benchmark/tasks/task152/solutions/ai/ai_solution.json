@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    int *prices = (int *)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &prices[i]);\n    }\n\n    int count = 0;\n    for (int i = 0; i < n; i++) {\n        if (prices[i] <= k) {\n            k -= prices[i];\n            count++;\n        } else {\n            break;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    free(prices);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GiftPurchasePlan {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        \n        int[] prices = new int[n];\n        for (int i = 0; i < n; i++) {\n            prices[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(prices);\n        \n        int count = 0;\n        int totalCost = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (totalCost + prices[i] <= k) {\n                totalCost += prices[i];\n                count++;\n            } else {\n                break;\n            }\n        }\n        \n        System.out.println(count);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:50:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> prices(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> prices[i];\n    }\n    sort(prices.begin(), prices.end());\n    \n    int left = 0, right = N - 1;\n    int count = 0;\n    while (left < right) {\n        int sum = prices[left] + prices[right];\n        if (sum == M) {\n            count++;\n            left++;\n            right--;\n        } else if (sum < M) {\n            left++;\n        } else {\n            right--;\n        }\n    }\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    \n    int *prices = malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &prices[i]);\n    }\n    \n    int minCost = 1000000000;\n    for (int mask = 0; mask < (1 << n); mask++) {\n        if (__builtin_popcount(mask) == k) {\n            int currentCost = 0;\n            for (int i = 0; i < n; i++) {\n                if (mask & (1 << i)) {\n                    currentCost += prices[i];\n                }\n            }\n            if (currentCost < minCost) {\n                minCost = currentCost;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", minCost);\n    \n    free(prices);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n, budget;\n    cin >> n >> budget;\n    \n    vector<int> prices(n);\n    for (int i = 0; i < n; i++) {\n        cin >> prices[i];\n    }\n    \n    sort(prices.begin(), prices.end());\n    \n    int total_gifts = 0;\n    int current_sum = 0;\n    \n    for (int price : prices) {\n        if (current_sum + price <= budget) {\n            current_sum += price;\n            total_gifts++;\n        } else {\n            break;\n        }\n    }\n    \n    cout << total_gifts << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:50:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class GiftPurchasePlan {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] prices = new int[n];\n        for (int i = 0; i < n; i++) {\n            prices[i] = scanner.nextInt();\n        }\n        int target = scanner.nextInt();\n\n        for (int i = 0; i < n; i++) {\n            for (int j = i + 1; j < n; j++) {\n                if (prices[i] + prices[j] == target) {\n                    System.out.println((i + 1) + \" \" + (j + 1));\n                    return;\n                }\n            }\n        }\n        System.out.println(-1);\n    }\n}",
+    "timestamp": "2025-08-05 18:50:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def gift_purchase_plan(prices, budget):\n    n = len(prices)\n    prices.sort()\n    count = 0\n    total = 0\n    \n    for price in prices:\n        if total + price <= budget:\n            total += price\n            count += 1\n        else:\n            break\n    \n    return count\n\n# Example usage:\nprices = [20, 10, 5, 30, 100]\nbudget = 50\nprint(gift_purchase_plan(prices, budget))   # Output: 3",
+    "timestamp": "2025-08-13 01:10:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class GiftPurchasePlan {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // User inputs\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        int[] costs = new int[n];\n        for (int i = 0; i < n; i++) {\n            costs[i] = scanner.nextInt();\n        }\n        \n        // Sorting the costs array\n        java.util.Arrays.sort(costs);\n        \n        int sum = 0;\n        int maxGifts = 0;\n        \n        // Find the maximum number of gifts\n        for (int i = 0; i < n; i++) {\n            if (sum + costs[i] <= m) {\n                sum += costs[i];\n                maxGifts++;\n            } else {\n                break;\n            }\n        }\n        \n        // Output the maximum number of gifts\n        System.out.println(maxGifts);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 01:10:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int giftPrices[] = {50, 100, 150, 200};  // Example gift prices\n    int budget;\n    int n = sizeof(giftPrices) / sizeof(giftPrices[0]);\n    \n    printf(\"Enter your budget: \");\n    scanf(\"%d\", &budget);\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            if (giftPrices[i] + giftPrices[j] <= budget) {\n                printf(\"You can buy gifts that cost %d and %d\\n\", giftPrices[i], giftPrices[j]);\n            }\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 01:10:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def optimal_gift_purchase(budget, prices):\n    n = len(prices)\n    dp = [[0] * (budget + 1) for _ in range(n + 1)]\n    \n    for i in range(1, n + 1):\n        for j in range(budget + 1):\n            if prices[i-1] > j:\n                dp[i][j] = dp[i-1][j]\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i-1][j-prices[i-1]] + 1)\n    \n    return dp[n][budget]\n\n# Read input\nbudget = int(input())\nnum_gifts = int(input())\nprices = list(map(int, input().split()))\n\n# Calculate and print result\nmax_gifts = optimal_gift_purchase(budget, prices)\nprint(max_gifts)",
+    "timestamp": "2025-08-13 01:10:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\nprices = list(map(int, input().split()))\ntotal = int(input())\n\nprices.sort()\nleft = 0\nright = n - 1\ncount = 0\n\nwhile left < right:\n    current_sum = prices[left] + prices[right]\n    if current_sum == total:\n        count += 1\n        left += 1\n        right -= 1\n    elif current_sum < total:\n        left += 1\n    else:\n        right -= 1\n\nprint(count)",
+    "timestamp": "2025-08-13 01:10:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint giftPurchasePlan(vector<int>& prices, int budget) {\n    sort(prices.begin(), prices.end());\n    int count = 0;\n    for (int price : prices) {\n        if (budget >= price) {\n            budget -= price;\n            count++;\n        } else {\n            break;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n, budget;\n    cout << \"Enter number of gifts and budget: \";\n    cin >> n >> budget;\n    vector<int> prices(n);\n    cout << \"Enter prices of gifts: \";\n    for (int i = 0; i < n; ++i) {\n        cin >> prices[i];\n    }\n    \n    int maxGifts = giftPurchasePlan(prices, budget);\n    cout << \"Maximum number of gifts: \" << maxGifts << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:58:36"
+  }
+]

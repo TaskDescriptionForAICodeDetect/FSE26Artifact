@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "4\n6 4\nC E D# F G A\nC E F G\n6 4\nC E D# F G A\nC D# F G\n3 6\nC D D\nD# B D B D# C#\n8 8\nC B B B B B F F\nC B B B B B B B\n",
+      "output": "Yes\nNo\nYes\nNo\n"
+    }
+  ]
+}

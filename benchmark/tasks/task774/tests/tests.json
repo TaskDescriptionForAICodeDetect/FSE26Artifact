@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "12 3 3\n2 2\nRRL\nLUD\n",
+      "output": "YES"
+    },
+    {
+      "input": "24 3 5\n2 2\nUDRRR\nLLDUD\n",
+      "output": "NO"
+    },
+    {
+      "input": "35 6 11\n2 1\nRLDRRUDDLRL\nURRDRLLDLRD\n",
+      "output": "NO"
+    }
+  ]
+}

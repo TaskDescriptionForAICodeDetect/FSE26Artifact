@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#define MOD 100000007\n#define MAX_LEN 100001\n\nint main() {\n    char s[MAX_LEN];\n    while (scanf(\"%s\", s) == 1) {\n        if (s[0] == '#' && s[1] == '\\0') break;\n        int len = strlen(s);\n        long long dp[MAX_LEN] = {0};\n        dp[0] = 1;\n        for (int i = 1; i <= len; ++i) {\n            if (s[i-1] != '0') {\n                dp[i] = dp[i-1];\n            }\n            if (i >= 2) {\n                int num = (s[i-2] - '0') * 10 + (s[i-1] - '0');\n                if (num >= 10 && num <= 99) {\n                    dp[i] = (dp[i] + dp[i-2]) % MOD;\n                }\n            }\n        }\n        printf(\"%lld\\n\", dp[len]);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:01:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class StuckArmMessage {\n    static final int MOD = 100_000_007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (true) {\n            String input = scanner.nextLine();\n            if (input.equals(\"#\")) break;\n            System.out.println(countInterpretations(input));\n        }\n        scanner.close();\n    }\n\n    static int countInterpretations(String s) {\n        int n = s.length();\n        long[] dp = new long[n + 1];\n        dp[0] = 1;\n\n        for (int i = 1; i <= n; i++) {\n            dp[i] = dp[i - 1];\n\n            if (i > 1) {\n                String twoDigits = s.substring(i - 2, i);\n                int num = Integer.parseInt(twoDigits);\n                if (num >= 10 && num <= 99) {\n                    dp[i] += dp[i - 2];\n                }\n            }\n            dp[i] %= MOD;\n        }\n\n        return (int) dp[n];\n    }\n}",
+    "timestamp": "2025-08-05 19:01:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nconst int MOD = 100000007;\n\nint countInterpretations(const string &s) {\n    int n = s.size();\n    if (n == 0) return 0;\n    \n    vector<long long> dp(n + 1, 0);\n    dp[0] = 1;\n    dp[1] = 1;\n    \n    for (int i = 2; i <= n; ++i) {\n        dp[i] = dp[i - 1];\n        if (s[i - 2] == '1') {\n            if (s[i - 1] == '1') {\n                dp[i] = (dp[i] + dp[i - 2]) % MOD;\n            }\n        }\n    }\n    \n    return dp[n];\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    string s;\n    while (cin >> s) {\n        if (s == \"#\") break;\n        cout << countInterpretations(s) << '\\n';\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:02:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 100000007\n#define MAX_LEN 100001\n\nconst char* keypad[10][5] = {\n    {\"\"}, {\"\"}, \n    {\"あ\", \"い\", \"う\", \"え\", \"お\"},\n    {\"か\", \"き\", \"く\", \"け\", \"こ\"},\n    {\"さ\", \"し\", \"す\", \"せ\", \"そ\"},\n    {\"た\", \"ち\", \"つ\", \"て\", \"と\"},\n    {\"な\", \"に\", \"ぬ\", \"ね\", \"の\"},\n    {\"は\", \"ひ\", \"ふ\", \"へ\", \"ほ\"},\n    {\"ま\", \"み\", \"む\", \"め\", \"も\"},\n    {\"や\", \"ゆ\", \"よ\"}\n};\n\nint count_interpretations(char* input) {\n    int len = strlen(input);\n    long long dp[MAX_LEN] = {0};\n    dp[0] = 1;\n\n    for (int i = 1; i <= len; i++) {\n        // Single digit case\n        if (input[i-1] >= '2' && input[i-1] <= '8') {\n            dp[i] = (dp[i] + dp[i-1]) % MOD;\n        }\n\n        // Two digit case\n        if (i > 1) {\n            char two_digits[3] = {input[i-2], input[i-1], '\\0'};\n            int num = atoi(two_digits);\n            \n            if (num >= 11 && num <= 89) {\n                dp[i] = (dp[i] + dp[i-2]) % MOD;\n            }\n        }\n    }\n\n    return dp[len];\n}\n\nint main() {\n    char input[MAX_LEN];\n    \n    while (1) {\n        scanf(\"%s\", input);\n        \n        if (input[0] == '#') break;\n        \n        printf(\"%d\\n\", count_interpretations(input));\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:02:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nunordered_map<string, vector<char>> keypad = {\n    {\"1\", {'あ', 'い', 'う', 'え', 'お'}},\n    {\"2\", {'か', 'き', 'く', 'け', 'こ'}},\n    {\"3\", {'さ', 'し', 'す', 'せ', 'そ'}},\n    {\"4\", {'た', 'ち', 'つ', 'て', 'と'}},\n    {\"5\", {'な', 'に', 'ぬ', 'ね', 'の'}},\n    {\"6\", {'は', 'ひ', 'ふ', 'へ', 'ほ'}},\n    {\"7\", {'ま', 'み', 'む', 'め', 'も'}},\n    {\"8\", {'や', 'ゆ', 'よ'}},\n    {\"9\", {'ら', 'り', 'る', 'れ', 'ろ'}},\n    {\"0\", {'わ', 'を', 'ん'}}\n};\n\nint countPossibleMessages(const string& input) {\n    const int MOD = 100000007;\n    int n = input.length();\n    vector<long long> dp(n + 1, 0);\n    dp[0] = 1;\n\n    for (int i = 1; i <= n; ++i) {\n        string single = input.substr(i - 1, 1);\n        if (keypad.count(single)) {\n            dp[i] = (dp[i] + dp[i - 1] * keypad[single].size()) % MOD;\n        }\n\n        if (i > 1) {\n            string dual = input.substr(i - 2, 2);\n            if (keypad.count(dual)) {\n                dp[i] = (dp[i] + dp[i - 2] * keypad[dual].size()) % MOD;\n            }\n        }\n    }\n\n    return dp[n];\n}\n\nint main() {\n    string input;\n    while (getline(cin, input) && input != \"#\") {\n        cout << countPossibleMessages(input) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:02:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    static final int MOD = 100000007;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while (!(line = br.readLine()).equals(\"#\")) {\n            System.out.println(solve(line));\n        }\n    }\n\n    static int solve(String s) {\n        int n = s.length();\n        if (n == 0) return 0;\n        long[] dp = new long[n + 1];\n        dp[0] = 1;\n        for (int i = 1; i <= n; i++) {\n            char c = s.charAt(i - 1);\n            if (c != '0') {\n                dp[i] = dp[i - 1];\n            }\n            if (i >= 2) {\n                char prev = s.charAt(i - 2);\n                if (prev == '1' || (prev == '2' && c <= '6')) {\n                    dp[i] += dp[i - 2];\n                }\n            }\n            dp[i] %= MOD;\n        }\n        return (int) dp[n];\n    }\n}",
+    "timestamp": "2025-08-05 19:02:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_possible_messages(s: str) -> int:\n    mod = 100000007\n    n = len(s)\n    count = 1\n    i = 0\n    while i < n:\n        j = i\n        while j < n and s[j] == s[i]:\n            j += 1\n        length = j - i\n        if length >= 2:\n            count = (count * (length + 1)) % mod\n        i = j\n    return count\n\ndef process_input():\n    import sys\n    input = sys.stdin.read\n    cases = input().strip().splitlines()\n    results = []\n    for case in cases:\n        if case == '#':\n            break\n        results.append(calculate_possible_messages(case))\n    for result in results:\n        print(result)\n\nprocess_input()",
+    "timestamp": "2025-08-13 02:08:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.io.BufferedReader;\nimport java.io.IOException;\nimport java.io.InputStreamReader;\n\npublic class DistinctMessages {\n    private static final int MOD = 100000007;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));\n        String line;\n        while (!(line = reader.readLine()).equals(\"#\")) {\n            System.out.println(calculateDistinctMessages(line));\n        }\n    }\n\n    private static int calculateDistinctMessages(String s) {\n        int n = s.length();\n        if (n == 0) return 0;\n\n        int[] dp = new int[n + 1];\n        dp[0] = 1; // Base case for an empty message\n\n        for (int i = 1; i <= n; i++) {\n            dp[i] = dp[i - 1]; // Count the single character possibility\n\n            if (i > 1 && s.charAt(i - 1) == s.charAt(i - 2)) {\n                dp[i] = (dp[i] + dp[i - 2]) % MOD; // Count the two-character combination\n            }\n\n            if (i > 2 && s.charAt(i - 1) == s.charAt(i - 2) && s.charAt(i - 2) == s.charAt(i - 3)) {\n                dp[i] = (dp[i] + dp[i - 3]) % MOD; // Count the three-character combination\n            }\n\n            // Add further conditions if four or more consecutive characters are relevant to your input method\n        }\n\n        return dp[n];\n    }\n}",
+    "timestamp": "2025-08-13 02:08:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 100000007\n\nint distinctMessages(const char *s) {\n    int n = strlen(s);\n    int dp[n+1];\n    dp[0] = 1;\n    for (int i = 1; i <= n; ++i) {\n        dp[i] = 0;\n        for (int j = 1; j <= 4 && i-j >= 0; ++j) {\n            if (s[i-j] != s[i-1]) break;\n            dp[i] = (dp[i] + dp[i-j]) % MOD;\n        }\n    }\n    return dp[n];\n}\n\nint main() {\n    char input[100001];\n    while (1) {\n        scanf(\"%s\", input);\n        if (input[0] == '#') break;\n        printf(\"%d\\n\", distinctMessages(input));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 02:08:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_interpretations(s):\n    MOD = 100000007\n    n = len(s)\n    dp = [0] * (n + 1)\n    dp[0] = 1\n\n    for i in range(1, n + 1):\n        # Single digit interpretation\n        if s[i-1] != '0':\n            dp[i] = dp[i-1]\n\n        # Two digit interpretation\n        if i > 1:\n            two_digit = int(s[i-2:i])\n            if 10 <= two_digit <= 99:\n                dp[i] = (dp[i] + dp[i-2]) % MOD\n\n    return dp[n]\n\ndef main():\n    while True:\n        s = input().strip()\n        if s == '#':\n            break\n        print(count_interpretations(s))\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 02:08:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\nMOD = 100000007\n\ndef solve():\n    input_lines = sys.stdin.read().splitlines()\n    for line in input_lines:\n        if line == '#':\n            break\n        s = line.strip()\n        n = len(s)\n        if n == 0:\n            print(1)\n            continue\n        dp = [0] * (n + 1)\n        dp[0] = 1\n        for i in range(1, n + 1):\n            # Single digit\n            if s[i-1] != '0':\n                dp[i] = dp[i-1]\n            # Two digits\n            if i >= 2:\n                two_digit = int(s[i-2:i])\n                if 10 <= two_digit <= 99:\n                    dp[i] += dp[i-2]\n            dp[i] %= MOD\n        print(dp[n] % MOD)\n\nsolve()",
+    "timestamp": "2025-08-13 02:08:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nconstexpr int MOD = 100000007;\n\nint countInterpretations(const std::string &input) {\n    if (input.empty()) return 1; // Base case: An empty string can only be interpreted one way.\n\n    int n = input.size();\n    std::vector<int> dp(n + 1, 0);\n    dp[0] = 1;\n\n    for (int i = 1; i <= n; ++i) {\n        char current = input[i - 1];\n        if (current != '0') {\n            dp[i] = dp[i - 1];\n        }\n\n        if (i > 1) {\n            char previous = input[i - 2];\n            if (previous == '1' || (previous == '2' && current <= '6')) {\n                dp[i] += dp[i - 2];\n                dp[i] %= MOD;\n            }\n        }\n\n        if (i > 2) {\n            char prePrevious = input[i - 3];\n            if (prePrevious == '1' || (prePrevious == '2' && (previous < '7' || (previous == '7' && current <= '6')))) {\n                dp[i] += dp[i - 3];\n                dp[i] %= MOD;\n            }\n        }\n    }\n\n    return dp[n];\n}\n\nint main() {\n    std::string input;\n    while (std::cin >> input && input != \"#\") {\n        std::cout << countInterpretations(input) << \"\\n\";\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:04:24"
+  }
+]

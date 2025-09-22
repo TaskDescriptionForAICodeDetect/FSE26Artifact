@@ -1,0 +1,1 @@
+Silver Fox is fighting against N monsters standing in a row on a number line. Each monster at coordinate X_i has health H_i. Silver Fox can use bombs that decrease the health of monsters within a range defined by D at a coordinate x by A. The goal is to determine the minimum number of bombs needed to reduce all monsters' health to 0 or below.

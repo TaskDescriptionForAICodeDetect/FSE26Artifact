@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "1\ngalaxy_angel 0 600\n1\ngalaxy_angel\n",
+      "output": "1"
+    },
+    {
+      "input": "11\nA 0 600\nB 0 610\nC 0 610\nD 0 610\nE 0 640\nEE 0 700\nF 0 710\nG 0 710\nH 0 710\nI 0 740\nJ 0 750\n2\nB\nH\n",
+      "output": "4"
+    },
+    {
+      "input": "42\nnchj 6 2620\nanhnnnmewbktthsrn 4 2515\ngntmdsh 1 1800\nachnnl 4 2540\nhnskirh 0 2200\naonexrcst 0 1700\ndgdys 6 2330\nhdnnara 4 2525\ndnpaonntssotk 4 2555\nddmnwndrlnd 6 2500\nC 4 2445\nastrttnomch 0 2330\nseknnqasr 1 2630\nsftnt 4 2630\nstnsgt 2 2605\ndrrnenmknmrmr 4 2610\nhnzm 6 2713\nyndmsoazzlsn 6 2658\nmrahlcalv 4 2615\nhshzrhkkrhs 1 900\nortchntsbshni 0 2430\nkmnmzshrski 1 2530\nsktdnc 4 1800\ngykkybrkjhkirkhn 2 2459\ntrk 0 900\n30zzsinhkntiik 3 2700\nsngkotmmmirprdx 1 2600\nyran 2 2529\ntntissygntinybu 1 2614\nskiichhtki 5 2505\ntgrbnny 6 2558\ndnbrsnki 3 1927\nyugozxl 1 1930\nfrbllchrmn 1 1928\nfjrg 1 1955\nshwmngtr 0 2200\nxmn 5 2200\nrngnkkrskitikihn 0 2100\nszysz 0 1254\nprttyrythmaulrdrm 6 1000\nsckiesfrntrqst 5 1820\nmshdr 1 2255\n1\nmrahlcalv\n0\n",
+      "output": "31"
+    }
+  ]
+}

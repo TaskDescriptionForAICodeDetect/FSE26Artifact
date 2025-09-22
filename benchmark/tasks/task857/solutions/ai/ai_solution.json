@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n\n    if (A + B - 1 > N) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    int* seq = (int*)malloc(N * sizeof(int));\n    int* used = (int*)calloc(N + 1, sizeof(int));\n\n    // Place decreasing subsequence\n    int decreasing = 0;\n    for (int i = 0; i < B; i++) {\n        seq[i] = B - i;\n        used[B - i] = 1;\n        decreasing++;\n    }\n\n    // Place remaining increasing subsequence\n    int remaining = A - 1;\n    int current = 1;\n    for (int i = B; i < N && remaining > 0; i++) {\n        while (current <= N && used[current]) current++;\n        seq[i] = current;\n        used[current] = 1;\n        current++;\n        remaining--;\n    }\n\n    // Fill remaining numbers\n    int last = 1;\n    for (int i = 0; i < N; i++) {\n        if (used[last]) last++;\n        if (seq[i] == 0) {\n            while (used[last]) last++;\n            seq[i] = last;\n            used[last] = 1;\n        }\n    }\n\n    // Print result\n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", seq[i]);\n    }\n    printf(\"\\n\");\n\n    free(seq);\n    free(used);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid construct_sequence(int N, int A, int B) {\n    if (A + B > N + 1 || A * B < N) {\n        printf(\"-1\\n\");\n        return;\n    }\n\n    int *sequence = (int *)malloc(N * sizeof(int));\n    int remaining = N;\n    int current = 0;\n\n    for (int i = B; i >= 1; --i) {\n        int take = (remaining - 1) / i + 1;\n        if (take > A) take = A;\n        for (int j = current + take; j > current; --j) {\n            sequence[current + take - (j - current)] = j;\n        }\n        current += take;\n        remaining -= take;\n    }\n\n    for (int i = 0; i < N; ++i) {\n        printf(\"%d \", sequence[i]);\n    }\n    printf(\"\\n\");\n    free(sequence);\n}\n\nint main() {\n    int N, A, B;\n    scanf(\"%d %d %d\", &N, &A, &B);\n    construct_sequence(N, A, B);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nvector<int> construct_sequence(int N, int A, int B) {\n    if (A + B > N + 1 || A * B < N) {\n        return {};\n    }\n\n    vector<int> sequence;\n    for (int i = B; i >= 1; --i) {\n        sequence.push_back(i);\n    }\n\n    if (A == 1) {\n        return sequence;\n    }\n\n    int remaining = N - B;\n    int current_block = 1;\n    vector<int> blocks;\n    blocks.push_back(B);\n\n    while (remaining > 0) {\n        int next_block_size = min(A - 1, remaining);\n        blocks.push_back(next_block_size);\n        remaining -= next_block_size;\n    }\n\n    int start = B + 1;\n    for (int i = 1; i < blocks.size(); ++i) {\n        int block_size = blocks[i];\n        int end = start + block_size - 1;\n        for (int j = end; j >= start; --j) {\n            sequence.push_back(j);\n        }\n        start = end + 1;\n    }\n\n    return sequence;\n}\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n\n    vector<int> sequence = construct_sequence(N, A, B);\n\n    if (sequence.empty()) {\n        cout << -1 << endl;\n    } else {\n        for (int num : sequence) {\n            cout << num << \" \";\n        }\n        cout << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:09:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int A = sc.nextInt();\n        int B = sc.nextInt();\n\n        if (A + B - 1 > N || A * B < N) {\n            System.out.println(-1);\n            return;\n        }\n\n        List<Integer> sequence = new ArrayList<>();\n        int remaining = N;\n        for (int i = B; i >= 1; --i) {\n            int size = Math.min(A, remaining - (i - 1));\n            for (int j = remaining - size + 1; j <= remaining; ++j) {\n                sequence.add(j);\n            }\n            remaining -= size;\n        }\n\n        for (int num : sequence) {\n            System.out.print(num + \" \");\n        }\n        System.out.println();\n    }\n}",
+    "timestamp": "2025-08-05 23:09:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int[] constructSequence(int N, int A, int B) {\n        if (A + B > N + 1) return null;\n        \n        int[] result = new int[N];\n        boolean[] used = new boolean[N + 1];\n        \n        // Place elements to create A-length increasing subsequence\n        int currentMax = 1;\n        for (int i = 0; i < A; i++) {\n            result[i] = currentMax;\n            used[currentMax] = true;\n            currentMax++;\n        }\n        \n        // Place elements to create B-length decreasing subsequence\n        int currentMin = N;\n        for (int i = N - 1; i >= N - B + 1; i--) {\n            result[i] = currentMin;\n            used[currentMin] = true;\n            currentMin--;\n        }\n        \n        // Fill remaining positions\n        int fillPos = A;\n        for (int num = 1; num <= N; num++) {\n            if (!used[num]) {\n                while (fillPos < N - B + 1 && result[fillPos] != 0) {\n                    fillPos++;\n                }\n                if (fillPos < N - B + 1) {\n                    result[fillPos] = num;\n                    used[num] = true;\n                }\n            }\n        }\n        \n        return result;\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int[] sequence = constructSequence(5, 2, 3);\n        if (sequence != null) {\n            for (int num : sequence) {\n                System.out.print(num + \" \");\n            }\n        } else {\n            System.out.println(\"No valid sequence exists\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:09:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool solve(int N, int A, int B) {\n    if (A + B > N + 1) return false;\n    \n    vector<int> perm(N);\n    vector<int> increasing, decreasing;\n    \n    // First place decreasing subsequence elements\n    for (int i = B; i >= 1; i--) {\n        decreasing.push_back(N - i + 1);\n    }\n    \n    // Place remaining increasing subsequence elements\n    int remaining = N - B;\n    for (int i = 1; i <= A; i++) {\n        if (remaining > 0) {\n            increasing.push_back(i);\n            remaining--;\n        }\n    }\n    \n    // Fill remaining spots\n    vector<bool> used(N + 1, false);\n    for (int x : decreasing) used[x] = true;\n    for (int x : increasing) used[x] = true;\n    \n    int current = 1;\n    int d = 0, i = 0;\n    for (int j = 0; j < N; j++) {\n        if (d < decreasing.size() && decreasing[d] == j + 1) {\n            perm[j] = decreasing[d];\n            d++;\n        } else if (i < increasing.size() && increasing[i] == j + 1) {\n            perm[j] = increasing[i];\n            i++;\n        } else {\n            while (current <= N && used[current]) current++;\n            perm[j] = current;\n            used[current] = true;\n            current++;\n        }\n    }\n    \n    // Verify the solution\n    vector<int> lis, lds;\n    \n    // Longest Increasing Subsequence\n    for (int x : perm) {\n        auto it = lower_bound(lis.begin(), lis.end(), x);\n        if (it == lis.end()) lis.push_back(x);\n        else *it = x;\n    }\n    \n    // Longest Decreasing Subsequence\n    for (int x : perm) {\n        auto it = lower_bound(lds.begin(), lds.end(), -x);\n        if (it == lds.end()) lds.push_back(-x);\n        else *it = -x;\n    }\n    \n    if (lis.size() == A && lds.size() == B) {\n        for (int x : perm) cout << x << \" \";\n        cout << endl;\n        return true;\n    }\n    \n    return false;\n}\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    \n    if (!solve(N, A, B)) {\n        cout << \"No solution exists\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:09:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_sequence(N, A, B):\n    if A + B - 1 > N:\n        return None\n    \n    sequence = []\n    increasing_part = list(range(1, A+1))\n    decreasing_part = list(range(A+1, N+1))[::-1]\n    \n    sequence.extend(increasing_part)\n    sequence.extend(decreasing_part)\n\n    length_to_adjust = N - (A + B - 1)\n    for i in range(length_to_adjust):\n        sequence.append(sequence.pop(A-1))\n    \n    return sequence\n\n# Example usage:\nN = 5\nA = 3\nB = 3\nprint(construct_sequence(N, A, B))",
+    "timestamp": "2025-08-13 13:50:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SequencePermute {\n    public static void main(String[] args) {\n        int N = 7; // Example values\n        int A = 4;\n        int B = 3;\n        \n        int[] result = constructSequence(N, A, B);\n        if (result != null) {\n            System.out.println(Arrays.toString(result));\n        } else {\n            System.out.println(\"No such sequence exists\");\n        }\n    }\n\n    public static int[] constructSequence(int N, int A, int B) {\n        if (A + B > N + 1) {\n            return null;\n        }\n        \n        int[] sequence = new int[N];\n        int increasingPart = Math.max(A, B);\n        int decreasingPart = A + B - increasingPart;\n        \n        int[] increasingPartSeq = new int[increasingPart];\n        int[] decreasingPartSeq = new int[decreasingPart];\n        \n        int idx = 0;\n        for (int i = 0; i < increasingPart; i++) {\n            increasingPartSeq[i] = ++idx;\n        }\n        \n        for (int i = decreasingPart - 1; i >= 0; i--) {\n            decreasingPartSeq[i] = ++idx;\n        }\n        \n        System.arraycopy(increasingPartSeq, 0, sequence, 0, increasingPart);\n        System.arraycopy(decreasingPartSeq, 0, sequence, increasingPart, decreasingPart);\n        \n        for (int i = increasingPart + decreasingPart; i < N; i++) {\n            sequence[i] = ++idx;\n        }\n        \n        return sequence;\n    }\n}",
+    "timestamp": "2025-08-13 13:50:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid constructSequence(int N, int A, int B) {\n    if (A + B > N + 1) {\n        printf(\"-1\\n\");\n        return;\n    }\n\n    int result[N];\n    int index = 0;\n\n    for (int i = 0; i < A; ++i) {\n        result[index++] = i + 1;\n    }\n\n    for (int i = B; i > 0; --i) {\n        result[index++] = A + i;\n    }\n\n    for (int i = A + B + 1; i <= N; ++i) {\n        result[index++] = i;\n    }\n\n    for (int i = 0; i < N; ++i) {\n        printf(\"%d \", result[i]);\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    int N, A, B;\n    \n    // Example Input\n    N = 5;\n    A = 3;\n    B = 3;\n    \n    constructSequence(N, A, B);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:50:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nvector<int> constructSequence(int N, int A, int B) {\n    if (A + B - 1 > N) {\n        return {}; // No valid sequence exists\n    }\n    \n    vector<int> result(N);\n    int current = 1;\n    \n    // Construct the longest decreasing subsequence\n    for (int i = 0; i < B; i++) {\n        result[i] = current++;\n    }\n    reverse(result.begin(), result.begin() + B); // Reverse first B elements to make them decreasing\n\n    // Fill the rest of the sequence\n    for (int i = B; i < N; i++) {\n        result[i] = current++;\n    }\n\n    // Now adjust the sequence to have an increasing subsequence of length A\n    if (A < B) {\n        reverse(result.begin(), result.begin() + B);\n        reverse(result.begin(), result.begin() + A);\n    } else {\n        reverse(result.end() - (N - A), result.end());\n    }\n\n    return result;\n}\n\nint main() {\n    int N, A, B;\n    cin >> N >> A >> B;\n    \n    vector<int> result = constructSequence(N, A, B);\n    if (result.empty()) {\n        cout << -1 << endl;\n    } else {\n        for (int x : result) {\n            cout << x << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:50:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_sequence(N, A, B):\n    if A + B > N + 1:\n        return None\n    \n    sequence = [0] * N\n    used = [False] * (N + 1)\n    \n    # Place increasing subsequence elements\n    increasing_start = N - A + 1\n    for i in range(A):\n        sequence[i] = increasing_start + i\n        used[increasing_start + i] = True\n    \n    # Place decreasing subsequence elements\n    decreasing_start = N\n    idx = N - 1\n    while idx >= A and len(sequence) < N:\n        if not used[decreasing_start]:\n            sequence[idx] = decreasing_start\n            used[decreasing_start] = True\n            idx -= 1\n        decreasing_start -= 1\n    \n    # Fill remaining positions with unused numbers\n    for num in range(1, N + 1):\n        if not used[num]:\n            for j in range(N):\n                if sequence[j] == 0:\n                    sequence[j] = num\n                    break\n    \n    return sequence\n\n# Example usage\nN, A, B = 5, 3, 3\nresult = construct_sequence(N, A, B)\nprint(result)",
+    "timestamp": "2025-08-13 13:50:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_sequence(N, A, B):\n    if A + B > N + 1 or A * B < N:\n        return []\n    \n    sequence = []\n    for i in range(B, 0, -1):\n        start = max(1, N - A * i + 1)\n        end = N - A * (i - 1)\n        if start > end:\n            continue\n        block = list(range(start, end + 1))\n        sequence.extend(block[::-1])\n        N = start - 1\n    \n    return sequence\n\nN, A, B = map(int, input().split())\nsequence = construct_sequence(N, A, B)\nif not sequence:\n    print(-1)\nelse:\n    print(' '.join(map(str, sequence)))",
+    "timestamp": "2025-08-13 13:50:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructSequence(N, A, B) {\n    if (A + B > N + 1) {\n        return null;\n    }\n\n    let sequence = Array(N);\n    for (let i = 0; i < B; i++) {\n        sequence[i] = N - i;\n    }\n    for (let i = 0; i < A - B; i++) {\n        sequence[B + i] = i + 1;\n    }\n    for (let i = A; i < N; i++) {\n        sequence[i] = i + 1;\n    }\n\n    return sequence;\n}\n\nconsole.log(constructSequence(5, 3, 3)); // Example usage",
+    "timestamp": "2025-08-13 13:51:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructSequence(N, A, B) {\n    if (A + B - 1 > N) return null;\n    \n    let result = new Array(N);\n    let used = new Array(N + 1).fill(false);\n    \n    // First create a sequence that satisfies longest increasing subsequence requirement\n    let increasingPart = [];\n    for (let i = 1; i <= A; i++) {\n        increasingPart.push(i);\n        used[i] = true;\n    }\n    \n    // Then create a sequence that satisfies longest decreasing subsequence requirement\n    let decreasingPart = [];\n    for (let i = N; i >= N - B + 1; i--) {\n        if (!used[i]) {\n            decreasingPart.push(i);\n            used[i] = true;\n        }\n    }\n    \n    // Fill the remaining positions with unused numbers\n    let remainingUnused = [];\n    for (let i = 1; i <= N; i++) {\n        if (!used[i]) {\n            remainingUnused.push(i);\n        }\n    }\n    \n    let currentIndex = 0;\n    for (let i = 0; i < N; i++) {\n        if (i < increasingPart.length) {\n            result[i] = increasingPart[i];\n        } else if (i >= N - decreasingPart.length) {\n            result[i] = decreasingPart[N - i - 1];\n        } else {\n            result[i] = remainingUnused[currentIndex++];\n        }\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 13:51:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructSequence(N, A, B) {\n    if (A + B > N + 1 || A * B < N) {\n        return [];\n    }\n\n    let sequence = [];\n    let remaining = N;\n    let currentBlock = B;\n\n    while (remaining > 0) {\n        let blockSize = Math.min(currentBlock, remaining);\n        let start = remaining - blockSize + 1;\n        for (let i = start; i <= remaining; i++) {\n            sequence.push(i);\n        }\n        remaining -= blockSize;\n        currentBlock = Math.min(currentBlock - 1, remaining);\n    }\n\n    let groups = [];\n    remaining = N;\n    let groupSize = B;\n    while (remaining > 0) {\n        let size = Math.min(groupSize, remaining);\n        groups.push(size);\n        remaining -= size;\n    }\n\n    let result = [];\n    let start = 1;\n    for (let i = 0; i < groups.length; i++) {\n        let end = start + groups[i] - 1;\n        for (let j = end; j >= start; j--) {\n            result.push(j);\n        }\n        start = end + 1;\n    }\n\n    return result;\n}\n\nfunction solve() {\n    const N = parseInt(readline());\n    const A = parseInt(readline());\n    const B = parseInt(readline());\n\n    const sequence = constructSequence(N, A, B);\n    if (sequence.length === 0) {\n        console.log(-1);\n    } else {\n        console.log(sequence.join(' '));\n    }\n}\n\n// For testing purposes, you can replace readline() with actual input\nfunction readline() {\n    // Mock implementation for testing\n    return lines.shift();\n}\n\n// Example usage:\n// let lines = ['5', '3', '2'];\n// solve();",
+    "timestamp": "2025-08-13 13:51:25"
+  }
+]

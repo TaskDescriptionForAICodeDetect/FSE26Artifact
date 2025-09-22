@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint min(int a, int b) {\n    return (a < b) ? a : b;\n}\n\nint calculate_distance(Point p1, Point p2) {\n    return abs(p1.x - p2.x) + abs(p1.y - p2.y);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Point *points = (Point *)malloc(N * sizeof(Point));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &points[i].x, &points[i].y);\n    }\n    \n    int total_distance = 0;\n    for (int i = 1; i < N; i++) {\n        total_distance += calculate_distance(points[i-1], points[i]);\n    }\n    \n    int max_saved = 0;\n    for (int i = 1; i < N - 1; i++) {\n        int original = calculate_distance(points[i-1], points[i]) + calculate_distance(points[i], points[i+1]);\n        int skipped = calculate_distance(points[i-1], points[i+1]);\n        int saved = original - skipped;\n        if (saved > max_saved) {\n            max_saved = saved;\n        }\n    }\n    \n    printf(\"%d\\n\", total_distance - max_saved);\n    free(points);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class WalkingSanta {\n    public static int solve(int[] arr) {\n        int n = arr.length;\n        int[] left = new int[n];\n        int[] right = new int[n];\n        \n        left[0] = arr[0];\n        for (int i = 1; i < n; i++) {\n            left[i] = Math.min(left[i-1] + 1, arr[i]);\n        }\n        \n        right[n-1] = arr[n-1];\n        for (int i = n-2; i >= 0; i--) {\n            right[i] = Math.min(right[i+1] + 1, arr[i]);\n        }\n        \n        int total = 0;\n        for (int i = 0; i < n; i++) {\n            total += Math.max(left[i], right[i]);\n        }\n        \n        return total;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] arr = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            arr[i] = scanner.nextInt();\n        }\n        \n        System.out.println(solve(arr));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:49:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> x(N), y(N);\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> x[i] >> y[i];\n    }\n    \n    if (N == 1) {\n        cout << 0 << endl;\n        return 0;\n    }\n    \n    sort(x.begin(), x.end());\n    sort(y.begin(), y.end());\n    \n    int min_x = x[0];\n    int max_x = x.back();\n    int min_y = y[0];\n    int max_y = y.back();\n    \n    int best_x = x[(N - 1) / 2];\n    int best_y = y[(N - 1) / 2];\n    \n    long long total_distance = 0;\n    for (int i = 0; i < N; ++i) {\n        total_distance += abs(x[i] - best_x) + abs(y[i] - best_y);\n    }\n    \n    cout << total_distance << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int t, n, x, y;\n    scanf(\"%d\", &t);\n    \n    while (t--) {\n        scanf(\"%d %d %d\", &n, &x, &y);\n        \n        if (n <= x) {\n            printf(\"YES\\n\");\n        } else {\n            int remaining = n - x;\n            if (remaining % 2 == 0 && remaining <= 2 * y) {\n                printf(\"YES\\n\");\n            } else {\n                printf(\"NO\\n\");\n            }\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n, k;\n    cin >> n >> k;\n    vector<int> gifts(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> gifts[i];\n    }\n    \n    sort(gifts.begin(), gifts.end());\n    \n    long long total_distance = 0;\n    for (int i = 0; i < n; i++) {\n        total_distance += abs(gifts[i] - (i / k));\n    }\n    \n    cout << total_distance << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class WalkingSanta {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] x = new int[n];\n        int[] y = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            x[i] = scanner.nextInt();\n            y[i] = scanner.nextInt();\n        }\n        \n        int minX = Integer.MAX_VALUE;\n        int maxX = Integer.MIN_VALUE;\n        int minY = Integer.MAX_VALUE;\n        int maxY = Integer.MIN_VALUE;\n        \n        for (int i = 0; i < n; i++) {\n            if (x[i] < minX) minX = x[i];\n            if (x[i] > maxX) maxX = x[i];\n            if (y[i] < minY) minY = y[i];\n            if (y[i] > maxY) maxY = y[i];\n        }\n        \n        int bestX = (minX + maxX) / 2;\n        int bestY = (minY + maxY) / 2;\n        \n        long totalDistance = 0;\n        for (int i = 0; i < n; i++) {\n            totalDistance += Math.abs(x[i] - bestX) + Math.abs(y[i] - bestY);\n        }\n        \n        System.out.println(totalDistance);\n    }\n}",
+    "timestamp": "2025-08-05 18:50:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def walking_santa(instructions):\n    x, y = 0, 0\n    visited = {(x, y)}\n\n    for inst in instructions:\n        if inst == 'N':\n            y += 1\n        elif inst == 'S':\n            y -= 1\n        elif inst == 'E':\n            x += 1\n        elif inst == 'W':\n            x -= 1\n\n        if (x, y) in visited:\n            return \"Santa delivers presents again.\"\n        visited.add((x, y))\n\n    return \"Santa does not deliver presents again.\"\n\n# Example usage\ninstructions = \"NESW\"\nprint(walking_santa(instructions))",
+    "timestamp": "2025-08-13 01:06:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class WalkingSanta {\n    private static final Scanner scanner = new Scanner(System.in);\n\n    public static void main(String[] args) {\n        int n = scanner.nextInt();\n        int x = scanner.nextInt();\n        int y = scanner.nextInt();\n\n        scanner.nextLine();\n        String path = scanner.nextLine();\n\n        solve(n, x, y, path);\n    }\n\n    private static void solve(int n, int x, int y, String path) {\n        int currentX = 0;\n        int currentY = 0;\n\n        for (char move : path.toCharArray()) {\n            switch (move) {\n                case 'N': currentY++; break;\n                case 'S': currentY--; break;\n                case 'E': currentX++; break;\n                case 'W': currentX--; break;\n            }\n        }\n\n        int dx = Math.abs(currentX - x);\n        int dy = Math.abs(currentY - y);\n\n        int steps = dx + dy;\n        if (steps > n) {\n            System.out.println(-1);\n        } else {\n            System.out.println((n - steps) % 2 == 0 ? steps : -1);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 01:06:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int n;\n    char directions[1001];\n    int x = 0, y = 0;\n\n    scanf(\"%d\", &n);\n    scanf(\"%s\", directions);\n\n    for (int i = 0; i < n; i++) {\n        char dir = directions[i];\n        if (dir == 'N') y++;\n        else if (dir == 'S') y--;\n        else if (dir == 'E') x++;\n        else if (dir == 'W') x--;\n    }\n\n    printf(\"Final Position: (%d, %d)\\n\", x, y);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:06:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, M, X, Y):\n    graph = [[] for _ in range(N+1)]\n    for _ in range(M):\n        a, b = map(int, input().split())\n        graph[a].append(b)\n        graph[b].append(a)\n    \n    dist = [float('inf')] * (N+1)\n    dist[X] = 0\n    \n    queue = [X]\n    while queue:\n        curr = queue.pop(0)\n        for neighbor in graph[curr]:\n            if dist[neighbor] == float('inf'):\n                dist[neighbor] = dist[curr] + 1\n                queue.append(neighbor)\n    \n    return dist[Y] if dist[Y] != float('inf') else -1\n\nN, M = map(int, input().split())\nX, Y = map(int, input().split())\nprint(solve(N, M, X, Y))",
+    "timestamp": "2025-08-13 01:07:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\n\ndef main():\n    input = sys.stdin.read().split()\n    idx = 0\n    N = int(input[idx])\n    idx += 1\n    points = []\n    for _ in range(N):\n        x = int(input[idx])\n        y = int(input[idx + 1])\n        points.append((x, y))\n        idx += 2\n    \n    if N == 0:\n        print(0)\n        return\n    \n    # Calculate centroid\n    sum_x = sum(p[0] for p in points)\n    sum_y = sum(p[1] for p in points)\n    centroid_x = sum_x / N\n    centroid_y = sum_y / N\n    \n    # Find the point closest to the centroid\n    min_dist = float('inf')\n    best_point = None\n    for p in points:\n        dx = p[0] - centroid_x\n        dy = p[1] - centroid_y\n        dist = dx * dx + dy * dy\n        if dist < min_dist:\n            min_dist = dist\n            best_point = p\n    \n    # Calculate total Manhattan distance\n    total = 0\n    for p in points:\n        total += abs(p[0] - best_point[0]) + abs(p[1] - best_point[1])\n    \n    print(total)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 01:07:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint calculateDistance(const string& path) {\n    int x = 0, y = 0;\n    for (char direction : path) {\n        switch (direction) {\n            case 'N': y++; break;\n            case 'S': y--; break;\n            case 'E': x++; break;\n            case 'W': x--; break;\n        }\n    }\n    return abs(x) + abs(y);\n}\n\nint main() {\n    string path;\n    cin >> path;\n    int distance = calculateDistance(path);\n    cout << distance << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:58:23"
+  }
+]

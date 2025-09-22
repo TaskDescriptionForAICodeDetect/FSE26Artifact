@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "#ffe085",
+      "output": "white"
+    },
+    {
+      "input": "#787878",
+      "output": "black"
+    },
+    {
+      "input": "#decade",
+      "output": "white"
+    },
+    {
+      "input": "#ff55ff",
+      "output": "fuchsia"
+    }
+  ]
+}

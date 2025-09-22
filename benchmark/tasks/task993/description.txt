@@ -1,0 +1,1 @@
+Given integers n and s, determine if there exists an integer b (b >= 2) such that the function f(b, n) equals s, where f(b, n) is defined as the sum of the digits of n when expressed in base b. If such an integer b exists, return the smallest such b; otherwise, return -1.

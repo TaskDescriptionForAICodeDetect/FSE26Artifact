@@ -1,0 +1,1 @@
+A sequence is said to be /\/\/\/ if it meets the following conditions: For each i = 1, 2, ..., n-2, a_i = a_{i+2}. The sequence consists of exactly two different numbers. You are given a sequence of even length and need to determine the minimum number of elements that must be replaced to achieve the /\/\/\/ pattern.

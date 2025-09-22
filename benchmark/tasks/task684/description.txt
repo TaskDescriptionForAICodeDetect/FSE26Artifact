@@ -1,0 +1,1 @@
+A positive integer X is said to be a lunlun number if the absolute difference between every pair of two adjacent digits in its base ten representation is at most 1. You are given a positive integer K. Find the K-th smallest lunlun number.

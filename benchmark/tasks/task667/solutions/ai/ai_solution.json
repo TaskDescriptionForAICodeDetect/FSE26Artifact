@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool solve() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int x = 0;\n    int players[2];\n    \n    for (int i = 0; i < N; i++) {\n        int S, A;\n        scanf(\"%d %d\", &S, &A);\n        \n        // Player 0 aims to make x zero, Player 1 aims to keep x non-zero\n        if (S == 0) {\n            // If x can be made zero, always do so\n            if ((x ^ A) == 0) {\n                x = 0;\n            }\n        } else {\n            // If x can be made non-zero, always do so\n            if ((x ^ A) != 0) {\n                x ^= A;\n            }\n        }\n    }\n    \n    return x == 0;\n}\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    \n    while (T--) {\n        printf(\"%s\\n\", solve() ? \"Yes\" : \"No\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:30:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);\n    while (T--) {\n        int N;\n        scanf(\"%d\", &N);\n        int x = 0;\n        int S, A;\n        for (int i = 0; i < N; i++) {\n            scanf(\"%d %d\", &S, &A);\n            if (S == 1) {\n                x ^= A;\n            }\n        }\n        printf(\"%d\\n\", x == 0 ? 0 : 1);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:30:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int T;\n    cin >> T;\n    while (T--) {\n        int N;\n        cin >> N;\n        vector<int> S(N), A(N);\n        for (int i = 0; i < N; ++i) {\n            cin >> S[i] >> A[i];\n        }\n        int x = 0;\n        for (int i = N - 1; i >= 0; --i) {\n            if (S[i] == 1) {\n                if ((x ^ A[i]) != 0) {\n                    x ^= A[i];\n                }\n            } else {\n                if ((x ^ A[i]) == 0) {\n                    x ^= A[i];\n                }\n            }\n        }\n        cout << (x == 0 ? 0 : 1) << '\\n';\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:30:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\n\npublic class Main {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));\n        int T = Integer.parseInt(br.readLine());\n        while (T-- > 0) {\n            int N = Integer.parseInt(br.readLine());\n            String S = br.readLine();\n            int[] A = new int[N];\n            String[] parts = br.readLine().split(\" \");\n            for (int i = 0; i < N; i++) {\n                A[i] = Integer.parseInt(parts[i]);\n            }\n            \n            int x = 0;\n            for (int i = N - 1; i >= 0; i--) {\n                if (S.charAt(i) == '1') {\n                    if ((x ^ A[i]) != 0) {\n                        x ^= A[i];\n                    }\n                } else {\n                    if ((x ^ A[i]) == 0) {\n                        x ^= A[i];\n                    }\n                }\n            }\n            bw.write((x == 0 ? \"0\" : \"1\") + \"\\n\");\n        }\n        bw.flush();\n    }\n}",
+    "timestamp": "2025-08-05 22:31:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int T = scanner.nextInt();\n        \n        for (int t = 0; t < T; t++) {\n            int N = scanner.nextInt();\n            int[] S = new int[N];\n            int[] A = new int[N];\n            \n            for (int i = 0; i < N; i++) {\n                S[i] = scanner.nextInt();\n                A[i] = scanner.nextInt();\n            }\n            \n            System.out.println(solve(N, S, A) ? \"Yes\" : \"No\");\n        }\n        \n        scanner.close();\n    }\n    \n    static boolean solve(int N, int[] S, int[] A) {\n        int x = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (S[i] == 0) {\n                // If Person 0's turn, they want to make x zero\n                if (x != 0 && (x ^ A[i]) == 0) {\n                    x = 0;\n                }\n            } else {\n                // If Person 1's turn, they want to make x non-zero\n                if (x == 0) {\n                    x = A[i];\n                }\n            }\n        }\n        \n        return x == 0;\n    }\n}",
+    "timestamp": "2025-08-05 22:31:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    int T;\n    cin >> T;\n    \n    while (T--) {\n        int N;\n        cin >> N;\n        \n        vector<int> S(N), A(N);\n        for (int i = 0; i < N; i++) {\n            cin >> S[i] >> A[i];\n        }\n        \n        int x = 0;\n        bool player0_turn = true;\n        \n        for (int i = 0; i < N; i++) {\n            if (S[i] == 0 && player0_turn) {\n                // Player 0's turn, always try to make x zero\n                if (x != 0) {\n                    x ^= A[i];\n                }\n            } else if (S[i] == 1 && !player0_turn) {\n                // Player 1's turn, always try to make x non-zero\n                if (x == 0) {\n                    x ^= A[i];\n                }\n            }\n            \n            player0_turn = !player0_turn;\n        }\n        \n        cout << (x == 0 ? \"Yes\" : \"No\") << '\\n';\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def determine_winner(N, S, A):\n    x = 0\n    for i in range(N):\n        if S[i] == 0:\n            x = x ^ A[i]\n    return x == 0\n\ndef solve_game(T, test_cases):\n    results = []\n    for i in range(T):\n        N, S, A = test_cases[i]\n        results.append(determine_winner(N, S, A))\n    return results\n\n# Example usage\nT = 1\ntest_cases = [\n    (3, [0, 1, 0], [4, 5, 6])\n]\n\nprint(solve_game(T, test_cases))",
+    "timestamp": "2025-08-13 11:06:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class XORGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int T = scanner.nextInt();\n        \n        for (int t = 0; t < T; t++) {\n            int N = scanner.nextInt();\n            int[] S = new int[N];\n            int[] A = new int[N];\n            \n            for (int i = 0; i < N; i++) {\n                S[i] = scanner.nextInt();\n            }\n            \n            for (int i = 0; i < N; i++) {\n                A[i] = scanner.nextInt();\n            }\n            \n            int xorSum = 0;\n            for (int i = 0; i < N; i++) {\n                if (S[i] == 0) {\n                    xorSum ^= A[i];\n                }\n            }\n            \n            System.out.println(xorSum == 0 ? \"0\" : \"1\");\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 11:06:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int T;\n    scanf(\"%d\", &T);  // Number of test cases\n\n    while (T--) {\n        int N;\n        scanf(\"%d\", &N);  // Number of rounds\n\n        int x = 0;\n        for (int i = 0; i < N; ++i) {\n            int S_i, A_i;\n            scanf(\"%d %d\", &S_i, &A_i);  // Read S_i and A_i\n\n            if (S_i == 0) {\n                x ^= A_i;\n            }\n        }\n\n        // Check final value of x\n        if (x == 0) {\n            printf(\"0\\n\");\n        } else {\n            printf(\"NON-0\\n\");\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:06:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isXZeroAfterGame(t, testCases) {\n    const results = [];\n  \n    for (let test = 0; test < t; test++) {\n        const { n, s, a } = testCases[test];\n        let x = 0;\n        \n        for (let i = 0; i < n; i++) {\n            if (s[i] === 0) {\n                x = x ^ a[i];\n            }\n        }\n\n        results.push(x === 0 ? \"Yes\" : \"No\");\n    }\n\n    return results;\n}\n\n// Example usage:\nconst testCases = [\n    { n: 3, s: [0, 1, 0], a: [1, 2, 3] },\n    { n: 4, s: [1, 0, 1, 0], a: [1, 2, 3, 4] }\n];\n\nconsole.log(isXZeroAfterGame(2, testCases));",
+    "timestamp": "2025-08-13 11:06:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_game(N, S, A):\n    x = 0\n    for i in range(N):\n        if S[i] == 0:\n            # Person 0 always tries to make x zero\n            if x ^ A[i] == 0:\n                x = 0\n        else:\n            # Person 1 tries to prevent x from becoming zero\n            if x ^ A[i] != 0:\n                x = x ^ A[i]\n    \n    return x == 0\n\ndef main():\n    T = int(input())\n    for _ in range(T):\n        N = int(input())\n        S = list(map(int, input().split()))\n        A = list(map(int, input().split()))\n        \n        if solve_game(N, S, A):\n            print(\"ZERO\")\n        else:\n            print(\"ONE\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 11:06:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, S, A) {\n    let x = 0;\n    \n    for (let i = 0; i < N; i++) {\n        if (S[i] === 0) {\n            // Person 0's turn: tries to make x zero if possible\n            if ((x ^ A[i]) === 0) {\n                x = 0;\n            }\n        } else {\n            // Person 1's turn: tries to make x non-zero\n            if ((x ^ A[i]) !== 0) {\n                x ^= A[i];\n            }\n        }\n    }\n    \n    return x === 0 ? 'Yes' : 'No';\n}\n\nfunction main() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    rl.question('', (T) => {\n        T = parseInt(T);\n        \n        const processInput = (testCase) => {\n            if (testCase === T) {\n                rl.close();\n                return;\n            }\n            \n            rl.question('', (line1) => {\n                const [N] = line1.split(' ').map(Number);\n                \n                rl.question('', (line2) => {\n                    const S = line2.split(' ').map(Number);\n                    \n                    rl.question('', (line3) => {\n                        const A = line3.split(' ').map(Number);\n                        \n                        console.log(solve(N, S, A));\n                        processInput(testCase + 1);\n                    });\n                });\n            });\n        };\n        \n        processInput(0);\n    });\n}\n\nmain();",
+    "timestamp": "2025-08-13 11:06:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    T = int(input[ptr])\n    ptr += 1\n    for _ in range(T):\n        N = int(input[ptr])\n        ptr += 1\n        S = input[ptr]\n        ptr += 1\n        A = list(map(int, input[ptr:ptr+N]))\n        ptr += N\n        \n        x = 0\n        for i in range(N-1, -1, -1):\n            s = int(S[i])\n            a = A[i]\n            if s == 0:\n                if (x ^ a) == 0:\n                    x ^= a\n            else:\n                if (x ^ a) != 0:\n                    x ^= a\n        print(1 if x != 0 else 0)\n\nsolve()",
+    "timestamp": "2025-08-13 11:06:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const readline = require('readline');\n\nconst rl = readline.createInterface({\n    input: process.stdin,\n    output: process.stdout\n});\n\nlet input = [];\nlet currentLine = 0;\n\nrl.on('line', (line) => {\n    input.push(line.trim());\n});\n\nrl.on('close', () => {\n    currentLine = 0;\n    const T = parseInt(input[currentLine++], 10);\n    for (let t = 0; t < T; t++) {\n        const N = parseInt(input[currentLine++], 10);\n        const S = input[currentLine++].split('').map(Number);\n        const A = input[currentLine++].split(' ').map(Number);\n        let x = 0;\n        for (let i = N - 1; i >= 0; i--) {\n            const player = S[i];\n            const a = A[i];\n            if (player === 0) {\n                if ((x ^ a) === 0) {\n                    x ^= a;\n                }\n            } else {\n                if ((x ^ a) !== 0) {\n                    x ^= a;\n                }\n            }\n        }\n        console.log(x === 0 ? 0 : 1);\n    }\n});",
+    "timestamp": "2025-08-13 11:07:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int T;\n    cin >> T;\n    while (T--) {\n        int N;\n        cin >> N;\n        vector<int> S(N), A(N);\n        for (int i = 0; i < N; ++i) {\n            cin >> S[i];\n        }\n        for (int i = 0; i < N; ++i) {\n            cin >> A[i];\n        }\n\n        int x = 0;\n        for (int i = N - 1; i >= 0; --i) {\n            if (S[i] == 0) {\n                x = min(x, x ^ A[i]);\n            } else {\n                x = max(x, x ^ A[i]);\n            }\n        }\n\n        if (x == 0) {\n            cout << \"YES\" << endl;\n        } else {\n            cout << \"NO\" << endl;\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:25"
+  }
+]

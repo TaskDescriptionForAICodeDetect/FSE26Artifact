@@ -1,0 +1,1 @@
+Given a positive integer L, determine how many pairs of positive integers a and b (where a <= b) exist such that the least common multiple (LCM) of a and b equals L. Input consists of multiple values of L, and terminates when L is 0. Output the number of valid pairs for each input value of L.

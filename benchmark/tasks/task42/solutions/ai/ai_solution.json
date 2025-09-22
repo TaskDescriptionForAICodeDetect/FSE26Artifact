@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import math\n\ndef solve_cake_problem(n, cakes):\n    # Sort cakes by volume for easier processing\n    volumes = [math.pi * r**2 * h for r, h in cakes]\n    \n    # Dynamic programming to find max possible volume \n    dp = [0] * n\n    \n    for i in range(n):\n        # Each cake can at least be placed alone\n        dp[i] = volumes[i]\n        \n        # Try to place on previous cakes if volume allows\n        for j in range(i):\n            if volumes[i] > volumes[j]:\n                dp[i] = max(dp[i], dp[j] + volumes[i])\n    \n    return max(dp)\n\n# Read input\nn = int(input())\ncakes = []\nfor _ in range(n):\n    r, h = map(int, input().split())\n    cakes.append((r, h))\n\n# Solve and print result \nprint(solve_cake_problem(n, cakes))",
+    "timestamp": "2025-08-05 17:32:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import bisect\nimport math\n\ndef solve():\n    n = int(input())\n    cakes = []\n    for _ in range(n):\n        r, h = map(int, input().split())\n        volume = math.pi * r * r * h\n        cakes.append((volume, r, h))\n    \n    # We need to process cakes in order of increasing volume, but since the constraint is j < i, we process in order\n    # But the optimal substructure is based on the volume sequence, so we can sort them by volume\n    # However, the original order must be maintained for the j < i constraint. So we cannot sort.\n    # Hence, we need to process in the original order, and for each cake, find the maximum sum up to a volume less than current.\n    \n    # We'll use a dynamic programming approach where dp[i] is the max total volume up to cake i (in original order)\n    # But we need an efficient way to query the max dp[j] where volume[j] < volume[i] and j < i.\n    # To do this, we can keep a list of volumes sorted, and for each volume, the corresponding max dp up to that volume.\n    # Using a Fenwick Tree (or Binary Indexed Tree) to keep track of max in log(n) time per query and update.\n    \n    # First, collect all volumes and compress them to rank (since volume can be up to 1e4*1e4*1e4*pi, which is large)\n    volumes = [cake[0] for cake in cakes]\n    sorted_unique_volumes = sorted(set(volumes))\n    # Create a mapping from volume to its rank\n    volume_to_rank = {v: i+1 for i, v in enumerate(sorted_unique_volumes)}\n    \n    max_rank = len(sorted_unique_volumes)\n    \n    # Fenwick Tree to keep track of max dp up to a certain rank\n    class FenwickTree:\n        def __init__(self, size):\n            self.size = size\n            self.tree = [0.0] * (self.size + 2)\n        \n        def update(self, index, value):\n            while index <= self.size:\n                if self.tree[index] < value:\n                    self.tree[index] = value\n                else:\n                    break  # since we are dealing with max, if existing value is >=, no need to proceed\n                index += index & -index\n        \n        def query(self, index):\n            res = 0.0\n            while index > 0:\n                if self.tree[index] > res:\n                    res = self.tree[index]\n                index -= index & -index\n            return res\n    \n    fenwick = FenwickTree(max_rank)\n    max_total = 0.0\n    for i in range(n):\n        vol, r, h = cakes[i]\n        rank = volume_to_rank[vol]\n        # Find the maximum dp[j] where volume[j] < vol (i.e., rank[j] < rank)\n        current_max = fenwick.query(rank - 1)\n        current_dp = current_max + vol\n        if current_dp > max_total:\n            max_total = current_dp\n        # Update the Fenwick tree for this volume's rank\n        fenwick.update(rank, current_dp)\n    \n    print(\"{0:.9f}\".format(max_total))\n\nsolve()",
+    "timestamp": "2025-08-05 17:33:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\n\ndef main():\n    input = sys.stdin.read\n    data = input().strip().split()\n    \n    n = int(data[0])\n    cakes = []\n\n    index = 1\n    for i in range(n):\n        r = int(data[index])\n        h = int(data[index + 1])\n        v = math.pi * r * r * h\n        cakes.append((v, i))\n        index += 2\n\n    cakes.sort()\n\n    max_volumes = [0] * n\n\n    for i in range(n):\n        max_volumes[i] = cakes[i][0]\n        for j in range(i):\n            if cakes[j][0] < cakes[i][0]:\n                max_volumes[i] = max(max_volumes[i], max_volumes[j] + cakes[i][0])\n\n    print(f\"{max(max_volumes):.9f}\")\n\nmain()",
+    "timestamp": "2025-08-12 21:54:32"
+  }
+]

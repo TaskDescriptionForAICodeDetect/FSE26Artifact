@@ -1,0 +1,1 @@
+Given two permutations P and Q of N integers, find the minimum non-negative integer d such that the sequence P becomes sorted in increasing order after d days. Each day, for each number x in the sequence P, you replace it with the number Q[x] in the same position. If it is not possible to sort P using Q, return -1.

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <math.h>\n\nint salsa_swap(int pos, int N) {\n    int result = 0;\n    for (int i = 0; i < N; i++) {\n        int digit = pos % 3;\n        if (digit == 1) digit = 2;\n        else if (digit == 2) digit = 1;\n        result += digit * pow(3, i);\n        pos /= 3;\n    }\n    return result;\n}\n\nvoid solve_dance_positions(int N, char* T) {\n    int positions[3000];\n    for (int i = 0; i < pow(3, N); i++) {\n        positions[i] = i;\n    }\n    \n    int len = strlen(T);\n    for (int k = 0; k < len; k++) {\n        int new_positions[3000];\n        for (int i = 0; i < pow(3, N); i++) {\n            if (T[k] == 'S') {\n                new_positions[salsa_swap(i, N)] = positions[i];\n            } else {\n                new_positions[(i + 1) % (int)pow(3, N)] = positions[i];\n            }\n        }\n        memcpy(positions, new_positions, sizeof(new_positions));\n    }\n    \n    for (int i = 0; i < pow(3, N); i++) {\n        printf(\"%d \", positions[i]);\n    }\n    printf(\"\\n\");\n}\n\nint main() {\n    int N;\n    char T[1000];\n    scanf(\"%d %s\", &N, T);\n    solve_dance_positions(N, T);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint switchDigits(int i, int N) {\n    int result = 0;\n    int power = 1;\n    for (int k = 0; k < N; k++) {\n        int digit = (i / power) % 3;\n        if (digit == 1) digit = 2;\n        else if (digit == 2) digit = 1;\n        result += digit * power;\n        power *= 3;\n    }\n    return result;\n}\n\nvoid applySalsa(int *positions, int N, int size) {\n    for (int i = 0; i < size; i++) {\n        positions[i] = switchDigits(positions[i], N);\n    }\n}\n\nvoid applyRumba(int *positions, int size) {\n    for (int i = 0; i < size; i++) {\n        positions[i] = (positions[i] + 1) % size;\n    }\n}\n\nint main() {\n    int N;\n    char T[100001];\n    scanf(\"%d %s\", &N, T);\n    int size = 1;\n    for (int i = 0; i < N; i++) {\n        size *= 3;\n    }\n    int *positions = (int *)malloc(size * sizeof(int));\n    for (int i = 0; i < size; i++) {\n        positions[i] = i;\n    }\n    int len = strlen(T);\n    for (int i = 0; i < len; i++) {\n        if (T[i] == 'S') {\n            applySalsa(positions, N, size);\n        } else if (T[i] == 'R') {\n            applyRumba(positions, size);\n        }\n    }\n    int *result = (int *)malloc(size * sizeof(int));\n    for (int i = 0; i < size; i++) {\n        result[positions[i]] = i;\n    }\n    for (int i = 0; i < size; i++) {\n        printf(\"%d \", result[i]);\n    }\n    free(positions);\n    free(result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nvector<int> convertToBase3(int num, int N) {\n    vector<int> res(N, 0);\n    for (int i = N - 1; i >= 0; --i) {\n        res[i] = num % 3;\n        num /= 3;\n    }\n    return res;\n}\n\nint convertToDecimal(const vector<int>& digits) {\n    int num = 0;\n    for (int d : digits) {\n        num = num * 3 + d;\n    }\n    return num;\n}\n\nvector<int> salsaTransform(const vector<int>& digits) {\n    vector<int> res;\n    for (int d : digits) {\n        if (d == 1) res.push_back(2);\n        else if (d == 2) res.push_back(1);\n        else res.push_back(0);\n    }\n    return res;\n}\n\nvector<int> solve(int N, const string& T) {\n    int total = 1;\n    for (int i = 0; i < N; ++i) total *= 3;\n    \n    vector<int> pos(total);\n    for (int i = 0; i < total; ++i) pos[i] = i;\n    \n    for (char c : T) {\n        if (c == 'S') {\n            for (int i = 0; i < total; ++i) {\n                vector<int> digits = convertToBase3(pos[i], N);\n                digits = salsaTransform(digits);\n                pos[i] = convertToDecimal(digits);\n            }\n        } else if (c == 'R') {\n            for (int i = 0; i < total; ++i) {\n                pos[i] = (pos[i] + 1) % total;\n            }\n        }\n    }\n    \n    vector<int> result(total);\n    for (int i = 0; i < total; ++i) {\n        result[pos[i]] = i;\n    }\n    return result;\n}\n\nint main() {\n    int N;\n    string T;\n    cin >> N >> T;\n    vector<int> res = solve(N, T);\n    for (int num : res) {\n        cout << num << \" \";\n    }\n    cout << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class DancePositions {\n    public static int[] solve(int N, String T) {\n        int size = (int) Math.pow(3, N);\n        int[] positions = new int[size];\n        for (int i = 0; i < size; i++) {\n            positions[i] = i;\n        }\n\n        for (char c : T.toCharArray()) {\n            if (c == 'S') {\n                for (int i = 0; i < size; i++) {\n                    positions[i] = salsa(positions[i], N);\n                }\n            } else if (c == 'R') {\n                for (int i = 0; i < size; i++) {\n                    positions[i] = (positions[i] + 1) % size;\n                }\n            }\n        }\n\n        int[] result = new int[size];\n        for (int i = 0; i < size; i++) {\n            result[positions[i]] = i;\n        }\n        return result;\n    }\n\n    private static int salsa(int num, int N) {\n        int result = 0;\n        for (int i = 0; i < N; i++) {\n            int digit = (num / (int) Math.pow(3, i)) % 3;\n            if (digit == 1) {\n                digit = 2;\n            } else if (digit == 2) {\n                digit = 1;\n            }\n            result += digit * (int) Math.pow(3, i);\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 22:33:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class CircleDancing {\n    public static int[] getFinalPositions(int N, String T) {\n        int totalPeople = (int) Math.pow(3, N);\n        int[] finalPositions = new int[totalPeople];\n        for (int i = 0; i < totalPeople; i++) {\n            finalPositions[i] = i;\n        }\n        \n        for (char song : T.toCharArray()) {\n            int[] nextPositions = new int[totalPeople];\n            \n            if (song == 'S') {\n                for (int i = 0; i < totalPeople; i++) {\n                    nextPositions[swapBaseThreeDigits(i, N)] = finalPositions[i];\n                }\n            } else {\n                for (int i = 0; i < totalPeople; i++) {\n                    nextPositions[(i + 1) % totalPeople] = finalPositions[i];\n                }\n            }\n            \n            finalPositions = nextPositions;\n        }\n        \n        return finalPositions;\n    }\n    \n    private static int swapBaseThreeDigits(int num, int N) {\n        int[] digits = new int[N];\n        for (int i = N - 1; i >= 0; i--) {\n            digits[i] = num % 3;\n            num /= 3;\n        }\n        \n        for (int i = 0; i < N; i++) {\n            if (digits[i] == 1) digits[i] = 2;\n            else if (digits[i] == 2) digits[i] = 1;\n        }\n        \n        int result = 0;\n        for (int i = 0; i < N; i++) {\n            result = result * 3 + digits[i];\n        }\n        \n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 22:33:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <cmath>\n\nusing namespace std;\n\nint salsa_transform(int pos, int N) {\n    int new_pos = 0;\n    for (int i = 0; i < N; i++) {\n        int digit = (pos / (int)pow(3, i)) % 3;\n        if (digit == 1) digit = 2;\n        else if (digit == 2) digit = 1;\n        new_pos += digit * pow(3, i);\n    }\n    return new_pos;\n}\n\nint rumba_transform(int pos, int N) {\n    return (pos + 1) % (int)pow(3, N);\n}\n\nint main() {\n    int N;\n    string T;\n    cin >> N >> T;\n\n    vector<int> positions(pow(3, N));\n    for (int i = 0; i < pow(3, N); i++) {\n        positions[i] = i;\n    }\n\n    for (char song : T) {\n        vector<int> new_positions(pow(3, N));\n        for (int i = 0; i < pow(3, N); i++) {\n            if (song == 'S') {\n                new_positions[salsa_transform(i, N)] = positions[i];\n            } else {\n                new_positions[rumba_transform(i, N)] = positions[i];\n            }\n        }\n        positions = new_positions;\n    }\n\n    for (int pos : positions) {\n        cout << pos << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:33:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def final_positions(N, T):\n    num_people = 3**N\n    positions = list(range(num_people))\n\n    for song in T:\n        new_positions = [0] * num_people\n        if song == 'S':\n            for i in range(num_people):\n                base3 = []\n                x = i\n                while x > 0:\n                    base3.append(x % 3)\n                    x //= 3\n                \n                base3 = (base3 + [0] * N)[:N]\n                new_index = sum((1 if digit == 2 else 2 if digit == 1 else 0) * (3**idx) for idx, digit in enumerate(base3))\n                new_positions[new_index] = positions[i]\n            \n        elif song == 'R':\n            for i in range(num_people):\n                new_index = (i + 1) % num_people\n                new_positions[new_index] = positions[i]\n        \n        positions = new_positions\n\n    return positions\n\n# Example usage\nN = 2\nT = \"SR\"\nprint(final_positions(N, T))",
+    "timestamp": "2025-08-13 11:13:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class DanceCircle {\n    public static int dance(int n, String T) {\n        int people = (int) Math.pow(3, n);\n        int[] positions = new int[people];\n        for (int i = 0; i < people; i++) {\n            positions[i] = i;\n        }\n\n        for (char song : T.toCharArray()) {\n            if (song == 'S') {\n                int[] newPositions = new int[people];\n                for (int i = 0; i < people; i++) {\n                    int j = salsaMove(i, n);\n                    newPositions[j] = positions[i];\n                }\n                positions = newPositions;\n            } else if (song == 'R') {\n                int[] newPositions = new int[people];\n                for (int i = 0; i < people; i++) {\n                    int j = (i + 1) % people;\n                    newPositions[j] = positions[i];\n                }\n                positions = newPositions;\n            }\n        }\n\n        for (int i = 0; i < people; i++) {\n            System.out.print(positions[i] + \" \");\n        }\n    }\n\n    private static int salsaMove(int i, int n) {\n        int result = 0, power = 1;\n        for (int j = 0; j < n; j++) {\n            int digit = i % 3;\n            i /= 3;\n            if (digit == 1) {\n                digit = 2;\n            } else if (digit == 2) {\n                digit = 1;\n            }\n            result += digit * power;\n            power *= 3;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        int n = 2; // Example for n = 2\n        String T = \"SRR\"; // Example string of songs\n        dance(n, T);\n    }\n}",
+    "timestamp": "2025-08-13 11:13:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n// Function to convert a number to its base 3 representation and switch digits 1 with 2 and 2 with 1\nint salsa_move(int i, int n) {\n    int j = 0, power = 1;\n    for (int k = 0; k < n; ++k) {\n        int digit = i % 3;\n        i /= 3;\n        if (digit == 1) digit = 2;\n        else if (digit == 2) digit = 1;\n        j += digit * power;\n        power *= 3;\n    }\n    return j;\n}\n\n// Function to simulate the dances given the string T\nvoid simulate_dances(char* T, int N) {\n    int num_positions = 1;\n    for (int i = 0; i < N; ++i) num_positions *= 3;\n\n    int* positions = (int*)malloc(num_positions * sizeof(int));\n    for (int i = 0; i < num_positions; ++i) {\n        positions[i] = i;\n    }\n\n    int length = strlen(T);\n    for (int i = 0; i < length; ++i) {\n        if (T[i] == 'S') {\n            int* new_positions = (int*)malloc(num_positions * sizeof(int));\n            for (int j = 0; j < num_positions; ++j) {\n                new_positions[salsa_move(j, N)] = positions[j];\n            }\n            free(positions);\n            positions = new_positions;\n        } else if (T[i] == 'R') {\n            int temp = positions[num_positions - 1];\n            for (int j = num_positions - 1; j > 0; --j) {\n                positions[j] = positions[j - 1];\n            }\n            positions[0] = temp;\n        }\n    }\n\n    for (int i = 0; i < num_positions; ++i) {\n        printf(\"%d \", positions[i]);\n    }\n    printf(\"\\n\");\n\n    free(positions);\n}\n\nint main() {\n    int N = 2;\n    char T[] = \"SSR\";\n\n    simulate_dances(T, N);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:14:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function switchBase3Digits(numStr) {\n    return numStr.replace(/1/g, 'x').replace(/2/g, '1').replace(/x/g, '2');\n}\n\nfunction computeFinalPositions(N, T) {\n    const totalPositions = Math.pow(3, N);\n    let positions = Array.from({length: totalPositions}, (_, index) => index);\n\n    for (let song of T) {\n        if (song === 'S') {\n            positions = positions.map(pos => {\n                const base3 = pos.toString(3).padStart(N, '0');\n                const newBase3 = switchBase3Digits(base3);\n                return parseInt(newBase3, 3);\n            });\n        } else if (song === 'R') {\n            positions = positions.map(pos => (pos + 1) % totalPositions);\n        }\n    }\n\n    return positions;\n}",
+    "timestamp": "2025-08-13 11:14:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, T):\n    def base3(x):\n        if x == 0:\n            return '0'\n        digits = []\n        while x:\n            digits.append(str(x % 3))\n            x //= 3\n        return ''.join(reversed(digits)).zfill(N)\n    \n    def swap_digits(s):\n        return ''.join('1' if c == '2' else '2' if c == '1' else c for c in s)\n    \n    total = 3**N\n    positions = list(range(total))\n    \n    for song in T:\n        if song == 'S':\n            positions = [positions[int(swap_digits(base3(i)), 3)] for i in range(total)]\n        else:\n            positions = [(p + 1) % total for p in positions]\n    \n    return positions",
+    "timestamp": "2025-08-13 11:14:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function dancingCircle(N, T) {\n    const total = Math.pow(3, N);\n    const positions = Array.from({length: total}, (_, i) => i);\n\n    const switchBase3Digits = (num) => {\n        let base3 = num.toString(3).padStart(N, '0');\n        let switched = base3.replace(/[12]/g, digit => digit === '1' ? '2' : '1');\n        return parseInt(switched, 3);\n    };\n\n    for (let song of T) {\n        if (song === 'S') {\n            positions.forEach((pos, i) => {\n                positions[switchBase3Digits(i)] = pos;\n            });\n        } else {\n            let newPositions = new Array(total);\n            positions.forEach((pos, i) => {\n                newPositions[(i + 1) % total] = pos;\n            });\n            positions.splice(0, total, ...newPositions);\n        }\n    }\n\n    return positions;\n}",
+    "timestamp": "2025-08-13 11:14:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    T = sys.stdin.readline().strip()\n    \n    # Precompute the power of 3 up to N\n    power = 1\n    for _ in range(N):\n        power *= 3\n    \n    # Initialize the position mapping\n    pos = list(range(power))\n    \n    for c in T:\n        if c == 'S':\n            new_pos = [0] * power\n            for i in range(power):\n                # Convert i to base3, swap 1 and 2, then convert back\n                temp = i\n                j = 0\n                for shift in range(N):\n                    digit = (temp // (3 ** shift)) % 3\n                    if digit == 1:\n                        digit = 2\n                    elif digit == 2:\n                        digit = 1\n                    j += digit * (3 ** shift)\n                new_pos[i] = pos[j]\n            pos = new_pos\n        elif c == 'R':\n            new_pos = [0] * power\n            for i in range(power):\n                new_pos[(i + 1) % power] = pos[i]\n            pos = new_pos\n    \n    # Prepare the inverse mapping\n    result = [0] * power\n    for i in range(power):\n        result[pos[i]] = i\n    print(' '.join(map(str, result)))\n\nsolve()",
+    "timestamp": "2025-08-13 11:14:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function computeFinalPositions(N, T) {\n    const totalPositions = Math.pow(3, N);\n    let positions = Array.from({ length: totalPositions }, (_, i) => i);\n\n    for (const song of T) {\n        if (song === 'S') {\n            positions = positions.map(i => {\n                let num = i;\n                let result = 0;\n                let power = 1;\n                for (let k = 0; k < N; k++) {\n                    const digit = num % 3;\n                    const newDigit = digit === 1 ? 2 : (digit === 2 ? 1 : 0);\n                    result += newDigit * power;\n                    power *= 3;\n                    num = Math.floor(num / 3);\n                }\n                return result;\n            });\n        } else if (song === 'R') {\n            positions = positions.map(i => (i + 1) % totalPositions);\n        }\n    }\n\n    const result = new Array(totalPositions);\n    positions.forEach((finalPos, originalPos) => {\n        result[finalPos] = originalPos;\n    });\n    return result;\n}",
+    "timestamp": "2025-08-13 11:14:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nstd::string toBase3(int num, int length) {\n    std::string base3 = \"\";\n    while (num > 0) {\n        base3 = char('0' + (num % 3)) + base3;\n        num /= 3;\n    }\n    while (base3.length() < length) {\n        base3 = '0' + base3;\n    }\n    return base3;\n}\n\nint fromBase3(const std::string& base3) {\n    int num = 0;\n    for (char c : base3) {\n        num = num * 3 + (c - '0');\n    }\n    return num;\n}\n\nint salsaMove(int pos, int N) {\n    std::string base3 = toBase3(pos, N);\n    for (char& c : base3) {\n        if (c == '1') {\n            c = '2';\n        } else if (c == '2') {\n            c = '1';\n        }\n    }\n    return fromBase3(base3);\n}\n\nstd::vector<int> danceMoves(int N, const std::string& T) {\n    int size = static_cast<int>(std::pow(3, N));\n    std::vector<int> positions(size);\n    \n    for (int i = 0; i < size; ++i) {\n        positions[i] = i;\n    }\n    \n    for (char song : T) {\n        if (song == 'S') {\n            std::vector<int> newPos(size);\n            for (int i = 0; i < size; ++i) {\n                int newPosition = salsaMove(positions[i], N);\n                newPos[newPosition] = positions[i];\n            }\n            positions = newPos;\n        } else if (song == 'R') {\n            std::vector<int> newPos(size);\n            for (int i = 0; i < size; ++i) {\n                int newPosition = (i + 1) % size;\n                newPos[newPosition] = positions[i];\n            }\n            positions = newPos;\n        }\n    }\n    \n    return positions;\n}\n\nint main() {\n    int N;\n    std::string T;\n    \n    std::cin >> N;\n    std::cin >> T;\n    \n    std::vector<int> finalPositions = danceMoves(N, T);\n    \n    for (int pos : finalPositions) {\n        std::cout << pos << \" \";\n    }\n    std::cout << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:58"
+  }
+]

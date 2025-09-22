@@ -1,0 +1,1 @@
+Given a subset of standard domino pieces, determine if they can be arranged in a straight line such that the touching ends match according to the standard playing rules.

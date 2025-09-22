@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAXN 20\n\nint factorial[MAXN];\nint used[MAXN];\n\nvoid precompute_factorials(int n) {\n    factorial[0] = 1;\n    for (int i = 1; i <= n; i++) {\n        factorial[i] = (1LL * factorial[i-1] * i) % MOD;\n    }\n}\n\nint solve(int n) {\n    precompute_factorials(n);\n    long long total_score = 0;\n\n    for (int perm = 0; perm < factorial[n-1]; perm++) {\n        memset(used, 0, sizeof(used));\n        int p = perm;\n        int order[MAXN-1];\n        \n        for (int i = 0; i < n-1; i++) {\n            int j = n-2-i;\n            order[j] = p % (i+2);\n            p /= (i+2);\n        }\n\n        int white_count = n;\n        int score = 0;\n        int machine_sequence[MAXN-1];\n        int sequence_idx = 0;\n\n        for (int i = 0; i < n-1; i++) {\n            int idx = 0;\n            for (int j = 0; j < n-1; j++) {\n                if (!used[j]) {\n                    if (idx == order[i]) {\n                        machine_sequence[sequence_idx++] = j;\n                        used[j] = 1;\n                        if (white_count > 0) white_count--;\n                        if (white_count > 0) white_count--;\n                        break;\n                    }\n                    idx++;\n                }\n            }\n        }\n\n        total_score = (total_score + sequence_idx) % MOD;\n    }\n\n    return total_score;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    printf(\"%d\\n\", solve(n));\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:06:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n#define maxN 1000000\n\nlong long fact[maxN + 1];\nlong long inv_fact[maxN + 1];\n\nlong long power(long long a, long long b) {\n    long long res = 1;\n    a %= MOD;\n    while (b > 0) {\n        if (b % 2 == 1) {\n            res = (res * a) % MOD;\n        }\n        a = (a * a) % MOD;\n        b /= 2;\n    }\n    return res;\n}\n\nvoid precompute() {\n    fact[0] = 1;\n    for (int i = 1; i <= maxN; i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n    inv_fact[maxN] = power(fact[maxN], MOD - 2);\n    for (int i = maxN - 1; i >= 0; i--) {\n        inv_fact[i] = (inv_fact[i + 1] * (i + 1)) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (k < 0 || k > n) return 0;\n    return (fact[n] * inv_fact[k] % MOD) * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    precompute();\n    long long result = 0;\n    for (int k = 1; k <= N - 1; k++) {\n        long long term = (k * comb(N - 1, k) % MOD) * fact[k] % MOD;\n        term = term * fact[N - 1 - k] % MOD;\n        result = (result + term) % MOD;\n    }\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:07:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> fact(N + 1), inv_fact(N + 1);\n    fact[0] = 1;\n    for (int i = 1; i <= N; ++i) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    inv_fact[N] = 1;\n    for (long long i = N, res = 1; i >= 1; --i) {\n        res = res * i % MOD;\n        inv_fact[i - 1] = res;\n    }\n    long long sum = 0;\n    for (int k = 1; k <= N - 1; ++k) {\n        long long term = fact[N - 1] * k % MOD;\n        term = term * (N - k) % MOD;\n        sum = (sum + term) % MOD;\n    }\n    cout << sum << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:07:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 1000000007;\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        sc.close();\n        \n        long[] fact = new long[N + 1];\n        fact[0] = 1;\n        for (int i = 1; i <= N; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        \n        long[] invFact = new long[N + 1];\n        invFact[N] = pow(fact[N], MOD - 2);\n        for (int i = N - 1; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n        \n        long res = 0;\n        for (int k = 1; k <= N - 1; k++) {\n            long term = fact[N - 1] * k % MOD;\n            term = term * (N - k) % MOD;\n            res = (res + term) % MOD;\n        }\n        \n        System.out.println(res);\n    }\n    \n    static long pow(long a, long b) {\n        long res = 1;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                res = res * a % MOD;\n            }\n            a = a * a % MOD;\n            b >>= 1;\n        }\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 23:07:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int sumOfPermutationScores(int N) {\n        final int MOD = 1_000_000_007;\n        long totalScore = 0;\n        \n        for (int[] perm : generatePermutations(N - 1)) {\n            totalScore += calculatePermutationScore(N, perm);\n            totalScore %= MOD;\n        }\n        \n        return (int) totalScore;\n    }\n    \n    private static int calculatePermutationScore(int N, int[] perm) {\n        boolean[] painted = new boolean[N];\n        int paintedCount = 0;\n        \n        for (int k = 0; k < perm.length; k++) {\n            int machine = perm[k];\n            painted[machine - 1] = true;\n            painted[machine] = true;\n            \n            paintedCount = countPaintedSquares(painted);\n            \n            if (paintedCount == N) {\n                return k + 1;\n            }\n        }\n        \n        return perm.length + 1;\n    }\n    \n    private static int countPaintedSquares(boolean[] painted) {\n        int count = 0;\n        for (boolean p : painted) {\n            if (p) count++;\n        }\n        return count;\n    }\n    \n    private static List<int[]> generatePermutations(int n) {\n        List<int[]> result = new ArrayList<>();\n        int[] current = new int[n];\n        for (int i = 0; i < n; i++) {\n            current[i] = i + 1;\n        }\n        \n        result.add(current.clone());\n        \n        while (nextPermutation(current)) {\n            result.add(current.clone());\n        }\n        \n        return result;\n    }\n    \n    private static boolean nextPermutation(int[] arr) {\n        int i = arr.length - 2;\n        while (i >= 0 && arr[i] >= arr[i + 1]) {\n            i--;\n        }\n        \n        if (i < 0) return false;\n        \n        int j = arr.length - 1;\n        while (j > i && arr[j] <= arr[i]) {\n            j--;\n        }\n        \n        swap(arr, i, j);\n        reverse(arr, i + 1, arr.length - 1);\n        \n        return true;\n    }\n    \n    private static void swap(int[] arr, int i, int j) {\n        int temp = arr[i];\n        arr[i] = arr[j];\n        arr[j] = temp;\n    }\n    \n    private static void reverse(int[] arr, int start, int end) {\n        while (start < end) {\n            swap(arr, start++, end--);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:08:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nconst int MOD = 1e9 + 7;\nconst int MAXN = 15;\n\nint N;\nll factorial[MAXN];\nll total_score = 0;\n\nvoid calculate_factorial() {\n    factorial[0] = 1;\n    for (int i = 1; i < MAXN; i++) {\n        factorial[i] = (factorial[i-1] * i) % MOD;\n    }\n}\n\nbool is_painting_complete(vector<bool>& squares) {\n    for (bool sq : squares) {\n        if (!sq) return false;\n    }\n    return true;\n}\n\nvoid calculate_permutation_score(vector<int>& permutation) {\n    vector<bool> squares(N, false);\n    for (int idx = 0; idx < permutation.size(); idx++) {\n        int machine = permutation[idx];\n        squares[machine-1] = true;\n        squares[machine] = true;\n        \n        if (is_painting_complete(squares)) {\n            total_score += (idx + 1);\n            return;\n        }\n    }\n}\n\nint main() {\n    cin >> N;\n    calculate_factorial();\n    \n    vector<int> permutation(N-1);\n    for (int i = 0; i < N-1; i++) {\n        permutation[i] = i + 1;\n    }\n    \n    do {\n        calculate_permutation_score(permutation);\n    } while (next_permutation(permutation.begin(), permutation.end()));\n    \n    total_score %= MOD;\n    cout << total_score * factorial[N-1] % MOD << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sum_of_scores(N):\n    MOD = 10**9 + 7\n\n    # Calculate factorials and inverse factorials\n    fact = [1] * (N)\n    ifact = [1] * (N)\n    for i in range(2, N):\n        fact[i] = fact[i - 1] * i % MOD\n    ifact[N - 1] = pow(fact[N - 1], MOD - 2, MOD)\n    for i in range(N - 2, 0, -1):\n        ifact[i] = ifact[i + 1] * (i + 1) % MOD\n\n    # Calculate sum of scores\n    score_sum = 0\n    for k in range(1, N):\n        score_sum += k * fact[N - 1] * ifact[k] % MOD\n    \n    return score_sum % MOD\n\n# Example usage\nN = 5  # Change this to the desired value of N\nprint(sum_of_scores(N))",
+    "timestamp": "2025-08-13 13:41:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Main {\n    \n    static final int MOD = 1_000_000_007;\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n\n        if (N == 1) {\n            System.out.println(0);\n        } else {\n            long result = (power(N - 1, N - 2, MOD) * (N - 1)) % MOD;\n            System.out.println(result);\n        }\n    }\n\n    static long power(long base, long exp, long mod) {\n        long result = 1;\n        while (exp > 0) {\n            if ((exp & 1) == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp >>= 1;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-13 13:41:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MOD 1000000007\n\nlong long mod_exp(int base, int exp, int mod) {\n    long long result = 1;\n    long long power = base;\n    while (exp) {\n        if (exp % 2) {\n            result = (result * power) % mod;\n        }\n        power = (power * power) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    if (N == 1) {\n        printf(\"0\\n\");\n        return 0;\n    }\n\n    long long factorial = 1;\n    for (int i = 1; i <= N - 2; i++) {\n        factorial = (factorial * i) % MOD;\n    }\n\n    long long result = (factorial * (N - 1)) % MOD;\n    result = (result * mod_exp(2, N - 2, MOD)) % MOD;\n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:41:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1000000007;\n\nlong long power(long long x, long long y, long long p) {\n    long long res = 1;\n    x = x % p;\n    while (y > 0) {\n        if (y & 1)\n            res = (res * x) % p;\n        y = y >> 1;\n        x = (x * x) % p;\n    }\n    return res;\n}\n\nlong long modInverse(long long n, long long p) {\n    return power(n, p - 2, p);\n}\n\nlong long nCrModPFermat(long long n, long long r, long long p) {\n    if (r > n) return 0;\n    if (r == 0) return 1;\n    \n    std::vector<long long> fac(n + 1, 1);\n    for (int i = 2; i <= n; i++)\n        fac[i] = fac[i - 1] * i % p;\n    \n    return (fac[n] * modInverse(fac[r], p) % p * modInverse(fac[n - r], p) % p) % p;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n\n    if (N <= 2) {\n        std::cout << 0 << std::endl;\n        return 0;\n    }\n\n    int fullSquares = N - 1;\n    long long sumScores = 0;\n    for (int k = 1; k < N; ++k) {\n        sumScores = (sumScores + k * nCrModPFermat(fullSquares - 1, k - 1, MOD)) % MOD;\n    }\n\n    std::cout << sumScores << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:41:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import permutations\n\ndef solve(N):\n    MOD = 10**9 + 7\n    total_score = 0\n\n    for perm in permutations(range(1, N)):\n        white_squares = [True] * N\n        score = 0\n        painted_black = 0\n\n        for machine in perm:\n            score += 1\n            white_squares[machine-1] = False\n            white_squares[machine] = False\n\n            if not white_squares[machine-1] and not white_squares[machine]:\n                painted_black += 2\n\n            if painted_black == N:\n                break\n\n        total_score += score\n\n    return total_score % MOD\n\ndef main():\n    N = int(input())\n    result = solve(N)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 13:41:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef solve():\n    N = int(sys.stdin.readline())\n    fact = [1] * (N + 1)\n    inv_fact = [1] * (N + 1)\n    for i in range(1, N + 1):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[N] = pow(fact[N], MOD-2, MOD)\n    for i in range(N-1, -1, -1):\n        inv_fact[i] = inv_fact[i+1] * (i+1) % MOD\n    \n    res = 0\n    for k in range(1, N):\n        term = fact[N-1] * k % MOD\n        term = term * (N - k) % MOD\n        res = (res + term) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 13:44:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function sumScores(N) {\n    const MOD = 1000000007;\n        \n    const fact = (n) => {\n        let res = 1;\n        for (let i = 2; i <= n; i++) {\n            res = (res * i) % MOD;\n        }\n        return res;\n    };\n    \n    if (N < 2) return 0;\n\n    let factorialN = fact(N);\n  \n    let result = ((factorialN - 1) * N) % MOD;\n\n    if (result < 0) {\n        result += MOD;\n    }\n\n    return result;\n}\n\nconst sumScoresForN = (N) => {\n    return sumScores(N);\n}\n\n// Example usage:\nconsole.log(sumScoresForN(2));  // Output: 1\nconsole.log(sumScoresForN(3));  // Output: 9\nconsole.log(sumScoresForN(4));  // Output: 96",
+    "timestamp": "2025-08-13 13:45:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N) {\n    const MOD = 1e9 + 7;\n    const factorial = [1];\n    for (let i = 1; i <= N; i++) {\n        factorial[i] = (factorial[i - 1] * i) % MOD;\n    }\n\n    const invFactorial = new Array(N + 1).fill(0);\n    invFactorial[N] = modPow(factorial[N], MOD - 2, MOD);\n    for (let i = N - 1; i >= 0; i--) {\n        invFactorial[i] = (invFactorial[i + 1] * (i + 1)) % MOD;\n    }\n\n    let totalScore = 0;\n    for (let permLength = 1; permLength < N; permLength++) {\n        const ways = (factorial[N - 1] * invFactorial[permLength] % MOD * invFactorial[N - 1 - permLength]) % MOD;\n        totalScore = (totalScore + ways * permLength) % MOD;\n    }\n\n    return totalScore;\n}\n\nfunction modPow(base, exp, mod) {\n    let result = 1;\n    base %= mod;\n    while (exp > 0) {\n        if (exp & 1) result = (result * base) % mod;\n        base = (base * base) % mod;\n        exp >>= 1;\n    }\n    return result;\n}",
+    "timestamp": "2025-08-13 13:45:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve() {\n    const N = parseInt(readline());\n    let fact = Array(N).fill(1);\n    for (let i = 2; i <= N; i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n    \n    let inv = Array(N + 1).fill(1);\n    inv[N] = powMod(fact[N], MOD - 2, MOD);\n    for (let i = N - 1; i >= 0; i--) {\n        inv[i] = (inv[i + 1] * (i + 1)) % MOD;\n    }\n    \n    function comb(n, k) {\n        if (k < 0 || k > n) return 0;\n        return (fact[n] * inv[k] % MOD) * inv[n - k] % MOD;\n    }\n    \n    let res = 0;\n    for (let k = 1; k <= N - 1; k++) {\n        let term = (k * comb(N - 1, k) % MOD) * fact[k] % MOD;\n        term = term * fact[N - 1 - k] % MOD;\n        res = (res + term) % MOD;\n    }\n    return res;\n}\n\nfunction powMod(a, b, mod) {\n    let res = 1;\n    a = a % mod;\n    while (b > 0) {\n        if (b % 2 === 1) {\n            res = (res * a) % mod;\n        }\n        a = (a * a) % mod;\n        b = Math.floor(b / 2);\n    }\n    return res;\n}\n\n// Sample usage (assuming input is read via readline function)\n// console.log(solve());",
+    "timestamp": "2025-08-13 13:45:33"
+  }
+]

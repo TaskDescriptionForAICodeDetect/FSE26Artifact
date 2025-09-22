@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    Point treasures[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &treasures[i].x, &treasures[i].y);\n    }\n    \n    while (Q--) {\n        int x1, y1, x2, y2;\n        scanf(\"%d %d %d %d\", &x1, &y1, &x2, &y2);\n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            if (treasures[i].x >= x1 && treasures[i].x <= x2 && \n                treasures[i].y >= y1 && treasures[i].y <= y2) {\n                count++;\n            }\n        }\n        printf(\"%d\\n\", count);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Point {\n    int x, y;\n    Point(int x, int y) : x(x), y(y) {}\n};\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n    vector<Point> treasures;\n    for (int i = 0; i < N; ++i) {\n        int x, y;\n        cin >> x >> y;\n        treasures.emplace_back(x, y);\n    }\n\n    for (int i = 0; i < Q; ++i) {\n        int x1, y1, x2, y2;\n        cin >> x1 >> y1 >> x2 >> y2;\n        int count = 0;\n        for (const auto& treasure : treasures) {\n            if (treasure.x >= x1 && treasure.x <= x2 && treasure.y >= y1 && treasure.y <= y2) {\n                count++;\n            }\n        }\n        cout << count << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class TreasureHunt {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        \n        int[] x = new int[N];\n        int[] y = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            x[i] = scanner.nextInt();\n            y[i] = scanner.nextInt();\n        }\n        \n        for (int q = 0; q < Q; q++) {\n            int x1 = scanner.nextInt();\n            int y1 = scanner.nextInt();\n            int x2 = scanner.nextInt();\n            int y2 = scanner.nextInt();\n            \n            int count = 0;\n            for (int i = 0; i < N; i++) {\n                if (x[i] >= x1 && x[i] <= x2 && y[i] >= y1 && y[i] <= y2) {\n                    count++;\n                }\n            }\n            System.out.println(count);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:31:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TreasureHunt {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt(); // Number of treasures\n        int Q = scanner.nextInt(); // Number of queries\n        \n        int[] X = new int[N];\n        int[] Y = new int[N];\n        \n        // Read treasure coordinates\n        for (int i = 0; i < N; i++) {\n            X[i] = scanner.nextInt();\n            Y[i] = scanner.nextInt();\n        }\n        \n        // Process queries\n        for (int q = 0; q < Q; q++) {\n            int A = scanner.nextInt();\n            int B = scanner.nextInt();\n            int C = scanner.nextInt();\n            int D = scanner.nextInt();\n            \n            int count = 0;\n            \n            // Count treasures within region\n            for (int i = 0; i < N; i++) {\n                if (A <= X[i] && X[i] <= C && B <= Y[i] && Y[i] <= D) {\n                    count++;\n                }\n            }\n            \n            System.out.println(count);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:31:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n\n    int* treasures_x = malloc(N * sizeof(int));\n    int* treasures_y = malloc(N * sizeof(int));\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &treasures_x[i], &treasures_y[i]);\n    }\n\n    for (int q = 0; q < Q; q++) {\n        int A, B, C, D;\n        scanf(\"%d %d %d %d\", &A, &B, &C, &D);\n\n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            if (A <= treasures_x[i] && treasures_x[i] <= C &&\n                B <= treasures_y[i] && treasures_y[i] <= D) {\n                count++;\n            }\n        }\n        printf(\"%d\\n\", count);\n    }\n\n    free(treasures_x);\n    free(treasures_y);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:31:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n    \n    vector<int> X(N), Y(N);\n    for (int i = 0; i < N; i++) {\n        cin >> X[i] >> Y[i];\n    }\n    \n    vector<vector<int>> queries(Q, vector<int>(4));\n    for (int i = 0; i < Q; i++) {\n        cin >> queries[i][0] >> queries[i][1] >> queries[i][2] >> queries[i][3];\n    }\n    \n    for (const auto& query : queries) {\n        int a = query[0], b = query[1], c = query[2], d = query[3];\n        \n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            if (a <= X[i] && X[i] <= c && b <= Y[i] && Y[i] <= d) {\n                count++;\n            }\n        }\n        \n        cout << count << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:31:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_treasures(treasures, regions):\n    treasure_counts = []\n    for x1, y1, x2, y2 in regions:\n        count = sum(x1 <= tx <= x2 and y1 <= ty <= y2 for tx, ty in treasures)\n        treasure_counts.append(count)\n    return treasure_counts\n\n# Example usage:\ntreasures = [(1, 2), (2, 3), (3, 4), (5, 5)]\nregions = [(1, 1, 3, 3), (4, 4, 6, 6)]\nprint(count_treasures(treasures, regions))  # Output: [3, 1]",
+    "timestamp": "2025-08-13 06:48:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class TreasureHunt {\n\n    static class Treasure {\n        int x, y;\n\n        Treasure(int x, int y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n\n    static class Region {\n        int x1, y1, x2, y2;\n\n        Region(int x1, int y1, int x2, int y2) {\n            this.x1 = x1;\n            this.y1 = y1;\n            this.x2 = x2;\n            this.y2 = y2;\n        }\n\n        boolean contains(Treasure treasure) {\n            return treasure.x >= x1 && treasure.x <= x2 && treasure.y >= y1 && treasure.y <= y2;\n        }\n    }\n\n    public static int countTreasuresInRegion(List<Treasure> treasures, Region region) {\n        int count = 0;\n        for (Treasure treasure : treasures) {\n            if (region.contains(treasure)) {\n                count++;\n            }\n        }\n        return count;\n    }\n\n    public static void main(String[] args) {\n        List<Treasure> treasures = new ArrayList<>();\n        treasures.add(new Treasure(2, 3));\n        treasures.add(new Treasure(5, 7));\n        treasures.add(new Treasure(8, 1));\n        treasures.add(new Treasure(4, 5));\n\n        Region searchRegion = new Region(1, 1, 6, 6);\n\n        int result = countTreasuresInRegion(treasures, searchRegion);\n        System.out.println(\"Number of treasures in region: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 06:48:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include<stdio.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\ntypedef struct {\n    int x1, y1, x2, y2;\n} Region;\n\nint isWithinRegion(Region region, Point treasure) {\n    return treasure.x >= region.x1 && treasure.x <= region.x2 &&\n           treasure.y >= region.y1 && treasure.y <= region.y2;\n}\n\nint countTreasuresInRegion(Point treasures[], int n, Region region) {\n    int count = 0;\n    for (int i = 0; i < n; i++) {\n        if (isWithinRegion(region, treasures[i])) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n, m;\n    printf(\"Enter number of treasures: \");\n    scanf(\"%d\", &n);\n    \n    Point treasures[n];\n    printf(\"Enter treasure coordinates (x y):\\n\");\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &treasures[i].x, &treasures[i].y);\n    }\n    \n    printf(\"Enter number of regions: \");\n    scanf(\"%d\", &m);\n    \n    Region regions[m];\n    printf(\"Enter region coordinates (x1 y1 x2 y2):\\n\");\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d %d %d\", &regions[i].x1, &regions[i].y1, &regions[i].x2, &regions[i].y2);\n    }\n    \n    printf(\"Number of treasures in each region:\\n\");\n    for (int i = 0; i < m; i++) {\n        printf(\"%d\\n\", countTreasuresInRegion(treasures, n, regions[i]));\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:48:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_treasures(N, treasures, regions):\n    # Create a 2D grid to mark treasure locations\n    grid = [[0] * N for _ in range(N)]\n    \n    # Mark treasure locations\n    for x, y in treasures:\n        grid[x-1][y-1] = 1\n    \n    # Count treasures in each region\n    result = []\n    for r1, c1, r2, c2 in regions:\n        count = 0\n        for x in range(r1-1, r2):\n            for y in range(c1-1, c2):\n                count += grid[x][y]\n        result.append(count)\n    \n    return result\n\n# Read input\nN = int(input())\nT = int(input())\ntreasures = []\nfor _ in range(T):\n    x, y = map(int, input().split())\n    treasures.append((x, y))\n\nQ = int(input())\nregions = []\nfor _ in range(Q):\n    r1, c1, r2, c2 = map(int, input().split())\n    regions.append((r1, c1, r2, c2))\n\n# Get and print results\nresults = count_treasures(N, treasures, regions)\nfor count in results:\n    print(count)",
+    "timestamp": "2025-08-13 06:48:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N = int(input[ptr])\n    ptr += 1\n    treasures = []\n    for _ in range(N):\n        x = int(input[ptr])\n        y = int(input[ptr+1])\n        treasures.append((x, y))\n        ptr += 2\n    Q = int(input[ptr])\n    ptr += 1\n    for _ in range(Q):\n        x1 = int(input[ptr])\n        y1 = int(input[ptr+1])\n        x2 = int(input[ptr+2])\n        y2 = int(input[ptr+3])\n        ptr += 4\n        count = 0\n        for (x, y) in treasures:\n            if x1 <= x <= x2 and y1 <= y <= y2:\n                count += 1\n        print(count)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 06:49:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nstruct Treasure {\n    int x, y;\n};\n\nstruct Region {\n    int x1, y1, x2, y2;\n};\n\nbool isWithinRegion(const Treasure& treasure, const Region& region) {\n    return (treasure.x >= region.x1 && treasure.x <= region.x2 &&\n            treasure.y >= region.y1 && treasure.y <= region.y2);\n}\n\nint countTreasuresInRegion(const std::vector<Treasure>& treasures, const Region& region) {\n    int count = 0;\n    for (const auto& treasure : treasures) {\n        if (isWithinRegion(treasure, region)) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n, m;\n    std::cin >> n >> m;\n    \n    std::vector<Treasure> treasures(n);\n    for (int i = 0; i < n; ++i) {\n        std::cin >> treasures[i].x >> treasures[i].y;\n    }\n\n    for (int i = 0; i < m; ++i) {\n        Region region;\n        std::cin >> region.x1 >> region.y1 >> region.x2 >> region.y2;\n        std::cout << countTreasuresInRegion(treasures, region) << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:34:26"
+  }
+]

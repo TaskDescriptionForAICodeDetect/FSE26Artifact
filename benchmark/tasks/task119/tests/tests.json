@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "1 10 20\n1\n",
+      "output": "11"
+    },
+    {
+      "input": "2 5 12\n1\n2\n",
+      "output": "8"
+    }
+  ]
+}

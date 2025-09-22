@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid guruguru_moyo(int n) {\n    char **grid = (char **)malloc(n * sizeof(char *));\n    for (int i = 0; i < n; i++) {\n        grid[i] = (char *)malloc((2 * n - 1) * sizeof(char));\n        for (int j = 0; j < 2 * n - 1; j++) {\n            grid[i][j] = ' ';\n        }\n    }\n\n    int x = 0, y = n - 1;\n    int dx = 0, dy = -1;\n    int steps = n;\n    int turn_counter = 0;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < steps; j++) {\n            grid[y][2 * x] = '#';\n            if (j != steps - 1) {\n                x += dx;\n                y += dy;\n            }\n        }\n        turn_counter++;\n        if (turn_counter % 2 == 0) {\n            steps--;\n        }\n        int temp = dx;\n        dx = -dy;\n        dy = temp;\n        x += dx;\n        y += dy;\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < 2 * n - 1; j++) {\n            printf(\"%c\", grid[i][j]);\n        }\n        printf(\"\\n\");\n    }\n\n    for (int i = 0; i < n; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    guruguru_moyo(n);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class GuruguruMoyo {\n    public static String generateSpiral(int n) {\n        char[][] grid = new char[n][n];\n        for (char[] row : grid) {\n            Arrays.fill(row, ' ');\n        }\n\n        int r = n - 1, c = 0;\n        int[] dr = {-1, 0, 1, 0};\n        int[] dc = {0, 1, 0, -1};\n        int dir = 0;\n        int steps = n;\n        int stepsCount = n;\n\n        while (steps > 0) {\n            for (int i = 0; i < stepsCount; i++) {\n                grid[r][c] = '#';\n                r += dr[dir];\n                c += dc[dir];\n            }\n\n            dir = (dir + 1) % 4;\n            steps--;\n            stepsCount--;\n        }\n\n        StringBuilder result = new StringBuilder();\n        for (char[] row : grid) {\n            for (int i = 0; i < row.length; i++) {\n                result.append(row[i]);\n                if (i < row.length - 1) result.append(\" \");\n            }\n            result.append(\"\\n\");\n        }\n\n        return result.toString();\n    }\n\n    public static void main(String[] args) {\n        int n = 5;\n        System.out.print(generateSpiral(n));\n    }\n}",
+    "timestamp": "2025-08-05 18:29:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid printGuruguruMoyo(int n) {\n    if (n <= 0) return;\n    \n    vector<vector<char>> grid(2 * n - 1, vector<char>(2 * n - 1, ' '));\n    int x = 0, y = 2 * n - 2;\n    int dx = 1, dy = 0;\n    int steps = 2 * n - 1;\n    int currentLength = steps;\n    int directionChanges = 0;\n    \n    for (int i = 0; i < steps * steps; ++i) {\n        grid[y][x] = '#';\n        if (i == currentLength - 1) {\n            int temp = dx;\n            dx = -dy;\n            dy = temp;\n            directionChanges++;\n            if (directionChanges % 2 == 0) {\n                currentLength--;\n            }\n        }\n        x += dx;\n        y += dy;\n    }\n    \n    for (int i = 0; i < 2 * n - 1; ++i) {\n        for (int j = 0; j < 2 * n - 1; ++j) {\n            cout << grid[i][j];\n            if (j < 2 * n - 2) {\n                cout << ' ';\n            }\n        }\n        cout << endl;\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    printGuruguruMoyo(n);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid print_guruguru_moyo(int n) {\n    char **grid = malloc(n * sizeof(char*));\n    for (int i = 0; i < n; i++) {\n        grid[i] = malloc(n * sizeof(char));\n        for (int j = 0; j < n; j++) {\n            grid[i][j] = ' ';\n        }\n    }\n\n    int row = n - 1, col = 0;\n    int direction = 0; // 0: right, 1: up, 2: left, 3: down\n    int steps = n;\n    int count = 0;\n\n    while (steps > 0) {\n        for (int i = 0; i < steps; i++) {\n            grid[row][col] = '#';\n            \n            switch(direction) {\n                case 0: col++; break;\n                case 1: row--; break;\n                case 2: col--; break;\n                case 3: row++; break;\n            }\n        }\n\n        direction = (direction + 1) % 4;\n        count++;\n        steps = n - count;\n    }\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            printf(\"%c \", grid[i][j]);\n        }\n        printf(\"\\n\");\n    }\n\n    for (int i = 0; i < n; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n}\n\nint main(int argc, char *argv[]) {\n    if (argc != 2) {\n        printf(\"Usage: %s <size>\\n\", argv[0]);\n        return 1;\n    }\n\n    int n = atoi(argv[1]);\n    if (n <= 0) {\n        printf(\"Size must be a positive integer\\n\");\n        return 1;\n    }\n\n    print_guruguru_moyo(n);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvector<vector<char>> generateGuruguru(int n) {\n    vector<vector<char>> grid(n, vector<char>(n, ' '));\n    int r = n - 1, c = 0;\n    int dr[] = {-1, 0, 1, 0};\n    int dc[] = {0, 1, 0, -1};\n    int dir = 0, steps = n;\n    bool first = true;\n\n    while (steps > 0) {\n        for (int i = 0; i < steps; i++) {\n            if (first || i % 2 == 1) grid[r][c] = '#';\n            r += dr[dir];\n            c += dc[dir];\n        }\n        \n        dir = (dir + 1) % 4;\n        steps--;\n        first = !first;\n    }\n\n    return grid;\n}\n\nvoid printGuruguru(const vector<vector<char>>& grid) {\n    for (const auto& row : grid) {\n        for (char cell : row) {\n            cout << cell << \" \";\n        }\n        cout << endl;\n    }\n}\n\nint main() {\n    int n;\n    cin >> n;\n    auto pattern = generateGuruguru(n);\n    printGuruguru(pattern);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class GuruguruMoyo {\n    public static void main(String[] args) {\n        int n = 5; // Example side length\n        printSpiral(n);\n    }\n\n    public static void printSpiral(int n) {\n        int size = 2 * n - 1;\n        char[][] grid = new char[size][size];\n        for (int i = 0; i < size; i++) {\n            for (int j = 0; j < size; j++) {\n                grid[i][j] = ' ';\n            }\n        }\n\n        int[] dx = {0, 1, 0, -1};\n        int[] dy = {1, 0, -1, 0};\n        int x = 0, y = 0, dir = 0;\n\n        for (int step = n - 1; step > 0; step--) {\n            for (int k = 0; k < 2; k++) {\n                for (int i = 0; i < step; i++) {\n                    grid[x][y] = '#';\n                    x += dx[dir];\n                    y += dy[dir];\n                }\n                dir = (dir + 1) % 4;\n            }\n        }\n        grid[x][y] = '#';\n\n        for (int i = 0; i < size; i++) {\n            for (int j = 0; j < size; j++) {\n                System.out.print(grid[j][i] + \" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:30:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def guruguru_moyo(n):\n    matrix = [[' ' for _ in range(n)] for _ in range(n)]\n    x, y = n - 1, 0\n    directions = [(0, 1), (-1, 0), (0, -1), (1, 0)]  # right, up, left, down\n    dir_index = 0\n\n    for i in range(n * n):\n        matrix[x][y] = '#'\n        nx, ny = x + directions[dir_index][0], y + directions[dir_index][1]\n        if 0 <= nx < n and 0 <= ny < n and matrix[nx][ny] == ' ':\n            x, y = nx, ny\n        else:\n            dir_index = (dir_index + 1) % 4\n            x += directions[dir_index][0]\n            y += directions[dir_index][1]\n\n    for row in matrix:\n        print(' '.join(row))\n\n# Example of usage\nguruguru_moyo(5)",
+    "timestamp": "2025-08-12 23:25:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class GuruguruMoyo {\n    public static void main(String[] args) {\n        int n = 7; // Set the side length here\n        System.out.println(generateGuruguruMoyo(n));\n    }\n\n    public static String generateGuruguruMoyo(int n) {\n        char[][] grid = new char[n][n];\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                grid[i][j] = ' ';\n            }\n        }\n\n        int top = 0, bottom = n - 1, left = 0, right = n - 1;\n        char currentCharacter = '#';\n\n        while (top <= bottom && left <= right) {\n            for (int i = bottom; i >= top; i--) {\n                grid[i][left] = currentCharacter;\n            }\n            left++;\n\n            for (int i = left; i <= right; i++) {\n                grid[top][i] = currentCharacter;\n            }\n            top++;\n\n            for (int i = top; i <= bottom; i++) {\n                grid[i][right] = currentCharacter;\n            }\n            right--;\n\n            for (int i = right; i >= left; i--) {\n                grid[bottom][i] = currentCharacter;\n            }\n            bottom--;\n\n            currentCharacter = currentCharacter == '#' ? ' ' : '#';\n        }\n\n        StringBuilder result = new StringBuilder();\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                result.append(grid[i][j]);\n                if (j < n - 1) result.append(' ');\n            }\n            if (i < n - 1) result.append(\"\\n\");\n        }\n\n        return result.toString();\n    }\n}",
+    "timestamp": "2025-08-12 23:26:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nvoid createSpiral(char **spiral, int n) {\n    int x = n - 1;\n    int y = 0;\n    int dx = 0;\n    int dy = 1;\n    int layer = 0;\n\n    for (int i = 0; i < n * n; i++) {\n        spiral[y][x] = '#';\n\n        if (dy == 1 && (y + dy == n - layer)) {\n            dy = 0;\n            dx = -1;\n        } else if (dx == -1 && (x + dx == -1 + layer)) {\n            dx = 0;\n            dy = -1;\n        } else if (dy == -1 && (y + dy == -1 + layer)) {\n            dy = 0;\n            dx = 1;\n            layer++;\n        } else if (dx == 1 && (x + dx == n - layer)) {\n            dx = 0;\n            dy = 1;\n        }\n        \n        x += dx;\n        y += dy;\n    }\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n\n    char **spiral = (char **)malloc(n * sizeof(char *));\n    for (int i = 0; i < n; i++) {\n        spiral[i] = (char *)malloc(n * sizeof(char));\n        for (int j = 0; j < n; j++) {\n            spiral[i][j] = ' ';\n        }\n    }\n\n    createSpiral(spiral, n);\n\n    for (int i = 0; i < n; i++) {\n        for (int j = 0; j < n; j++) {\n            printf(\"%c \", spiral[i][j]);\n        }\n        printf(\"\\n\");\n    }\n\n    for (int i = 0; i < n; i++) {\n        free(spiral[i]);\n    }\n    free(spiral);\n\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:26:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def guruguru_moyo(n):\n    matrix = [[' ' for _ in range(n)] for _ in range(n)]\n    x, y = n - 1, n - 1\n    direction = 0\n    steps = 1\n    current_step = 0\n    turn_count = 0\n\n    while steps <= n * n:\n        matrix[y][x] = '#' if steps % 2 == 1 else ' '\n        \n        if direction == 0:  # Right\n            x -= 1\n        elif direction == 1:  # Up\n            y -= 1\n        elif direction == 2:  # Left\n            x += 1\n        else:  # Down\n            y += 1\n        \n        current_step += 1\n        \n        if current_step == steps:\n            direction = (direction + 1) % 4\n            current_step = 0\n            turn_count += 1\n            \n            if turn_count % 2 == 0:\n                steps += 1\n\n    for row in matrix:\n        print(' '.join(row))\n\n# Example usage\nguruguru_moyo(5)",
+    "timestamp": "2025-08-12 23:26:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def guruguru_moyo(n):\n    if n == 1:\n        print('#')\n        return\n    grid = [[' ' for _ in range(2*n-1)] for _ in range(2*n-1)]\n    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n    x, y = n-1, 0\n    dir_idx = 0\n    steps = 1\n    grid[x][y] = '#'\n    \n    for _ in range(2*n - 1):\n        for __ in range(2):\n            dx, dy = directions[dir_idx % 4]\n            for ___ in range(steps):\n                x += dx\n                y += dy\n                if 0 <= x < 2*n-1 and 0 <= y < 2*n-1:\n                    grid[x][y] = '#'\n            dir_idx += 1\n        steps += 1\n    \n    for row in grid:\n        print(''.join(row))",
+    "timestamp": "2025-08-12 23:26:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nint main() {\n    int n;\n    std::cin >> n;\n\n    // Initialize grid with spaces\n    std::vector<std::vector<char>> grid(n, std::vector<char>(n * 2 - 1, ' '));\n\n    // Spiral drawing variables\n    int row_start = n - 1, row_end = 0;\n    int col_start = 0, col_end = (n - 1) * 2;\n    bool toggle = true;\n\n    while (row_start >= row_end && col_start <= col_end) {\n        if (toggle) {\n            for (int i = col_start; i <= col_end; i+=2)\n                grid[row_start][i] = '#';\n            row_start--;\n            for (int i = row_start; i >= row_end; i--)\n                grid[i][col_end] = '#';\n            col_end-=2;\n        } else {\n            for (int i = col_end; i >= col_start; i-=2)\n                grid[row_end][i] = '#';\n            row_end++;\n            for (int i = row_end; i <= row_start; i++)\n                grid[i][col_start] = '#';\n            col_start+=2;\n        }\n        toggle = !toggle;\n    }\n\n    // Display the grid\n    for (int i = 0; i < n; ++i) {\n        for (int j = 0; j < n * 2 - 1; ++j) {\n            std::cout << grid[i][j];\n        }\n        std::cout << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:50:15"
+  }
+]

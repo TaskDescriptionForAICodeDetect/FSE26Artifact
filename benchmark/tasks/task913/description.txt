@@ -1,0 +1,1 @@
+There are N towns on a plane. Each town is located at specific coordinates. You can build a road between two towns at a cost equal to the minimum of the absolute differences of their coordinates. Your objective is to find the minimum cost needed to connect every pair of towns so that they are reachable from one another.

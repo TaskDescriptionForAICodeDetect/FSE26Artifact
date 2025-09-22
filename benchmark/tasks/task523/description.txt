@@ -1,0 +1,36 @@
+Dimensional Travel
+
+Problem
+
+Dimensions exist from 1D to N dimensions. The AOR squid can move between dimensions. Specifically, when the AOR squid is in the i-th dimension, it can freely move to the j-th dimension (where i > j), but cannot move to the k-th dimension (where i < k).
+
+The AOR squid can use M types of magic, numbered from 1 to M. The i-th magic allows movement from dimension a_i to dimension b_i. This can only be used when in a_i dimension.
+
+When going to the i-th dimension, the AOR squid receives a specific "dimension curse" that causes d_i damage. Once affected by the curse of dimension i, it will not receive the curse from dimension j (where i > j) afterward. 
+
+The task is to find the minimum total damage the AOR squid will receive when moving from dimension s to dimension t, considering it has already received the curse damage at dimension s, which should be ignored. It is guaranteed that the AOR squid can reach dimension t.
+
+Constraints
+
+2 ≤ N ≤ 10^5
+1 ≤ M ≤ min(10^5, N × (N - 1) / 2)
+1 ≤ s, t ≤ N
+s ≠ t
+1 ≤ d_i ≤ 10^3
+When i ≠ j, it holds that (a_i ≠ a_j or b_i ≠ b_j).
+All inputs consist of integers.
+
+Input Format
+
+The input is given in the following format.
+
+N M s t
+d_1 ... d_N
+a_1 b_1
+a_2 b_2
+...
+a_M b_M
+
+Output
+
+Print the minimum total damage the AOR squid receives. Also, output a newline at the end.

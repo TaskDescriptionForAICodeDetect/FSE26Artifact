@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def is_increasing(matrix):\n    n, m = len(matrix), len(matrix[0])\n    \n    # Check rows\n    for i in range(n):\n        for j in range(1, m):\n            if matrix[i][j] <= matrix[i][j-1]:\n                return False\n    \n    # Check columns\n    for j in range(m):\n        for i in range(1, n):\n            if matrix[i][j] <= matrix[i-1][j]:\n                return False\n    \n    return True\n\ndef solve_problem():\n    n, m = map(int, input().split())\n    \n    matrix_a = []\n    for _ in range(n):\n        matrix_a.append(list(map(int, input().split())))\n    \n    matrix_b = []\n    for _ in range(n):\n        matrix_b.append(list(map(int, input().split())))\n    \n    # Try all possible swaps\n    for i in range(n):\n        for j in range(m):\n            matrix_a[i][j], matrix_b[i][j] = matrix_b[i][j], matrix_a[i][j]\n            \n            if is_increasing(matrix_a) and is_increasing(matrix_b):\n                print(\"Possible\")\n                return\n            \n            # Revert the swap\n            matrix_a[i][j], matrix_b[i][j] = matrix_b[i][j], matrix_a[i][j]\n    \n    # Check if original matrices are increasing\n    if is_increasing(matrix_a) and is_increasing(matrix_b):\n        print(\"Possible\")\n        return\n    \n    print(\"Impossible\")\n\nsolve_problem()",
+    "timestamp": "2025-08-05 17:34:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m = map(int, input().split())\na = [list(map(int, input().split())) for _ in range(n)]\nb = [list(map(int, input().split())) for _ in range(n)]\n\n# For each cell, ensure the smaller is in a and larger in b\nfor i in range(n):\n    for j in range(m):\n        if a[i][j] > b[i][j]:\n            a[i][j], b[i][j] = b[i][j], a[i][j]\n\npossible = True\n\n# Check rows in a and b\nfor i in range(n):\n    for j in range(1, m):\n        if a[i][j] <= a[i][j-1]:\n            possible = False\n        if b[i][j] <= b[i][j-1]:\n            possible = False\n\n# Check columns in a and b\nfor j in range(m):\n    for i in range(1, n):\n        if a[i][j] <= a[i-1][j]:\n            possible = False\n        if b[i][j] <= b[i-1][j]:\n            possible = False\n\nprint(\"Possible\" if possible else \"Impossible\")",
+    "timestamp": "2025-08-05 17:34:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_strictly_increasing(row_or_col):\n    return all(row_or_col[i] < row_or_col[i + 1] for i in range(len(row_or_col) - 1))\n\ndef can_make_matrices_increasing(n, m, matrix1, matrix2):\n    for i in range(n):\n        for j in range(m):\n            if matrix1[i][j] > matrix2[i][j]:\n                matrix1[i][j], matrix2[i][j] = matrix2[i][j], matrix1[i][j]\n\n    for i in range(n):\n        if not is_strictly_increasing(matrix1[i]) or not is_strictly_increasing(matrix2[i]):\n            return \"Impossible\"\n\n    for j in range(m):\n        if not is_strictly_increasing([matrix1[i][j] for i in range(n)]) or not is_strictly_increasing([matrix2[i][j] for i in range(n)]):\n            return \"Impossible\"\n\n    return \"Possible\"\n\nn, m = map(int, input().split())\nmatrix1 = [list(map(int, input().split())) for _ in range(n)]\nmatrix2 = [list(map(int, input().split())) for _ in range(n)]\n\nprint(can_make_matrices_increasing(n, m, matrix1, matrix2))",
+    "timestamp": "2025-08-12 21:55:46"
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "examples": [
+    {
+      "input": "3\nscarlet green blue yellow magenta cyan\nblue pink green magenta cyan lemon\npurple red blue yellow cyan green\n",
+      "output": "4\n"
+    },
+    {
+      "input": "2\nred green blue yellow magenta cyan\ncyan green blue yellow magenta red\n",
+      "output": "2\n"
+    },
+    {
+      "input": "2\nred green gray gray magenta cyan\ncyan green gray gray magenta red\n",
+      "output": "0\n"
+    },
+    {
+      "input": "2\nred green blue yellow magenta cyan\nmagenta red blue yellow cyan green\n",
+      "output": "0\n"
+    },
+    {
+      "input": "3\nred green blue yellow magenta cyan\ncyan green blue yellow magenta red\nmagenta red blue yellow cyan green\n",
+      "output": "2\n"
+    },
+    {
+      "input": "3\nblue green green green green blue\ngreen blue blue green green green\ngreen green green green green sea-green\n",
+      "output": "4\n"
+    },
+    {
+      "input": "3\nred yellow red yellow red yellow\nred red yellow yellow red yellow\nred red red red red red\n",
+      "output": "0\n"
+    },
+    {
+      "input": "4\nviolet violet salmon salmon salmon salmon\nviolet salmon salmon salmon salmon violet\nviolet violet salmon salmon violet violet\nviolet violet violet violet salmon salmon\n",
+      "output": "16\n"
+    }
+  ]
+}

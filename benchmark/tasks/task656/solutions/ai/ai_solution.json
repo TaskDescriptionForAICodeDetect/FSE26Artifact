@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_DAYS 305\n#define MAX_CONTESTS 30\n\nint main() {\n    int D, N;\n    scanf(\"%d %d\", &D, &N);\n\n    int s[MAX_DAYS][MAX_CONTESTS];\n    int c[MAX_CONTESTS];\n\n    for (int d = 0; d < D; d++) {\n        for (int i = 0; i < N; i++) {\n            scanf(\"%d\", &s[d][i]);\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &c[i]);\n    }\n\n    int dp[MAX_DAYS][MAX_CONTESTS];\n    int last[MAX_CONTESTS];\n    memset(last, -1, sizeof(last));\n    memset(dp, 0, sizeof(dp));\n\n    for (int d = 0; d < D; d++) {\n        for (int i = 0; i < N; i++) {\n            dp[d][i] = INT_MIN;\n            \n            for (int j = 0; j < N; j++) {\n                int prev = d > 0 ? dp[d-1][j] : 0;\n                int penalty = (last[i] != -1) ? c[i] * (d - last[i]) : 0;\n                \n                int current_score = prev + s[d][i] - penalty;\n                dp[d][i] = (current_score > dp[d][i]) ? current_score : dp[d][i];\n            }\n            \n            if (dp[d][i] > INT_MIN) {\n                last[i] = d;\n            }\n        }\n    }\n\n    int max_satisfaction = INT_MIN;\n    for (int i = 0; i < N; i++) {\n        max_satisfaction = (dp[D-1][i] > max_satisfaction) ? dp[D-1][i] : max_satisfaction;\n    }\n\n    printf(\"%d\\n\", max_satisfaction);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint main() {\n    int D;\n    scanf(\"%d\", &D);\n    \n    int c[26];\n    for (int i = 0; i < 26; i++) {\n        scanf(\"%d\", &c[i]);\n    }\n    \n    int s[365][26];\n    for (int i = 0; i < D; i++) {\n        for (int j = 0; j < 26; j++) {\n            scanf(\"%d\", &s[i][j]);\n        }\n    }\n    \n    int last[26] = {0};\n    int total = 0;\n    \n    for (int d = 1; d <= D; d++) {\n        int best_t = 0;\n        int max_score = INT_MIN;\n        \n        for (int t = 0; t < 26; t++) {\n            int temp = total + s[d-1][t];\n            int penalty = 0;\n            \n            for (int i = 0; i < 26; i++) {\n                if (i == t) continue;\n                penalty += c[i] * (d - last[i]);\n            }\n            \n            temp -= penalty;\n            \n            if (temp > max_score) {\n                max_score = temp;\n                best_t = t;\n            }\n        }\n        \n        total = max_score;\n        last[best_t] = d;\n        printf(\"%d\\n\", best_t + 1);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:27:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int D;\n    cin >> D;\n    vector<int> c(26);\n    for (int i = 0; i < 26; ++i) {\n        cin >> c[i];\n    }\n    vector<vector<int>> s(D, vector<int>(26));\n    for (int i = 0; i < D; ++i) {\n        for (int j = 0; j < 26; ++j) {\n            cin >> s[i][j];\n        }\n    }\n\n    vector<int> last(26, 0);\n    long long satisfaction = 0;\n    for (int d = 1; d <= D; ++d) {\n        int best_type = 0;\n        long long max_gain = LLONG_MIN;\n        for (int t = 0; t < 26; ++t) {\n            long long gain = s[d-1][t];\n            long long penalty = 0;\n            for (int i = 0; i < 26; ++i) {\n                if (i == t) continue;\n                penalty += c[i] * (d - last[i]);\n            }\n            long long total = gain - penalty;\n            if (total > max_gain) {\n                max_gain = total;\n                best_type = t;\n            }\n        }\n        last[best_type] = d;\n        satisfaction += max_gain;\n        cout << best_type + 1 << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:28:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int D = scanner.nextInt();\n        int[] c = new int[26];\n        for (int i = 0; i < 26; i++) {\n            c[i] = scanner.nextInt();\n        }\n        int[][] s = new int[D][26];\n        for (int d = 0; d < D; d++) {\n            for (int i = 0; i < 26; i++) {\n                s[d][i] = scanner.nextInt();\n            }\n        }\n\n        int[] last = new int[26];\n        long satisfaction = 0;\n        for (int d = 1; d <= D; d++) {\n            int bestType = 0;\n            long maxScore = Long.MIN_VALUE;\n            for (int i = 0; i < 26; i++) {\n                long score = s[d - 1][i];\n                long penalty = 0;\n                for (int j = 0; j < 26; j++) {\n                    if (i == j) continue;\n                    penalty += c[j] * (d - last[j]);\n                }\n                long total = score - penalty;\n                if (total > maxScore) {\n                    maxScore = total;\n                    bestType = i;\n                }\n            }\n            last[bestType] = d;\n            satisfaction += maxScore;\n            System.out.println(bestType + 1);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:29:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class AtCoderContests {\n    public static int maximizeSatisfaction(int D, int[][] satisfactions, int[] penalties) {\n        int[][] dp = new int[D + 1][26];\n        int[][] lastDay = new int[D + 1][26];\n\n        for (int[] row : dp) {\n            Arrays.fill(row, Integer.MIN_VALUE);\n        }\n        dp[0][0] = 0;\n\n        for (int day = 1; day <= D; day++) {\n            for (int currentContest = 0; currentContest < 26; currentContest++) {\n                for (int prevContest = 0; prevContest < 26; prevContest++) {\n                    if (dp[day - 1][prevContest] == Integer.MIN_VALUE) continue;\n\n                    int currentSatisfaction = satisfactions[day - 1][currentContest];\n                    int penalty = (day - lastDay[day - 1][currentContest] > 1) ? penalties[currentContest] : 0;\n\n                    int newScore = dp[day - 1][prevContest] + currentSatisfaction - penalty;\n                    if (newScore > dp[day][currentContest]) {\n                        dp[day][currentContest] = newScore;\n                        lastDay[day][currentContest] = day;\n                    }\n                }\n            }\n        }\n\n        return Arrays.stream(dp[D]).max().getAsInt();\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int D = sc.nextInt();\n        int[] penalties = new int[26];\n        for (int i = 0; i < 26; i++) {\n            penalties[i] = sc.nextInt();\n        }\n\n        int[][] satisfactions = new int[D][26];\n        for (int day = 0; day < D; day++) {\n            for (int contest = 0; contest < 26; contest++) {\n                satisfactions[day][contest] = sc.nextInt();\n            }\n        }\n\n        int maxSatisfaction = maximizeSatisfaction(D, satisfactions, penalties);\n        System.out.println(maxSatisfaction);\n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:29:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int D;\n    cin >> D;\n\n    vector<vector<int>> s(D, vector<int>(26));\n    for (int d = 0; d < D; d++) {\n        for (int i = 0; i < 26; i++) {\n            cin >> s[d][i];\n        }\n    }\n\n    vector<int> c(26);\n    for (int i = 0; i < 26; i++) {\n        cin >> c[i];\n    }\n\n    vector<int> last(26, -1);\n    vector<int> schedule(D);\n    long long total_satisfaction = 0;\n\n    for (int d = 0; d < D; d++) {\n        int best_contest = -1;\n        long long max_satisfaction = LLONG_MIN;\n\n        for (int i = 0; i < 26; i++) {\n            long long satisfaction = s[d][i];\n            if (last[i] != -1) {\n                satisfaction -= c[i] * (d - last[i]);\n            }\n\n            if (satisfaction > max_satisfaction) {\n                max_satisfaction = satisfaction;\n                best_contest = i;\n            }\n        }\n\n        schedule[d] = best_contest;\n        last[best_contest] = d;\n        total_satisfaction += max_satisfaction;\n    }\n\n    cout << total_satisfaction << endl;\n\n    for (int contest : schedule) {\n        cout << contest + 1 << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:29:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximize_satisfaction(D, s, c):\n    last_held = [-1] * 26\n    satisfaction = 0\n    schedule = []\n\n    for day in range(D):\n        max_gain = float('-inf')\n        best_contest = -1\n\n        for contest in range(26):\n            current_gain = s[day][contest]\n            penalty = sum(c[j] * (day - last_held[j]) for j in range(26))\n            net_gain = current_gain - penalty\n\n            if net_gain > max_gain:\n                max_gain = net_gain\n                best_contest = contest\n\n        satisfaction += s[day][best_contest]\n        last_held[best_contest] = day\n        schedule.append(best_contest)\n\n    return schedule, satisfaction\n\n# Example usage:\n# D = number of days\n# s = satisfaction matrix (D x 26)\n# c = penalty for not holding contest of type i for one day\n# The function returns a schedule and the maximum satisfaction.",
+    "timestamp": "2025-08-13 10:55:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class AtCoderContestScheduler {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        int D = sc.nextInt();\n        int[] c = new int[26];\n        int[][] s = new int[D][26];\n\n        for (int i = 0; i < 26; i++) {\n            c[i] = sc.nextInt();\n        }\n\n        for (int i = 0; i < D; i++) {\n            for (int j = 0; j < 26; j++) {\n                s[i][j] = sc.nextInt();\n            }\n        }\n\n        int[] last = new int[26];\n        int satisfaction = 0;\n        StringBuilder result = new StringBuilder();\n\n        for (int day = 0; day < D; day++) {\n            int maxSatisfactionIncrease = Integer.MIN_VALUE;\n            int bestContest = 0;\n\n            for (int contest = 0; contest < 26; contest++) {\n                int currentSatisfactionIncrease = s[day][contest];\n                currentSatisfactionIncrease -= c[contest] * (day + 1 - last[contest]);\n\n                if (currentSatisfactionIncrease > maxSatisfactionIncrease) {\n                    maxSatisfactionIncrease = currentSatisfactionIncrease;\n                    bestContest = contest;\n                }\n            }\n\n            result.append(bestContest + 1).append(\"\\n\");\n            satisfaction += maxSatisfactionIncrease;\n            last[bestContest] = day + 1;\n        }\n\n        System.out.println(result.toString());\n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-13 10:55:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#define MAX_D 365\n#define MAX_C 26\n\nint s[MAX_D][MAX_C]; // Satisfaction scores\nint c[MAX_C];        // Penalty scores\nint last_held[MAX_C]; // Last day each type was held\nint contest_schedule[MAX_D]; // Contest type for each day\n\nint main() {\n    int D;\n    scanf(\"%d\", &D);\n    \n    for(int i = 0; i < MAX_C; i++) {\n        scanf(\"%d\", &c[i]);\n        last_held[i] = -1;\n    }\n    \n    for(int d = 0; d < D; d++) {\n        for(int i = 0; i < MAX_C; i++) {\n            scanf(\"%d\", &s[d][i]);\n        }\n    }\n \n    int satisfaction = 0;\n    \n    for(int d = 0; d < D; d++) {\n        int best_contest = 0;\n        int best_score = -1e9;\n        \n        for(int i = 0; i < MAX_C; i++) {\n            int current_score = s[d][i];\n            for(int j = 0; j < MAX_C; j++) {\n                if (last_held[j] != -1 && j != i) {\n                    current_score -= c[j] * (d - last_held[j]);\n                }\n            }\n            if (current_score > best_score) {\n                best_score = current_score;\n                best_contest = i;\n            }\n        }\n        \n        contest_schedule[d] = best_contest;\n        last_held[best_contest] = d;\n        satisfaction += s[d][best_contest];\n        for(int i = 0; i < MAX_C; i++) {\n            if (last_held[i] != -1 && i != best_contest) {\n                satisfaction -= c[i] * (d - last_held[i]);\n            }\n        }\n    }\n    \n    for(int d = 0; d < D; d++) {\n        printf(\"%c\\n\", 'A' + contest_schedule[d]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:55:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maximizeSatisfaction(D, satisfaction, penalty) {\n    const contestTypes = 26; // Total contest types\n    let lastHeld = Array(contestTypes).fill(0);\n    let totalSatisfaction = 0;\n    let schedule = [];\n\n    for (let day = 0; day < D; day++) {\n        let bestSatisfaction = -Infinity;\n        let bestContest = -1;\n\n        for (let contest = 0; contest < contestTypes; contest++) {\n            let currentSatisfaction = satisfaction[day][contest];\n            \n            // Calculate penalty\n            for (let otherContest = 0; otherContest < contestTypes; otherContest++) {\n                if (otherContest !== contest) {\n                    currentSatisfaction -= penalty[otherContest] * (day + 1 - lastHeld[otherContest]);\n                }\n            }\n\n            if (currentSatisfaction > bestSatisfaction) {\n                bestSatisfaction = currentSatisfaction;\n                bestContest = contest;\n            }\n        }\n\n        schedule.push(bestContest);\n        totalSatisfaction += bestSatisfaction;\n        lastHeld[bestContest] = day + 1;\n    }\n\n    return schedule;\n}\n\n// Example usage:\n// let D = 10; // Number of days\n// let satisfaction = [[...], [...], ..., [...]]; // 2D array of satisfaction values\n// let penalty = [...]; // Array of penalty values for not holding a contest type\n// console.log(maximizeSatisfaction(D, satisfaction, penalty));",
+    "timestamp": "2025-08-13 10:55:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_contest_scheduling(D, s, c):\n    # Initialize dp table: dp[d][i] represents max satisfaction at day d with last contest type i\n    dp = [[-float('inf')] * 26 for _ in range(D + 1)]\n    dp[0] = [0] * 26\n\n    # Keep track of last day each contest type was held\n    last_held = [-float('inf')] * 26\n\n    for d in range(1, D + 1):\n        for i in range(26):\n            for j in range(26):\n                # Penalty for not holding a contest type\n                penalty = sum(c[k] for k in range(26) if d - last_held[k] > 1)\n                \n                # Update max satisfaction\n                dp[d][i] = max(dp[d][i], dp[d-1][j] + s[d-1][i] - penalty)\n        \n        # Update last day for the chosen contest type\n        max_satisfaction_type = max(range(26), key=lambda x: dp[d][x])\n        last_held[max_satisfaction_type] = d\n\n    return max(dp[D])\n\n# Input parsing and function call\nD = int(input())\ns = [list(map(int, input().split())) for _ in range(D)]\nc = list(map(int, input().split()))\n\nprint(solve_contest_scheduling(D, s, c))",
+    "timestamp": "2025-08-13 10:55:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxSatisfaction(D, s, c) {\n    const N = 26;\n    const dp = Array.from({ length: D + 1 }, () => \n        Array.from({ length: N }, () => Array(D + 1).fill(-Infinity))\n    );\n    \n    for (let i = 0; i < N; i++) {\n        dp[0][i][0] = 0;\n    }\n    \n    for (let d = 1; d <= D; d++) {\n        for (let curr = 0; curr < N; curr++) {\n            for (let last = 0; last < N; last++) {\n                for (let since = 0; since <= d; since++) {\n                    let score = dp[d-1][last][since-1] + s[d-1][curr];\n                    \n                    if (curr !== last) {\n                        since = 1;\n                    }\n                    \n                    for (let type = 0; type < N; type++) {\n                        if (type !== curr) {\n                            score -= c[type] * Math.max(0, since - 1);\n                        }\n                    }\n                    \n                    dp[d][curr][since] = Math.max(\n                        dp[d][curr][since] !== undefined ? dp[d][curr][since] : -Infinity, \n                        score\n                    );\n                }\n            }\n        }\n    }\n    \n    let maxScore = -Infinity;\n    for (let curr = 0; curr < N; curr++) {\n        for (let since = 0; since <= D; since++) {\n            maxScore = Math.max(maxScore, dp[D][curr][since]);\n        }\n    }\n    \n    return maxScore;\n}",
+    "timestamp": "2025-08-13 10:55:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    D = int(input())\n    c = list(map(int, input().split()))\n    s = [list(map(int, input().split())) for _ in range(D)]\n    \n    last = [-1] * 26\n    total = 0\n    \n    for day in range(D):\n        max_inc = -float('inf')\n        best_t = 0\n        for t in range(26):\n            inc = s[day][t]\n            penalty = 0\n            for i in range(26):\n                if i != t:\n                    penalty += c[i] * (day - last[i])\n            temp_inc = inc - penalty\n            if temp_inc > max_inc:\n                max_inc = temp_inc\n                best_t = t\n        last[best_t] = day\n        total += max_inc\n        print(best_t + 1)\n\nsolve()",
+    "timestamp": "2025-08-13 10:55:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n\nconst [D] = input[0].split(' ').map(Number);\nconst c = input[1].split(' ').map(Number);\nconst s = [];\nfor (let i = 0; i < D; i++) {\n    s.push(input[i + 2].split(' ').map(Number));\n}\n\nconst last = new Array(26).fill(0);\nlet res = 0;\nconst out = [];\n\nfor (let day = 1; day <= D; day++) {\n    let maxScore = -Infinity;\n    let bestT = 0;\n    for (let t = 0; t < 26; t++) {\n        const score = s[day - 1][t];\n        let penalty = 0;\n        for (let i = 0; i < 26; i++) {\n            if (i === t) continue;\n            penalty += c[i] * (day - last[i]);\n        }\n        const total = score - penalty;\n        if (total > maxScore) {\n            maxScore = total;\n            bestT = t;\n        }\n    }\n    res += maxScore;\n    last[bestT] = day;\n    out.push(bestT + 1);\n}\n\nconsole.log(out.join('\\n'));",
+    "timestamp": "2025-08-13 10:55:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    const int CONTEST_TYPES = 26;\n    \n    int D;\n    cin >> D;\n\n    vector<int> c(CONTEST_TYPES);\n    for (int i = 0; i < CONTEST_TYPES; ++i) {\n        cin >> c[i];\n    }\n\n    vector<vector<int>> s(D, vector<int>(CONTEST_TYPES));\n    for (int d = 0; d < D; ++d) {\n        for (int i = 0; i < CONTEST_TYPES; ++i) {\n            cin >> s[d][i];\n        }\n    }\n\n    vector<int> last_held(CONTEST_TYPES, 0);\n    vector<int> contests(D);\n\n    int satisfaction = 0;\n\n    for (int d = 0; d < D; ++d) {\n        int best_contest_type = 0;\n        int max_score = -1;\n\n        for (int i = 0; i < CONTEST_TYPES; ++i) {\n            int bonus = s[d][i];\n            int penalty = 0;\n            \n            for (int j = 0; j < CONTEST_TYPES; ++j) {\n                penalty += c[j] * (d + 1 - last_held[j]);\n            }\n            penalty -= c[i] * (d + 1 - last_held[i]);\n\n            int score = bonus - penalty;\n\n            if (score > max_score) {\n                max_score = score;\n                best_contest_type = i;\n            }\n        }\n\n        contests[d] = best_contest_type;\n        last_held[best_contest_type] = d + 1;\n        satisfaction += s[d][best_contest_type];\n\n        for (int i = 0; i < CONTEST_TYPES; ++i) {\n            satisfaction -= c[i] * (d + 1 - last_held[i]);\n        }\n    }\n    \n    for (int d = 0; d < D; ++d) {\n        cout << contests[d] + 1 << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:01:11"
+  }
+]

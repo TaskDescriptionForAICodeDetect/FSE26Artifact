@@ -1,0 +1,1 @@
+Given an edge-weighted directed graph G, determine the shortest path from each vertex to every other vertex. If the graph contains a negative cycle, output 'NEGATIVE CYCLE'. Otherwise, output the cost of the shortest paths between all pairs of vertices.

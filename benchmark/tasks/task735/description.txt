@@ -1,0 +1,1 @@
+Given two strings s and t of lowercase English letters, determine if there exists an integer i such that t is a subsequence of the concatenation of the first i characters of the string formed by repeating s 10^{100} times. If such an integer i exists, find the minimum i; otherwise, return -1.

@@ -1,0 +1,1 @@
+Given n integers a1, a2, ..., an and n integers p1, p2, ..., pn, along with an integer m, select the k-th integer ak with a probability of pk[%] for each k (1 ≤ k ≤ n), resulting in selecting between 0 and n integers. Calculate the expected number of integers between 1 and m that are divisible by at least one of the selected integers.

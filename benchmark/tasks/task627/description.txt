@@ -1,0 +1,1 @@
+Given a bipartite graph, determine the size of the largest matching. A bipartite graph consists of two disjoint sets of vertices, X and Y, such that every edge connects a vertex from X to a vertex from Y. A matching is a subset of edges where no two edges share a vertex.

@@ -1,0 +1,11 @@
+Create a program that reads poker hand data and outputs the best hand for each set of hands according to specified rules. The game uses 5 cards, with no more than 5 cards of the same number, and without jokers. The hands to be considered are ranked as follows:
+
+- null (does not fit any described hand)
+- one pair (one pair of the same number)
+- two pair (two pairs of the same number)
+- three card (three of the same number)
+- straight (5 cards in consecutive order, with Ace treated as both high and low at the ends)
+- full house (three of one number and two of another)
+- four card (four of the same number)
+
+Input consists of multiple datasets formatted as: hand1, hand2, hand3, hand4, hand5. The hands are represented by numbers where Jack is 11, Queen is 12, King is 13, Ace is 1, and other cards are their respective numbers. There are no more than 50 datasets. Output the highest rank for each dataset adhering to the output format as seen in the examples.

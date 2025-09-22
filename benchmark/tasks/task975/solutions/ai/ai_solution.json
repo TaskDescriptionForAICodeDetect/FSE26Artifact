@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_N 100\n\ntypedef struct {\n    int pos;\n    int candy_time;\n    int coin_time;\n    int collected;\n} Bear;\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint abs_diff(int a, int b) {\n    return abs(a - b);\n}\n\nint solve(int N, int E, int T, Bear* bears) {\n    int total_time = 0;\n    int current_pos = 0;\n\n    for (int i = 0; i < N; i++) {\n        bears[i].collected = 0;\n        bears[i].candy_time = 0;\n        bears[i].coin_time = 0;\n    }\n\n    for (int i = 0; i < N; i++) {\n        int best_bear = -1;\n        int min_time = INT_MAX;\n\n        for (int j = 0; j < N; j++) {\n            if (bears[j].collected) continue;\n\n            int travel_time = abs_diff(current_pos, bears[j].pos);\n            int total_bear_time = total_time + travel_time;\n\n            if (total_bear_time < min_time) {\n                min_time = total_bear_time;\n                best_bear = j;\n            }\n        }\n\n        if (best_bear == -1) break;\n\n        int travel_time = abs_diff(current_pos, bears[best_bear].pos);\n        total_time += travel_time;\n        current_pos = bears[best_bear].pos;\n\n        bears[best_bear].candy_time = total_time;\n        bears[best_bear].coin_time = total_time + T;\n        bears[best_bear].collected = 1;\n    }\n\n    int max_coin_time = 0;\n    for (int i = 0; i < N; i++) {\n        max_coin_time = max(max_coin_time, bears[i].coin_time);\n    }\n\n    int exit_time = max_coin_time + abs_diff(current_pos, E);\n\n    return exit_time;\n}\n\nint main() {\n    int N, E, T;\n    Bear bears[MAX_N];\n\n    scanf(\"%d %d %d\", &N, &E, &T);\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &bears[i].pos);\n    }\n\n    int result = solve(N, E, T, bears);\n    printf(\"%d\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint main() {\n    int N, E, T;\n    scanf(\"%d %d %d\", &N, &E, &T);\n    int x[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &x[i]);\n    }\n    \n    qsort(x, N, sizeof(int), compare);\n    \n    int dp[N];\n    for (int i = 0; i < N; i++) {\n        dp[i] = INT_MAX;\n    }\n    \n    int left = 0;\n    int min_val = INT_MAX;\n    \n    for (int i = 0; i < N; i++) {\n        while (left < i && 2 * (x[i] - x[left]) > T) {\n            min_val = min(min_val, dp[left] - 2 * x[left]);\n            left++;\n        }\n        dp[i] = min(dp[i], x[i] + T);\n        if (left > 0) {\n            dp[i] = min(dp[i], min_val + 3 * x[i]);\n        }\n    }\n    \n    int total_time = dp[N-1] + abs(E - x[N-1]);\n    printf(\"%d\\n\", total_time);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nlong long solve() {\n    int N, E, T;\n    cin >> N >> E >> T;\n    vector<int> x(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> x[i];\n    }\n    sort(x.begin(), x.end());\n\n    vector<long long> dp(N, LLONG_MAX);\n    long long min_val = LLONG_MAX;\n    int left = 0;\n\n    for (int i = 0; i < N; ++i) {\n        while (left < i && 2 * (x[i] - x[left]) > T) {\n            min_val = min(min_val, dp[left] - 2 * x[left]);\n            ++left;\n        }\n        if (left > 0) {\n            dp[i] = min(dp[i], min_val + 3LL * x[i]);\n        }\n        if (2 * (x[i] - x[0]) <= T) {\n            dp[i] = min(dp[i], (long long)T + x[i]);\n        } else {\n            dp[i] = min(dp[i], 3LL * x[i] - x[0]);\n        }\n    }\n\n    long long total_time = dp[N-1] + (E - x[N-1]);\n    return total_time;\n}\n\nint main() {\n    cout << solve() << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class BearGame {\n    public static int minTime(int N, int E, int[] x, int T) {\n        Arrays.sort(x);\n        int maxTime = 0;\n        int currentPos = 0;\n        int time = 0;\n        \n        for (int i = 0; i < N; i++) {\n            time += Math.abs(x[i] - currentPos);\n            currentPos = x[i];\n            maxTime = Math.max(maxTime, time + T);\n        }\n        \n        time += Math.abs(E - currentPos);\n        maxTime = Math.max(maxTime, time);\n        \n        return maxTime;\n    }\n}",
+    "timestamp": "2025-08-05 23:32:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CandyGameSolution {\n    public static int minimumTime(int N, int E, int[] bearPositions, int T) {\n        // Sort bear positions\n        Arrays.sort(bearPositions);\n        \n        // Track total time and current position\n        int currentTime = 0;\n        int currentPos = 0;\n        \n        // Tracking coin generation times\n        int[] coinTimes = new int[N];\n        \n        // First pass: Give candies to bears and calculate coin generation times\n        for (int i = 0; i < N; i++) {\n            // Time to move to bear's position\n            currentTime += Math.abs(bearPositions[i] - currentPos);\n            currentPos = bearPositions[i];\n            \n            // Give candy to bear\n            coinTimes[i] = currentTime + T;\n        }\n        \n        // Time to move to exit after giving candies\n        currentTime += Math.abs(E - currentPos);\n        currentPos = E;\n        \n        // Second pass: Collect coins in order of generation\n        for (int i = 0; i < N; i++) {\n            // Time to move to coin position\n            currentTime += Math.abs(bearPositions[i] - currentPos);\n            currentPos = bearPositions[i];\n            \n            // Wait for coin generation if needed\n            currentTime = Math.max(currentTime, coinTimes[i]);\n        }\n        \n        // Move back to exit\n        currentTime += Math.abs(E - currentPos);\n        \n        return currentTime;\n    }\n\n    public static void main(String[] args) {\n        int N = 3;  // Number of bears/candies\n        int E = 10; // Exit position\n        int[] bearPositions = {3, 6, 7}; // Bear positions\n        int T = 2;  // Time to generate coin\n        \n        System.out.println(minimumTime(N, E, bearPositions, T));\n    }\n}",
+    "timestamp": "2025-08-05 23:32:58"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint solve(int N, int E, int T, vector<int>& bears) {\n    vector<pair<int, int>> candy_times(N);\n    \n    // Sort bears to optimize route\n    sort(bears.begin(), bears.end());\n    \n    int current_pos = 0;\n    int current_time = 0;\n    \n    // Give candies to bears\n    for (int i = 0; i < N; i++) {\n        // Move to bear's position\n        current_time += abs(bears[i] - current_pos);\n        current_pos = bears[i];\n        \n        // Give candy\n        candy_times[i] = {current_pos, current_time + T};\n    }\n    \n    // Collect coins\n    int max_coin_time = 0;\n    for (auto& [pos, coin_time] : candy_times) {\n        // Move to coin's position\n        current_time += abs(pos - current_pos);\n        current_pos = pos;\n        \n        // Wait for coin if needed\n        current_time = max(current_time, coin_time);\n        max_coin_time = max(max_coin_time, current_time);\n    }\n    \n    // Move to exit\n    current_time += abs(E - current_pos);\n    \n    return current_time;\n}\n\nint main() {\n    int N, E, T;\n    cin >> N >> E >> T;\n    \n    vector<int> bears(N);\n    for (int i = 0; i < N; i++) {\n        cin >> bears[i];\n    }\n    \n    cout << solve(N, E, T, bears) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:33:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_time_to_collect_coins(N, E, T, bears):\n    # Sort bear positions for optimal path calculation\n    bears.sort()\n    \n    # Calculate time to give candies to bears\n    candy_time = 0\n    for bear in bears:\n        candy_time = max(candy_time, bear) + 1\n    \n    # Calculate time to collect all coins and go to the exit\n    coin_collect_time = max(candy_time + T, bears[-1] + T)\n    \n    return coin_collect_time + abs(E - bears[-1])\n\n# Example usage:\nN = 5\nE = 10\nT = 2\nbears = [2, 5, 8, 6, 10]\nprint(min_time_to_collect_coins(N, E, T, bears))  # Output depends on the specifics of the given input",
+    "timestamp": "2025-08-13 15:50:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class CandyGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt(); // Number of candies/bears\n        int E = scanner.nextInt(); // Exit position\n        int T = scanner.nextInt(); // Time to get a coin from a bear\n        int[] bearPositions = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            bearPositions[i] = scanner.nextInt();\n        }\n        scanner.close();\n\n        Arrays.sort(bearPositions);\n\n        int time = 0;\n        int playerPos = 0;\n\n        for (int i = 0; i < N; i++) {\n            time += Math.abs(bearPositions[i] - playerPos); // move to bear position\n            playerPos = bearPositions[i];\n        }\n\n        for (int i = N - 1; i >= 0; i--) {\n            time = Math.max(time, bearPositions[i] + T); // wait to collect coin\n        }\n\n        time += Math.abs(E - playerPos); // move to exit\n\n        System.out.println(time);\n    }\n}",
+    "timestamp": "2025-08-13 15:50:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    int N, E, T;\n    scanf(\"%d %d %d\", &N, &E, &T);\n    \n    int x[N];\n    for(int i = 0; i < N; i++) {\n        scanf(\"%d\", &x[i]);\n    }\n    \n    qsort(x, N, sizeof(int), compare);\n    \n    int time = 0, currentPosition = 0;\n    for(int i = 0; i < N; i++) {\n        time += abs(x[i] - currentPosition) + T;\n        currentPosition = x[i];\n    }\n    \n    time += abs(E - currentPosition);\n    \n    printf(\"%d\\n\", time);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:50:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n#include <numeric>\n\nusing namespace std;\n\nint main() {\n    int N, E, T;\n    cin >> N >> E >> T;\n\n    vector<int> bearPositions(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> bearPositions[i];\n    }\n\n    // Sort the bear positions to plan the player's route efficiently\n    sort(bearPositions.begin(), bearPositions.end());\n\n    int currentTime = 0;\n    int currentPos = 0;\n\n    for (int i = 0; i < N; ++i) {\n        // Move to the next bear's position\n        currentTime += abs(bearPositions[i] - currentPos);\n        currentPos = bearPositions[i];\n\n        // Give a candy and wait for the coin\n        currentTime += T;\n    }\n\n    // Collect all coins here without any additional delay (since they are already available)\n    currentPos = bearPositions[N - 1];\n    currentTime = max(currentTime, currentPos);\n\n    // Move to the exit\n    currentTime += abs(E - currentPos);\n\n    cout << currentTime << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:50:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_game(N, E, bears, T):\n    # Sort bears by their position\n    bears.sort()\n    \n    # Initialize variables\n    current_pos = 0\n    current_time = 0\n    remaining_candies = N\n    coin_times = []\n    coin_positions = []\n    \n    # Give candies to bears and track coin placement times\n    for bear in bears:\n        # Move to bear's position\n        current_time += abs(bear - current_pos)\n        current_pos = bear\n        \n        # Give candy to bear\n        coin_times.append(current_time + T)\n        coin_positions.append(bear)\n        remaining_candies -= 1\n    \n    # Move to last bear to collect coins\n    current_time += abs(bears[-1] - current_pos)\n    current_pos = bears[-1]\n    \n    # Collect coins\n    for coin_time, coin_pos in sorted(zip(coin_times, coin_positions)):\n        # Move to coin position\n        current_time += abs(coin_pos - current_pos)\n        current_pos = coin_pos\n        \n        # Ensure time is at least coin placement time\n        current_time = max(current_time, coin_time)\n    \n    # Move to exit\n    current_time += abs(E - current_pos)\n    \n    return current_time",
+    "timestamp": "2025-08-13 15:50:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_time_to_exit(N, E, x, T):\n    x_sorted = sorted(x)\n    max_time = 0\n    current_pos = 0\n    \n    for i in range(N):\n        distance = abs(x_sorted[i] - current_pos)\n        current_pos = x_sorted[i]\n        max_time += distance\n        max_time = max(max_time, T * (i + 1))\n    \n    distance_to_exit = abs(E - current_pos)\n    max_time += distance_to_exit\n    \n    return max_time\n\n# Sample usage:\n# N = 3\n# E = 10\n# x = [2, 3, 5]\n# T = 3\n# print(min_time_to_exit(N, E, x, T))  # Output should be 13",
+    "timestamp": "2025-08-13 15:50:47"
+  }
+]

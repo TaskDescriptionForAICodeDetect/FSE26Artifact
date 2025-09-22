@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint cross_product(Point p0, Point p1, Point p2) {\n    return (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n}\n\nint main() {\n    Point p0, p1, p2;\n    scanf(\"%d %d %d %d %d %d\", &p0.x, &p0.y, &p1.x, &p1.y, &p2.x, &p2.y);\n    \n    int cross = cross_product(p0, p1, p2);\n    \n    if (cross > 0) {\n        printf(\"COUNTER_CLOCKWISE\\n\");\n    } else if (cross < 0) {\n        printf(\"CLOCKWISE\\n\");\n    } else {\n        int dot = (p2.x - p0.x) * (p1.x - p0.x) + (p2.y - p0.y) * (p1.y - p0.y);\n        int len0 = (p1.x - p0.x) * (p1.x - p0.x) + (p1.y - p0.y) * (p1.y - p0.y);\n        \n        if (dot < 0) {\n            printf(\"ONLINE_BACK\\n\");\n        } else if (dot > len0) {\n            printf(\"ONLINE_FRONT\\n\");\n        } else {\n            printf(\"ON_SEGMENT\\n\");\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:13:39"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\nint main() {\n    Point p0, p1, p2;\n    scanf(\"%lf %lf\", &p0.x, &p0.y);\n    scanf(\"%lf %lf\", &p1.x, &p1.y);\n    scanf(\"%lf %lf\", &p2.x, &p2.y);\n\n    double cross = (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n\n    if (cross > 0) {\n        printf(\"COUNTER_CLOCKWISE\\n\");\n    } else if (cross < 0) {\n        printf(\"CLOCKWISE\\n\");\n    } else {\n        double dot = (p2.x - p0.x) * (p1.x - p0.x) + (p2.y - p0.y) * (p1.y - p0.y);\n        if (dot < 0) {\n            printf(\"ONLINE_BACK\\n\");\n        } else {\n            double len1 = (p1.x - p0.x) * (p1.x - p0.x) + (p1.y - p0.y) * (p1.y - p0.y);\n            double len2 = (p2.x - p0.x) * (p2.x - p0.x) + (p2.y - p0.y) * (p2.y - p0.y);\n            if (len1 < len2) {\n                printf(\"ONLINE_FRONT\\n\");\n            } else {\n                printf(\"ON_SEGMENT\\n\");\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:13:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n};\n\nint ccw(Point p0, Point p1, Point p2) {\n    double cross = (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n    if (cross > 1e-8) return 1; // COUNTER_CLOCKWISE\n    if (cross < -1e-8) return -1; // CLOCKWISE\n\n    double dot = (p2.x - p0.x) * (p1.x - p0.x) + (p2.y - p0.y) * (p1.y - p0.y);\n    if (dot < -1e-8) return 2; // ONLINE_BACK\n\n    double len1 = (p1.x - p0.x) * (p1.x - p0.x) + (p1.y - p0.y) * (p1.y - p0.y);\n    double len2 = (p2.x - p0.x) * (p2.x - p0.x) + (p2.y - p0.y) * (p2.y - p0.y);\n    if (len2 > len1 + 1e-8) return -2; // ONLINE_FRONT\n\n    return 0; // ON_SEGMENT\n}\n\nint main() {\n    Point p0, p1, p2;\n    cin >> p0.x >> p0.y;\n    cin >> p1.x >> p1.y;\n    cin >> p2.x >> p2.y;\n\n    int res = ccw(p0, p1, p2);\n    switch (res) {\n        case 1: cout << \"COUNTER_CLOCKWISE\" << endl; break;\n        case -1: cout << \"CLOCKWISE\" << endl; break;\n        case 2: cout << \"ONLINE_BACK\" << endl; break;\n        case -2: cout << \"ONLINE_FRONT\" << endl; break;\n        case 0: cout << \"ON_SEGMENT\" << endl; break;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:14:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static class Point {\n        long x, y;\n        Point(long x, long y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n\n    static int ccw(Point p0, Point p1, Point p2) {\n        long cross = (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n        if (cross > 0) return 1; // COUNTER_CLOCKWISE\n        if (cross < 0) return -1; // CLOCKWISE\n        return 0; // collinear\n    }\n\n    static String solve(Point p0, Point p1, Point p2) {\n        int res = ccw(p0, p1, p2);\n        if (res == 1) return \"COUNTER_CLOCKWISE\";\n        if (res == -1) return \"CLOCKWISE\";\n\n        long dot = (p2.x - p0.x) * (p1.x - p0.x) + (p2.y - p0.y) * (p1.y - p0.y);\n        if (dot < 0) return \"ONLINE_BACK\";\n\n        long len1 = (p1.x - p0.x) * (p1.x - p0.x) + (p1.y - p0.y) * (p1.y - p0.y);\n        long len2 = (p2.x - p0.x) * (p2.x - p0.x) + (p2.y - p0.y) * (p2.y - p0.y);\n        if (len1 < len2) return \"ONLINE_FRONT\";\n\n        return \"ON_SEGMENT\";\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        Point p0 = new Point(sc.nextLong(), sc.nextLong());\n        Point p1 = new Point(sc.nextLong(), sc.nextLong());\n        int q = sc.nextInt();\n        while (q-- > 0) {\n            Point p2 = new Point(sc.nextLong(), sc.nextLong());\n            System.out.println(solve(p0, p1, p2));\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:14:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    static class Point {\n        long x, y;\n        Point(long x, long y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n    \n    static long ccw(Point p0, Point p1, Point p2) {\n        return (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        long x0 = sc.nextLong();\n        long y0 = sc.nextLong();\n        long x1 = sc.nextLong();\n        long y1 = sc.nextLong();\n        long x2 = sc.nextLong();\n        long y2 = sc.nextLong();\n        \n        Point p0 = new Point(x0, y0);\n        Point p1 = new Point(x1, y1);\n        Point p2 = new Point(x2, y2);\n        \n        long result = ccw(p0, p1, p2);\n        \n        if (result > 0) {\n            System.out.println(\"COUNTER_CLOCKWISE\");\n        } else if (result < 0) {\n            System.out.println(\"CLOCKWISE\");\n        } else {\n            if (p2.x >= Math.min(p0.x, p1.x) && p2.x <= Math.max(p0.x, p1.x) && \n                p2.y >= Math.min(p0.y, p1.y) && p2.y <= Math.max(p0.y, p1.y)) {\n                System.out.println(\"ON_SEGMENT\");\n            } else if ((p0.x - p1.x) * (p2.x - p1.x) + (p0.y - p1.y) * (p2.y - p1.y) > 0) {\n                System.out.println(\"ONLINE_FRONT\");\n            } else {\n                System.out.println(\"ONLINE_BACK\");\n            }\n        }\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:14:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nstruct Point {\n    int x, y;\n};\n\nint cross_product(Point p0, Point p1, Point p2) {\n    return (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n}\n\nbool on_segment(Point p0, Point p1, Point p2) {\n    return min(p0.x, p1.x) <= p2.x && p2.x <= max(p0.x, p1.x) &&\n           min(p0.y, p1.y) <= p2.y && p2.y <= max(p0.y, p1.y);\n}\n\nint main() {\n    Point p0, p1, p2;\n    cin >> p0.x >> p0.y >> p1.x >> p1.y >> p2.x >> p2.y;\n\n    int cross = cross_product(p0, p1, p2);\n\n    if (cross > 0) {\n        cout << \"COUNTER_CLOCKWISE\" << endl;\n    } else if (cross < 0) {\n        cout << \"CLOCKWISE\" << endl;\n    } else {\n        if (on_segment(p0, p1, p2)) {\n            cout << \"ON_SEGMENT\" << endl;\n        } else if ((p2.x - p0.x) * (p1.x - p0.x) < 0 || (p2.y - p0.y) * (p1.y - p0.y) < 0) {\n            cout << \"ONLINE_BACK\" << endl;\n        } else {\n            cout << \"ONLINE_FRONT\" << endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:14:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def turn_direction(p0, p1, p2):\n    def cross_product(a, b, c):\n        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])\n    \n    def is_online(a, b, c):\n        return cross_product(a, b, c) == 0\n    \n    if is_online(p0, p1, p2):\n        dist_p0_p1 = (p1[0] - p0[0]) ** 2 + (p1[1] - p0[1]) ** 2\n        dist_p0_p2 = (p2[0] - p0[0]) ** 2 + (p2[1] - p0[1]) ** 2\n        dist_p2_p1 = (p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2\n        \n        if dist_p0_p2 > dist_p0_p1:\n            return \"ONLINE_FRONT\"\n        elif dist_p2_p1 > dist_p0_p1:\n            return \"ONLINE_BACK\"\n        else:\n            return \"ON_SEGMENT\"\n    else:\n        cross = cross_product(p0, p1, p2)\n        if cross > 0:\n            return \"COUNTER_CLOCKWISE\"\n        else:\n            return \"CLOCKWISE\"\n\n# Example: Usage\np0 = (0, 0)\np1 = (2, 2)\np2 = (1, 2)\nprint(turn_direction(p0, p1, p2))  # Should print 'COUNTER_CLOCKWISE'",
+    "timestamp": "2025-08-13 09:35:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class TurnDirection {\n    public static String determineDirection(int[] p0, int[] p1, int[] p2) {\n        int dx1 = p1[0] - p0[0];\n        int dy1 = p1[1] - p0[1];\n        int dx2 = p2[0] - p0[0];\n        int dy2 = p2[1] - p0[1];\n\n        int crossProduct = dx1 * dy2 - dy1 * dx2;\n\n        if (crossProduct > 0) {\n            return \"COUNTER_CLOCKWISE\";\n        } else if (crossProduct < 0) {\n            return \"CLOCKWISE\";\n        } else {\n            int dotProduct = dx1 * dx2 + dy1 * dy2;\n            if (dotProduct < 0) {\n                return \"ONLINE_BACK\";\n            } else {\n                int lenSquaredP0P1 = dx1 * dx1 + dy1 * dy1;\n                int lenSquaredP0P2 = dx2 * dx2 + dy2 * dy2;\n                if (lenSquaredP0P2 > lenSquaredP0P1) {\n                    return \"ONLINE_FRONT\";\n                } else {\n                    return \"ON_SEGMENT\";\n                }\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int[] p0 = {scanner.nextInt(), scanner.nextInt()};\n        int[] p1 = {scanner.nextInt(), scanner.nextInt()};\n        int[] p2 = {scanner.nextInt(), scanner.nextInt()};\n        \n        System.out.println(determineDirection(p0, p1, p2));\n    }\n}",
+    "timestamp": "2025-08-13 09:35:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint cross_product(Point p0, Point p1, Point p2) {\n    return (p1.x - p0.x) * (p2.y - p0.y) - (p1.y - p0.y) * (p2.x - p0.x);\n}\n\nint dot_product(Point p0, Point p1, Point p2) {\n    return (p1.x - p0.x) * (p2.x - p0.x) + (p1.y - p0.y) * (p2.y - p0.y);\n}\n\nint length_squared(Point p0, Point p1) {\n    int dx = p1.x - p0.x;\n    int dy = p1.y - p0.y;\n    return dx*dx + dy*dy;\n}\n\nvoid print_turn_type(Point p0, Point p1, Point p2) {\n    int cross = cross_product(p0, p1, p2);\n\n    if (cross > 0) {\n        printf(\"COUNTER_CLOCKWISE\\n\");\n    } else if (cross < 0) {\n        printf(\"CLOCKWISE\\n\");\n    } else {\n        int dot = dot_product(p0, p1, p2);\n        if (dot < 0) {\n            printf(\"ONLINE_BACK\\n\");\n        } else if (dot > 0 && dot < length_squared(p0, p1)) {\n            printf(\"ON_SEGMENT\\n\");\n        } else if (dot > 0) {\n            printf(\"ONLINE_FRONT\\n\");\n        }\n    }\n}\n\nint main() {\n    Point p0, p1, p2;\n    scanf(\"%d %d\", &p0.x, &p0.y);\n    scanf(\"%d %d\", &p1.x, &p1.y);\n    scanf(\"%d %d\", &p2.x, &p2.y);\n\n    print_turn_type(p0, p1, p2);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:36:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def turn(p0, p1, p2):\n    def cross_product(p0, p1, p2):\n        return (p1[0] - p0[0]) * (p2[1] - p0[1]) - (p1[1] - p0[1]) * (p2[0] - p0[0])\n    \n    cp = cross_product(p0, p1, p2)\n    \n    if cp > 0:\n        return 'COUNTER_CLOCKWISE'\n    elif cp < 0:\n        return 'CLOCKWISE'\n    \n    def on_segment(p0, p1, p2):\n        return (min(p0[0], p1[0]) <= p2[0] <= max(p0[0], p1[0]) and \n                min(p0[1], p1[1]) <= p2[1] <= max(p0[1], p1[1]))\n    \n    if on_segment(p0, p1, p2):\n        return 'ON_SEGMENT'\n    \n    if ((p2[0] - p0[0]) * (p1[0] - p0[0]) < 0 or \n        (p2[1] - p0[1]) * (p1[1] - p0[1]) < 0):\n        return 'ONLINE_BACK'\n    \n    return 'ONLINE_FRONT'",
+    "timestamp": "2025-08-13 09:36:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def direction(p0, p1, p2):\n    cross = (p1[0] - p0[0])*(p2[1] - p0[1]) - (p1[1] - p0[1])*(p2[0] - p0[0])\n    if cross > 0:\n        return 'COUNTER_CLOCKWISE'\n    elif cross < 0:\n        return 'CLOCKWISE'\n    else:\n        dot = (p2[0] - p0[0])*(p1[0] - p0[0]) + (p2[1] - p0[1])*(p1[1] - p0[1])\n        if dot < 0:\n            return 'ONLINE_BACK'\n        else:\n            len_p0p1 = (p1[0] - p0[0])**2 + (p1[1] - p0[1])**2\n            len_p0p2 = (p2[0] - p0[0])**2 + (p2[1] - p0[1])**2\n            if len_p0p2 > len_p0p1:\n                return 'ONLINE_FRONT'\n            else:\n                return 'ON_SEGMENT'\n\np0 = tuple(map(float, input().split()))\np1 = tuple(map(float, input().split()))\np2 = tuple(map(float, input().split()))\nprint(direction(p0, p1, p2))",
+    "timestamp": "2025-08-13 09:36:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\n\nstruct Point {\n    int x, y;\n};\n\nint orientation(Point p0, Point p1, Point p2) {\n    // Calculate the orientation\n    int val = (p1.y - p0.y) * (p2.x - p1.x) - (p1.x - p0.x) * (p2.y - p1.y);\n    if (val == 0) return 0; // collinear\n    return (val > 0) ? 1 : 2; // 1 => clockwise, 2 => counterclockwise\n}\n\nbool onSegment(Point p0, Point p1, Point p2) {\n    if (p2.x <= max(p0.x, p1.x) && p2.x >= min(p0.x, p1.x) &&\n        p2.y <= max(p0.y, p1.y) && p2.y >= min(p0.y, p1.y))\n        return true;\n    return false;\n}\n\nint main() {\n    Point p0, p1, p2;\n    cin >> p0.x >> p0.y >> p1.x >> p1.y >> p2.x >> p2.y;\n\n    int orient = orientation(p0, p1, p2);\n    \n    if (orient == 0) {\n        if (onSegment(p0, p1, p2))\n            cout << \"ON_SEGMENT\" << endl;\n        else if ((p2.x - p0.x) * (p1.x - p2.x) + (p2.y - p0.y) * (p1.y - p2.y) < 0)\n            cout << \"ONLINE_BACK\" << endl;\n        else\n            cout << \"ONLINE_FRONT\" << endl;\n    } else if (orient == 1) {\n        cout << \"CLOCKWISE\" << endl;\n    } else {\n        cout << \"COUNTER_CLOCKWISE\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:52:48"
+  }
+]

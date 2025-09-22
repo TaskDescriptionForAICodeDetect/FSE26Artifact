@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 100005\n\nint main() {\n    int N, total_stones = 0;\n    int a[MAX_N], stones[MAX_N], count[MAX_N];\n    \n    scanf(\"%d\", &N);\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &a[i]);\n        stones[i] = a[i];\n        total_stones += a[i];\n        count[i] = 0;\n    }\n    \n    int seq[MAX_N], seq_idx = 0;\n    \n    while (total_stones > 0) {\n        int max_stones = 0;\n        int min_max_pile = 0;\n        \n        for (int i = 1; i <= N; i++) {\n            if (stones[i] > max_stones) {\n                max_stones = stones[i];\n                min_max_pile = i;\n            }\n        }\n        \n        for (int i = 1; i <= N; i++) {\n            if (stones[i] == max_stones && i < min_max_pile) {\n                min_max_pile = i;\n            }\n        }\n        \n        seq[seq_idx++] = min_max_pile;\n        count[min_max_pile]++;\n        stones[min_max_pile]--;\n        total_stones--;\n    }\n    \n    for (int i = 1; i <= N; i++) {\n        printf(\"%d \", count[i]);\n    }\n    printf(\"\\n\");\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int index;\n    int stones;\n} Pile;\n\nint compare(const void *a, const void *b) {\n    Pile *pileA = (Pile *)a;\n    Pile *pileB = (Pile *)b;\n    if (pileB->stones != pileA->stones) {\n        return pileB->stones - pileA->stones;\n    } else {\n        return pileA->index - pileB->index;\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Pile *piles = (Pile *)malloc(N * sizeof(Pile));\n    long long total = 0;\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &piles[i].stones);\n        piles[i].index = i + 1;\n        total += piles[i].stones;\n    }\n\n    qsort(piles, N, sizeof(Pile), compare);\n\n    long long *count = (long long *)calloc(N + 1, sizeof(long long));\n    for (int i = 0; i < N; ++i) {\n        if (i == N - 1) {\n            count[piles[i].index] += total;\n            break;\n        }\n        long long diff = piles[i].stones - piles[i + 1].stones;\n        count[piles[i].index] += (i + 1) * diff;\n        total -= (i + 1) * diff;\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        printf(\"%lld\\n\", count[i]);\n    }\n\n    free(piles);\n    free(count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    \n    vector<int> res(N, 0);\n    for (int i = 0; i < N; ++i) {\n        res[i] = a[i] - (i + 1 < N ? a[i + 1] : 0);\n    }\n    \n    for (int i = N - 2; i >= 0; --i) {\n        if (res[i] > res[i + 1]) {\n            int diff = res[i] - res[i + 1];\n            int k = diff / (i + 2);\n            if (diff % (i + 2) != 0) {\n                k++;\n            }\n            res[i] -= k;\n            res[i + 1] += k * (i + 1);\n        }\n    }\n    \n    for (int i = 0; i < N; ++i) {\n        cout << res[i] << \"\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = sc.nextInt();\n        }\n        \n        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((i, j) -> {\n            if (a[i] != a[j]) {\n                return Integer.compare(a[j], a[i]);\n            } else {\n                return Integer.compare(i, j);\n            }\n        });\n        \n        for (int i = 0; i < N; i++) {\n            if (a[i] > 0) {\n                maxHeap.add(i);\n            }\n        }\n        \n        int[] res = new int[N];\n        while (!maxHeap.isEmpty()) {\n            int x = maxHeap.poll();\n            res[x]++;\n            a[x]--;\n            if (a[x] > 0) {\n                maxHeap.add(x);\n            }\n        }\n        \n        for (int count : res) {\n            System.out.println(count);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:26:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class SnukeSequence {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int[] stones = new int[N];\n        \n        st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < N; i++) {\n            stones[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        int[] result = solve(N, stones);\n        \n        for (int count : result) {\n            System.out.println(count);\n        }\n    }\n    \n    static int[] solve(int N, int[] stones) {\n        int totalStones = 0;\n        for (int stone : stones) {\n            totalStones += stone;\n        }\n        \n        int[] sequence = new int[totalStones];\n        int[] counts = new int[N];\n        \n        PriorityQueue<Integer> maxPiles = new PriorityQueue<>((a, b) -> {\n            if (stones[a] != stones[b]) {\n                return Integer.compare(stones[b], stones[a]);\n            }\n            return Integer.compare(a, b);\n        });\n        \n        for (int i = 0; i < N; i++) {\n            if (stones[i] > 0) {\n                maxPiles.offer(i);\n            }\n        }\n        \n        for (int i = 0; i < totalStones; i++) {\n            int maxPile = maxPiles.poll();\n            sequence[i] = maxPile + 1;\n            counts[maxPile]++;\n            stones[maxPile]--;\n            \n            if (stones[maxPile] > 0) {\n                maxPiles.offer(maxPile);\n            }\n            \n            if (!maxPiles.isEmpty()) {\n                while (!maxPiles.isEmpty() && stones[maxPiles.peek()] == 0) {\n                    maxPiles.poll();\n                }\n            }\n        }\n        \n        return counts;\n    }\n}",
+    "timestamp": "2025-08-05 23:26:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N);\n    vector<int> count(N, 0);\n    priority_queue<pair<int, int>> pq;\n    \n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n        pq.push({a[i], -i});\n    }\n    \n    vector<int> sequence;\n    \n    while (!pq.empty()) {\n        int stones = pq.top().first;\n        int index = -pq.top().second;\n        pq.pop();\n        \n        sequence.push_back(index + 1);\n        count[index]++;\n        \n        a[index]--;\n        \n        if (a[index] > 0) {\n            pq.push({a[index], -index});\n        }\n    }\n    \n    for (int i = 0; i < N; i++) {\n        cout << count[i] << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:26:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_stones(N, a):\n    counts = [0] * N\n    while sum(a) > 0:\n        max_stones = max(a)\n        x = min(i for i in range(N) if a[i] == max_stones)\n        counts[x] += 1\n        a[x] -= 1\n    return counts\n\n# Example usage:\nN = 4\na = [1, 2, 2, 1]\nresult = count_stones(N, a)\nprint(result)  # Output: [1, 2, 2, 1]",
+    "timestamp": "2025-08-13 15:13:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class StoneSequence {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        int[] count = new int[N];\n        \n        while (true) {\n            int maxStones = -1;\n            int pileIndex = -1;\n            \n            // Find the pile with the maximum stones remaining and smallest index\n            for (int i = 0; i < N; i++) {\n                if (a[i] > maxStones) {\n                    maxStones = a[i];\n                    pileIndex = i;\n                }\n            }\n            \n            if (maxStones == 0) break; // All piles are empty\n            \n            // Append pileIndex+1 to the sequence and reduce stone count\n            count[pileIndex]++;\n            a[pileIndex]--;\n        }\n        \n        for (int i = 0; i < N; i++) {\n            System.out.println(count[i]);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 15:13:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N];\n    int count[N];\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n        count[i] = 0;\n    }\n    \n    while (1) {\n        int maxStones = 0, chosenPile = -1;\n        for (int i = 0; i < N; i++) {\n            if (a[i] > maxStones) {\n                maxStones = a[i];\n                chosenPile = i;\n            }\n        }\n        if (chosenPile == -1) break; // No stones left, terminate the loop\n        count[chosenPile]++;\n        a[chosenPile]--;\n    }\n    \n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", count[i]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:14:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n    \n    // Max-Heap with pair (number of stones, index), prioritized by number of stones, then index\n    priority_queue<pair<int, int>> pq;\n    \n    for (int i = 0; i < N; ++i) {\n        if (a[i] > 0) {\n            pq.push({a[i], -i});  // Use -i to simulate a min-heap for index\n        }\n    }\n    \n    vector<int> result(N, 0);\n    \n    while (!pq.empty()) {\n        auto [stones, negIndex] = pq.top();\n        pq.pop();\n        int idx = -negIndex;\n        result[idx]++;\n        if (--a[idx] > 0) {\n            pq.push({a[idx], -idx});\n        }\n    }\n    \n    for (int i = 0; i < N; ++i) {\n        cout << result[i] << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:14:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, stones):\n    counts = [0] * N\n    total_stones = sum(stones)\n    result = [0] * N\n    \n    while total_stones > 0:\n        max_stones = max(stones)\n        candidates = [i for i in range(N) if stones[i] == max_stones]\n        x = min(candidates)\n        \n        result[x] += 1\n        stones[x] -= 1\n        total_stones -= 1\n    \n    return result\n\ndef main():\n    N = int(input())\n    stones = list(map(int, input().split()))\n    \n    answer = solve(N, stones)\n    print(*answer)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 15:19:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import heapq\n\ndef solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    N = int(data[0])\n    a = list(map(int, data[1:N+1]))\n    \n    heap = []\n    for i in range(N):\n        heapq.heappush(heap, (-a[i], i+1))  # using max heap via min heap with negative values\n    \n    res = [0] * (N + 1)\n    while heap:\n        neg_val, x = heapq.heappop(heap)\n        current_val = -neg_val\n        if not heap:\n            res[x] = current_val\n            break\n        next_neg_val, next_x = heapq.heappop(heap)\n        next_val = -next_neg_val\n        diff = current_val - next_val\n        res[x] += diff\n        heapq.heappush(heap, (next_neg_val, next_x))\n    \n    for i in range(1, N+1):\n        print(res[i])\n\nsolve()",
+    "timestamp": "2025-08-13 15:19:07"
+  }
+]

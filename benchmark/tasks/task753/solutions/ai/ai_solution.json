@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    long long result = 1;\n    \n    for (int i = 0; i < N; i++) {\n        result = (result * (M + 1)) % MOD;\n    }\n    \n    for (int j = 0; j < M; j++) {\n        result = (result * (N + 1)) % MOD;\n    }\n    \n    printf(\"%lld\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#define MOD 998244353\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    long long result = 1;\n    for (int i = 1; i <= N + M; i++) {\n        result = result * i % MOD;\n    }\n    for (int i = 1; i <= N; i++) {\n        result = result * (M + 1) % MOD;\n    }\n    for (int j = 1; j <= M; j++) {\n        result = result * (N + 1) % MOD;\n    }\n    \n    printf(\"%lld\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:46:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 998244353;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<vector<int>> grid(N, vector<int>(M, 0));\n    vector<int> row(N), col(M);\n    \n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            grid[i][j] = (i < col[j] ? 1 : 0) + (j < row[i] ? 1 : 0);\n        }\n    }\n    \n    int result = 1;\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            if (i == 0 && j == 0) {\n                result = 2;\n            } else if (i == 0) {\n                if (grid[i][j] == grid[i][j-1]) {\n                    result = (result * 1LL * (grid[i][j] + 1)) % MOD;\n                } else {\n                    result = (result * 1LL * (max(grid[i][j], grid[i][j-1]) + 1)) % MOD;\n                }\n            } else if (j == 0) {\n                if (grid[i][j] == grid[i-1][j]) {\n                    result = (result * 1LL * (grid[i][j] + 1)) % MOD;\n                } else {\n                    result = (result * 1LL * (max(grid[i][j], grid[i-1][j]) + 1)) % MOD;\n                }\n            } else {\n                int expected = max(grid[i-1][j], grid[i][j-1]);\n                if (grid[i-1][j] == grid[i][j-1]) {\n                    if (grid[i][j] < expected) {\n                        result = 0;\n                    } else if (grid[i][j] == expected) {\n                        result = (result * 1LL * (expected + 1)) % MOD;\n                    } else {\n                        result = (result * 2LL) % MOD;\n                    }\n                } else {\n                    if (grid[i][j] != expected) {\n                        result = 0;\n                    }\n                }\n            }\n        }\n    }\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        long[][] dp = new long[N + 2][M + 2];\n        dp[0][0] = 1;\n\n        for (int i = 0; i <= N; i++) {\n            for (int j = 0; j <= M; j++) {\n                if (i < N) {\n                    dp[i + 1][j] = (dp[i + 1][j] + dp[i][j] * (j + 1)) % MOD;\n                }\n                if (j < M) {\n                    dp[i][j + 1] = (dp[i][j + 1] + dp[i][j] * (i + 1)) % MOD;\n                }\n                if (i < N && j < M) {\n                    dp[i + 1][j + 1] = (dp[i + 1][j + 1] - dp[i][j] * (i + 1) % MOD * (j + 1) % MOD + MOD) % MOD;\n                }\n            }\n        }\n\n        System.out.println(dp[N][M]);\n    }\n}",
+    "timestamp": "2025-08-05 22:47:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    static final int MOD = 998244353;\n    \n    public static int countGrids(int N, int M) {\n        // Total ways to choose k_i for rows and l_j for columns\n        long rowWays = power(M + 1, N);\n        long colWays = power(N + 1, M);\n        \n        return (int)((rowWays * colWays) % MOD);\n    }\n    \n    // Fast exponentiation with modulo\n    static long power(int base, int exp) {\n        long result = 1;\n        long x = base;\n        \n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                result = (result * x) % MOD;\n            }\n            x = (x * x) % MOD;\n            exp /= 2;\n        }\n        \n        return result;\n    }\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        System.out.println(countGrids(N, M));\n    }\n}",
+    "timestamp": "2025-08-05 22:47:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst int MOD = 998244353;\n\nll pow_mod(ll base, ll exp) {\n    ll res = 1;\n    while (exp > 0) {\n        if (exp & 1) res = (res * base) % MOD;\n        base = (base * base) % MOD;\n        exp >>= 1;\n    }\n    return res;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    ll ans = 1;\n    for (int i = 0; i < N; i++) {\n        ans = (ans * (M + 1)) % MOD;\n    }\n    for (int j = 0; j < M; j++) {\n        ans = (ans * (N + 1)) % MOD;\n    }\n    \n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:47:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_grids(N, M):\n    MOD = 998244353\n\n    def factorial(n):\n        result = 1\n        for i in range(2, n + 1):\n            result = result * i % MOD\n        return result\n\n    fact_N = factorial(N)\n    fact_M = factorial(M)\n\n    return fact_N * fact_M % MOD\n\n# Example usage:\nN = 3\nM = 3\nprint(count_grids(N, M))",
+    "timestamp": "2025-08-13 12:33:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class TakahashiGrid {\n\n    private static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n\n        System.out.println(numberOfDifferentGrids(N, M));\n    }\n\n    private static long numberOfDifferentGrids(int N, int M) {\n        long result = 0;\n        \n        long[][] combinationCache = new long[Math.max(N, M) + 1][Math.max(N, M) + 1];\n        for (int i = 0; i <= Math.max(N, M); i++) {\n            combinationCache[i][0] = 1;\n            for (int j = 1; j <= i; j++) {\n                combinationCache[i][j] = (combinationCache[i - 1][j - 1] + combinationCache[i - 1][j]) % MOD;\n            }\n        }\n\n        for (int k = 0; k <= N; k++) {\n            for (int l = 0; l <= M; l++) {\n                long rowsCombination = combinationCache[N][k];\n                long columnsCombination = combinationCache[M][l];\n                long waysToChooseRows = pow(2, k * (M - l), MOD);\n                long waysToChooseColumns = pow(2, (N - k) * l, MOD);\n                \n                long currentCombinationWays = (((rowsCombination * columnsCombination) % MOD) * ((waysToChooseRows * waysToChooseColumns) % MOD)) % MOD;\n                \n                if ((k + l) % 2 == 0) {\n                    result = (result + currentCombinationWays) % MOD;\n                } else {\n                    result = (result - currentCombinationWays + MOD) % MOD;\n                }\n            }\n        }\n\n        return result;\n    }\n  \n    private static long pow(long base, long exp, long mod) {\n        long result = 1;\n        while (exp > 0) {\n            if ((exp & 1) != 0) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp >>= 1;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-13 12:33:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nlong long mod_exp(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    long long num_grids = mod_exp(2, N + M, MOD);\n    num_grids = (num_grids * mod_exp(2, N * M - N - M, MOD)) % MOD;\n\n    printf(\"%lld\\n\", num_grids);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:33:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    // Calculate powers of 2 up to max(N, M)\n    int maxNM = max(N, M);\n    vector<int> pow2(maxNM + 1, 1);\n    for (int i = 1; i <= maxNM; ++i) {\n        pow2[i] = (2 * pow2[i - 1]) % MOD;\n    }\n\n    // The result is (2^N - 1) * (2^M - 1) % MOD\n    long long result = (long long)(pow2[N] - 1 + MOD) % MOD;\n    result = result * (pow2[M] - 1 + MOD) % MOD;\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:33:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_grids(N, M):\n    MOD = 998244353\n    \n    # Calculate the total number of possible row and column choices\n    row_choices = M + 1\n    col_choices = N + 1\n    \n    # Total possible configurations is the product of row and column choices\n    total_configs = pow(row_choices, N, MOD) * pow(col_choices, M, MOD) % MOD\n    \n    return total_configs\n\n# Read input\nN, M = map(int, input().split())\n\n# Print the result\nprint(count_grids(N, M))",
+    "timestamp": "2025-08-13 12:33:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    N, M = map(int, sys.stdin.readline().split())\n    \n    # Precompute factorial, inverse factorial, and inverse arrays up to max(N, M) + 2\n    max_nm = max(N, M) + 2\n    fact = [1] * (max_nm + 1)\n    inv_fact = [1] * (max_nm + 1)\n    \n    for i in range(1, max_nm + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_nm] = pow(fact[max_nm], MOD-2, MOD)\n    for i in range(max_nm - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    def comb(a, b):\n        if a < 0 or b < 0 or a < b:\n            return 0\n        return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD\n    \n    res = 0\n    for k in range(0, N + 1):\n        for l in range(0, M + 1):\n            term = comb(N, k) * comb(M, l) % MOD\n            term = term * comb(k + l, k) % MOD\n            term = term * comb((N - k) + (M - l), (N - k)) % MOD\n            res = (res + term) % MOD\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 12:33:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countDifferentGrids(N, M) {\n    const MOD = 998244353;\n\n    // Precompute factorials and their modular inverses\n    const fact = [1];\n    const invFact = [1];\n\n    for (let i = 1; i <= Math.max(N, M); i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n\n    invFact[Math.max(N, M)] = modInverse(fact[Math.max(N, M)], MOD);\n\n    for (let i = Math.max(N, M) - 1; i >= 1; i--) {\n        invFact[i] = (invFact[i + 1] * (i + 1)) % MOD;\n    }\n\n    // Calculate number of ways to choose values for k_i and l_j\n    const waysForK = fact[M + N] * invFact[M] % MOD * invFact[N] % MOD;\n    const waysForL = fact[M + N] * invFact[M] % MOD * invFact[N] % MOD;\n\n    // Calculate number of different grids\n    const result = waysForK * waysForL % MOD;\n    \n    return result;\n}\n\nfunction modInverse(a, mod) {\n    return modExp(a, mod - 2, mod);\n}\n\nfunction modExp(base, exp, mod) {\n    let result = 1;\n    while (exp > 0) {\n        if (exp % 2 === 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp = Math.floor(exp / 2);\n    }\n    return result;\n}\n\n// Example usage:\nconst N = 3, M = 3;\nconsole.log(countDifferentGrids(N, M));  // Output: 36",
+    "timestamp": "2025-08-13 12:33:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countGrids(N, M) {\n    const MOD = 998244353;\n    \n    let result = 1;\n    for (let i = 0; i < N; i++) {\n        result = (result * (M + 1)) % MOD;\n    }\n    \n    for (let j = 0; j < M; j++) {\n        result = (result * (N + 1)) % MOD;\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 12:33:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 998244353;\n\nfunction solve(N, M) {\n    let result = 1;\n    for (let i = 1; i <= N; i++) {\n        for (let j = 1; j <= M; j++) {\n            const min = Math.min(i, j);\n            const max = Math.max(i, j);\n            let ways = (min + 1) + (max - min);\n            result = (result * ways) % MOD;\n        }\n    }\n    return result;\n}\n\n// Example usage:\n// console.log(solve(N, M));",
+    "timestamp": "2025-08-13 12:33:52"
+  }
+]

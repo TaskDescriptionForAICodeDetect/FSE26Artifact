@@ -1,0 +1,3 @@
+Two Colors Sort
+
+Umg wants to sort a sequence of numbers from 1 to N in ascending order. He can choose two different numbers of the same color and swap their places using his special power. He wants to color R numbers red and the remaining N-R numbers blue. Your task is to determine if he can achieve his goal of sorting the sequence in ascending order. He can use his special power any number of times, but he cannot move the numbers without it.

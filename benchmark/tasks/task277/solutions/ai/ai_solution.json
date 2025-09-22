@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int position;\n    int direction; // 1 for right, -1 for left\n    int id;\n} Ant;\n\nint main() {\n    int L, N;\n    scanf(\"%d %d\", &L, &N);\n\n    Ant* ants = (Ant*)malloc(N * sizeof(Ant));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &ants[i].position, &ants[i].direction);\n        ants[i].id = i + 1;\n    }\n\n    int time = 0;\n    int last_ant = 0;\n\n    while (1) {\n        int active = 0;\n        for (int i = 0; i < N; i++) {\n            if (ants[i].position >= 0 && ants[i].position <= L) {\n                active = 1;\n                break;\n            }\n        }\n        if (!active) break;\n\n        time++;\n\n        for (int i = 0; i < N; i++) {\n            if (ants[i].position < 0 || ants[i].position > L) continue;\n            ants[i].position += ants[i].direction;\n        }\n\n        for (int i = 0; i < N; i++) {\n            if (ants[i].position < 0 || ants[i].position > L) continue;\n            for (int j = i + 1; j < N; j++) {\n                if (ants[j].position < 0 || ants[j].position > L) continue;\n                if (ants[i].position == ants[j].position) {\n                    ants[i].direction *= -1;\n                    ants[j].direction *= -1;\n                }\n            }\n        }\n\n        for (int i = 0; i < N; i++) {\n            if (ants[i].position < 0 || ants[i].position > L) {\n                last_ant = ants[i].id;\n            }\n        }\n    }\n\n    printf(\"%d %d\\n\", time, last_ant);\n    free(ants);\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:52:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Ant {\n    int id;\n    int position;\n    int direction; // 1 for right, -1 for left\n};\n\nint main() {\n    int L, N;\n    cin >> L >> N;\n    \n    vector<Ant> ants(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> ants[i].position >> ants[i].direction;\n        ants[i].id = i + 1;\n    }\n    \n    vector<pair<int, int>> events; // time, id\n    for (const Ant &ant : ants) {\n        if (ant.direction == 1) {\n            events.emplace_back(L - ant.position, ant.id);\n        } else {\n            events.emplace_back(ant.position, ant.id);\n        }\n    }\n    \n    auto max_event = *max_element(events.begin(), events.end());\n    cout << max_event.first << \" \" << max_event.second << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 20:53:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Ant {\n    int id;\n    int position;\n    int direction; // 1 for right, -1 for left\n\n    public Ant(int id, int position, int direction) {\n        this.id = id;\n        this.position = position;\n        this.direction = direction;\n    }\n}\n\npublic class AntTunnel {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int L = scanner.nextInt();\n        int n = scanner.nextInt();\n        List<Ant> ants = new ArrayList<>();\n\n        for (int i = 0; i < n; i++) {\n            int position = scanner.nextInt();\n            int direction = scanner.nextInt();\n            ants.add(new Ant(i + 1, position, direction));\n        }\n\n        int maxTime = 0;\n        int lastAnt = -1;\n\n        List<Integer> exitTimes = new ArrayList<>();\n        List<Integer> antIds = new ArrayList<>();\n\n        for (Ant ant : ants) {\n            int time;\n            if (ant.direction == 1) {\n                time = L - ant.position;\n            } else {\n                time = ant.position;\n            }\n            exitTimes.add(time);\n            antIds.add(ant.id);\n        }\n\n        for (int i = 0; i < exitTimes.size(); i++) {\n            if (exitTimes.get(i) > maxTime) {\n                maxTime = exitTimes.get(i);\n                lastAnt = antIds.get(i);\n            }\n        }\n\n        System.out.println(\"The last ant to exit is ant \" + lastAnt + \" at time \" + maxTime + \".\");\n    }\n}",
+    "timestamp": "2025-08-05 20:53:32"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class AntTunnel {\n    static class Ant {\n        int id;\n        int position;\n        int direction;\n\n        Ant(int id, int position, int direction) {\n            this.id = id;\n            this.position = position;\n            this.direction = direction;\n        }\n    }\n\n    public static int[] simulateTunnel(int tunnelLength, Ant[] ants) {\n        int maxTime = 0;\n        int lastAntId = -1;\n\n        for (Ant ant : ants) {\n            int exitTime = ant.direction == 1 ? \n                tunnelLength - ant.position : \n                ant.position;\n            \n            if (exitTime > maxTime) {\n                maxTime = exitTime;\n                lastAntId = ant.id;\n            }\n        }\n\n        return new int[]{maxTime, lastAntId};\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int tunnelLength = scanner.nextInt();\n        int numAnts = scanner.nextInt();\n\n        Ant[] ants = new Ant[numAnts];\n        for (int i = 0; i < numAnts; i++) {\n            int position = scanner.nextInt();\n            int direction = scanner.nextInt();\n            ants[i] = new Ant(i + 1, position, direction);\n        }\n\n        int[] result = simulateTunnel(tunnelLength, ants);\n        System.out.println(\"Time to exit: \" + result[0]);\n        System.out.println(\"Last ant ID: \" + result[1]);\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 20:53:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\ntypedef struct {\n    int id;\n    int position;\n    int direction;\n} Ant;\n\nint compareTime(const void* a, const void* b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint main() {\n    int tunnelLength, numAnts;\n    scanf(\"%d %d\", &tunnelLength, &numAnts);\n\n    Ant* ants = malloc(numAnts * sizeof(Ant));\n    int* exitTimes = malloc(numAnts * sizeof(int));\n\n    for (int i = 0; i < numAnts; i++) {\n        scanf(\"%d %d\", &ants[i].position, &ants[i].direction);\n        ants[i].id = i + 1;\n\n        if (ants[i].direction == 1) {\n            exitTimes[i] = tunnelLength - ants[i].position;\n        } else {\n            exitTimes[i] = ants[i].position;\n        }\n    }\n\n    qsort(exitTimes, numAnts, sizeof(int), compareTime);\n\n    int lastAntTime = exitTimes[numAnts - 1];\n    int lastAntID = 0;\n\n    for (int i = 0; i < numAnts; i++) {\n        if (exitTimes[i] == lastAntTime) {\n            lastAntID = ants[i].id;\n            break;\n        }\n    }\n\n    printf(\"%d %d\\n\", lastAntTime, lastAntID);\n\n    free(ants);\n    free(exitTimes);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:53:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nstruct Ant {\n    int position;\n    int direction;\n    int id;\n    bool exited = false;\n};\n\nint simulateTunnel(int tunnelLength, std::vector<Ant>& ants) {\n    int maxTime = 0;\n    int remainingAnts = ants.size();\n\n    while (remainingAnts > 0) {\n        for (auto& ant : ants) {\n            if (!ant.exited) {\n                ant.position += ant.direction;\n\n                if (ant.position <= 0 || ant.position >= tunnelLength) {\n                    ant.exited = true;\n                    remainingAnts--;\n                    maxTime = std::max(maxTime, std::abs(ant.position - (ant.direction > 0 ? 0 : tunnelLength)));\n                }\n            }\n        }\n    }\n\n    return maxTime;\n}\n\nint findLastAntToExit(std::vector<Ant>& ants) {\n    int lastAntId = -1;\n    int maxDistance = INT_MIN;\n\n    for (const auto& ant : ants) {\n        int distance = std::abs(ant.position);\n        if (distance > maxDistance) {\n            maxDistance = distance;\n            lastAntId = ant.id;\n        }\n    }\n\n    return lastAntId;\n}\n\nint main() {\n    int tunnelLength, numAnts;\n    std::cin >> tunnelLength >> numAnts;\n\n    std::vector<Ant> ants(numAnts);\n    for (int i = 0; i < numAnts; ++i) {\n        ants[i].id = i + 1;\n        std::cin >> ants[i].position >> ants[i].direction;\n    }\n\n    int exitTime = simulateTunnel(tunnelLength, ants);\n    int lastAntId = findLastAntToExit(ants);\n\n    std::cout << \"Time before all ants exit: \" << exitTime << std::endl;\n    std::cout << \"Last ant to exit: \" << lastAntId << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 20:53:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def last_ant_exit(n, tunnel_length, ant_positions):\n    events = []\n    \n    for i, (pos, direction) in enumerate(ant_positions):\n        if direction == 1:\n            # Ant moving to the right\n            time_to_exit = tunnel_length - pos\n        else:\n            # Ant moving to the left\n            time_to_exit = pos\n            \n        events.append((time_to_exit, i + 1))\n        \n    events.sort()  # Sort events by time first, then by ant index\n    \n    return events[-1]\n\n# Input parsing can be done here:\n# Example\nn = 4\ntunnel_length = 10\nant_positions = [(2, 1), (4, -1), (6, 1), (8, -1)]\n\ntime, ant_index = last_ant_exit(n, tunnel_length, ant_positions)\n\nprint(f\"Time for all ants to exit: {time}\")\nprint(f\"Last ant to exit: {ant_index}\")",
+    "timestamp": "2025-08-13 04:00:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class AntsTunnel {\n\n    static class Ant implements Comparable<Ant> {\n        int position;\n        int id;\n        int direction; // 1 for right, -1 for left\n\n        Ant(int position, int id, int direction) {\n            this.position = position;\n            this.id = id;\n            this.direction = direction;\n        }\n\n        @Override\n        public int compareTo(Ant other) {\n            return Integer.compare(this.position, other.position);\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int numAnts = scanner.nextInt();\n        int tunnelLength = scanner.nextInt();\n        Ant[] ants = new Ant[numAnts];\n\n        for (int i = 0; i < numAnts; i++) {\n            int position = scanner.nextInt();\n            int direction = scanner.nextInt();\n            ants[i] = new Ant(position, i + 1, direction);\n        }\n\n        Arrays.sort(ants);\n\n        int maxTime = 0;\n        int lastAntId = 0;\n\n        for (Ant ant : ants) {\n            int time = (ant.direction == 1) ? (tunnelLength - ant.position) : ant.position;\n            if (time >= maxTime) {\n                maxTime = time;\n                lastAntId = ant.id;\n            }\n        }\n\n        System.out.println(maxTime + \" \" + lastAntId);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 04:00:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int position;\n    int direction; // 1 for right, -1 for left\n    int index;\n} Ant;\n\nint cmp(const void *a, const void *b) {\n    Ant *ant1 = (Ant *)a;\n    Ant *ant2 = (Ant *)b;\n    return ant1->position - ant2->position;\n}\n\nint main() {\n    int n, L;\n    scanf(\"%d %d\", &n, &L);\n\n    Ant ants[n];\n    for (int i = 0; i < n; i++) {\n        int position, direction;\n        scanf(\"%d %d\", &position, &direction);\n        ants[i].position = position;\n        ants[i].direction = direction;\n        ants[i].index = i;\n    }\n  \n    qsort(ants, n, sizeof(Ant), cmp);\n\n    int lastTime = 0;\n    int lastAnt = -1;\n    for (int i = 0; i < n; i++) {\n        int exitTime;\n        if (ants[i].direction == 1) {\n            exitTime = L - ants[i].position;\n        } else {\n            exitTime = ants[i].position;\n        }\n\n        if (exitTime >= lastTime) {\n            lastTime = exitTime;\n            lastAnt = ants[i].index;\n        }\n    }\n  \n    printf(\"%d\\n%d\\n\", lastTime, lastAnt);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:01:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def last_ant_to_exit(tunnel_length, ant_positions, ant_directions):\n    n = len(ant_positions)\n    max_time = 0\n    last_ant_index = -1\n\n    for i in range(n):\n        if ant_directions[i] == 'L':\n            time_to_exit = ant_positions[i]\n        else:\n            time_to_exit = tunnel_length - ant_positions[i]\n\n        if time_to_exit > max_time:\n            max_time = time_to_exit\n            last_ant_index = i\n\n    return max_time, last_ant_index + 1\n\ndef main():\n    tunnel_length = int(input(\"Enter tunnel length: \"))\n    n = int(input(\"Enter number of ants: \"))\n    \n    ant_positions = []\n    ant_directions = []\n\n    for i in range(n):\n        pos, direction = input(f\"Enter position and direction for ant {i+1} (space-separated): \").split()\n        ant_positions.append(int(pos))\n        ant_directions.append(direction)\n\n    exit_time, last_ant = last_ant_to_exit(tunnel_length, ant_positions, ant_directions)\n    \n    print(f\"Time to exit: {exit_time}\")\n    print(f\"Last ant to exit: {last_ant}\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 04:01:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read().split()\n    ptr = 0\n    T = int(input[ptr])\n    ptr += 1\n    for _ in range(T):\n        L, N = map(int, input[ptr:ptr+2])\n        ptr +=2\n        ants = []\n        for __ in range(N):\n            p, d = input[ptr], int(input[ptr+1])\n            ptr +=2\n            ants.append((p, d))\n        \n        max_time = 0\n        last_ant = None\n        left_exit = []\n        right_exit = []\n        \n        for idx, (p, d) in enumerate(ants, 1):\n            if d == 0:\n                time = p\n                left_exit.append((time, idx))\n            else:\n                time = L - p\n                right_exit.append((time, idx))\n            if time > max_time:\n                max_time = time\n                last_ant = idx\n            elif time == max_time:\n                if last_ant is None or idx > last_ant:\n                    last_ant = idx\n        \n        print(f\"The last ant will fall down in {max_time} seconds - started at {last_ant}.\")\n\nsolve()",
+    "timestamp": "2025-08-13 04:01:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Ant {\n    int id;\n    int position;\n    int direction; // -1 for left, 1 for right\n};\n\nbool compareByPosition(const Ant &a, const Ant &b) {\n    return a.position < b.position;\n}\n\nint main() {\n    int n, l;\n    std::cin >> n >> l;\n    std::vector<Ant> ants(n);\n\n    for (int i = 0; i < n; ++i) {\n        int position, direction;\n        std::cin >> position >> direction;\n        ants[i] = {i + 1, position, direction};\n    }\n\n    int lastExitTime = 0;\n    int lastAntId = 0;\n    for (const auto &ant : ants) {\n        int exitTime;\n        if (ant.direction == -1) {\n            exitTime = ant.position;\n        } else {\n            exitTime = l - ant.position;\n        }\n        \n        if (exitTime > lastExitTime) {\n            lastExitTime = exitTime;\n            lastAntId = ant.id;\n        }\n    }\n\n    std::cout << lastExitTime << \" \" << lastAntId << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:16:23"
+  }
+]

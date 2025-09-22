@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_N 1000\n#define MAX_M 1000\n\nint N, M;\nchar board[MAX_N][MAX_M + 1];\nint dp[MAX_N][MAX_M];\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint solve() {\n    memset(dp, 0, sizeof(dp));\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (board[i][j] != 'o') continue;\n\n            if (i > 0 && board[i-1][j] == '.') {\n                dp[i][j] = max(dp[i][j], (i > 1 ? dp[i-2][j] : 0) + 1);\n            }\n\n            if (j > 0 && board[i][j-1] == '.') {\n                dp[i][j] = max(dp[i][j], (j > 1 ? dp[i][j-2] : 0) + 1);\n            }\n        }\n    }\n\n    int max_ops = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            max_ops = max(max_ops, dp[i][j]);\n        }\n    }\n\n    return max_ops;\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", board[i]);\n    }\n\n    printf(\"%d\\n\", solve());\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:23:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 100\n\nint N, M;\nchar board[MAX_N][MAX_N + 1];\nint visited[MAX_N][MAX_N];\n\nint dfs(int x, int y) {\n    if (x >= N || y >= M || board[x][y] == '#' || board[x][y] == 'o') {\n        return 0;\n    }\n    if (visited[x][y] != -1) {\n        return visited[x][y];\n    }\n    int right = dfs(x, y + 1);\n    int down = dfs(x + 1, y);\n    int max = (right > down) ? right : down;\n    visited[x][y] = max + (board[x][y] == '.' ? 0 : 1);\n    return visited[x][y];\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", board[i]);\n    }\n\n    memset(visited, -1, sizeof(visited));\n    int total = 0;\n\n    for (int i = N - 1; i >= 0; i--) {\n        for (int j = M - 1; j >= 0; j--) {\n            if (board[i][j] == 'o') {\n                board[i][j] = '.';\n                total += dfs(i, j);\n                board[i][j] = 'o';\n            }\n        }\n    }\n\n    printf(\"%d\\n\", total);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:23:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<string> board(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> board[i];\n    }\n\n    int operations = 0;\n    bool changed;\n    do {\n        changed = false;\n        for (int i = N - 1; i >= 0; --i) {\n            for (int j = M - 1; j >= 0; --j) {\n                if (board[i][j] == 'o') {\n                    // Try moving down\n                    if (i + 1 < N && board[i+1][j] == '.') {\n                        board[i][j] = '.';\n                        board[i+1][j] = 'o';\n                        operations++;\n                        changed = true;\n                    }\n                    // Try moving right\n                    else if (j + 1 < M && board[i][j+1] == '.') {\n                        board[i][j] = '.';\n                        board[i][j+1] = 'o';\n                        operations++;\n                        changed = true;\n                    }\n                }\n            }\n        }\n    } while (changed);\n\n    cout << operations << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        scanner.nextLine(); // consume the newline\n        char[][] board = new char[N][M];\n        for (int i = 0; i < N; i++) {\n            board[i] = scanner.nextLine().toCharArray();\n        }\n        \n        int operations = 0;\n        boolean changed;\n        do {\n            changed = false;\n            for (int i = N - 1; i >= 0; i--) {\n                for (int j = M - 1; j >= 0; j--) {\n                    if (board[i][j] == 'o') {\n                        // Try to move right\n                        if (j + 1 < M && board[i][j + 1] == '.') {\n                            board[i][j] = '.';\n                            board[i][j + 1] = 'o';\n                            operations++;\n                            changed = true;\n                        } else if (i + 1 < N && board[i + 1][j] == '.') {\n                            // Try to move down\n                            board[i][j] = '.';\n                            board[i + 1][j] = 'o';\n                            operations++;\n                            changed = true;\n                        }\n                    }\n                }\n            }\n        } while (changed);\n        \n        System.out.println(operations);\n    }\n}",
+    "timestamp": "2025-08-05 22:24:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MaximumOperations {\n    public static int findMaxOperations(String[] board) {\n        int N = board.length;\n        int M = board[0].length();\n        int[][] dp = new int[N][M];\n        \n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                if (board[i].charAt(j) != 'o') continue;\n                \n                int right = j + 1 < M ? dp[i][j + 1] : 0;\n                int down = i + 1 < N ? dp[i + 1][j] : 0;\n                \n                if (j + 1 < M && board[i].charAt(j + 1) == '.') {\n                    dp[i][j + 1] = Math.max(dp[i][j + 1], dp[i][j] + 1);\n                }\n                \n                if (i + 1 < N && board[i + 1].charAt(j) == '.') {\n                    dp[i + 1][j] = Math.max(dp[i + 1][j], dp[i][j] + 1);\n                }\n            }\n        }\n        \n        int maxOperations = 0;\n        for (int[] row : dp) {\n            for (int val : row) {\n                maxOperations = Math.max(maxOperations, val);\n            }\n        }\n        \n        return maxOperations;\n    }\n}",
+    "timestamp": "2025-08-05 22:24:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxOperations(vector<string>& board) {\n    int N = board.size();\n    int M = board[0].length();\n    vector<vector<int>> dp(N, vector<int>(M, 0));\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            if (board[i][j] == 'o') {\n                int right = 0, down = 0;\n                \n                if (j + 1 < M && board[i][j+1] == '.') right = 1;\n                if (i + 1 < N && board[i+1][j] == '.') down = 1;\n                \n                if (i > 0) right += dp[i-1][j];\n                if (j > 0) down += dp[i][j-1];\n                \n                dp[i][j] = max(right, down);\n            }\n        }\n    }\n    \n    int totalOperations = 0;\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < M; j++) {\n            totalOperations += dp[i][j];\n        }\n    }\n    \n    return totalOperations;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<string> board(N);\n    for (int i = 0; i < N; i++) {\n        cin >> board[i];\n    }\n    \n    cout << maxOperations(board) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_operations(board):\n    N = len(board)\n    M = len(board[0]) if N > 0 else 0\n\n    def can_move(x, y):\n        return 0 <= x < N and 0 <= y < M and board[x][y] == '.'\n\n    operations = 0\n    \n    for i in range(N-1, -1, -1):\n        for j in range(M-1, -1, -1):\n            if board[i][j] == 'o':\n                moved = False\n                if can_move(i, j + 1):\n                    board[i] = board[i][:j] + '.' + 'o' + board[i][j+2:]\n                    operations += 1\n                    moved = True\n                elif can_move(i + 1, j):\n                    board[i] = board[i][:j] + '.' + board[i][j+1:]\n                    temp = list(board[i+1])\n                    temp[j] = 'o'\n                    board[i + 1] = ''.join(temp)\n                    operations += 1\n                    moved = True\n                if moved:\n                    operations += max_operations(board)\n                    return operations\n    return operations\n\n# Example usage:\nboard = [\n    \".o..\",\n    \"....\",\n    \".#o.\",\n    \"....\"\n]\n\nprint(max_operations(board))",
+    "timestamp": "2025-08-13 10:25:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class BoardGame {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int M = scanner.nextInt();\n        scanner.nextLine(); // Consume the newline\n\n        char[][] board = new char[N][M];\n\n        for (int i = 0; i < N; i++) {\n            board[i] = scanner.nextLine().toCharArray();\n        }\n\n        System.out.println(maxOperations(board, N, M));\n    }\n\n    private static int maxOperations(char[][] board, int N, int M) {\n        int operations = 0;\n\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < M; j++) {\n                if (board[i][j] == 'o') {\n                    // Move right if possible\n                    if (j + 1 < M && board[i][j + 1] == '.') {\n                        operations++;\n                    }\n                    // Move down if possible\n                    if (i + 1 < N && board[i + 1][j] == '.') {\n                        operations++;\n                    }\n                }\n            }\n        }\n\n        return operations;\n    }\n}",
+    "timestamp": "2025-08-13 10:25:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAXN 50\n#define MAXM 50\n\nint N, M;\nchar board[MAXN][MAXM];\nint maxOperations = 0;\n\nvoid movePiece(int x, int y) {\n    if (x >= N || y >= M || board[x][y] != 'o') return;\n    \n    if (y + 1 < M && board[x][y + 1] == '.') {\n        board[x][y] = '.';\n        board[x][y + 1] = 'o';\n        maxOperations++;\n        movePiece(x, y + 1);\n    }\n    \n    if (x + 1 < N && board[x + 1][y] == '.') {\n        board[x][y] = '.';\n        board[x + 1][y] = 'o';\n        maxOperations++;\n        movePiece(x + 1, y);\n    }\n}\n\nvoid calculateOperations() {\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            if (board[i][j] == 'o') {\n                movePiece(i, j);\n            }\n        }\n    }\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%s\", board[i]);\n    }\n    \n    calculateOperations();\n    \n    printf(\"%d\\n\", maxOperations);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:26:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_operations(board):\n    N, M = len(board), len(board[0])\n    dp = [[0] * M for _ in range(N)]\n    \n    for i in range(N):\n        for j in range(M):\n            if board[i][j] == 'o':\n                if i > 0 and board[i-1][j] == 'o':\n                    dp[i][j] = max(dp[i][j], dp[i-1][j])\n                if j > 0 and board[i][j-1] == 'o':\n                    dp[i][j] = max(dp[i][j], dp[i][j-1])\n                dp[i][j] += 1\n    \n    return max(max(row) for row in dp)\n\ndef solve():\n    N, M = map(int, input().split())\n    board = [input().strip() for _ in range(N)]\n    print(max_operations(board))\n\nsolve()",
+    "timestamp": "2025-08-13 10:26:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_operations(board):\n    if not board:\n        return 0\n    N = len(board)\n    M = len(board[0]) if N > 0 else 0\n    operations = 0\n    \n    # Convert each row into a list for easier manipulation\n    grid = [list(row) for row in board]\n    \n    # Process from bottom-right to top-left\n    for i in range(N-1, -1, -1):\n        for j in range(M-1, -1, -1):\n            if grid[i][j] == 'o':\n                # Try to move down first\n                moved = False\n                if i + 1 < N and grid[i+1][j] == '.':\n                    grid[i][j] = '.'\n                    grid[i+1][j] = 'o'\n                    operations += 1\n                    moved = True\n                elif j + 1 < M and grid[i][j+1] == '.':\n                    grid[i][j] = '.'\n                    grid[i][j+1] = 'o'\n                    operations += 1\n                    moved = True\n                # If moved, recheck the current cell in case new pieces can move here\n                if moved:\n                    # Recheck the current cell and cells to the right and down\n                    for x in range(i, N):\n                        for y in range(j, M):\n                            if grid[x][y] == 'o':\n                                if x + 1 < N and grid[x+1][y] == '.':\n                                    grid[x][y] = '.'\n                                    grid[x+1][y] = 'o'\n                                    operations += 1\n                                elif y + 1 < M and grid[x][y+1] == '.':\n                                    grid[x][y] = '.'\n                                    grid[x][y+1] = 'o'\n                                    operations += 1\n    return operations",
+    "timestamp": "2025-08-13 10:26:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nint maxOperations(vector<string>& board, int N, int M) {\n    int moves = 0;\n    vector<vector<bool>> visited(N, vector<bool>(M, false));\n    queue<pair<int, int>> q;\n    \n    // Add all pieces to the queue\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < M; ++j) {\n            if (board[i][j] == 'o') {\n                q.push({i, j});\n                visited[i][j] = true;\n            }\n        }\n    }\n    \n    // Directions: right and down\n    vector<int> dx = {0, 1};\n    vector<int> dy = {1, 0};\n    \n    while (!q.empty()) {\n        int x = q.front().first;\n        int y = q.front().second;\n        q.pop();\n        \n        for (int dir = 0; dir < 2; ++dir) {\n            int nx = x + dx[dir];\n            int ny = y + dy[dir];\n            \n            if (nx >= 0 && nx < N && ny >= 0 && ny < M && !visited[nx][ny] && board[nx][ny] == '.') {\n                visited[nx][ny] = true;\n                q.push({nx, ny});\n                ++moves;\n            }\n        }\n    }\n    \n    return moves;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<string> board(N);\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> board[i];\n    }\n    \n    cout << maxOperations(board, N, M) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:58:59"
+  }
+]

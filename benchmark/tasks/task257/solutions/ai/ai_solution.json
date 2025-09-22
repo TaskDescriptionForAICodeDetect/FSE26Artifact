@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint min_operations(int n) {\n    if (n == 1) return 0;\n    int *dp = (int *)malloc((n + 1) * sizeof(int));\n    for (int i = 0; i <= n; i++) {\n        dp[i] = INT_MAX;\n    }\n    dp[1] = 0;\n    \n    for (int i = 1; i <= n; i++) {\n        for (int j = 1; j <= i; j++) {\n            if (i + j <= n) {\n                if (dp[i] + 1 < dp[i + j]) {\n                    dp[i + j] = dp[i] + 1;\n                }\n            }\n        }\n        for (int j = 1; j <= i; j++) {\n            if (i - j >= 1) {\n                if (dp[i] + 1 < dp[i - j]) {\n                    dp[i - j] = dp[i] + 1;\n                }\n            }\n        }\n    }\n    \n    int result = dp[n];\n    free(dp);\n    return result;\n}\n\nint main() {\n    int n;\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n        printf(\"%d\\n\", min_operations(n));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:19:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class PowerOperations {\n    public static int minOperations(int n) {\n        if (n <= 1) return 0;\n        \n        int[] dp = new int[n + 1];\n        dp[0] = 0;\n        dp[1] = 0;\n        \n        for (int i = 2; i <= n; i++) {\n            dp[i] = Integer.MAX_VALUE;\n            \n            if (i % 2 == 0) {\n                dp[i] = Math.min(dp[i], dp[i/2] + 1);\n            }\n            \n            dp[i] = Math.min(dp[i], dp[i-1] + 1);\n        }\n        \n        return dp[n];\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            \n            System.out.println(minOperations(n));\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 19:20:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\nusing namespace std;\n\nint minOperations(int n) {\n    if (n == 1) return 0;\n    vector<int> dp(n + 1, INT_MAX);\n    dp[1] = 0;\n    for (int i = 1; i <= n; ++i) {\n        for (int j = 1; j <= i; ++j) {\n            if (i + j <= n) {\n                dp[i + j] = min(dp[i + j], dp[i] + 1);\n            }\n            if (i * j <= n) {\n                dp[i * j] = min(dp[i * j], dp[i] + 1);\n            }\n        }\n    }\n    return dp[n];\n}\n\nint main() {\n    int n;\n    while (cin >> n && n != 0) {\n        cout << minOperations(n) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:20:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint min_operations(int n) {\n    if (n <= 1) return 0;\n    \n    int dp[n+1];\n    dp[0] = 0;\n    dp[1] = 0;\n    \n    for (int i = 2; i <= n; i++) {\n        dp[i] = INT_MAX;\n        \n        if (i % 2 == 0) {\n            dp[i] = dp[i/2] + 1;\n        }\n        \n        for (int j = 1; j < i; j++) {\n            int ops = dp[j] + dp[i-j] + 1;\n            if (ops < dp[i]) {\n                dp[i] = ops;\n            }\n        }\n    }\n    \n    return dp[n];\n}\n\nint main() {\n    int n;\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n        printf(\"%d\\n\", min_operations(n));\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:20:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint compute_least_operations(int n) {\n    vector<int> dp(n + 1, INT_MAX);\n    dp[0] = 0;\n    dp[1] = 0;\n\n    for (int i = 2; i <= n; ++i) {\n        if (i % 2 == 0) {\n            dp[i] = min(dp[i], dp[i/2] + 1);\n        }\n        dp[i] = min(dp[i], dp[i-1] + 1);\n    }\n\n    return dp[n];\n}\n\nint main() {\n    int n;\n    while (cin >> n && n != 0) {\n        cout << compute_least_operations(n) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:20:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        List<Integer> inputs = new ArrayList<>();\n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            inputs.add(n);\n        }\n        for (int n : inputs) {\n            System.out.println(minOperations(n));\n        }\n    }\n\n    private static int minOperations(int n) {\n        if (n == 1) return 0;\n        List<Integer> path = new ArrayList<>();\n        path.add(1);\n        return dfs(1, n, path);\n    }\n\n    private static int dfs(int current, int target, List<Integer> path) {\n        if (current == target) {\n            return path.size() - 1;\n        }\n        if (current > target) {\n            return Integer.MAX_VALUE;\n        }\n        int minOps = Integer.MAX_VALUE;\n        for (int i = 0; i < path.size(); i++) {\n            for (int j = i; j < path.size(); j++) {\n                int next = path.get(i) + path.get(j);\n                if (next > current && next <= target) {\n                    path.add(next);\n                    int ops = dfs(next, target, path);\n                    if (ops < minOps) {\n                        minOps = ops;\n                    }\n                    path.remove(path.size() - 1);\n                }\n            }\n        }\n        return minOps;\n    }\n}",
+    "timestamp": "2025-08-05 19:20:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations_for_power(n):\n    if n == 1:\n        return 0\n    \n    memo = {}\n    \n    def calculate_operations(exp):\n        if exp in memo:\n            return memo[exp]\n\n        if exp <= 1:\n            return 0\n\n        ops = float('inf')\n        for k in range(1, exp):\n            ops = min(ops, 1 + max(calculate_operations(k), calculate_operations(exp - k)))\n\n            if exp % k == 0:\n                ops = min(ops, 1 + calculate_operations(exp // k))\n\n        memo[exp] = ops\n        return ops\n\n    return calculate_operations(n)\n\ndef main():\n    import sys\n    input = sys.stdin.read\n    data = list(map(int, input().split()))\n    \n    result = []\n    for n in data:\n        if n == 0:\n            break\n        result.append(min_operations_for_power(n))\n    \n    for res in result:\n        print(res)\n\nmain()",
+    "timestamp": "2025-08-13 03:33:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class LeastOperations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            System.out.println(minimumOperations(n));\n        }\n        scanner.close();\n    }\n\n    private static int minimumOperations(int n) {\n        if (n == 1) return 0;\n        List<Integer> ops = new ArrayList<>();\n        while (n > 1) {\n            ops.add(n);\n            n /= 2;\n        }\n        Collections.reverse(ops);\n        return computeOperations(ops);\n    }\n\n    private static int computeOperations(List<Integer> ops) {\n        int operations = 0;\n        Set<Integer> powersReachable = new HashSet<>();\n        powersReachable.add(1);\n        for (int target : ops) {\n            Set<Integer> newReachable = new HashSet<>();\n            for (int power : powersReachable) {\n                newReachable.add(power * 2);\n                newReachable.add(power * 2 - 1);\n                newReachable.add(power * 2 + 1);\n            }\n            if (!newReachable.contains(target)) {\n                operations++;\n            }\n            powersReachable = newReachable;\n        }\n        return operations;\n    }\n}",
+    "timestamp": "2025-08-13 03:33:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minimumOperations(int n) {\n    if (n == 1) return 0;\n    int dp[n + 1];\n    dp[1] = 0;\n    for (int i = 2; i <= n; i++) {\n        dp[i] = INT_MAX;\n        for (int j = 1; j < i; j++) {\n            if (i % j == 0) {\n                if (dp[j] + 1 < dp[i]) {\n                    dp[i] = dp[j] + 1;\n                }\n            }\n        }\n    }\n    return dp[n];\n}\n\nint main() {\n    int n;\n    while (scanf(\"%d\", &n) && n != 0) {\n        printf(\"%d\\n\", minimumOperations(n));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 03:33:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def compute_min_operations(n):\n    if n == 0:\n        return 0\n    \n    # Dynamic programming to store minimum operations\n    dp = [float('inf')] * (n + 1)\n    dp[0] = 0\n    dp[1] = 0\n    \n    for i in range(2, n + 1):\n        # If even, can divide by sqrt first\n        if i % 2 == 0:\n            dp[i] = min(dp[i], dp[i//2] + 1)\n        \n        # Try all possible factorizations\n        for j in range(1, i):\n            if i % j == 0:\n                dp[i] = min(dp[i], dp[j] + dp[i//j] + 1)\n    \n    return dp[n]\n\ndef main():\n    while True:\n        n = int(input())\n        if n == 0:\n            break\n        print(compute_min_operations(n))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 03:33:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(n):\n    if n == 1:\n        return 0\n    operations = [0] * (n + 1)\n    for i in range(2, n + 1):\n        operations[i] = operations[i - 1] + 1\n        if i % 2 == 0:\n            operations[i] = min(operations[i], operations[i // 2] + 1)\n        if i % 3 == 0:\n            operations[i] = min(operations[i], operations[i // 3] + 1)\n    return operations[n]\n\nwhile True:\n    n = int(input())\n    if n == 0:\n        break\n    print(min_operations(n))",
+    "timestamp": "2025-08-13 03:34:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nusing namespace std;\n\nint minOperations(int n) {\n    vector<int> dp(n + 1, INT_MAX);\n    dp[1] = 0;\n    \n    for (int i = 2; i <= n; ++i) {\n        for (int j = 1; j <= i / 2; ++j) {\n            dp[i] = min(dp[i], dp[j] + dp[i - j] + 1);\n        }\n    }\n    \n    return dp[n];\n}\n\nint main() {\n    int n;\n    while (cin >> n && n) {\n        cout << minOperations(n) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:13:28"
+  }
+]

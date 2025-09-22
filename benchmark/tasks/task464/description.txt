@@ -1,0 +1,1 @@
+The task is to determine how many distinct numbers can be displayed on an elevator display based on the floors that multiple elevators are currently on. Each elevator can stop on a range of floors defined by its low and high range. You need to write a program that calculates the number of unique displayed numbers for different datasets provided as input.

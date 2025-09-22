@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "3\naab\nczc\nbaa\n",
+      "output": "aac"
+    },
+    {
+      "input": "36\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiQiiiiiiiiiiiiiiiQiiiiiiiii\niiiiiiiiiiiQQQiiiiiiiiiiQQQQiiiiiiiii\niiiiiiiiiiiQQQQQiiiiiiiQQQQiiiiiiiiii\niiiiiiiiiiiiQQQQQQQQQQQQQQQiiiiiiiiii\niiiiiiiiiiiiQQQQQQQQQQQQQQQiiiiiiiiii\niiiiiiiiiiiiQQQQQQQQQQQQQQiiiiiiiiiii\niiiiiiiiiiiiiQQQQQQQQQQQQQiiiiiiiiiii\niiiiiiiiiiiiQQQQQQQQQQQQQQQiiiiiiiiii\niiiiiiiQiiiQQQQQQQQQQQQQQQQQiiiQiiiii\niiiiiiiQQiQQQQQQQQQQQQQQQQQQiiQQiiiii\niiiiiiiQQQQQQQQQQQQQQQQQQQQiQQiiiiii\niiiiiiiiiiQQQQQQQQQQQQQQQQQQQQiiiiiii\niiiiiiiiiQQQQQiiQQQQQQQQiiQQQQQiiiiii\niiiiiiiQQQQQQiiiiQQQQQiiiiQQQQQQiiiii\niiiiiQQQQQQQQiiiQQQQQiiQQQQQQQQiQiii\niiiQQQQQQQiiiiiQQQQQQQiiiiiiQQQQQQQi\niiQQQQQQQiiiiiiQQQQQQQiiiiiiiiQQQiii\niQQQQiiiiiiiiiQQQQQQQQQiiiiiiiiQQQii\niiiiiiiiiiiiiiiQQQQQQQQQiiiiiiiiiiiii\niiiiiiiiiiiiQQQQQQQQQQiiiiiiiiiiiii\niiiiiiiiiiiiQQQQQQQQQQiiiiiiiiiiiii\niiiiiiiiiiiiiQQQQQQQQiiiiiiiiiiiiii\niiiiiiiiiiiiiQQQQQQQQiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\niiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n",
+      "output": "QQQQQQQQQQQQQQQQQQQQQQQQQiiiiiiiiiii"
+    },
+    {
+      "input": "3\nAcm\naCm\nacM\n",
+      "output": "ACM"
+    }
+  ]
+}

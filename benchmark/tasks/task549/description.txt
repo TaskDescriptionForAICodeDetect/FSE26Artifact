@@ -1,0 +1,1 @@
+There are N balls in a box, each labeled with a positive integer. You can perform actions by selecting and removing two balls, then adding a new ball labeled with the sum of their integers. You cannot act if all integers are odd or all integers are even. Determine the maximum number of actions possible under these conditions.

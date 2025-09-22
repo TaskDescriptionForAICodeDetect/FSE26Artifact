@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_TEAMS 1024\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nint main() {\n    int n, m, total_teams;\n    int ranking[MAX_TEAMS];\n    int segments[MAX_TEAMS][2];\n    \n    scanf(\"%d %d\", &n, &m);\n    total_teams = 1 << n;\n    \n    for (int i = 0; i < total_teams; i++) {\n        scanf(\"%d\", &ranking[i]);\n    }\n    \n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d\", &segments[i][0], &segments[i][1]);\n    }\n    \n    int min_changes = total_teams;\n    \n    for (int mask = 0; mask < (1 << total_teams); mask++) {\n        int current_ranking[MAX_TEAMS];\n        memcpy(current_ranking, ranking, sizeof(ranking));\n        \n        int changes = 0;\n        for (int i = 0; i < total_teams; i++) {\n            if (mask & (1 << i)) {\n                current_ranking[i] = total_teams - current_ranking[i];\n                changes++;\n            }\n        }\n        \n        int valid = 1;\n        for (int i = 0; i < m; i++) {\n            int a = segments[i][0], b = segments[i][1];\n            int subarray[MAX_TEAMS];\n            memcpy(subarray, current_ranking + a, (b - a + 1) * sizeof(int));\n            qsort(subarray, b - a + 1, sizeof(int), compare);\n            \n            if (memcmp(subarray, current_ranking + a, (b - a + 1) * sizeof(int)) != 0) {\n                valid = 0;\n                break;\n            }\n        }\n        \n        if (valid) {\n            min_changes = (changes < min_changes) ? changes : min_changes;\n        }\n    }\n    \n    printf(\"%d\\n\", min_changes);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:51:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 20\n#define MAX_M 100000\n\nint n, m;\nint a[MAX_M], b[MAX_M];\nint rank[1 << MAX_N];\nint depth[1 << MAX_N];\n\nint compare(const void *a, const void *b) {\n    return depth[*(int*)a] - depth[*(int*)b];\n}\n\nint main() {\n    scanf(\"%d %d\", &n, &m);\n    int total_teams = 1 << n;\n    for (int i = 0; i < m; i++) {\n        scanf(\"%d %d\", &a[i], &b[i]);\n        a[i]--; // convert to 0-based\n        b[i]--;\n    }\n\n    // Initialize depth (rank in tournament)\n    for (int i = 0; i < total_teams; i++) {\n        depth[i] = n;\n    }\n\n    // Simulate tournament to assign correct depths\n    for (int round = 0; round < n; round++) {\n        int teams_in_round = total_teams >> (round + 1);\n        for (int i = 0; i < teams_in_round; i++) {\n            depth[i] = round;\n        }\n    }\n\n    // Assign initial ranks based on input\n    for (int i = 0; i < m; i++) {\n        for (int j = a[i]; j <= b[i]; j++) {\n            rank[j] = i;\n        }\n    }\n\n    // Create a list of teams sorted by their depth (correct tournament rank)\n    int teams[1 << MAX_N];\n    for (int i = 0; i < total_teams; i++) {\n        teams[i] = i;\n    }\n    qsort(teams, total_teams, sizeof(int), compare);\n\n    // Count mismatches\n    int changes = 0;\n    for (int i = 0; i < total_teams; i++) {\n        if (depth[teams[i]] != rank[i]) {\n            changes++;\n        }\n    }\n\n    printf(\"%d\\n\", changes);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<pair<int, int>> segments;\n    for (int i = 0; i < m; ++i) {\n        int a, b;\n        cin >> a >> b;\n        segments.emplace_back(a, b);\n    }\n\n    sort(segments.begin(), segments.end());\n\n    int res = 0;\n    int last = -1;\n    for (auto &seg : segments) {\n        if (seg.first > last) {\n            res += seg.second - seg.first + 1;\n            last = seg.second;\n        } else if (seg.second > last) {\n            res += seg.second - last;\n            last = seg.second;\n        }\n    }\n\n    int total_teams = 1 << n;\n    cout << total_teams - res << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        \n        List<int[]> segments = new ArrayList<>();\n        for (int i = 0; i < m; i++) {\n            int a = scanner.nextInt();\n            int b = scanner.nextInt();\n            segments.add(new int[]{a, b});\n        }\n        \n        Collections.sort(segments, (s1, s2) -> Integer.compare(s1[0], s2[0]));\n        \n        int changes = 0;\n        int prevEnd = 0;\n        for (int[] seg : segments) {\n            if (seg[0] > prevEnd) {\n                changes += seg[0] - prevEnd - 1;\n            }\n            prevEnd = Math.max(prevEnd, seg[1]);\n        }\n        changes += (1 << n) - 1 - prevEnd;\n        \n        System.out.println(changes);\n    }\n}",
+    "timestamp": "2025-08-05 21:52:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ConsistentRanking {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        \n        int[] ranks = new int[2 * n];\n        for (int i = 0; i < m; i++) {\n            int a = scanner.nextInt() - 1;\n            int b = scanner.nextInt() - 1;\n            for (int j = a; j <= b; j++) {\n                ranks[j] = scanner.nextInt() - 1;\n            }\n        }\n        \n        int result = solve(n, ranks);\n        System.out.println(result);\n    }\n    \n    static int solve(int n, int[] ranks) {\n        int changes = 0;\n        boolean[] used = new boolean[2 * n];\n        \n        for (int i = 0; i < 2 * n; i++) {\n            if (ranks[i] == -1) continue;\n            \n            if (used[ranks[i]]) {\n                changes++;\n            } else {\n                used[ranks[i]] = true;\n            }\n        }\n        \n        return changes;\n    }\n}",
+    "timestamp": "2025-08-05 21:52:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    vector<pair<int, int>> ranks(m);\n    for (int i = 0; i < m; ++i) {\n        int a, b;\n        cin >> a >> b;\n        ranks[i] = {a, b};\n    }\n    \n    int minChanges = n + 1;\n    \n    for (int mask = 0; mask < (1 << (2 * n)); ++mask) {\n        vector<int> order(2 * n);\n        for (int i = 0; i < 2 * n; ++i) {\n            order[i] = (mask & (1 << i)) ? 1 : 0;\n        }\n        \n        bool valid = true;\n        int changes = 0;\n        \n        for (const auto& rank : ranks) {\n            int a = rank.first - 1;\n            int b = rank.second - 1;\n            \n            if (order[a] > order[b]) {\n                valid = false;\n                break;\n            }\n            \n            if (order[a] != ((a < b) ? 0 : 1)) {\n                changes++;\n            }\n        }\n        \n        if (valid) {\n            minChanges = min(minChanges, changes);\n        }\n    }\n    \n    cout << minChanges << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_changes_to_consistent_ranking(n, m, segments):\n    segments = [(int(a), int(b)) for a, b in segments]\n    for i in range(m):\n        segments[i] = (segments[i][0] - 1, segments[i][1] - 1)\n\n    total_teams = 2 * n\n    dp = [0] * (total_teams + 1)\n\n    valid_segments = [(0, 0)]\n    for a, b in segments:\n        if b >= total_teams:\n            b = total_teams - 1\n        if a < total_teams:\n            valid_segments.append((a, min(b, total_teams - 1)))\n\n    valid_segments = sorted(valid_segments, key=lambda x: x[1])\n\n    for i in range(1, total_teams + 1):\n        dp[i] = dp[i - 1]\n        for a, b in valid_segments:\n            if b == i - 1:\n                dp[i] = max(dp[i], dp[a] + (b - a + 1))\n\n    return total_teams - dp[-1]\n\n# Example usage:\nn = 2\nm = 1\nsegments = [(1, 4)]\nprint(min_changes_to_consistent_ranking(n, m, segments))  # Output will depend on input",
+    "timestamp": "2025-08-13 07:52:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class Championship {\n\n    public static int minChanges(int n, int m, int[] a, int[] b) {\n        int teams = 1 << n;\n        int[] rank = new int[teams];\n\n        for (int i = 0; i < m; i++) {\n            int start = a[i];\n            int end = b[i];\n            for (int j = start; j <= end; j++) {\n                rank[j]++;\n            }\n        }\n\n        Arrays.sort(rank);\n        int half = teams / 2;\n        int changes = 0;\n        for (int i = 0; i < half; i++) {\n            changes += Math.max(0, rank[i] - (half - i - 1));\n        }\n\n        return changes;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        int[] a = new int[m];\n        int[] b = new int[m];\n        for (int i = 0; i < m; i++) {\n            a[i] = scanner.nextInt();\n            b[i] = scanner.nextInt();\n        }\n        System.out.println(minChanges(n, m, a, b));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 07:52:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint minChanges(int n, int m, int *ranks) {\n    int *consistentRanks = (int *)malloc((2 * n) * sizeof(int));\n    int changeCount = 0;\n\n    for (int i = 0; i < 2 * n; i++) {\n        consistentRanks[i] = i / m;\n    }\n\n    for (int i = 0; i < 2 * n; i++) {\n        if (ranks[i] != consistentRanks[i]) {\n            changeCount++;\n        }\n    }\n\n    free(consistentRanks);\n    return changeCount;\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    int *ranks = (int *)malloc((2 * n) * sizeof(int));\n\n    for (int i = 0; i < 2 * n; i++) {\n        scanf(\"%d\", &ranks[i]);\n    }\n\n    int result = minChanges(n, m, ranks);\n    printf(\"%d\\n\", result);\n\n    free(ranks);\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:52:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_rank_changes(n, m, ranks):\n    total_teams = 2**n\n    \n    def is_valid_ranking(ranking):\n        for (a, b) in ranks:\n            if any(ranking[i] > ranking[j] for i in range(a, b+1) for j in range(a, b+1) if i < j):\n                return False\n        return True\n    \n    def backtrack(current_ranking):\n        if is_valid_ranking(current_ranking):\n            return sum(1 for i in range(len(current_ranking)) if current_ranking[i] != i)\n        \n        min_changes = float('inf')\n        \n        for i in range(total_teams):\n            for j in range(total_teams):\n                new_ranking = current_ranking.copy()\n                new_ranking[i], new_ranking[j] = new_ranking[j], new_ranking[i]\n                \n                changes = backtrack(new_ranking)\n                min_changes = min(min_changes, changes)\n        \n        return min_changes\n    \n    initial_ranking = list(range(total_teams))\n    return backtrack(initial_ranking)\n\n# Read input\nn, m = map(int, input().split())\nranks = []\nfor _ in range(m):\n    a, b = map(int, input().split())\n    ranks.append((a-1, b-1))\n\n# Solve and print result\nresult = min_rank_changes(n, m, ranks)\nprint(result)",
+    "timestamp": "2025-08-13 07:52:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    n, m = map(int, sys.stdin.readline().split())\n    segments = []\n    for _ in range(m):\n        a, b = map(int, sys.stdin.readline().split())\n        segments.append((a, b))\n    \n    # The minimal changes is the total number of teams minus the size of the largest possible\n    # subset of segments that can form a consistent ranking (non-overlapping and in order)\n    # This is equivalent to the interval scheduling problem where we want to maximize the number of non-overlapping segments\n    \n    # Sort segments by their end points\n    segments.sort(key=lambda x: x[1])\n    \n    res = 0\n    last_end = -1\n    for a, b in segments:\n        if a > last_end:\n            res += 1\n            last_end = b\n    \n    print(2**n - res)\n\nsolve()",
+    "timestamp": "2025-08-13 07:52:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    vector<pair<int, int>> rankings(m);\n    for(int i = 0; i < m; ++i) {\n        cin >> rankings[i].first >> rankings[i].second;\n    }\n    \n    vector<int> correct_rank(2 * n, 0);\n    for(int i = 0; i < 2 * n; ++i) {\n        correct_rank[i] = i / 2;\n    }\n    \n    sort(rankings.begin(), rankings.end());\n\n    vector<int> received_rank(2 * n);\n    for (int i = 0, current_rank = 0; i < m; ++i) {\n        for (int j = rankings[i].first; j <= rankings[i].second; ++j) {\n            received_rank[j] = current_rank;\n        }\n        current_rank++;\n    }\n\n    vector<vector<int>> dp(2 * n + 1, vector<int>(2 * n + 1, INT_MAX));\n    for (int i = 0; i <= 2 * n; ++i) {\n        dp[i][i] = 0;\n    }\n\n    for (int len = 1; len <= 2 * n; ++len) {\n        for (int i = 0; i + len <= 2 * n; ++i) {\n            int j = i + len;\n            for (int k = i; k < j; ++k) {\n                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k + 1][j] + (correct_rank[i] != received_rank[i] || correct_rank[k] != received_rank[k]) + (correct_rank[j - 1] != received_rank[j - 1]));\n            }\n        }\n    }\n\n    cout << dp[0][2 * n] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:41:13"
+  }
+]

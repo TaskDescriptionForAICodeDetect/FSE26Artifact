@@ -1,0 +1,1 @@
+Find the number of integers between 1 and N (inclusive) that contain exactly K non-zero digits when written in base ten.

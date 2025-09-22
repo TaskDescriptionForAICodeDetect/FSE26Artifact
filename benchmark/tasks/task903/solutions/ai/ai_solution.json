@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_N 100000\n#define MAX_M 100000\n\nint main() {\n    int N, M;\n    int preferences[MAX_M] = {0};\n    int min_max_attendance = INT_MAX;\n\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 0; i < N; i++) {\n        int sport;\n        scanf(\"%d\", &sport);\n        preferences[sport - 1]++;\n    }\n\n    for (int mask = 1; mask < (1 << M); mask++) {\n        int max_attendance = 0;\n        int total_participants = 0;\n\n        for (int j = 0; j < M; j++) {\n            if (mask & (1 << j)) {\n                total_participants += preferences[j];\n                max_attendance = (max_attendance > preferences[j]) ? max_attendance : preferences[j];\n            }\n        }\n\n        if (total_participants == N) {\n            min_max_attendance = (min_max_attendance < max_attendance) ? min_max_attendance : max_attendance;\n        }\n    }\n\n    printf(\"%d\\n\", min_max_attendance);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    int *favorites = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &favorites[i]);\n        favorites[i]--; // converting to 0-based index\n    }\n    \n    int *count = (int *)calloc(M, sizeof(int));\n    for (int i = 0; i < N; i++) {\n        count[favorites[i]]++;\n    }\n    \n    int min_max = INT_MAX;\n    for (int mask = 1; mask < (1 << M); mask++) {\n        int current_max = 0;\n        for (int i = 0; i < M; i++) {\n            if (mask & (1 << i)) {\n                current_max += count[i];\n            }\n        }\n        if (current_max < min_max) {\n            min_max = current_max;\n        }\n    }\n    \n    printf(\"%d\\n\", min_max);\n    \n    free(favorites);\n    free(count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:17:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n#include <queue>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> fav(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> fav[i];\n        fav[i]--; // converting to 0-based index\n    }\n\n    vector<int> count(M, 0);\n    for (int sport : fav) {\n        count[sport]++;\n    }\n\n    int result = INT_MAX;\n    for (int mask = 1; mask < (1 << M); ++mask) {\n        int max_count = 0;\n        for (int i = 0; i < M; ++i) {\n            if (mask & (1 << i)) {\n                max_count = max(max_count, count[i]);\n            }\n        }\n        result = min(result, max_count);\n    }\n\n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextInt() - 1;\n        }\n        \n        int[] count = new int[M];\n        for (int a : A) {\n            count[a]++;\n        }\n        \n        int low = 1;\n        int high = N;\n        int answer = N;\n        \n        while (low <= high) {\n            int mid = (low + high) / 2;\n            if (isPossible(count, mid)) {\n                answer = mid;\n                high = mid - 1;\n            } else {\n                low = mid + 1;\n            }\n        }\n        \n        System.out.println(answer);\n    }\n    \n    private static boolean isPossible(int[] count, int maxParticipants) {\n        long required = 0;\n        for (int c : count) {\n            required += (c + maxParticipants - 1) / maxParticipants - 1;\n        }\n        return required <= 0;\n    }\n}",
+    "timestamp": "2025-08-05 23:18:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SportsMeet {\n    public static int minimizeMaxParticipants(int N, int M, List<Integer> preferences) {\n        int[] sportCount = new int[M];\n        \n        for (int sport : preferences) {\n            sportCount[sport - 1]++;\n        }\n        \n        Arrays.sort(sportCount);\n        \n        int minMax = N;\n        for (int participants = 1; participants <= N; participants++) {\n            int[] currentSportCount = Arrays.copyOf(sportCount, M);\n            int maxParticipants = 0;\n            int remainingParticipants = N;\n            \n            for (int i = 0; i < M && remainingParticipants > 0; i++) {\n                int selectedParticipants = Math.min(currentSportCount[i], participants);\n                remainingParticipants -= selectedParticipants;\n                maxParticipants = Math.max(maxParticipants, selectedParticipants);\n            }\n            \n            if (remainingParticipants == 0) {\n                minMax = Math.min(minMax, maxParticipants);\n            }\n        }\n        \n        return minMax;\n    }\n    \n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n        \n        List<Integer> preferences = new ArrayList<>();\n        for (int i = 0; i < N; i++) {\n            preferences.add(sc.nextInt());\n        }\n        \n        System.out.println(minimizeMaxParticipants(N, M, preferences));\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:18:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<vector<int>> sports(M);\n    for (int i = 0; i < N; i++) {\n        int sport;\n        cin >> sport;\n        sports[sport-1].push_back(i);\n    }\n    \n    int minMax = N;\n    for (int mask = 1; mask < (1 << M); mask++) {\n        vector<int> selected;\n        for (int j = 0; j < M; j++) {\n            if (mask & (1 << j)) {\n                selected.insert(selected.end(), sports[j].begin(), sports[j].end());\n            }\n        }\n        \n        if (selected.size() == N) {\n            int maxParticipants = 0;\n            vector<int> count(M, 0);\n            \n            for (int participant : selected) {\n                for (int j = 0; j < M; j++) {\n                    if (mask & (1 << j)) {\n                        auto it = find(sports[j].begin(), sports[j].end(), participant);\n                        if (it != sports[j].end()) {\n                            count[j]++;\n                            break;\n                        }\n                    }\n                }\n            }\n            \n            maxParticipants = *max_element(count.begin(), count.end());\n            minMax = min(minMax, maxParticipants);\n        }\n    }\n    \n    cout << minMax << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimize_max_attendance(N, M, favorites):\n    from collections import Counter\n    \n    def is_feasible(x):\n        count = Counter()\n        for f in favorites:\n            count[f] += 1\n        \n        max_attendance = max(count.values())\n        return max_attendance <= x\n    \n    left, right = 1, N\n    while left < right:\n        mid = (left + right) // 2\n        if is_feasible(mid):\n            right = mid\n        else:\n            left = mid + 1\n    return left\n\n# Example usage:\nN = 5\nM = 3\nfavorites = [1, 2, 2, 3, 3]\nprint(minimize_max_attendance(N, M, favorites))",
+    "timestamp": "2025-08-13 14:27:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SportsMeet {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt(); // number of participants\n        int m = scanner.nextInt(); // number of sports options\n        \n        int[] preferences = new int[n];\n        for (int i = 0; i < n; i++) {\n            preferences[i] = scanner.nextInt() - 1;\n        }\n        \n        int left = 1, right = n;\n        while (left < right) {\n            int mid = (left + right) / 2;\n            if (canDistributeSports(preferences, m, n, mid)) {\n                right = mid;\n            } else {\n                left = mid + 1;\n            }\n        }\n        \n        System.out.println(left);\n    }\n    \n    private static boolean canDistributeSports(int[] preferences, int m, int n, int maxAttendance) {\n        int[] sportCount = new int[m];\n        for (int i = 0; i < n; i++) {\n            sportCount[preferences[i]]++;\n        }\n        \n        int fillableSports = 0;\n        for (int i = 0; i < m; i++) {\n            fillableSports += (sportCount[i] + maxAttendance - 1) / maxAttendance;\n        }\n        \n        return fillableSports >= m;\n    }\n}",
+    "timestamp": "2025-08-13 14:27:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100000\n#define MAX_M 100000\n\nint participants[MAX_N];\nint sport_count[MAX_M];\n\nint compare(const void *a, const void *b) {\n    return *(int*)a - *(int*)b;\n}\n\nint main() {\n    int N, M;\n\n    // Read N and M\n    scanf(\"%d%d\", &N, &M);\n\n    // Initialize sport_count\n    for (int i = 0; i < M; i++) {\n        sport_count[i] = 0;\n    }\n\n    // Read participants' favorite sports\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &participants[i]);\n        sport_count[participants[i] - 1]++;\n    }\n\n    // Sort the sport_count array\n    qsort(sport_count, M, sizeof(int), compare);\n\n    int min_max_attendance = N;\n\n    // Binary search over token number\n    int low = 1, high = N;\n    while (low <= high) {\n        int mid = (low + high) / 2;\n        int tokens_used = 0;\n        int possible = 1;\n\n        // Check if mid is possible\n        for (int i = M - 1; i >= 0; i--) {\n            if (sport_count[i] <= mid) break;\n            tokens_used += (sport_count[i] - mid);\n            if (tokens_used > mid) {\n                possible = 0;\n                break;\n            }\n        }\n\n        if (possible) {\n            min_max_attendance = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    // Print result\n    printf(\"%d\\n\", min_max_attendance);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:28:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    vector<int> favourite(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> favourite[i];\n    }\n\n    int low = 1, high = N, ans = N;\n\n    while (low <= high) {\n        int mid = (low + high) / 2;\n        vector<int> count(M + 1, 0);\n        for (int i = 0; i < N; ++i) {\n            ++count[favourite[i]];\n        }\n\n        int groups = 0;\n        for (int i = 1; i <= M; ++i) {\n            groups += (count[i] + mid - 1) / mid;\n        }\n\n        if (groups <= M) {\n            ans = mid;\n            high = mid - 1;\n        } else {\n            low = mid + 1;\n        }\n    }\n\n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:28:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_sports_meet(N, M, preferences):\n    # Count participants' preferences\n    sport_counts = [0] * M\n    for pref in preferences:\n        sport_counts[pref-1] += 1\n    \n    # Sort sport counts\n    sport_counts.sort()\n    \n    # Minimize the max participants\n    min_max_participants = float('inf')\n    for max_participants in range(1, max(sport_counts) + 1):\n        # Try to distribute participants\n        current_counts = sport_counts.copy()\n        distributed = True\n        \n        # Redistribute participants\n        for i in range(M):\n            if current_counts[i] > max_participants:\n                # If any sport exceeds max_participants, it's not possible\n                distributed = False\n                break\n        \n        if distributed:\n            min_max_participants = min(min_max_participants, max(current_counts))\n    \n    return min_max_participants\n\n# Read input\nN, M = map(int, input().split())\npreferences = list(map(int, input().split()))\n\n# Print result\nprint(solve_sports_meet(N, M, preferences))",
+    "timestamp": "2025-08-13 14:28:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import defaultdict\n\ndef solve():\n    N, M = map(int, sys.stdin.readline().split())\n    favorites = [int(x) for x in sys.stdin.readline().split()]\n    \n    # Initialize a frequency dictionary for each sport\n    freq = defaultdict(int)\n    for sport in favorites:\n        freq[sport] += 1\n    \n    # We need to select a subset of sports, so we can consider all possible non-empty subsets\n    # But with M up to 10, we can use bitmasking to iterate all subsets\n    min_max = float('inf')\n    \n    # Iterate all non-empty subsets of sports\n    for mask in range(1, 1 << M):\n        current_max = 0\n        for sport in range(1, M+1):\n            if mask & (1 << (sport - 1)):\n                current_max = max(current_max, freq.get(sport, 0))\n        if current_max < min_max:\n            min_max = current_max\n            if min_max == 0:\n                break  # can't get better than 0\n    print(min_max)\n\nsolve()",
+    "timestamp": "2025-08-13 14:28:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimizeMaxParticipants(N, M, favorites) {\n    let left = 1, right = N;\n    \n    const canDistribute = (maxCount) => {\n        let usedSports = Array(M).fill(0);\n        for (let fav of favorites) {\n            if (usedSports[fav] < maxCount) {\n                usedSports[fav]++;\n            } else {\n                return false;\n            }\n        }\n        return true;\n    };\n    \n    favorites.sort((a, b) => a - b);\n    \n    while (left < right) {\n        let mid = Math.floor((left + right) / 2);\n        \n        if (canDistribute(mid)) {\n            right = mid;\n        } else {\n            left = mid + 1;\n        }\n    }\n    \n    return left;\n}\n\n// Example usage:\n// minimizeMaxParticipants(N, M, favorites);",
+    "timestamp": "2025-08-13 14:28:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimizeMaxParticipants(N, M, preferences) {\n    const participantCount = new Array(M).fill(0);\n    \n    for (const pref of preferences) {\n        participantCount[pref - 1]++;\n    }\n    \n    let left = 1, right = N;\n    \n    while (left < right) {\n        const mid = Math.floor((left + right) / 2);\n        \n        if (canDistributeParticipants(participantCount, mid)) {\n            right = mid;\n        } else {\n            left = mid + 1;\n        }\n    }\n    \n    return left;\n}\n\nfunction canDistributeParticipants(participantCount, maxPerSport) {\n    let remainingParticipants = participantCount.reduce((a, b) => a + b, 0);\n    const sortedParticipants = participantCount.slice().sort((a, b) => b - a);\n    \n    for (const count of sortedParticipants) {\n        if (count > maxPerSport) return false;\n        \n        const used = Math.min(count, maxPerSport);\n        remainingParticipants -= used;\n        \n        if (remainingParticipants <= 0) return true;\n    }\n    \n    return remainingParticipants <= 0;\n}",
+    "timestamp": "2025-08-13 14:28:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const [N, M] = input[0].split(' ').map(Number);\n    const favSports = input.slice(1, N + 1).map(line => line.split(' ').map(Number)[0] - 1);\n    \n    let minMax = Infinity;\n    let remainingSports = new Set(Array.from({ length: M }, (_, i) => i));\n    \n    while (remainingSports.size > 0) {\n        const count = new Array(M).fill(0);\n        for (const sport of favSports) {\n            if (remainingSports.has(sport)) {\n                count[sport]++;\n            }\n        }\n        \n        const currentMax = Math.max(...count.filter((_, idx) => remainingSports.has(idx)));\n        minMax = Math.min(minMax, currentMax);\n        \n        if (minMax === 0) break;\n        \n        for (let i = 0; i < M; i++) {\n            if (count[i] === currentMax) {\n                remainingSports.delete(i);\n            }\n        }\n    }\n    \n    console.log(minMax);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:29:09"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "3 4",
+      "output": "4"
+    },
+    {
+      "input": "4 4",
+      "output": "2"
+    }
+  ]
+}

@@ -1,0 +1,384 @@
+{
+  "examples": [
+    {
+      "input": "xx..\n.oo.\nx...\noox.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x.ox\nox..\nx.o.\noo.x\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "x..x\n..oo\no...\nx.xo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o.x.\no...\n.x..\nooxx\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".xox\no.x.\nx.o.\n..o.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o.oo\n.x.o\nx.x.\n.x..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".xx.\n.xoo\n.oox\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xxox\no.x.\nx.oo\nxo.o\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".xox\n.x..\nxoo.\noox.\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".oxx\nx...\n.o..\no...\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "...x\n.x.o\n.o..\n.x.o\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "oo.x\nxo.o\no.xx\n.oxx\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".x.o\n..o.\n..ox\nxox.\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "....\n.x..\nx...\n..oo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n....\n.x.o\n..xo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xo.x\n...o\n.oox\nx...\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "o..o\nx..x\n.o.x\nxo..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "ox.o\nx..x\nx..o\noo.x\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".xox\n.x.o\nooxo\n..x.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x..o\no..o\n..x.\nx.xo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xxoo\no.oo\n...x\nx..x\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xoox\n.xx.\no..o\n..xo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "..o.\nxxox\n....\n.oxo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xoox\nxxox\noo..\n.ox.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "..ox\n.o..\nx..o\n.oxx\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".oo.\n.x..\nx...\nox..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o.xx\nxo.o\n...o\n..x.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x...\n.ox.\n.oo.\n.xox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xoxx\n..x.\no.oo\nx.o.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".x.x\n.o.o\no.xx\nx.oo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "...o\nxo.x\n.x..\nxoo.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o...\n...o\noxx.\n.xxo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xxox\no..o\nx..o\noxox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "x...\no.ox\nxo..\n....\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "x.x.\nox.o\n.o.o\nxox.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".oxx\n..xo\n.oox\n....\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xxo.\n...x\nooxx\n.o.o\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xoxo\no..x\n.xo.\nox..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".o..\nox..\n.o.x\n.x..\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".oxo\nx...\n.o..\n.xox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".oxx\n..o.\n.o.x\n.ox.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".xxo\n...o\n..ox\nox..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x...\nxo..\noxo.\n..ox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xoxo\nx.ox\n....\noxo.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x..o\nxo.x\no.xo\nxoox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".x..\no..x\n.oo.\nxox.\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xxox\no.x.\nxo.o\nxo.o\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".xo.\nx.oo\n...x\n.o.x\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "ox.o\n...x\n..oo\nxxox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "oox.\nxoo.\no.x.\nx..x\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "oxox\nx.oo\nooxx\nxxo.\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "....\nxo.x\n..x.\noo..\n",
+      "output": "NO\n"
+    },
+    {
+      "input": ".ox.\nx..o\nxo.x\noxo.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".xox\nxo..\n..oo\n.x..\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xxo.\n.oo.\n..x.\n..xo\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "ox..\n..oo\n..x.\nxxo.\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "xxo.\nx..x\noo.o\noxox\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xx..\noxxo\nxo.o\noox.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xox.\noox.\n....\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x..o\no..o\no..x\nxxox\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "oxo.\nxx.x\nooxx\n.o.o\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".o.x\no..o\nx..x\n..xo\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "x.x.\n...o\n.o..\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xo..\n....\nx...\n..o.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "xo..\n....\n..xo\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "ox.x\n...o\n....\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".x..\no.o.\n.x..\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".x..\no...\n...x\n.o..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "..xo\n....\nx.o.\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o.x.\n....\n.ox.\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "...x\n....\n.x.o\n..o.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o..x\n....\n...x\n..o.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o...\nx.x.\no...\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\nxo..\n..o.\nx...\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".oo.\nx...\n....\n..x.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n.x.x\no.o.\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".o..\n.x..\n..o.\n.x..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "..o.\n.x..\n....\no..x\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n.oxo\n....\nx...\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "..o.\n..x.\n....\n.ox.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".o..\no..x\n....\n.x..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n..ox\n....\n.o.x\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "o...\n.o..\nx.x.\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n..oo\n.x.x\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".o..\n....\no...\nx.x.\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n.o..\n....\nox.x\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "oxo.\nxxox\noo.o\nxoxx\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "..xx\noo..\n....\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".xx.\n...x\noo.o\no..x\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "x...\n.x..\n....\noo..\n",
+      "output": "YES\n"
+    },
+    {
+      "input": ".oox\n..x.\n....\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "...x\no..x\n.o..\n....\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "oxox\n..ox\nxoxo\nxoxo\n",
+      "output": "YES\n"
+    },
+    {
+      "input": "....\n.ox.\n.o..\nx...\n",
+      "output": "NO\n"
+    },
+    {
+      "input": "....\n...x\n...x\noo..\n",
+      "output": "YES\n"
+    }
+  ]
+}

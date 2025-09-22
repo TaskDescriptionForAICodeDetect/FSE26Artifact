@@ -1,0 +1,1 @@
+Write a program to find the most distant point from the sea on a given map of an island, which is represented as a convex polygon. The polygon is defined by its vertices, and you need to report the distance of the most distant point from the sea with an accuracy of at least 0.00001.

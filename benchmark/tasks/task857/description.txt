@@ -1,0 +1,1 @@
+Determine if there exists a sequence obtained by permuting 1, 2, ..., N that satisfies the conditions that the length of its longest increasing subsequence is A and the length of its longest decreasing subsequence is B. If it exists, construct one such sequence.

@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "AJMP\naB23d",
+      "output": "32Bad"
+    },
+    {
+      "input": "E\n86AE",
+      "output": "AE86"
+    },
+    {
+      "input": "AM\n6",
+      "output": "7"
+    },
+    {
+      "input": "JPEM\nWaEaETC302Q",
+      "output": "EC302QTWaEa"
+    },
+    {
+      "input": "CP\nrTurnAGundam1isdefferentf",
+      "output": "TurnAGundam0isdefferentfr"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+You are given an integer N. Construct any one N-by-N matrix a that satisfies the following conditions:
+
+1. The elements a_{i,j} are pairwise distinct integers such that 1 <= a_{i,j} <= 10^{15}.
+2. There exists a positive integer m such that for any two elements x and y in the matrix that are vertically or horizontally adjacent, max(x,y) mod min(x,y) is always equal to m.
+
+It can be proven that a solution always exists under the given constraints of the problem.

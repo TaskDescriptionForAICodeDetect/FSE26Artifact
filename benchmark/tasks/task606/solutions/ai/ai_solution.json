@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 20\n\nvoid combinations(int* coins, int n, int k, int l, int r, int* count) {\n    int* combination = malloc(k * sizeof(int));\n    \n    void backtrack(int start, int depth, int sum) {\n        if (depth == k) {\n            if (sum >= l && sum <= r) {\n                (*count)++;\n            }\n            return;\n        }\n        \n        for (int i = start; i < n; i++) {\n            combination[depth] = coins[i];\n            backtrack(i + 1, depth + 1, sum + coins[i]);\n        }\n    }\n    \n    backtrack(0, 0, 0);\n    free(combination);\n}\n\nint main() {\n    int n, k, l, r;\n    scanf(\"%d %d %d %d\", &n, &k, &l, &r);\n    \n    int coins[MAX_N];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &coins[i]);\n    }\n    \n    int count = 0;\n    combinations(coins, n, k, l, r, &count);\n    \n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:17:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint count = 0;\n\nvoid combination(int arr[], int data[], int start, int end, int index, int k, int L, int R) {\n    if (index == k) {\n        int sum = 0;\n        for (int i = 0; i < k; i++) {\n            sum += data[i];\n        }\n        if (sum >= L && sum <= R) {\n            count++;\n        }\n        return;\n    }\n    for (int i = start; i <= end && end - i + 1 >= k - index; i++) {\n        data[index] = arr[i];\n        combination(arr, data, i + 1, end, index + 1, k, L, R);\n    }\n}\n\nint main() {\n    int N, K, L, R;\n    scanf(\"%d %d %d %d\", &N, &K, &L, &R);\n    int arr[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    int data[K];\n    combination(arr, data, 0, N - 1, 0, K, L, R);\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:17:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, K, L, R;\n    cin >> N >> K >> L >> R;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n\n    int count = 0;\n    for (int mask = 0; mask < (1 << N); ++mask) {\n        if (__builtin_popcount(mask) != K) continue;\n        int sum = 0;\n        for (int i = 0; i < N; ++i) {\n            if (mask & (1 << i)) {\n                sum += a[i];\n            }\n        }\n        if (sum >= L && sum <= R) {\n            count++;\n        }\n    }\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoinCombinations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int L = scanner.nextInt();\n        int R = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        int count = 0;\n        for (int mask = 0; mask < (1 << N); mask++) {\n            if (Integer.bitCount(mask) != K) {\n                continue;\n            }\n            int sum = 0;\n            for (int i = 0; i < N; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    sum += a[i];\n                }\n            }\n            if (sum >= L && sum <= R) {\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:18:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoinCombinations {\n    public static int countCombinations(int N, int K, int L, int R, int[] coins) {\n        List<List<Integer>> combinations = new ArrayList<>();\n        backtrack(combinations, new ArrayList<>(), coins, 0, K, L, R);\n        return combinations.size();\n    }\n\n    private static void backtrack(List<List<Integer>> combinations, List<Integer> current, \n                                   int[] coins, int start, int K, int L, int R) {\n        if (current.size() == K) {\n            int sum = current.stream().mapToInt(Integer::intValue).sum();\n            if (sum >= L && sum <= R) {\n                combinations.add(new ArrayList<>(current));\n            }\n            return;\n        }\n\n        for (int i = start; i < coins.length; i++) {\n            current.add(coins[i]);\n            backtrack(combinations, current, coins, i + 1, K, L, R);\n            current.remove(current.size() - 1);\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int L = scanner.nextInt();\n        int R = scanner.nextInt();\n        \n        int[] coins = new int[N];\n        for (int i = 0; i < N; i++) {\n            coins[i] = scanner.nextInt();\n        }\n\n        System.out.println(countCombinations(N, K, L, R, coins));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:18:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint countCombinations(int N, int K, int L, int R, vector<int>& coins) {\n    int count = 0;\n    \n    vector<vector<int>> combinations;\n    vector<int> current;\n    \n    function<void(int)> backtrack = [&](int start) {\n        if (current.size() == K) {\n            int sum = 0;\n            for (int coin : current) {\n                sum += coin;\n            }\n            \n            if (sum >= L && sum <= R) {\n                count++;\n            }\n            return;\n        }\n        \n        for (int i = start; i < N; i++) {\n            current.push_back(coins[i]);\n            backtrack(i + 1);\n            current.pop_back();\n        }\n    };\n    \n    backtrack(0);\n    \n    return count;\n}\n\nint main() {\n    int N, K, L, R;\n    cin >> N >> K >> L >> R;\n    \n    vector<int> coins(N);\n    for (int i = 0; i < N; i++) {\n        cin >> coins[i];\n    }\n    \n    int result = countCombinations(N, K, L, R, coins);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import combinations\n\ndef count_coin_combinations(n, k, coins, L, R):\n    count = 0\n    for comb in combinations(coins, k):\n        if L <= sum(comb) <= R:\n            count += 1\n    return count\n\n# Example usage\nN = 5\nK = 3\ncoins = [1, 2, 3, 4, 5]\nL = 5\nR = 10\n\nprint(count_coin_combinations(N, K, coins, L, R))",
+    "timestamp": "2025-08-13 09:53:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class CoinCombination {\n    public static void main(String[] args) {\n        int N = 5; // number of coins\n        int[] coins = {1, 2, 3, 4, 5}; // coin values\n        int K = 3; // number of coins to choose\n        int L = 5; // minimum total value\n        int R = 10; // maximum total value\n\n        System.out.println(countCombinations(coins, N, K, L, R));\n    }\n\n    public static int countCombinations(int[] coins, int N, int K, int L, int R) {\n        int count = 0;\n        List<List<Integer>> combinations = new ArrayList<>();\n        getCombinations(coins, 0, N, K, new ArrayList<>(), combinations);\n\n        for (List<Integer> combination : combinations) {\n            int sum = 0;\n            for (int val : combination) {\n                sum += val;\n            }\n            if (sum >= L && sum <= R) {\n                count++;\n            }\n        }\n\n        return count;\n    }\n\n    private static void getCombinations(int[] coins, int start, int N, int K, List<Integer> currentCombination, List<List<Integer>> combinations) {\n        if (currentCombination.size() == K) {\n            combinations.add(new ArrayList<>(currentCombination));\n            return;\n        }\n\n        for (int i = start; i < N; i++) {\n            currentCombination.add(coins[i]);\n            getCombinations(coins, i + 1, N, K, currentCombination, combinations);\n            currentCombination.remove(currentCombination.size() - 1);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 09:54:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid combinationUtil(int arr[], int n, int r, int index, int data[], int i, int L, int R, int* count) {\n    if (index == r) {\n        int sum = 0;\n        for (int j = 0; j < r; j++)\n            sum += data[j];\n        if (sum >= L && sum <= R)\n            (*count)++;\n        return;\n    }\n\n    if (i >= n)\n        return;\n\n    data[index] = arr[i];\n    combinationUtil(arr, n, r, index + 1, data, i + 1, L, R, count);\n\n    combinationUtil(arr, n, r, index, data, i + 1, L, R, count);\n}\n\nint countCombinations(int arr[], int n, int k, int L, int R) {\n    int data[k];\n    int count = 0;\n    combinationUtil(arr, n, k, 0, data, 0, L, R, &count);\n    return count;\n}\n\nint main() {\n    int N = 5, K = 3, L = 10, R = 20;\n    int coins[] = {5, 10, 12, 13, 15};\n    int result = countCombinations(coins, N, K, L, R);\n    printf(\"Number of valid combinations: %d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:54:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import combinations\n\ndef count_coin_combinations(coins, K, L, R):\n    count = 0\n    for combo in combinations(coins, K):\n        total_value = sum(combo)\n        if L <= total_value <= R:\n            count += 1\n    return count\n\n# Example usage\nN = int(input())\ncoins = list(map(int, input().split()))\nK = int(input())\nL, R = map(int, input().split())\n\nresult = count_coin_combinations(coins, K, L, R)\nprint(result)",
+    "timestamp": "2025-08-13 09:54:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom itertools import combinations\n\ndef solve():\n    N, K, L, R = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    count = 0\n    for comb in combinations(a, K):\n        total = sum(comb)\n        if L <= total <= R:\n            count += 1\n    print(count)\n\nsolve()",
+    "timestamp": "2025-08-13 09:54:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint countCombinations(vector<int>& coins, int N, int K, int L, int R) {\n    int count = 0;\n    vector<int> indices(K);\n    \n    for (int i = 0; i < K; ++i) {\n        indices[i] = i;\n    }\n    \n    do {\n        int sum = 0;\n        for (int i = 0; i < K; ++i) {\n            sum += coins[indices[i]];\n        }\n        if (sum >= L && sum <= R) {\n            ++count;\n        }\n        \n        int j = K - 1;\n        while (j >= 0 && indices[j] == N - K + j) {\n            --j;\n        }\n        if (j >= 0) {\n            ++indices[j];\n            for (int k = j + 1; k < K; ++k) {\n                indices[k] = indices[k - 1] + 1;\n            }\n        } else {\n            break;\n        }\n    } while (true);\n    \n    return count;\n}\n\nint main() {\n    int N, K, L, R;\n    cin >> N >> K >> L >> R;\n    vector<int> coins(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> coins[i];\n    }\n    \n    int result = countCombinations(coins, N, K, L, R);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:55:45"
+  }
+]

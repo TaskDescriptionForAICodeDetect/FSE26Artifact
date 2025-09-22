@@ -1,0 +1,1 @@
+You have N items and a bag of strength W. Each item has a weight w_i and a value v_i. Select some items to maximize the total value without exceeding the weight limit W.

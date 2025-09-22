@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_MONSTERS 100005\n\ntypedef struct {\n    long long x;\n    long long h;\n} Monster;\n\nint compare(const void* a, const void* b) {\n    Monster* m1 = (Monster*)a;\n    Monster* m2 = (Monster*)b;\n    return (m1->x - m2->x);\n}\n\nint solve(Monster* monsters, int N, long long D, long long A) {\n    qsort(monsters, N, sizeof(Monster), compare);\n    \n    int bombs = 0;\n    for (int i = 0; i < N; i++) {\n        if (monsters[i].h <= 0) continue;\n        \n        long long bombCoord = monsters[i].x;\n        long long damage = ((monsters[i].h + A - 1) / A);\n        bombs += damage;\n        \n        for (int j = i + 1; j < N; j++) {\n            if (monsters[j].x - bombCoord > D) break;\n            monsters[j].h -= damage * A;\n        }\n    }\n    \n    return bombs;\n}\n\nint main() {\n    int N;\n    long long D, A;\n    Monster monsters[MAX_MONSTERS];\n    \n    scanf(\"%d %lld %lld\", &N, &D, &A);\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld %lld\", &monsters[i].x, &monsters[i].h);\n    }\n    \n    printf(\"%d\\n\", solve(monsters, N, D, A));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int h;\n} Monster;\n\nint compare(const void *a, const void *b) {\n    Monster *monsterA = (Monster *)a;\n    Monster *monsterB = (Monster *)b;\n    return monsterA->x - monsterB->x;\n}\n\nint main() {\n    int N, D, A;\n    scanf(\"%d %d %d\", &N, &D, &A);\n\n    Monster monsters[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &monsters[i].x, &monsters[i].h);\n    }\n\n    qsort(monsters, N, sizeof(Monster), compare);\n\n    long long bombs = 0;\n    long long current = 0;\n    int queue[N][2];\n    int head = 0, tail = 0;\n\n    for (int i = 0; i < N; i++) {\n        while (head < tail && queue[head][0] < monsters[i].x) {\n            current -= queue[head][1];\n            head++;\n        }\n\n        long long remaining = monsters[i].h - current * A;\n        if (remaining > 0) {\n            long long cnt = (remaining + A - 1) / A;\n            bombs += cnt;\n            current += cnt;\n            queue[tail][0] = monsters[i].x + 2 * D;\n            queue[tail][1] = cnt;\n            tail++;\n        }\n    }\n\n    printf(\"%lld\\n\", bombs);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, D, A;\n    cin >> N >> D >> A;\n    vector<pair<int, int>> monsters(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> monsters[i].first >> monsters[i].second;\n    }\n    sort(monsters.begin(), monsters.end());\n    \n    vector<int> X(N), H(N);\n    for (int i = 0; i < N; ++i) {\n        X[i] = monsters[i].first;\n        H[i] = monsters[i].second;\n    }\n    \n    vector<long long> damage(N + 1, 0);\n    long long res = 0;\n    long long current = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        current += damage[i];\n        if (H[i] > current) {\n            long long needed = (H[i] - current + A - 1) / A;\n            res += needed;\n            long long bomb_damage = needed * A;\n            current += bomb_damage;\n            int right = upper_bound(X.begin(), X.end(), X[i] + 2 * D) - X.begin();\n            if (right < N) {\n                damage[right] -= bomb_damage;\n            }\n        }\n    }\n    \n    cout << res << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:38:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        long D = sc.nextLong();\n        long A = sc.nextLong();\n        long[][] monsters = new long[N][2];\n        for (int i = 0; i < N; i++) {\n            monsters[i][0] = sc.nextLong();\n            monsters[i][1] = sc.nextLong();\n        }\n        Arrays.sort(monsters, (a, b) -> Long.compare(a[0], b[0]));\n\n        long[] x = new long[N];\n        long[] h = new long[N];\n        for (int i = 0; i < N; i++) {\n            x[i] = monsters[i][0];\n            h[i] = monsters[i][1];\n        }\n\n        long res = 0;\n        long[] diff = new long[N + 1];\n        long current = 0;\n\n        int left = 0;\n        for (int i = 0; i < N; i++) {\n            current += diff[i];\n            if (h[i] > current) {\n                long needed = (h[i] - current + A - 1) / A;\n                res += needed;\n                current += needed * A;\n                int right = upperBound(x, x[i] + 2 * D);\n                if (right < N) {\n                    diff[right] -= needed * A;\n                }\n            }\n        }\n        System.out.println(res);\n    }\n\n    private static int upperBound(long[] arr, long key) {\n        int left = 0;\n        int right = arr.length;\n        while (left < right) {\n            int mid = (left + right) / 2;\n            if (arr[mid] <= key) {\n                left = mid + 1;\n            } else {\n                right = mid;\n            }\n        }\n        return left;\n    }\n}",
+    "timestamp": "2025-08-05 22:38:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SilverFoxBombs {\n    public static int minimumBombs(int[] coordinates, int[] health, int bombRange, int bombDamage) {\n        int n = coordinates.length;\n        List<int[]> monsters = new ArrayList<>();\n        \n        for (int i = 0; i < n; i++) {\n            monsters.add(new int[]{coordinates[i], health[i]});\n        }\n        \n        monsters.sort((a, b) -> Integer.compare(a[0], b[0]));\n        \n        int bombCount = 0;\n        int index = 0;\n        \n        while (index < n) {\n            if (monsters.get(index)[1] > 0) {\n                int bombLocation = monsters.get(index)[0];\n                bombCount++;\n                \n                for (int j = index; j < n; j++) {\n                    int monsterDistance = Math.abs(monsters.get(j)[0] - bombLocation);\n                    if (monsterDistance <= bombRange) {\n                        monsters.get(j)[1] -= bombDamage;\n                    }\n                }\n            }\n            \n            index++;\n        }\n        \n        return bombCount;\n    }\n    \n    public static void main(String[] args) {\n        int[] coordinates = {1, 3, 5, 7};\n        int[] health = {2, 3, 4, 5};\n        int bombRange = 2;\n        int bombDamage = 3;\n        \n        int result = minimumBombs(coordinates, health, bombRange, bombDamage);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 22:38:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint minBombs(vector<int>& positions, vector<int>& health, int bombRange, int bombDamage) {\n    int n = positions.size();\n    vector<pair<int, int>> monsters;\n    \n    for (int i = 0; i < n; i++) {\n        monsters.push_back({positions[i], health[i]});\n    }\n    \n    sort(monsters.begin(), monsters.end());\n    \n    int bombs = 0;\n    \n    for (int i = 0; i < n; i++) {\n        if (monsters[i].second > 0) {\n            int bombPos = monsters[i].first;\n            int remainingDamage = bombDamage;\n            \n            bombs++;\n            \n            for (int j = i; j < n; j++) {\n                if (abs(monsters[j].first - bombPos) <= bombRange) {\n                    int damage = min(remainingDamage, monsters[j].second);\n                    monsters[j].second -= damage;\n                    remainingDamage -= damage;\n                    \n                    if (remainingDamage <= 0) break;\n                }\n            }\n        }\n    }\n    \n    return bombs;\n}\n\nint main() {\n    int n, d, a;\n    cin >> n >> d >> a;\n    \n    vector<int> x(n), h(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> x[i] >> h[i];\n    }\n    \n    cout << minBombs(x, h, d, a) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:38:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_bombs_needed(N, monsters, D, A):\n    monsters.sort()  # Sort monsters based on their coordinates\n    bombs = 0\n    i = 0\n    \n    while i < N:\n        x, h = monsters[i]  # current monster's position and health\n        \n        if h > 0:\n            bombs_needed = (h + A - 1) // A  # Ceiling division to determine the number of bombs\n            bombs += bombs_needed\n            blast_range = x + 2 * D\n            \n            # Apply bombs effect to all monsters within the blast range\n            for j in range(i, N):\n                if monsters[j][0] <= blast_range:\n                    monsters[j] = (monsters[j][0], monsters[j][1] - bombs_needed * A)\n                else:\n                    break\n\n        i += 1\n\n    return bombs\n\n# Example usage:\nN = 3\nmonsters = [(1, 9), (10, 10), (20, 10)]\nD = 5\nA = 10\nprint(min_bombs_needed(N, monsters, D, A))  # Output: 3",
+    "timestamp": "2025-08-13 11:50:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SilverFox {\n\n    public static int minBombs(int[] X, int[] H, int N, int D, int A) {\n        int bombs = 0;\n        TreeMap<Integer, Integer> events = new TreeMap<>();\n\n        for (int i = 0; i < N; i++) {\n            events.put(X[i], events.getOrDefault(X[i], 0) + H[i]);\n            events.put(X[i] + 2 * D + 1, events.getOrDefault(X[i] + 2 * D + 1, 0) - H[i]);\n        }\n\n        long currentHp = 0;\n        long deltaBomb = 0;\n\n        for (Map.Entry<Integer, Integer> event : events.entrySet()) {\n            int position = event.getKey();\n            int hpAtPosition = event.getValue();\n\n            currentHp += deltaBomb;\n            \n            long requiredBombs = Math.max(0, (currentHp + hpAtPosition + A - 1) / A) - currentHp / A;\n            bombs += requiredBombs;\n            deltaBomb += requiredBombs * A;\n            \n            currentHp += hpAtPosition;\n        }\n\n        return bombs;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int D = scanner.nextInt();\n        int A = scanner.nextInt();\n        int[] X = new int[N];\n        int[] H = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            X[i] = scanner.nextInt();\n            H[i] = scanner.nextInt();\n        }\n        \n        System.out.println(minBombs(X, H, N, D, A));\n    }\n}",
+    "timestamp": "2025-08-13 11:50:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int x;\n    int h;\n} Monster;\n\n// Comparison function for sorting monsters based on coordinates\nint compare(const void* a, const void* b) {\n    return ((Monster*)a)->x - ((Monster*)b)->x;\n}\n\n// Function to apply bombs and reduce the health\nint minBombs(Monster monsters[], int n, int d, int a) {\n    qsort(monsters, n, sizeof(Monster), compare);\n    \n    int* damage = (int*)calloc(n, sizeof(int)); // To track the impact of each bomb\n    int bombs = 0;\n    long long current_damage = 0;\n    int j = 0;\n\n    for (int i = 0; i < n; i++) {\n        current_damage -= (i > 0 ? damage[i - 1] : 0);\n        \n        if (monsters[i].h > current_damage) {\n            long long additional_damage = monsters[i].h - current_damage;\n            long long required_bombs = (additional_damage + a - 1) / a;\n            bombs += required_bombs;\n            current_damage += required_bombs * a;\n            \n            int lastIndex = monsters[i].x + 2 * d;\n            while (j < n && monsters[j].x <= lastIndex) {\n                j++;\n            }\n            if (i < j) {\n                damage[j - 1] += required_bombs * a;\n            }\n        }\n    }\n\n    free(damage);\n    return bombs;\n}\n\nint main() {\n    int n, d, a;\n    scanf(\"%d %d %d\", &n, &d, &a);\n    \n    Monster* monsters = (Monster*)malloc(n * sizeof(Monster));\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &monsters[i].x, &monsters[i].h);\n    }\n    \n    int result = minBombs(monsters, n, d, a);\n    printf(\"%d\\n\", result);\n    \n    free(monsters);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:50:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minBombsNeeded(N, monsters, D, A) {\n  monsters.sort((a, b) => a[0] - b[0]);\n\n  let bombs = 0;\n  let damageEffect = Array(N).fill(0);\n  let currentDamage = 0;\n\n  for (let i = 0; i < N; i++) {\n    currentDamage -= i > 0 ? damageEffect[i - 1] : 0;\n\n    if (monsters[i][1] > currentDamage) {\n      let remainingHealth = monsters[i][1] - currentDamage;\n      let requiredBombs = Math.ceil(remainingHealth / A);\n      bombs += requiredBombs;\n      currentDamage += requiredBombs * A;\n      let endRange = monsters[i][0] + 2 * D;\n\n      let j = i;\n      while (j < N && monsters[j][0] <= endRange) {\n        j++;\n      }\n      damageEffect[(j - 1) >= i ? (j - 1) : i] += requiredBombs * A;\n    }\n  }\n\n  return bombs;\n}",
+    "timestamp": "2025-08-13 11:50:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_bombs_to_defeat_monsters(N, X, H, D, A):\n    monsters = sorted(zip(X, H))\n    bombs_used = 0\n    \n    for i in range(N):\n        while monsters[i][1] > 0:\n            best_bomb_coord = monsters[i][0]\n            \n            for j in range(N):\n                if abs(monsters[j][0] - best_bomb_coord) <= D:\n                    monsters[j] = (monsters[j][0], max(monsters[j][1] - A, 0))\n            \n            bombs_used += 1\n    \n    return bombs_used\n\n# Example usage\nN, D, A = map(int, input().split())\nX = list(map(int, input().split()))\nH = list(map(int, input().split()))\n\nresult = min_bombs_to_defeat_monsters(N, X, H, D, A)\nprint(result)",
+    "timestamp": "2025-08-13 11:51:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimumBombs(N, X, H, D, A) {\n    const monsters = X.map((x, i) => ({ x, h: H[i] })).sort((a, b) => a.x - b.x);\n    let bombCount = 0;\n\n    while (monsters.some(monster => monster.h > 0)) {\n        const target = monsters.find(monster => monster.h > 0);\n        const bombX = target.x;\n        bombCount++;\n\n        for (const monster of monsters) {\n            if (Math.abs(monster.x - bombX) <= D) {\n                monster.h -= A;\n            }\n        }\n    }\n\n    return bombCount;\n}",
+    "timestamp": "2025-08-13 11:51:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    N, D, A = map(int, sys.stdin.readline().split())\n    monsters = []\n    for _ in range(N):\n        X, H = map(int, sys.stdin.readline().split())\n        monsters.append((X, H))\n    monsters.sort()\n    \n    X = [x for x, h in monsters]\n    H = [h for x, h in monsters]\n    \n    res = 0\n    diff = [0] * (N + 2)\n    current = 0\n    \n    left = 0\n    for right in range(N):\n        while left < right and X[left] < X[right] - 2 * D:\n            left += 1\n        \n        current += diff[right]\n        remaining = H[right] - current * A\n        if remaining <= 0:\n            continue\n        \n        bombs = (remaining + A - 1) // A\n        res += bombs\n        current += bombs\n        diff[right] += bombs\n        end = right\n        while end < N and X[end] <= X[right] + 2 * D:\n            end += 1\n        if end < N + 1:\n            diff[end] -= bombs\n    \n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 11:51:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N, D, A;\n    let monsters = [];\n\n    rl.on('line', (line) => {\n        const input = line.trim().split(' ').map(Number);\n        if (N === undefined) {\n            N = input[0];\n            D = input[1];\n            A = input[2];\n        } else {\n            const X = input[0];\n            const H = input[1];\n            monsters.push({ X, H });\n            if (monsters.length === N) {\n                rl.close();\n                main();\n            }\n        }\n    });\n\n    function main() {\n        monsters.sort((a, b) => a.X - b.X);\n        const X = monsters.map(m => m.X);\n        const H = monsters.map(m => m.H);\n        const n = X.length;\n        let res = 0;\n        const diff = new Array(n + 1).fill(0);\n        let current = 0;\n\n        for (let i = 0, j = 0; i < n; ++i) {\n            current += diff[i];\n            if (H[i] - current * A > 0) {\n                const need = Math.ceil((H[i] - current * A) / A);\n                res += need;\n                current += need;\n                const right = X[i] + 2 * D;\n                while (j < n && X[j] <= right) {\n                    ++j;\n                }\n                if (j < n) {\n                    diff[j] -= need;\n                }\n            }\n        }\n        console.log(res);\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 11:51:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\n// Function to apply the bomb to the range\nvoid applyBomb(vector<long long>& health, vector<int>& positions, int d_range, long long a_decrease, int index) {\n    int n = health.size();\n    int start_pos = positions[index] - d_range;\n    int end_pos = positions[index] + d_range;\n    \n    for (int i = index; i < n && positions[i] <= end_pos; ++i) {\n        health[i] -= a_decrease;\n    }\n}\n\nint main() {\n    int n, d;\n    long long a;\n    cin >> n >> d >> a;\n    \n    vector<int> positions(n);\n    vector<long long> health(n);\n    \n    for (int i = 0; i < n; ++i) {\n        cin >> positions[i] >> health[i];\n    }\n    \n    // Sort the monsters by their position\n    vector<pair<int, long long>> monsters(n);\n    for (int i = 0; i < n; ++i) {\n        monsters[i] = {positions[i], health[i]};\n    }\n    sort(monsters.begin(), monsters.end());\n    \n    // Extract sorted positions and healths\n    for (int i = 0; i < n; ++i) {\n        positions[i] = monsters[i].first;\n        health[i] = monsters[i].second;\n    }\n    \n    long long currentDamage = 0;\n    int bombCount = 0;\n    int left = 0;\n    \n    for (int i = 0; i < n; ++i) {\n        if (health[i] > currentDamage) {\n            long long requiredBombs = (health[i] - currentDamage + a - 1) / a;\n            bombCount += requiredBombs;\n            long long totalDamage = requiredBombs * a;\n            \n            // Apply bomb impact to current monster and subsequent monsters as per range\n            currentDamage += totalDamage;\n            applyBomb(health, positions, 2 * d, totalDamage, i);\n\n            // Reduce currentDamage for left-out-of-range monsters\n            while (left <= i && positions[left] < positions[i] - 2 * d) {\n                currentDamage -= a * ((health[left] + a - 1) / a);\n                ++left;\n            }\n        }\n    }\n    \n    cout << bombCount << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:05:46"
+  }
+]

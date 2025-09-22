@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "5 8\n5\n10\n8\n7\n3\nADD 1\nADD 3\nCHECK 0\nCHECK 1\nCHECK 2\nCHECK 3\nCHECK 4\nCHECK 5\n",
+      "output": "NA\n2\n1\n0\n0\n0"
+    },
+    {
+      "input": "5 28\n5\n10\n8\n7\n3\nCHECK 0\nCHECK 1\nCHECK 2\nCHECK 3\nCHECK 4\nCHECK 5\nADD 1\nCHECK 0\nCHECK 1\nCHECK 2\nCHECK 3\nCHECK 4\nCHECK 5\nREMOVE 1\nADD 3\nCHECK 0\nCHECK 1\nCHECK 2\nCHECK 3\nCHECK 4\nCHECK 5\nADD 1\nCHECK 0\nCHECK 1\nCHECK 2\nCHECK 3\nCHECK 4\nCHECK 5\n",
+      "output": "NA\nNA\nNA\nNA\nNA\n0\nNA\nNA\nNA\n2\n0\n0\nNA\n5\n3\n1\n0\n0\nNA\n2\n1\n0\n0\n0"
+    }
+  ]
+}

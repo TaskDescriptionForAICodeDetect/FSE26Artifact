@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "hyo\nni\nEND_OF_TEXT\nf\nd\nf\nf\nk\np\np\ne\ny\na\nk\ny\ny\nn\ny\n-",
+      "output": "honihoni\nhoni"
+    }
+  ]
+}

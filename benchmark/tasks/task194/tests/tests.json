@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "4\nakzakr 2 1 8\nfnmyi 5 2 3 4 6 9\ntsnukk 5 2 3 4 7 9\nyskwcnt 6 3 4 7 8 9 10\n\n0",
+      "output": "7 akzakr"
+    },
+    {
+      "input": "4\nakzakr 1 2\nfnmyi 3 10 11 12\ntsnukk 2 1 8\nyskwcnt 2 1 8\n\n0",
+      "output": "4 akzakr"
+    },
+    {
+      "input": "5\nknmmdk 2 13 19\nakmhmr 4 13 15 19 22\nmksyk 6 3 7 12 13 15 19\nskrkyk 3 1 4 8\ntmemm 3 1 17 24\n\n0",
+      "output": "6 knmmdk"
+    },
+    {
+      "input": "5\nknmmdk 5 5 6 16 18 26\nakmhmr 9 3 4 7 11 14 15 17 18 20\nmksyk 5 6 13 25 27 28\nskrkyk 4 3 16 23 24\ntmemm 3 6 12 20\n\n0",
+      "output": "12 tmemm"
+    },
+    {
+      "input": "14\nhrkamm 6 4 6 8 10 20 22\nmkhsi 6 1 10 12 15 22 27\nhbkgnh 2 4 9\nchyksrg 8 3 4 12 15 16 20 25 28\nmktkkc 6 0 1 8 15 17 20\ntknsj 6 6 8 18 19 25 26\nyyitktk 3 3 12 18\nykhhgwr 5 3 9 10 11 24\namftm 7 2 6 8 12 13 14 17\nmmftm 4 6 12 16 18\nrtkakzk 3 14 15 21\nazsmur 7 1 2 4 12 15 18 20\niormns 2 4 20\nktrotns 6 7 12 14 17 20 25\n\n0",
+      "output": "19 iormns"
+    },
+    {
+      "input": "14\nhrkamm 2 4 21\nmkhsi 6 2 3 8 11 18 20\nhbkgnh 4 4 16 28 29\nchyksrg 5 0 3 9 17 22\nmktkkc 2 7 18\ntknsj 3 3 9 23\nyyitktk 3 10 13 25\nykhhgwr 2 18 26\namftm 3 13 18 22\nmmftm 4 1 20 24 27\nrtkakzk 2 1 10\nazsmur 5 2 5 10 14 17\niormns 3 9 15 16\nktrotns 5 7 12 16 17 20\n\n0",
+      "output": "24 mktkkc"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+Problem G: Spring Tiles
+
+One morning, you wake up in a labyrinth filled with springs. You do not know why you are in this unfamiliar place. Although you could choose to wait for help, you have learned from experience that staying too long in such a labyrinth will inevitably lead you to be blown away by the gusts of wind that will come. However, you cannot predict when the gusts will blow. Therefore, you believe that the best strategy is to act in such a way that minimizes the expected number of moves required to escape the labyrinth.
+
+You found an unidentified scroll on the ground and when you read it, you accidentally understood the overall map of the labyrinth. Additionally, by drinking some grass you happened to have, you were able to learn the locations of all traps. It seems that this labyrinth only contains dangerous monsters and springs, without any other traps.
+
+The labyrinth consists of different types of tiles arranged in a rectangular shape, represented as follows:
+
+########
+#..##g.#
+#*#.*#. #
+#......#
+#*s#*.* #
+########
+
+'.': Free floor. You can move freely on this.
+
+'#': Wall. You cannot enter walls.
+
+'s': Your starting position. Below this tile is a floor.
+
+g': Stairs. If you step on this tile, you will have successfully escaped the labyrinth.
+
+'*': Spring. If you step on this tile, you will randomly be sent to any floor tile (excluding stairs and spring tiles). The probability of landing on each floor is uniform.
+
+You can move to adjacent tiles in one of four directions (up, down, left, right) from your current tile. However, diagonal movement is not allowed.
+
+Given the map of the labyrinth, calculate the expected number of moves required to escape when following the best strategy. The number of moves spent on being sent by springs should not be included in this count.

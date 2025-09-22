@@ -1,0 +1,1 @@
+Given a non-negative real sequence of length N and a non-negative real number K, you need to find the length of the longest contiguous subsequence such that the product of the elements in that subsequence is less than or equal to K. If no such subsequence exists, output 0.

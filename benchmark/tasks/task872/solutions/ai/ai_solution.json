@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdbool.h>\n#include <string.h>\n\nbool canReachDestination(char* s, int x, int y) {\n    int currentX = 0, currentY = 0;\n    int dx[4] = {1, 0, -1, 0};\n    int dy[4] = {0, 1, 0, -1};\n    int direction = 0;\n    int len = strlen(s);\n\n    for (int i = 0; i < len; i++) {\n        if (s[i] == 'F') {\n            currentX += dx[direction];\n            currentY += dy[direction];\n        } else if (s[i] == 'T') {\n            direction = (direction + 1) % 4;\n        }\n    }\n\n    return (currentX == x && currentY == y);\n}",
+    "timestamp": "2025-08-05 23:11:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdbool.h>\n#include <string.h>\n\nbool canReach(int x, int y, char* s) {\n    int dx = 1, dy = 0;\n    int posX = 0, posY = 0;\n    int len = strlen(s);\n    \n    for (int i = 0; i < len; ++i) {\n        if (s[i] == 'F') {\n            posX += dx;\n            posY += dy;\n        } else {\n            int temp = dx;\n            dx = -dy;\n            dy = temp;\n        }\n    }\n    if (posX == x && posY == y) {\n        return true;\n    }\n    \n    dx = 1; dy = 0;\n    posX = 0; posY = 0;\n    for (int i = 0; i < len; ++i) {\n        if (s[i] == 'F') {\n            posX += dx;\n            posY += dy;\n        } else {\n            int temp = dx;\n            dx = dy;\n            dy = -temp;\n        }\n    }\n    if (posX == x && posY == y) {\n        return true;\n    }\n    \n    return false;\n}",
+    "timestamp": "2025-08-05 23:11:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <set>\nusing namespace std;\n\nbool canReach(int x, int y, const string& s) {\n    vector<pair<int, int>> directions = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};\n    int dir = 0; // initial direction: positive x-axis\n    int posX = 0, posY = 0;\n    \n    for (char c : s) {\n        if (c == 'F') {\n            posX += directions[dir].first;\n            posY += directions[dir].second;\n        } else if (c == 'T') {\n            dir = (dir + 1) % 4;\n        }\n    }\n    \n    if (posX == x && posY == y) {\n        return true;\n    }\n    \n    // Now check all possible variations by flipping 'T's\n    vector<int> turns;\n    for (int i = 0; i < s.size(); ++i) {\n        if (s[i] == 'T') {\n            turns.push_back(i);\n        }\n    }\n    \n    int n = turns.size();\n    for (int mask = 0; mask < (1 << n); ++mask) {\n        dir = 0;\n        posX = 0;\n        posY = 0;\n        int turnIndex = 0;\n        \n        for (char c : s) {\n            if (c == 'F') {\n                posX += directions[dir].first;\n                posY += directions[dir].second;\n            } else if (c == 'T') {\n                bool flip = (mask & (1 << turnIndex)) != 0;\n                if (flip) {\n                    dir = (dir - 1 + 4) % 4;\n                } else {\n                    dir = (dir + 1) % 4;\n                }\n                turnIndex++;\n            }\n        }\n        \n        if (posX == x && posY == y) {\n            return true;\n        }\n    }\n    \n    return false;\n}\n\nint main() {\n    string s;\n    int x, y;\n    cin >> s >> x >> y;\n    cout << (canReach(x, y, s) ? \"Yes\" : \"No\") << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RobotMovement {\n    public static boolean canReach(int x, int y, String s) {\n        int dx = 1, dy = 0;\n        int posX = 0, posY = 0;\n        List<int[]> directions = new ArrayList<>();\n        directions.add(new int[]{1, 0});  // initial direction: positive x\n        directions.add(new int[]{0, 1});  // positive y\n        directions.add(new int[]{-1, 0}); // negative x\n        directions.add(new int[]{0, -1}); // negative y\n        int dirIndex = 0;\n        \n        for (char c : s.toCharArray()) {\n            if (c == 'F') {\n                posX += directions.get(dirIndex)[0];\n                posY += directions.get(dirIndex)[1];\n            } else if (c == 'T') {\n                dirIndex = (dirIndex + 1) % 4;\n            }\n        }\n        \n        return posX == x && posY == y;\n    }\n}",
+    "timestamp": "2025-08-05 23:12:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public boolean isReachable(String s, int x, int y) {\n        int currX = 0, currY = 0;\n        int dx = 1, dy = 0;\n        \n        for (char instruction : s.toCharArray()) {\n            if (instruction == 'F') {\n                currX += dx;\n                currY += dy;\n            } else if (instruction == 'T') {\n                int temp = dx;\n                dx = -dy;\n                dy = temp;\n            }\n        }\n        \n        return currX == x && currY == y;\n    }\n}",
+    "timestamp": "2025-08-05 23:12:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    bool is_reachable(string s, int x, int y) {\n        int curr_x = 0, curr_y = 0;\n        int dx[4] = {1, 0, -1, 0};\n        int dy[4] = {0, 1, 0, -1};\n        int dir = 0;\n        \n        for (char c : s) {\n            if (c == 'F') {\n                curr_x += dx[dir];\n                curr_y += dy[dir];\n            } else {\n                dir = (dir + 1) % 4;\n            }\n        }\n        \n        return curr_x == x && curr_y == y;\n    }\n};",
+    "timestamp": "2025-08-05 23:12:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_reach_destination(s, x, y):\n    direction = 0  \n    dx = [1, 0, -1, 0]  \n    dy = [0, 1, 0, -1] \n    pos_x, pos_y = 0, 0\n\n    for instruction in s:\n        if instruction == 'F':\n            pos_x += dx[direction]\n            pos_y += dy[direction]\n        elif instruction == 'T':\n            direction = (direction + 1) % 4  # Turning 90 degrees clockwise\n\n    return pos_x == x and pos_y == y\n\n# Example use:\n# result = can_reach_destination(\"FFFTFF\", 2, -1)\n# print(result)",
+    "timestamp": "2025-08-13 14:04:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class RobotPath {\n    public static boolean canReachDestination(String s, int x, int y) {\n        int posX = 0, posY = 0;\n        int direction = 0; // 0: +x, 1: +y, 2: -x, 3: -y\n\n        for (char instruction : s.toCharArray()) {\n            if (instruction == 'F') {\n                if (direction == 0) {\n                    posX += 1;\n                } else if (direction == 1) {\n                    posY += 1;\n                } else if (direction == 2) {\n                    posX -= 1;\n                } else if (direction == 3) {\n                    posY -= 1;\n                }\n            } else if (instruction == 'T') {\n                direction = (direction + 1) % 4;\n            }\n        }\n        return posX == x && posY == y;\n    }\n\n    public static void main(String[] args) {\n        // Test cases\n        System.out.println(canReachDestination(\"FFFTFFF\", 3, 3)); // Output: true\n        System.out.println(canReachDestination(\"FFFF\", 4, 0));   // Output: true\n        System.out.println(canReachDestination(\"TFFF\", 0, 0));   // Output: false\n    }\n}",
+    "timestamp": "2025-08-13 14:04:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint canReach(int targetX, int targetY, const char* instructions) {\n    int x = 0, y = 0;\n    int dx = 1, dy = 0; // Initially facing positive x-axis\n    \n    for (int i = 0; i < strlen(instructions); ++i) {\n        if (instructions[i] == 'F') {\n            x += dx;\n            y += dy;\n        } else if (instructions[i] == 'T') {\n            // Turns 90 degrees clockwise\n            int temp = dx;\n            dx = dy;\n            dy = -temp;\n        }\n    }\n    \n    return x == targetX && y == targetY;\n}\n\nint main() {\n    int targetX = 1, targetY = 1; // Example target coordinates\n    const char* instructions = \"FFTT\"; // Example instruction sequence\n    \n    if (canReach(targetX, targetY, instructions)) {\n        printf(\"The robot can reach the target (%d, %d).\\n\", targetX, targetY);\n    } else {\n        printf(\"The robot cannot reach the target (%d, %d).\\n\", targetX, targetY);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:04:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canReachTarget(x, y, instructions) {\n    const directions = [\n        [1, 0],  // facing towards positive x-axis\n        [0, 1],  // facing towards positive y-axis\n        [-1, 0], // facing towards negative x-axis\n        [0, -1]  // facing towards negative y-axis\n    ];\n    \n    let position = [0, 0];\n    let directionIndex = 0; // initially facing positive x-axis\n\n    for (let i = 0; i < instructions.length; i++) {\n        const instruction = instructions[i];\n        \n        if (instruction === 'F') {\n            position[0] += directions[directionIndex][0];\n            position[1] += directions[directionIndex][1];\n        } else if (instruction === 'T') {\n            directionIndex = (directionIndex + 1) % 4;\n        }\n    }\n\n    return position[0] === x && position[1] === y;\n}",
+    "timestamp": "2025-08-13 14:04:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_reach_target(s, x, y):\n    dx, dy = 1, 0  # Initial direction facing positive x-axis\n    cx, cy = 0, 0  # Current position starts at origin\n\n    for instruction in s:\n        if instruction == 'F':\n            cx += dx\n            cy += dy\n        elif instruction == 'T':\n            # Rotate 90 degrees (alternating clockwise/counterclockwise)\n            dx, dy = -dy, dx\n\n    return cx == x and cy == y",
+    "timestamp": "2025-08-13 14:04:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canReach(s, x, y) {\n    let currX = 0, currY = 0;\n    let dir = 0;\n    const directions = [[1, 0], [0, -1], [-1, 0], [0, 1]];\n\n    for (let instruction of s) {\n        if (instruction === 'F') {\n            currX += directions[dir][0];\n            currY += directions[dir][1];\n        } else {\n            dir = (dir + 1) % 4;\n        }\n    }\n\n    return currX === x && currY === y;\n}",
+    "timestamp": "2025-08-13 14:04:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_robot_bounded(instructions, x, y):\n    # Initial position and direction\n    pos_x, pos_y = 0, 0\n    direction = 0  # 0: +x, 1: +y, 2: -x, 3: -y\n    \n    for cmd in instructions:\n        if cmd == 'F':\n            if direction == 0:\n                pos_x += 1\n            elif direction == 1:\n                pos_y += 1\n            elif direction == 2:\n                pos_x -= 1\n            elif direction == 3:\n                pos_y -= 1\n        elif cmd == 'T':\n            direction = (direction + 1) % 4  # Assuming clockwise turn\n    \n    # Check if the final position matches (x, y)\n    if pos_x == x and pos_y == y:\n        return True\n    \n    # If not, check if the robot is in a loop (direction changed or not at origin)\n    if direction != 0 or (pos_x == 0 and pos_y == 0):\n        # The robot will eventually reach (x, y) after repeating the sequence\n        # So we need to check if (x, y) is reachable in any of the 4 cycles\n        for _ in range(3):\n            new_x, new_y = pos_x, pos_y\n            # Rotate the displacement vector 90 degrees clockwise\n            new_x, new_y = new_y, -new_x\n            pos_x += new_x\n            pos_y += new_y\n            if pos_x == x and pos_y == y:\n                return True\n        return False\n    else:\n        return False",
+    "timestamp": "2025-08-13 14:04:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isRobotBounded(instructions, x, y) {\n    let dirX = 0, dirY = 1; // Initial direction: positive y-axis (but in code, we'll treat as x, y)\n    let posX = 0, posY = 0;\n    \n    for (const instruction of instructions) {\n        if (instruction === 'F') {\n            posX += dirX;\n            posY += dirY;\n        } else if (instruction === 'T') {\n            // Rotate 90 degrees counterclockwise\n            [dirX, dirY] = [-dirY, dirX];\n        }\n    }\n    \n    // After one full sequence, check if at (x, y) or if direction changed (implies bounded)\n    return (posX === x && posY === y) || (dirX !== 0 || dirY !== 1);\n}",
+    "timestamp": "2025-08-13 14:04:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nbool canReachTarget(const std::string &s, int x, int y) {\n    int direction = 0; // 0 = positive x, 1 = positive y, 2 = negative x, 3 = negative y\n    int posX = 0, posY = 0;\n\n    for (char instruction : s) {\n        if (instruction == 'F') {\n            switch (direction) {\n                case 0: posX++; break;\n                case 1: posY++; break;\n                case 2: posX--; break;\n                case 3: posY--; break;\n            }\n        } else if (instruction == 'T') {\n            direction = (direction + 1) % 4; // Turn clockwise\n        }\n    }\n\n    return posX == x && posY == y;\n}\n\nint main() {\n    std::string instructions;\n    int targetX, targetY;\n    std::cout << \"Enter instructions: \";\n    std::cin >> instructions;\n    std::cout << \"Enter target X and Y coordinates: \";\n    std::cin >> targetX >> targetY;\n\n    if (canReachTarget(instructions, targetX, targetY)) {\n        std::cout << \"The robot can reach the target.\" << std::endl;\n    } else {\n        std::cout << \"The robot cannot reach the target.\" << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:42:10"
+  }
+]

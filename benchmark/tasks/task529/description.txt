@@ -1,0 +1,1 @@
+You are given a string t and a set S of N different strings. You need to separate t such that each part is included in S. Your task is to count the number of ways to separate t. Because the result can be large, you should output the remainder divided by 1,000,000,007.

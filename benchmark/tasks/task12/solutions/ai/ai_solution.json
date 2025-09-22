@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, s, b):\n    # Count character frequencies\n    freq = {}\n    for char in s:\n        freq[char] = freq.get(char, 0) + 1\n    \n    # Sort beauty indices in descending order\n    beauty_indices = sorted(range(n), key=lambda x: b[x], reverse=True)\n    \n    # Prepare the antipalindromic permutation\n    t = [''] * n\n    \n    # Assign most beautiful indices first\n    for idx in beauty_indices:\n        char = s[idx]\n        \n        # Find a character that can be placed\n        for c, f in freq.items():\n            if f > 0:\n                if all(t[j] == '' or (t[j] != c and t[n-j-1] != c) for j in range(n)):\n                    t[idx] = c\n                    freq[c] -= 1\n                    break\n    \n    # Fill remaining positions\n    for i in range(n):\n        if t[i] == '':\n            for c, f in freq.items():\n                if f > 0:\n                    if all(t[j] == '' or (t[j] != c and t[n-j-1] != c) for j in range(n)):\n                        t[i] = c\n                        freq[c] -= 1\n                        break\n    \n    # Calculate total beauty\n    beauty = sum(b[i] for i in range(n) if s[i] == t[i])\n    \n    return beauty\n\n# Read input\nn = int(input())\ns = input()\nb = list(map(int, input().split()))\n\n# Print result\nprint(solve(n, s, b))",
+    "timestamp": "2025-08-05 17:31:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\ns = input().strip()\nb = list(map(int, input().split()))\n\nfrom collections import defaultdict\n\nchar_indices = defaultdict(list)\nfor idx, char in enumerate(s):\n    char_indices[char].append(idx)\n\ntotal_beauty = 0\nused = [False] * n\n\nfor char in char_indices:\n    indices = char_indices[char]\n    m = len(indices)\n    for i in range(m // 2):\n        pos1 = indices[i]\n        pos2 = indices[m - 1 - i]\n        if pos1 == pos2:\n            continue  # should not happen as per problem statement\n        if b[pos1] >= b[pos2]:\n            total_beauty += b[pos1]\n            used[pos2] = True\n        else:\n            total_beauty += b[pos2]\n            used[pos1] = True\n\nremaining_indices = [i for i in range(n) if not used[i]]\nfor i in range(0, len(remaining_indices), 2):\n    pos1 = remaining_indices[i]\n    pos2 = remaining_indices[i+1]\n    total_beauty += max(b[pos1], b[pos2])\n\nprint(total_beauty)",
+    "timestamp": "2025-08-05 17:31:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_beauty(n, s, beauty):\n    from collections import Counter\n    char_count = Counter(s)\n    sorted_indices = sorted(range(n), key=lambda x: -beauty[x])\n    t = [''] * n\n    \n    idx = 0\n    for char, count in char_count.items():\n        for _ in range(count):\n            t[sorted_indices[idx]] = char\n            idx += 1\n    \n    for i in range(n // 2):\n        if t[i] == t[n - i - 1]:\n            for j in range(n // 2, n):\n                if t[i] != t[j] and t[n - i - 1] != t[j]:\n                    t[i], t[j] = t[j], t[i]\n                    break\n    \n    max_beauty_value = sum(beauty[i] for i in range(n) if t[i] == s[i])\n    return max_beauty_value\n\nn = int(input().strip())\ns = input().strip()\nbeauty = list(map(int, input().strip().split()))\n\nprint(max_beauty(n, s, beauty))",
+    "timestamp": "2025-08-12 21:40:52"
+  }
+]

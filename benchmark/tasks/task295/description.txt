@@ -1,0 +1,1 @@
+In this problem, you are requested to find the longest arithmetic progression that can be formed by selecting some numbers from a given set of numbers. An arithmetic progression is a sequence where the difference of consecutive numbers is constant. Given a set of distinct integers, you need to determine the length of the longest arithmetic progression that can be made from them.

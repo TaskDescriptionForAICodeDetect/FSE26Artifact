@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "8\n2\nomura\ntoshio\nraku\ntanaka\nimura\nyoshai\nhayashi\nmiura\n3\n1\ntasaka\nnakata\ntanaka\n1\n1\nfoo\n5\n2\npsqt\nabcdef\nabzdefa\npqrst\nabdxcef\n0\n",
+      "output": "imura,miura\nimura,omura\nmiura,omura\ntoshio,yoshoi\n4\ntanaka,tasaka\n1\n0\nabcdef,abdxcef\nabcdef,abzdefa\npqrst,psqt\n3\n"
+    }
+  ]
+}

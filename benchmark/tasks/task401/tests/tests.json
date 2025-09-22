@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "ooox....\n.x......\nooo.....\n........\n........\n........\n........\n............\n",
+      "output": "ooooo...\n.o......\nooo.....\n...o....\n....o...\n........\n........\n............\n"
+    },
+    {
+      "input": "........\n........\n........\n...ox...\n...xo...\n........\n........\n............\n",
+      "output": "xxxxxxxx\nxxxooxxx\nxxxxooxx\nxxxxxxxx\nooxxooox\nooxoooox\noxooooox\nooooooox\n"
+    },
+    {
+      "input": "........\n........\n..ooo...\n..oxo...\n..ooo...\n........\n........\n............\n",
+      "output": "........\n........\n..ooo...\n..ooo...\n..ooo...\n.....o..\n......o.\n.......\n"
+    }
+  ]
+}

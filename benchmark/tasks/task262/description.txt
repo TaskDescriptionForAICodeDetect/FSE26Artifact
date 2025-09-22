@@ -1,0 +1,1 @@
+Determine whether a straight line can separate a given set of black and white points on a plane. A line separates the points if all black points are on one side and all white points are on the other side.

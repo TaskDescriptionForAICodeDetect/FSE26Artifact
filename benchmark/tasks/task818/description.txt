@@ -1,0 +1,1 @@
+You are given N integers; the i-th of them is A_i. Find the maximum possible sum of the absolute differences between the adjacent elements after arranging these integers in a row in any order you like.

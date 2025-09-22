@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "5\nANazA\n",
+      "output": "1\nA\n"
+    },
+    {
+      "input": "7\nACMICPC\n",
+      "output": "5\nHIJKL\n"
+    },
+    {
+      "input": "4\nAIZU\n",
+      "output": "0\n\n"
+    }
+  ]
+}

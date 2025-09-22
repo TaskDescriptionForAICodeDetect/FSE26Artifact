@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "abcabcaxcabc\n4\n1 9 3\n8 12 3\n1 4 2\n2 3 2\n",
+      "output": "Yes\nYes\nNo\nYes\n"
+    },
+    {
+      "input": "isuruu\n4\n3 6 1\n3 6 2\n3 6 3\n2 4 1\n",
+      "output": "Yes\nYes\nYes\nNo\n"
+    }
+  ]
+}

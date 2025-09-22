@@ -1,0 +1,42 @@
+New Drug Development
+
+Dr. Yasuei conducts research daily to develop new drugs. To develop a new drug, various substances must be combined to create the drug and tested to find a suitable one. While trying various combinations, Dr. Yasuei discovered that the combinations of substances could be represented by a tree diagram.
+
+In the diagram, the encircled items are called substance nodes, while those enclosed in triangles are called selection nodes. Substance nodes represent substances, and selection nodes represent the choice of substances. There are two types of selection nodes: 'or' type (denoted with an 'or' symbol) and 'alt' type (denoted with an 'alt' symbol). Nodes marked with a '?' label denote that they are optional. However, child nodes (the nodes at the ends of downward branches) of selection nodes cannot be optional. Different substance nodes that appear in the tree diagram each represent a distinct substance.
+
+When making a drug combination, start from the top node of the tree diagram and select nodes as follows:
+1. If the reached node is a non-optional substance node, it must be chosen.
+2. If it's an optional substance node, whether to choose it is optional.
+3. For 'or' type selection nodes, at least one child must be chosen. However, if the selection node is optional, it is permissible to select none of its children.
+4. For 'alt' type selection nodes, only one child must be selected. Again, if the selection node is optional, then no child must be selected.
+
+You are instructed by Dr. Yasuei to determine how many different combinations of substances exist. Create a program that outputs the total number of combinations when given a tree diagram.
+
+Input:
+The input is provided in the following format:
+N
+node1
+node2
+:
+noden
+s1 t1
+s2 t2
+:
+sN-1 tN-1
+
+The first line contains the number of nodes N (1 ≤ N ≤ 1000). The next N lines provide information about node i. The first node is the top node of the tree diagram. The following N-1 lines provide edges from node si to child node ti (1 ≤ si ≠ ti ≤ N), where each of t1 to tN-1 appears exactly once from 2 to N.
+
+Node information is formatted as follows:
+- E: Non-optional substance node.
+- E?: Optional substance node.
+- type: Non-optional selection node, where type is either A (alt type) or R (or type).
+- type?: Optional selection node, in the same format as above.
+
+The tree diagram generated from the input will satisfy these conditions:
+- Selection nodes have two or more child nodes.
+- Child nodes of selection nodes are non-optional.
+- The top node of the tree diagram is non-optional.
+- No node has more than 10 children.
+
+Output:
+Output the total number of combinations derived from the given tree diagram in one line. Since the output value may be very large, output the result modulo 1,000,000,007.

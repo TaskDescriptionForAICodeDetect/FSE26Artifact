@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "11\n01u12u0123u\n",
+      "output": "SAFE\n"
+    },
+    {
+      "input": "6\n01u10u\n",
+      "output": "UNSAFE\n"
+    },
+    {
+      "input": "8\n201u210u\n",
+      "output": "SAFE\n"
+    },
+    {
+      "input": "9\n01u12u20u\n",
+      "output": "UNSAFE\n"
+    },
+    {
+      "input": "3\n77u\n",
+      "output": "UNSAFE\n"
+    },
+    {
+      "input": "12\n9u8u845u954u\n",
+      "output": "UNSAFE\n"
+    }
+  ]
+}

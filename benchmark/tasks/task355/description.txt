@@ -1,0 +1,1 @@
+You are given a tree with N nodes. Each node is numbered from 1 to N, with node 1 being the root. You need to implement two operations: marking a node and querying the nearest marked ancestor of a node. Initially, only the root node is marked. Your program must execute a series of these operations and print the sum of results from all query operations.

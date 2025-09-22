@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <math.h>\n\ndouble max_probability = 0.0;\ndouble** probabilities;\nint m, n;\n\nvoid backtrack(int room, double current_prob, int* used_cats) {\n    if (room == n) {\n        if (current_prob > max_probability) {\n            max_probability = current_prob;\n        }\n        return;\n    }\n    for (int cat = 0; cat < m; cat++) {\n        if (!used_cats[cat]) {\n            used_cats[cat] = 1;\n            backtrack(room + 1, current_prob * probabilities[cat][room], used_cats);\n            used_cats[cat] = 0;\n        }\n    }\n}\n\nint main() {\n    scanf(\"%d %d\", &m, &n);\n    probabilities = (double**)malloc(m * sizeof(double*));\n    for (int i = 0; i < m; i++) {\n        probabilities[i] = (double*)malloc(n * sizeof(double));\n        for (int j = 0; j < n; j++) {\n            scanf(\"%lf\", &probabilities[i][j]);\n        }\n    }\n\n    int* used_cats = (int*)calloc(m, sizeof(int));\n    backtrack(0, 1.0, used_cats);\n\n    printf(\"%.12lf\\n\", max_probability);\n\n    for (int i = 0; i < m; i++) {\n        free(probabilities[i]);\n    }\n    free(probabilities);\n    free(used_cats);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:16:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <iomanip>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int m, n;\n    cin >> m >> n;\n    vector<vector<double>> prob(m, vector<double>(n));\n    for (int i = 0; i < m; ++i) {\n        for (int j = 0; j < n; ++j) {\n            cin >> prob[i][j];\n        }\n    }\n\n    vector<double> dp(1 << n, 0.0);\n    dp[0] = 1.0;\n\n    for (int mask = 0; mask < (1 << n); ++mask) {\n        int rooms_done = __builtin_popcount(mask);\n        for (int cat = 0; cat < m; ++cat) {\n            double current_prob = 0.0;\n            for (int room = 0; room < n; ++room) {\n                if (!(mask & (1 << room))) {\n                    double new_prob = dp[mask] * prob[cat][room];\n                    int new_mask = mask | (1 << room);\n                    if (new_prob > dp[new_mask]) {\n                        dp[new_mask] = new_prob;\n                    }\n                }\n            }\n        }\n    }\n\n    cout << fixed << setprecision(12) << dp[(1 << n) - 1] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:16:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class TheCastle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int m = scanner.nextInt();\n        int n = scanner.nextInt();\n        double[][] prob = new double[m][n];\n        for (int i = 0; i < m; i++) {\n            for (int j = 0; j < n; j++) {\n                prob[i][j] = scanner.nextDouble();\n            }\n        }\n\n        double[][] dp = new double[1 << n][m + 1];\n        for (int mask = 0; mask < (1 << n); mask++) {\n            for (int cat = 0; cat <= m; cat++) {\n                dp[mask][cat] = 0.0;\n            }\n        }\n        dp[0][0] = 1.0;\n\n        for (int mask = 0; mask < (1 << n); mask++) {\n            for (int used = 0; used < m; used++) {\n                if (dp[mask][used] == 0.0) continue;\n                for (int room = 0; room < n; room++) {\n                    if ((mask & (1 << room)) != 0) continue;\n                    int newMask = mask | (1 << room);\n                    double p = prob[used][room];\n                    dp[newMask][used + 1] = Math.max(dp[newMask][used + 1], dp[mask][used] * p);\n                }\n                dp[mask][used + 1] = Math.max(dp[mask][used + 1], dp[mask][used]);\n            }\n        }\n\n        double maxProb = 0.0;\n        for (int used = 0; used <= m; used++) {\n            maxProb = Math.max(maxProb, dp[(1 << n) - 1][used]);\n        }\n        System.out.printf(\"%.10f\\n\", maxProb);\n    }\n}",
+    "timestamp": "2025-08-05 21:17:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TheCastle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int m = scanner.nextInt();\n        int n = scanner.nextInt();\n        \n        double[][] probabilities = new double[m][n];\n        for (int i = 0; i < m; i++) {\n            for (int j = 0; j < n; j++) {\n                probabilities[i][j] = scanner.nextDouble();\n            }\n        }\n        \n        double[] dp = new double[1 << n];\n        dp[0] = 1.0;\n        \n        for (int room = 0; room < n; room++) {\n            double[] newDp = new double[1 << n];\n            \n            for (int state = 0; state < (1 << n); state++) {\n                if ((state & (1 << room)) > 0) continue;\n                \n                for (int cat = 0; cat < m; cat++) {\n                    double newProb = dp[state] * probabilities[cat][room];\n                    newDp[state | (1 << room)] = Math.max(newDp[state | (1 << room)], newProb);\n                }\n            }\n            \n            for (int state = 0; state < (1 << n); state++) {\n                dp[state] = Math.max(dp[state], newDp[state]);\n            }\n        }\n        \n        System.out.printf(\"%.9f\\n\", dp[(1 << n) - 1]);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:17:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\n#define MAX_CATS 16\n#define MAX_ROOMS 16\n\ndouble max(double a, double b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    int m, n;\n    double probs[MAX_CATS][MAX_ROOMS];\n    double dp[1 << MAX_CATS][MAX_ROOMS];\n\n    scanf(\"%d %d\", &m, &n);\n\n    for (int i = 0; i < m; i++) {\n        for (int j = 0; j < n; j++) {\n            scanf(\"%lf\", &probs[i][j]);\n        }\n    }\n\n    for (int state = 0; state < (1 << m); state++) {\n        for (int room = 0; room < n; room++) {\n            dp[state][room] = 0.0;\n        }\n    }\n\n    for (int i = 0; i < m; i++) {\n        dp[1 << i][0] = probs[i][0];\n    }\n\n    for (int room = 1; room < n; room++) {\n        for (int state = 0; state < (1 << m); state++) {\n            for (int i = 0; i < m; i++) {\n                if (state & (1 << i)) {\n                    for (int prev = 0; prev < m; prev++) {\n                        if ((state & (1 << prev)) && prev != i) {\n                            dp[state][room] = max(dp[state][room], \n                                dp[state ^ (1 << i)][room-1] * probs[i][room]);\n                        }\n                    }\n                }\n            }\n        }\n    }\n\n    double max_prob = 0.0;\n    for (int i = 0; i < m; i++) {\n        max_prob = max(max_prob, dp[(1 << m) - 1][n-1]);\n    }\n\n    printf(\"%.9f\\n\", max_prob);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <iomanip>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int m, n;\n    cin >> m >> n;\n    \n    vector<vector<double>> probabilities(m, vector<double>(n));\n    for (int i = 0; i < m; i++) {\n        for (int j = 0; j < n; j++) {\n            cin >> probabilities[i][j];\n        }\n    }\n    \n    vector<double> dp(1 << n, 0.0);\n    dp[0] = 1.0;\n    \n    for (int i = 0; i < m; i++) {\n        vector<double> new_dp(1 << n, 0.0);\n        \n        for (int state = 0; state < (1 << n); state++) {\n            for (int room = 0; room < n; room++) {\n                if ((state & (1 << room)) == 0) {\n                    double prob = dp[state] * probabilities[i][room];\n                    new_dp[state | (1 << room)] = max(new_dp[state | (1 << room)], prob);\n                }\n            }\n        }\n        \n        dp = new_dp;\n    }\n    \n    cout << fixed << setprecision(10) << dp[(1 << n) - 1] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:17:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import permutations\n\ndef max_probability(m, n, cats):\n    max_prob = 0\n    \n    for perm in permutations(range(m)):\n        prob = 1.0\n        for i in range(n):\n            cat_index = perm[i]\n            prob *= cats[cat_index][i]\n        max_prob = max(max_prob, prob)\n    \n    return max_prob\n\n# Read input\nm, n = map(int, input().split())\ncats = [list(map(float, input().split())) for _ in range(m)]\n\n# Compute and display the result\nresult = max_probability(m, n, cats)\nprint(f\"{result:.9f}\")",
+    "timestamp": "2025-08-13 05:48:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class TheCastle {\n    static int m, n;\n    static double[][] probabilities;\n    static double[][] dp;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        m = scanner.nextInt();\n        n = scanner.nextInt();\n        probabilities = new double[m][n];\n\n        for (int i = 0; i < m; i++) {\n            for (int j = 0; j < n; j++) {\n                probabilities[i][j] = scanner.nextDouble();\n            }\n        }\n\n        dp = new double[1 << m][n + 1];\n        for (int i = 0; i < (1 << m); i++) {\n            for (int j = 0; j <= n; j++) {\n                dp[i][j] = -1.0;\n            }\n        }\n        \n        double result = solve(0, 0);\n        System.out.printf(\"%.9f\", result);\n    }\n\n    static double solve(int catMask, int room) {\n        if (room == n) {\n            return 1.0;\n        }\n\n        if (dp[catMask][room] != -1.0) {\n            return dp[catMask][room];\n        }\n\n        double best = 0.0;\n        for (int i = 0; i < m; i++) {\n            if ((catMask & (1 << i)) == 0) { // If the i-th cat has not been used\n                double successProb = probabilities[i][room];\n                double nextProb = solve(catMask | (1 << i), room + 1);\n                best = Math.max(best, successProb * nextProb);\n            }\n        }\n\n        dp[catMask][room] = best;\n        return best;\n    }\n}",
+    "timestamp": "2025-08-13 05:48:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\n#define MAXN 16\n#define MAXM 16\n\nint m, n;\ndouble probabilities[MAXM][MAXN];\ndouble dp[1 << MAXN];\n\ndouble dfs(int mask, int room) {\n    if (room == n) {\n        return 1.0;\n    }\n    if (dp[mask] > -0.5) {\n        return dp[mask];\n    }\n    double max_prob = 0.0;\n    for (int i = 0; i < m; ++i) {\n        if (!(mask & (1 << i))) {\n            double current_prob = probabilities[i][room] * dfs(mask | (1 << i), room + 1);\n            if (current_prob > max_prob) {\n                max_prob = current_prob;\n            }\n        }\n    }\n    dp[mask] = max_prob;\n    return max_prob;\n}\n\nint main() {\n    scanf(\"%d %d\", &m, &n);\n    for (int i = 0; i < m; ++i) {\n        for (int j = 0; j < n; ++j) {\n            scanf(\"%lf\", &probabilities[i][j]);\n        }\n    }\n    for (int i = 0; i < (1 << n); ++i) {\n        dp[i] = -1.0;\n    }\n    printf(\"%.9lf\\n\", dfs(0, 0));\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:48:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_castle_problem(m, n, probabilities):\n    # Initialize dynamic programming table\n    dp = [[0.0] * (n + 1) for _ in range(m + 1)]\n    dp[0][0] = 1.0\n\n    # Iterate through cats and rooms\n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            # Probability of defeating current room\n            p_win = probabilities[i-1][j-1]\n\n            # Probability of reaching current room and winning\n            dp[i][j] = dp[i-1][j-1] * p_win + dp[i][j-1] * (1 - dp[i-1][j-1])\n\n    return dp[m][n]\n\n# Read input\nm, n = map(int, input().split())\nprobabilities = []\nfor _ in range(m):\n    probabilities.append(list(map(float, input().split())))\n\n# Solve and print result\nresult = solve_castle_problem(m, n, probabilities)\nprint(\"{:.9f}\".format(result))",
+    "timestamp": "2025-08-13 05:48:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    m, n = map(int, sys.stdin.readline().split())\n    prob = []\n    for _ in range(m):\n        row = list(map(float, sys.stdin.readline().split()))\n        prob.append(row)\n    \n    # dp[mask][k] : mask is bitmask of rooms done, k is number of cats left\n    # Initialize for 0 rooms done, all cats left\n    dp = [[0.0] * (m + 1) for _ in range(1 << n)]\n    for k in range(m + 1):\n        dp[0][k] = 1.0\n    \n    for mask in range(1 << n):\n        if mask == 0:\n            continue\n        for k in range(1, m + 1):\n            max_p = 0.0\n            for room in range(n):\n                if mask & (1 << room):\n                    # The room was cleared by some cat\n                    # The probability is:\n                    # cat k clears room, and the rest is dp[mask ^ (1<<room)][k-1]\n                    # or cat k doesn't clear room, and the rest is dp[mask][k-1]\n                    p = prob[k-1][room] * dp[mask ^ (1 << room)][k-1] + (1 - prob[k-1][room]) * dp[mask][k-1]\n                    if p > max_p:\n                        max_p = p\n            dp[mask][k] = max_p\n    \n    full_mask = (1 << n) - 1\n    print(\"{0:.12f}\".format(dp[full_mask][m]))\n\nsolve()",
+    "timestamp": "2025-08-13 05:49:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <iomanip>\n\nusing namespace std;\n\ndouble calculateMaxProbability(int roomIndex, int usedCats, const vector<vector<double>>& probabilities, vector<vector<double>>& dp, int m, int n) {\n    if (roomIndex == n) {\n        return 1.0;\n    }\n    if (dp[roomIndex][usedCats] != -1.0) {\n        return dp[roomIndex][usedCats];\n    }\n    \n    double maxProbability = 0.0;\n    for (int i = 0; i < m; ++i) {\n        if (!(usedCats & (1 << i))) {\n            maxProbability = max(maxProbability, probabilities[i][roomIndex] * calculateMaxProbability(roomIndex + 1, usedCats | (1 << i), probabilities, dp, m, n));\n        }\n    }\n    dp[roomIndex][usedCats] = maxProbability;\n    return maxProbability;\n}\n\nint main() {\n    int m, n;\n    cin >> m >> n;\n    \n    vector<vector<double>> probabilities(m, vector<double>(n));\n    for (int i = 0; i < m; ++i) {\n        for (int j = 0; j < n; ++j) {\n            cin >> probabilities[i][j];\n        }\n    }\n    \n    vector<vector<double>> dp(n+1, vector<double>((1 << m), -1.0));\n    \n    double result = calculateMaxProbability(0, 0, probabilities, dp, m, n);\n    \n    cout << fixed << setprecision(9) << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:28:19"
+  }
+]

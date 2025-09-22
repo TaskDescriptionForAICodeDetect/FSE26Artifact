@@ -1,0 +1,16 @@
+Ikuta, who hates to lose, has recently become obsessed with a game played on a Go board. However, since he cannot win against his friends in Go or Gomoku at all, he decided to practice a less famous game called Phutball. This game is challenging, so he has decided to start by training to determine if he can win by reaching the goal during his turn. The conditions for winning are as follows: 
+
+- The white stone cannot jump to a position occupied by the black stone. 
+- The game uses a central section of a 19 × 15 board. 
+- The board state for judging the victory condition consists of one white stone and several black stones placed on it. 
+- The goal is defined as the bottom edge of the board or any position below it. 
+- To win, the following actions can be taken: 
+  - The white stone can perform one or more jumps. 
+  - A jump is done by jumping over a black stone adjacent to the white stone in one of the 8 directions (up, down, left, right, diagonally). 
+  - The white stone cannot jump in a direction that does not have an adjacent black stone. 
+  - The jumped black stone is removed from the board with each jump. 
+  - After jumping, the white stone must either be on the goal or still on the board. 
+  - Even if there are two or more black stones in a row, a jump must be able to cover them exactly. 
+  - The white stone cannot jump to a position occupied by a black stone. 
+
+Your job is to write a program to help Ikuta determine if he can reach the goal and, if possible, find the minimum number of jumps required to do so.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nvoid flip(int grid[10][10], int x, int y) {\n    grid[x][y] ^= 1;\n    if (x > 0) grid[x-1][y] ^= 1;\n    if (x < 9) grid[x+1][y] ^= 1;\n    if (y > 0) grid[x][y-1] ^= 1;\n    if (y < 9) grid[x][y+1] ^= 1;\n}\n\nint main() {\n    int grid[10][10];\n    int solution[10][10] = {0};\n\n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n\n    for (int i = 1; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            if (grid[i-1][j]) {\n                flip(grid, i, j);\n                solution[i][j] = 1;\n            }\n        }\n    }\n\n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            printf(\"%d \", solution[i][j]);\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class AxionParticleCalculator {\n    public static int[][] calculateAxionPath(int[][] tubes) {\n        int[][] path = new int[10][10];\n        boolean[][] visited = new boolean[10][10];\n        \n        for (int row = 0; row < 10; row++) {\n            for (int col = 0; col < 10; col++) {\n                if (tubes[row][col] == 1) {\n                    path[row][col] = 1;\n                    toggleTubes(tubes, path, visited, row, col);\n                }\n            }\n        }\n        \n        return path;\n    }\n    \n    private static void toggleTubes(int[][] tubes, int[][] path, boolean[][] visited, int row, int col) {\n        if (row < 0 || row >= 10 || col < 0 || col >= 10 || visited[row][col]) {\n            return;\n        }\n        \n        visited[row][col] = true;\n        tubes[row][col] = 0;\n        \n        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};\n        \n        for (int[] dir : directions) {\n            int newRow = row + dir[0];\n            int newCol = col + dir[1];\n            \n            if (newRow >= 0 && newRow < 10 && newCol >= 0 && newCol < 10 && tubes[newRow][newCol] == 1) {\n                toggleTubes(tubes, path, visited, newRow, newCol);\n            }\n        }\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[][] tubes = new int[10][10];\n        \n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                tubes[i][j] = scanner.nextInt();\n            }\n        }\n        \n        int[][] result = calculateAxionPath(tubes);\n        \n        for (int[] row : result) {\n            for (int val : row) {\n                System.out.print(val + \" \");\n            }\n            System.out.println();\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:28:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid solve() {\n    vector<vector<int>> grid(10, vector<int>(10));\n    vector<vector<int>> solution(10, vector<int>(10, 0));\n    \n    for (int i = 0; i < 10; ++i) {\n        for (int j = 0; j < 10; ++j) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    for (int i = 0; i < 10; ++i) {\n        for (int j = 0; j < 10; ++j) {\n            if (grid[i][j] == 1) {\n                solution[i][j] = 1;\n                for (int k = 0; k < 10; ++k) {\n                    grid[i][k] ^= 1;\n                    grid[k][j] ^= 1;\n                }\n                grid[i][j] ^= 1;\n            }\n        }\n    }\n    \n    for (int i = 0; i < 10; ++i) {\n        for (int j = 0; j < 10; ++j) {\n            cout << solution[i][j] << \" \";\n        }\n        cout << endl;\n    }\n}\n\nint main() {\n    solve();\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define SIZE 10\n\nint tubes[SIZE][SIZE];\nint solution[SIZE][SIZE];\n\nvoid toggle(int row, int col) {\n    tubes[row][col] = 1 - tubes[row][col];\n    if (row > 0) tubes[row-1][col] = 1 - tubes[row-1][col];\n    if (row < SIZE-1) tubes[row+1][col] = 1 - tubes[row+1][col];\n    if (col > 0) tubes[row][col-1] = 1 - tubes[row][col-1];\n    if (col < SIZE-1) tubes[row][col+1] = 1 - tubes[row][col+1];\n}\n\nint solve() {\n    for (int mask = 0; mask < (1 << SIZE); mask++) {\n        memcpy(solution, solution, sizeof(solution));\n        memset(solution, 0, sizeof(solution));\n        \n        for (int i = 0; i < SIZE; i++) {\n            if (mask & (1 << i)) {\n                toggle(0, i);\n                solution[0][i] = 1;\n            }\n        }\n        \n        for (int row = 1; row < SIZE; row++) {\n            for (int col = 0; col < SIZE; col++) {\n                if (tubes[row-1][col] == 1) {\n                    toggle(row, col);\n                    solution[row][col] = 1;\n                }\n            }\n        }\n        \n        int allOff = 1;\n        for (int row = 0; row < SIZE; row++) {\n            for (int col = 0; col < SIZE; col++) {\n                if (tubes[row][col] == 1) {\n                    allOff = 0;\n                    break;\n                }\n            }\n            if (!allOff) break;\n        }\n        \n        if (allOff) return 1;\n    }\n    \n    return 0;\n}\n\nint main() {\n    for (int i = 0; i < SIZE; i++) {\n        for (int j = 0; j < SIZE; j++) {\n            scanf(\"%d\", &tubes[i][j]);\n        }\n    }\n    \n    if (solve()) {\n        for (int i = 0; i < SIZE; i++) {\n            for (int j = 0; j < SIZE; j++) {\n                printf(\"%d \", solution[i][j]);\n            }\n            printf(\"\\n\");\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid solve(vector<vector<int>>& grid) {\n    vector<vector<int>> solution(10, vector<int>(10, 0));\n    \n    for (int row = 0; row < 10; row++) {\n        for (int col = 0; col < 10; col++) {\n            if (grid[row][col] == 1) {\n                solution[row][col] = 1;\n                \n                if (row > 0) grid[row-1][col] = 1 - grid[row-1][col];\n                if (row < 9) grid[row+1][col] = 1 - grid[row+1][col];\n                if (col > 0) grid[row][col-1] = 1 - grid[row][col-1];\n                if (col < 9) grid[row][col+1] = 1 - grid[row][col+1];\n            }\n        }\n    }\n    \n    for (int row = 0; row < 10; row++) {\n        for (int col = 0; col < 10; col++) {\n            cout << solution[row][col] << \" \";\n        }\n        cout << endl;\n    }\n}\n\nint main() {\n    vector<vector<int>> grid(10, vector<int>(10));\n    \n    for (int i = 0; i < 10; i++) {\n        for (int j = 0; j < 10; j++) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    solve(grid);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class AxionParticles {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[][] tubes = new int[10][10];\n        int[][] axions = new int[10][10];\n\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                tubes[i][j] = scanner.nextInt();\n            }\n        }\n\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                if (tubes[i][j] == 1) {\n                    axions[i][j] = 1;\n                    for (int k = 0; k < 10; k++) {\n                        tubes[i][k] ^= axions[i][j];\n                        tubes[k][j] ^= axions[i][j];\n                    }\n                }\n            }\n        }\n\n        for (int i = 0; i < 10; i++) {\n            for (int j = 0; j < 10; j++) {\n                System.out.print(axions[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:29:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def axion_particle_path(tubes):\n    rows, cols = len(tubes), len(tubes[0])\n    path = [[0]*cols for _ in range(rows)]\n    \n    def toggle(r, c):\n        if 0 <= r < rows and 0 <= c < cols:\n            tubes[r][c] ^= 1\n\n    for r in range(rows):\n        for c in range(cols):\n            if tubes[r][c] == 1:\n                path[r][c] = 1\n                toggle(r+1, c)\n                toggle(r, c+1)\n    \n    return path\n\n# Example usage:\ntubes = [\n    [1, 0, 1, 0, 0, 1, 1, 0, 0, 1],\n    [0, 1, 1, 0, 1, 0, 1, 1, 0, 0],\n    [1, 1, 0, 1, 0, 0, 0, 1, 1, 0],\n    [0, 1, 0, 0, 0, 1, 0, 1, 0, 1],\n    [1, 0, 1, 0, 1, 0, 1, 0, 1, 0],\n    [0, 0, 1, 0, 0, 1, 0, 1, 0, 1],\n    [1, 0, 0, 1, 0, 1, 0, 0, 1, 1],\n    [0, 1, 0, 1, 0, 0, 1, 0, 1, 0],\n    [1, 0, 1, 0, 1, 0, 0, 1, 0, 0],\n    [0, 1, 1, 0, 1, 0, 0, 0, 1, 1]\n]\n\npath = axion_particle_path(tubes)\n\nfor row in path:\n    print(row)",
+    "timestamp": "2025-08-12 23:25:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class AxionPathFinder {\n    private static int size = 10;\n    private static int[][] tubes;\n    private static int[][] path;\n\n    public static void main(String[] args) {\n        int[][] input = {\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},\n            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}\n        };\n        \n        tubes = input;\n        path = new int[size][size];\n        \n        findPath(0, 0);\n        \n        for (int i = 0; i < size; i++) {\n            for (int j = 0; j < size; j++) {\n                System.out.print(path[i][j] + \" \");\n            }\n            System.out.println();\n        }\n    }\n\n    private static boolean findPath(int x, int y) {\n        if (x < 0 || x >= size || y < 0 || y >= size || tubes[x][y] == 0 || path[x][y] == 1) {\n            return false;\n        }\n\n        path[x][y] = 1;\n\n        if (x == size - 1 && y == size - 1) {\n            return true;\n        }\n\n        if (findPath(x + 1, y) || findPath(x, y + 1) || findPath(x - 1, y) || findPath(x, y - 1)) {\n            return true;\n        }\n\n        path[x][y] = 0;\n        return false;\n    }\n}",
+    "timestamp": "2025-08-12 23:25:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define N 10\n\nvoid calculateAxionPath(int tubes[N][N], int path[N][N]);\n\nint main() {\n    int tubes[N][N];\n    int path[N][N] = {0};\n\n    // Read the input state of the tubes\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            scanf(\"%d\", &tubes[i][j]);\n        }\n    }\n\n    calculateAxionPath(tubes, path);\n\n    // Output the path array\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            printf(\"%d \", path[i][j]);\n        }\n        printf(\"\\n\");\n    }\n\n    return 0;\n}\n\nvoid toggleNeighbors(int arr[N][N], int x, int y) {\n    if (x > 0) arr[x - 1][y] ^= 1;        // toggle up\n    if (x < N - 1) arr[x + 1][y] ^= 1;    // toggle down\n    if (y > 0) arr[x][y - 1] ^= 1;        // toggle left\n    if (y < N - 1) arr[x][y + 1] ^= 1;    // toggle right\n}\n\nvoid calculateAxionPath(int tubes[N][N], int path[N][N]) {\n    for (int i = 0; i < N - 1; i++) {\n        for (int j = 0; j < N; j++) {\n            if (tubes[i][j] == 1) {\n                path[i][j] = 1;\n                tubes[i][j] ^= 1;\n                toggleNeighbors(tubes, i, j);\n            }\n        }\n    }\n\n    for (int j = 0; j < N; j++) {\n        if (tubes[N-1][j] == 1) {\n            path[N-1][j] = 1;\n        }\n    }\n}",
+    "timestamp": "2025-08-12 23:25:28"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_axion_puzzle(tubes):\n    n = 10\n    result = [[0] * n for _ in range(n)]\n    \n    def toggle(x, y):\n        for dx, dy in [(0,0), (1,0), (-1,0), (0,1), (0,-1)]:\n            nx, ny = x + dx, y + dy\n            if 0 <= nx < n and 0 <= ny < n:\n                tubes[nx][ny] = 1 - tubes[nx][ny]\n    \n    for mask in range(1 << n):\n        current_tubes = [row[:] for row in tubes]\n        current_result = [[0] * n for _ in range(n)]\n        \n        for j in range(n):\n            if mask & (1 << j):\n                current_result[0][j] = 1\n                toggle(0, j)\n        \n        for i in range(1, n):\n            for j in range(n):\n                if current_tubes[i-1][j] == 0:\n                    current_result[i][j] = 1\n                    toggle(i, j)\n        \n        if all(all(t == 1 for t in row) for row in current_tubes):\n            return current_result\n    \n    return None",
+    "timestamp": "2025-08-12 23:25:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_axion_puzzle(grid):\n    n = len(grid)\n    solution = [[0 for _ in range(n)] for _ in range(n)]\n    \n    for i in range(n):\n        for j in range(n):\n            if grid[i][j] == 1:\n                solution[i][j] = 1\n                # Toggle the current cell and adjacent cells\n                for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                    ni, nj = i + di, j + dj\n                    if 0 <= ni < n and 0 <= nj < n:\n                        grid[ni][nj] ^= 1\n    return solution\n\n# Example usage:\n# grid = [[0, 1, 0], [1, 1, 1], [0, 1, 0]]  # Example 3x3 grid\n# print(solve_axion_puzzle(grid))",
+    "timestamp": "2025-08-12 23:25:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int N = 10;\n\n// Function to toggle a tube and its adjacent tubes\nvoid toggle(vector<vector<int>>& tubes, int x, int y) {\n    int dx[] = {0, 0, 1, -1};\n    int dy[] = {1, -1, 0, 0};\n    \n    tubes[x][y] ^= 1;\n    for (int i = 0; i < 4; ++i) {\n        int nx = x + dx[i], ny = y + dy[i];\n        if (nx >= 0 && nx < N && ny >= 0 && ny < N) {\n            tubes[nx][ny] ^= 1;\n        }\n    }\n}\n\nint main() {\n    vector<vector<int>> tubes(N, vector<int>(N));\n    vector<vector<int>> axionPath(N, vector<int>(N, 0));\n\n    for (int i = 0; i < N; ++i)\n        for (int j = 0; j < N; ++j)\n            cin >> tubes[i][j];\n\n    // First row strategy to decide axion positions\n    for (int j = 0; j < N; ++j) {\n        if (tubes[0][j] == 1) {\n            toggle(tubes, 0, j);\n            axionPath[1][j] = 1;\n        }\n    }\n\n    // Solve for subsequent rows based on above row toggles\n    for (int i = 1; i < N-1; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (tubes[i][j] == 1) {\n                toggle(tubes, i, j);\n                axionPath[i+1][j] = 1;\n            }\n        }\n    }\n    \n    // Verify and correct last row\n    for (int j = 0; j < N; ++j) {\n        if (tubes[N-1][j] == 1) {\n            toggle(tubes, N-2, j);\n            axionPath[N-2][j] = 1;\n        }\n    }\n\n    // Output the axion path\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            cout << axionPath[i][j] << \" \";\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:50:10"
+  }
+]

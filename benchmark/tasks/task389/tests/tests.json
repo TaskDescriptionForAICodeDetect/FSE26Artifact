@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "4 4\nA B G\nA B 40 3\nB C 80 0\nA G 40 0\nB G 80 0\n5 6\nKusatsu Tokyo Aizu\nTokyo Nagoya 120 3\nKusatsu Nagoya 40 0\nKusatsu Kanazawa 40 0\nKanazawa Aizu 40 0\nTokyo Kanazawa 40 0\nTokyo Aizu 80 4\n0 0",
+      "output": "5\n4"
+    }
+  ]
+}

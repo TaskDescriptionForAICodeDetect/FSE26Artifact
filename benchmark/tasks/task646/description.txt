@@ -1,0 +1,1 @@
+You are given an array a_0, a_1, ..., a_{N-1} of length N. Process Q queries of the following types: 0 l r b c: For each i = l, l+1, ..., r - 1, set a_i to b * a_i + c. 1 l r: Print the sum of a_i from index l to r - 1 modulo 998244353.

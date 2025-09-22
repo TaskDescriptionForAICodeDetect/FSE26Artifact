@@ -1,0 +1,1 @@
+Whist is a card game played by four players in two teams. Your task is to write a program that determines the winning team and their score for given plays of a deal, based on the rules provided.

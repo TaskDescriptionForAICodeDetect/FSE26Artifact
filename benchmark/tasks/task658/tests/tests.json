@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "15\noof\n",
+      "output": "1575111451"
+    },
+    {
+      "input": "237564\nwhydidyoudesertme\n",
+      "output": "2318008117"
+    }
+  ]
+}

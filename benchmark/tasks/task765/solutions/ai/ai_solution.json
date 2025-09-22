@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MOD 1000003\n\nlong long power_mod(long long base, long long exp, long long mod) {\n    long long result = 1;\n    base %= mod;\n    \n    while (exp > 0) {\n        if (exp & 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp >>= 1;\n    }\n    \n    return result;\n}\n\nlong long sequence_product(long long x, long long d, long long n) {\n    long long result = 1;\n    long long current_term = x;\n    \n    for (int i = 0; i < n; i++) {\n        result = (result * current_term) % MOD;\n        current_term = (current_term * d) % MOD;\n    }\n    \n    return result;\n}\n\nint main() {\n    int Q;\n    scanf(\"%d\", &Q);\n    \n    while (Q--) {\n        long long x, d, n;\n        scanf(\"%lld %lld %lld\", &x, &d, &n);\n        \n        printf(\"%lld\\n\", sequence_product(x, d, n));\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#define MOD 1000003\n\nlong long power(long long a, long long b) {\n    long long result = 1;\n    a %= MOD;\n    while (b > 0) {\n        if (b % 2 == 1) {\n            result = (result * a) % MOD;\n        }\n        a = (a * a) % MOD;\n        b /= 2;\n    }\n    return result;\n}\n\nlong long factorial_mod(long long n) {\n    if (n >= MOD) return 0;\n    long long result = 1;\n    for (long long i = 1; i <= n; i++) {\n        result = (result * i) % MOD;\n    }\n    return result;\n}\n\nlong long solve(long long x, long long d, long long n) {\n    if (d == 0) {\n        return power(x, n);\n    }\n    long long a = x * power(d, MOD - 2) % MOD;\n    if (a + n - 1 >= MOD || a < 0) {\n        return 0;\n    }\n    long long numerator = factorial_mod(a + n - 1);\n    long long denominator = factorial_mod(a - 1);\n    long long inv_denominator = power(denominator, MOD - 2);\n    long long term = numerator * inv_denominator % MOD;\n    return term * power(d, n) % MOD;\n}\n\nint main() {\n    int Q;\n    scanf(\"%d\", &Q);\n    while (Q--) {\n        long long x, d, n;\n        scanf(\"%lld %lld %lld\", &x, &d, &n);\n        printf(\"%lld\\n\", solve(x, d, n));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\nusing namespace std;\n\nconst int MOD = 1000003;\n\nlong long modpow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    base %= mod;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long modinv(long long a, long long mod) {\n    return modpow(a, mod - 2, mod);\n}\n\nlong long compute_product(long long x, long long d, long long n) {\n    if (d == 0) {\n        return modpow(x, n, MOD);\n    }\n    long long a = x * modinv(d, MOD) % MOD;\n    long long product = 1;\n    for (long long k = 0; k < n; ++k) {\n        long long term = (a + k) % MOD;\n        if (term == 0) {\n            return 0;\n        }\n        product = (product * term) % MOD;\n    }\n    product = product * modpow(d, n, MOD) % MOD;\n    return product;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    int Q;\n    cin >> Q;\n    while (Q--) {\n        long long x, d, n;\n        cin >> x >> d >> n;\n        cout << compute_product(x, d, n) << '\\n';\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\nimport java.util.*;\n\npublic class ArithmeticProgressionProduct {\n    private static final int MOD = 1_000_003;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter pw = new PrintWriter(System.out);\n        int Q = Integer.parseInt(br.readLine());\n        while (Q-- > 0) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            long x = Long.parseLong(st.nextToken());\n            long d = Long.parseLong(st.nextToken());\n            long n = Long.parseLong(st.nextToken());\n            if (x == 0) {\n                pw.println(0);\n                continue;\n            }\n            x %= MOD;\n            d %= MOD;\n            long a = x;\n            long product = 1;\n            if (n >= MOD) {\n                product = 0;\n            } else {\n                for (int i = 0; i < n; i++) {\n                    product = (product * a) % MOD;\n                    a = (a + d) % MOD;\n                }\n            }\n            pw.println(product);\n        }\n        pw.flush();\n        pw.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:50:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class ArithmeticProgressionProduct {\n    static final int MOD = 1_000_003;\n\n    public static long calculateProductModulo(long x, long d, int n) {\n        long product = 1;\n        for (int i = 0; i < n; i++) {\n            product = (product * ((x + (long)i * d) % MOD)) % MOD;\n        }\n        return product;\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));\n\n        int Q = Integer.parseInt(br.readLine());\n        \n        for (int q = 0; q < Q; q++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            long x = Long.parseLong(st.nextToken());\n            long d = Long.parseLong(st.nextToken());\n            int n = Integer.parseInt(st.nextToken());\n            \n            long result = calculateProductModulo(x, d, n);\n            bw.write(result + \"\\n\");\n        }\n        \n        bw.flush();\n        bw.close();\n        br.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:51:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1000003;\n\nlong long modPow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    base %= mod;\n    while (exp > 0) {\n        if (exp & 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp >>= 1;\n    }\n    return result;\n}\n\nlong long modInverse(long long a, long long mod) {\n    return modPow(a, mod - 2, mod);\n}\n\nlong long computeSequenceProduct(long long x, long long d, long long n) {\n    if (n == 0) return 1;\n    \n    long long lastTerm = x + (n - 1) * d;\n    long long product = 1;\n    \n    if (d == 0) {\n        product = modPow(x, n, MOD);\n    } else {\n        long long numerator = (lastTerm * (lastTerm + d)) % MOD;\n        numerator = (numerator * modInverse(2, MOD)) % MOD;\n        \n        long long denominator = (x * (x + (n - 1) * d)) % MOD;\n        denominator = (denominator * modInverse(2, MOD)) % MOD;\n        \n        product = (numerator * modInverse(denominator, MOD)) % MOD;\n    }\n    \n    return product;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    int Q;\n    cin >> Q;\n    \n    while (Q--) {\n        long long x, d, n;\n        cin >> x >> d >> n;\n        \n        cout << computeSequenceProduct(x, d, n) << \"\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:51:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 1000003\n\ndef arithmetic_progression_product(x, d, n):\n    if d == 0:\n        return pow(x, n, MOD)  # Special case when d = 0, all terms are x\n    \n    # General case\n    prod = 1\n    for i in range(n):\n        term = (x + i * d) % MOD\n        prod = (prod * term) % MOD\n    return prod\n\ndef solve_queries(queries):\n    results = []\n    for x, d, n in queries:\n        results.append(arithmetic_progression_product(x, d, n))\n    return results\n\n# Example usage with queries\nqueries = [\n    (3, 2, 4),  # Example query (x=3, d=2, n=4)\n    (5, 0, 3),  # Special case with d=0\n    # Add other queries as needed\n]\n\nanswers = solve_queries(queries)\nfor answer in answers:\n    print(answer)",
+    "timestamp": "2025-08-13 12:42:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.io.BufferedReader;\nimport java.io.IOException;\nimport java.io.InputStreamReader;\nimport java.util.StringTokenizer;\n\npublic class Main {\n    private static final long MOD = 1000003;\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int Q = Integer.parseInt(br.readLine().trim());\n\n        while (Q-- > 0) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            long x = Long.parseLong(st.nextToken());\n            long d = Long.parseLong(st.nextToken());\n            long n = Long.parseLong(st.nextToken());\n\n            if (d == 0) {\n                long result = powerMod(x, n, MOD);\n                System.out.println(result);\n                continue;\n            }\n\n            long product = 1;\n            for (long i = 0; i < n; i++) {\n                product = product * (x + i * d) % MOD;\n            }\n            System.out.println(product);\n        }\n    }\n\n    private static long powerMod(long base, long exp, long mod) {\n        long result = 1;\n        base = base % mod;\n        while (exp > 0) {\n            if ((exp & 1) != 0) {\n                result = result * base % mod;\n            }\n            exp >>= 1;\n            base = base * base % mod;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-13 12:43:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000003\n\nlong long mod_exp(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nlong long mod_inverse(long long a, long long mod) {\n    return mod_exp(a, mod - 2, mod);\n}\n\nlong long mod_factorial(long long n, long long mod) {\n    long long result = 1;\n    for (long long i = 2; i <= n; i++) {\n        result = (result * i) % mod;\n    }\n    return result;\n}\n\nint main() {\n    int Q;\n    scanf(\"%d\", &Q);\n    while (Q--) {\n        long long x, d, n;\n        scanf(\"%lld %lld %lld\", &x, &d, &n);\n\n        if (d == 0) {\n            long long answer = mod_exp(x % MOD, n, MOD);\n            printf(\"%lld\\n\", answer);\n            continue;\n        }\n\n        x %= MOD;\n        d %= MOD;\n\n        long long last_term = x + (n - 1) * d;\n        if (last_term >= MOD) {\n            printf(\"0\\n\");\n            continue;\n        }\n\n        long long num_terms = (last_term - x) / d + 1;\n        long long first_term = x / d;\n\n        long long k = last_term / MOD;\n        long long r = last_term % MOD;\n\n        long long product = 1;\n        for (long long i = first_term; i <= k; i++) {\n            product = (product * mod_factorial(MOD - 1, MOD)) % MOD;\n            product = (product * mod_exp(d, MOD - 1, MOD)) % MOD;\n        }\n        product = (product * mod_factorial(r, MOD)) % MOD;\n        if (x % MOD != 0) {\n            product = (product * mod_exp(x, num_terms, MOD)) % MOD;\n        }\n\n        printf(\"%lld\\n\", product);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:43:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MOD = 1000003;\n\nlong long mod_product(int x, int d, int n) {\n    long long product = 1;\n    for (int i = 0; i < n; ++i) {\n        product = (product * (x + i * d)) % MOD;\n    }\n    return product;\n}\n\nint main() {\n    int Q;\n    cin >> Q;\n    while (Q--) {\n        int x, d, n;\n        cin >> x >> d >> n;\n        cout << mod_product(x, d, n) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:43:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_arithmetic_progression_product(x, d, n):\n    MOD = 1_000_003\n    \n    # Handle the case of 0 or 1 terms\n    if n == 0:\n        return 1\n    if n == 1:\n        return x % MOD\n    \n    # Initialize product\n    product = 1\n    \n    # Current term\n    current = x\n    \n    # Compute product of all terms\n    for _ in range(n):\n        product = (product * current) % MOD\n        current += d\n    \n    return product\n\n# Handle multiple queries\ndef process_queries(queries):\n    results = []\n    for x, d, n in queries:\n        results.append(solve_arithmetic_progression_product(x, d, n))\n    return results\n\n# Example usage\nqueries = [\n    (2, 3, 4),   # First query\n    (5, 2, 3)    # Second query\n]\n\nprint(process_queries(queries))",
+    "timestamp": "2025-08-13 12:43:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\nMOD = 1000003\n\ndef precompute_factorials(max_n, MOD):\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    return fact, inv_fact\n\nmax_possible_n = MOD\nfact, inv_fact = precompute_factorials(max_possible_n, MOD)\n\ndef solve():\n    input = sys.stdin.read().split()\n    ptr = 0\n    Q = int(input[ptr])\n    ptr += 1\n    for _ in range(Q):\n        x = int(input[ptr])\n        d = int(input[ptr+1])\n        n = int(input[ptr+2])\n        ptr +=3\n        \n        if d == 0:\n            res = pow(x, n, MOD)\n        else:\n            inv_d = pow(d, MOD-2, MOD)\n            a = x * inv_d % MOD\n            if a + n - 1 >= MOD:\n                res = 0\n            else:\n                if a == 0:\n                    res = 0\n                else:\n                    numerator = fact[a + n - 1] * inv_fact[a - 1] % MOD\n                    res = numerator * pow(d, n, MOD) % MOD\n        print(res % MOD)\n\nsolve()",
+    "timestamp": "2025-08-13 12:43:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function arithmeticProgressionProductModulo(queries) {\n    const MOD = 1000003;\n\n    function modExp(base, exp, mod) {\n        let result = 1;\n        while (exp > 0) {\n            if (exp % 2 == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp = Math.floor(exp / 2);\n        }\n        return result;\n    }\n\n    function productOfSequence(x, d, n) {\n        if (n === 1) return x % MOD;\n        \n        let factorialMod = 1;\n        for (let i = 1; i < n; i++) {\n            factorialMod = (factorialMod * d) % MOD;\n        }\n        \n        let firstTermMod = x % MOD;\n        let lastTermMod = (x + (n - 1) * d) % MOD;\n        \n        let geometricSumMod = modExp(d, n - 1, MOD);\n        \n        let result = (firstTermMod * geometricSumMod % MOD) * factorialMod % MOD;\n        return result % MOD;\n    }\n\n    const results = queries.map(([x, d, n]) => productOfSequence(x, d, n));\n    return results;\n}\n\n// Example usage:\n// const queries = [\n//     [2, 2, 3],\n//     [1, 3, 5],\n// ];\n// console.log(arithmeticProgressionProductModulo(queries));",
+    "timestamp": "2025-08-13 12:43:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solveArithmeticProgressionProduct(queries) {\n    const MOD = 1000003;\n    const results = [];\n\n    for (const [x, d, n] of queries) {\n        let product = 1;\n        for (let i = 0; i < n; i++) {\n            product = (product * (x + i * d)) % MOD;\n        }\n        results.push(product);\n    }\n\n    return results;\n}",
+    "timestamp": "2025-08-13 12:43:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1000003;\n\nfunction precomputeFactorials(maxN) {\n    const fact = new Array(maxN + 1);\n    fact[0] = 1;\n    for (let i = 1; i <= maxN; i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n    return fact;\n}\n\nconst maxFact = MOD;\nconst fact = precomputeFactorials(maxFact);\n\nfunction modInverse(a, mod) {\n    let m = mod;\n    let y = 0, x = 1;\n    if (mod === 1) return 0;\n    while (a > 1) {\n        let q = Math.floor(a / mod);\n        let t = mod;\n        mod = a % mod;\n        a = t;\n        t = y;\n        y = x - q * y;\n        x = t;\n    }\n    if (x < 0) x += m;\n    return x;\n}\n\nfunction solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let Q;\n    let queries = [];\n    let lineCount = 0;\n\n    rl.on('line', (line) => {\n        if (lineCount === 0) {\n            Q = parseInt(line);\n            lineCount++;\n        } else {\n            const [x, d, n] = line.split(' ').map(Number);\n            queries.push({ x, d, n });\n            if (queries.length === Q) {\n                rl.close();\n            }\n        }\n    });\n\n    rl.on('close', () => {\n        for (const query of queries) {\n            const { x, d, n } = query;\n            if (d === 0) {\n                let ans = 1;\n                for (let i = 0; i < n; i++) {\n                    ans = (ans * x) % MOD;\n                }\n                console.log(ans);\n                continue;\n            }\n            const a = x * modInverse(d, MOD) % MOD;\n            const m = MOD;\n            if (a + n - 1 >= m) {\n                console.log(0);\n            } else {\n                const invD = modInverse(d, MOD);\n                let numerator = fact[a + n - 1];\n                let denominator = a === 0 ? 1 : fact[a - 1];\n                let product = (numerator * modInverse(denominator, MOD)) % MOD;\n                let powD = 1;\n                for (let i = 0; i < n; i++) {\n                    powD = (powD * d) % MOD;\n                }\n                product = (product * powD) % MOD;\n                console.log(product);\n            }\n        }\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:44:13"
+  }
+]

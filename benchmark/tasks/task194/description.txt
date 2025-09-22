@@ -1,0 +1,31 @@
+Problem A: Popularity Estimation
+You are the planning director of an animation production company. Nowadays, animation companies produce not just animations but also related merchandise, such as character figurines and character song CDs, which are important sources of revenue. The extent to which this revenue can be increased relies entirely on you, the planning director.
+
+It is obvious that related products cannot be released without any consideration. The development of products requires significant time and budget. For example, when releasing a character figurine, it must be limited to characters that are expected to have high sales and popularity.
+
+One means of measuring a character's popularity is through popularity polls. You have organized several popularity polls, but it seems that viewers have become dissatisfied with these methods. It is urgent to establish other methods to measure popularity.
+
+Thus, you have formulated a hypothesis: the popularity of a character is proportional to the total screen time of that character in the anime. To test this hypothesis, you decided to write a program to compile the screen time for each character.
+
+Input:
+The input consists of multiple cases. Each case is given in the following format:
+
+n 
+name0 m0 d0,0 ... d0,m0-1
+name1 m1 d1,0 ... d1,m1-1
+...
+namen-1 mn-1 dn-1,0 ... dn-1,mn-1-1
+
+Where n is the number of characters. namei is the name of the character. mi is the number of different times the character appeared, followed by mi integers di,j representing the times the character was on screen. The end of the input is indicated by a line containing n=0.
+
+If only one character is on screen at a time, that character earns n points. Each additional character appearing at the same time reduces the points earned by one for each character present. If n characters are on screen at the same time, each character receives one point.
+
+The input must satisfy the following constraints:
+2 ≤ n ≤ 20
+0 ≤ mi ≤ 30
+0 ≤ di,j < 30
+Each di,j for the i-th character is distinct.
+namei contains only uppercase or lowercase letters and has a length of 10 or less.
+
+Output:
+Output the name of the character with the lowest points and that character's points, separated by a single space. If there are multiple characters with the same lowest points, select the one with the lexicographically smallest name.

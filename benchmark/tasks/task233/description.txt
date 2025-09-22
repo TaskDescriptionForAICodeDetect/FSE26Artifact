@@ -1,0 +1,1 @@
+Write a program that finds the descending route containing the maximum number of prime caves from a given starting cave. Given the total number of caves and the cave visited first, the program should identify the path that includes the largest number of prime caves and output both the number of prime caves on the path and the last prime cave number.

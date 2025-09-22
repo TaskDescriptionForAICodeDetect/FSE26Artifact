@@ -1,0 +1,1 @@
+You are given a simple connected undirected graph consisting of N vertices and M edges. The vertices are numbered from 1 to N, and the edges are numbered from 1 to M. Edge i connects vertex a_i and b_i bidirectionally. Determine if three circuits can be formed using each of the edges exactly once. A circuit is a cycle allowing repetitions of vertices but not edges.

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 100\n\nchar grid[MAX_N][MAX_N];\n\nint main() {\n    int A, B;\n    scanf(\"%d %d\", &A, &B);\n\n    int h = A + B + 1;\n    int w = 2;\n\n    for (int i = 0; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            grid[i][j] = (i % 2 == j) ? '.' : '#';\n        }\n    }\n\n    for (int i = 0; i < h; i++) {\n        grid[i][w] = '\\0';\n        printf(\"%s\\n\", grid[i]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:07:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int A, B;\n    scanf(\"%d %d\", &A, &B);\n    \n    int h = 100, w = 100;\n    char grid[100][100];\n    \n    for (int i = 0; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            if (i < 50) {\n                grid[i][j] = '.';\n            } else {\n                grid[i][j] = '#';\n            }\n        }\n    }\n    \n    int white = 1, black = 1;\n    int x = 0, y = 0;\n    \n    while (white < A) {\n        grid[x][y] = '#';\n        y += 2;\n        if (y >= w) {\n            y = 0;\n            x += 2;\n        }\n        white++;\n    }\n    \n    x = 51, y = 0;\n    while (black < B) {\n        grid[x][y] = '.';\n        y += 2;\n        if (y >= w) {\n            y = 0;\n            x += 2;\n        }\n        black++;\n    }\n    \n    printf(\"%d %d\\n\", h, w);\n    for (int i = 0; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            printf(\"%c\", grid[i][j]);\n        }\n        printf(\"\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int A, B;\n    cin >> A >> B;\n    \n    int h = 100, w = 100;\n    vector<vector<char>> grid(h, vector<char>(w, '.'));\n    \n    // Fill top half with black (for B components)\n    for (int i = 0; i < 50; ++i) {\n        for (int j = 0; j < 100; ++j) {\n            grid[i][j] = '#';\n        }\n    }\n    \n    // Create B-1 white cells in the black region\n    int count = 1;\n    for (int i = 1; i < 50 && count < B; i += 2) {\n        for (int j = 1; j < 100 && count < B; j += 2) {\n            grid[i][j] = '.';\n            ++count;\n        }\n    }\n    \n    // Create A-1 black cells in the white region\n    count = 1;\n    for (int i = 51; i < 100 && count < A; i += 2) {\n        for (int j = 1; j < 100 && count < A; j += 2) {\n            grid[i][j] = '#';\n            ++count;\n        }\n    }\n    \n    cout << h << \" \" << w << endl;\n    for (int i = 0; i < h; ++i) {\n        for (int j = 0; j < w; ++j) {\n            cout << grid[i][j];\n        }\n        cout << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int A = sc.nextInt();\n        int B = sc.nextInt();\n        \n        char[][] grid = new char[100][100];\n        for (int i = 0; i < 100; i++) {\n            for (int j = 0; j < 100; j++) {\n                if (i < 50) {\n                    grid[i][j] = '.';\n                } else {\n                    grid[i][j] = '#';\n                }\n            }\n        }\n        \n        int white = 1;\n        int black = 1;\n        \n        for (int i = 0; i < 50 && white < A; i += 2) {\n            for (int j = 0; j < 100 && white < A; j += 2) {\n                grid[i][j] = '#';\n                white++;\n            }\n        }\n        \n        for (int i = 51; i < 100 && black < B; i += 2) {\n            for (int j = 0; j < 100 && black < B; j += 2) {\n                grid[i][j] = '.';\n                black++;\n            }\n        }\n        \n        System.out.println(\"100 100\");\n        for (int i = 0; i < 100; i++) {\n            System.out.println(new String(grid[i]));\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:08:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GridPainting {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int A = scanner.nextInt();\n        int B = scanner.nextInt();\n        \n        int h = A + B + 1;\n        int w = 2;\n        \n        char[][] grid = new char[h][w];\n        \n        // Initialize grid with black squares\n        for (int i = 0; i < h; i++) {\n            for (int j = 0; j < w; j++) {\n                grid[i][j] = '#';\n            }\n        }\n        \n        // Paint white squares for A connected components\n        for (int i = 0; i < A; i++) {\n            grid[i][0] = '.';\n        }\n        \n        // Paint white squares for B connected components\n        for (int i = 0; i < B; i++) {\n            grid[A + i][1] = '.';\n        }\n        \n        // Print the grid\n        for (int i = 0; i < h; i++) {\n            for (int j = 0; j < w; j++) {\n                System.out.print(grid[i][j]);\n            }\n            System.out.println();\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:08:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int A, B;\n    cin >> A >> B;\n\n    vector<vector<char>> grid(2, vector<char>(A + B, '.'));\n\n    // Paint white squares\n    for (int i = 0; i < A; i++) {\n        grid[0][i] = 'W';\n        if (i > 0) grid[1][i-1] = 'W';\n    }\n\n    // Paint black squares\n    for (int i = 0; i < B; i++) {\n        grid[1][A+i] = 'B';\n        if (i > 0) grid[0][A+i-1] = 'B';\n    }\n\n    // Print grid dimensions\n    cout << 2 << \" \" << A + B << endl;\n\n    // Print grid\n    for (const auto& row : grid) {\n        for (char cell : row) {\n            cout << cell;\n        }\n        cout << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:08:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def create_grid(A, B):\n    h, w = 100, 100\n    grid = [[1] * w for _ in range(h)]\n    \n    bw = 2  # 0 for white, 1 for black, but since we use 1 for all cells first, change to 2 for black\n    wh = 0  # white color, 0\n\n    black_rows = (B - 1) * 2\n    white_rows = (A - 1) * 2\n\n    for i in range(0, black_rows, 2):\n        for j in range(0, w, 2):\n            grid[i][j] = grid[i][j + 1] = bw\n    \n    for i in range(black_rows, white_rows + black_rows, 2):\n        for j in range(0, w, 2):\n            grid[h - i - 1][j] = grid[h - i - 1][j + 1] = wh\n\n    for row in grid:\n        print(''.join('#' if cell == 1 else '.' for cell in row))\n\n\nA, B = map(int, input().split())\ncreate_grid(A, B)",
+    "timestamp": "2025-08-13 13:47:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class GridPainter {\n    public static void main(String[] args) {\n        int A = 3; // Example value for A\n        int B = 2; // Example value for B\n\n        int h = 100, w = 100;\n        char[][] grid = new char[h][w];\n\n        for (char[] row : grid) {\n            Arrays.fill(row, '#');\n        }\n\n        // Creating A white components\n        for (int i = 0; i < A; i++) {\n            int x = i * 4;\n            for (int j = 0; j < 50; j++) {\n                grid[x][j] = '.';\n            }\n        }\n\n        // Creating B black components\n        for (int i = 0; i < B; i++) {\n            int x = i * 4 + 2;\n            for (int j = 0; j < 50; j++) {\n                grid[x][j] = '#';\n            }\n        }\n\n        // Print the grid\n        for (int i = 0; i < h; i++) {\n            for (int j = 0; j < w; j++) {\n                System.out.print(grid[i][j]);\n            }\n            System.out.println();\n        }\n    }\n}",
+    "timestamp": "2025-08-13 13:47:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nvoid printGrid(int A, int B) {\n    int h = 100, w = 100;\n    int grid[100][100] = {0};\n\n    // Fill the grid to separate A white components and B black components\n    int whiteComponents = 0, blackComponents = 0;\n\n    // Start by filling top with white and bottom with black\n    for (int i = 0; i < 50; i++) {\n        for (int j = 0; j < w; j++) {\n            if (whiteComponents < A) {\n                grid[i][j] = 0;\n                if ((j % 2 == 0) && i > 0)\n                    whiteComponents++;\n            } else {\n                grid[i][j] = 1;\n            }\n        }\n    }\n\n    for (int i = 50; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            if (blackComponents < B) {\n                grid[i][j] = 1;\n                if ((j % 2 == 0) && i > 50)\n                    blackComponents++;\n            } else {\n                grid[i][j] = 0;\n            }\n        }\n    }\n\n    // Print the grid\n    for (int i = 0; i < h; i++) {\n        for (int j = 0; j < w; j++) {\n            printf(\"%c\", grid[i][j] ? '#' : '.');\n        }\n        printf(\"\\n\");\n    }\n}\n\nint main() {\n    int A, B;\n    scanf(\"%d %d\", &A, &B);\n    printGrid(A, B);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:47:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function createGrid(A, B) {\n    const h = 100, w = 100;\n    const grid = Array.from({length: h}, () => Array(w).fill('.'));\n    \n    for (let i = 0; i < h; i++) {\n        for (let j = 0; j < w; j++) {\n            if ((i % 2 === 0 && j % 2 === 0 && A > 0) || (i % 2 === 1 && j % 2 === 1 && B > 0)) {\n                grid[i][j] = '#';\n                if (i % 2 === 0 && j % 2 === 0) A--;\n                if (i % 2 === 1 && j % 2 === 1) B--;\n            }\n        }\n    }\n    \n    console.log(h, w);\n    grid.forEach(row => console.log(row.join('')));\n}\n\nconst A = 5;\nconst B = 5;\ncreateGrid(A, B);",
+    "timestamp": "2025-08-13 13:47:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(A, B):\n    # Simple strategy: create separate clusters\n    h, w = 4, 4  # Reasonable grid size\n    grid = [[0] * w for _ in range(h)]\n    \n    # Create white connected components\n    white_count = 0\n    for i in range(h):\n        for j in range(w):\n            if white_count < A:\n                grid[i][j] = 1\n                white_count += 1\n    \n    # Create black connected components\n    black_count = 0\n    for i in range(h):\n        for j in range(w):\n            if grid[i][j] == 0 and black_count < B:\n                grid[i][j] = 2\n                black_count += 1\n    \n    # Output\n    for row in grid:\n        print(''.join(['.' if x == 1 else '#' if x == 2 else '+' for x in row]))\n\n# Read input\nA, B = map(int, input().split())\nsolve(A, B)",
+    "timestamp": "2025-08-13 13:47:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(A, B) {\n    let h = 2, w = 2;\n    let grid = Array.from({length: h}, () => Array(w).fill(0));\n    \n    if (A === 1 && B === 1) {\n        grid[0][0] = 1;\n        return grid;\n    }\n    \n    while (true) {\n        let whiteComponents = countComponents(grid, 1);\n        let blackComponents = countComponents(grid, 0);\n        \n        if (whiteComponents === A && blackComponents === B) {\n            return grid;\n        }\n        \n        if (whiteComponents > A || blackComponents > B) {\n            h++;\n            w++;\n            grid = Array.from({length: h}, () => Array(w).fill(0));\n            continue;\n        }\n        \n        for (let i = 0; i < h; i++) {\n            for (let j = 0; j < w; j++) {\n                grid[i][j] = (grid[i][j] + 1) % 2;\n                \n                whiteComponents = countComponents(grid, 1);\n                blackComponents = countComponents(grid, 0);\n                \n                if (whiteComponents === A && blackComponents === B) {\n                    return grid;\n                }\n                \n                if (whiteComponents > A || blackComponents > B) {\n                    grid[i][j] = (grid[i][j] + 1) % 2;\n                }\n            }\n        }\n    }\n}\n\nfunction countComponents(grid, color) {\n    let h = grid.length, w = grid[0].length;\n    let visited = Array.from({length: h}, () => Array(w).fill(false));\n    let components = 0;\n    \n    for (let i = 0; i < h; i++) {\n        for (let j = 0; j < w; j++) {\n            if (!visited[i][j] && grid[i][j] === color) {\n                dfs(grid, visited, i, j, color);\n                components++;\n            }\n        }\n    }\n    \n    return components;\n}\n\nfunction dfs(grid, visited, r, c, color) {\n    let h = grid.length, w = grid[0].length;\n    let directions = [[0,1], [1,0], [0,-1], [-1,0]];\n    \n    visited[r][c] = true;\n    \n    for (let [dx, dy] of directions) {\n        let nr = r + dx, nc = c + dy;\n        \n        if (nr >= 0 && nr < h && nc >= 0 && nc < w && \n            !visited[nr][nc] && grid[nr][nc] === color) {\n            dfs(grid, visited, nr, nc, color);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 13:47:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "A, B = map(int, input().split())\n\ngrid = [['#' for _ in range(100)] for _ in range(50)] + [['.' for _ in range(100)] for _ in range(50)]\n\na = A - 1\nb = B - 1\n\nfor i in range(0, 50, 2):\n    for j in range(0, 100, 2):\n        if a > 0:\n            grid[i][j] = '.'\n            a -= 1\n\nfor i in range(51, 100, 2):\n    for j in range(0, 100, 2):\n        if b > 0:\n            grid[i][j] = '#'\n            b -= 1\n\nprint(100, 100)\nfor row in grid:\n    print(''.join(row))",
+    "timestamp": "2025-08-13 13:48:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    rl.on('line', (input) => {\n        const [A, B] = input.split(' ').map(Number);\n        const grid = [];\n        const h = 50;\n        const w = 100;\n        \n        // Initialize grid with all white\n        for (let i = 0; i < h; i++) {\n            grid.push(new Array(w).fill('.'));\n        }\n        \n        // Add black components (B-1)\n        for (let i = 0; i < B - 1; i++) {\n            const row = Math.floor(i / 25) * 2;\n            const col = (i % 25) * 2;\n            grid[row][col] = '#';\n        }\n        \n        // Initialize second half with all black\n        for (let i = h / 2; i < h; i++) {\n            for (let j = 0; j < w; j++) {\n                grid[i][j] = '#';\n            }\n        }\n        \n        // Add white components (A-1)\n        for (let i = 0; i < A - 1; i++) {\n            const row = h / 2 + Math.floor(i / 25) * 2;\n            const col = (i % 25) * 2;\n            grid[row][col] = '.';\n        }\n        \n        // Output the grid\n        console.log(`${h} ${w}`);\n        for (const row of grid) {\n            console.log(row.join(''));\n        }\n        \n        rl.close();\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:48:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid printGrid(const vector<vector<char>> &grid) {\n    for (const auto &row : grid) {\n        for (char cell : row) {\n            cout << cell;\n        }\n        cout << endl;\n    }\n}\n\nint main() {\n    int A, B;\n    cin >> A >> B;\n    \n    int h = 100, w = 100;\n    vector<vector<char>> grid(h, vector<char>(w));\n    \n    // Initialize the grid with two blocks for creating connection components\n    for (int i = 0; i < h/2; ++i) {\n        for (int j = 0; j < w; ++j) {\n            grid[i][j] = '#';  // Black area\n        }\n    }\n    \n    for (int i = h/2; i < h; ++i) {\n        for (int j = 0; j < w; ++j) {\n            grid[i][j] = '.';  // White area\n        }\n    }\n    \n    int blackComponents = 1;\n    \n    for (int i = 0; i < h / 2 && blackComponents < B; i += 2) {\n        for (int j = 0; j < w && blackComponents < B; j += 2) {\n            grid[i][j] = '.';\n            blackComponents++;\n            if(blackComponents == B) break;\n        }\n    }\n    \n    int whiteComponents = 1;\n    \n    for (int i = h / 2; i < h && whiteComponents < A; i += 2) {\n        for (int j = 0; j < w && whiteComponents < A; j += 2) {\n            grid[i][j] = '#';\n            whiteComponents++;\n            if(whiteComponents == A) break;\n        }\n    }\n    \n    printGrid(grid);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:40:54"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ndouble calculateExpectedValue(int n, int m, int a[], int p[]) {\n    double expected = 0.0;\n    for (int num = 1; num <= m; num++) {\n        double prob_not_divisible = 1.0;\n        for (int k = 0; k < n; k++) {\n            if (num % a[k] == 0) {\n                prob_not_divisible *= (100 - p[k]) / 100.0;\n            }\n        }\n        expected += (1.0 - prob_not_divisible);\n    }\n    return expected;\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    int a[n], p[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &p[i]);\n    }\n    double result = calculateExpectedValue(n, m, a, p);\n    printf(\"%.6f\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:34:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <iomanip>\n\nusing namespace std;\n\ndouble calculateExpected(const vector<int>& a, const vector<int>& p, int m) {\n    int n = a.size();\n    double expected = 0.0;\n\n    for (int num = 1; num <= m; ++num) {\n        double prob_not_covered = 1.0;\n        for (int i = 0; i < n; ++i) {\n            if (num % a[i] == 0) {\n                prob_not_covered *= (1.0 - p[i] / 100.0);\n            }\n        }\n        expected += (1.0 - prob_not_covered);\n    }\n\n    return expected;\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<int> a(n), p(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < n; ++i) {\n        cin >> p[i];\n    }\n\n    double result = calculateExpected(a, p, m);\n    cout << fixed << setprecision(10) << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:34:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ExpectedDivisibleNumbers {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int m = scanner.nextInt();\n        int[] a = new int[n];\n        double[] p = new double[n];\n        \n        for (int i = 0; i < n; i++) {\n            a[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < n; i++) {\n            p[i] = scanner.nextInt() / 100.0;\n        }\n        \n        double result = 0.0;\n        for (int num = 1; num <= m; num++) {\n            double probNotDivisible = 1.0;\n            for (int i = 0; i < n; i++) {\n                if (num % a[i] == 0) {\n                    probNotDivisible *= (1 - p[i]);\n                }\n            }\n            result += (1 - probNotDivisible);\n        }\n        \n        System.out.printf(\"%.2f\\n\", result);\n    }\n}",
+    "timestamp": "2025-08-05 21:35:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static double expectedDivisibleCount(int n, int[] a, int[] p, int m) {\n        double result = 0.0;\n        \n        for (int mask = 0; mask < (1 << n); mask++) {\n            double probability = 1.0;\n            int lcm = 1;\n            int selectedCount = 0;\n            \n            for (int i = 0; i < n; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    probability *= p[i] / 100.0;\n                    selectedCount++;\n                    lcm = lcm(lcm, a[i]);\n                } else {\n                    probability *= (1 - p[i] / 100.0);\n                }\n            }\n            \n            if (selectedCount > 0) {\n                result += probability * (m / lcm);\n            }\n        }\n        \n        return result;\n    }\n    \n    private static int gcd(int a, int b) {\n        while (b != 0) {\n            int temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n    \n    private static int lcm(int a, int b) {\n        return a / gcd(a, b) * b;\n    }\n}",
+    "timestamp": "2025-08-05 21:35:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\nlong long countDivisibles(int m, int num) {\n    return m / num;\n}\n\nlong long calculateInclusion(int m, int *nums, int n, double *probs) {\n    long long result = 0.0;\n    \n    for (int mask = 1; mask < (1 << n); mask++) {\n        int divisor = 1;\n        double prob = 1.0;\n        int bits = 0;\n        \n        for (int j = 0; j < n; j++) {\n            if (mask & (1 << j)) {\n                divisor = (divisor * nums[j]) / __gcd(divisor, nums[j]);\n                prob *= probs[j] / 100.0;\n                bits++;\n            }\n        }\n        \n        long long count = countDivisibles(m, divisor);\n        \n        if (bits % 2 == 1) {\n            result += prob * count;\n        } else {\n            result -= prob * count;\n        }\n    }\n    \n    return round(result);\n}\n\nint __gcd(int a, int b) {\n    while (b != 0) {\n        int temp = b;\n        b = a % b;\n        a = temp;\n    }\n    return a;\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    \n    int nums[n];\n    double probs[n];\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &nums[i]);\n    }\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%lf\", &probs[i]);\n    }\n    \n    long long result = calculateInclusion(m, nums, n, probs);\n    printf(\"%lld\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:35:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    \n    vector<int> a(n), p(n);\n    for (int i = 0; i < n; i++) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < n; i++) {\n        cin >> p[i];\n    }\n    \n    vector<double> prob(n);\n    for (int i = 0; i < n; i++) {\n        prob[i] = p[i] / 100.0;\n    }\n    \n    double expected = 0;\n    for (int mask = 1; mask < (1 << n); mask++) {\n        int lcm = 1;\n        double p_mask = 1.0;\n        int sign = 1;\n        \n        for (int i = 0; i < n; i++) {\n            if (mask & (1 << i)) {\n                lcm = lcm / __gcd(lcm, a[i]) * a[i];\n                p_mask *= prob[i];\n                sign *= -1;\n            }\n        }\n        \n        expected += sign * p_mask * (m / lcm);\n    }\n    \n    printf(\"%.10f\\n\", expected);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:35:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import accumulate\nimport random\nfrom math import gcd\nfrom functools import reduce\n\ndef expected_selected_multiples(n, a, p, m):\n    p = [pk / 100 for pk in p]\n    \n    def lcm(a, b):\n        return abs(a * b) // gcd(a, b)\n    \n    def expected_value(probabilities, elements, m):\n        expected = 0\n        for i in range(1, 1 << len(elements)):\n            subset_prob = 1\n            subset_lcm = 1\n            \n            for j in range(len(elements)):\n                if i & (1 << j):\n                    subset_prob *= probabilities[j]\n                    subset_lcm = lcm(subset_lcm, elements[j])\n                else:\n                    subset_prob *= (1 - probabilities[j])\n            \n            subset_count = m // subset_lcm\n\n            if bin(i).count('1') % 2 == 1:\n                expected += subset_prob * subset_count\n            else:\n                expected -= subset_prob * subset_count\n        \n        return expected\n    \n    return expected_value(p, a, m)\n\n# Example usage:\nn = 3\na = [2, 3, 5]\np = [50, 50, 50]\nm = 10\nprint(expected_selected_multiples(n, a, p, m))",
+    "timestamp": "2025-08-13 07:06:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Random;\n\npublic class ExpectedValueCalculator {\n    public static double calculateExpectedValue(int n, int[] a, int[] p, int m) {\n        double expectedValue = 0;\n        for (int i = 1; i <= m; i++) {\n            double probNotDivisible = 1.0;\n            for (int j = 0; j < n; j++) {\n                if (i % a[j] == 0) {\n                    probNotDivisible *= (100 - p[j]) / 100.0;\n                }\n            }\n            expectedValue += (1 - probNotDivisible);\n        }\n        return expectedValue;\n    }\n\n    public static void main(String[] args) {\n        int n = 3;\n        int[] a = {2, 3, 5};\n        int[] p = {50, 60, 70};\n        int m = 20;\n        double result = calculateExpectedValue(n, a, p, m);\n        System.out.println(\"Expected Value: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 07:06:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\ndouble calculateExpectation(int n, int a[], int p[], int m) {\n    double expectation = 0.0;\n    int maskLimit = 1 << n;\n    \n    for (int mask = 1; mask < maskLimit; ++mask) {\n        double probability = 1.0;\n        for (int i = 0; i < n; ++i) {\n            if (mask & (1 << i)) {\n                probability *= p[i] / 100.0;\n            } else {\n                probability *= (1 - p[i] / 100.0);\n            }\n        }\n\n        int gcd = a[0];\n        for (int i = 1; i < n; ++i) {\n            if (mask & (1 << i)) {\n                gcd = (gcd * a[i]) / __gcd(gcd, a[i]);\n                if (gcd > m) break;\n            }\n        }\n\n        int count = 0;\n        if (gcd <= m) {\n            count = m / gcd;\n        }\n\n        expectation += count * probability;\n    }\n\n    return expectation;\n}\n\nint main() {\n    int n = 3;\n    int a[] = {2, 3, 5};\n    int p[] = {50, 50, 50};\n    int m = 10;\n    \n    double result = calculateExpectation(n, a, p, m);\n    printf(\"%.6lf\\n\", result);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 07:06:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(n, a, p, m):\n    prob = [pi / 100 for pi in p]\n    dp = [0] * (m + 1)\n    dp[0] = 1\n\n    for i in range(1, m + 1):\n        for j in range(n):\n            if i % a[j] == 0:\n                dp[i] += (1 - dp[i]) * prob[j]\n\n    return sum(1 - (1 - dp[i]) for i in range(1, m + 1))",
+    "timestamp": "2025-08-13 07:06:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    n, m = map(int, sys.stdin.readline().split())\n    a = list(map(int, sys.stdin.readline().split()))\n    p = list(map(int, sys.stdin.readline().split()))\n    \n    # Preprocess probabilities (convert from percentage to 0-1)\n    prob = [x / 100.0 for x in p]\n    \n    total = 0.0\n    \n    for num in range(1, m + 1):\n        # Compute the probability that num is divisible by at least one selected a_k\n        prob_not_covered = 1.0\n        for k in range(n):\n            if num % a[k] == 0:\n                prob_not_covered *= (1.0 - prob[k])\n        prob_covered = 1.0 - prob_not_covered\n        total += prob_covered\n    \n    print(\"{0:.1f}\".format(total))\n\nsolve()",
+    "timestamp": "2025-08-13 07:06:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\nusing namespace std;\n\ndouble probabilityToSelect(int n, const vector<int>& p) {\n    double prob = 1.0;\n    for (int i = 0; i < n; ++i) {\n        prob *= (100 - p[i]) / 100.0;\n    }\n    return 1.0 - prob;\n}\n\ndouble expectedDivisibleCount(int m, const vector<int>& selected) {\n    double expectation = 0.0;\n    for (int i : selected) {\n        expectation += (m / i);\n    }\n    return expectation;\n}\n\nint main() {\n    int n, m;\n    cin >> n >> m;\n    vector<int> a(n), p(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> a[i];\n    }\n    for (int i = 0; i < n; ++i) {\n        cin >> p[i];\n    }\n    \n    double totalExpectation = 0.0;\n    int limit = 1 << n; // Total combinations of selections\n    \n    for (int mask = 1; mask < limit; ++mask) {\n        vector<int> selected;\n        double selectionProbability = 1.0;\n        for (int i = 0; i < n; ++i) {\n            if (mask & (1 << i)) {\n                selected.push_back(a[i]);\n                selectionProbability *= p[i] / 100.0;\n            } else {\n                selectionProbability *= (100 - p[i]) / 100.0;\n            }\n        }\n        \n        if (!selected.empty()) {\n            double divExpectation = expectedDivisibleCount(m, selected);\n            totalExpectation += divExpectation * selectionProbability;\n        }\n    }\n    \n    cout << fixed << totalExpectation << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:35:57"
+  }
+]

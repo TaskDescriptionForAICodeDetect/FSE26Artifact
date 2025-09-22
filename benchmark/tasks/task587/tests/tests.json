@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "0 0 2 0\n2\n-1 1\n-1 -1\n",
+      "output": "COUNTER_CLOCKWISE\nCLOCKWISE\n"
+    },
+    {
+      "input": "0 0 2 0\n3\n-1 0\n0 0\n3 0\n",
+      "output": "ONLINE_BACK\nON_SEGMENT\nONLINE_FRONT\n"
+    }
+  ]
+}

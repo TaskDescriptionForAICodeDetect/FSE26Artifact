@@ -1,0 +1,1 @@
+A sequence a_1, a_2, ..., a_n is said to be alternating if for each i = 1, 2, ..., n-2, a_i = a_{i+2} and exactly two different numbers appear in the sequence. You are given a sequence v_1, v_2, ..., v_n of even length. Your task is to determine the minimum number of elements that need to be replaced to make this sequence alternating.

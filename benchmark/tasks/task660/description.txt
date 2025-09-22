@@ -1,0 +1,1 @@
+Given a string S consisting of 0 and 1, find the number of strings, modulo 998244353, that can result from applying the following operation on S zero or more times: Remove the two characters at the beginning of S, erase one of them, and reinsert the other somewhere in S. This operation can only be applied when S has two or more characters.

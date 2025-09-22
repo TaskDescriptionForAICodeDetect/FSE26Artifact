@@ -1,0 +1,1 @@
+You have a grid with H rows and W columns, initially painted white. After N cells are painted black, your task is to determine how many 3×3 subrectangles in the grid contain exactly j black cells for each integer j from 0 to 9.

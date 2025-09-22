@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\nint min(int a, int b) {\n    return a < b ? a : b;\n}\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint computeMinYears(char* s) {\n    int n = strlen(s);\n    if (n == 0) return 0;\n    \n    int dp[n];\n    for (int i = 0; i < n; i++) {\n        dp[i] = INT_MAX;\n    }\n    \n    for (int i = 0; i < n; i++) {\n        int min_val = INT_MAX, max_val = INT_MIN;\n        for (int j = i; j >= 0; j--) {\n            int num = s[j] - '0';\n            min_val = min(min_val, num);\n            max_val = max(max_val, num);\n            int diff = max_val - min_val;\n            if (j == 0) {\n                dp[i] = min(dp[i], diff);\n            } else {\n                dp[i] = min(dp[i], dp[j - 1] + diff);\n            }\n        }\n    }\n    \n    return dp[n - 1];\n}\n\nint main() {\n    char s[1000];\n    scanf(\"%s\", s);\n    printf(\"%d\\n\", computeMinYears(s));\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:45:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Solution {\n    public static int minimumYearsToWish(String numericString) {\n        int n = numericString.length();\n        int minYears = Integer.MAX_VALUE;\n\n        // Try all possible segment lengths\n        for (int segmentLength = 1; segmentLength <= n; segmentLength++) {\n            if (n % segmentLength == 0) {\n                int maxDiff = calculateMaxDifference(numericString, segmentLength);\n                minYears = Math.min(minYears, maxDiff);\n            }\n        }\n\n        return minYears;\n    }\n\n    private static int calculateMaxDifference(String numericString, int segmentLength) {\n        int maxDifference = 0;\n        int numSegments = numericString.length() / segmentLength;\n\n        for (int i = 0; i < numSegments; i++) {\n            int start = i * segmentLength;\n            int end = start + segmentLength;\n            \n            int segmentMin = Integer.MAX_VALUE;\n            int segmentMax = Integer.MIN_VALUE;\n\n            for (int j = start; j < end; j++) {\n                int digit = numericString.charAt(j) - '0';\n                segmentMin = Math.min(segmentMin, digit);\n                segmentMax = Math.max(segmentMax, digit);\n            }\n\n            maxDifference = Math.max(maxDifference, segmentMax - segmentMin);\n        }\n\n        return maxDifference;\n    }\n\n    public static void main(String[] args) {\n        String input = \"52274\";\n        System.out.println(minimumYearsToWish(input)); // Example usage\n    }\n}",
+    "timestamp": "2025-08-05 18:45:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    string s;\n    cin >> s;\n    int n = s.size();\n    if (n == 0) {\n        cout << 0 << endl;\n        return 0;\n    }\n\n    vector<vector<int>> dp(n, vector<int>(n, 0));\n    for (int i = 0; i < n; ++i) {\n        for (int j = i; j < n; ++j) {\n            if (i == j) {\n                dp[i][j] = s[i] - '0';\n            } else {\n                dp[i][j] = max(dp[i][j-1], s[j] - '0');\n            }\n        }\n    }\n\n    vector<vector<int>> dp_min(n, vector<int>(n, 0));\n    for (int i = 0; i < n; ++i) {\n        for (int j = i; j < n; ++j) {\n            if (i == j) {\n                dp_min[i][j] = s[i] - '0';\n            } else {\n                dp_min[i][j] = min(dp_min[i][j-1], s[j] - '0');\n            }\n        }\n    }\n\n    vector<vector<int>> diff(n, vector<int>(n, 0));\n    for (int i = 0; i < n; ++i) {\n        for (int j = i; j < n; ++j) {\n            diff[i][j] = dp[i][j] - dp_min[i][j];\n        }\n    }\n\n    vector<int> f(n, INT_MAX);\n    for (int i = 0; i < n; ++i) {\n        f[i] = diff[0][i];\n        for (int j = 0; j < i; ++j) {\n            f[i] = min(f[i], max(f[j], diff[j+1][i]));\n        }\n    }\n\n    cout << f[n-1] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\nint minYearsToFulfillWish(char* numStr) {\n    int len = strlen(numStr);\n    int minDiff = INT_MAX;\n\n    for (int splitPoint = 1; splitPoint < len; splitPoint++) {\n        for (int segmentSize = 1; segmentSize <= len / splitPoint; segmentSize++) {\n            int segments = splitPoint;\n            int currMax = INT_MIN;\n            int currMin = INT_MAX;\n            int valid = 1;\n\n            for (int i = 0; i < segments; i++) {\n                int start = i * segmentSize;\n                int end = start + segmentSize;\n                \n                if (end > len) {\n                    valid = 0;\n                    break;\n                }\n\n                char segmentStr[20] = {0};\n                strncpy(segmentStr, numStr + start, segmentSize);\n                int segmentVal = atoi(segmentStr);\n\n                currMax = (segmentVal > currMax) ? segmentVal : currMax;\n                currMin = (segmentVal < currMin) ? segmentVal : currMin;\n            }\n\n            if (valid) {\n                int currDiff = currMax - currMin;\n                minDiff = (currDiff < minDiff) ? currDiff : minDiff;\n            }\n        }\n    }\n\n    return minDiff;\n}\n\nint main() {\n    char numStr[100];\n    scanf(\"%s\", numStr);\n    printf(\"%d\\n\", minYearsToFulfillWish(numStr));\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:46:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint minimumYearsToFulfillWish(string s) {\n    int n = s.length();\n    int result = INT_MAX;\n\n    for (int mask = 0; mask < (1 << (n - 1)); mask++) {\n        vector<int> segments;\n        int start = 0;\n\n        for (int i = 0; i < n - 1; i++) {\n            if (mask & (1 << i)) {\n                segments.push_back(stoi(s.substr(start, i - start + 1)));\n                start = i + 1;\n            }\n        }\n        segments.push_back(stoi(s.substr(start)));\n\n        int maxVal = *max_element(segments.begin(), segments.end());\n        int minVal = *min_element(segments.begin(), segments.end());\n        result = min(result, maxVal - minVal);\n    }\n\n    return result;\n}\n\nint main() {\n    string input;\n    cin >> input;\n    cout << minimumYearsToFulfillWish(input) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:47:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\n\npublic class Solution {\n    public int minYears(String s) {\n        int n = s.length();\n        int[][] dp = new int[n][n];\n        \n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                dp[i][j] = Integer.MAX_VALUE;\n            }\n        }\n        \n        for (int i = 0; i < n; i++) {\n            dp[i][i] = 0;\n        }\n        \n        for (int len = 2; len <= n; len++) {\n            for (int i = 0; i <= n - len; i++) {\n                int j = i + len - 1;\n                int minVal = Integer.MAX_VALUE;\n                int maxVal = Integer.MIN_VALUE;\n                for (int k = i; k <= j; k++) {\n                    int num = s.charAt(k) - '0';\n                    minVal = Math.min(minVal, num);\n                    maxVal = Math.max(maxVal, num);\n                }\n                dp[i][j] = maxVal - minVal;\n                \n                for (int k = i; k < j; k++) {\n                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k + 1][j]);\n                }\n            }\n        }\n        \n        return dp[0][n - 1];\n    }\n}",
+    "timestamp": "2025-08-05 18:47:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_years_before_wish_fulfilled(s):\n    def is_possible(max_diff):\n        min_segment, max_segment = int(s[:1]), int(s[:1])\n        previous_number = int(s[:1])\n        for i in range(1, len(s)):\n            number = int(s[i])\n            if number < min_segment:\n                min_segment = number\n            if number > max_segment:\n                max_segment = number\n            if max_segment - min_segment > max_diff:\n                previous_number = number\n                min_segment = number\n                max_segment = number\n        return True\n\n    low, high = 0, 9\n    answer = high\n    while low <= high:\n        mid = (low + high) // 2\n        if is_possible(mid):\n            answer = mid\n            high = mid - 1\n        else:\n            low = mid + 1\n    return answer\n\ns = \"314159265358979\"\nresult = min_years_before_wish_fulfilled(s)\nprint(result)",
+    "timestamp": "2025-08-13 00:48:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\n\npublic class WishFulfillment {\n    public static void main(String[] args) {\n        String digits = \"572314805\";\n        int result = minimumYears(digits);\n        System.out.println(result);\n    }\n\n    public static int minimumYears(String digits) {\n        int n = digits.length();\n        int[] prefixMin = new int[n];\n        int[] prefixMax = new int[n];\n        int[] suffixMin = new int[n];\n        int[] suffixMax = new int[n];\n\n        // Initialize the prefix and suffix arrays\n        prefixMin[0] = prefixMax[0] = digits.charAt(0) - '0';\n        suffixMin[n - 1] = suffixMax[n - 1] = digits.charAt(n - 1) - '0';\n\n        // Fill prefix arrays\n        for (int i = 1; i < n; i++) {\n            int currentDigit = digits.charAt(i) - '0';\n            prefixMin[i] = Math.min(prefixMin[i - 1], currentDigit);\n            prefixMax[i] = Math.max(prefixMax[i - 1], currentDigit);\n        }\n\n        // Fill suffix arrays\n        for (int i = n - 2; i >= 0; i--) {\n            int currentDigit = digits.charAt(i) - '0';\n            suffixMin[i] = Math.min(suffixMin[i + 1], currentDigit);\n            suffixMax[i] = Math.max(suffixMax[i + 1], currentDigit);\n        }\n\n        // Calculate minimum difference\n        int minDifference = Integer.MAX_VALUE;\n        for (int i = 0; i < n - 1; i++) {\n            int maxFirstPart = prefixMax[i];\n            int minFirstPart = prefixMin[i];\n            int maxSecondPart = suffixMax[i + 1];\n            int minSecondPart = suffixMin[i + 1];\n            int currentDifference = Math.max(maxFirstPart, maxSecondPart) - Math.min(minFirstPart, minSecondPart);\n            minDifference = Math.min(minDifference, currentDifference);\n        }\n\n        return minDifference;\n    }\n}",
+    "timestamp": "2025-08-13 00:48:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <limits.h>\n\nint calculateDifference(char *str, int start, int end) {\n    int min = INT_MAX, max = INT_MIN, num;\n    for (int i = start; i <= end; i++) {\n        num = str[i] - '0'; // Convert char to integer\n        if (num < min) min = num;\n        if (num > max) max = num;\n    }\n    return max - min;\n}\n\nint minFulfillmentYears(char *str) {\n    int n = strlen(str);\n    int minDifference = INT_MAX;\n\n    for (int i = 0; i < n; i++) {\n        for (int j = i; j < n; j++) {\n            int diff = calculateDifference(str, i, j);\n            if (diff < minDifference) {\n                minDifference = diff;\n            }\n        }\n    }\n\n    return minDifference;\n}\n\nint main() {\n    char str[] = \"123456789\";\n    int years = minFulfillmentYears(str);\n    printf(\"Minimum number of years: %d\\n\", years);\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:49:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_years_to_wish(s):\n    n = len(s)\n    if n == 0:\n        return 0\n    \n    min_diff = float('inf')\n    \n    for i in range(1, n + 1):\n        for j in range(i, n + 1):\n            # Try all possible first segment lengths\n            first_seg = s[:i]\n            second_seg = s[i:j]\n            last_seg = s[j:]\n            \n            if not first_seg or not second_seg or not last_seg:\n                continue\n            \n            first_val = int(first_seg)\n            second_val = int(second_seg)\n            last_val = int(last_seg)\n            \n            curr_diff = max(first_val, second_val, last_val) - min(first_val, second_val, last_val)\n            min_diff = min(min_diff, curr_diff)\n    \n    return min_diff",
+    "timestamp": "2025-08-13 00:49:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_years_to_fulfill_wish(s):\n    n = len(s)\n    if n == 0:\n        return 0\n    \n    min_diff = float('inf')\n    \n    for i in range(1, n):\n        left = s[:i]\n        right = s[i:]\n        \n        max_left = max(left)\n        min_left = min(left)\n        diff_left = int(max_left) - int(min_left)\n        \n        max_right = max(right)\n        min_right = min(right)\n        diff_right = int(max_right) - int(min_right)\n        \n        current_max_diff = max(diff_left, diff_right)\n        \n        if current_max_diff < min_diff:\n            min_diff = current_max_diff\n    \n    if n == 1:\n        return 0\n    \n    return min_diff\n\ns = input().strip()\nprint(min_years_to_fulfill_wish(s))",
+    "timestamp": "2025-08-13 00:49:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nint computeMinYears(const std::string& nums) {\n    int n = nums.size();\n    std::vector<int> numbers;\n    for (char c : nums) {\n        numbers.push_back(c - '0');\n    }\n\n    std::sort(numbers.begin(), numbers.end());\n    int minDiff = INT_MAX;\n\n    for (int i = 1; i < n; ++i) {\n        minDiff = std::min(minDiff, numbers[i] - numbers[i - 1]);\n    }\n\n    return minDiff;\n}\n\nint main() {\n    std::string nums;\n    std::cout << \"Enter numeric string: \";\n    std::cin >> nums;\n    int minYears = computeMinYears(nums);\n    std::cout << \"Minimum number of years: \" << minYears << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:56:11"
+  }
+]

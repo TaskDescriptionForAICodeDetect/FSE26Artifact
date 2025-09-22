@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MAX_N 100005\n\nint parent[MAX_N];\nint rank[MAX_N];\n\nvoid init(int n) {\n    for (int i = 1; i <= n; i++) {\n        parent[i] = i;\n        rank[i] = 0;\n    }\n}\n\nint find(int x) {\n    if (parent[x] != x) {\n        parent[x] = find(parent[x]);\n    }\n    return parent[x];\n}\n\nvoid unionSet(int x, int y) {\n    int px = find(x);\n    int py = find(y);\n    \n    if (px == py) return;\n    \n    if (rank[px] < rank[py]) {\n        parent[px] = py;\n    } else if (rank[px] > rank[py]) {\n        parent[py] = px;\n    } else {\n        parent[py] = px;\n        rank[px]++;\n    }\n}\n\nint main() {\n    int n, q;\n    scanf(\"%d %d\", &n, &q);\n    \n    init(n);\n    \n    while (q--) {\n        int type, u, v;\n        scanf(\"%d %d %d\", &type, &u, &v);\n        \n        if (type == 0) {\n            unionSet(u, v);\n        } else {\n            printf(\"%d\\n\", find(u) == find(v));\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int *parent;\n    int *rank;\n} DSU;\n\nDSU* createDSU(int n) {\n    DSU* dsu = (DSU*)malloc(sizeof(DSU));\n    dsu->parent = (int*)malloc((n + 1) * sizeof(int));\n    dsu->rank = (int*)malloc((n + 1) * sizeof(int));\n    for (int i = 0; i <= n; i++) {\n        dsu->parent[i] = i;\n        dsu->rank[i] = 0;\n    }\n    return dsu;\n}\n\nint find(DSU* dsu, int u) {\n    if (dsu->parent[u] != u) {\n        dsu->parent[u] = find(dsu, dsu->parent[u]);\n    }\n    return dsu->parent[u];\n}\n\nvoid unionSets(DSU* dsu, int u, int v) {\n    int rootU = find(dsu, u);\n    int rootV = find(dsu, v);\n    if (rootU != rootV) {\n        if (dsu->rank[rootU] > dsu->rank[rootV]) {\n            dsu->parent[rootV] = rootU;\n        } else if (dsu->rank[rootU] < dsu->rank[rootV]) {\n            dsu->parent[rootU] = rootV;\n        } else {\n            dsu->parent[rootV] = rootU;\n            dsu->rank[rootU]++;\n        }\n    }\n}\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    DSU* dsu = createDSU(N);\n    while (Q--) {\n        int type, u, v;\n        scanf(\"%d %d %d\", &type, &u, &v);\n        if (type == 0) {\n            unionSets(dsu, u, v);\n        } else {\n            if (find(dsu, u) == find(dsu, v)) {\n                printf(\"1\\n\");\n            } else {\n                printf(\"0\\n\");\n            }\n        }\n    }\n    free(dsu->parent);\n    free(dsu->rank);\n    free(dsu);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvector<int> parent;\n\nint find(int u) {\n    if (parent[u] != u) {\n        parent[u] = find(parent[u]);\n    }\n    return parent[u];\n}\n\nvoid unite(int u, int v) {\n    int rootU = find(u);\n    int rootV = find(v);\n    if (rootU != rootV) {\n        parent[rootV] = rootU;\n    }\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, Q;\n    cin >> N >> Q;\n    parent.resize(N);\n    for (int i = 0; i < N; ++i) {\n        parent[i] = i;\n    }\n\n    while (Q--) {\n        int type, u, v;\n        cin >> type >> u >> v;\n        if (type == 0) {\n            unite(u, v);\n        } else {\n            if (find(u) == find(v)) {\n                cout << \"1\\n\";\n            } else {\n                cout << \"0\\n\";\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:25:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass DisjointSet {\n    private int[] parent;\n    private int[] rank;\n\n    public DisjointSet(int size) {\n        parent = new int[size];\n        rank = new int[size];\n        for (int i = 0; i < size; i++) {\n            parent[i] = i;\n        }\n    }\n\n    public int find(int u) {\n        if (parent[u] != u) {\n            parent[u] = find(parent[u]);\n        }\n        return parent[u];\n    }\n\n    public void union(int u, int v) {\n        int rootU = find(u);\n        int rootV = find(v);\n        if (rootU == rootV) return;\n\n        if (rank[rootU] > rank[rootV]) {\n            parent[rootV] = rootU;\n        } else if (rank[rootU] < rank[rootV]) {\n            parent[rootU] = rootV;\n        } else {\n            parent[rootV] = rootU;\n            rank[rootU]++;\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        DisjointSet ds = new DisjointSet(N);\n\n        for (int i = 0; i < Q; i++) {\n            int type = scanner.nextInt();\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n\n            if (type == 0) {\n                ds.union(u, v);\n            } else {\n                if (ds.find(u) == ds.find(v)) {\n                    System.out.println(1);\n                } else {\n                    System.out.println(0);\n                }\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:25:25"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\nimport java.util.*;\n\npublic class Solution {\n    static class UnionFind {\n        int[] parent;\n        int[] rank;\n        \n        public UnionFind(int n) {\n            parent = new int[n + 1];\n            rank = new int[n + 1];\n            for (int i = 1; i <= n; i++) {\n                parent[i] = i;\n            }\n        }\n        \n        int find(int x) {\n            if (parent[x] != x) {\n                parent[x] = find(parent[x]);\n            }\n            return parent[x];\n        }\n        \n        void union(int x, int y) {\n            int rootX = find(x);\n            int rootY = find(y);\n            \n            if (rootX == rootY) return;\n            \n            if (rank[rootX] < rank[rootY]) {\n                parent[rootX] = rootY;\n            } else if (rank[rootX] > rank[rootY]) {\n                parent[rootY] = rootX;\n            } else {\n                parent[rootY] = rootX;\n                rank[rootX]++;\n            }\n        }\n    }\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        PrintWriter pw = new PrintWriter(System.out);\n        \n        StringTokenizer st = new StringTokenizer(br.readLine());\n        int N = Integer.parseInt(st.nextToken());\n        int Q = Integer.parseInt(st.nextToken());\n        \n        UnionFind uf = new UnionFind(N);\n        \n        for (int i = 0; i < Q; i++) {\n            st = new StringTokenizer(br.readLine());\n            int type = Integer.parseInt(st.nextToken());\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n            \n            if (type == 0) {\n                uf.union(u, v);\n            } else {\n                pw.println(uf.find(u) == uf.find(v) ? 1 : 0);\n            }\n        }\n        \n        pw.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:25:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass UnionFind {\nprivate:\n    vector<int> parent, rank;\n\npublic:\n    UnionFind(int n) {\n        parent.resize(n);\n        rank.resize(n, 0);\n        for (int i = 0; i < n; i++) {\n            parent[i] = i;\n        }\n    }\n\n    int find(int x) {\n        if (parent[x] != x) {\n            parent[x] = find(parent[x]);\n        }\n        return parent[x];\n    }\n\n    void unionSet(int x, int y) {\n        int px = find(x);\n        int py = find(y);\n\n        if (px == py) return;\n\n        if (rank[px] < rank[py]) {\n            parent[px] = py;\n        } else if (rank[px] > rank[py]) {\n            parent[py] = px;\n        } else {\n            parent[py] = px;\n            rank[px]++;\n        }\n    }\n};\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    int N, Q;\n    cin >> N >> Q;\n\n    UnionFind uf(N);\n\n    while (Q--) {\n        int type, u, v;\n        cin >> type >> u >> v;\n        u--; v--;\n\n        if (type == 0) {\n            uf.unionSet(u, v);\n        } else {\n            cout << (uf.find(u) == uf.find(v) ? 1 : 0) << \"\\n\";\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:25:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class UnionFind:\n    def __init__(self, size):\n        self.parent = list(range(size))\n        self.rank = [1] * size\n\n    def find(self, p):\n        if self.parent[p] != p:\n            self.parent[p] = self.find(self.parent[p])\n        return self.parent[p]\n\n    def union(self, p, q):\n        rootP = self.find(p)\n        rootQ = self.find(q)\n\n        if rootP != rootQ:\n            if self.rank[rootP] > self.rank[rootQ]:\n                self.parent[rootQ] = rootP\n            elif self.rank[rootP] < self.rank[rootQ]:\n                self.parent[rootP] = rootQ\n            else:\n                self.parent[rootQ] = rootP\n                self.rank[rootP] += 1\n\n    def connected(self, p, q):\n        return self.find(p) == self.find(q)\n\ndef processQueries(N, queries):\n    uf = UnionFind(N)\n    results = []\n    \n    for query in queries:\n        qtype, u, v = query\n        if qtype == 0:\n            uf.union(u, v)\n        elif qtype == 1:\n            result = 1 if uf.connected(u, v) else 0\n            results.append(result)\n    \n    return results",
+    "timestamp": "2025-08-13 10:31:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class GraphConnectedComponents {\n    private int[] parent;\n    private int[] rank;\n\n    public GraphConnectedComponents(int n) {\n        parent = new int[n];\n        rank = new int[n];\n        for (int i = 0; i < n; i++) {\n            parent[i] = i;\n            rank[i] = 0;\n        }\n    }\n\n    private int find(int u) {\n        if (parent[u] != u) {\n            parent[u] = find(parent[u]);\n        }\n        return parent[u];\n    }\n\n    private void union(int u, int v) {\n        int rootU = find(u);\n        int rootV = find(v);\n        if (rootU != rootV) {\n            if (rank[rootU] < rank[rootV]) {\n                parent[rootU] = rootV;\n            } else if (rank[rootU] > rank[rootV]) {\n                parent[rootV] = rootU;\n            } else {\n                parent[rootV] = rootU;\n                rank[rootU]++;\n            }\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        GraphConnectedComponents graph = new GraphConnectedComponents(N);\n\n        for (int i = 0; i < Q; i++) {\n            int queryType = scanner.nextInt();\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n            if (queryType == 0) {\n                graph.union(u, v);\n            } else if (queryType == 1) {\n                if (graph.find(u) == graph.find(v)) {\n                    System.out.println(1);\n                } else {\n                    System.out.println(0);\n                }\n            }\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 10:31:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAXN 100000\n\nint parent[MAXN];\nint size[MAXN];\n\nvoid init(int n) {\n    for (int i = 0; i < n; i++) {\n        parent[i] = i;\n        size[i] = 1;\n    }\n}\n\nint find(int u) {\n    if (u != parent[u])\n        parent[u] = find(parent[u]);\n    return parent[u];\n}\n\nvoid union_sets(int u, int v) {\n    u = find(u);\n    v = find(v);\n    if (u != v) {\n        if (size[u] < size[v]) {\n            int temp = u;\n            u = v;\n            v = temp;\n        }\n        parent[v] = u;\n        size[u] += size[v];\n    }\n}\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    init(N);\n\n    for (int i = 0; i < Q; i++) {\n        int type, u, v;\n        scanf(\"%d %d %d\", &type, &u, &v);\n        if (type == 0) {\n            union_sets(u, v);\n        } else if (type == 1) {\n            if (find(u) == find(v)) {\n                printf(\"1\\n\");\n            } else {\n                printf(\"0\\n\");\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:31:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class UnionFind:\n    def __init__(self, n):\n        self.parent = list(range(n))\n        self.rank = [0] * n\n\n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self.parent[x])\n        return self.parent[x]\n\n    def union(self, x, y):\n        px, py = self.find(x), self.find(y)\n        if px == py:\n            return False\n        if self.rank[px] < self.rank[py]:\n            px, py = py, px\n        self.parent[py] = px\n        if self.rank[px] == self.rank[py]:\n            self.rank[px] += 1\n        return True\n\ndef solve():\n    n, q = map(int, input().split())\n    uf = UnionFind(n)\n    \n    for _ in range(q):\n        query = list(map(int, input().split()))\n        \n        if query[0] == 0:\n            uf.union(query[1]-1, query[2]-1)\n        else:\n            print(1 if uf.find(query[1]-1) == uf.find(query[2]-1) else 0)\n\nsolve()",
+    "timestamp": "2025-08-13 10:31:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom sys import stdin\n\ndef main():\n    sys.setrecursionlimit(1 << 25)\n    N, Q = map(int, stdin.readline().split())\n    parent = [i for i in range(N)]\n    rank = [1]*N\n\n    def find(u):\n        while parent[u] != u:\n            parent[u] = parent[parent[u]]\n            u = parent[u]\n        return u\n\n    def union(u, v):\n        u_root = find(u)\n        v_root = find(v)\n        if u_root == v_root:\n            return\n        if rank[u_root] > rank[v_root]:\n            parent[v_root] = u_root\n            rank[u_root] += rank[v_root]\n        else:\n            parent[u_root] = v_root\n            rank[v_root] += rank[u_root]\n\n    for _ in range(Q):\n        query = stdin.readline().split()\n        if query[0] == '0':\n            u, v = int(query[1]), int(query[2])\n            union(u, v)\n        else:\n            u, v = int(query[1]), int(query[2])\n            if find(u) == find(v):\n                print(1)\n            else:\n                print(0)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 10:31:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nclass UnionFind {\nprivate:\n    vector<int> parent, rank;\n    \npublic:\n    UnionFind(int size) {\n        parent.resize(size);\n        rank.resize(size, 0);\n        for (int i = 0; i < size; i++) {\n            parent[i] = i;\n        }\n    }\n\n    int find(int u) {\n        if (parent[u] != u) {\n            parent[u] = find(parent[u]);\n        }\n        return parent[u];\n    }\n\n    void unionSet(int u, int v) {\n        int rootU = find(u);\n        int rootV = find(v);\n        if (rootU != rootV) {\n            if (rank[rootU] > rank[rootV]) {\n                parent[rootV] = rootU;\n            } else if (rank[rootU] < rank[rootV]) {\n                parent[rootU] = rootV;\n            } else {\n                parent[rootV] = rootU;\n                rank[rootU]++;\n            }\n        }\n    }\n};\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n    UnionFind uf(N);\n    \n    for (int i = 0; i < Q; i++) {\n        int type, u, v;\n        cin >> type >> u >> v;\n        if (type == 0) {\n            uf.unionSet(u, v);\n        } else if (type == 1) {\n            if (uf.find(u) == uf.find(v)) {\n                cout << 1 << endl;\n            } else {\n                cout << 0 << endl;\n            }\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:59:28"
+  }
+]

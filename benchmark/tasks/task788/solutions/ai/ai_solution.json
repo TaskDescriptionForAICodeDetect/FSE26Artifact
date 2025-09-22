@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_LAMPS 1000\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int lampX[MAX_LAMPS], lampY[MAX_LAMPS];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &lampX[i], &lampY[i]);\n    }\n\n    for (int x = -1000; x <= 1000; x++) {\n        bool possible = true;\n        bool lampStatus[MAX_LAMPS] = {false};\n\n        for (int i = 0; i < N; i++) {\n            int toggleX = lampX[i];\n            int toggleY = lampY[i];\n\n            int dx = toggleX - x;\n            int dy = toggleY;\n\n            if (dx % 2 == 0 && dy % 2 == 0) {\n                lampStatus[i] = true;\n            } else if (dx % 2 == 1 && dy % 2 == 1) {\n                lampStatus[i] = true;\n            } else {\n                possible = false;\n                break;\n            }\n        }\n\n        if (possible) {\n            int onCount = 0;\n            for (int i = 0; i < N; i++) {\n                if (lampStatus[i]) onCount++;\n            }\n            \n            if (onCount == N) {\n                printf(\"%d\\n\", x);\n                return 0;\n            }\n        }\n    }\n\n    printf(\"-1\\n\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:54:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int x, y;\n    int X = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &x, &y);\n        if (y == 0) {\n            X ^= x;\n        }\n    }\n    \n    printf(\"%d\\n\", X);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<pair<int, int>> lamps(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> lamps[i].first >> lamps[i].second;\n    }\n\n    map<pair<int, int>, int> count;\n    for (auto &p : lamps) {\n        int x = p.first;\n        int y = p.second;\n        count[{x, y}] ^= 1;\n        count[{x, y+1}] ^= 1;\n        count[{x+1, y}] ^= 1;\n    }\n\n    vector<pair<int, int>> active;\n    for (auto &entry : count) {\n        if (entry.second) {\n            active.push_back(entry.first);\n        }\n    }\n\n    sort(active.begin(), active.end());\n\n    if (active.size() != 1 || active[0].second != 0) {\n        cout << -1 << endl;\n    } else {\n        cout << active[0].first << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:55:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LampGrid {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[][] lamps = new int[N][2];\n        \n        for (int i = 0; i < N; i++) {\n            lamps[i][0] = scanner.nextInt();\n            lamps[i][1] = scanner.nextInt();\n        }\n        \n        // The key observation is that the X can be derived from the parity of x and y coordinates\n        // For any lamp (x, y), the initial X must satisfy X ≡ x + y mod 2\n        // So we can compute X mod 2 from the first lamp and verify with others\n        int X_mod_2 = (lamps[0][0] + lamps[0][1]) % 2;\n        if (X_mod_2 < 0) X_mod_2 += 2;\n        \n        for (int i = 1; i < N; i++) {\n            int current_mod = (lamps[i][0] + lamps[i][1]) % 2;\n            if (current_mod < 0) current_mod += 2;\n            if (current_mod != X_mod_2) {\n                System.out.println(\"No solution\");\n                return;\n            }\n        }\n        \n        // The minimal X is the minimal x - y among all lamps (since X = x - y is a solution)\n        int min_X = Integer.MAX_VALUE;\n        int max_X = Integer.MIN_VALUE;\n        \n        for (int[] lamp : lamps) {\n            int x = lamp[0];\n            int y = lamp[1];\n            int current_X = x - y;\n            if (current_X < min_X) {\n                min_X = current_X;\n            }\n            if (current_X > max_X) {\n                max_X = current_X;\n            }\n        }\n        \n        // All possible X are in the range [min_X, max_X] with step 2\n        // We need to find X that is congruent to X_mod_2 mod 2\n        // The solution is the minimal X in the range that satisfies X ≡ X_mod_2 mod 2\n        int X = min_X;\n        if (X % 2 != X_mod_2) {\n            X++;\n        }\n        \n        System.out.println(X);\n    }\n}",
+    "timestamp": "2025-08-05 22:55:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LampToggling {\n    public static int findInitialLamp(int N, int[] onLampX, int[] onLampY) {\n        Set<Long> toggledSet = new HashSet<>();\n        \n        for (int i = 0; i < N; i++) {\n            long key = ((long) onLampX[i] << 32) | (onLampY[i] & 0xFFFFFFFFL);\n            toggledSet.add(key);\n        }\n        \n        for (int x = -1000000; x <= 1000000; x++) {\n            boolean valid = true;\n            \n            for (int i = 0; i < N; i++) {\n                if (!isToggled(toggledSet, x, onLampX[i], onLampY[i])) {\n                    valid = false;\n                    break;\n                }\n            }\n            \n            if (valid) {\n                return x;\n            }\n        }\n        \n        return -1;\n    }\n    \n    private static boolean isToggled(Set<Long> toggledSet, int x, int lampX, int lampY) {\n        int[] dx = {0, 0, 1};\n        int[] dy = {0, 1, 0};\n        \n        for (int k = 0; k < 3; k++) {\n            int nx = lampX + dx[k] - x;\n            int ny = lampY + dy[k];\n            \n            long key = ((long) nx << 32) | (ny & 0xFFFFFFFFL);\n            if (toggledSet.contains(key)) {\n                return false;\n            }\n        }\n        \n        return true;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] onLampX = new int[N];\n        int[] onLampY = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            onLampX[i] = scanner.nextInt();\n            onLampY[i] = scanner.nextInt();\n        }\n        \n        int result = findInitialLamp(N, onLampX, onLampY);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:55:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n#include <algorithm>\n\nusing namespace std;\n\nint findInitialLampPosition(vector<pair<int, int>>& onLamps) {\n    unordered_set<int> xCoords;\n    \n    for (auto& lamp : onLamps) {\n        xCoords.insert(lamp.first);\n    }\n    \n    vector<int> uniqueX(xCoords.begin(), xCoords.end());\n    sort(uniqueX.begin(), uniqueX.end());\n    \n    for (int x : uniqueX) {\n        unordered_set<pair<int, int>, pair_hash> toggledLamps;\n        bool possible = true;\n        \n        for (auto& lamp : onLamps) {\n            int lx = lamp.first, ly = lamp.second;\n            \n            if (toggledLamps.count({lx, ly}) == 0) {\n                toggledLamps.insert({lx, ly});\n                toggledLamps.insert({lx, ly + 1});\n                toggledLamps.insert({lx + 1, ly});\n            }\n        }\n        \n        if (toggledLamps.size() == onLamps.size()) {\n            return x;\n        }\n    }\n    \n    return -1;\n}\n\nstruct pair_hash {\n    template <class T1, class T2>\n    size_t operator () (const pair<T1, T2>& p) const {\n        auto h1 = hash<T1>{}(p.first);\n        auto h2 = hash<T2>{}(p.second);\n        return h1 ^ h2;\n    }\n};\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<pair<int, int>> onLamps(N);\n    for (int i = 0; i < N; i++) {\n        cin >> onLamps[i].first >> onLamps[i].second;\n    }\n    \n    int result = findInitialLampPosition(onLamps);\n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_initial_lamp_position(n, lamps):\n    sum_n = sum(y for x, y in lamps)\n    X = sum(x for x, y in lamps) - sum_n * (sum_n - 1) // 2\n    return X\n\n# Sample usage:\nN = 3\nlamps = [(3, 1), (4, 2), (5, 3)]\nprint(find_initial_lamp_position(N, lamps))",
+    "timestamp": "2025-08-13 12:58:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Set;\n\npublic class LampGrid {\n    \n    public static int findInitialX(int n, int[][] lamps) {\n        Set<String> onLamps = new HashSet<>();\n        for (int[] lamp : lamps) {\n            onLamps.add(lamp[0] + \",\" + lamp[1]);\n        }\n\n        int xorSum = 0;\n        for (int[] lamp : lamps) {\n            int x = lamp[0];\n            int y = lamp[1];\n\n            if (onLamps.contains(x + \",\" + y)) {\n                xorSum ^= y;\n                xorSum ^= (y + 1);\n            }\n\n            if (onLamps.contains((x - 1) + \",\" + y)) {\n                xorSum ^= y;\n            }\n        }\n\n        return xorSum;\n    }\n\n    public static void main(String[] args) {\n        int n = 3;\n        int[][] lamps = {{2, 0}, {1, 0}, {3, 0}};\n        System.out.println(findInitialX(n, lamps)); // Output: 2\n    }\n}",
+    "timestamp": "2025-08-13 12:58:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int result = 0;\n    for (int i = 0; i < N; ++i) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        result ^= y; // Calculate the XOR of all y-coordinates\n    }\n\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:58:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nint findInitialX(const std::vector<std::pair<int, int>>& lamps) {\n    std::unordered_map<int, int> parity;\n\n    for (const auto& lamp : lamps) {\n        int x = lamp.first;\n        int y = lamp.second;\n        parity[x] += 1;\n        parity[x] %= 2;\n        parity[x + 1] += 1;\n        parity[x + 1] %= 2;\n        parity[x - y] += 1;\n        parity[x - y] %= 2;\n    }\n\n    for (const auto& entry : parity) {\n        if (entry.second == 1) {\n            return entry.first;\n        }\n    }\n    \n    return -1;  // Should not be reached if the input is valid\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<std::pair<int, int>> lamps(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> lamps[i].first >> lamps[i].second;\n    }\n\n    int initialX = findInitialX(lamps);\n    std::cout << initialX << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:59:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_x(coordinates):\n    # Create a set of on lamps\n    on_lamps = set(coordinates)\n    \n    # If 0,0 is not initially on, toggle it\n    if (0, 0) not in on_lamps:\n        on_lamps.add((0, 0))\n    else:\n        on_lamps.remove((0, 0))\n    \n    # Simulate toggles to reconstruct initial state\n    for x, y in coordinates:\n        if (x, y) not in on_lamps:\n            # Toggle (x, y)\n            on_lamps.add((x, y))\n        else:\n            on_lamps.remove((x, y))\n        \n        if (x, y+1) not in on_lamps:\n            # Toggle (x, y+1)\n            on_lamps.add((x, y+1))\n        else:\n            on_lamps.remove((x, y+1))\n        \n        if (x+1, y) not in on_lamps:\n            # Toggle (x+1, y)\n            on_lamps.add((x+1, y))\n        else:\n            on_lamps.remove((x+1, y))\n    \n    # X is the x-coordinate of the only lamp on in the first row\n    for lamp in on_lamps:\n        if lamp[1] == 0:\n            return lamp[0]\n    \n    return 0",
+    "timestamp": "2025-08-13 12:59:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_initial_x(N, lamps):\n    x_set = set()\n    for (x, y) in lamps:\n        x_set.add(x - y)\n    if len(x_set) == 1:\n        return x_set.pop()\n    else:\n        # The problem states that a solution exists, so this case shouldn't happen\n        return None\n\n# Read input\nN = int(input())\nlamps = []\nfor _ in range(N):\n    x, y = map(int, input().split())\n    lamps.append((x, y))\n\n# Compute and print the result\nprint(find_initial_x(N, lamps))",
+    "timestamp": "2025-08-13 12:59:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findInitialLampX(lamps) {\n    let xorSum = 0;\n    for (const [x, y] of lamps) {\n        xorSum ^= y;\n    }\n    return xorSum;\n}\n\n// Example usage:\n// Lamps that are on after operations are at coordinates: [(2, 0), (3, 1)]\nconsole.log(findInitialLampX([[2, 0], [3, 1]]));  // Output: 1",
+    "timestamp": "2025-08-13 12:59:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findInitialLampPosition(coordinates) {\n    const lamps = new Set(coordinates.map(([x, y]) => `${x},${y}`));\n    \n    for (let x = -10000; x <= 10000; x++) {\n        let currentLamps = new Set([`${x},0`]);\n        \n        for (const [lampX, lampY] of coordinates) {\n            if (lamps.has(`${lampX},${lampY}`)) {\n                toggle(currentLamps, lampX, lampY);\n            }\n        }\n        \n        if (currentLamps.size === lamps.size) {\n            return x;\n        }\n    }\n    \n    return -1;\n}\n\nfunction toggle(currentLamps, x, y) {\n    const points = [\n        `${x},${y}`,\n        `${x},${y+1}`,\n        `${x+1},${y}`\n    ];\n    \n    for (const point of points) {\n        if (currentLamps.has(point)) {\n            currentLamps.delete(point);\n        } else {\n            currentLamps.add(point);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 12:59:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findX(N, lamps) {\n    const lampSet = new Set(lamps.map(lamp => `${lamp[0]},${lamp[1]}`));\n    const operations = new Set();\n    \n    for (const [x, y] of lamps) {\n        if (!operations.has(`${x},${y}`)) {\n            operations.add(`${x},${y}`);\n            toggle(x, y, lampSet);\n        }\n    }\n    \n    for (const [x, y] of lamps) {\n        if (lampSet.has(`${x},${y}`)) {\n            return x - y;\n        }\n    }\n    \n    return 0;\n}\n\nfunction toggle(x, y, lampSet) {\n    const coords = [`${x},${y}`, `${x},${y+1}`, `${x+1},${y}`];\n    for (const coord of coords) {\n        if (lampSet.has(coord)) {\n            lampSet.delete(coord);\n        } else {\n            lampSet.add(coord);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 13:00:06"
+  }
+]

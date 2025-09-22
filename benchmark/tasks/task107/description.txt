@@ -1,0 +1,1 @@
+Create a program to convert between the Maya Long Count Calendar and the Gregorian calendar. The Gregorian date will be provided in the format y.m.d and the Maya Long Count date in the format b.ka.t.w.ki. The program should work within defined limits for both calendars and handle multiple datasets until a '#' character is encountered.

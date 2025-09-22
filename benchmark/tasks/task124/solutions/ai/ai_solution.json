@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    int flips[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &flips[i]);\n    }\n    \n    int total_flips = 0;\n    \n    for (int i = 0; i < n; i++) {\n        if (flips[i] > 0) {\n            int current_flips = flips[i];\n            total_flips += current_flips;\n            \n            flips[i] -= current_flips;\n            if (i + 1 < n) {\n                flips[i + 1] -= current_flips;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", total_flips);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:42:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PancakeFlips {\n    public static int minFlips(int[] requiredFlips) {\n        int n = requiredFlips.length;\n        int totalFlips = 0;\n        \n        for (int i = 0; i < n; i++) {\n            int currentFlips = 0;\n            \n            for (int j = i; j < n; j++) {\n                if (currentFlips < requiredFlips[j]) {\n                    int remainingFlips = requiredFlips[j] - currentFlips;\n                    totalFlips += remainingFlips;\n                    currentFlips += remainingFlips;\n                }\n            }\n        }\n        \n        return totalFlips;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        System.out.print(\"Enter number of pancakes: \");\n        int n = scanner.nextInt();\n        \n        int[] requiredFlips = new int[n];\n        \n        System.out.println(\"Enter required flips for each pancake:\");\n        for (int i = 0; i < n; i++) {\n            requiredFlips[i] = scanner.nextInt();\n        }\n        \n        int result = minFlips(requiredFlips);\n        System.out.println(\"Minimum total flips: \" + result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:42:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> flips(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> flips[i];\n    }\n    \n    int total_flips = 0;\n    for (int i = 0; i < n; ++i) {\n        if (flips[i] > 0) {\n            int current_flips = flips[i];\n            total_flips += current_flips;\n            flips[i] -= current_flips;\n            if (i + 1 < n) {\n                flips[i + 1] -= current_flips;\n            }\n        }\n    }\n    \n    cout << total_flips << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\n#define MAX_PANCAKES 100\n\nint minFlips(int pancakes[], int n) {\n    int totalFlips = 0;\n    int flipped[MAX_PANCAKES] = {0};\n\n    for (int i = 0; i < n; i++) {\n        int remainingFlips = pancakes[i];\n        int currentIndex = i;\n\n        while (remainingFlips > 0) {\n            if (flipped[currentIndex] == 0) {\n                // Flip current pancake\n                flipped[currentIndex] = 1;\n                totalFlips++;\n                remainingFlips--;\n            }\n\n            // Find next pancake to potentially flip with current one\n            int nextIndex = (currentIndex + 1 < n) ? currentIndex + 1 : currentIndex - 1;\n\n            if (nextIndex >= 0 && nextIndex < n && flipped[nextIndex] == 0) {\n                // Can flip two pancakes together\n                flipped[nextIndex] = 1;\n                totalFlips++;\n                currentIndex = nextIndex;\n            } else {\n                break;\n            }\n        }\n    }\n\n    return totalFlips;\n}\n\nint main() {\n    int n;\n    int pancakes[MAX_PANCAKES];\n\n    scanf(\"%d\", &n);\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d\", &pancakes[i]);\n    }\n\n    printf(\"%d\\n\", minFlips(pancakes, n));\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint minFlips(int n, vector<int>& requiredFlips) {\n    vector<int> currentFlips(n, 0);\n    int totalFlips = 0;\n\n    while (*max_element(currentFlips.begin(), currentFlips.end()) < *max_element(requiredFlips.begin(), requiredFlips.end())) {\n        int minFlipsNeeded = INT_MAX;\n        int bestStartIndex = -1;\n\n        for (int i = 0; i <= n - 2; i++) {\n            int flipsIfFlipped = max(currentFlips[i], currentFlips[i + 1]) + 1;\n            if (flipsIfFlipped < minFlipsNeeded) {\n                minFlipsNeeded = flipsIfFlipped;\n                bestStartIndex = i;\n            }\n        }\n\n        if (currentFlips[bestStartIndex] < requiredFlips[bestStartIndex] || \n            currentFlips[bestStartIndex + 1] < requiredFlips[bestStartIndex + 1]) {\n            currentFlips[bestStartIndex]++;\n            currentFlips[bestStartIndex + 1]++;\n            totalFlips++;\n        }\n    }\n\n    return totalFlips;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> requiredFlips(n);\n    \n    for (int i = 0; i < n; i++) {\n        cin >> requiredFlips[i];\n    }\n\n    cout << minFlips(n, requiredFlips) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:43:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class PancakeFlips {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] requiredFlips = new int[n];\n        for (int i = 0; i < n; i++) {\n            requiredFlips[i] = scanner.nextInt();\n        }\n        \n        int totalFlips = 0;\n        for (int i = 0; i < n; i++) {\n            if (requiredFlips[i] > 0) {\n                int flips = requiredFlips[i];\n                totalFlips += flips;\n                requiredFlips[i] = 0;\n                if (i + 1 < n) {\n                    requiredFlips[i + 1] -= flips;\n                }\n            }\n        }\n        System.out.println(totalFlips);\n    }\n}",
+    "timestamp": "2025-08-05 18:43:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_flips_to_cook_pancakes(n, required_flips):\n    total_flips = 0\n    \n    for flips in required_flips:\n        total_flips += flips\n    \n    return total_flips\n\n# Example usage\nn = 5\nrequired_flips = [3, 6, 2, 7, 1]\nprint(min_flips_to_cook_pancakes(n, required_flips))",
+    "timestamp": "2025-08-13 00:41:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class PancakeFlipping {\n\n    public static int minTotalFlipsRequired(int[] requiredFlips) {\n        int totalFlips = 0;\n\n        for (int flips : requiredFlips) {\n            totalFlips += flips;\n        }\n        \n        return totalFlips;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int n = scanner.nextInt();\n        int[] requiredFlips = new int[n];\n\n        for (int i = 0; i < n; i++) {\n            requiredFlips[i] = scanner.nextInt();\n        }\n        \n        int result = minTotalFlipsRequired(requiredFlips);\n        System.out.println(result);\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 00:41:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint min_flips(int* flips, int n) {\n    int total_flips = 0;\n    for (int i = 0; i < n; ++i) {\n        total_flips += flips[i];\n        if (i < n - 1) {\n            int min_pair_flips = flips[i] < flips[i + 1] ? flips[i] : flips[i + 1];\n            total_flips -= min_pair_flips;\n        }\n    }\n    return total_flips;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int *flips = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &flips[i]);\n    }\n    \n    int result = min_flips(flips, n);\n    printf(\"%d\\n\", result);\n    \n    free(flips);\n    return 0;\n}",
+    "timestamp": "2025-08-13 00:41:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_pancake_flips(pancakes):\n    n = len(pancakes)\n    dp = [[float('inf')] * (max(pancakes) + 1) for _ in range(n)]\n    \n    for i in range(n):\n        dp[i][0] = 0\n    \n    for i in range(n):\n        for j in range(1, max(pancakes) + 1):\n            if j > pancakes[i]:\n                continue\n            \n            # Single pancake flip\n            dp[i][j] = min(dp[i][j], dp[i][j-1] + 1)\n            \n            # Two adjacent pancakes flip\n            if i + 1 < n:\n                dp[i][j] = min(dp[i][j], dp[i+1][j-1] + 1)\n    \n    return min(dp[n-1])\n\ndef solve():\n    n = int(input())\n    pancakes = list(map(int, input().split()))\n    print(min_pancake_flips(pancakes))\n\nsolve()",
+    "timestamp": "2025-08-13 00:41:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_flips(pancakes):\n    n = len(pancakes)\n    flips = 0\n    while True:\n        # Find the first pancake that still needs flips\n        i = 0\n        while i < n and pancakes[i] == 0:\n            i += 1\n        if i >= n:\n            break\n        # Flip two adjacent pancakes starting at i\n        pancakes[i] -= 1\n        if i + 1 < n:\n            pancakes[i + 1] -= 1\n        flips += 1\n    return flips\n\n# Read input\nn = int(input())\npancakes = list(map(int, input().split()))\nprint(min_flips(pancakes))",
+    "timestamp": "2025-08-13 00:42:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\n// Function to find the minimum total flips needed\nint minFlips(vector<int>& flips) {\n    int totalFlips = 0;\n    for (int flip : flips) {\n        totalFlips += flip;\n    }\n    return totalFlips / 2 + totalFlips % 2;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> pancakeFlips(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> pancakeFlips[i];\n    }\n\n    int result = minFlips(pancakeFlips);\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:55:23"
+  }
+]

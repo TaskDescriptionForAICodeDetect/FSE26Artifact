@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "4\ncba\ncab\nb\na\n0",
+      "output": "yes"
+    },
+    {
+      "input": "3\nbca\nab\na\n0",
+      "output": "no"
+    },
+    {
+      "input": "5\nabc\nacb\nb\nc\nc\n0",
+      "output": "yes"
+    },
+    {
+      "input": "5\nabc\nacb\nc\nb\nb\n0",
+      "output": "no"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+Implement a program that outputs the zigzag traversal of an NxN matrix, where N is a given integer. The traversal starts at the top-left corner of the matrix and ends at the bottom-right corner, filling each cell with the order in which it was visited. Each output matrix should be right-justified within a width of 3 and prefixed with a header indicating the test case number.

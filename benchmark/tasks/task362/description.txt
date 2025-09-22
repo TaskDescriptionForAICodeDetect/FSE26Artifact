@@ -1,0 +1,18 @@
+Problem I: The Door to Summer
+
+Natsume loves cats a lot. Natsume has never had a cat at home and always played with stray cats. This time, Natsume has decided to adopt a cat at home. Natsume welcomed the cat home and named it Lennon, starting to love it.
+
+Natsume's house consists of many rooms and connects them through many doors, which are of two types:
+
+1. Normal doors for humans: Natsume can open them, but Lennon cannot. Both Natsume and Lennon can pass through. Once opened, the door can remain open.
+2. Small doors for cats: Lennon can open and pass freely, but since they are small, Natsume cannot pass through.
+
+Lennon loves summer. So, when the winter comes and the outside of the house is covered with white snow, he gets very moody. However, he believes that one of the doors in the house leads to "Summer". Natsume calls this door the "Door to Summer". Therefore, when it gets cold and he becomes grumpy, Lennon always wants to go through that door.
+
+One winter day, Lennon decided to go through the Door to Summer again. However, it is not guaranteed that Lennon can open the door on his own and go through it. In this case, Natsume has to help Lennon. This means that Natsume has to open some doors that can only be opened by her, allowing Lennon to go through the Door to Summer.
+
+Initially, all doors in the house are closed. We are given the connections of the rooms in the house and the starting positions of Natsume and Lennon. Calculate the minimum number of doors that Natsume must open for Lennon to reach the other side of the Door to Summer when both follow the optimal strategy.
+
+Input: The first line contains the number of rooms n and the number of doors m, separated by a space. Each room is assigned a number from 0 to n, where 0 represents the area beyond the Door to Summer. The second line gives the initial room numbers of Natsume and Lennon, separated by a space. Both room numbers are at least 1 and neither starts beyond the Door to Summer. The next m lines provide information about each door in the format: two room IDs and a one-character letter representing the door type, separated by spaces. A door connects the specified two rooms, with 'N' for normal doors and 'L' for small doors. There is always exactly one door connecting to the room with ID 0, which is the Door to Summer. Constraints: 1 <= n, m <= 100000.
+
+Output: Output the minimum number of doors Natsume must open in a single line.

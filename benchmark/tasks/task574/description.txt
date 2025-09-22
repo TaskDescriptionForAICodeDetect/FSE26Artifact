@@ -1,0 +1,1 @@
+Implement the Shell Sort algorithm as described above. Your function should read an integer n and a sequence A of n integers, then output the number of gap values m, the gap values G_i, the count of operations cnt, and the sorted sequence A in ascending order. The gaps should satisfy the constraints given, and cnt should not exceed \lceil n^{1.5}\rceil.

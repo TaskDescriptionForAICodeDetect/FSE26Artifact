@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, K, count = 0;\n    int replies[1001] = {0};\n    int displayed[1001] = {0};\n\n    scanf(\"%d %d\", &N, &K);\n\n    for (int i = 1; i <= N; i++) {\n        int A;\n        scanf(\"%d\", &A);\n        replies[i] = A;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        if (replies[i] == 0) {\n            displayed[i] = 1;\n            count++;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) {\n        if (replies[i] > 0 && replies[replies[i]] == 0) {\n            displayed[i] = 1;\n            count++;\n        }\n    }\n\n    for (int k = 1; k <= K; k++) {\n        for (int i = 1; i <= N; i++) {\n            if (replies[i] > 0 && displayed[replies[i]] == 1 && displayed[i] == 0) {\n                displayed[i] = 1;\n                count++;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:00:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    int *A = (int *)malloc((N + 1) * sizeof(int));\n    int *has_reply = (int *)calloc((N + 1), sizeof(int));\n    int *depth = (int *)calloc((N + 1), sizeof(int));\n\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &A[i]);\n        if (A[i] != 0) {\n            has_reply[A[i]] = 1;\n        }\n    }\n\n    for (int i = 1; i <= N; i++) {\n        if (A[i] == 0) {\n            depth[i] = 0;\n        } else {\n            depth[i] = depth[A[i]] + 1;\n        }\n    }\n\n    int count = 0;\n    for (int i = 1; i <= N; i++) {\n        if (!has_reply[i] || depth[i] <= K) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    free(A);\n    free(has_reply);\n    free(depth);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> A(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> A[i];\n    }\n\n    unordered_set<int> displayed;\n    vector<vector<int>> replies(N + 1);\n\n    for (int i = 1; i <= N; ++i) {\n        if (A[i] != 0) {\n            replies[A[i]].push_back(i);\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        if (A[i] == 0 || replies[i].empty()) {\n            displayed.insert(i);\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        if (A[i] != 0 && displayed.count(A[i])) {\n            int current = A[i];\n            int steps = 1;\n            bool valid = true;\n            while (current != 0 && steps <= K) {\n                if (!displayed.count(current)) {\n                    valid = false;\n                    break;\n                }\n                current = A[current];\n                steps++;\n            }\n            if (valid && steps <= K) {\n                displayed.insert(i);\n            }\n        }\n    }\n\n    cout << displayed.size() << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[] A = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        List<List<Integer>> children = new ArrayList<>();\n        for (int i = 0; i <= N; i++) {\n            children.add(new ArrayList<>());\n        }\n        for (int i = 1; i <= N; i++) {\n            if (A[i] != 0) {\n                children.get(A[i]).add(i);\n            }\n        }\n\n        int[] depth = new int[N + 1];\n        Queue<Integer> queue = new LinkedList<>();\n        for (int i = 1; i <= N; i++) {\n            if (A[i] == 0) {\n                queue.add(i);\n                depth[i] = 0;\n            }\n        }\n\n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            for (int child : children.get(current)) {\n                depth[child] = depth[current] + 1;\n                queue.add(child);\n            }\n        }\n\n        int count = 0;\n        for (int i = 1; i <= N; i++) {\n            if (children.get(i).isEmpty() || depth[i] < K) {\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:01:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class IkatterTweetDisplay {\n    public static int countDisplayedTweets(int N, int K, int[] A) {\n        Set<Integer> displayTweets = new HashSet<>();\n        boolean[] hasReplies = new boolean[N + 1];\n\n        // Mark tweets that have received replies\n        for (int i = 0; i < N; i++) {\n            if (A[i] > 0) {\n                hasReplies[A[i]] = true;\n            }\n        }\n\n        // Find tweets that should be displayed\n        for (int i = 0; i < N; i++) {\n            // Tweets with no replies\n            if (!hasReplies[i + 1]) {\n                displayTweets.add(i + 1);\n            }\n            \n            // Tweets without reply parent\n            if (A[i] == 0) {\n                displayTweets.add(i + 1);\n            }\n            \n            // Trace back within K replies\n            if (A[i] > 0) {\n                int current = i + 1;\n                int depth = 0;\n                while (A[current - 1] > 0 && depth < K) {\n                    current = A[current - 1];\n                    depth++;\n                    \n                    if (!hasReplies[current]) {\n                        displayTweets.add(current);\n                        break;\n                    }\n                }\n            }\n        }\n\n        return displayTweets.size();\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int N = 5;\n        int K = 2;\n        int[] A = {0, 1, 2, 0, 4};\n        System.out.println(countDisplayedTweets(N, K, A));\n    }\n}",
+    "timestamp": "2025-08-05 22:02:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<int> A(N + 1);\n    vector<int> replies_count(N + 1, 0);\n    vector<bool> display(N + 1, false);\n    \n    for (int i = 1; i <= N; i++) {\n        cin >> A[i];\n        if (A[i] > 0) {\n            replies_count[A[i]]++;\n        }\n    }\n    \n    for (int i = 1; i <= N; i++) {\n        if (A[i] == 0 || replies_count[i] == 0) {\n            display[i] = true;\n            int current = i;\n            int depth = 0;\n            \n            while (A[current] > 0 && depth < K) {\n                current = A[current];\n                depth++;\n                if (replies_count[current] == 0) {\n                    display[current] = true;\n                }\n            }\n        }\n    }\n    \n    int displayed_tweets = 0;\n    for (int i = 1; i <= N; i++) {\n        if (display[i]) {\n            displayed_tweets++;\n        }\n    }\n    \n    cout << displayed_tweets << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_displayed_tweets(N, K, A):\n    displayed = set()\n    reply_chain_length = [0] * (N + 1)\n    \n    for i in range(1, N + 1):\n        if A[i] == 0:\n            displayed.add(i)\n        else:\n            reply_chain_length[i] = reply_chain_length[A[i]] + 1\n            if reply_chain_length[i] <= K or A[A[i]] == 0:\n                displayed.add(A[i])\n                \n    return len(displayed)\n\n# Example usage:\nN = 6\nK = 1\nA = [0, 0, 1, 2, 3, 0, 5] # Notice A[0] is unused and it's 1-indexed\nprint(count_displayed_tweets(N, K, A))",
+    "timestamp": "2025-08-13 08:33:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class IkatterTweets {\n    public static int countDisplayedTweets(int[] A, int K) {\n        int N = A.length;\n        boolean[] displayed = new boolean[N];\n        boolean[] hasReply = new boolean[N];\n        List<Integer>[] replyList = new ArrayList[N + 1];\n\n        for (int i = 0; i < N; i++) {\n            if (replyList[i] == null) {\n                replyList[i] = new ArrayList<>();\n            }\n            if (A[i] > 0) {\n                if (replyList[A[i]] == null) {\n                    replyList[A[i]] = new ArrayList<>();\n                }\n                replyList[A[i]].add(i);\n                hasReply[A[i] - 1] = true;\n            } else {\n                displayed[i] = true;\n            }\n        }\n\n        Queue<Integer> queue = new LinkedList<>();\n        // Find tweets not having received any replies\n        for (int i = 0; i < N; i++) {\n            if (!hasReply[i]) {\n                displayed[i] = true;\n                queue.offer(i);\n            }\n        }\n\n        // BFS to find all reachable tweets within K replies\n        while (!queue.isEmpty()) {\n            int current = queue.poll();\n            if (replyList[current + 1] != null) {\n                for (int replyIndex : replyList[current + 1]) {\n                    if (!displayed[replyIndex]) {\n                        displayed[replyIndex] = true;\n                        queue.offer(replyIndex);\n                    }\n\n                    int traceBack = K;\n                    int traceCurrent = replyIndex;\n                    while (traceBack > 0 && A[traceCurrent] > 0) {\n                        traceCurrent = A[traceCurrent] - 1;\n                        traceBack--;\n                        if (traceBack > 0 && A[traceCurrent] > 0 && !displayed[traceCurrent] && !hasReply[traceCurrent]) {\n                            displayed[traceCurrent] = true;\n                            queue.offer(traceCurrent);\n                        }\n                    }\n                }\n            }\n        }\n\n        // Count displayed tweets\n        int displayedCount = 0;\n        for (boolean isDisplayed : displayed) {\n            if (isDisplayed) {\n                displayedCount++;\n            }\n        }\n\n        return displayedCount;\n    }\n\n    public static void main(String[] args) {\n        int[] A = {0, 0, 1, 3, 4, 2};\n        int K = 2;\n        System.out.println(countDisplayedTweets(A, K)); // Output the number of displayed tweets\n    }\n}",
+    "timestamp": "2025-08-13 08:34:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int A[N+1];\n    int replyCount[N+1];\n    bool isDisplayed[N+1];\n    \n    // Initialize arrays\n    for (int i = 0; i <= N; i++) {\n        replyCount[i] = 0;\n        isDisplayed[i] = false;\n    }\n\n    // Read input and count replies\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &A[i]);\n        if (A[i] > 0) {\n            replyCount[A[i]]++;\n        }\n    }\n\n    // Check display conditions\n    for (int i = 1; i <= N; i++) {\n        if (A[i] == 0 || replyCount[i] == 0) {\n            isDisplayed[i] = true;\n        } else {\n            int currentTweet = i;\n            int count = 0;\n            while (currentTweet > 0 && count < K) {\n                if (replyCount[currentTweet] == 0) {\n                    isDisplayed[i] = true;\n                    break;\n                }\n                currentTweet = A[currentTweet];\n                count++;\n            }\n        }\n    }\n\n    // Count displayed tweets\n    int displayedCount = 0;\n    for (int i = 1; i <= N; i++) {\n        if (isDisplayed[i]) {\n            displayedCount++;\n        }\n    }\n    \n    printf(\"%d\\n\", displayedCount);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:34:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_displayed_tweets(N, K, A):\n    # Track replies and original tweets\n    replied_to = set()\n    original_tweets = set(range(1, N+1))\n    \n    # Mark tweets that have replies\n    for i in range(N):\n        if A[i] > 0:\n            replied_to.add(A[i])\n    \n    # Track tweets to be displayed\n    displayed = set()\n    \n    for i in range(N):\n        # Condition 1: Tweet does not reply to any other tweet\n        if A[i] == 0:\n            displayed.add(i+1)\n        \n        # Condition 2: Tweet has no replies\n        if i+1 not in replied_to:\n            displayed.add(i+1)\n        \n        # Condition 3: Trace back within K replies\n        if A[i] > 0:\n            current = i+1\n            depth = 0\n            while A[current-1] > 0 and depth < K:\n                current = A[current-1]\n                depth += 1\n                if current not in replied_to:\n                    displayed.add(current)\n    \n    return len(displayed)\n\n# Example usage\nN, K = map(int, input().split())\nA = list(map(int, input().split()))\nprint(count_displayed_tweets(N, K, A))",
+    "timestamp": "2025-08-13 08:34:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    K = int(data[1])\n    A = list(map(int, data[2:2+N]))\n    \n    # Build the reply tree\n    children = [[] for _ in range(N+1)]  # 1-based\n    for i in range(N):\n        parent = A[i]\n        children[parent].append(i+1)  # tweet IDs are 1-based\n    \n    # For each node, find the depth of the deepest child in its subtree\n    max_depth = [0] * (N + 1)\n    \n    # We perform a post-order traversal to compute max_depth\n    stack = [(1, False)]  # (node, visited)\n    \n    while stack:\n        node, visited = stack.pop()\n        if not visited:\n            stack.append((node, True))\n            # Push children in reverse order to process them in order\n            for child in reversed(children[node]):\n                stack.append((child, False))\n        else:\n            current_max = 0\n            for child in children[node]:\n                if max_depth[child] > current_max:\n                    current_max = max_depth[child]\n            max_depth[node] = current_max + 1\n    \n    # Now, count the tweets that are displayed\n    displayed = 0\n    \n    # We perform a BFS to count nodes where the path to root (original tweet) has <= K edges\n    from collections import deque\n    q = deque()\n    \n    # Start with root nodes (tweets that are not replies)\n    for i in range(1, N+1):\n        if A[i-1] == 0:\n            q.append((i, 0))  # (node, depth)\n    \n    while q:\n        node, depth = q.popleft()\n        if depth <= K:\n            displayed += 1\n        else:\n            continue\n        for child in children[node]:\n            q.append((child, depth + 1))\n    \n    print(displayed)\n\nsolve()",
+    "timestamp": "2025-08-13 08:34:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n#include <unordered_map>\n#include <queue>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<int> A(N + 1);\n    vector<int> reply_count(N + 1, 0);\n    unordered_map<int, vector<int>> graph;\n\n    for (int i = 1; i <= N; ++i) {\n        cin >> A[i];\n        if (A[i] > 0) {\n            graph[A[i]].push_back(i);\n            reply_count[A[i]]++;\n        }\n    }\n\n    unordered_set<int> displayed;\n\n    for (int i = 1; i <= N; ++i) {\n        if (A[i] == 0 || reply_count[i] == 0) {\n            queue<pair<int, int>> q;\n            q.push({i, 0});\n            unordered_set<int> visited;\n\n            while (!q.empty()) {\n                auto [curr, depth] = q.front();\n                q.pop();\n                if (visited.count(curr)) continue;\n                visited.insert(curr);\n\n                displayed.insert(curr);\n\n                if (depth < K) {\n                    for (int neighbor : graph[curr]) {\n                        q.push({neighbor, depth + 1});\n                    }\n                }\n            }\n        }\n    }\n\n    cout << displayed.size() << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:46:50"
+  }
+]

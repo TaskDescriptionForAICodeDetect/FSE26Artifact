@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdbool.h>\n#include <stdio.h>\n\nbool check_bingo(int A[3][3], bool marked[3][3]) {\n    // Check rows\n    for (int i = 0; i < 3; i++) {\n        if (marked[i][0] && marked[i][1] && marked[i][2])\n            return true;\n    }\n    \n    // Check columns\n    for (int j = 0; j < 3; j++) {\n        if (marked[0][j] && marked[1][j] && marked[2][j])\n            return true;\n    }\n    \n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2])\n        return true;\n    \n    if (marked[0][2] && marked[1][1] && marked[2][0])\n        return true;\n    \n    return false;\n}\n\nbool solve_bingo(int A[3][3], int N, int chosen_numbers[]) {\n    bool marked[3][3] = {false};\n    \n    for (int k = 0; k < N; k++) {\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (A[i][j] == chosen_numbers[k]) {\n                    marked[i][j] = true;\n                }\n            }\n        }\n    }\n    \n    return check_bingo(A, marked);\n}",
+    "timestamp": "2025-08-05 22:35:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int A[3][3];\n    int marked[3][3] = {0};\n    int N, b;\n    \n    for (int i = 0; i < 3; i++) {\n        for (int j = 0; j < 3; j++) {\n            scanf(\"%d\", &A[i][j]);\n        }\n    }\n    \n    scanf(\"%d\", &N);\n    \n    for (int k = 0; k < N; k++) {\n        scanf(\"%d\", &b);\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (A[i][j] == b) {\n                    marked[i][j] = 1;\n                }\n            }\n        }\n    }\n    \n    int bingo = 0;\n    \n    // Check rows\n    for (int i = 0; i < 3; i++) {\n        if (marked[i][0] && marked[i][1] && marked[i][2]) {\n            bingo = 1;\n        }\n    }\n    \n    // Check columns\n    for (int j = 0; j < 3; j++) {\n        if (marked[0][j] && marked[1][j] && marked[2][j]) {\n            bingo = 1;\n        }\n    }\n    \n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2]) {\n        bingo = 1;\n    }\n    if (marked[0][2] && marked[1][1] && marked[2][0]) {\n        bingo = 1;\n    }\n    \n    printf(\"%s\\n\", bingo ? \"Yes\" : \"No\");\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:35:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_set>\n\nusing namespace std;\n\nint main() {\n    vector<vector<int>> A(3, vector<int>(3));\n    for (int i = 0; i < 3; ++i) {\n        for (int j = 0; j < 3; ++j) {\n            cin >> A[i][j];\n        }\n    }\n\n    int N;\n    cin >> N;\n    unordered_set<int> b;\n    for (int i = 0; i < N; ++i) {\n        int num;\n        cin >> num;\n        b.insert(num);\n    }\n\n    vector<vector<bool>> marked(3, vector<bool>(3, false));\n    for (int i = 0; i < 3; ++i) {\n        for (int j = 0; j < 3; ++j) {\n            if (b.find(A[i][j]) != b.end()) {\n                marked[i][j] = true;\n            }\n        }\n    }\n\n    bool bingo = false;\n\n    // Check rows\n    for (int i = 0; i < 3; ++i) {\n        if (marked[i][0] && marked[i][1] && marked[i][2]) {\n            bingo = true;\n        }\n    }\n\n    // Check columns\n    for (int j = 0; j < 3; ++j) {\n        if (marked[0][j] && marked[1][j] && marked[2][j]) {\n            bingo = true;\n        }\n    }\n\n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2]) {\n        bingo = true;\n    }\n    if (marked[0][2] && marked[1][1] && marked[2][0]) {\n        bingo = true;\n    }\n\n    cout << (bingo ? \"Yes\" : \"No\") << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:36:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BingoChecker {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int[][] A = new int[3][3];\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                A[i][j] = scanner.nextInt();\n            }\n        }\n        \n        int N = scanner.nextInt();\n        Set<Integer> numbers = new HashSet<>();\n        for (int i = 0; i < N; i++) {\n            numbers.add(scanner.nextInt());\n        }\n        \n        boolean[][] marked = new boolean[3][3];\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (numbers.contains(A[i][j])) {\n                    marked[i][j] = true;\n                }\n            }\n        }\n        \n        boolean bingo = false;\n        \n        // Check rows\n        for (int i = 0; i < 3; i++) {\n            if (marked[i][0] && marked[i][1] && marked[i][2]) {\n                bingo = true;\n            }\n        }\n        \n        // Check columns\n        for (int j = 0; j < 3; j++) {\n            if (marked[0][j] && marked[1][j] && marked[2][j]) {\n                bingo = true;\n            }\n        }\n        \n        // Check diagonals\n        if (marked[0][0] && marked[1][1] && marked[2][2]) {\n            bingo = true;\n        }\n        if (marked[0][2] && marked[1][1] && marked[2][0]) {\n            bingo = true;\n        }\n        \n        System.out.println(bingo ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 22:37:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BingoSolution {\n    public static boolean checkBingo(int[][] sheet, int[] chosenNumbers) {\n        boolean[][] marked = new boolean[3][3];\n        \n        // Mark chosen numbers on the sheet\n        for (int num : chosenNumbers) {\n            for (int i = 0; i < 3; i++) {\n                for (int j = 0; j < 3; j++) {\n                    if (sheet[i][j] == num) {\n                        marked[i][j] = true;\n                    }\n                }\n            }\n        }\n        \n        // Check rows\n        for (int i = 0; i < 3; i++) {\n            if (marked[i][0] && marked[i][1] && marked[i][2]) {\n                return true;\n            }\n        }\n        \n        // Check columns\n        for (int j = 0; j < 3; j++) {\n            if (marked[0][j] && marked[1][j] && marked[2][j]) {\n                return true;\n            }\n        }\n        \n        // Check diagonals\n        if (marked[0][0] && marked[1][1] && marked[2][2]) {\n            return true;\n        }\n        \n        if (marked[0][2] && marked[1][1] && marked[2][0]) {\n            return true;\n        }\n        \n        return false;\n    }\n}",
+    "timestamp": "2025-08-05 22:37:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nbool checkBingo(vector<vector<int>>& sheet, vector<int>& chosenNumbers) {\n    vector<vector<bool>> marked(3, vector<bool>(3, false));\n    \n    // Mark chosen numbers on the sheet\n    for (int num : chosenNumbers) {\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (sheet[i][j] == num) {\n                    marked[i][j] = true;\n                }\n            }\n        }\n    }\n    \n    // Check rows\n    for (int i = 0; i < 3; i++) {\n        if (marked[i][0] && marked[i][1] && marked[i][2]) return true;\n    }\n    \n    // Check columns\n    for (int j = 0; j < 3; j++) {\n        if (marked[0][j] && marked[1][j] && marked[2][j]) return true;\n    }\n    \n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2]) return true;\n    if (marked[0][2] && marked[1][1] && marked[2][0]) return true;\n    \n    return false;\n}\n\nint main() {\n    vector<vector<int>> sheet(3, vector<int>(3));\n    int N;\n    \n    // Input bingo sheet\n    for (int i = 0; i < 3; i++) {\n        for (int j = 0; j < 3; j++) {\n            cin >> sheet[i][j];\n        }\n    }\n    \n    // Input number of chosen numbers\n    cin >> N;\n    \n    // Input chosen numbers\n    vector<int> chosenNumbers(N);\n    for (int i = 0; i < N; i++) {\n        cin >> chosenNumbers[i];\n    }\n    \n    // Check for bingo\n    cout << (checkBingo(sheet, chosenNumbers) ? \"Yes\" : \"No\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_bingo(A, B):\n    marks = [[False] * 3 for _ in range(3)]\n    \n    for b in B:\n        for i in range(3):\n            for j in range(3):\n                if A[i][j] == b:\n                    marks[i][j] = True\n\n    # Check rows\n    for i in range(3):\n        if all(marks[i]):\n            return True\n    \n    # Check columns\n    for j in range(3):\n        if all([marks[i][j] for i in range(3)]):\n            return True\n\n    # Check diagonals\n    if all([marks[i][i] for i in range(3)]) or all([marks[i][2 - i] for i in range(3)]):\n        return True\n    \n    return False\n\n# Example usage:\nA = [\n    [5, 10, 7],\n    [3, 22, 11],\n    [9, 8, 13]\n]\n\nB = [10, 22, 9, 11, 7]\nprint(is_bingo(A, B))  # Output: True or False depending on marked numbers",
+    "timestamp": "2025-08-13 11:42:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashSet;\nimport java.util.Set;\n\npublic class Bingo {\n\n    public static boolean isBingo(int[][] card, int[] numbers) {\n        Set<Integer> numbersSet = new HashSet<>();\n        for (int num : numbers) {\n            numbersSet.add(num);\n        }\n\n        // Check rows\n        for (int i = 0; i < 3; i++) {\n            if (numbersSet.contains(card[i][0]) && numbersSet.contains(card[i][1]) && numbersSet.contains(card[i][2])) {\n                return true;\n            }\n        }\n\n        // Check columns\n        for (int j = 0; j < 3; j++) {\n            if (numbersSet.contains(card[0][j]) && numbersSet.contains(card[1][j]) && numbersSet.contains(card[2][j])) {\n                return true;\n            }\n        }\n\n        // Check diagonals\n        if (numbersSet.contains(card[0][0]) && numbersSet.contains(card[1][1]) && numbersSet.contains(card[2][2])) {\n            return true;\n        }\n\n        if (numbersSet.contains(card[0][2]) && numbersSet.contains(card[1][1]) && numbersSet.contains(card[2][0])) {\n            return true;\n        }\n\n        return false;\n    }\n\n    public static void main(String[] args) {\n        int[][] bingoCard = {\n            {5, 10, 15},\n            {20, 25, 30},\n            {35, 40, 45}\n        };\n        int[] chosenNumbers = {5, 25, 40, 10, 30};\n\n        boolean result = isBingo(bingoCard, chosenNumbers);\n        System.out.println(\"Bingo: \" + result);\n    }\n}",
+    "timestamp": "2025-08-13 11:43:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool checkBingo(int grid[3][3], int marked[3][3]) {\n    // Check rows\n    for (int i = 0; i < 3; i++) {\n        if (marked[i][0] && marked[i][1] && marked[i][2])\n            return true;\n    }\n    // Check columns\n    for (int j = 0; j < 3; j++) {\n        if (marked[0][j] && marked[1][j] && marked[2][j])\n            return true;\n    }\n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2])\n        return true;\n    if (marked[0][2] && marked[1][1] && marked[2][0])\n        return true;\n    \n    return false;\n}\n\nint main() {\n    int A[3][3], N, b;\n    int marked[3][3] = {0};\n    \n    // Input grid values\n    for (int i = 0; i < 3; i++) {\n        for (int j = 0; j < 3; j++) {\n            scanf(\"%d\", &A[i][j]);\n        }\n    }\n    \n    // Input number of chosen numbers\n    scanf(\"%d\", &N);\n    \n    // Mark chosen numbers in the grid\n    for (int k = 0; k < N; k++) {\n        scanf(\"%d\", &b);\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (A[i][j] == b) {\n                    marked[i][j] = 1;\n                }\n            }\n        }\n    }\n    \n    // Check for bingo\n    if (checkBingo(A, marked)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:43:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isBingo(A, chosenNumbers) {\n  const mark = Array(3).fill(0).map(() => Array(3).fill(false));\n\n  // Mark the numbers that are chosen\n  for (let i = 0; i < 3; i++) {\n    for (let j = 0; j < 3; j++) {\n      if (chosenNumbers.includes(A[i][j])) {\n        mark[i][j] = true;\n      }\n    }\n  }\n\n  // Check rows for bingo\n  for (let i = 0; i < 3; i++) {\n    if (mark[i][0] && mark[i][1] && mark[i][2]) {\n      return true;\n    }\n  }\n\n  // Check columns for bingo\n  for (let j = 0; j < 3; j++) {\n    if (mark[0][j] && mark[1][j] && mark[2][j]) {\n      return true;\n    }\n  }\n\n  // Check diagonals for bingo\n  if (mark[0][0] && mark[1][1] && mark[2][2]) {\n    return true;\n  }\n  if (mark[0][2] && mark[1][1] && mark[2][0]) {\n    return true;\n  }\n\n  return false;\n}\n\n// Example Usage:\n// const bingoCard = [\n//   [5, 10, 15],\n//   [20, 25, 30],\n//   [35, 40, 45]\n// ];\n// const chosenNumbers = [5, 25, 45];\n// console.log(isBingo(bingoCard, chosenNumbers));",
+    "timestamp": "2025-08-13 11:43:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def check_bingo(A, B):\n    # Mark the numbers on the bingo sheet\n    marked = [[False] * 3 for _ in range(3)]\n    for num in B:\n        for i in range(3):\n            for j in range(3):\n                if A[i][j] == num:\n                    marked[i][j] = True\n    \n    # Check rows\n    for i in range(3):\n        if all(marked[i][j] for j in range(3)):\n            return True\n    \n    # Check columns\n    for j in range(3):\n        if all(marked[i][j] for i in range(3)):\n            return True\n    \n    # Check diagonals\n    if all(marked[i][i] for i in range(3)):\n        return True\n    \n    if all(marked[i][2-i] for i in range(3)):\n        return True\n    \n    return False\n\n# Example usage\n# A = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]\n# B = [1, 2, 3]\n# print(check_bingo(A, B))",
+    "timestamp": "2025-08-13 11:43:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function checkBingo(A, chosenNumbers) {\n    let marked = Array.from({ length: 3 }, () => Array(3).fill(false));\n    \n    for (let num of chosenNumbers) {\n        for (let i = 0; i < 3; i++) {\n            for (let j = 0; j < 3; j++) {\n                if (A[i][j] === num) {\n                    marked[i][j] = true;\n                }\n            }\n        }\n    }\n    \n    // Check rows\n    for (let i = 0; i < 3; i++) {\n        if (marked[i][0] && marked[i][1] && marked[i][2]) return true;\n    }\n    \n    // Check columns\n    for (let j = 0; j < 3; j++) {\n        if (marked[0][j] && marked[1][j] && marked[2][j]) return true;\n    }\n    \n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2]) return true;\n    if (marked[0][2] && marked[1][1] && marked[2][0]) return true;\n    \n    return false;\n}",
+    "timestamp": "2025-08-13 11:43:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def check_bingo(A, B):\n    marked = [[False for _ in range(3)] for _ in range(3)]\n    B_set = set(B)\n    \n    for i in range(3):\n        for j in range(3):\n            if A[i][j] in B_set:\n                marked[i][j] = True\n    \n    # Check rows\n    for i in range(3):\n        if all(marked[i][j] for j in range(3)):\n            return True\n    \n    # Check columns\n    for j in range(3):\n        if all(marked[i][j] for i in range(3)):\n            return True\n    \n    # Check diagonals\n    if all(marked[i][i] for i in range(3)) or all(marked[i][2 - i] for i in range(3)):\n        return True\n    \n    return False\n\n# Sample usage:\n# A = [\n#     [1, 2, 3],\n#     [4, 5, 6],\n#     [7, 8, 9]\n# ]\n# B = [1, 5, 9]\n# print(check_bingo(A, B))  # Output: True",
+    "timestamp": "2025-08-13 11:43:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function checkBingo(A, B) {\n    const marked = Array(3).fill().map(() => Array(3).fill(false));\n    const bSet = new Set(B);\n    \n    for (let i = 0; i < 3; i++) {\n        for (let j = 0; j < 3; j++) {\n            if (bSet.has(A[i][j])) {\n                marked[i][j] = true;\n            }\n        }\n    }\n    \n    // Check rows\n    for (let i = 0; i < 3; i++) {\n        if (marked[i][0] && marked[i][1] && marked[i][2]) {\n            return true;\n        }\n    }\n    \n    // Check columns\n    for (let j = 0; j < 3; j++) {\n        if (marked[0][j] && marked[1][j] && marked[2][j]) {\n            return true;\n        }\n    }\n    \n    // Check diagonals\n    if (marked[0][0] && marked[1][1] && marked[2][2]) {\n        return true;\n    }\n    if (marked[0][2] && marked[1][1] && marked[2][0]) {\n        return true;\n    }\n    \n    return false;\n}",
+    "timestamp": "2025-08-13 11:43:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n\nusing namespace std;\n\nbool checkBingo(const vector<vector<int>>& A, const set<int>& markedNums) {\n    // Check rows\n    for (int i = 0; i < 3; ++i) {\n        if (markedNums.count(A[i][0]) && markedNums.count(A[i][1]) && markedNums.count(A[i][2])) {\n            return true;\n        }\n    }\n    \n    // Check columns\n    for (int j = 0; j < 3; ++j) {\n        if (markedNums.count(A[0][j]) && markedNums.count(A[1][j]) && markedNums.count(A[2][j])) {\n            return true;\n        }\n    }\n    \n    // Check diagonals\n    if (markedNums.count(A[0][0]) && markedNums.count(A[1][1]) && markedNums.count(A[2][2])) {\n        return true;\n    }\n    \n    if (markedNums.count(A[0][2]) && markedNums.count(A[1][1]) && markedNums.count(A[2][0])) {\n        return true;\n    }\n    \n    return false;\n}\n\nint main() {\n    vector<vector<int>> A(3, vector<int>(3));\n    for (int i = 0; i < 3; ++i) {\n        for (int j = 0; j < 3; ++j) {\n            cin >> A[i][j];\n        }\n    }\n    \n    int N;\n    cin >> N;\n    vector<int> chosenNumbers(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> chosenNumbers[i];\n    }\n    \n    set<int> markedNums;\n    for (int num : chosenNumbers) {\n        markedNums.insert(num);\n    }\n    \n    if (checkBingo(A, markedNums)) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:04:41"
+  }
+]

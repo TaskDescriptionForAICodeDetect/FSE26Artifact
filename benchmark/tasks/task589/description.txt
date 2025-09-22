@@ -1,0 +1,1 @@
+For given two segments s1 and s2, print '1' if they intersect, '0' otherwise. s1 is formed by end points p0 and p1, and s2 is formed by end points p2 and p3.

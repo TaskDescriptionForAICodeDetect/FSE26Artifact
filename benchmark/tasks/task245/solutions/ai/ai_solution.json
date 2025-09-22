@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\nint main() {\n    uint32_t encrypted[9];\n    uint32_t key = 0;\n\n    for (int i = 0; i < 9; i++) {\n        scanf(\"%u\", &encrypted[i]);\n    }\n\n    for (int bit = 0; bit < 32; bit++) {\n        uint32_t mask = 1u << bit;\n        uint32_t sum = 0;\n        for (int i = 0; i < 8; i++) {\n            sum += encrypted[i] & mask;\n        }\n        if ((sum & mask) != (encrypted[8] & mask)) {\n            key |= mask;\n        }\n    }\n\n    printf(\"%u\\n\", key);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:15:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class KeyFinder {\n    public static int findKey(int[] encrypted) {\n        for (int key = 0; key < (1 << 32); key++) {\n            if (checkKey(encrypted, key)) {\n                return key;\n            }\n        }\n        return -1;\n    }\n\n    private static boolean checkKey(int[] encrypted, int key) {\n        int[] decrypted = new int[9];\n        for (int i = 0; i < 9; i++) {\n            decrypted[i] = encrypted[i] ^ key;\n        }\n\n        int checksum = 0;\n        for (int i = 0; i < 8; i++) {\n            checksum = (checksum + decrypted[i]) & 0xFFFFFFFF;\n        }\n\n        if (checksum != decrypted[8]) {\n            return false;\n        }\n\n        int lsbCount = 0;\n        for (int i = 0; i < 8; i++) {\n            if ((decrypted[i] & 1) == 1) {\n                lsbCount++;\n            }\n        }\n\n        return lsbCount >= 3 && lsbCount <= 5;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n\n        for (int d = 0; d < datasets; d++) {\n            int[] encrypted = new int[9];\n            for (int i = 0; i < 9; i++) {\n                encrypted[i] = scanner.nextInt();\n            }\n            System.out.println(findKey(encrypted));\n        }\n    }\n}",
+    "timestamp": "2025-08-05 19:15:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nuint32_t findKey(const vector<uint32_t>& encrypted) {\n    uint32_t key = 0;\n    for (int i = 0; i < 32; ++i) {\n        uint32_t mask = 1 << i;\n        int count = 0;\n        for (int j = 0; j < 8; ++j) {\n            if (encrypted[j] & mask) {\n                count++;\n            }\n        }\n        uint32_t checksum_bit = (encrypted[8] & mask) ? 1 : 0;\n        uint32_t sum_bit = (count % 2) ? 1 : 0;\n        if (sum_bit != checksum_bit) {\n            key |= mask;\n        }\n    }\n    return key;\n}\n\nint main() {\n    vector<uint32_t> encrypted(9);\n    for (int i = 0; i < 9; ++i) {\n        cin >> encrypted[i];\n    }\n    uint32_t key = findKey(encrypted);\n    cout << key << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:16:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\nuint32_t solve_encryption_key(uint32_t *data) {\n    uint32_t key = 0;\n    uint32_t sum = 0;\n\n    for (int i = 0; i < 8; i++) {\n        sum += data[i];\n    }\n    sum %= (1U << 32);\n\n    if (sum != data[8]) {\n        return 0;\n    }\n\n    for (int bit = 0; bit < 32; bit++) {\n        int lsb_count = 0;\n        for (int i = 0; i < 8; i++) {\n            if ((data[i] & 1) == ((key >> bit) & 1)) {\n                lsb_count++;\n            }\n        }\n\n        if (lsb_count >= 4) {\n            key |= (1U << bit);\n        }\n    }\n\n    return key;\n}\n\nint main() {\n    uint32_t data[9];\n    \n    while (scanf(\"%u %u %u %u %u %u %u %u %u\", \n        &data[0], &data[1], &data[2], &data[3], \n        &data[4], &data[5], &data[6], &data[7], &data[8]) == 9) {\n        \n        uint32_t key = solve_encryption_key(data);\n        printf(\"%u\\n\", key);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:16:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cstdint>\n\nuint32_t findEncryptionKey(const std::vector<uint32_t>& encrypted) {\n    uint32_t checksum = 0;\n    for (int i = 0; i < 8; ++i) {\n        checksum += encrypted[i];\n    }\n    checksum %= (1ULL << 32);\n\n    for (uint32_t key = 0; key < (1ULL << 32); ++key) {\n        uint32_t calculatedChecksum = 0;\n        bool validKey = true;\n\n        for (int i = 0; i < 8; ++i) {\n            uint32_t decrypted = encrypted[i] ^ key;\n            \n            if ((decrypted & 1) != ((key >> (i % 32)) & 1)) {\n                validKey = false;\n                break;\n            }\n            \n            calculatedChecksum += decrypted;\n        }\n\n        calculatedChecksum %= (1ULL << 32);\n\n        if (validKey && calculatedChecksum == checksum && \n            calculatedChecksum == encrypted[8]) {\n            return key;\n        }\n    }\n\n    return 0;\n}\n\nint main() {\n    int T;\n    std::cin >> T;\n\n    for (int t = 0; t < T; ++t) {\n        std::vector<uint32_t> encrypted(9);\n        for (int i = 0; i < 9; ++i) {\n            std::cin >> encrypted[i];\n        }\n\n        uint32_t key = findEncryptionKey(encrypted);\n        std::cout << key << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:16:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class BitFlipKeyFinder {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int[] encrypted = new int[9];\n        \n        for (int i = 0; i < 9; i++) {\n            encrypted[i] = scanner.nextInt();\n        }\n        \n        long sum = 0;\n        for (int i = 0; i < 8; i++) {\n            sum += encrypted[i] & 0xFFFFFFFFL;\n        }\n        long checksum = sum % (1L << 32);\n        \n        if (checksum != (encrypted[8] & 0xFFFFFFFFL)) {\n            System.out.println(\"Invalid checksum\");\n            return;\n        }\n        \n        int key = 0;\n        for (int i = 0; i < 32; i++) {\n            int mask = 1 << i;\n            int count = 0;\n            for (int j = 0; j < 8; j++) {\n                if ((encrypted[j] & mask) != 0) {\n                    count++;\n                }\n            }\n            if (count > 4) {\n                key |= mask;\n            }\n        }\n        \n        System.out.println(key);\n    }\n}",
+    "timestamp": "2025-08-05 19:16:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_encryption_key(data):\n    checksum = data[8]\n    calculated_checksum = sum(data[:8]) % (1 << 32)\n    key = 0\n    if checksum == calculated_checksum:\n        for value in data[:8]:\n            key ^= value & 1\n    return key\n\n# Example usage\ndata = [0x12345678, 0x9abcdef0, 0x23456789, 0x67890abc, 0xabcdef12, 0x345689ab, 0x890abcdef, 0x2345678a, 0xabcdef12]\nkey = find_encryption_key(data)\nprint(f'Encryption key: {key}')",
+    "timestamp": "2025-08-13 03:18:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class EncryptionKeyFinder {\n    public static int findEncryptionKey(int[] numbers) {\n        int key = 0;\n        for (int i = 0; i < 8; i++) {\n            int lsb = numbers[i] & 1;\n            key |= lsb << i;\n        }\n        return key;\n    }\n\n    public static void main(String[] args) {\n        // Example usage:\n        int[] dataset = {0b101, 0b110, 0b111, 0b100, 0b101, 0b110, 0b111, 0b100, 668}; // dataset with checksum at index 8\n        int key = findEncryptionKey(dataset);\n        System.out.println(\"Encryption Key: \" + key);\n    }\n}",
+    "timestamp": "2025-08-13 03:18:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdint.h>\n\nuint32_t find_encryption_key(uint32_t encrypted_data[]) {\n    uint32_t checksum = encrypted_data[8];\n    uint32_t sum = 0;\n    for (int i = 0; i < 8; ++i) {\n        sum += encrypted_data[i];\n    }\n    sum = sum % (1U << 32);\n    \n    uint32_t key = checksum ^ sum;\n    return key;\n}\n\nint main() {\n    uint32_t encrypted_data[9] = { /* example encrypted integers */ };\n    \n    // Replace with actual encrypted data\n    for (int i = 0; i < 9; ++i) {\n        scanf(\"%u\", &encrypted_data[i]);\n    }\n    \n    uint32_t key = find_encryption_key(encrypted_data);\n    printf(\"Encryption Key: %u\\n\", key);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 03:18:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_encryption_key(encrypted_data):\n    key = 0\n    for bit in range(32):\n        bit_key = 0\n        for i in range(8):\n            bit_key ^= (encrypted_data[i] >> bit) & 1\n        \n        expected_bit = (encrypted_data[8] >> bit) & 1\n        if bit_key != expected_bit:\n            key |= (1 << bit)\n    \n    return key\n\ndef verify_key(encrypted_data, key):\n    decrypted_data = [x ^ key for x in encrypted_data[:8]]\n    checksum = sum(decrypted_data) & 0xFFFFFFFF\n    return checksum == encrypted_data[8]\n\ndef main():\n    num_datasets = int(input())\n    results = []\n    \n    for _ in range(num_datasets):\n        encrypted_data = list(map(int, input().split()))\n        key = find_encryption_key(encrypted_data)\n        results.append(key if verify_key(encrypted_data, key) else -1)\n    \n    for result in results:\n        print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 03:18:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_key(encrypted_data):\n    sum_first_eight = sum(encrypted_data[:8]) & 0xFFFFFFFF\n    checksum = encrypted_data[8]\n    \n    if sum_first_eight == checksum:\n        return 0\n    else:\n        return 1",
+    "timestamp": "2025-08-13 03:18:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nuint32_t findEncryptionKey(const std::vector<uint32_t>& data) {\n    uint32_t sum = 0;\n    for (int i = 0; i < 8; ++i) {\n        sum += data[i];\n    }\n    sum %= (1UL << 32);\n    uint32_t checksum = data[8];\n    \n    uint32_t xorValue = sum ^ checksum;\n    uint32_t key = 0;\n\n    for (int i = 0; i < 32; ++i) {\n        if (xorValue & (1UL << i)) {\n            key |= (1UL << i);\n        }\n    }\n\n    return key;\n}\n\nint main() {\n    std::vector<uint32_t> data(9);\n    for (int i = 0; i < 9; ++i) {\n        std::cin >> data[i];\n    }\n\n    uint32_t key = findEncryptionKey(data);\n    std::cout << \"Encryption Key: \" << key << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:10:57"
+  }
+]

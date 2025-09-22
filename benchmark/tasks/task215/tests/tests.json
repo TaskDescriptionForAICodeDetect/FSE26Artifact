@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "ABC 3",
+      "output": "0"
+    },
+    {
+      "input": "ABC 0",
+      "output": "A"
+    },
+    {
+      "input": "2(4(AB)3(XY))10C 30",
+      "output": "C"
+    },
+    {
+      "input": "1000(1000(1000(1000(1000(1000(NM)))))) 999999",
+      "output": "M"
+    }
+  ]
+}

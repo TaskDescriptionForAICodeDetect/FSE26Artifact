@@ -1,0 +1,1 @@
+Find the most suitable width and height of a rectangular picture based on given constraints. You are given an integer m (greater than 4) and a fraction a/b (where 0 < a/b <= 1). The area of the picture should not exceed m, both dimensions must be prime numbers, and the ratio of width to height should be between a/b and 1 inclusive. The goal is to maximize the area.

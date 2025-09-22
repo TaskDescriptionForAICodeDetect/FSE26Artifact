@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "4\n4 6\n*.*..*\n*.....\n..-...\n^.*#..\n10\nSRSSRRUSSR\n2 2\n<.\n..\n12\nDDSRRSUUSLLS\n3 5\n>-#**\n.-*#*\n.-**#\n15\nSSSDRSSSDRSSSUU\n5 5\nv****\n*****\n*****\n*****\n*****\n44\nSSSSDDRSDRSRDSULUURSSSSRRRRDSSSSDDLSDLSDLSSD",
+      "output": "*....*\n......\n..-...\n..>#..\n\n<.\n..\n\n^-#**\n.-.#*\n.-..#\n\n.....\n.***.\n..*..\n..*..\n....v"
+    }
+  ]
+}

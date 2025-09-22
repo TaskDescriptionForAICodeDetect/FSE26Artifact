@@ -1,0 +1,1 @@
+You need to create a program that counts the number of coasters that are both vertically and horizontally symmetrical based on the image data provided. The first coaster's information is sent as a complete N x N pixel image, while the subsequent coasters are sent as difference information indicating the pixel positions that have changed from the previous image.

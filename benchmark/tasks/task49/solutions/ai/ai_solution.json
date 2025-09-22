@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(h, n):\n    visited = set()\n    current = 1\n    steps = 0\n    commands = ['L', 'R'] * (2**h)\n    command_index = 0\n    skipped_count = 0\n\n    while current != n:\n        if current in visited:\n            skipped_count += 1\n            if skipped_count == 2:\n                current = current // 2\n                skipped_count = 0\n            command_index += 1\n            continue\n\n        visited.add(current)\n        steps += 1\n\n        if commands[command_index] == 'L':\n            current = 2 * current\n        else:\n            current = 2 * current + 1\n\n        skipped_count = 0\n        command_index += 1\n\n    return steps\n\nh, n = map(int, input().split())\nprint(solve(h, n))",
+    "timestamp": "2025-08-05 17:33:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "h, n = map(int, input().split())\nres = 0\ncur = 1\nleft = 1\nright = 2 ** h\ngo_left = True\n\nfor _ in range(h):\n    mid = (left + right) // 2\n    if go_left:\n        if n <= mid:\n            res += 1\n            right = mid\n            go_left = not go_left\n        else:\n            res += 2 ** (h - _)\n            left = mid + 1\n    else:\n        if n > mid:\n            res += 1\n            left = mid + 1\n            go_left = not go_left\n        else:\n            res += 2 ** (h - _)\n            right = mid\n\nprint(res)",
+    "timestamp": "2025-08-05 17:33:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_visited_nodes(h, n):\n    visited = set()\n    current_node = 1\n    visited.add(current_node)\n    commands = [\"L\", \"R\"]\n    command_index = 0\n    \n    visited_count = 0\n    consec_skip_count = 0\n    while True:\n        if current_node == n:\n            return visited_count\n        \n        command = commands[command_index]\n        command_index = (command_index + 1) % len(commands)\n        \n        if command == \"L\":\n            next_node = current_node * 2\n        else:\n            next_node = current_node * 2 + 1\n        \n        if next_node in visited:\n            consec_skip_count += 1\n            if consec_skip_count == 2:\n                consec_skip_count = 0\n                current_node //= 2\n            continue\n        \n        consec_skip_count = 0\n        if next_node > (2 ** (h + 1) - 1) // 2:\n            current_node //= 2\n        else:\n            current_node = next_node\n            visited.add(current_node)\n            visited_count += 1\n    \nh, n = map(int, input().split())\nprint(count_visited_nodes(h, n))",
+    "timestamp": "2025-08-12 21:55:06"
+  }
+]

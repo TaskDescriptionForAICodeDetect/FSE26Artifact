@@ -1,0 +1,1 @@
+You are given an array A of length N. Process Q queries of the following types: 1) Replace the value at index X with V. 2) Calculate the maximum value in the subarray from L to R. 3) Find the minimum index j such that j is between X and N and the value at index j is greater than or equal to V. If no such j exists, return j = N + 1.

@@ -1,0 +1,1 @@
+You are given N non-overlapping circles in the xy-plane. The radius of each circle varies, but the radius of the largest circle is not more than double that of the smallest. Your task is to write a program that finds the closest pair of circles and print their distance. The distance between two circles is calculated using their centers and radii.

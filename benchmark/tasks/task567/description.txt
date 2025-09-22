@@ -1,0 +1,1 @@
+Write a program that reads relations in a Social Network Service (SNS) and determines if given pairs of users are reachable from one another through the network.

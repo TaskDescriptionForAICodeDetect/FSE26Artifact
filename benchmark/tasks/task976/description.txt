@@ -1,0 +1,1 @@
+We have a tree with N vertices labeled from 1 to N. A set of integers have been written into K of the vertices. The task is to fill in the empty vertices such that the integers in any two directly connected vertices differ by exactly 1. Determine if it is possible to write integers into all empty vertices satisfying this condition and, if so, provide one valid configuration.

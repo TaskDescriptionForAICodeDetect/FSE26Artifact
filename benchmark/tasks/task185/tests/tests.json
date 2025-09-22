@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\n800 600\nindex 1\n500 100 700 200 profile\nprofile 2\n100 100 400 200 index\n100 400 400 500 link\nlink 1\n100 100 300 200 index\n9\nclick 600 150\nshow\nclick 200 450\nshow\nback\nback\nshow\nforward\nshow\n0\n",
+      "output": "profile\nlink\nindex\nprofile\n"
+    }
+  ]
+}

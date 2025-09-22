@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\ntypedef struct {\n    int x;\n    int y;\n} Point;\n\ndouble distance(Point a, Point b) {\n    return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));\n}\n\nint main() {\n    int N, D;\n    scanf(\"%d %d\", &N, &D);\n    \n    Point frog;\n    scanf(\"%d %d\", &frog.x, &frog.y);\n    \n    Point *sprinklers = malloc(N * sizeof(Point));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &sprinklers[i].x, &sprinklers[i].y);\n    }\n    \n    int possible = 1;\n    for (int i = 0; i < N; i++) {\n        if (distance(frog, sprinklers[i]) > D) {\n            possible = 0;\n            break;\n        }\n        frog = sprinklers[i];\n    }\n    \n    if (possible) {\n        printf(\"OK\\n\");\n    } else {\n        printf(\"NA\\n\");\n    }\n    \n    free(sprinklers);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class FrogSprinklerSurvival {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt(); // Number of sprinklers\n        int L = scanner.nextInt(); // Jump distance\n        int P = scanner.nextInt(); // Initial frog position\n        \n        int[] sprinklerPositions = new int[N];\n        int[] sprinklerWaterRanges = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            sprinklerPositions[i] = scanner.nextInt();\n            sprinklerWaterRanges[i] = scanner.nextInt();\n        }\n        \n        System.out.println(canSurvive(N, L, P, sprinklerPositions, sprinklerWaterRanges) ? \"OK\" : \"NA\");\n        \n        scanner.close();\n    }\n    \n    static boolean canSurvive(int N, int L, int P, int[] positions, int[] ranges) {\n        PriorityQueue<Integer> maxRangeHeap = new PriorityQueue<>(Collections.reverseOrder());\n        \n        int currentPos = P;\n        int jumpsRemaining = 0;\n        \n        for (int i = 0; i < N; i++) {\n            // If we can't reach the current sprinkler\n            while (currentPos + L < positions[i]) {\n                // Try to use a previous sprinkler's water range\n                if (maxRangeHeap.isEmpty()) {\n                    return false;\n                }\n                \n                int maxRange = maxRangeHeap.poll();\n                currentPos += maxRange;\n                jumpsRemaining++;\n            }\n            \n            // Add current sprinkler's water range to heap\n            maxRangeHeap.offer(ranges[i]);\n        }\n        \n        // Check if can reach final destination\n        while (currentPos + L < 1000000) {\n            if (maxRangeHeap.isEmpty()) {\n                return false;\n            }\n            \n            int maxRange = maxRangeHeap.poll();\n            currentPos += maxRange;\n            jumpsRemaining++;\n        }\n        \n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 18:28:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\nusing namespace std;\n\nstruct Point {\n    int x, y;\n};\n\ndouble distance(Point a, Point b) {\n    return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));\n}\n\nstring solve(Point frog, int jump, vector<Point> sprinklers) {\n    for (auto s : sprinklers) {\n        if (distance(frog, s) > jump) {\n            return \"NA\";\n        }\n        frog = s;\n    }\n    return \"OK\";\n}\n\nint main() {\n    Point frog;\n    int jump, N;\n    cin >> frog.x >> frog.y >> jump >> N;\n    vector<Point> sprinklers(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> sprinklers[i].x >> sprinklers[i].y;\n    }\n    cout << solve(frog, jump, sprinklers) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <math.h>\n\n#define MAX_SPRINKLERS 100\n\nbool can_reach_sprinkler(double frog_pos, double sprinkler_pos, double jump_distance) {\n    return fabs(frog_pos - sprinkler_pos) <= jump_distance;\n}\n\nint main() {\n    int N, jump_distance;\n    scanf(\"%d %d\", &N, &jump_distance);\n\n    double sprinklers[MAX_SPRINKLERS];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lf\", &sprinklers[i]);\n    }\n\n    double start_pos;\n    scanf(\"%lf\", &start_pos);\n\n    double current_pos = start_pos;\n    bool possible = true;\n\n    for (int i = 0; i < N; i++) {\n        if (!can_reach_sprinkler(current_pos, sprinklers[i], jump_distance)) {\n            possible = false;\n            break;\n        }\n        current_pos = sprinklers[i];\n    }\n\n    printf(\"%s\\n\", possible ? \"OK\" : \"NA\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, D;\n    cin >> N >> D;\n    \n    vector<int> sprinklers(N);\n    for (int i = 0; i < N; i++) {\n        cin >> sprinklers[i];\n    }\n    \n    int start;\n    cin >> start;\n    \n    vector<bool> dp(N, false);\n    dp[0] = abs(sprinklers[0] - start) <= D;\n    \n    for (int i = 1; i < N; i++) {\n        for (int j = 0; j < i; j++) {\n            if (dp[j] && abs(sprinklers[i] - sprinklers[j]) <= D) {\n                dp[i] = true;\n                break;\n            }\n        }\n        \n        if (!dp[i] && abs(sprinklers[i] - start) <= D) {\n            dp[i] = true;\n        }\n    }\n    \n    cout << (dp[N-1] ? \"OK\" : \"NA\") << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class FrogSprinklers {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int D = scanner.nextInt();\n        int[] x = new int[N];\n        int[] y = new int[N];\n        for (int i = 0; i < N; i++) {\n            x[i] = scanner.nextInt();\n            y[i] = scanner.nextInt();\n        }\n        int px = scanner.nextInt();\n        int py = scanner.nextInt();\n\n        boolean possible = true;\n        for (int i = 0; i < N; i++) {\n            int dx = Math.abs(x[i] - px);\n            int dy = Math.abs(y[i] - py);\n            if (dx + dy > D) {\n                possible = false;\n                break;\n            }\n            px = x[i];\n            py = y[i];\n        }\n        System.out.println(possible ? \"OK\" : \"NA\");\n    }\n}",
+    "timestamp": "2025-08-05 18:29:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_survive(initial_position, jump_distance, sprinklers):\n    current_position = initial_position\n    \n    for sprinkler in sprinklers:\n        if abs(current_position - sprinkler) <= jump_distance:\n            current_position = sprinkler\n        else:\n            return 'NA'\n    \n    return 'OK'\n\n# Example Usage:\ninitial_position = 0\njump_distance = 3\nsprinklers = [2, 5, 8, 11]\n\nprint(can_survive(initial_position, jump_distance, sprinklers))",
+    "timestamp": "2025-08-12 23:22:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class FrogSurvival {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int n = scanner.nextInt(); // number of sprinklers\n        int initialPos = scanner.nextInt(); // initial position of the frog\n        int jumpDistance = scanner.nextInt(); // jump distance for the frog\n\n        int[] sprinklers = new int[n];\n        for (int i = 0; i < n; i++) {\n            sprinklers[i] = scanner.nextInt();\n        }\n\n        System.out.println(canSurvive(sprinklers, initialPos, jumpDistance) ? \"OK\" : \"NA\");\n        scanner.close();\n    }\n\n    private static boolean canSurvive(int[] sprinklers, int initialPos, int jumpDistance) {\n        int currentPosition = initialPos;\n\n        for (int sprinklerPosition : sprinklers) {\n            if (Math.abs(currentPosition - sprinklerPosition) <= jumpDistance) {\n                currentPosition = sprinklerPosition;\n            } else {\n                return false;\n            }\n        }\n\n        return true;\n    }\n}",
+    "timestamp": "2025-08-12 23:22:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <math.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nbool canSurvive(Point* sprinklers, int numSprinklers, Point pyonkichi, int jumpDistance) {\n    for (int i = 0; i < numSprinklers; i++) {\n        int dx = sprinklers[i].x - pyonkichi.x;\n        int dy = sprinklers[i].y - pyonkichi.y;\n        if (dx * dx + dy * dy <= jumpDistance * jumpDistance) {\n            pyonkichi = sprinklers[i];\n        } else {\n            return false;\n        }\n    }\n    return true;\n}\n\nint main() {\n    int numSprinklers, jumpDistance;\n    Point pyonkichi;\n    \n    scanf(\"%d %d %d\", &pyonkichi.x, &pyonkichi.y, &jumpDistance);\n    scanf(\"%d\", &numSprinklers);\n    \n    Point* sprinklers = (Point*)malloc(numSprinklers * sizeof(Point));\n    for (int i = 0; i < numSprinklers; i++) {\n        scanf(\"%d %d\", &sprinklers[i].x, &sprinklers[i].y);\n    }\n    \n    if (canSurvive(sprinklers, numSprinklers, pyonkichi, jumpDistance)) {\n        printf(\"OK\\n\");\n    } else {\n        printf(\"NA\\n\");\n    }\n    \n    free(sprinklers);\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:22:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_survive(initial_pos, sprinklers, jump_distance):\n    current_pos = initial_pos\n    for sprinkler in sprinklers:\n        if abs(current_pos - sprinkler) > jump_distance:\n            return 'NA'\n        current_pos = sprinkler\n    return 'OK'\n\ndef main():\n    initial_pos = int(input())\n    jump_distance = int(input())\n    n = int(input())\n    sprinklers = list(map(int, input().split()))\n    \n    result = can_survive(initial_pos, sprinklers, jump_distance)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:23:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    idx = 0\n    N = int(data[idx])\n    idx += 1\n    D = int(data[idx])\n    idx += 1\n    x0, y0 = map(int, data[idx:idx+2])\n    idx += 2\n    \n    sprinklers = []\n    for _ in range(N):\n        x, y = map(int, data[idx:idx+2])\n        sprinklers.append((x, y))\n        idx += 2\n    \n    current_x, current_y = x0, y0\n    \n    for x, y in sprinklers:\n        dx = abs(x - current_x)\n        dy = abs(y - current_y)\n        if dx + dy <= D:\n            current_x, current_y = x, y\n        else:\n            if (dx * dx + dy * dy) <= D * D:\n                current_x, current_y = x, y\n            else:\n                print(\"NA\")\n                return\n    \n    print(\"OK\")\n\nsolve()",
+    "timestamp": "2025-08-12 23:23:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nbool canSurvive(double initialPos, const vector<pair<double, double>>& sprinklers, double jumpDistance) {\n    for (const auto& sprinkler : sprinklers) {\n        double x = sprinkler.first;\n        double r = sprinkler.second;\n        if (fabs(initialPos - x) <= r) {\n            initialPos = x + r; // Jump to the farthest edge of the current sprinkler's range\n        } else if (fabs(initialPos - x) <= jumpDistance) {\n            initialPos = x + r; // Jump to the farthest edge of the current sprinkler's range\n        } else {\n            return false; // Cannot reach the sprinkler\n        }\n    }\n    return true;\n}\n\nint main() {\n    double initialPos, jumpDistance;\n    int n;\n    cin >> initialPos >> jumpDistance >> n;\n    \n    vector<pair<double, double>> sprinklers(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> sprinklers[i].first >> sprinklers[i].second;\n    }\n    \n    if (canSurvive(initialPos, sprinklers, jumpDistance)) {\n        cout << \"OK\" << endl;\n    } else {\n        cout << \"NA\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:49:59"
+  }
+]

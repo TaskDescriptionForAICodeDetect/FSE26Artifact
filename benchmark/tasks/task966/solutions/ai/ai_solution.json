@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nlong long min_coins(int N, long long* prices) {\n    long long total_price = 0;\n    for (int i = 0; i < N; i++) {\n        total_price += prices[i];\n    }\n    \n    long long coins = 0;\n    long long coin_value = 1;\n    \n    while (total_price > 0) {\n        long long coin_count = total_price / coin_value;\n        if (coin_count > 0) {\n            coins += coin_count;\n            total_price %= coin_value;\n        }\n        coin_value *= 10;\n    }\n    \n    return coins;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    long long* prices = malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &prices[i]);\n    }\n    \n    long long result = min_coins(N, prices);\n    printf(\"%lld\\n\", result);\n    \n    free(prices);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    long long *A = (long long *)malloc(N * sizeof(long long));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%lld\", &A[i]);\n    }\n\n    long long total = 0;\n    for (int i = 0; i < N; i++) {\n        total += A[i];\n    }\n\n    long long coins = 0;\n    while (total > 0) {\n        coins += total % 10;\n        total /= 10;\n    }\n\n    printf(\"%lld\\n\", coins);\n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n    \n    long long total = 0;\n    for (long long a : A) {\n        total += a;\n    }\n    \n    long long max_coin = 1;\n    while (max_coin <= total) {\n        max_coin *= 10;\n    }\n    max_coin /= 10;\n    \n    long long coins = 0;\n    while (total > 0) {\n        long long count = total / max_coin;\n        coins += count;\n        total -= count * max_coin;\n        max_coin /= 10;\n    }\n    \n    cout << coins << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        int minCoins = Integer.MAX_VALUE;\n        for (int mask = 1; mask < (1 << N); mask++) {\n            int total = 0;\n            for (int i = 0; i < N; i++) {\n                if ((mask & (1 << i)) != 0) {\n                    total += A[i];\n                }\n            }\n            int coins = 0;\n            while (total > 0) {\n                coins += total % 10;\n                total /= 10;\n            }\n            if (coins < minCoins) {\n                minCoins = coins;\n            }\n        }\n        System.out.println(minCoins);\n    }\n}",
+    "timestamp": "2025-08-05 23:30:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MinimumCoins {\n    public static int solve(int[] prices) {\n        Set<Integer> possiblePayments = new HashSet<>();\n        possiblePayments.add(0);\n\n        for (int price : prices) {\n            Set<Integer> newPayments = new HashSet<>();\n            for (int payment : possiblePayments) {\n                newPayments.add(payment + price);\n            }\n            possiblePayments.addAll(newPayments);\n        }\n\n        int minCoins = Integer.MAX_VALUE;\n        for (int payment : possiblePayments) {\n            if (payment > 0) {\n                minCoins = Math.min(minCoins, getMinCoins(payment));\n            }\n        }\n\n        return minCoins;\n    }\n\n    private static int getMinCoins(int amount) {\n        int[] coins = {10000, 1000, 100, 10, 1};\n        int coinCount = 0;\n\n        for (int coin : coins) {\n            coinCount += amount / coin;\n            amount %= coin;\n        }\n\n        return coinCount;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] prices = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            prices[i] = scanner.nextInt();\n        }\n\n        System.out.println(solve(prices));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:30:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n    }\n    \n    long long total = 0;\n    for (int price : A) {\n        total += price;\n    }\n    \n    int coins = 0;\n    long long remaining = total;\n    \n    for (int n = log10(total); n >= 0; n--) {\n        long long coin_value = pow(10, n);\n        coins += remaining / coin_value;\n        remaining %= coin_value;\n    }\n    \n    cout << coins << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_coins(N, prices):\n    total_price = sum(prices)\n    num_coins = 0\n\n    power = 0\n    while total_price > 0:\n        if total_price % 10 != 0:\n            num_coins += total_price % 10\n        total_price //= 10\n        power += 1\n        \n    return num_coins\n\n# Example usage:\nN = 3\nprices = [10, 100, 1000]\nprint(min_coins(N, prices))  # Output: 3",
+    "timestamp": "2025-08-13 15:39:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class TakahashiKingdom {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        long[] A = new long[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextLong();\n        }\n        scanner.close();\n\n        System.out.println(minCoins(A));\n    }\n\n    public static int minCoins(long[] A) {\n        long total = Arrays.stream(A).sum();\n        int coinCount = 0;\n\n        for (long power = (long) Math.pow(10, (int) Math.log10(total)); power > 0; power /= 10) {\n            coinCount += total / power;\n            total %= power;\n        }\n\n        return coinCount;\n    }\n}",
+    "timestamp": "2025-08-13 15:39:36"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    long long total = 0;\n    \n    for(int i = 0; i < N; i++) {\n        long long A_i;\n        scanf(\"%lld\", &A_i);\n        total += A_i;\n    }\n    \n    int num_coins = 0;\n    \n    while(total > 0) {\n        long long largest = 1;\n        \n        // Find the largest coin less than or equal to the total\n        while(largest <= total / 10) {\n            largest *= 10;\n        }\n        \n        num_coins += total / largest;\n        total %= largest;\n    }\n    \n    printf(\"%d\\n\", num_coins);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:39:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<long long> A(N);\n    long long totalPrice = 0;\n\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        totalPrice += A[i];\n    }\n\n    long long coinTypes[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000, \n                             10000000000LL, 100000000000LL, 1000000000000LL, 10000000000000LL, 100000000000000LL};\n    int numCoins = 0;\n\n    for (int i = 14; i >= 0; --i) {\n        numCoins += totalPrice / coinTypes[i];\n        totalPrice %= coinTypes[i];\n    }\n\n    cout << numCoins << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:39:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, A):\n    total_price = sum(A)\n    coins = [1, 10, 100, 1000, 10000]\n    \n    while coins[-1] < total_price:\n        coins.append(coins[-1] * 10)\n    \n    coins_count = 0\n    for coin in reversed(coins):\n        coins_count += total_price // coin\n        total_price %= coin\n    \n    return coins_count",
+    "timestamp": "2025-08-13 15:39:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef solve():\n    N = int(input())\n    A = list(map(int, input().split()))\n    total = sum(A)\n    max_coin = 10 ** (int(math.log10(total)) + 1) if total != 0 else 1\n    coins = 0\n    remaining = total\n    \n    for power in range(20, -1, -1):\n        coin_value = 10 ** power\n        if coin_value > remaining:\n            continue\n        count = remaining // coin_value\n        coins += count\n        remaining -= count * coin_value\n        if remaining == 0:\n            break\n    \n    print(coins)\n\nsolve()",
+    "timestamp": "2025-08-13 15:39:54"
+  }
+]

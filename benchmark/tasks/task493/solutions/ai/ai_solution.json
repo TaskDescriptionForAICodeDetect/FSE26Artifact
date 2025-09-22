@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_LEN 100\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint evaluate(char* expr) {\n    int len = strlen(expr);\n    int dp[MAX_LEN][MAX_LEN];\n    memset(dp, 0, sizeof(dp));\n\n    // Initialize single digits\n    for (int i = 0; i < len; i += 2) {\n        dp[i][i] = expr[i] - '0';\n    }\n\n    // Dynamic programming to compute max values\n    for (int diff = 2; diff < len; diff += 2) {\n        for (int i = 0; i < len - diff; i += 2) {\n            int j = i + diff;\n            for (int k = i + 1; k < j; k += 2) {\n                if (expr[k] == '+') {\n                    dp[i][j] = max(dp[i][j], dp[i][k-1] + dp[k+1][j]);\n                } else if (expr[k] == '*') {\n                    dp[i][j] = max(dp[i][j], dp[i][k-1] * dp[k+1][j]);\n                } else if (expr[k] == '|') {\n                    dp[i][j] = max(dp[i][j], max(dp[i][k-1], dp[k+1][j]));\n                }\n            }\n        }\n    }\n\n    return dp[0][len-1];\n}\n\nint main() {\n    char expr[MAX_LEN];\n    scanf(\"%s\", expr);\n    printf(\"%d\\n\", evaluate(expr));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <ctype.h>\n\nlong long evaluate(char *s, int *pos) {\n    long long res = 0;\n    long long current = 0;\n    while (s[*pos] != '\\0') {\n        if (isdigit(s[*pos])) {\n            current = current * 10 + (s[*pos] - '0');\n            (*pos)++;\n        } else if (s[*pos] == '+') {\n            res += current;\n            current = 0;\n            (*pos)++;\n        } else if (s[*pos] == '*') {\n            (*pos)++;\n            long long next = evaluate(s, pos);\n            current *= next;\n        } else if (s[*pos] == 'o') {\n            (*pos) += 2; // skip 'or'\n            long long next = evaluate(s, pos);\n            return current > next ? current : next;\n        } else {\n            break;\n        }\n    }\n    return res + current;\n}\n\nlong long max_value(char *s) {\n    int pos = 0;\n    return evaluate(s, &pos);\n}\n\nint main() {\n    char s[1001];\n    scanf(\"%1000s\", s);\n    printf(\"%lld\\n\", max_value(s));\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    string S;\n    cin >> S;\n    vector<int> nums;\n    vector<char> ops;\n    int num = 0;\n    for (char c : S) {\n        if (c == '+' || c == '*') {\n            nums.push_back(num);\n            ops.push_back(c);\n            num = 0;\n        } else {\n            num = num * 10 + (c - '0');\n        }\n    }\n    nums.push_back(num);\n    \n    long long max_val = nums[0];\n    for (int i = 0; i < ops.size(); ++i) {\n        if (ops[i] == '+') {\n            max_val += nums[i+1];\n        } else {\n            max_val *= nums[i+1];\n        }\n    }\n    \n    long long current_or = nums[0];\n    for (int i = 0; i < ops.size(); ++i) {\n        if (ops[i] == '+') {\n            current_or += nums[i+1];\n        } else {\n            current_or = max(current_or * nums[i+1], current_or + nums[i+1]);\n        }\n    }\n    \n    cout << max(max_val, current_or) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:54:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.nextLine();\n        scanner.close();\n\n        String[] parts = S.split(\"\\\\+\");\n        int max = 0;\n        for (String part : parts) {\n            String[] numbers = part.split(\"\\\\*\");\n            int product = 1;\n            for (String num : numbers) {\n                product *= Integer.parseInt(num);\n            }\n            max += product;\n        }\n        System.out.println(max);\n    }\n}",
+    "timestamp": "2025-08-05 21:54:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MaxExpressionValue {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.nextLine();\n        \n        System.out.println(maxExpressionValue(S));\n        scanner.close();\n    }\n    \n    public static long maxExpressionValue(String S) {\n        int n = S.length();\n        long[][] dp = new long[n][2];\n        \n        dp[0][0] = S.charAt(0) - '0';\n        dp[0][1] = S.charAt(0) - '0';\n        \n        for (int i = 1; i < n; i++) {\n            int digit = S.charAt(i) - '0';\n            \n            // Case 1: No operation\n            dp[i][0] = Math.max(dp[i-1][0] * 10 + digit, \n                                dp[i-1][1] * 10 + digit);\n            \n            // Case 2: Adding 'or' operation\n            dp[i][1] = Math.max(dp[i][0], \n                                dp[i-1][0] | digit);\n        }\n        \n        return dp[n-1][1];\n    }\n}",
+    "timestamp": "2025-08-05 21:54:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint evaluateExpression(const string& expr) {\n    int result = 0;\n    int current = 0;\n    char lastOp = '+';\n\n    for (char c : expr) {\n        if (c >= '0' && c <= '9') {\n            current = current * 10 + (c - '0');\n        } else {\n            if (lastOp == '+') {\n                result += current;\n            } else if (lastOp == '-') {\n                result -= current;\n            }\n            current = 0;\n            lastOp = c;\n        }\n    }\n\n    if (lastOp == '+') {\n        result += current;\n    } else if (lastOp == '-') {\n        result -= current;\n    }\n\n    return result;\n}\n\nint maximizeExpression(const string& S) {\n    int maxVal = evaluateExpression(S);\n    int n = S.length();\n\n    for (int i = 0; i < n; i++) {\n        if (S[i] == '+' || S[i] == '-') {\n            string modifiedExpr = S;\n            modifiedExpr[i] = (S[i] == '+') ? '|' : S[i];\n            maxVal = max(maxVal, evaluateExpression(modifiedExpr));\n        }\n    }\n\n    return maxVal;\n}\n\nint main() {\n    string S;\n    cin >> S;\n    cout << maximizeExpression(S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:54:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def enhance_expression(S):\n    numbers = [int(num) for num in S.split()]\n    result = 0\n    for num in numbers:\n        result |= num\n    return result\n\n# Example usage\nS = \"6 3 9 5\"\nmax_value = enhance_expression(S)\nprint(max_value)",
+    "timestamp": "2025-08-13 08:01:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MaximizeOrExpression {\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        String expression = sc.next();\n\n        System.out.println(maximizeOr(expression));\n        sc.close();\n    }\n\n    private static int maximizeOr(String expression) {\n        String[] terms = expression.split(\"\\\\|\");\n        int result = 0;\n        for (String term : terms) {\n            result |= evaluateExpression(term);\n        }\n        return result;\n    }\n\n    private static int evaluateExpression(String expr) {\n        int value = 0;\n        for (char ch : expr.toCharArray()) {\n            if (Character.isDigit(ch)) {\n                value = value * 10 + (ch - '0');\n            }\n        }\n        return value;\n    }\n}",
+    "timestamp": "2025-08-13 08:01:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_LEN 100\n\n// Function to get the maximum value possible using 'or' in the given expression\nint max_value_with_or(char *expression) {\n    int max_value = 0;\n    char *token = strtok(expression, \" \");\n    \n    // Iterate through each number/token in the expression\n    while (token != NULL) {\n        int num = atoi(token);\n        max_value |= num;  // Using bitwise OR to maximize the value\n        token = strtok(NULL, \" \");\n    }\n    \n    return max_value;\n}\n\n// Main function to handle input and output\nint main() {\n    char expression[MAX_LEN];\n    \n    // Read the expression\n    printf(\"Enter the expression: \");\n    fgets(expression, MAX_LEN, stdin);\n    \n    // Remove newline character at the end\n    expression[strcspn(expression, \"\\n\")] = 0;\n    \n    // Calculate maximum value using 'or'\n    int result = max_value_with_or(expression);\n    \n    printf(\"Maximum value using 'or': %d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 08:01:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(S):\n    # Convert string to list of digits\n    nums = [int(x) for x in S]\n    \n    # Try inserting 'or' between each pair of digits\n    max_val = int(S)\n    \n    for i in range(len(nums) - 1):\n        # Split the number at current position\n        left = int(''.join(map(str, nums[:i+1])))\n        right = int(''.join(map(str, nums[i+1:])))\n        \n        # Compute current value with 'or' between left and right\n        current_val = left | right\n        max_val = max(max_val, current_val)\n    \n    return max_val",
+    "timestamp": "2025-08-13 08:01:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_value_expression(S):\n    max_val = 0\n    current = 0\n    for c in S:\n        if c == '+':\n            max_val += current\n            current = 0\n        elif c == '*':\n            max_val += current\n            current = 0\n        else:\n            current = current * 10 + int(c)\n    max_val += current\n    return max_val\n\nS = input().strip()\nprint(max_value_expression(S))",
+    "timestamp": "2025-08-13 08:02:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <stack>\nusing namespace std;\n\nint main() {\n    string s;\n    cin >> s;\n    \n    vector<int> values;\n    stack<char> operators;\n    \n    int currentValue = 0;\n    bool onNumber = false;\n\n    for (char c : s) {\n        if (isdigit(c)) {\n            currentValue = currentValue * 10 + (c - '0');\n            onNumber = true;\n        } else {\n            if (onNumber) {\n                values.push_back(currentValue);\n                currentValue = 0;\n                onNumber = false;\n            }\n            operators.push(c);\n        }\n    }\n\n    if (onNumber) values.push_back(currentValue);\n\n    int maxValue = values[0];\n    for (int i = 1; i < values.size(); ++i) {\n        maxValue |= values[i];\n    }\n\n    cout << maxValue << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:42:55"
+  }
+]

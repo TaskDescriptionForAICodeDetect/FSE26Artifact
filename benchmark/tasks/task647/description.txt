@@ -1,0 +1,1 @@
+You are given N integers. The integers are said to be pairwise coprime if the GCD of every pair (i, j) where 1 ≤ i < j ≤ N is 1. The integers are setwise coprime if they are not pairwise coprime but the GCD of all integers is 1. Your task is to determine if the integers are pairwise coprime, setwise coprime, or neither. The GCD denotes the greatest common divisor.

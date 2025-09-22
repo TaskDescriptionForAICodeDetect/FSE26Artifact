@@ -1,0 +1,1 @@
+Implement a binary search tree (BST) with operations to insert a key and print keys using inorder and preorder tree walks. The initial state of the tree is empty.

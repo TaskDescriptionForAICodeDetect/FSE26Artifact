@@ -1,0 +1,1 @@
+You are given an undirected graph with N vertices and 0 edges. Process Q queries of the following types: 0 u v: Add an edge (u, v). 1 u v: Print 1 if u and v are in the same connected component, 0 otherwise.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nvoid findFoldingSequence(int n, int k) {\n    char *sequence = (char *)malloc((n + 1) * sizeof(char));\n    sequence[n] = '\\0';\n    int left = 0;\n    int right = (1 << n) - 1;\n    int target = k - 1;\n\n    for (int i = n - 1; i >= 0; --i) {\n        int mid = (left + right) / 2;\n        if (target <= mid) {\n            sequence[i] = 'L';\n            right = mid;\n        } else {\n            sequence[i] = 'R';\n            left = mid + 1;\n        }\n    }\n\n    printf(\"%s\\n\", sequence);\n    free(sequence);\n}\n\nint main() {\n    int n, k;\n    scanf(\"%d %d\", &n, &k);\n    findFoldingSequence(n, k);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nvoid findFoldingSequence(int n, int k, vector<string>& sequences, string current, int left, int right, int target) {\n    if (left == right) {\n        if (left == target) {\n            sequences.push_back(current);\n        }\n        return;\n    }\n    \n    int mid = (left + right) / 2;\n    if (target <= mid) {\n        findFoldingSequence(n, k - 1, sequences, current + \"L\", left, mid, target);\n    } else {\n        findFoldingSequence(n, k - 1, sequences, current + \"R\", mid + 1, right, target);\n    }\n}\n\nvector<string> solve(int n, int k, int m) {\n    vector<string> sequences;\n    int totalLayers = 1 << k; // 2^k\n    int ribbonLength = (1 << n) - 1; // 2^n - 1\n    int segmentLength = ribbonLength / totalLayers;\n    int targetSegment = (m - 1) / segmentLength;\n    \n    findFoldingSequence(n, k, sequences, \"\", 0, totalLayers - 1, targetSegment);\n    for (auto& seq : sequences) {\n        reverse(seq.begin(), seq.end());\n    }\n    sort(sequences.begin(), sequences.end());\n    \n    return sequences;\n}\n\nint main() {\n    int n, k, m;\n    cin >> n >> k >> m;\n    \n    vector<string> sequences = solve(n, k, m);\n    \n    for (const string& seq : sequences) {\n        cout << seq << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:03:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class RibbonFolding {\n    public static List<String> solve(int n, int k) {\n        List<String> result = new ArrayList<>();\n        int totalLayers = 1 << n; // 2^n layers\n        int currentLayer = k;\n        \n        for (int i = n; i >= 1; i--) {\n            int half = totalLayers / 2;\n            if (currentLayer > half) {\n                result.add(\"R\");\n                currentLayer = totalLayers - currentLayer + 1;\n            } else {\n                result.add(\"L\");\n            }\n            totalLayers = half;\n        }\n        \n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 21:04:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RibbonFolding {\n    public static List<String> findFoldingSequences(int folds, int markedLayer) {\n        List<String> sequences = new ArrayList<>();\n        backtrack(\"\", folds, markedLayer, sequences);\n        return sequences;\n    }\n\n    private static void backtrack(String currentSequence, int remainingFolds, int markedLayer, List<String> sequences) {\n        if (remainingFolds == 0) {\n            if (checkMarkedLayer(currentSequence, markedLayer)) {\n                sequences.add(currentSequence);\n            }\n            return;\n        }\n\n        backtrack(currentSequence + \"L\", remainingFolds - 1, markedLayer, sequences);\n        backtrack(currentSequence + \"R\", remainingFolds - 1, markedLayer, sequences);\n    }\n\n    private static boolean checkMarkedLayer(String sequence, int markedLayer) {\n        int currentLayer = 1;\n        int left = 0, right = (1 << sequence.length()) - 1;\n\n        for (char fold : sequence.toCharArray()) {\n            if (fold == 'L') {\n                right = (left + right) / 2;\n            } else {\n                left = (left + right) / 2 + 1;\n            }\n            currentLayer++;\n        }\n\n        return markedLayer == currentLayer && (left + right) / 2 == markedLayer - 1;\n    }\n\n    public static void main(String[] args) {\n        int folds = 3;\n        int markedLayer = 4;\n        List<String> result = findFoldingSequences(folds, markedLayer);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 21:04:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_FOLDS 30\n\nvoid solve_ribbon_folding(int num_folds, int marked_layer) {\n    bool possible_folds[MAX_FOLDS + 1][MAX_FOLDS + 1] = {false};\n    possible_folds[0][marked_layer] = true;\n\n    for (int fold = 1; fold <= num_folds; fold++) {\n        for (int layer = 1; layer <= (1 << fold); layer++) {\n            int upper_layer = (layer + 1) / 2;\n            int lower_layer = (layer + 1) / 2 + ((layer % 2 == 0) ? (1 << (fold - 1)) : 0);\n\n            for (int prev_layer = 1; prev_layer <= (1 << (fold - 1)); prev_layer++) {\n                if (possible_folds[fold - 1][prev_layer]) {\n                    if (prev_layer == upper_layer) {\n                        possible_folds[fold][layer] = true;\n                        break;\n                    }\n                    if (prev_layer == lower_layer) {\n                        possible_folds[fold][layer] = true;\n                        break;\n                    }\n                }\n            }\n        }\n    }\n\n    bool found_solution = false;\n    for (int layer = 1; layer <= (1 << num_folds); layer++) {\n        if (possible_folds[num_folds][layer]) {\n            found_solution = true;\n            printf(\"Solution found for layer %d\\n\", layer);\n        }\n    }\n\n    if (!found_solution) {\n        printf(\"No solution exists\\n\");\n    }\n}\n\nint main() {\n    int num_folds, marked_layer;\n    scanf(\"%d %d\", &num_folds, &marked_layer);\n    solve_ribbon_folding(num_folds, marked_layer);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nclass RibbonFolding {\npublic:\n    vector<string> findPossibleFolds(int numFolds, int markedLayer) {\n        vector<string> possibleFolds;\n        \n        // Generate all possible fold sequences\n        generateFoldSequences(\"\", numFolds, possibleFolds);\n        \n        // Filter valid sequences based on marked layer\n        vector<string> validFolds;\n        for (const string& fold : possibleFolds) {\n            if (simulateFolding(fold, markedLayer)) {\n                validFolds.push_back(fold);\n            }\n        }\n        \n        return validFolds;\n    }\n\nprivate:\n    void generateFoldSequences(string currentSequence, int remainingFolds, vector<string>& sequences) {\n        if (remainingFolds == 0) {\n            sequences.push_back(currentSequence);\n            return;\n        }\n        \n        generateFoldSequences(currentSequence + \"L\", remainingFolds - 1, sequences);\n        generateFoldSequences(currentSequence + \"R\", remainingFolds - 1, sequences);\n    }\n    \n    bool simulateFolding(const string& foldSequence, int markedLayer) {\n        int currentLayer = 1;\n        int totalLayers = 1;\n        \n        for (char fold : foldSequence) {\n            totalLayers *= 2;\n            \n            if (fold == 'L') {\n                currentLayer = 2 * currentLayer - 1;\n            } else {\n                currentLayer = 2 * currentLayer;\n            }\n        }\n        \n        return currentLayer == markedLayer;\n    }\n};\n\nint main() {\n    RibbonFolding solver;\n    int numFolds, markedLayer;\n    \n    cin >> numFolds >> markedLayer;\n    \n    vector<string> results = solver.findPossibleFolds(numFolds, markedLayer);\n    \n    for (const string& fold : results) {\n        cout << fold << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:04:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_ribbon_sequences(folds, marked_layer):\n    def fold_layers(sequence):\n        n = len(sequence)\n        return [sequence[i] for i in range(n//2-1, -1, -1)] + \\\n               [sequence[i] for i in range(n//2, n)]\n\n    def unfold_sequence(sequence):\n        unfolded = [sequence]\n        for _ in range(folds):\n            unfolded = [fold_layers(seq) for seq in unfolded for seq in [seq[:len(seq)//2], seq[len(seq)//2:]]]\n        return unfolded\n    \n    ribbon = [i for i in range(1 << folds)]\n    sequences = unfold_sequence([ribbon])\n    \n    for seq in sequences:\n        if seq[0][marked_layer] == marked_layer:\n            return seq\n    return None\n\n# Example Usage:\nfolds = 3  # Number of folds\nmarked_layer = 5  # Marked layer number\nresult = find_ribbon_sequences(folds, marked_layer)\nprint(result)",
+    "timestamp": "2025-08-13 04:44:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class RibbonFolding {\n    \n    public List<String> getPossibleFoldingSequences(int folds, int markedLayer) {\n        List<String> sequences = new ArrayList<>();\n        generateSequences(folds, markedLayer, \"\", 0, sequences);\n        return sequences;\n    }\n\n    private void generateSequences(int folds, int markedLayer, String currentSequence, int currentLayer, List<String> sequences) {\n        if (folds == 0) {\n            if (currentLayer == markedLayer) {\n                sequences.add(currentSequence);\n            }\n            return;\n        }\n\n        // Try folding left and right and advance\n        generateSequences(folds - 1, markedLayer, currentSequence + \"L\", currentLayer * 2, sequences);\n        generateSequences(folds - 1, markedLayer, currentSequence + \"R\", currentLayer * 2 + 1, sequences);\n    }\n\n    public static void main(String[] args) {\n        RibbonFolding ribbonFolding = new RibbonFolding();\n        int folds = 3; // Example number of folds\n        int markedLayer = 5; // Example marked layer\n        List<String> sequences = ribbonFolding.getPossibleFoldingSequences(folds, markedLayer);\n        System.out.println(\"Possible folding sequences: \" + sequences);\n    }\n}",
+    "timestamp": "2025-08-13 04:44:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n// Node structure to represent a fold\ntypedef struct Node {\n    int direction; // 0 for left, 1 for right\n    struct Node* next;\n} Node;\n\n// Function to create a new Node\nNode* createNode(int direction) {\n    Node* newNode = (Node*)malloc(sizeof(Node));\n    newNode->direction = direction;\n    newNode->next = NULL;\n    return newNode;\n}\n\n// Helper function to record the sequence of folds\nvoid recordFoldSequence(Node** head, int direction) {\n    Node* newNode = createNode(direction);\n    if (*head == NULL) {\n        *head = newNode;\n    } else {\n        Node* temp = *head;\n        while (temp->next) {\n            temp = temp->next;\n        }\n        temp->next = newNode;\n    }\n}\n\n// Recursive function to simulate the folding process\nvoid simulateFolds(int folds, int currentFold, Node* sequence, Node** result) {\n    if (currentFold > folds) return;\n    // Left fold\n    recordFoldSequence(result, 0);\n    simulateFolds(folds, currentFold + 1, sequence, result);\n    // Record current fold\n    sequence->next = createNode(1);\n    simulateFolds(folds, currentFold + 1, sequence, result);\n}\n\n// Function to generate and print all possible fold sequences\nvoid generateFoldSequences(int numFolds, int markedLayer) {\n    Node* sequence = createNode(0);\n    Node* result = NULL;\n    simulateFolds(numFolds, 1, sequence, &result);\n    // Output the sequences\n    Node* temp = result;\n    while (temp) {\n        if (temp->direction == 1) {\n            printf(\"Right \");\n        } else {\n            printf(\"Left \");\n        }\n        temp = temp->next;\n    }\n    printf(\"\\n\");\n}\n\n// Main function\nint main() {\n    int folds = 3;\n    int markedLayer = 1; // example value\n    printf(\"Possible folding sequences:\\n\");\n    generateFoldSequences(folds, markedLayer);\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:45:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def ribbon_folding(num_folds, marked_layer):\n    # Initialize the ribbon with marked layer\n    ribbon = list(range(1, 2 ** num_folds + 1))\n    marked_index = marked_layer - 1\n\n    # Generate all possible folding sequences\n    sequences = []\n\n    def backtrack(current_sequence, ribbon_state):\n        if len(current_sequence) == num_folds:\n            # Check if marked layer is in the correct position\n            if ribbon_state[marked_index] == 1:\n                sequences.append(current_sequence.copy())\n            return\n\n        # Try folding from left\n        left_fold = ribbon_state.copy()\n        left_fold = left_fold[:len(left_fold)//2] + left_fold[len(left_fold)//2:][::-1]\n        current_sequence.append('L')\n        backtrack(current_sequence, left_fold)\n        current_sequence.pop()\n\n        # Try folding from right\n        right_fold = ribbon_state.copy()\n        right_fold = right_fold[len(right_fold)//2:][::-1] + right_fold[:len(right_fold)//2]\n        current_sequence.append('R')\n        backtrack(current_sequence, right_fold)\n        current_sequence.pop()\n\n    backtrack([], ribbon)\n    return sequences\n\n# Example usage\nprint(ribbon_folding(3, 2))",
+    "timestamp": "2025-08-13 04:45:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(folds, layer):\n    left = 'L'\n    right = 'R'\n    sequence = []\n    current_layer = layer\n    for _ in range(folds):\n        half = (current_layer + 1) // 2\n        if current_layer % 2 == 1:\n            sequence.append(left)\n            current_layer = half\n        else:\n            sequence.append(right)\n            current_layer = half\n    return sequence[::-1]",
+    "timestamp": "2025-08-13 04:45:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid generateFolds(vector<int>& ribbon, int folds, vector<int>& markedLayers) {\n    if (folds == 0) {\n        markedLayers.push_back(ribbon.size() / 2); // Mark the center\n        return;\n    }\n\n    int length = ribbon.size();\n    vector<int> leftRibbon(ribbon.begin(), ribbon.begin() + length / 2);\n    vector<int> rightRibbon(ribbon.begin() + length / 2, ribbon.end());\n\n    generateFolds(leftRibbon, folds - 1, markedLayers);\n    generateFolds(rightRibbon, folds - 1, markedLayers);\n\n    // Merging the folds\n    markedLayers.push_back(leftRibbon.size());\n}\n\nvoid identifyFoldingOperations(int folds, int layer) {\n    vector<int> ribbon(1 << folds, 0);  // Initialize ribbon with 2^folds layers\n    vector<int> markedLayers;\n    generateFolds(ribbon, folds, markedLayers);\n\n    cout << \"Folding operations to reach layer \" << layer << \":\\n\";\n    for (size_t i = 0; i < markedLayers.size(); ++i) {\n        if (markedLayers[i] == layer)\n            cout << \"Fold \" << i + 1 << \" -> layer marked at position \" << markedLayers[i] << \"\\n\";\n    }\n}\n\nint main() {\n    int folds = 3;    // Example: 3 folds\n    int layer = 2;    // Layer to identify\n\n    identifyFoldingOperations(folds, layer);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:21:31"
+  }
+]

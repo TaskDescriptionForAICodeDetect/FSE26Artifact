@@ -1,0 +1,1 @@
+You are to input a string using an On-Screen Keyboard (OSK) that is controlled by a remote with five buttons: four directional arrows and an OK button. Your task is to find the minimum number of button presses required to input a given string with the specified OSK layout.

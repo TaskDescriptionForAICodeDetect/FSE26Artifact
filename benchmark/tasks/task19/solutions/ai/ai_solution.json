@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve_depot_bomb(n, m, depot):\n    wall_rows = []\n    wall_cols = []\n    \n    # Find rows and columns with walls\n    for i in range(n):\n        for j in range(m):\n            if depot[i][j] == '*':\n                if i not in wall_rows:\n                    wall_rows.append(i)\n                if j not in wall_cols:\n                    wall_cols.append(j)\n    \n    # Check if bombing each row/column destroys all walls\n    for r in wall_rows:\n        hit_walls = set()\n        for j in range(m):\n            if depot[r][j] == '*':\n                hit_walls.add((r, j))\n        \n        for c in wall_cols:\n            temp_hit_walls = hit_walls.copy()\n            for i in range(n):\n                if depot[i][c] == '*':\n                    temp_hit_walls.add((i, c))\n            \n            if len(temp_hit_walls) == len(wall_rows) * len(wall_cols):\n                return \"YES\", r+1, c+1\n    \n    return \"NO\"\n\n# Read input\nn, m = map(int, input().split())\ndepot = [input().strip() for _ in range(n)]\n\n# Solve and print result\nresult = solve_depot_bomb(n, m, depot)\nprint(result[0])\nif result[0] == \"YES\":\n    print(result[1], result[2])",
+    "timestamp": "2025-08-05 17:31:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, m = map(int, input().split())\ngrid = [input().strip() for _ in range(n)]\nrow_counts = [0] * n\ncol_counts = [0] * m\ntotal = 0\n\nfor i in range(n):\n    for j in range(m):\n        if grid[i][j] == '*':\n            row_counts[i] += 1\n            col_counts[j] += 1\n            total += 1\n\nfound = False\nx, y = -1, -1\nfor i in range(n):\n    for j in range(m):\n        current = row_counts[i] + col_counts[j]\n        if grid[i][j] == '*':\n            current -= 1\n        if current == total:\n            x, y = i + 1, j + 1  # converting to 1-based\n            found = True\n            break\n    if found:\n        break\n\nif found:\n    print(\"YES\")\n    print(x, y)\nelse:\n    print(\"NO\")",
+    "timestamp": "2025-08-05 17:32:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_possible_to_wipe_out_walls(n, m, field):\n    row_wall_counts = [0] * n\n    col_wall_counts = [0] * m\n    total_walls = 0\n\n    for i in range(n):\n        for j in range(m):\n            if field[i][j] == '*':\n                row_wall_counts[i] += 1\n                col_wall_counts[j] += 1\n                total_walls += 1\n\n    for i in range(n):\n        for j in range(m):\n            # Calculate number of walls that the bomb would remove\n            if field[i][j] == '*':\n                if row_wall_counts[i] + col_wall_counts[j] - 1 == total_walls:\n                    print(\"YES\")\n                    print(i + 1, j + 1)\n                    return\n            else:\n                if row_wall_counts[i] + col_wall_counts[j] == total_walls:\n                    print(\"YES\")\n                    print(i + 1, j + 1)\n                    return\n\n    print(\"NO\")\n\n# Reading input\nn, m = map(int, input().split())\nfield = [input().strip() for _ in range(n)]\n\n# Checking if it's possible to wipe out all walls with one bomb\nis_possible_to_wipe_out_walls(n, m, field)",
+    "timestamp": "2025-08-12 21:41:37"
+  }
+]

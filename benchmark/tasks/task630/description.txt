@@ -1,0 +1,1 @@
+For a set S of integers, perform a sequence of operations where multiple elements can have equivalent values. The operations include inserting an integer, finding the count of a specific integer, deleting all instances of an integer, and dumping elements within a specified range in ascending order. Each operation has to report specific information as outlined.

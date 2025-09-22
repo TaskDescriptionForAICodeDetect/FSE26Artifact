@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int id;\n    int score;\n} Participant;\n\nint compare(const void *a, const void *b) {\n    Participant *p1 = (Participant *)a;\n    Participant *p2 = (Participant *)b;\n    if (p1->score != p2->score) {\n        return p2->score - p1->score;\n    } else {\n        return p1->id - p2->id;\n    }\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    if (n < 3 || n > 40) {\n        return 1;\n    }\n\n    Participant participants[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &participants[i].id, &participants[i].score);\n    }\n\n    qsort(participants, n, sizeof(Participant), compare);\n\n    for (int i = 0; i < n; i++) {\n        printf(\"%d %d\\n\", participants[i].id, participants[i].score);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class BowlingScores {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int n = scanner.nextInt();\n        \n        if (n < 3 || n > 40) {\n            System.out.println(\"Invalid number of participants\");\n            return;\n        }\n        \n        List<Student> students = new ArrayList<>();\n        \n        for (int i = 0; i < n; i++) {\n            int id = scanner.nextInt();\n            int score = scanner.nextInt();\n            students.add(new Student(id, score));\n        }\n        \n        Collections.sort(students, new Comparator<Student>() {\n            @Override\n            public int compare(Student a, Student b) {\n                if (a.score != b.score) {\n                    return b.score - a.score;\n                }\n                return a.id - b.id;\n            }\n        });\n        \n        for (Student student : students) {\n            System.out.println(student.id + \" \" + student.score);\n        }\n        \n        scanner.close();\n    }\n    \n    static class Student {\n        int id;\n        int score;\n        \n        Student(int id, int score) {\n            this.id = id;\n            this.score = score;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:29:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nstruct Participant {\n    int id;\n    int score;\n};\n\nbool compareParticipants(const Participant &a, const Participant &b) {\n    if (a.score == b.score) {\n        return a.id < b.id;\n    }\n    return a.score > b.score;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    if (n < 3 || n > 40) {\n        return 0;\n    }\n\n    vector<Participant> participants(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> participants[i].id >> participants[i].score;\n    }\n\n    sort(participants.begin(), participants.end(), compareParticipants);\n\n    for (const auto &p : participants) {\n        cout << p.id << \" \" << p.score << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\ntypedef struct {\n    int id;\n    int score;\n} Player;\n\nint compare(const void* a, const void* b) {\n    Player* playerA = (Player*)a;\n    Player* playerB = (Player*)b;\n    \n    if (playerA->score != playerB->score) {\n        return playerB->score - playerA->score;\n    }\n    \n    return playerA->id - playerB->id;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    if (n < 3 || n > 40) {\n        printf(\"Invalid number of participants\\n\");\n        return 0;\n    }\n    \n    Player players[40];\n    \n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &players[i].id, &players[i].score);\n    }\n    \n    qsort(players, n, sizeof(Player), compare);\n    \n    for (int i = 0; i < n; i++) {\n        printf(\"%d %d\\n\", players[i].id, players[i].score);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <iomanip>\n\nusing namespace std;\n\nclass Bowler {\npublic:\n    int id;\n    int score;\n    \n    Bowler(int _id, int _score) : id(_id), score(_score) {}\n};\n\nbool compareScores(const Bowler& a, const Bowler& b) {\n    if (a.score == b.score) {\n        return a.id < b.id;\n    }\n    return a.score > b.score;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    \n    if (n < 3 || n > 40) {\n        cout << \"Invalid number of participants\" << endl;\n        return 0;\n    }\n    \n    vector<Bowler> bowlers;\n    \n    for (int i = 0; i < n; i++) {\n        int id, score;\n        cin >> id >> score;\n        bowlers.push_back(Bowler(id, score));\n    }\n    \n    sort(bowlers.begin(), bowlers.end(), compareScores);\n    \n    for (const auto& bowler : bowlers) {\n        cout << bowler.id << \" \" << bowler.score << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\nclass Participant implements Comparable<Participant> {\n    int id;\n    int score;\n\n    public Participant(int id, int score) {\n        this.id = id;\n        this.score = score;\n    }\n\n    @Override\n    public int compareTo(Participant other) {\n        if (this.score != other.score) {\n            return Integer.compare(other.score, this.score);\n        } else {\n            return Integer.compare(this.id, other.id);\n        }\n    }\n}\n\npublic class BowlingScores {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        if (n < 3 || n > 40) {\n            System.out.println(\"Number of participants must be between 3 and 40.\");\n            return;\n        }\n\n        List<Participant> participants = new ArrayList<>();\n        for (int i = 0; i < n; i++) {\n            int id = scanner.nextInt();\n            int score = scanner.nextInt();\n            participants.add(new Participant(id, score));\n        }\n\n        Collections.sort(participants);\n\n        for (Participant p : participants) {\n            System.out.println(p.id + \" \" + p.score);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:30:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sort_bowling_results(participants):\n    # Sort participants by score in descending order, then by student ID in ascending order in case of a tie\n    sorted_results = sorted(participants, key=lambda x: (-x[1], x[0]))\n    return sorted_results\n\ndef main():\n    num_participants = int(input(\"Enter number of participants (between 3 and 40): \"))\n    if num_participants < 3 or num_participants > 40:\n        raise ValueError(\"Number of participants must be between 3 and 40\")\n\n    participants = []\n    for _ in range(num_participants):\n        student_id = input(\"Enter student ID: \")\n        score = int(input(\"Enter score: \"))\n        participants.append((student_id, score))\n\n    sorted_results = sort_bowling_results(participants)\n    print(\"Results:\")\n    for student_id, score in sorted_results:\n        print(f\"Student ID: {student_id}, Score: {score}\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:31:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\nclass Participant implements Comparable<Participant> {\n    int studentId;\n    int score;\n\n    public Participant(int studentId, int score) {\n        this.studentId = studentId;\n        this.score = score;\n    }\n\n    @Override\n    public int compareTo(Participant other) {\n        if (this.score != other.score) {\n            return other.score - this.score;\n        }\n        return this.studentId - other.studentId;\n    }\n}\n\npublic class BowlingScores {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt(); // Number of participants\n\n        if (n < 3 || n > 40) {\n            System.out.println(\"Invalid number of participants\");\n            return;\n        }\n\n        List<Participant> participants = new ArrayList<>();\n\n        for (int i = 0; i < n; i++) {\n            int studentId = scanner.nextInt();\n            int score = scanner.nextInt();\n            participants.add(new Participant(studentId, score));\n        }\n\n        Collections.sort(participants);\n\n        for (Participant participant : participants) {\n            System.out.println(\"Student ID: \" + participant.studentId + \", Score: \" + participant.score);\n        }\n    }\n}",
+    "timestamp": "2025-08-12 23:32:09"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_PARTICIPANTS 40\n#define MIN_PARTICIPANTS 3\n\ntypedef struct {\n    int id;\n    int score;\n} Participant;\n\nint compareParticipant(const void *a, const void *b) {\n    Participant *p1 = (Participant *)a;\n    Participant *p2 = (Participant *)b;\n    if (p1->score != p2->score) {\n        return p2->score - p1->score;\n    } else {\n        return p1->id - p2->id;\n    }\n}\n\nint main() {\n    int numParticipants;\n    Participant participants[MAX_PARTICIPANTS];\n\n    printf(\"Enter the number of participants (3-40): \");\n    scanf(\"%d\", &numParticipants);\n\n    if (numParticipants < MIN_PARTICIPANTS || numParticipants > MAX_PARTICIPANTS) {\n        printf(\"Invalid number of participants!\\n\");\n        return 1;\n    }\n\n    for (int i = 0; i < numParticipants; i++) {\n        printf(\"Enter ID and score for participant %d: \", i + 1);\n        scanf(\"%d %d\", &participants[i].id, &participants[i].score);\n    }\n\n    qsort(participants, numParticipants, sizeof(Participant), compareParticipant);\n\n    printf(\"Results:\\n\");\n    for (int i = 0; i < numParticipants; i++) {\n        printf(\"ID: %d, Score: %d\\n\", participants[i].id, participants[i].score);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:32:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def calculate_bowling_score(rolls):\n    score = 0\n    frame = 0\n    roll_index = 0\n\n    while frame < 10:\n        if rolls[roll_index] == 10:  # Strike\n            score += 10 + rolls[roll_index + 1] + rolls[roll_index + 2]\n            roll_index += 1\n        elif rolls[roll_index] + rolls[roll_index + 1] == 10:  # Spare\n            score += 10 + rolls[roll_index + 2]\n            roll_index += 2\n        else:  # Open frame\n            score += rolls[roll_index] + rolls[roll_index + 1]\n            roll_index += 2\n        frame += 1\n\n    return score\n\ndef main():\n    # Input number of participants\n    n = int(input())\n    \n    # Validate number of participants\n    if n < 3 or n > 40:\n        print(\"Invalid number of participants\")\n        return\n\n    # Store participant scores\n    participants = []\n\n    # Process each participant\n    for _ in range(n):\n        student_id, *rolls = map(int, input().split())\n        score = calculate_bowling_score(rolls)\n        participants.append((student_id, score))\n\n    # Sort participants by score (descending) and student ID (ascending)\n    participants.sort(key=lambda x: (-x[1], x[0]))\n\n    # Output results\n    for student_id, score in participants:\n        print(f\"{student_id} {score}\")\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:32:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\nparticipants = []\nfor _ in range(n):\n    student_id, score = input().split()\n    participants.append((int(student_id), int(score)))\n\nparticipants.sort(key=lambda x: (-x[1], x[0]))\n\nfor participant in participants:\n    print(participant[0], participant[1])",
+    "timestamp": "2025-08-12 23:32:40"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Participant {\n    int studentID;\n    int score;\n};\n\nbool compareParticipants(const Participant& a, const Participant& b) {\n    if (a.score == b.score) {\n        return a.studentID < b.studentID;\n    }\n    return a.score > b.score;\n}\n\nint main() {\n    int n;\n    std::cout << \"Enter number of participants: \";\n    std::cin >> n;\n\n    if (n < 3 || n > 40) {\n        std::cerr << \"Number of participants must be between 3 and 40\" << std::endl;\n        return 1;\n    }\n\n    std::vector<Participant> participants(n);\n\n    for (int i = 0; i < n; ++i) {\n        std::cout << \"Enter student ID and score for participant \" << i + 1 << \": \";\n        std::cin >> participants[i].studentID >> participants[i].score;\n    }\n\n    std::sort(participants.begin(), participants.end(), compareParticipants);\n\n    std::cout << \"Sorted results:\" << std::endl;\n    for (const auto& participant : participants) {\n        std::cout << \"Student ID: \" << participant.studentID << \", Score: \" << participant.score << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:50:42"
+  }
+]

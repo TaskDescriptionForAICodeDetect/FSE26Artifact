@@ -1,0 +1,1 @@
+Iroha has a sequence of N strings s_1, s_2, ..., s_N. She will choose some (possibly all) strings from the sequence, then concatenate those strings retaining the relative order, to produce a long string. Among all strings of length K that she can produce in this way, find the lexicographically smallest one.

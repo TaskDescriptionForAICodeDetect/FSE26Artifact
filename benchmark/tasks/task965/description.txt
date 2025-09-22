@@ -1,0 +1,1 @@
+Determine if a particular undirected connected graph with N vertices exists based on given distance constraints from two specific vertices. If such a graph can be constructed, find the minimum number of edges required.

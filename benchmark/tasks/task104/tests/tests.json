@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "5 5\n.X.S.\n.X#..\n.XX##\n.#XG.\n..X..\n7 3\nSXX.XXG\nX.#.#X.\nXXX.XX#\n4 4\nS...\nX.X.\nGX..\n...X\n10 10\n..XXXXX.XX\n.X.#.#X.XX\nSX.#X.X..X\n#X.##.X.XX\n..XXXX#.XX\n##.##.##XX\n....X.XX#X\n.##X..#X#X\n....XX#..X\n...#XXG..X\n0 0",
+      "output": "11\n10\n10\n33"
+    }
+  ]
+}

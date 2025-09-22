@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def max_team_size(l, r, a):\n    max_same_hand = min(l, r)\n    team_size = 2 * max_same_hand\n    \n    remaining_a = a\n    \n    if l < r:\n        diff = r - l\n        extra_on_right = min(diff, remaining_a)\n        team_size += 2 * extra_on_right\n        remaining_a -= extra_on_right\n    elif r < l:\n        diff = l - r\n        extra_on_left = min(diff, remaining_a)\n        team_size += 2 * extra_on_left\n        remaining_a -= extra_on_left\n    \n    team_size += min(remaining_a // 2 * 2, remaining_a)\n    \n    return team_size\n\nl, r, a = map(int, input().split())\nprint(max_team_size(l, r, a))",
+    "timestamp": "2025-08-05 17:32:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "l, r, a = map(int, input().split())\n\nmin_lr = min(l, r)\nmax_lr = max(l, r)\ndiff = max_lr - min_lr\n\nif a >= diff:\n    remaining_a = a - diff\n    total = 2 * (min_lr + diff) + (remaining_a // 2) * 2\nelse:\n    total = 2 * (min_lr + a)\n\nprint(total)",
+    "timestamp": "2025-08-05 17:32:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_team_size(l, r, a):\n    min_lr = min(l, r)\n    max_lr = max(l, r)\n    total = min_lr * 2\n    remaining_ambidexters = a - (max_lr - min_lr)\n\n    if remaining_ambidexters >= 0:\n        total += (max_lr - min_lr) * 2\n        total += (remaining_ambidexters // 2) * 2\n    else:\n        total += (a * 2)\n\n    return total\n\n# Example usage:\nprint(max_team_size(1, 4, 2))  # Output: 6\nprint(max_team_size(5, 5, 5))  # Output: 14\nprint(max_team_size(0, 2, 0))  # Output: 0",
+    "timestamp": "2025-08-12 21:53:52"
+  }
+]

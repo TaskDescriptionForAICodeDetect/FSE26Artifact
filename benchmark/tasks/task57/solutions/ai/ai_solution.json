@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, k, p, x, y, a):\n    current_sum = sum(a)\n    current_sorted = sorted(a)\n    \n    for _ in range(n - k):\n        if current_sum > x:\n            return \"-1\"\n        \n        if len(current_sorted) == n // 2:\n            current_sorted.append(1)\n            current_sum += 1\n        elif current_sorted[n // 2] < y:\n            current_sorted.append(y)\n            current_sum += y\n        else:\n            current_sorted.append(1)\n            current_sum += 1\n        \n        current_sorted.sort()\n    \n    if current_sum > x:\n        return \"-1\"\n    \n    return \" \".join(map(str, current_sorted[k:]))\n\nn, k, p, x, y = map(int, input().split())\na = list(map(int, input().split()))\n\nprint(solve(n, k, p, x, y, a))",
+    "timestamp": "2025-08-05 17:33:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, k, p, x, y = map(int, input().split())\na = list(map(int, input().split()))\nsum_so_far = sum(a)\nremaining = n - k\nmin_needed = max(0, (n + 1) // 2 - sum(1 for num in a if num >= y))\nif min_needed > remaining:\n    print(-1)\nelse:\n    # We need to add at least 'min_needed' elements >= y, and the rest can be 1\n    added_high = min_needed\n    added_low = remaining - added_high\n    marks = [y] * added_high + [1] * added_low\n    total = sum_so_far + sum(marks)\n    if total > x:\n        print(-1)\n    else:\n        # Now check if the median is >= y\n        combined = a + marks\n        combined_sorted = sorted(combined)\n        median = combined_sorted[(n - 1) // 2]\n        if median >= y:\n            print(' '.join(map(str, marks)))\n        else:\n            print(-1)",
+    "timestamp": "2025-08-05 17:34:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def vova_marks(n, k, p, x, y, marks):\n    remaining_tests = n - k\n    current_sum = sum(marks)\n    needed_sum = x - current_sum\n    median_position = (n + 1) // 2\n\n    marks.sort()\n    less_than_y = sum(1 for m in marks if m < y)\n\n    min_required_to_median = max(0, median_position - less_than_y)\n    if min_required_to_median + remaining_tests > remaining_tests:\n        return \"-1\"\n\n    needed_sum -= min_required_to_median * y\n    if needed_sum > (remaining_tests - min_required_to_median) * (p - 1):\n        return \"-1\"\n\n    result = [y] * min_required_to_median\n    if remaining_tests > min_required_to_median:\n        result.extend([1] * (remaining_tests - min_required_to_median))\n\n    total_sum = current_sum + sum(result)\n    if total_sum > x:\n        return \"-1\"\n    \n    return \" \".join(map(str, result))\n\n# Example usage\nn, k, p, x, y = 5, 3, 5, 18, 4\nmarks = [3, 5, 4]\nprint(vova_marks(n, k, p, x, y, marks))  # Output: \"4 1\"",
+    "timestamp": "2025-08-12 21:55:34"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int a;\n    int b;\n} Movie;\n\nint compare(const void *x, const void *y) {\n    Movie *m1 = (Movie *)x;\n    Movie *m2 = (Movie *)y;\n    return m1->b - m2->b;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    Movie movies[n];\n    for (int i = 0; i < n; i++) {\n        scanf(\"%d %d\", &movies[i].a, &movies[i].b);\n    }\n    \n    qsort(movies, n, sizeof(Movie), compare);\n    \n    int watched[n + 1];\n    for (int i = 1; i <= n; i++) {\n        watched[i] = 0;\n    }\n    \n    int total = 0;\n    for (int day = 1; day <= 31; day++) {\n        int best = -1;\n        for (int i = 0; i < n; i++) {\n            if (movies[i].a <= day && day <= movies[i].b) {\n                if (best == -1 || (watched[best + 1] > watched[i + 1])) {\n                    best = i;\n                }\n            }\n        }\n        if (best != -1) {\n            if (watched[best + 1] == 0) {\n                total += 100;\n            } else {\n                total += 50;\n            }\n            watched[best + 1]++;\n        }\n    }\n    \n    printf(\"%d\\n\", total);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:00:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nstruct Movie {\n    int a, b;\n};\n\nbool compareMovies(const Movie &m1, const Movie &m2) {\n    return m1.b < m2.b;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<Movie> movies(n);\n    for (int i = 0; i < n; ++i) {\n        cin >> movies[i].a >> movies[i].b;\n    }\n    sort(movies.begin(), movies.end(), compareMovies);\n\n    vector<int> dp(32, 0);\n    vector<int> count(n + 1, 0);\n\n    for (int day = 1; day <= 31; ++day) {\n        dp[day] = dp[day - 1];\n        for (int i = 0; i < n; ++i) {\n            if (movies[i].a <= day && day <= movies[i].b) {\n                int points = (count[i + 1] == 0) ? 100 : 50;\n                int prev_day = movies[i].a - 1;\n                if (dp[prev_day] + points > dp[day]) {\n                    dp[day] = dp[prev_day] + points;\n                    count[i + 1]++;\n                }\n            }\n        }\n    }\n    cout << dp[31] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:01:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static class Movie {\n        int a, b;\n        Movie(int a, int b) {\n            this.a = a;\n            this.b = b;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        Movie[] movies = new Movie[n];\n        for (int i = 0; i < n; i++) {\n            int a = sc.nextInt();\n            int b = sc.nextInt();\n            movies[i] = new Movie(a, b);\n        }\n\n        Arrays.sort(movies, (m1, m2) -> m1.b - m2.b);\n\n        int[] dp = new int[32];\n        int[] count = new int[n + 1];\n\n        for (int day = 1; day <= 31; day++) {\n            dp[day] = dp[day - 1];\n            for (int i = 0; i < n; i++) {\n                if (movies[i].a <= day && day <= movies[i].b) {\n                    int id = i + 1;\n                    int gain = (count[id] == 0) ? 100 : 50;\n                    if (dp[day] < dp[day - 1] + gain) {\n                        dp[day] = dp[day - 1] + gain;\n                        count[id]++;\n                    }\n                }\n            }\n        }\n\n        System.out.println(dp[31]);\n    }\n}",
+    "timestamp": "2025-08-05 21:01:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TaroMovieHappiness {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] a = new int[n];\n        int[] b = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            a[i] = sc.nextInt();\n            b[i] = sc.nextInt();\n        }\n        \n        int[] happiness = new int[32];\n        boolean[] watched = new boolean[n];\n        \n        for (int day = 1; day <= 31; day++) {\n            int maxHappiness = 0;\n            int selectedMovie = -1;\n            \n            for (int i = 0; i < n; i++) {\n                if (day >= a[i] && day <= b[i]) {\n                    int currentHappiness = watched[i] ? 50 : 100;\n                    if (currentHappiness > maxHappiness) {\n                        maxHappiness = currentHappiness;\n                        selectedMovie = i;\n                    }\n                }\n            }\n            \n            if (selectedMovie != -1) {\n                happiness[day] = maxHappiness;\n                watched[selectedMovie] = true;\n            }\n        }\n        \n        int totalHappiness = Arrays.stream(happiness).sum();\n        System.out.println(totalHappiness);\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:02:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_MOVIES 100\n#define MAX_DAYS 31\n\nint main() {\n    int n, happiness = 0;\n    int movie_watched[MAX_MOVIES + 1] = {0};\n    int daily_schedule[MAX_DAYS + 1] = {0};\n\n    scanf(\"%d\", &n);\n\n    for (int i = 1; i <= n; i++) {\n        int a, b;\n        scanf(\"%d %d\", &a, &b);\n\n        for (int day = a; day <= b; day++) {\n            if (daily_schedule[day] == 0) {\n                daily_schedule[day] = i;\n                if (!movie_watched[i]) {\n                    happiness += 100;\n                    movie_watched[i] = 1;\n                } else {\n                    happiness += 50;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", happiness);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<pair<int, int>> movies(n);\n    for (int i = 0; i = n; i++) {\n        cin >> movies[i].first >> movies[i].second;\n    }\n    \n    vector<bool> watched(32, false);\n    int happiness = 0;\n    \n    for (int day = 1; day <= 31; day++) {\n        int bestMovie = -1;\n        int maxPoints = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (movies[i].first <= day && day <= movies[i].second) {\n                int points = watched[i] ? 50 : 100;\n                if (points > maxPoints) {\n                    maxPoints = points;\n                    bestMovie = i;\n                }\n            }\n        }\n        \n        if (bestMovie != -1) {\n            happiness += watched[bestMovie] ? 50 : 100;\n            watched[bestMovie] = true;\n        }\n    }\n    \n    cout << happiness << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:02:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_happiness(n, schedule):\n    dp = [0] * 32\n    movie_days = [[] for _ in range(32)]\n\n    for i in range(n):\n        a, b = schedule[i]\n        for day in range(a, b + 1):\n            movie_days[day].append(i)\n\n    seen = set()\n\n    for day in range(1, 32):\n        dp[day] = dp[day - 1]\n        best_happiness = 0\n        for movie in movie_days[day]:\n            if movie not in seen:\n                best_happiness = max(best_happiness, 100)\n            else:\n                best_happiness = max(best_happiness, 50)\n        \n        if best_happiness > 0:\n            seen.add(movie)\n        \n        dp[day] += best_happiness\n\n    return dp[31]\n\n# Example usage\nn = 3\nschedule = [(1, 10), (11, 20), (21, 31)]\nprint(max_happiness(n, schedule))  # Example: Output should be 3100 with proper schedule",
+    "timestamp": "2025-08-13 04:34:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MovieSchedule {\n\n    static class Movie {\n        int start;\n        int end;\n        int index;\n\n        Movie(int start, int end, int index) {\n            this.start = start;\n            this.end = end;\n            this.index = index;\n        }\n    }\n\n    public static int maxHappiness(int n, int[] a, int[] b) {\n        List<Movie> movies = new ArrayList<>();\n        for (int i = 0; i < n; i++) {\n            movies.add(new Movie(a[i], b[i], i));\n        }\n\n        // Sort movies by end date (then by start date)\n        movies.sort(Comparator.comparingInt((Movie m) -> m.end).thenComparingInt(m -> m.start));\n\n        int maxHappiness = 0;\n        Set<Integer> watchedMovies = new HashSet<>();\n        int[] dp = new int[32]; // dp[i] stores maximum happiness up to day i\n\n        for (int day = 1; day <= 31; day++) {\n            dp[day] = dp[day - 1]; // If no movie watched today, carry forward previous day happiness\n\n            for (Movie movie : movies) {\n                if (movie.start <= day && day <= movie.end) {\n                    int currentHappiness = dp[day - 1];\n                    if (!watchedMovies.contains(movie.index)) {\n                        currentHappiness += 100;\n                        watchedMovies.add(movie.index); // Mark as watched for first time\n                    } else {\n                        currentHappiness += 50;\n                    }\n                    dp[day] = Math.max(dp[day], currentHappiness);\n                }\n            }\n        }\n\n        return dp[31]; // Maximum happiness achievable by August 31\n    }\n\n    public static void main(String[] args) {\n        int n = 3;\n        int[] a = {1, 10, 20};\n        int[] b = {10, 20, 31};\n        System.out.println(maxHappiness(n, a, b)); // Example usage\n    }\n}",
+    "timestamp": "2025-08-13 04:34:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_DAYS 31\n#define MAX_MOVIES 100\n\ntypedef struct {\n    int start, end;\n} Movie;\n\n// Comparator function for sorting movies by their end day, and then by start day\nint compareMovies(const void* a, const void* b) {\n    Movie* movie1 = (Movie*)a;\n    Movie* movie2 = (Movie*)b;\n    if (movie1->end != movie2->end) {\n        return movie1->end - movie2->end;\n    } else {\n        return movie1->start - movie2->start;\n    }\n}\n\nint main() {\n    int n;\n    Movie movies[MAX_MOVIES];\n    int dp[MAX_DAYS + 1][MAX_MOVIES + 1] = {0};\n    \n    // Input number of movies\n    scanf(\"%d\", &n);\n    \n    // Input each movie's start and end day\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d %d\", &movies[i].start, &movies[i].end);\n    }\n    \n    // Sort movies by their end day\n    qsort(movies, n, sizeof(Movie), compareMovies);\n    \n    // Dynamic programming to calculate maximum happiness\n    for (int day = 1; day <= MAX_DAYS; ++day) {\n        for (int watched = 0; watched <= n; ++watched) {\n            // Case 1: Do not watch a movie on this day\n            dp[day][watched] = dp[day - 1][watched];\n            // Case 2: Watch a movie\n            for (int i = 0; i < n; ++i) {\n                if (movies[i].start <= day && day <= movies[i].end) {\n                    int firstWatch = (watched & (1 << i)) == 0;\n                    int happiness = firstWatch ? 100 : 50;\n                    int newWatched = watched | (1 << i);\n                    dp[day][newWatched] = (dp[day][newWatched] > dp[day - 1][watched] + happiness) ? \n                                           dp[day][newWatched] : dp[day - 1][watched] + happiness;\n                }\n            }\n        }\n    }\n    \n    // Find maximum happiness from the last day\n    int maxHappiness = 0;\n    for (int i = 0; i < (1 << n); ++i) {\n        if (dp[MAX_DAYS][i] > maxHappiness) {\n            maxHappiness = dp[MAX_DAYS][i];\n        }\n    }\n    \n    // Output the maximum happiness points\n    printf(\"%d\\n\", maxHappiness);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 04:34:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_happiness(n, movies):\n    dp = [[0] * 32 for _ in range(n + 1)]\n    \n    for i in range(1, n + 1):\n        a, b = movies[i-1]\n        for j in range(1, 32):\n            dp[i][j] = dp[i][j-1]\n            if a <= j <= b:\n                first_watch = dp[i-1][j-1] + 100\n                repeat_watch = dp[i-1][j-1] + 50\n                dp[i][j] = max(dp[i][j], first_watch, repeat_watch)\n    \n    return max(dp[n])\n\n# Read input\nn = int(input())\nmovies = []\nfor _ in range(n):\n    a, b = map(int, input().split())\n    movies.append((a, b))\n\n# Calculate and print result\nprint(max_happiness(n, movies))",
+    "timestamp": "2025-08-13 04:35:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\nmovies = []\nfor _ in range(n):\n    a, b = map(int, input().split())\n    movies.append((a, b))\n\n# Sort movies by end day to prioritize earlier ending movies\nmovies.sort(key=lambda x: x[1])\n\ndays = [0] * 32  # days[1..31] represent August 1 to August 31\ntotal_happiness = 0\n\n# We'll track for each movie how many times it's been watched\nwatched = [0] * (n + 1)  # 1-based indexing\n\nfor day in range(1, 32):\n    best_movie = None\n    best_happiness = -1\n    best_index = -1\n    \n    for i in range(n):\n        a, b = movies[i]\n        if a <= day <= b:\n            current_happiness = 100 if watched[i+1] == 0 else 50\n            if current_happiness > best_happiness:\n                best_happiness = current_happiness\n                best_movie = movies[i]\n                best_index = i + 1  # 1-based\n    \n    if best_movie is not None:\n        total_happiness += best_happiness\n        watched[best_index] += 1\n\nprint(total_happiness)",
+    "timestamp": "2025-08-13 04:35:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nstruct Movie {\n    int start;\n    int end;\n    int index;\n};\n\nbool compareMovies(const Movie &a, const Movie &b) {\n    return a.end < b.end;\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    std::vector<Movie> movies(n);\n\n    for (int i = 0; i < n; ++i) {\n        std::cin >> movies[i].start >> movies[i].end;\n        movies[i].index = i;\n    }\n\n    std::sort(movies.begin(), movies.end(), compareMovies);\n\n    std::vector<std::vector<int>> dp(32, std::vector<int>(1 << n, -1));\n    dp[0][0] = 0;\n\n    for (int day = 0; day <= 31; ++day) {\n        for (int mask = 0; mask < (1 << n); ++mask) {\n            if (dp[day][mask] == -1) continue;\n\n            // consider not watching any movie on this day\n            if (day < 31) {\n                dp[day + 1][mask] = std::max(dp[day + 1][mask], dp[day][mask]);\n            }\n            \n            // consider watching each available movie on this day\n            for (int i = 0; i < n; ++i) {\n                if (movies[i].start <= day + 1 && day + 1 <= movies[i].end) {\n                    int watchedMask = mask | (1 << i);\n                    int happiness = dp[day][mask] + ((mask & (1 << i)) ? 50 : 100);\n                    if (day < 31) {\n                        dp[day + 1][watchedMask] = std::max(dp[day + 1][watchedMask], happiness);\n                    }\n                }\n            }\n        }\n    }\n\n    int maxHappiness = 0;\n    for (int mask = 0; mask < (1 << n); ++mask) {\n        maxHappiness = std::max(maxHappiness, dp[31][mask]);\n    }\n\n    std::cout << maxHappiness << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:20:21"
+  }
+]

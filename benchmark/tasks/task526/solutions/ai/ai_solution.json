@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minimumDaysToReduce(int S, int T, int D, int *plan) {\n    for (int days = 0; days <= D * D; days++) {\n        if (S <= T) return days;\n        S -= plan[days % D];\n    }\n    return -1;\n}\n\nint main() {\n    int S, T, D;\n    scanf(\"%d %d %d\", &S, &T, &D);\n    \n    int plan[D];\n    for (int i = 0; i < D; i++) {\n        scanf(\"%d\", &plan[i]);\n    }\n    \n    int result = minimumDaysToReduce(S, T, D, plan);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:01:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    long long S, T, D;\n    scanf(\"%lld %lld %lld\", &S, &T, &D);\n    long long *cycle = (long long *)malloc(D * sizeof(long long));\n    for (long long i = 0; i < D; i++) {\n        scanf(\"%lld\", &cycle[i]);\n    }\n\n    long long current = S;\n    long long days = 0;\n    long long min_weight = S;\n    long long total_cycle = 0;\n\n    for (long long i = 0; i < D; i++) {\n        total_cycle += cycle[i];\n    }\n\n    if (total_cycle >= 0) {\n        printf(\"-1\\n\");\n        free(cycle);\n        return 0;\n    }\n\n    while (current > T) {\n        for (long long i = 0; i < D && current > T; i++) {\n            current += cycle[i];\n            days++;\n            if (current <= T) {\n                printf(\"%lld\\n\", days);\n                free(cycle);\n                return 0;\n            }\n        }\n        if (current >= min_weight) {\n            printf(\"-1\\n\");\n            free(cycle);\n            return 0;\n        }\n        min_weight = current;\n    }\n\n    printf(\"%lld\\n\", days);\n    free(cycle);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    long long S, T, D;\n    cin >> S >> T >> D;\n    vector<long long> changes(D);\n    for (long long i = 0; i < D; ++i) {\n        cin >> changes[i];\n    }\n\n    long long current = S;\n    long long days = 0;\n\n    // Check first D days\n    for (long long i = 0; i < D; ++i) {\n        if (current <= T) {\n            cout << days << endl;\n            return 0;\n        }\n        current += changes[i % D];\n        days++;\n        if (current <= T) {\n            cout << days << endl;\n            return 0;\n        }\n    }\n\n    if (current >= S) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    // Calculate the net change per D days\n    long long net_change = 0;\n    for (long long i = 0; i < D; ++i) {\n        net_change += changes[i];\n    }\n\n    if (net_change >= 0) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    // Calculate full cycles needed\n    long long full_cycles = (current - T + (-net_change) - 1) / (-net_change);\n    days += full_cycles * D;\n    current += full_cycles * net_change;\n\n    // Check remaining days\n    while (current > T) {\n        current += changes[days % D];\n        days++;\n    }\n\n    cout << days << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:02:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int S = scanner.nextInt();\n        int T = scanner.nextInt();\n        int D = scanner.nextInt();\n        int[] changes = new int[D];\n        for (int i = 0; i < D; i++) {\n            changes[i] = scanner.nextInt();\n        }\n        \n        int currentWeight = S;\n        int days = 0;\n        boolean possible = false;\n        \n        while (true) {\n            if (currentWeight <= T) {\n                possible = true;\n                break;\n            }\n            int change = changes[days % D];\n            currentWeight += change;\n            days++;\n            \n            if (days > 1000000) { // Prevent infinite loop\n                break;\n            }\n        }\n        \n        System.out.println(possible ? days : -1);\n    }\n}",
+    "timestamp": "2025-08-05 22:02:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int findMinDays(int S, int T, int D, int[] weights) {\n        int currentWeight = S;\n        boolean[] visited = new boolean[D];\n        \n        for (int day = 0; day <= D * 100; day++) {\n            if (currentWeight <= T) {\n                return day;\n            }\n            \n            int weightChange = weights[day % D];\n            currentWeight -= weightChange;\n            \n            if (visited[day % D]) {\n                break;\n            }\n            \n            visited[day % D] = true;\n        }\n        \n        return -1;\n    }\n}",
+    "timestamp": "2025-08-05 22:02:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int minimumDays(int S, int T, vector<int>& weights) {\n        int D = weights.size();\n        int currentWeight = S;\n        \n        for (int day = 0; day < D * 2; day++) {\n            if (currentWeight <= T) {\n                return day;\n            }\n            \n            currentWeight -= weights[day % D];\n        }\n        \n        return currentWeight <= T ? D * 2 : -1;\n    }\n};",
+    "timestamp": "2025-08-05 22:02:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def chokudai_slimming(S, T, D_days):\n    day_count = 0\n    current_weight = S\n    n = len(D_days)\n    \n    while current_weight > T:\n        current_weight += D_days[day_count % n]\n        day_count += 1\n        if day_count > n and D_days[day_count % n] >= D_days[(day_count - n) % n]:\n            return -1\n        \n    return day_count\n\n# Example usage:\nS = 100\nT = 70\nD_days = [-2, 0, -5]\nprint(chokudai_slimming(S, T, D_days))  # Output: 10",
+    "timestamp": "2025-08-13 08:37:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class WeightReduction {\n\n    public static int slimmingPlan(int S, int T, int[] changes) {\n        int D = changes.length;\n        int days = 0;\n        \n        while (S > T) {\n            S += changes[days % D];\n            days++;\n            if (days > D && changesCyclicNoReduction(changes)) {\n                return -1;\n            }\n        }\n        \n        return days;\n    }\n    \n    private static boolean changesCyclicNoReduction(int[] changes) {\n        int sum = 0;\n        for (int change : changes) {\n            sum += change;\n        }\n        return sum >= 0;\n    }\n\n    public static void main(String[] args) {\n        int S = 6;\n        int T = 4;\n        int[] changes = {-2, 1, -1};\n        \n        System.out.println(slimmingPlan(S, T, changes));  // Output: 2\n    }\n}",
+    "timestamp": "2025-08-13 08:37:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int S, T, D;\n    scanf(\"%d %d %d\", &S, &T, &D);\n\n    int weightChange[D];\n    for (int i = 0; i < D; i++) {\n        scanf(\"%d\", &weightChange[i]);\n    }\n\n    int currentWeight = S;\n    int days = 0;\n\n    while (currentWeight > T) {\n        if (days > 100000) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n\n        currentWeight += weightChange[days % D];\n        days++;\n    }\n\n    printf(\"%d\\n\", days);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:37:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_weight_reduction(S, T, D, weights):\n    visited = set()\n    current_weight = S\n    days = 0\n\n    while current_weight > T:\n        if days >= D * 2:  # Prevent infinite loop\n            return -1\n        \n        day_index = days % D\n        current_weight += weights[day_index]\n        \n        state = (current_weight, day_index)\n        if state in visited:\n            return -1\n        \n        visited.add(state)\n        days += 1\n\n    return days",
+    "timestamp": "2025-08-13 08:37:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    S, T, D = map(int, input().split())\n    W = list(map(int, input().split()))\n    \n    current_weight = S\n    days = 0\n    \n    visited = set()\n    \n    while current_weight > T:\n        mod_day = days % D\n        current_weight += W[mod_day]\n        days += 1\n        \n        if current_weight <= T:\n            break\n            \n        state = (mod_day, current_weight)\n        if state in visited:\n            return -1\n        visited.add(state)\n        \n        if days > 1000000:  # Prevent infinite loop\n            return -1\n    \n    return days if current_weight <= T else -1\n\nprint(solve())",
+    "timestamp": "2025-08-13 08:37:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint slimmingPlan(int S, int T, int D, vector<int>& cycle) {\n    int weight = S;\n    for (int days = 0; days <= 300000; ++days) {\n        if (weight <= T) {\n            return days;\n        }\n        weight += cycle[days % D];\n    }\n    return -1;\n}\n\nint main() {\n    int S, T, D;\n    cin >> S >> T >> D;\n    vector<int> cycle(D);\n    for (int i = 0; i < D; ++i) {\n        cin >> cycle[i];\n    }\n    cout << slimmingPlan(S, T, D, cycle) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:11"
+  }
+]

@@ -1,0 +1,1 @@
+We have a tree with N vertices, numbered from 1 to N. Each edge connects Vertex a_i and Vertex b_i. The goal is to find a permutation of these integers (p_1, p_2, ..., p_N) such that for every pair of vertices (i, j) at a distance of 3, the sum or product of p_i and p_j is a multiple of 3. If no valid permutation exists, return -1.

@@ -1,0 +1,1 @@
+Write a program that manipulates a sequence A = {a0, a1, ..., an-1} with the following operations: update(s, t, x) which changes the elements from as to at to x, and find(i) which outputs the value of ai. The initial values of ai (i = 0, 1, ..., n-1) are 231-1. The program should handle multiple queries consisting of updates and find operations.

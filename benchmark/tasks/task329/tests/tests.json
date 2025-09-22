@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "1 4 10 LoveLetter",
+      "output": "LoveLetter 33"
+    },
+    {
+      "input": "2 3 20 Greetings",
+      "output": "Greetings 25"
+    },
+    {
+      "input": "1 2 1 BusinessMailC",
+      "output": "BusinessMailC 2"
+    },
+    {
+      "input": "2 3 1 BusinessMailB",
+      "output": "BusinessMailB 2"
+    },
+    {
+      "input": "3 1 1 BusinessMailA",
+      "output": "BusinessMailA 2"
+    }
+  ]
+}

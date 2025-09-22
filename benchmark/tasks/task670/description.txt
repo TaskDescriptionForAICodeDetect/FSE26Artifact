@@ -1,0 +1,1 @@
+You have N lamps and N buttons. Initially, the first A lamps are on, and the rest are off. A permutation of these lamps is generated. You can press a button corresponding to an on lamp to toggle the state of another lamp based on the permutation. Calculate the winning probability when playing optimally, and return the probability multiplied by N! modulo (10^9 + 7).

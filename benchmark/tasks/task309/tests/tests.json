@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "9\ndo\nthe\nbest\nand\nenjoy\ntoday\nat\nacm\nicpc",
+      "output": "1"
+    },
+    {
+      "input": "14\noh\nyes\nby\nfar\nit\nis\nwow\nso\nbad\nto\nme\nyou\nknow\nhey",
+      "output": "2"
+    },
+    {
+      "input": "15\nabcde\nfghijkl\nmnopq\nrstuvwx\nyzz\nabcde\nfghijkl\nmnopq\nrstuvwx\nyz\nabcde\nfghijkl\nmnopq\nrstuvwx\nyz",
+      "output": "6"
+    }
+  ]
+}

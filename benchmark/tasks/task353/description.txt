@@ -1,0 +1,1 @@
+Write a program that reports the point equally distant from a set of lines given as input. If there are no solutions or multiple solutions, the program should report that as well.

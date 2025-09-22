@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N, H;\n    scanf(\"%d %d\", &N, &H);\n    \n    int *descend_cost = (int *)malloc((N - 1) * sizeof(int));\n    int *heal_amount = (int *)malloc((N - 1) * sizeof(int));\n    \n    for (int i = 0; i < N - 1; i++) {\n        scanf(\"%d\", &descend_cost[i]);\n    }\n    \n    for (int i = 0; i < N - 1; i++) {\n        scanf(\"%d\", &heal_amount[i]);\n    }\n    \n    int current_health = H;\n    int heal_count = 0;\n    \n    for (int i = 0; i < N - 1; i++) {\n        if (current_health > descend_cost[i]) {\n            current_health -= descend_cost[i];\n        } else {\n            int needed = descend_cost[i] - current_health;\n            int times = (needed + heal_amount[i] - 1) / heal_amount[i];\n            heal_count += times;\n            current_health += times * heal_amount[i];\n            current_health -= descend_cost[i];\n            if (current_health > H) {\n                current_health = H;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", heal_count);\n    \n    free(descend_cost);\n    free(heal_amount);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DungeonTreasure {\n    public static int minimumHealingSprings(int N, int H, int[] descent, int[] spring) {\n        int[] health = new int[N + 1];\n        int[] springs = new int[N + 1];\n        \n        health[0] = H;\n        \n        for (int level = 1; level <= N; level++) {\n            health[level] = health[level - 1] - descent[level - 1];\n            \n            while (health[level] <= 0) {\n                springs[level]++;\n                health[level] += spring[level - 1];\n                \n                if (health[level] > H) {\n                    health[level] = H;\n                }\n            }\n        }\n        \n        int totalSprings = 0;\n        for (int springCount : springs) {\n            totalSprings += springCount;\n        }\n        \n        return totalSprings;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int H = scanner.nextInt();\n        \n        int[] descent = new int[N];\n        for (int i = 0; i < N; i++) {\n            descent[i] = scanner.nextInt();\n        }\n        \n        int[] spring = new int[N];\n        for (int i = 0; i < N; i++) {\n            spring[i] = scanner.nextInt();\n        }\n        \n        int result = minimumHealingSprings(N, H, descent, spring);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:49:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N, H;\n    cin >> N >> H;\n    vector<int> cost(N), heal(N);\n    for (int i = 0; i < N - 1; ++i) {\n        cin >> cost[i];\n    }\n    for (int i = 0; i < N - 1; ++i) {\n        cin >> heal[i];\n    }\n\n    int current_health = H;\n    int uses = 0;\n    for (int i = 0; i < N - 1; ++i) {\n        current_health -= cost[i];\n        while (current_health <= 0) {\n            current_health += heal[i];\n            uses++;\n            if (current_health > H) {\n                current_health = H;\n            }\n        }\n    }\n    cout << uses << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint min_healing_times(int N, int H, int descend_costs[], int spring_healing[]) {\n    int current_health = H;\n    int total_spring_uses = 0;\n\n    for (int level = 1; level < N; level++) {\n        int descent_cost = descend_costs[level - 1];\n\n        while (current_health < descent_cost) {\n            current_health += spring_healing[level - 1];\n            total_spring_uses++;\n\n            if (current_health > H) {\n                current_health = H;\n            }\n        }\n\n        current_health -= descent_cost;\n    }\n\n    return total_spring_uses;\n}\n\nint main() {\n    int N, H;\n    scanf(\"%d %d\", &N, &H);\n\n    int *descend_costs = malloc((N - 1) * sizeof(int));\n    int *spring_healing = malloc((N - 1) * sizeof(int));\n\n    for (int i = 0; i < N - 1; i++) {\n        scanf(\"%d\", &descend_costs[i]);\n    }\n\n    for (int i = 0; i < N - 1; i++) {\n        scanf(\"%d\", &spring_healing[i]);\n    }\n\n    int result = min_healing_times(N, H, descend_costs, spring_healing);\n    printf(\"%d\\n\", result);\n\n    free(descend_costs);\n    free(spring_healing);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:43"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n\nint minimumHeals(int N, int H, const std::vector<int>& descent_costs, const std::vector<int>& spring_heals) {\n    std::vector<std::vector<int>> dp(N + 1, std::vector<int>(H + 1, INT_MAX));\n    dp[0][H] = 0;\n\n    for (int level = 0; level < N; ++level) {\n        for (int current_health = 0; current_health <= H; ++current_health) {\n            if (dp[level][current_health] == INT_MAX) continue;\n\n            for (int heal_times = 0; heal_times <= H; ++heal_times) {\n                int new_health = std::min(H, current_health + heal_times * spring_heals[level]);\n                int remaining_health = new_health - descent_costs[level];\n\n                if (remaining_health > 0) {\n                    dp[level + 1][remaining_health] = std::min(\n                        dp[level + 1][remaining_health], \n                        dp[level][current_health] + heal_times\n                    );\n                }\n            }\n        }\n    }\n\n    int min_heals = INT_MAX;\n    for (int health = 1; health <= H; ++health) {\n        min_heals = std::min(min_heals, dp[N][health]);\n    }\n\n    return min_heals == INT_MAX ? -1 : min_heals;\n}\n\nint main() {\n    int N, H;\n    std::cin >> N >> H;\n\n    std::vector<int> descent_costs(N);\n    std::vector<int> spring_heals(N);\n\n    for (int i = 0; i < N; ++i) {\n        std::cin >> descent_costs[i] >> spring_heals[i];\n    }\n\n    int result = minimumHeals(N, H, descent_costs, spring_heals);\n    std::cout << result << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:49:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class DungeonTreasure {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int H = scanner.nextInt();\n        int[] descendCost = new int[N];\n        int[] healAmount = new int[N];\n        \n        for (int i = 0; i < N - 1; i++) {\n            descendCost[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N - 1; i++) {\n            healAmount[i] = scanner.nextInt();\n        }\n        \n        int currentHealth = H;\n        int uses = 0;\n        \n        for (int i = 0; i < N - 1; i++) {\n            if (currentHealth > descendCost[i]) {\n                currentHealth -= descendCost[i];\n            } else {\n                int needed = descendCost[i] - currentHealth;\n                int heals = (needed + healAmount[i] - 1) / healAmount[i];\n                uses += heals;\n                currentHealth += heals * healAmount[i];\n                currentHealth -= descendCost[i];\n            }\n        }\n        \n        System.out.println(uses);\n    }\n}",
+    "timestamp": "2025-08-05 18:50:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_springs_used(N, H, descent_costs, springs_heal):\n    current_health = H\n    springs_count = 0\n\n    for level in range(N):\n        current_health -= descent_costs[level]\n        \n        if current_health <= 0:\n            needed_heal = (descent_costs[level] - current_health) // springs_heal[level] + (1 if (descent_costs[level] - current_health) % springs_heal[level] != 0 else 0)\n            springs_count += needed_heal\n            current_health += needed_heal * springs_heal[level]\n\n    return springs_count\n\n# Example usage:\nN = 3\nH = 10\ndescent_costs = [4, 5, 6]\nsprings_heal = [3, 3, 3]\nprint(min_springs_used(N, H, descent_costs, springs_heal))",
+    "timestamp": "2025-08-13 01:04:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class DungeonAdventure {\n    static class Level {\n        int cost;\n        int healing;\n        \n        Level(int cost, int healing) {\n            this.cost = cost;\n            this.healing = healing;\n        }\n    }\n    \n    public static int minSpringsUsage(int N, int H, Level[] levels) {\n        int health = H;\n        int springsUsed = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (health > levels[i].cost) {\n                health -= levels[i].cost;\n            } else {\n                int requiredHealth = levels[i].cost - health + 1;\n                int healsNeeded = (int) Math.ceil((double) requiredHealth / levels[i].healing);\n                springsUsed += healsNeeded;\n                health += healsNeeded * levels[i].healing;\n                health -= levels[i].cost;\n            }\n            \n            if (health > H) {\n                health = H;\n            }\n        }\n        \n        return springsUsed;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int H = scanner.nextInt();\n        \n        Level[] levels = new Level[N];\n        \n        for (int i = 0; i < N; i++) {\n            int cost = scanner.nextInt();\n            int healing = scanner.nextInt();\n            levels[i] = new Level(cost, healing);\n        }\n        \n        System.out.println(minSpringsUsage(N, H, levels));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 01:05:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minSpringsUsed(int N, int H, int cost[], int heal[]) {\n    int dp[N + 1]; // Minimum springs used to reach each level\n    dp[0] = 0; // Start at level 0, no springs used\n\n    for (int i = 1; i <= N; ++i) {\n        dp[i] = INT_MAX; // Initialize with a large value\n        int currentHealth = H;\n\n        // Walk back from current level i to level 0 to find minimum springs needed\n        for (int j = i; j > 0; --j) {\n            currentHealth -= cost[j - 1];\n            if (currentHealth < 0) break; // Can't descend if health is zero or below\n            int springsNeeded = 0;\n\n            // Calculate the number of springs needed to maintain health above zero\n            while (currentHealth < H && springsNeeded + dp[j - 1] < dp[i]) {\n                currentHealth += heal[j - 1];\n                springsNeeded++;\n            }\n\n            if (springsNeeded + dp[j - 1] < dp[i]) {\n                dp[i] = springsNeeded + dp[j - 1];\n            } else {\n                break;\n            }\n        }\n    }\n\n    return dp[N];\n}\n\nint main() {\n    int N = 5;\n    int H = 10;\n    int cost[] = {3, 4, 5, 6, 7};\n    int heal[] = {5, 5, 5, 5, 5};\n\n    printf(\"Minimum springs used: %d\\n\", minSpringsUsed(N, H, cost, heal));\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:05:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_healing_times(N, H, descent_costs, spring_healing):\n    curr_health = H\n    total_healing_times = 0\n\n    for level in range(1, N):\n        # Cost to descend to next level\n        curr_health -= descent_costs[level - 1]\n\n        # If health drops to 0 or below, use healing spring\n        while curr_health <= 0:\n            curr_health += spring_healing[level - 1]\n            total_healing_times += 1\n\n            # Ensure health doesn't exceed initial health\n            curr_health = min(curr_health, H)\n\n    return total_healing_times",
+    "timestamp": "2025-08-13 01:05:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_healing_uses(N, H, descend_cost, heal_amount):\n    current_health = H\n    healing_uses = 0\n    \n    for i in range(N - 1):\n        cost = descend_cost[i]\n        heal = heal_amount[i]\n        \n        if current_health > cost:\n            current_health -= cost\n        else:\n            needed = cost - current_health\n            times = (needed + heal - 1) // heal  # Equivalent to ceiling division\n            healing_uses += times\n            current_health += times * heal - cost\n    \n    return healing_uses",
+    "timestamp": "2025-08-13 01:05:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint minSpringsUsage(int N, int H, const std::vector<int>& costs, const std::vector<int>& restores) {\n    int currentHealth = H;\n    int springUsage = 0;\n\n    for (int level = 0; level < N; ++level) {\n        int cost = costs[level];\n        int restore = restores[level];\n\n        // If current health is enough to descend, just descend\n        if (currentHealth >= cost) {\n            currentHealth -= cost;\n        } else {\n            // Calculate times spring needs to be used in order to descend\n            int deficit = cost - currentHealth;\n            int timesToUseSpring = (deficit + restore - 1) / restore;  // ceil(divide)\n            springUsage += timesToUseSpring;\n            currentHealth += timesToUseSpring * restore - cost;\n        }\n\n        // Ensure currentHealth does not exceed maximum health\n        currentHealth = std::min(currentHealth, H);\n    }\n\n    return springUsage;\n}\n\nint main() {\n    int N, H;\n    std::cin >> N >> H;\n\n    std::vector<int> costs(N);\n    std::vector<int> restores(N);\n\n    for (int i = 0; i < N; ++i) {\n        std::cin >> costs[i] >> restores[i];\n    }\n\n    std::cout << minSpringsUsage(N, H, costs, restores) << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:58:17"
+  }
+]

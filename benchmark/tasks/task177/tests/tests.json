@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "5\n<main>10,10,190,150<menu>20,20,70,140</menu><primary>80,20,180,140</primary></main>\n10 10\n15 15\n40 60\n2 3\n130 80\n0\n",
+      "output": "main 2\nmain 2\nmenu 0\nOUT OF MAIN PANEL 1\nprimary 0\n"
+    }
+  ]
+}

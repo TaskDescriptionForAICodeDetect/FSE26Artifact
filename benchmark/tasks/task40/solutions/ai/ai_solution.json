@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(m, a, b):\n    if a > b:\n        a, b = b, a\n    \n    visited = set([0])\n    queue = [0]\n    \n    while queue:\n        curr = queue.pop(0)\n        \n        for next_pos in [curr + a, curr - b]:\n            if 0 <= next_pos <= m and next_pos not in visited:\n                visited.add(next_pos)\n                queue.append(next_pos)\n    \n    return sum(1 for pos in range(m + 1) if pos in visited)\n\ndef main():\n    m, a, b = map(int, input().split())\n    print(solve(m, a, b))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-05 17:32:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import sys\nimport math\n\ndef solve():\n    m, a, b = map(int, sys.stdin.readline().split())\n    res = 0\n    max_reach = 0\n    visited = [False] * (a + b + 2)\n    visited[0] = True\n    count = 1\n    # We process until max_reach <= a + b + m, but in practice, we can limit to a + b\n    # because after that, the pattern repeats every gcd(a, b)\n    while max_reach <= a + b:\n        # Try to extend max_reach by a\n        if max_reach + a <= a + b and visited[(max_reach + a) % (a + b)]:\n            new_max = max_reach + a\n            while new_max <= a + b:\n                if not visited[new_max % (a + b)]:\n                    visited[new_max % (a + b)] = True\n                    count += 1\n                new_max += a\n            max_reach = new_max - a\n        else:\n            # Can't extend further, break\n            break\n    # Now compute the sum\n    g = math.gcd(a, b)\n    # The safe limit is min(m, max_reach)\n    safe = min(m, max_reach)\n    res = (safe + 1) * (safe + 2) // 2\n    # Now handle the remaining part if m > max_reach\n    if m > max_reach:\n        remaining = m - max_reach\n        k = remaining // g\n        # The sum from max_reach + 1 to max_reach + k*g + g-1\n        # Each block of g contributes (count) + (count + 1) + ... + (count + g - 1)\n        # Which is g*count + g*(g-1)/2\n        block_sum = g * count + g * (g - 1) // 2\n        res += k * block_sum\n        # The remaining part after k full blocks\n        rem = remaining % g\n        res += rem * (count + k)\n        res += rem * (rem + 1) // 2\n    print(res)\n\nsolve()",
+    "timestamp": "2025-08-05 17:33:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sum_f(m, a, b):\n    if b <= a:\n        return (m * (m + 1)) // 2 + (m + 1)\n    \n    g = {}\n    for i in range(min(a, b)):\n        reachable = set()\n        j = i\n        while j <= m:\n            reachable.add(j)\n            j += a\n        for r in range(len(reachable), 0, -1):\n            if (i - r * b) >= 0:\n                reachable.add(i - r * b)\n        g[i] = len(reachable)\n    \n    total = 0\n    for i in range(m+1):\n        total += g[i % min(a, b)]\n    \n    return total\n\n# Example usage:\nm, a, b = map(int, input().split())\nprint(sum_f(m, a, b))",
+    "timestamp": "2025-08-12 21:54:24"
+  }
+]

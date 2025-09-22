@@ -1,0 +1,1 @@
+Write a program for the Merge Sort algorithm based on the provided pseudocode. Additionally, count and report the number of comparisons made in the Merge function.

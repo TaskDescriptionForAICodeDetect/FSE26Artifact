@@ -1,0 +1,1 @@
+You are given a permutation p of the integers from 1 to N. You can perform two types of operations: shifting a subarray to the left at a cost A, or shifting it to the right at a cost B. Your goal is to determine the minimum total cost required to sort the permutation in ascending order.

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n\ndouble solve(int N, int K, int S) {\n    if (S == 0) {\n        return 0.0;\n    }\n    double mean = K * (N + 1) / 2.0;\n    if (mean <= 0) {\n        return -1.0;\n    }\n    if (S > 0 && mean >= 0) {\n        return (double)S / mean;\n    } else {\n        return -1.0;\n    }\n}\n\nint main() {\n    int N, K, S;\n    scanf(\"%d %d %d\", &N, &K, &S);\n    double result = solve(N, K, S);\n    if (result < 0) {\n        printf(\"-1\\n\");\n    } else {\n        printf(\"%.12lf\\n\", result);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:23:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <iomanip>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    long long S;\n    cin >> N >> K >> S;\n\n    double mean = K * (N + 1) / 2.0;\n\n    if (mean == 0) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    if (S == 0) {\n        cout << \"0.000000\" << endl;\n        return 0;\n    }\n\n    if (mean < 0 && S > 0) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    if (mean > 0 && S < 0) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    double expected_jumps = S / mean;\n\n    if (expected_jumps < 0) {\n        cout << -1 << endl;\n    } else {\n        cout << fixed << setprecision(6) << expected_jumps << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:23:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int S = scanner.nextInt();\n        \n        double expected = computeExpectedValue(N, K, S);\n        if (expected < 0) {\n            System.out.println(-1);\n        } else {\n            System.out.printf(\"%.15f\\n\", expected);\n        }\n    }\n    \n    private static double computeExpectedValue(int N, int K, int S) {\n        double meanJump = K * (N + 1) / 2.0;\n        if (meanJump <= 0) {\n            return -1;\n        }\n        if (S % meanJump != 0) {\n            return -1;\n        }\n        int jumps = (int) (S / meanJump);\n        if (jumps <= 0) {\n            return -1;\n        }\n        return jumps;\n    }\n}",
+    "timestamp": "2025-08-05 21:24:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ShadowWitchProblem {\n    public static double solve(int N, int K, int S) {\n        double[][] dp = new double[S + 1][S + 1];\n        dp[0][0] = 1.0;\n\n        for (int jump = 1; jump <= S; jump++) {\n            for (int pos = 0; pos <= S; pos++) {\n                for (int k = 0; k < K; k++) {\n                    int randomNum = k + 1;\n                    if (pos + randomNum <= S) {\n                        dp[jump][pos + randomNum] += dp[jump - 1][pos] / K;\n                    }\n                }\n            }\n        }\n\n        double expectedJumps = 0.0;\n        for (int jump = 1; jump <= S; jump++) {\n            expectedJumps += jump * dp[jump][S];\n        }\n\n        return expectedJumps > 0 && expectedJumps < Double.POSITIVE_INFINITY ? expectedJumps : -1;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int S = scanner.nextInt();\n        \n        double result = solve(N, K, S);\n        System.out.printf(\"%.10f\\n\", result);\n    }\n}",
+    "timestamp": "2025-08-05 21:24:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <math.h>\n#include <limits.h>\n\ndouble solve(int S, int N, int K) {\n    if (K <= 0 || N <= 0 || S <= 0) return -1;\n    \n    // Probability of exactly reaching S\n    double* dp = calloc(S + 1, sizeof(double));\n    int* ways = calloc(S + 1, sizeof(int));\n    dp[0] = 1.0;\n    ways[0] = 1;\n    \n    for (int jump = 1; jump <= K; jump++) {\n        double* new_dp = calloc(S + 1, sizeof(double));\n        int* new_ways = calloc(S + 1, sizeof(int));\n        \n        for (int prev = 0; prev < S; prev++) {\n            if (ways[prev] == 0) continue;\n            \n            for (int rand_num = 1; rand_num <= N; rand_num++) {\n                int new_pos = prev + rand_num;\n                if (new_pos > S) break;\n                \n                new_dp[new_pos] += dp[prev] / N;\n                new_ways[new_pos] += ways[prev];\n            }\n        }\n        \n        free(dp);\n        free(ways);\n        dp = new_dp;\n        ways = new_ways;\n    }\n    \n    double expected_jumps = 0;\n    int total_ways_to_reach = 0;\n    \n    for (int j = 1; j <= K; j++) {\n        if (dp[S] > 0) {\n            expected_jumps = j;\n            total_ways_to_reach = 1;\n            break;\n        }\n    }\n    \n    free(dp);\n    free(ways);\n    \n    return total_ways_to_reach ? expected_jumps : -1;\n}\n\nint main() {\n    int S, N, K;\n    scanf(\"%d %d %d\", &S, &N, &K);\n    \n    double result = solve(S, N, K);\n    printf(\"%.10f\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:24:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n#include <iomanip>\n#include <algorithm>\n#include <limits>\n\nusing namespace std;\n\nint main() {\n    int N, S, K;\n    cin >> N >> S >> K;\n\n    if (K == 0 || N == 0) {\n        cout << -1 << endl;\n        return 0;\n    }\n\n    vector<double> prob(S + 1, 0.0);\n    prob[S] = 1.0;\n\n    for (int jump = 1; ; jump++) {\n        vector<double> newProb(S + 1, 0.0);\n\n        for (int curr = 0; curr <= S; curr++) {\n            if (prob[curr] == 0) continue;\n\n            for (int i = 1; i <= N; i++) {\n                int next = curr - i;\n                if (next < 0) break;\n\n                newProb[max(0, next)] += prob[curr] / N;\n\n                if (next == 0) {\n                    cout << fixed << setprecision(10) << jump << endl;\n                    return 0;\n                }\n            }\n        }\n\n        prob = newProb;\n\n        double totalProb = 0;\n        for (double p : prob) totalProb += p;\n\n        if (totalProb < 1e-10) {\n            cout << -1 << endl;\n            return 0;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:24:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def expected_jumps(N, K, S):\n    from collections import defaultdict\n    from fractions import Fraction\n\n    if S == 0:\n        return 0.0\n\n    # Calculate all possible sums of K integers from 1 to N\n    sums = defaultdict(int)\n    def generate_sums(curr_sum, depth):\n        if depth == K:\n            sums[curr_sum] += 1\n            return\n        for i in range(1, N + 1):\n            generate_sums(curr_sum + i, depth + 1)\n    \n    generate_sums(0, 0)\n    sum_probabilities = {s: count / (N ** K) for s, count in sums.items()}\n\n    # Use dynamic programming to find the expected number of jumps to reach 0\n    expected = dict()\n    expected[0] = 0\n    for x in range(1, S + max(sums.keys()) + 1):\n        if x in expected:\n            continue\n        min_jumps = Fraction(0)\n        found = False\n        for s, prob in sum_probabilities.items():\n            if x < s:\n                continue\n            if x - s in expected:\n                min_jumps += prob * (1 + expected[x - s])\n                found = True\n        if found:\n            expected[x] = min_jumps\n        elif x == S + 1:\n            return -1.0\n\n    result = expected.get(S, None)\n    if result is None:\n        return -1.0\n    else:\n        return float(result)\n\n# Example usage\nN = 2\nK = 1\nS = 1\nprint(expected_jumps(N, K, S))",
+    "timestamp": "2025-08-13 06:22:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class ShadowWitch {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int S = scanner.nextInt(); // starting position of Sayaka\n        int K = scanner.nextInt(); // number of integers\n        int N = scanner.nextInt(); // range of random integers\n        scanner.close();\n\n        System.out.println(calculateExpectedJumps(S, K, N));\n    }\n\n    private static double calculateExpectedJumps(int S, int K, int N) {\n        int[] jumps = new int[N * K + 1];\n        Arrays.fill(jumps, 0);\n\n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j <= N; j++) {\n                for (int k = 1; k <= N; k++) {\n                    if (K == 1) {\n                        jumps[i] = 1;\n                    } else if (K == 2) {\n                        jumps[i + j] = 1;\n                    } else if (K == 3) {\n                        jumps[i + j + k] = 1;\n                    }\n                }\n            }\n        }\n\n        return dp(S, K, N, jumps);\n    }\n\n    private static double dp(int S, int K, int N, int[] jumps) {\n        double[] dp = new double[S + 1];\n        Arrays.fill(dp, -1);\n        dp[0] = 0;\n\n        for (int s = 1; s <= S; s++) {\n            double sum = 0.0;\n            int count = 0;\n\n            for (int j = 1; j <= K * N; j++) {\n                if (s - j >= 0 && jumps[j] > 0) {\n                    sum += dp[s - j] + 1;\n                    count++;\n                }\n            }\n\n            if (count == 0) return -1;\n            dp[s] = sum / count;\n        }\n\n        return dp[S] < 0 ? -1 : dp[S];\n    }\n}",
+    "timestamp": "2025-08-13 06:22:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\n#define MAX_ITER 1000000\n\ndouble calculateExpectedJumps(int S, int K, int N) {\n    double *prob = (double *)calloc(S + 1, sizeof(double));\n    double sum_prob = 0.0;\n    int max_sum = K * N;\n\n    // Base case: Sayaka is initially at S\n    prob[S] = 1.0;\n\n    // Expected value accumulator\n    double expectedSteps = 0.0;\n\n    // Iterate, accumulating probabilities\n    for (int steps = 0; steps < MAX_ITER; steps++) {\n        double nextProb = 0.0;\n        for (int s = 1; s <= S; s++) {\n            if (prob[s] > 0.0) {\n                for (int diceSum = 1; diceSum <= max_sum; diceSum++) {\n                    if (diceSum <= s) {\n                        nextProb += prob[s] / pow(N, K);\n                    }\n                }\n                prob[s] = nextProb;\n                sum_prob += nextProb;\n                nextProb = 0.0;\n            }\n        }\n\n        // Add the probability of reaching position 0\n        double attackProb = (prob[0] / pow(N, K));\n        expectedSteps += (steps + 1) * attackProb;\n\n        if (sum_prob < 1e-9) break;  // if no more probability to move\n    }\n\n    free(prob);\n\n    // Check if expected value is bounded\n    if (sum_prob < 1e-9) return -1.0;\n\n    return expectedSteps;\n}\n\nint main() {\n    int S, K, N;\n    scanf(\"%d %d %d\", &S, &K, &N);\n\n    double result = calculateExpectedJumps(S, K, N);\n\n    if (result == -1.0) {\n        printf(\"-1\\n\");\n    } else {\n        printf(\"%.10f\\n\", result);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 06:22:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, K, S):\n    # If jump sum cannot reach witch\n    if K * N < S:\n        return -1\n\n    # If minimum jump exceeds witch's position\n    if K < S:\n        return -1\n\n    # Compute expected value\n    numerator = 0\n    denominator = 0\n    \n    # Try all possible jump sum combinations\n    def dfs(current_pos, current_jumps):\n        nonlocal numerator, denominator\n        \n        if current_pos == S:\n            numerator += current_jumps\n            denominator += 1\n            return\n        \n        if current_pos > S or current_jumps >= 10**6:\n            return\n        \n        # Try all K random jumps\n        for _ in range(K):\n            jump = sum(random.randint(1, N) for _ in range(K))\n            dfs(current_pos + jump, current_jumps + 1)\n    \n    # Simulate multiple trials\n    trials = 10000\n    for _ in range(trials):\n        dfs(0, 0)\n    \n    # Return expected value if computable\n    return numerator / denominator if denominator > 0 else -1\n\nimport random\nrandom.seed(42)",
+    "timestamp": "2025-08-13 06:22:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef solve():\n    N, K, S = map(int, sys.stdin.readline().split())\n    S_abs = abs(S)\n    \n    # The minimal sum per jump is K, maximal is K*N\n    if S_abs == 0:\n        print(0)\n        return\n    if K == 0 or (K * N == 0):\n        print(-1)\n        return\n    if S_abs % K != 0:\n        print(-1)\n        return\n    \n    avg_per_jump = K * (N + 1) / 2\n    if avg_per_jump == 0:\n        print(-1)\n        return\n    \n    expected_jumps = S_abs / avg_per_jump\n    print(expected_jumps)\n\nsolve()",
+    "timestamp": "2025-08-13 06:23:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int N, K, S;\n    cin >> N >> K >> S;\n\n    vector<double> dp(S + 1, 0.0); \n    double expectedJumps = 0.0;\n    double prob = 1.0 / pow(N, K);\n\n    for (int d = S; d >= 1; --d) {\n        double sum = 0.0;\n        for (int x = 1; x <= N; ++x) {\n            if (d - x >= 0) {\n                sum += dp[d - x];\n            }\n        }\n        dp[d] = (sum / N) + 1.0;\n    }\n\n    expectedJumps = dp[S];\n    if (isnan(expectedJumps) || isinf(expectedJumps)) {\n        cout << \"-1\\n\";\n    } else {\n        cout.precision(12);\n        cout << expectedJumps << \"\\n\";\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:31:36"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "3\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\no.o\n...\n.o.",
+      "output": "2\n2\n1 3 erase\n2 3 write"
+    },
+    {
+      "input": "4\n1 2 3 4\n1 2 3 4\n1 2 3 4\n1 2 3 4\n1 2 3 4\n1 2 3 4\n1 2 3 4\n1 2 3 4\noooo\noooo\noooo\noooo",
+      "output": "30\n12\n1 1 erase\n1 2 erase\n1 3 erase\n2 1 erase\n2 2 erase\n2 4 erase\n3 1 erase\n3 3 erase\n3 4 erase\n4 2 erase\n4 3 erase\n4 4 erase"
+    },
+    {
+      "input": "3\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\n1 1 1\no..\n.o.\n..o",
+      "output": "0\n0"
+    }
+  ]
+}

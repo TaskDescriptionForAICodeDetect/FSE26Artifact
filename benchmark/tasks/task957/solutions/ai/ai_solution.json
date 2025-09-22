@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int unique_rotations = 1;\n    for (int i = 1; i < N; i++) {\n        int rotated[N];\n        for (int j = 0; j < N; j++) {\n            rotated[j] = a[(j + i) % N];\n        }\n\n        int is_unique = 1;\n        for (int j = 0; j < unique_rotations; j++) {\n            int current_rotation[N];\n            for (int k = 0; k < N; k++) {\n                current_rotation[k] = a[(k + j) % N];\n            }\n\n            int same = 1;\n            for (int k = 0; k < N; k++) {\n                if (rotated[k] != current_rotation[k]) {\n                    same = 0;\n                    break;\n                }\n            }\n\n            if (same) {\n                is_unique = 0;\n                break;\n            }\n        }\n\n        if (is_unique) {\n            unique_rotations++;\n        }\n    }\n\n    printf(\"%d\\n\", unique_rotations);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:28:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#define MOD 1000000007\n\nlong long mod_pow(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    long long ans;\n    if (N % 2 == 1) {\n        int m = (N + 1) / 2;\n        ans = mod_pow(K, m, MOD);\n    } else {\n        int m = N / 2;\n        ans = mod_pow(K, m, MOD);\n    }\n    \n    if (N % 2 == 0 && K % 2 == 1) {\n        int m = N / 2;\n        ans = (ans + mod_pow(K, m, MOD)) % MOD;\n        ans = (ans * 500000004) % MOD; // 500000004 is the modular inverse of 2 mod 1e9+7\n    }\n    \n    printf(\"%lld\\n\", ans);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:28:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n#include <cmath>\nusing namespace std;\n\nconst long long MOD = 1e9 + 7;\n\nlong long modpow(long long a, long long b, long long mod) {\n    long long res = 1;\n    while (b > 0) {\n        if (b & 1) res = res * a % mod;\n        a = a * a % mod;\n        b >>= 1;\n    }\n    return res;\n}\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    long long ans = 0;\n    if (N % 2 == 1) {\n        int m = (N + 1) / 2;\n        ans = modpow(K, m, MOD);\n    } else {\n        int m = N / 2;\n        ans = modpow(K, m, MOD);\n    }\n    \n    set<string> unique_sequences;\n    \n    if (N == 1) {\n        cout << K % MOD << endl;\n        return 0;\n    }\n    \n    if (K == 1) {\n        cout << 1 << endl;\n        return 0;\n    }\n    \n    if (N % 2 == 1) {\n        int m = (N + 1) / 2;\n        ans = modpow(K, m, MOD);\n    } else {\n        int m = N / 2;\n        ans = modpow(K, m, MOD);\n    }\n    \n    cout << ans << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:28:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int K = sc.nextInt();\n        sc.close();\n\n        long result;\n        if (N % 2 == 1) {\n            int m = (N + 1) / 2;\n            result = modPow(K, m, MOD);\n        } else {\n            int m = N / 2;\n            result = modPow(K, m, MOD);\n        }\n        System.out.println(result);\n    }\n\n    static long modPow(long base, int exponent, int mod) {\n        long result = 1;\n        base = base % mod;\n        while (exponent > 0) {\n            if (exponent % 2 == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exponent = exponent / 2;\n        }\n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 23:29:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 1_000_000_007;\n\n    public static int countPalindromeSequences(int N, int K) {\n        long count = 0;\n\n        for (int[] initialPalindrome : generatePalindromes(N, K)) {\n            Set<String> uniqueSequences = new HashSet<>();\n            int[] current = initialPalindrome.clone();\n\n            for (int rotations = 0; rotations < N; rotations++) {\n                uniqueSequences.add(Arrays.toString(current));\n                current = rotate(current);\n            }\n\n            count = (count + uniqueSequences.size()) % MOD;\n        }\n\n        return (int) count;\n    }\n\n    private static List<int[]> generatePalindromes(int N, int K) {\n        List<int[]> palindromes = new ArrayList<>();\n        generatePalindromesRecursive(new int[N], 0, N, K, palindromes);\n        return palindromes;\n    }\n\n    private static void generatePalindromesRecursive(int[] current, int index, int N, int K, List<int[]> palindromes) {\n        if (index >= (N + 1) / 2) {\n            palindromes.add(current.clone());\n            return;\n        }\n\n        for (int num = 1; num <= K; num++) {\n            current[index] = num;\n            if (N - 1 - index != index) {\n                current[N - 1 - index] = num;\n            }\n            generatePalindromesRecursive(current, index + 1, N, K, palindromes);\n        }\n    }\n\n    private static int[] rotate(int[] arr) {\n        int[] rotated = new int[arr.length];\n        System.arraycopy(arr, 1, rotated, 0, arr.length - 1);\n        rotated[arr.length - 1] = arr[0];\n        return rotated;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        System.out.println(countPalindromeSequences(N, K));\n    }\n}",
+    "timestamp": "2025-08-05 23:29:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<vector<int>> dp(N + 1, vector<int>(N + 1, 0));\n    dp[0][0] = 1;\n    \n    for (int len = 1; len <= N; len++) {\n        for (int first = 1; first <= K; first++) {\n            for (int last = 1; last <= K; last++) {\n                if (len == 1 || first == last) {\n                    for (int i = 0; i < len; i++) {\n                        dp[len][i] = (dp[len][i] + dp[len - 1][i]) % MOD;\n                    }\n                }\n            }\n        }\n    }\n    \n    int result = 0;\n    for (int i = 0; i < N; i++) {\n        result = (result + dp[N][i]) % MOD;\n    }\n    \n    cout << result << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:29:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef calculate_sequences(N, K):\n    if N == 1:\n        return K\n    \n    # Calculate how many distinct palindromes of length N exist\n    if N % 2 == 0:\n        half_length = N // 2\n    else:\n        half_length = N // 2 + 1\n\n    # There are K choices for each element in the first half of the palindrome\n    distinct_palindromes = pow(K, half_length, MOD)\n    \n    return distinct_palindromes\n\n# Input and output handling\nN, K = map(int, input().split())\nprint(calculate_sequences(N, K))",
+    "timestamp": "2025-08-13 15:28:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n\n        if (N == 1) {\n            System.out.println(K % MOD);\n            return;\n        }\n\n        long palindromes = countPalindromes(N, K);\n        long gcd = gcd(N, gcd(Powers(N - 1)));\n        long result = modPow(palindromes, gcd, MOD);\n\n        System.out.println(result);\n    }\n\n    static long countPalindromes(int N, int K) {\n        int half = (N + 1) / 2;\n        return modPow(K, half, MOD);\n    }\n\n    static long modPow(long base, long exp, long mod) {\n        long result = 1;\n        while (exp > 0) {\n            if ((exp % 2) == 1) {\n                result = (result * base) % mod;\n            }\n            base = (base * base) % mod;\n            exp /= 2;\n        }\n        return result;\n    }\n\n    static long gcd(long a, long b) {\n        while (b != 0) {\n            long temp = b;\n            b = a % b;\n            a = temp;\n        }\n        return a;\n    }\n\n    static long[] Powers(int n) {\n        long[] hn = new long[n + 1];\n        hn[1] = 1; \n        for (int i = 2; i <= n; i++) {\n            hn[i] = gcd(hn[i - 1], i);\n        }\n        return hn;\n    }\n}",
+    "timestamp": "2025-08-13 15:28:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nlong long mod_exp(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int half_length = (N + 1) / 2;\n    long long total_palindromes = mod_exp(K, half_length, MOD);\n    \n    printf(\"%lld\\n\", total_palindromes);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:28:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N, K;\n    std::cin >> N >> K;\n\n    if (N == 1) {\n        std::cout << K << std::endl;\n        return 0;\n    }\n\n    // Calculate number of palindromes\n    int palindromeLength = (N + 1) / 2;\n    long long numPalindromes = 1;\n    for (int i = 0; i < palindromeLength; ++i) {\n        numPalindromes = (numPalindromes * K) % MOD;\n    }\n\n    // Calculate number of unique rotations of a palindrome\n    long long numSequences = (numPalindromes * N) % MOD;\n\n    std::cout << numSequences << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:28:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, K):\n    MOD = 10**9 + 7\n    \n    def is_palindrome(arr):\n        return arr == arr[::-1]\n    \n    def count_unique_rotations(arr):\n        unique_rotations = set()\n        unique_rotations.add(tuple(arr))\n        \n        for _ in range(N - 1):\n            arr = arr[1:] + [arr[0]]\n            unique_rotations.add(tuple(arr))\n        \n        return len(unique_rotations)\n    \n    def generate_palindromes(current, length):\n        if length == N:\n            return [current] if is_palindrome(current) else []\n        \n        result = []\n        for num in range(1, K + 1):\n            result.extend(generate_palindromes(current + [num], length + 1))\n        \n        return result\n    \n    palindromes = generate_palindromes([], 0)\n    total_unique_rotations = sum(count_unique_rotations(p) for p in palindromes)\n    \n    return total_unique_rotations % MOD\n\ndef main():\n    N, K = map(int, input().split())\n    print(solve(N, K))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 15:29:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve():\n    import sys\n    N, K = map(int, sys.stdin.readline().split())\n    \n    if N == 1:\n        print(K % MOD)\n        return\n    \n    m = (N + 1) // 2\n    ans = pow(K, m, MOD)\n    \n    if N % 2 == 1:\n        ans = (ans - pow(K, m - 1, MOD)) % MOD\n    else:\n        ans = (ans - pow(K, m - 1, MOD)) % MOD\n    \n    ans = (ans + pow(K, m - 1, MOD)) % MOD\n    \n    print(ans)\n\nsolve()",
+    "timestamp": "2025-08-13 15:29:10"
+  }
+]

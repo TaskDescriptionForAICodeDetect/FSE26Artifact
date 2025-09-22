@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 100005\n\nint parent[MAX_N];\nint depth[MAX_N];\n\nint find(int x) {\n    if (parent[x] != x) {\n        parent[x] = find(parent[x]);\n    }\n    return parent[x];\n}\n\nvoid init_dsu(int n) {\n    for (int i = 1; i <= n; i++) {\n        parent[i] = i;\n        depth[i] = 0;\n    }\n}\n\nint main() {\n    int n, m;\n    scanf(\"%d %d\", &n, &m);\n    \n    init_dsu(n);\n    \n    int edge_count = 0;\n    \n    for (int i = 0; i < m; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        \n        int root_x = find(x);\n        int root_y = find(y);\n        \n        if (root_x != root_y) {\n            edge_count++;\n            \n            if (depth[root_x] < depth[root_y]) {\n                parent[root_x] = root_y;\n            } else if (depth[root_x] > depth[root_y]) {\n                parent[root_y] = root_x;\n            } else {\n                parent[root_y] = root_x;\n                depth[root_x]++;\n            }\n        }\n    }\n    \n    printf(\"%s\\n\", (edge_count % 2 == 0) ? \"Bob\" : \"Alice\");\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 100000\n\ntypedef struct Node {\n    int vertex;\n    struct Node* next;\n} Node;\n\nNode* adj[MAX_N + 1];\nint grundy[MAX_N + 1];\n\nvoid add_edge(int u, int v) {\n    Node* new_node = (Node*)malloc(sizeof(Node));\n    new_node->vertex = v;\n    new_node->next = adj[u];\n    adj[u] = new_node;\n}\n\nvoid dfs(int u, int parent) {\n    grundy[u] = 0;\n    Node* curr = adj[u];\n    while (curr != NULL) {\n        int v = curr->vertex;\n        if (v != parent) {\n            dfs(v, u);\n            grundy[u] ^= (grundy[v] + 1);\n        }\n        curr = curr->next;\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 1; i <= N; i++) {\n        adj[i] = NULL;\n    }\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        add_edge(x, y);\n        add_edge(y, x);\n    }\n    dfs(1, -1);\n    if (grundy[1] != 0) {\n        printf(\"Alice\\n\");\n    } else {\n        printf(\"Bob\\n\");\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nvector<vector<int>> adj;\n\nint dfs(int u, int parent) {\n    int res = 0;\n    for (int v : adj[u]) {\n        if (v != parent) {\n            res ^= (dfs(v, u) + 1);\n        }\n    }\n    return res;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    adj.resize(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int x, y;\n        cin >> x >> y;\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n    int grundy = dfs(1, -1);\n    cout << (grundy != 0 ? \"Alice\" : \"Bob\") << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TreeGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        List<List<Integer>> tree = new ArrayList<>();\n        for (int i = 0; i <= N; i++) {\n            tree.add(new ArrayList<>());\n        }\n        for (int i = 0; i < N - 1; i++) {\n            int x = scanner.nextInt();\n            int y = scanner.nextInt();\n            tree.get(x).add(y);\n            tree.get(y).add(x);\n        }\n        int[] grundy = new int[N + 1];\n        dfs(1, -1, tree, grundy);\n        if (grundy[1] != 0) {\n            System.out.println(\"Alice\");\n        } else {\n            System.out.println(\"Bob\");\n        }\n    }\n\n    private static void dfs(int node, int parent, List<List<Integer>> tree, int[] grundy) {\n        for (int child : tree.get(node)) {\n            if (child != parent) {\n                dfs(child, node, tree, grundy);\n                grundy[node] ^= (grundy[child] + 1);\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:18:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TreeGame {\n    public static String determineWinner(int N, int[][] edges) {\n        // Create adjacency list representation of the tree\n        List<List<Integer>> graph = new ArrayList<>(N + 1);\n        for (int i = 0; i <= N; i++) {\n            graph.add(new ArrayList<>());\n        }\n        \n        // Build the graph\n        for (int[] edge : edges) {\n            graph.get(edge[0]).add(edge[1]);\n            graph.get(edge[1]).add(edge[0]);\n        }\n        \n        // Calculate subtree sizes and check game outcome\n        int[] subtreeSize = new int[N + 1];\n        calculateSubtreeSize(1, -1, graph, subtreeSize);\n        \n        // If subtree size containing Vertex 1 is even, Bob wins\n        // If subtree size containing Vertex 1 is odd, Alice wins\n        return subtreeSize[1] % 2 == 0 ? \"Bob\" : \"Alice\";\n    }\n    \n    private static int calculateSubtreeSize(int node, int parent, \n                                            List<List<Integer>> graph, \n                                            int[] subtreeSize) {\n        subtreeSize[node] = 1;\n        \n        for (int child : graph.get(node)) {\n            if (child != parent) {\n                subtreeSize[node] += calculateSubtreeSize(child, node, graph, subtreeSize);\n            }\n        }\n        \n        return subtreeSize[node];\n    }\n}",
+    "timestamp": "2025-08-05 23:18:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MAXN = 2e5 + 5;\nvector<int> graph[MAXN];\nint subtree_size[MAXN];\n\nvoid dfs(int node, int parent) {\n    subtree_size[node] = 1;\n    for (int child : graph[node]) {\n        if (child != parent) {\n            dfs(child, node);\n            subtree_size[node] += subtree_size[child];\n        }\n    }\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N;\n    cin >> N;\n\n    for (int i = 1; i < N; i++) {\n        int x, y;\n        cin >> x >> y;\n        graph[x].push_back(y);\n        graph[y].push_back(x);\n    }\n\n    dfs(1, 0);\n\n    int total_nodes = N;\n    int winner = 0;\n\n    while (total_nodes > 1) {\n        int max_component = 0;\n        for (int child : graph[1]) {\n            max_component = max(max_component, subtree_size[child]);\n        }\n\n        if (max_component > total_nodes / 2) {\n            winner = 1;\n            break;\n        }\n\n        total_nodes--;\n        winner = 1 - winner;\n    }\n\n    cout << (winner == 0 ? \"Bob\" : \"Alice\") << \"\\n\";\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def tree_game_winner(n, edges):\n    from collections import defaultdict\n\n    # Building adjacency list for the tree\n    tree = defaultdict(list)\n    for x, y in edges:\n        tree[x].append(y)\n        tree[y].append(x)\n\n    # Depth-First Search to count the total number of vertices\n    def dfs(node, parent):\n        size = 1\n        for neighbor in tree[node]:\n            if neighbor != parent:\n                size += dfs(neighbor, node)\n        return size\n\n    # Calculate the size of the subtree rooted at 1, which is the whole tree\n    total_size = dfs(1, -1)\n\n    # Optimal strategy: Alice wins if N is odd, Bob wins if N is even\n    return \"Alice\" if total_size % 2 == 1 else \"Bob\"\n\n# Example usage\nn = 5\nedges = [(1, 2), (1, 3), (3, 4), (3, 5)]\nprint(tree_game_winner(n, edges))  # Output should be \"Alice\" or \"Bob\"",
+    "timestamp": "2025-08-13 14:30:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class TreeGame {\n    \n    static class Tree {\n        List<List<Integer>> adj;\n        int[] subtreeSize;\n        boolean[] visited;\n        \n        Tree(int n) {\n            adj = new ArrayList<>();\n            subtreeSize = new int[n + 1];\n            visited = new boolean[n + 1];\n            for (int i = 0; i <= n; i++) {\n                adj.add(new ArrayList<>());\n            }\n        }\n        \n        void addEdge(int u, int v) {\n            adj.get(u).add(v);\n            adj.get(v).add(u);\n        }\n\n        void dfs(int u) {\n            visited[u] = true;\n            subtreeSize[u] = 1;\n            for (int v : adj.get(u)) {\n                if (!visited[v]) {\n                    dfs(v);\n                    subtreeSize[u] += subtreeSize[v];\n                }\n            }\n        }\n    }\n    \n    public static String findWinner(int N, int[][] edges) {\n        Tree tree = new Tree(N);\n        \n        for (int[] edge : edges) {\n            tree.addEdge(edge[0], edge[1]);\n        }\n        \n        tree.dfs(1);\n        \n        int xorSum = 0;\n        for (int i = 2; i <= N; i++) {\n            if((tree.subtreeSize[i] & 1) == 1) {\n                xorSum ^= tree.subtreeSize[i];\n            }\n        }\n        \n        return xorSum != 0 ? \"Alice\" : \"Bob\";\n    }\n\n    public static void main(String[] args) {\n        int N = 5;\n        int[][] edges = {{1, 2}, {1, 3}, {3, 4}, {3, 5}};\n        System.out.println(findWinner(N, edges)); // Output: Alice\n    }\n}",
+    "timestamp": "2025-08-13 14:30:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint *subtreeSize;\nint *parent;\nint N;\nint **adj;\nint *degree;\n\nvoid dfs(int node, int par) {\n    subtreeSize[node] = 1;\n    parent[node] = par;\n    for (int i = 0; i < degree[node]; i++) {\n        int next = adj[node][i];\n        if (next == par) continue;\n        dfs(next, node);\n        subtreeSize[node] += subtreeSize[next];\n    }\n}\n\nint main() {\n    scanf(\"%d\", &N);\n\n    subtreeSize = (int *)malloc((N + 1) * sizeof(int));\n    parent = (int *)malloc((N + 1) * sizeof(int));\n    degree = (int *)malloc((N + 1) * sizeof(int));\n    adj = (int **)malloc((N + 1) * sizeof(int *));\n\n    for (int i = 0; i <= N; i++) {\n        degree[i] = 0;\n        adj[i] = (int *)malloc(N * sizeof(int));\n    }\n\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        scanf(\"%d %d\", &x, &y);\n        adj[x][degree[x]++] = y;\n        adj[y][degree[y]++] = x;\n    }\n\n    dfs(1, 0);\n\n    int xorSum = 0;\n    for (int i = 2; i <= N; i++) {\n        int size = subtreeSize[i];\n        if (parent[i] != 0) {\n            size = subtreeSize[i] < subtreeSize[1] / 2 ? subtreeSize[i] : subtreeSize[1] - subtreeSize[i];\n        }\n        xorSum ^= size;\n    }\n\n    if (xorSum == 0) {\n        printf(\"Bob\\n\");\n    } else {\n        printf(\"Alice\\n\");\n    }\n\n    for (int i = 0; i <= N; i++) {\n        free(adj[i]);\n    }\n    free(adj);\n    free(degree);\n    free(parent);\n    free(subtreeSize);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:30:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint N;\nvector<vector<int>> adj;\nvector<int> subtree_size;\n\nvoid calcSubtreeSizes(int node, int parent) {\n    subtree_size[node] = 1;\n    for (int neighbor : adj[node]) {\n        if (neighbor != parent) {\n            calcSubtreeSizes(neighbor, node);\n            subtree_size[node] += subtree_size[neighbor];\n        }\n    }\n}\n\nint findCentroid(int node, int parent, int total_size) {\n    for (int neighbor : adj[node]) {\n        if (neighbor != parent && subtree_size[neighbor] > total_size / 2) {\n            return findCentroid(neighbor, node, total_size);\n        }\n    }\n    return node;\n}\n\nstring playGame() {\n    // Calculate subtree sizes\n    calcSubtreeSizes(1, -1);\n\n    // Find centroid\n    int centroid = findCentroid(1, -1, subtree_size[1]);\n\n    // If there are even number of vertices, Bob wins, else Alice wins\n    return (N % 2 == 0) ? \"Bob\" : \"Alice\";\n}\n\nint main() {\n    cin >> N;\n    adj.resize(N + 1);\n    subtree_size.resize(N + 1, 0);\n\n    for (int i = 0; i < N - 1; i++) {\n        int x, y;\n        cin >> x >> y;\n        adj[x].push_back(y);\n        adj[y].push_back(x);\n    }\n\n    cout << playGame() << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:31:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_tree_game(N, edges):\n    # Create adjacency list representation of the tree\n    graph = [[] for _ in range(N+1)]\n    for x, y in edges:\n        graph[x].append(y)\n        graph[y].append(x)\n    \n    # Find the size of subtree containing vertex 1\n    def dfs_subtree_size(node, parent):\n        size = 1\n        for child in graph[node]:\n            if child != parent:\n                size += dfs_subtree_size(child, node)\n        return size\n    \n    subtree_size = dfs_subtree_size(1, 0)\n    \n    # Determine winner based on subtree size and total vertices\n    if (N - subtree_size) % 2 == 0:\n        return \"Bob\"\n    else:\n        return \"Alice\"\n\n# Read input\nN = int(input())\nedges = []\nfor _ in range(N-1):\n    x, y = map(int, input().split())\n    edges.append((x, y))\n\n# Print result\nprint(solve_tree_game(N, edges))",
+    "timestamp": "2025-08-13 14:31:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef determine_winner(N, edges):\n    adjacency = [[] for _ in range(N+1)]\n    for x, y in edges:\n        adjacency[x].append(y)\n        adjacency[y].append(x)\n    \n    parent = [0] * (N + 1)\n    children = [[] for _ in range(N + 1)]\n    q = deque([1])\n    parent[1] = 0\n    \n    while q:\n        u = q.popleft()\n        for v in adjacency[u]:\n            if parent[v] == 0 and v != parent[u]:\n                parent[v] = u\n                children[u].append(v)\n                q.append(v)\n    \n    grundy = [0] * (N + 1)\n    stack = [(1, False)]\n    \n    while stack:\n        node, processed = stack.pop()\n        if not processed:\n            stack.append((node, True))\n            for child in children[node]:\n                stack.append((child, False))\n        else:\n            for child in children[node]:\n                grundy[node] ^= (grundy[child] + 1)\n    \n    return \"Alice\" if grundy[1] != 0 else \"Bob\"\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N = int(input[ptr])\n    ptr += 1\n    edges = []\n    for _ in range(N-1):\n        x = int(input[ptr])\n        y = int(input[ptr+1])\n        edges.append((x, y))\n        ptr += 2\n    print(determine_winner(N, edges))\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 14:31:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function determineWinner(N, edges) {\n    if (N % 2 === 0) {\n        return \"Bob\";\n    } else {\n        return \"Alice\";\n    }\n}",
+    "timestamp": "2025-08-13 14:31:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, edges) {\n    // Create adjacency list representation of the tree\n    const graph = Array.from({ length: N + 1 }, () => []);\n    for (const [x, y] of edges) {\n        graph[x].push(y);\n        graph[y].push(x);\n    }\n\n    // Find depth of each vertex\n    const depth = new Array(N + 1).fill(0);\n    const visited = new Array(N + 1).fill(false);\n\n    function dfs(node, currentDepth) {\n        visited[node] = true;\n        depth[node] = currentDepth;\n        for (const neighbor of graph[node]) {\n            if (!visited[neighbor]) {\n                dfs(neighbor, currentDepth + 1);\n            }\n        }\n    }\n\n    dfs(1, 0);\n\n    // Determine winner\n    let disconnectCount = 0;\n    for (const [x, y] of edges) {\n        if (depth[x] !== depth[y]) {\n            disconnectCount++;\n        }\n    }\n\n    return disconnectCount % 2 === 1 ? 'Alice' : 'Bob';\n}",
+    "timestamp": "2025-08-13 14:31:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf-8').trim().split('\\n');\n\nfunction solve() {\n    let ptr = 0;\n    const N = parseInt(input[ptr++], 10);\n    const adj = Array.from({ length: N + 1 }, () => []);\n    \n    for (let i = 0; i < N - 1; i++) {\n        const [x, y] = input[ptr++].split(' ').map(Number);\n        adj[x].push(y);\n        adj[y].push(x);\n    }\n    \n    const grundy = Array(N + 1).fill(0);\n    \n    function dfs(u, parent) {\n        let g = 0;\n        for (const v of adj[u]) {\n            if (v === parent) continue;\n            dfs(v, u);\n            g ^= (grundy[v] + 1);\n        }\n        grundy[u] = g;\n    }\n    \n    dfs(1, -1);\n    console.log(grundy[1] !== 0 ? \"Alice\" : \"Bob\");\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:31:42"
+  }
+]

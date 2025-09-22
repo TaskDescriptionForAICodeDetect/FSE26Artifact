@@ -1,0 +1,1 @@
+Calculate the ratio of 'ok' checks to the total number of checks in a restaurant based on the time taken to provide the products. A check is considered 'ok' if the time taken is 8 minutes or less. You need to categorize checks into lunch, dinner, and midnight time slots and print the percentage of 'ok' checks for each category.

@@ -1,0 +1,1 @@
+Given integers L and R, find the number of pairs of integers (x, y) such that L ≤ x ≤ y ≤ R and the remainder when y is divided by x is equal to y XOR x. Return the result modulo 10^9 + 7.

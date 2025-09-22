@@ -1,0 +1,1 @@
+A robot is placed at the origin in a two-dimensional plane, initially facing the positive x-axis. It will be given an instruction sequence s, consisting of the letters 'F' to move forward by distance 1, and 'T' to turn 90 degrees either clockwise or counterclockwise. The goal is to determine if the robot can reach the coordinates (x, y) after executing all instructions in s.

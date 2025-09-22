@@ -1,0 +1,1 @@
+There are N cards placed on a grid with H rows and W columns of squares. Each card has an integer A_i written on it, and is placed on a specific square determined by its row R_i and column C_i. You can pick up at most one card from each row and at most one card from each column. Your goal is to find the maximum possible sum of the integers from the cards you picked.

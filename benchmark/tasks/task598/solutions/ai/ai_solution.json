@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ndouble distance(double x1, double y1, double x2, double y2) {\n    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));\n}\n\ndouble triangleArea(double x1, double y1, double x2, double y2, double x3, double y3) {\n    return fabs(0.5 * (x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)));\n}\n\nint main() {\n    double x1, y1, x2, y2, x3, y3;\n    scanf(\"%lf %lf %lf %lf %lf %lf\", &x1, &y1, &x2, &y2, &x3, &y3);\n\n    double a = distance(x2, y2, x3, y3);\n    double b = distance(x1, y1, x3, y3);\n    double c = distance(x1, y1, x2, y2);\n    double s = (a + b + c) / 2.0;\n    double area = triangleArea(x1, y1, x2, y2, x3, y3);\n\n    double r = area / s;\n\n    double k1 = (b * x3 + c * x2 + a * x1) / (a + b + c);\n    double k2 = (b * y3 + c * y2 + a * y1) / (a + b + c);\n\n    printf(\"%.6f %.6f %.6f\\n\", k1, k2, r);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:16:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint main() {\n    double x1, y1, x2, y2, x3, y3;\n    scanf(\"%lf %lf %lf %lf %lf %lf\", &x1, &y1, &x2, &y2, &x3, &y3);\n\n    double a = sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));\n    double b = sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));\n    double c = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));\n\n    double perimeter = a + b + c;\n    double area = fabs((x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2.0);\n    double r = area / (perimeter / 2.0);\n\n    double cx = (a * x1 + b * x2 + c * x3) / perimeter;\n    double cy = (a * y1 + b * y2 + c * y3) / perimeter;\n\n    printf(\"%.6lf %.6lf %.6lf\\n\", cx, cy, r);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:16:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <iomanip>\n\nusing namespace std;\n\nint main() {\n    double x1, y1, x2, y2, x3, y3;\n    cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;\n\n    double a = sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));\n    double b = sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));\n    double c = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));\n\n    double perimeter = a + b + c;\n    double area = fabs((x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2.0);\n\n    double r = area / (perimeter / 2.0);\n\n    double cx = (a * x1 + b * x2 + c * x3) / perimeter;\n    double cy = (a * y1 + b * y2 + c * y3) / perimeter;\n\n    cout << fixed << setprecision(7);\n    cout << cx << \" \" << cy << \" \" << r << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:16:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Incircle {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        double x1 = scanner.nextDouble();\n        double y1 = scanner.nextDouble();\n        double x2 = scanner.nextDouble();\n        double y2 = scanner.nextDouble();\n        double x3 = scanner.nextDouble();\n        double y3 = scanner.nextDouble();\n\n        double a = Math.sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));\n        double b = Math.sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));\n        double c = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));\n\n        double perimeter = a + b + c;\n        double area = Math.abs((x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2.0);\n        double r = area / (perimeter / 2.0);\n\n        double cx = (a * x1 + b * x2 + c * x3) / perimeter;\n        double cy = (a * y1 + b * y2 + c * y3) / perimeter;\n\n        System.out.printf(\"%.6f %.6f %.6f\\n\", cx, cy, r);\n    }\n}",
+    "timestamp": "2025-08-05 22:16:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class IncircleCalculator {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        double x1 = scanner.nextDouble();\n        double y1 = scanner.nextDouble();\n        double x2 = scanner.nextDouble();\n        double y2 = scanner.nextDouble();\n        double x3 = scanner.nextDouble();\n        double y3 = scanner.nextDouble();\n        \n        double a = Math.sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));\n        double b = Math.sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));\n        double c = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));\n        \n        double s = (a + b + c) / 2.0;\n        double area = Math.sqrt(s * (s - a) * (s - b) * (s - c));\n        \n        double r = area / s;\n        \n        double cx = (a * x1 + b * x2 + c * x3) / (a + b + c);\n        double cy = (a * y1 + b * y2 + c * y3) / (a + b + c);\n        \n        System.out.printf(\"%.6f %.6f %.6f\\n\", cx, cy, r);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:17:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <iomanip>\n\nusing namespace std;\n\ndouble distance(double x1, double y1, double x2, double y2) {\n    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));\n}\n\nint main() {\n    double x1, y1, x2, y2, x3, y3;\n    cin >> x1 >> y1 >> x2 >> y2 >> x3 >> y3;\n\n    double a = distance(x2, y2, x3, y3);\n    double b = distance(x1, y1, x3, y3);\n    double c = distance(x1, y1, x2, y2);\n\n    double s = (a + b + c) / 2.0;\n    double area = sqrt(s * (s - a) * (s - b) * (s - c));\n\n    double r = area / s;\n\n    double cx = (a * x1 + b * x2 + c * x3) / (a + b + c);\n    double cy = (a * y1 + b * y2 + c * y3) / (a + b + c);\n\n    cout << fixed << setprecision(6);\n    cout << cx << \" \" << cy << \" \" << r << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:17:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def incircle(x1, y1, x2, y2, x3, y3):\n    import math\n    \n    # Calculate the lengths of the triangle sides\n    a = math.sqrt((x2 - x3) ** 2 + (y2 - y3) ** 2)\n    b = math.sqrt((x1 - x3) ** 2 + (y1 - y3) ** 2)\n    c = math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)\n    \n    # Calculate semiperimeter\n    s = (a + b + c) / 2.0\n    \n    # Calculate the area of the triangle using Heron's Formula\n    area = math.sqrt(s * (s - a) * (s - b) * (s - c))\n    \n    # Calculate the radius of the incircle\n    r = area / s\n    \n    # Calculate the coordinates of the incenter\n    cx = (a * x1 + b * x2 + c * x3) / (a + b + c)\n    cy = (a * y1 + b * y2 + c * y3) / (a + b + c)\n    \n    return cx, cy, r\n\n# Example usage:\nx1, y1, x2, y2, x3, y3 = 0, 0, 1, 0, 0, 1\ncenter_x, center_y, radius = incircle(x1, y1, x2, y2, x3, y3)\nprint(f\"Center: ({center_x:.6f}, {center_y:.6f}), Radius: {radius:.6f}\")",
+    "timestamp": "2025-08-13 09:46:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class IncircleCalculator {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        // Read input points\n        int x1 = scanner.nextInt();\n        int y1 = scanner.nextInt();\n        int x2 = scanner.nextInt();\n        int y2 = scanner.nextInt();\n        int x3 = scanner.nextInt();\n        int y3 = scanner.nextInt();\n\n        // Calculate side lengths\n        double a = Math.sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));\n        double b = Math.sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));\n        double c = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));\n\n        // Calculate the semi-perimeter\n        double s = (a + b + c) / 2;\n\n        // Calculate the area of the triangle using Heron's formula\n        double area = Math.sqrt(s * (s - a) * (s - b) * (s - c));\n\n        // Calculate the radius of the incircle\n        double r = area / s;\n\n        // Calculate the coordinates of the incenter\n        double cx = (a * x1 + b * x2 + c * x3) / (a + b + c);\n        double cy = (a * y1 + b * y2 + c * y3) / (a + b + c);\n\n        // Output the results\n        System.out.printf(\"%.6f %.6f %.6f%n\", cx, cy, r);\n    }\n}",
+    "timestamp": "2025-08-13 09:46:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint main() {\n    int x1, y1, x2, y2, x3, y3;\n    scanf(\"%d %d %d %d %d %d\", &x1, &y1, &x2, &y2, &x3, &y3);\n\n    double a = sqrt((x2 - x3) * (x2 - x3) + (y2 - y3) * (y2 - y3));\n    double b = sqrt((x1 - x3) * (x1 - x3) + (y1 - y3) * (y1 - y3));\n    double c = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));\n\n    double perimeter = a + b + c;\n    double cx = (a * x1 + b * x2 + c * x3) / perimeter;\n    double cy = (a * y1 + b * y2 + c * y3) / perimeter;\n\n    double s = perimeter / 2.0;\n    double area = sqrt(s * (s - a) * (s - b) * (s - c));\n\n    double radius = area / s;\n\n    printf(\"%.6f %.6f %.6f\\n\", cx, cy, radius);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:47:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef triangle_incircle(x1, y1, x2, y2, x3, y3):\n    # Calculate side lengths\n    a = math.sqrt((x2-x3)**2 + (y2-y3)**2)\n    b = math.sqrt((x3-x1)**2 + (y3-y1)**2)\n    c = math.sqrt((x1-x2)**2 + (y1-y2)**2)\n    \n    # Semi-perimeter\n    s = (a + b + c) / 2\n    \n    # Triangle area using Heron's formula\n    area = math.sqrt(s * (s-a) * (s-b) * (s-c))\n    \n    # Radius of incircle\n    r = area / s\n    \n    # Coordinates of vertices\n    ax, ay = x1, y1\n    bx, by = x2, y2\n    cx, cy = x3, y3\n    \n    # Calculate incircle center\n    d = a + b + c\n    cx = (a*ax + b*bx + c*cx) / d\n    cy = (a*ay + b*by + c*cy) / d\n    \n    return round(cx, 6), round(cy, 6), round(r, 6)\n\n# Input\nx1, y1 = map(int, input().split())\nx2, y2 = map(int, input().split())\nx3, y3 = map(int, input().split())\n\n# Calculate and print result\ncx, cy, r = triangle_incircle(x1, y1, x2, y2, x3, y3)\nprint(f\"{cx} {cy} {r}\")",
+    "timestamp": "2025-08-13 09:47:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\nx1, y1 = map(int, input().split())\nx2, y2 = map(int, input().split())\nx3, y3 = map(int, input().split())\n\na = math.sqrt((x2 - x3)**2 + (y2 - y3)**2)\nb = math.sqrt((x1 - x3)**2 + (y1 - y3)**2)\nc = math.sqrt((x1 - x2)**2 + (y1 - y2)**2)\n\nperimeter = a + b + c\narea = abs((x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) / 2)\nr = area / (perimeter / 2)\n\ncx = (a * x1 + b * x2 + c * x3) / perimeter\ncy = (a * y1 + b * y2 + c * y3) / perimeter\n\nprint(\"{0:.8f} {1:.8f} {2:.8f}\".format(cx, cy, r))",
+    "timestamp": "2025-08-13 09:47:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <iomanip>\n\nstruct Point {\n    double x, y;\n};\n\ndouble distance(const Point& p1, const Point& p2) {\n    return std::sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));\n}\n\nint main() {\n    Point A, B, C;\n    std::cin >> A.x >> A.y >> B.x >> B.y >> C.x >> C.y;\n\n    double a = distance(B, C);\n    double b = distance(A, C);\n    double c = distance(A, B);\n\n    double perimeter = a + b + c;\n\n    double cx = (a * A.x + b * B.x + c * C.x) / perimeter;\n    double cy = (a * A.y + b * B.y + c * C.y) / perimeter;\n\n    double area = std::fabs(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2.0;\n    double r = area / (perimeter / 2.0);\n\n    std::cout << std::fixed << std::setprecision(6) << cx << ' ' << cy << ' ' << r << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:54:46"
+  }
+]

@@ -1,0 +1,1 @@
+Bitonic Traveling Salesman Problem (Bitonic TSP): For given N points in the 2D Euclidean plane, find the distance of the shortest tour that starts from the leftmost point, goes to the rightmost point, and returns back to the starting point, visiting each point at least once.

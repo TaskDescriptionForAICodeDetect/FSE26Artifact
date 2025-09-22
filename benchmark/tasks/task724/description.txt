@@ -1,0 +1,1 @@
+Takahashi has N cards, each with an integer written on it. He can choose an integer K and repeatedly perform an operation where he selects K cards, ensuring all integers on the chosen cards are different. The goal is to determine how many times this operation can be performed for each K from 1 to N.

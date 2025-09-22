@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "1\n10",
+      "output": "Possible\n4\n0 0\n0 1\n1 1\n1 0\n0 0"
+    },
+    {
+      "input": "2\n1000",
+      "output": "Possible\n6\n1 0\n2 0\n2 1\n1 1\n0 1\n0 0\n1 0"
+    },
+    {
+      "input": "2\n1001",
+      "output": "Impossible"
+    },
+    {
+      "input": "1\n1",
+      "output": "Possible\n0\n1 1"
+    }
+  ]
+}

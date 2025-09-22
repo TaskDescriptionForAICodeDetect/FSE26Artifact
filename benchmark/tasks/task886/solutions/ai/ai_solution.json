@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_H 100\n#define MAX_W 100\n\nint main() {\n    int H, W;\n    char matrix[MAX_H][MAX_W + 1];\n    int char_count[26] = {0};\n\n    scanf(\"%d %d\", &H, &W);\n    \n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", matrix[i]);\n        for (int j = 0; j < W; j++) {\n            char_count[matrix[i][j] - 'a']++;\n        }\n    }\n\n    bool possible = true;\n    for (int i = 0; i < 26; i++) {\n        if (char_count[i] % 2 != 0 && \n            (H % 2 == 0 || W % 2 == 0)) {\n            possible = false;\n            break;\n        }\n    }\n\n    printf(\"%s\\n\", possible ? \"YES\" : \"NO\");\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:13:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    \n    int freq[26] = {0};\n    char c;\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            scanf(\" %c\", &c);\n            freq[c - 'a']++;\n        }\n    }\n    \n    int four = (H / 2) * (W / 2);\n    int two = (H % 2) * (W / 2) + (W % 2) * (H / 2);\n    int one = (H % 2) * (W % 2);\n    \n    for (int i = 0; i < 26; i++) {\n        while (freq[i] >= 4 && four > 0) {\n            freq[i] -= 4;\n            four--;\n        }\n    }\n    \n    for (int i = 0; i < 26; i++) {\n        while (freq[i] >= 2 && two > 0) {\n            freq[i] -= 2;\n            two--;\n        }\n    }\n    \n    for (int i = 0; i < 26; i++) {\n        while (freq[i] >= 1 && one > 0) {\n            freq[i] -= 1;\n            one--;\n        }\n    }\n    \n    if (four == 0 && two == 0 && one == 0) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:14:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<string> grid(H);\n    map<char, int> freq;\n    for (int i = 0; i < H; ++i) {\n        cin >> grid[i];\n        for (char c : grid[i]) {\n            freq[c]++;\n        }\n    }\n\n    int g1 = 0, g2 = 0;\n    for (auto &p : freq) {\n        int cnt = p.second;\n        g1 += cnt % 2;\n        g2 += (cnt / 2) % 2;\n    }\n\n    bool possible = false;\n    if (H % 2 == 1 && W % 2 == 1) {\n        if (g1 == 1 && g2 <= (H / 2 + W / 2)) {\n            possible = true;\n        }\n    } else if (H % 2 == 1) {\n        if (g1 == 0 && g2 <= W / 2) {\n            possible = true;\n        }\n    } else if (W % 2 == 1) {\n        if (g1 == 0 && g2 <= H / 2) {\n            possible = true;\n        }\n    } else {\n        if (g1 == 0 && g2 == 0) {\n            possible = true;\n        }\n    }\n\n    cout << (possible ? \"Yes\" : \"No\") << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:14:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int H = sc.nextInt();\n        int W = sc.nextInt();\n        sc.nextLine();\n        int[] count = new int[26];\n        for (int i = 0; i < H; i++) {\n            String line = sc.nextLine();\n            for (int j = 0; j < W; j++) {\n                count[line.charAt(j) - 'a']++;\n            }\n        }\n\n        int g1 = (H % 2) * (W % 2);\n        int g2 = (H / 2) * (W % 2) + (W / 2) * (H % 2);\n        int g4 = (H / 2) * (W / 2);\n\n        boolean possible = true;\n        for (int i = 0; i < 26; i++) {\n            while (g4 > 0 && count[i] >= 4) {\n                count[i] -= 4;\n                g4--;\n            }\n        }\n        for (int i = 0; i < 26; i++) {\n            while (g2 > 0 && count[i] >= 2) {\n                count[i] -= 2;\n                g2--;\n            }\n        }\n        for (int i = 0; i < 26; i++) {\n            while (g1 > 0 && count[i] >= 1) {\n                count[i] -= 1;\n                g1--;\n            }\n        }\n        if (g1 != 0 || g2 != 0 || g4 != 0) {\n            possible = false;\n        }\n        System.out.println(possible ? \"Yes\" : \"No\");\n    }\n}",
+    "timestamp": "2025-08-05 23:14:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static boolean canCreatePalindromeMatrix(char[][] matrix) {\n        int H = matrix.length;\n        int W = matrix[0].length;\n        \n        // Count frequency of each character\n        int[] charCount = new int[26];\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                charCount[matrix[i][j] - 'a']++;\n            }\n        }\n        \n        // Check row and column palindrome conditions\n        int oddCount = 0;\n        for (int count : charCount) {\n            if (count % 2 != 0) {\n                oddCount++;\n            }\n        }\n        \n        // Check if we can create palindrome matrix\n        return oddCount <= H + W;\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        char[][] matrix = {\n            {'a', 'b', 'c'},\n            {'d', 'e', 'f'},\n            {'g', 'h', 'i'}\n        };\n        \n        System.out.println(canCreatePalindromeMatrix(matrix));\n    }\n}",
+    "timestamp": "2025-08-05 23:14:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nbool canCreatePalindromeMatrix(vector<vector<char>>& matrix) {\n    int H = matrix.size();\n    int W = matrix[0].size();\n    \n    // Count frequency of each character\n    unordered_map<char, int> charCount;\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            charCount[matrix[i][j]]++;\n        }\n    }\n    \n    // Check if matrix can be rearranged to palindrome\n    for (int i = 0; i < H; i++) {\n        // Count odd frequency characters for each row/column possible palindrome\n        int oddCount = 0;\n        unordered_map<char, int> rowCount;\n        \n        for (int j = 0; j < W; j++) {\n            rowCount[matrix[i][j]]++;\n        }\n        \n        for (auto& pair : rowCount) {\n            if (pair.second % 2 != 0) {\n                oddCount++;\n            }\n        }\n        \n        if (oddCount > 1) return false;\n    }\n    \n    for (int j = 0; j < W; j++) {\n        int oddCount = 0;\n        unordered_map<char, int> colCount;\n        \n        for (int i = 0; i < H; i++) {\n            colCount[matrix[i][j]]++;\n        }\n        \n        for (auto& pair : colCount) {\n            if (pair.second % 2 != 0) {\n                oddCount++;\n            }\n        }\n        \n        if (oddCount > 1) return false;\n    }\n    \n    return true;\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    \n    vector<vector<char>> matrix(H, vector<char>(W));\n    \n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cin >> matrix[i][j];\n        }\n    }\n    \n    if (canCreatePalindromeMatrix(matrix)) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:14:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_palindrome_rearrangement_possible(matrix):\n    from collections import Counter\n    \n    H = len(matrix)\n    W = len(matrix[0])\n\n    def count_frequencies(matrix):\n        freq = Counter()\n        for row in matrix:\n            freq.update(row)\n        return freq\n\n    def can_form_palindrome(frequencies, num, is_odd):\n        odd_count = 0\n        for count in frequencies.values():\n            if count % 2 != 0:\n                odd_count += 1\n        if is_odd:\n            return odd_count <= num\n        else:\n            return odd_count == 0\n\n    frequencies = count_frequencies(matrix)\n    \n    num_rows = H if H % 2 == 0 else H // 2 + 1\n    num_cols = W if W % 2 == 0 else W // 2 + 1\n    \n    if not can_form_palindrome(frequencies, num_rows * num_cols, H % 2):\n        return False\n    \n    if not can_form_palindrome(frequencies, num_rows * num_cols, W % 2):\n        return False\n\n    return True\n\n\n# Example usage:\nmatrix = [\n    \"abc\",\n    \"def\",\n    \"ghi\",\n]\n\nprint(is_palindrome_rearrangement_possible(matrix))",
+    "timestamp": "2025-08-13 14:14:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class PalindromeMatrix {\n    \n    public static boolean canFormPalindromeMatrix(String[] matrix) {\n        int H = matrix.length;\n        int W = matrix[0].length();\n        \n        if (H % 2 == 1 && W % 2 == 1) {\n            return false; // Both H and W cannot be odd for palindrome matrix\n        }\n\n        int[] frequency = new int[26]; // Frequency of each letter\n\n        // Counting frequency of each character\n        for (String row : matrix) {\n            for (char c : row.toCharArray()) {\n                frequency[c - 'a']++;\n            }\n        }\n\n        int oddCount = 0;\n        for (int freq : frequency) {\n            if (freq % 2 == 1) {\n                oddCount++;\n            }\n        }\n\n        // Conditions to check whether we can rearrange to a palindrome matrix\n        if ((H % 2 == 0 && W % 2 == 0 && oddCount == 0) || \n            (H % 2 == 1 && W % 2 == 0 && oddCount <= W) || \n            (H % 2 == 0 && W % 2 == 1 && oddCount <= H) || \n            (H % 2 == 1 && W % 2 == 1 && oddCount <= H + W - 1)) {\n            return true; \n        }\n\n        return false;\n    }\n\n    public static void main(String[] args) {\n        String[] matrix = {\n            \"abc\",\n            \"def\",\n            \"ghi\"\n        };\n        \n        if (canFormPalindromeMatrix(matrix)) {\n            System.out.println(\"Yes\");\n        } else {\n            System.out.println(\"No\");\n        }\n    }\n}",
+    "timestamp": "2025-08-13 14:14:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\nbool canFormPalindromeMatrix(int H, int W, char matrix[H][W]) {\n    int count[26] = {0};\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            count[matrix[i][j] - 'a']++;\n        }\n    }\n\n    int fourCount = (H / 2) * (W / 2);\n    int twoCount = ((H % 2) * (W / 2)) + ((W % 2) * (H / 2));\n    int oneCount = (H % 2) * (W % 2);\n\n    int availableFour = 0, availableTwo = 0, availableOne = 0;\n\n    for (int i = 0; i < 26; ++i) {\n        availableFour += count[i] / 4;\n        count[i] %= 4;\n    }\n\n    for (int i = 0; i < 26; ++i) {\n        availableTwo += count[i] / 2;\n        count[i] %= 2;\n    }\n\n    for (int i = 0; i < 26; ++i) {\n        availableOne += count[i];\n    }\n\n    return availableFour >= fourCount && availableTwo >= twoCount && availableOne >= oneCount;\n}\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    char matrix[H][W];\n    for (int i = 0; i < H; ++i) {\n        scanf(\"%s\", matrix[i]);\n    }\n\n    if (canFormPalindromeMatrix(H, W, matrix)) {\n        printf(\"Yes\\n\");\n    } else {\n        printf(\"No\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:14:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\nusing namespace std;\n\nbool isPossible(int H, int W, const vector<string>& grid) {\n    unordered_map<char, int> freq;\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            freq[grid[i][j]]++;\n        }\n    }\n\n    int oddRows = H % 2, oddCols = W % 2;\n    int oddCount = 0, pairCount = 0;\n\n    for (auto& [_, count] : freq) {\n        pairCount += count / 4;\n        if (count % 2 != 0) {\n            oddCount++;\n        }\n    }\n\n    int neededPairs = (H / 2) * (W / 2);\n    int neededSingles = (oddRows * W / 2) + (oddCols * H / 2);\n\n    if (pairCount >= neededPairs && oddCount <= neededSingles + oddRows * oddCols) {\n        return true;\n    }\n    return false;\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<string> grid(H);\n    for (int i = 0; i < H; ++i) {\n        cin >> grid[i];\n    }\n\n    if (isPossible(H, W, grid)) {\n        cout << \"Yes\" << endl;\n    } else {\n        cout << \"No\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:14:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_create_palindrome_matrix(matrix):\n    # Count frequencies of letters\n    letter_freq = {}\n    for row in matrix:\n        for letter in row:\n            letter_freq[letter] = letter_freq.get(letter, 0) + 1\n    \n    # Check if we can form palindromes\n    odd_count = sum(1 for freq in letter_freq.values() if freq % 2 != 0)\n    \n    # For palindrome, odd frequency letters can't exceed H+W-1\n    return odd_count <= len(matrix) + len(matrix[0]) - 1",
+    "timestamp": "2025-08-13 14:14:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import defaultdict\n\ndef solve():\n    H, W = map(int, input().split())\n    freq = defaultdict(int)\n    for _ in range(H):\n        row = input().strip()\n        for c in row:\n            freq[c] += 1\n    \n    # Determine the required counts\n    need4 = (H // 2) * (W // 2)\n    need2 = 0\n    if H % 2 == 1:\n        need2 += W // 2\n    if W % 2 == 1:\n        need2 += H // 2\n    need1 = 1 if (H % 2 == 1 and W % 2 == 1) else 0\n    \n    # Check if possible\n    cnt4 = 0\n    cnt2 = 0\n    cnt1 = 0\n    for c in freq:\n        while freq[c] >= 4 and cnt4 < need4:\n            freq[c] -= 4\n            cnt4 += 1\n        while freq[c] >= 2 and cnt2 < need2:\n            freq[c] -= 2\n            cnt2 += 1\n        if freq[c] >= 1:\n            cnt1 += freq[c]\n    \n    if cnt4 == need4 and cnt2 == need2 and cnt1 == need1:\n        print(\"Yes\")\n    else:\n        print(\"No\")\n\nsolve()",
+    "timestamp": "2025-08-13 14:15:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canRearrangeToPalindrome(matrix) {\n    const H = matrix.length;\n    const W = matrix[0].length;\n    const frequency = {};\n\n    // Count frequency of each character in the matrix\n    for (let row = 0; row < H; row++) {\n        for (let col = 0; col < W; col++) {\n            let char = matrix[row][col];\n            if (frequency[char]) {\n                frequency[char]++;\n            } else {\n                frequency[char] = 1;\n            }\n        }\n    }\n\n    function canFormPalindrome(frequency, dim1, dim2) {\n        let count4 = 0, count2 = 0, count1 = 0;\n        for (const key in frequency) {\n            const count = frequency[key];\n            count4 += Math.floor(count / 4);\n            count2 += Math.floor((count % 4) / 2);\n            count1 += count % 2;\n        }\n        \n        const needed4 = Math.floor(dim1 / 2) * Math.floor(dim2 / 2);\n        const needed2 = Math.floor(dim1 / 2) * (dim2 % 2) + Math.floor(dim2 / 2) * (dim1 % 2);\n        const needed1 = (dim1 % 2) * (dim2 % 2);\n\n        return count4 >= needed4 && count2 >= needed2 && count1 >= needed1;\n    }\n\n    return canFormPalindrome(frequency, H, W);\n}\n\n// Example usage:\nconst matrix = [\n    ['a', 'b', 'a'],\n    ['b', 'c', 'b'],\n    ['a', 'b', 'a']\n];\nconsole.log(canRearrangeToPalindrome(matrix)); // Output: true or false",
+    "timestamp": "2025-08-13 14:15:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function canCreatePalindromeMatrix(matrix) {\n    const letterCounts = {};\n    const H = matrix.length;\n    const W = matrix[0].length;\n\n    // Count letter frequencies across entire matrix\n    for (let i = 0; i < H; i++) {\n        for (let j = 0; j < W; j++) {\n            const letter = matrix[i][j];\n            letterCounts[letter] = (letterCounts[letter] || 0) + 1;\n        }\n    }\n\n    // Check if matrix can form palindrome rows/columns\n    const oddCountLetters = Object.values(letterCounts).filter(count => count % 2 !== 0);\n\n    // For even dimensions, no odd frequency letters allowed\n    if (H % 2 === 0 && W % 2 === 0) {\n        return oddCountLetters.length === 0;\n    }\n\n    // For odd dimensions, at most one letter can have odd frequency\n    if (H % 2 !== 0 || W % 2 !== 0) {\n        return oddCountLetters.length <= 1;\n    }\n}",
+    "timestamp": "2025-08-13 14:15:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const [H, W] = input[0].split(' ').map(Number);\n    const grid = input.slice(1, H + 1).map(row => row.trim());\n    \n    const freq = {};\n    for (const row of grid) {\n        for (const c of row) {\n            freq[c] = (freq[c] || 0) + 1;\n        }\n    }\n    \n    let count4 = 0;\n    let count2 = 0;\n    let count1 = 0;\n    \n    for (const c in freq) {\n        count4 += Math.floor(freq[c] / 4);\n        const rem = freq[c] % 4;\n        if (rem >= 2) count2++;\n        if (rem % 2 === 1) count1++;\n    }\n    \n    let possible = true;\n    const max4 = Math.floor(H / 2) * Math.floor(W / 2);\n    if (count4 < max4) {\n        possible = false;\n    } else {\n        const remaining = (count4 - max4) * 4;\n        count2 += remaining / 2;\n        \n        const needed2 = (H % 2) * Math.floor(W / 2) + (W % 2) * Math.floor(H / 2);\n        if (count2 < needed2) {\n            possible = false;\n        } else {\n            const remaining2 = count2 - needed2;\n            if (remaining2 % 2 !== 0) {\n                possible = false;\n            } else {\n                count1 += remaining2;\n                const needed1 = (H % 2) * (W % 2);\n                if (count1 !== needed1) {\n                    possible = false;\n                }\n            }\n        }\n    }\n    \n    console.log(possible ? \"Yes\" : \"No\");\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:15:35"
+  }
+]

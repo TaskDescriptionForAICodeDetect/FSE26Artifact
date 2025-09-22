@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint findMedian(int a, int b, int c) {\n    int temp[3] = {a, b, c};\n    for (int i = 0; i < 2; i++) {\n        for (int j = 0; j < 2 - i; j++) {\n            if (temp[j] > temp[j+1]) {\n                int swap = temp[j];\n                temp[j] = temp[j+1];\n                temp[j+1] = swap;\n            }\n        }\n    }\n    return temp[1];\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int pyramid[N][2*N-1];\n    \n    // Read the last row\n    for (int j = 0; j < 2*N-1; j++) {\n        scanf(\"%d\", &pyramid[N-1][j]);\n    }\n    \n    // Fill pyramid from bottom to top\n    for (int i = N-2; i >= 0; i--) {\n        int step_width = 2*i + 1;\n        for (int j = 0; j < step_width; j++) {\n            if (j == 0) {\n                // Left edge\n                pyramid[i][j] = findMedian(pyramid[i+1][j], pyramid[i+1][j], pyramid[i+1][j+1]);\n            } else if (j == step_width-1) {\n                // Right edge\n                pyramid[i][j] = findMedian(pyramid[i+1][j-1], pyramid[i+1][j], pyramid[i+1][j]);\n            } else {\n                // Middle blocks\n                pyramid[i][j] = findMedian(pyramid[i+1][j-1], pyramid[i+1][j], pyramid[i+1][j+1]);\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", pyramid[0][0]);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nvoid findStep1(int *stepN, int N) {\n    int size = 2 * N - 1;\n    int **pyramid = (int **)malloc(N * sizeof(int *));\n    for (int i = 0; i < N; i++) {\n        pyramid[i] = (int *)malloc((2 * (i + 1) - 1) * sizeof(int));\n    }\n\n    for (int i = 0; i < size; i++) {\n        pyramid[N - 1][i] = stepN[i];\n    }\n\n    for (int i = N - 2; i >= 0; i--) {\n        int currentSize = 2 * (i + 1) - 1;\n        for (int j = 0; j < currentSize; j++) {\n            int a = pyramid[i + 1][j];\n            int b = pyramid[i + 1][j + 1];\n            int c = pyramid[i + 1][j + 2];\n            if (a > b) { int temp = a; a = b; b = temp; }\n            if (a > c) { int temp = a; a = c; c = temp; }\n            if (b > c) { int temp = b; b = c; c = temp; }\n            pyramid[i][j] = b;\n        }\n    }\n\n    printf(\"%d\\n\", pyramid[0][0]);\n\n    for (int i = 0; i < N; i++) {\n        free(pyramid[i]);\n    }\n    free(pyramid);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int size = 2 * N - 1;\n    int *stepN = (int *)malloc(size * sizeof(int));\n    for (int i = 0; i < size; i++) {\n        scanf(\"%d\", &stepN[i]);\n    }\n    findStep1(stepN, N);\n    free(stepN);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(2 * N - 1);\n    for (int i = 0; i < 2 * N - 1; ++i) {\n        cin >> a[i];\n    }\n    \n    while (a.size() > 1) {\n        vector<int> next;\n        for (int i = 1; i < a.size() - 1; ++i) {\n            vector<int> temp = {a[i-1], a[i], a[i+1]};\n            sort(temp.begin(), temp.end());\n            next.push_back(temp[1]);\n        }\n        a = next;\n    }\n    \n    cout << a[0] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PyramidMedian {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int size = 2 * N - 1;\n        int[] stepN = new int[size];\n        for (int i = 0; i < size; i++) {\n            stepN[i] = scanner.nextInt();\n        }\n\n        int[][] pyramid = new int[N][size];\n        pyramid[N - 1] = stepN.clone();\n\n        for (int i = N - 2; i >= 0; i--) {\n            int currentSize = 2 * (i + 1) - 1;\n            for (int j = 0; j < currentSize; j++) {\n                int left = pyramid[i + 1][j];\n                int middle = pyramid[i + 1][j + 1];\n                int right = pyramid[i + 1][j + 2];\n                pyramid[i][j] = median(left, middle, right);\n            }\n        }\n\n        System.out.println(pyramid[0][0]);\n    }\n\n    private static int median(int a, int b, int c) {\n        int[] arr = {a, b, c};\n        Arrays.sort(arr);\n        return arr[1];\n    }\n}",
+    "timestamp": "2025-08-05 23:33:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PyramidMedian {\n    public static int solve(int[] lastStep, int N) {\n        int[][] pyramid = new int[N][2 * N - 1];\n        \n        for (int i = 0; i < lastStep.length; i++) {\n            pyramid[N - 1][i] = lastStep[i];\n        }\n        \n        for (int row = N - 2; row >= 0; row--) {\n            for (int col = 0; col < 2 * (row + 1) - 1; col++) {\n                int left = col > 0 ? pyramid[row + 1][col - 1] : 0;\n                int center = pyramid[row + 1][col];\n                int right = col < 2 * (row + 1) - 2 ? pyramid[row + 1][col + 1] : 0;\n                \n                List<Integer> medianValues = new ArrayList<>();\n                if (left != 0) medianValues.add(left);\n                medianValues.add(center);\n                if (right != 0) medianValues.add(right);\n                \n                Collections.sort(medianValues);\n                pyramid[row][col] = medianValues.get(medianValues.size() / 2);\n            }\n        }\n        \n        return pyramid[0][0];\n    }\n}",
+    "timestamp": "2025-08-05 23:33:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<vector<int>> pyramid(N);\n    \n    for (int i = 0; i < N; i++) {\n        pyramid[i].resize(2 * i + 1);\n        if (i == N - 1) {\n            for (int j = 0; j < 2 * i + 1; j++) {\n                cin >> pyramid[i][j];\n            }\n        }\n    }\n    \n    for (int step = N - 2; step >= 0; step--) {\n        for (int j = 0; j < 2 * step + 1; j++) {\n            vector<int> candidates;\n            \n            candidates.push_back(pyramid[step + 1][j]);\n            candidates.push_back(pyramid[step + 1][j + 1]);\n            \n            if (j < 2 * step) {\n                candidates.push_back(pyramid[step + 1][j + 2]);\n            }\n            \n            sort(candidates.begin(), candidates.end());\n            pyramid[step][j] = candidates[candidates.size() / 2];\n        }\n    }\n    \n    cout << pyramid[0][0] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:33:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_pyramid_top(N, permutation):\n    def find_index(step, block):\n        return block * (block + 1) // 2 - (N - step)\n    \n    def median(v1, v2, v3):\n        return sorted([v1, v2, v3])[1]\n    \n    blocks = [0] * (N * (N + 1) // 2)\n    start_idx = find_index(N, N)\n    blocks[start_idx:start_idx + len(permutation)] = permutation\n\n    for step in range(N - 1, 0, -1):\n        for block in range(1, step + 1):\n            i = find_index(step, block)\n            left = find_index(step + 1, block)\n            right = find_index(step + 1, block + 1)\n            med = median(blocks[i + block], blocks[left], blocks[right])\n            blocks[i] = med\n\n    return blocks[0]\n\n# Example usage\nN = 3\npermutation = [3, 1, 2, 5, 6]\nprint(find_pyramid_top(N, permutation))  # Output will vary based on the input permutation",
+    "timestamp": "2025-08-13 15:51:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class PyramidStep {\n\n    public static int findTopBlockNumber(int[] stepN) {\n        int N = (stepN.length + 1) / 2;\n        int[][] pyramid = new int[N + 1][];\n        \n        for (int i = 1; i <= N; i++) {\n            pyramid[i] = new int[2 * i - 1];\n        }\n        \n        pyramid[N] = Arrays.copyOf(stepN, stepN.length);\n        \n        for (int i = N - 1; i >= 1; i--) {\n            for (int j = 0; j < pyramid[i].length; j++) {\n                pyramid[i][j] = median(\n                    pyramid[i + 1][j],\n                    pyramid[i + 1][j + 1],\n                    pyramid[i + 1][j + 2]\n                );\n            }\n        }\n        \n        return pyramid[1][0];\n    }\n\n    private static int median(int a, int b, int c) {\n        int[] arr = {a, b, c};\n        Arrays.sort(arr);\n        return arr[1];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] stepN = new int[2 * N - 1];\n        \n        for (int i = 0; i < stepN.length; i++) {\n            stepN[i] = scanner.nextInt();\n        }\n        \n        int result = findTopBlockNumber(stepN);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 15:52:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100\n\nint main() {\n    int N;\n    int perm[2 * MAX_N - 1];\n    int pyramid[MAX_N][2 * MAX_N - 1];\n\n    // Read N\n    scanf(\"%d\", &N);\n\n    // Read permutation for step N\n    for (int i = 0; i < 2 * N - 1; i++) {\n        scanf(\"%d\", &perm[i]);\n    }\n\n    // Initialize step N of pyramid\n    for (int i = 0; i < 2 * N - 1; i++) {\n        pyramid[N - 1][i] = perm[i];\n    }\n\n    // Fill the pyramid from step N-1 to step 1\n    for (int i = N - 2; i >= 0; i--) {\n        int offset = N - 1 - i; // Calculate center offset for each step\n        for (int j = 0; j < 2 * i + 1; j++) { // Each step has 2i+1 blocks\n            int left_below = pyramid[i + 1][j + offset];\n            int center_below = pyramid[i + 1][j + offset + 1];\n            int right_below = pyramid[i + 1][j + offset + 2];\n            \n            // Sort the three values to find the median\n            int values[3] = {left_below, center_below, right_below};\n            for (int a = 0; a < 2; a++) {\n                for (int b = a + 1; b < 3; b++) {\n                    if (values[a] > values[b]) {\n                        int temp = values[a];\n                        values[a] = values[b];\n                        values[b] = temp;\n                    }\n                }\n            }\n            \n            // Set the block value as the median\n            pyramid[i][j + offset] = values[1];\n        }\n    }\n\n    // Print the value on the top block of the pyramid\n    printf(\"%d\\n\", pyramid[0][N - 1]);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:52:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint n;\n\n// Function to recursively calculate the value of upper blocks\nint calculate(const vector<vector<int>>& pyramid, vector<vector<int>>& cache, int step, int index) {\n    if (step == n) return pyramid[step][index];\n    if (cache[step][index] != -1) return cache[step][index];\n    \n    int left = calculate(pyramid, cache, step + 1, index);\n    int mid = calculate(pyramid, cache, step + 1, index + 1);\n    int right = calculate(pyramid, cache, step + 1, index + 2);\n    \n    vector<int> values = {left, mid, right};\n    sort(values.begin(), values.end());\n    return cache[step][index] = values[1];\n}\n\nint main() {\n    cin >> n;\n    vector<int> row(2 * n - 1);\n    for (int i = 0; i < 2 * n - 1; ++i) {\n        cin >> row[i];\n    }\n    \n    // Build the pyramid using only the given last step\n    vector<vector<int>> pyramid(n + 1);\n    pyramid[n] = row;\n    \n    // Initialize a cache to store computed values to avoid recomputation\n    vector<vector<int>> cache(n + 1, vector<int>(2 * n - 1, -1));\n    \n    // Calculate the value at the first step and first block\n    cout << calculate(pyramid, cache, 1, 0) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:52:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_pyramid(bottom_row):\n    N = len(bottom_row)\n    pyramid = [[0] * (2*i-1) for i in range(1, N+1)]\n    \n    # Fill bottom row\n    pyramid[N-1] = bottom_row\n    \n    # Work upwards from bottom row\n    for row in range(N-2, -1, -1):\n        row_size = 2 * (row + 1) - 1\n        for col in range(row_size):\n            # Median calculation\n            left = pyramid[row+1][col]\n            middle = pyramid[row+1][col+1]\n            right = pyramid[row+1][col+2]\n            candidates = sorted([left, middle, right])\n            pyramid[row][col] = candidates[1]\n    \n    return pyramid[0][0]\n\n# Example usage\n# bottom_row = input list of integers from step N\n# result = solve_pyramid(bottom_row)",
+    "timestamp": "2025-08-13 15:52:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    A = list(map(int, sys.stdin.readline().split()))\n    \n    # The top of the pyramid is the median of the base's sliding window of size N\n    # This is equivalent to the median of medians of the base\n    # But for the problem, it's the middle element of the sorted base when N is odd\n    # For the sample input, N=2, the answer is the median of the 3-element base's median\n    # So the answer is the median of the entire base when N is odd, or the median of the middle three when N is even\n    \n    if N == 1:\n        print(A[0])\n        return\n    \n    # For general N, the top is the median of the middle (2N-1 - 2*(N-1)) = 1 element when N is odd\n    # Or the median of the middle 3 elements when N is even\n    # Wait, no. For N=2, the pyramid has 3 blocks in base, and the top is median of the 3.\n    # For N=3, the pyramid has 5 blocks in base, and the top is median of the median of 3 blocks, which is the middle one.\n    # So the answer is the middle element of the sorted base for any N.\n    \n    A_sorted = sorted(A)\n    print(A_sorted[len(A_sorted) // 2])\n\nsolve()",
+    "timestamp": "2025-08-13 15:52:35"
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_N 5000\n\nlong long dp[MAX_N + 1][MAX_N + 1];\n\nint main() {\n    int n, a[MAX_N + 1];\n    \n    scanf(\"%d\", &n);\n    for (int i = 1; i <= n + 1; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = 1;\n    \n    for (int i = 1; i <= n + 1; i++) {\n        for (int j = 0; j <= n; j++) {\n            dp[i][j] = dp[i-1][j];\n            if (j > 0) {\n                dp[i][j] = (dp[i][j] + dp[i-1][j-1]) % MOD;\n            }\n        }\n    }\n    \n    for (int k = 1; k <= n + 1; k++) {\n        printf(\"%lld\\n\", dp[n+1][k]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#define MOD 1000000007\n#define MAXN 200010\n\nint fact[MAXN], inv_fact[MAXN];\nint freq[MAXN];\n\nint power(int a, int b) {\n    int res = 1;\n    while (b > 0) {\n        if (b % 2 == 1) {\n            res = (1LL * res * a) % MOD;\n        }\n        a = (1LL * a * a) % MOD;\n        b /= 2;\n    }\n    return res;\n}\n\nvoid precompute() {\n    fact[0] = 1;\n    for (int i = 1; i < MAXN; i++) {\n        fact[i] = (1LL * fact[i-1] * i) % MOD;\n    }\n    inv_fact[MAXN-1] = power(fact[MAXN-1], MOD-2);\n    for (int i = MAXN-2; i >= 0; i--) {\n        inv_fact[i] = (1LL * inv_fact[i+1] * (i+1)) % MOD;\n    }\n}\n\nint comb(int n, int k) {\n    if (k < 0 || k > n) return 0;\n    return (1LL * fact[n] * inv_fact[k] % MOD) * inv_fact[n - k] % MOD;\n}\n\nint main() {\n    precompute();\n    int n;\n    scanf(\"%d\", &n);\n    int a[n+1];\n    int dup = -1;\n    for (int i = 0; i < n+1; i++) {\n        scanf(\"%d\", &a[i]);\n        freq[a[i]]++;\n        if (freq[a[i]] == 2) {\n            dup = a[i];\n        }\n    }\n    int l = -1, r = -1;\n    for (int i = 0; i < n+1; i++) {\n        if (a[i] == dup) {\n            if (l == -1) l = i;\n            else r = i;\n        }\n    }\n    int m = n + 1 - (r - l + 1);\n    for (int k = 1; k <= n + 1; k++) {\n        int total = comb(n + 1, k);\n        int sub = comb(m, k - 1);\n        int ans = (total - sub + MOD) % MOD;\n        printf(\"%d\\n\", ans);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:18:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nvector<int> fac, inv_fac;\n\nint power(int a, int b) {\n    int res = 1;\n    while (b > 0) {\n        if (b & 1) res = (long long)res * a % MOD;\n        a = (long long)a * a % MOD;\n        b >>= 1;\n    }\n    return res;\n}\n\nvoid precompute(int n) {\n    fac.resize(n + 1);\n    inv_fac.resize(n + 1);\n    fac[0] = 1;\n    for (int i = 1; i <= n; ++i) {\n        fac[i] = (long long)fac[i - 1] * i % MOD;\n    }\n    inv_fac[n] = power(fac[n], MOD - 2);\n    for (int i = n - 1; i >= 0; --i) {\n        inv_fac[i] = (long long)inv_fac[i + 1] * (i + 1) % MOD;\n    }\n}\n\nint comb(int n, int k) {\n    if (k < 0 || k > n) return 0;\n    return (long long)fac[n] * inv_fac[k] % MOD * inv_fac[n - k] % MOD;\n}\n\nvector<int> solve(int n, vector<int>& a) {\n    vector<int> pos(n + 1, -1);\n    int x = -1, y = -1;\n    for (int i = 0; i < n + 1; ++i) {\n        if (pos[a[i]] != -1) {\n            x = pos[a[i]];\n            y = i;\n            break;\n        }\n        pos[a[i]] = i;\n    }\n    int m = x + (n - y);\n    precompute(n + 1);\n    vector<int> res(n + 1);\n    for (int k = 1; k <= n + 1; ++k) {\n        res[k - 1] = (comb(n + 1, k) - comb(m, k - 1) + MOD) % MOD;\n    }\n    return res;\n}\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> a(n + 1);\n    for (int i = 0; i < n + 1; ++i) {\n        cin >> a[i];\n    }\n    vector<int> res = solve(n, a);\n    for (int k = 1; k <= n + 1; ++k) {\n        cout << res[k - 1] << '\\n';\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:19:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.math.*;\n\npublic class Solution {\n    static final int MOD = 1000000007;\n    \n    static class Combinatorics {\n        int max;\n        long[] fact;\n        long[] invFact;\n        \n        public Combinatorics(int max) {\n            this.max = max;\n            fact = new long[max + 1];\n            invFact = new long[max + 1];\n            fact[0] = 1;\n            for (int i = 1; i <= max; i++) {\n                fact[i] = fact[i - 1] * i % MOD;\n            }\n            invFact[max] = modInverse(fact[max], MOD);\n            for (int i = max - 1; i >= 0; i--) {\n                invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n            }\n        }\n        \n        long comb(int n, int k) {\n            if (k < 0 || k > n) return 0;\n            return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n        }\n        \n        long modInverse(long a, int mod) {\n            return modPow(a, mod - 2, mod);\n        }\n        \n        long modPow(long a, long b, int mod) {\n            long res = 1;\n            while (b > 0) {\n                if ((b & 1) == 1) {\n                    res = res * a % mod;\n                }\n                a = a * a % mod;\n                b >>= 1;\n            }\n            return res;\n        }\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] a = new int[n + 1];\n        for (int i = 0; i < n + 1; i++) {\n            a[i] = scanner.nextInt();\n        }\n        \n        int[] pos = new int[n + 1];\n        Arrays.fill(pos, -1);\n        int left = -1, right = -1;\n        for (int i = 0; i < n + 1; i++) {\n            if (pos[a[i]] != -1) {\n                left = pos[a[i]];\n                right = i;\n                break;\n            }\n            pos[a[i]] = i;\n        }\n        \n        int m = n + 1;\n        int l = left + (m - 1 - right);\n        Combinatorics comb = new Combinatorics(m + 1);\n        \n        for (int k = 1; k <= m; k++) {\n            long res = (comb.comb(m, k) - comb.comb(l, k - 1) + MOD) % MOD;\n            System.out.println(res);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:19:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 1_000_000_007;\n\n    public static int[] countSubsequences(int[] arr) {\n        int n = arr.length - 1;\n        int[] result = new int[n + 1];\n        \n        // Use dynamic programming to count subsequences\n        int[][] dp = new int[n + 2][n + 2];\n        dp[0][0] = 1;\n        \n        // Count frequency of each number\n        int[] freq = new int[n + 1];\n        for (int num : arr) {\n            freq[num]++;\n        }\n        \n        // Dynamic programming to count subsequences\n        for (int i = 1; i <= n + 1; i++) {\n            for (int j = 0; j <= n; j++) {\n                // Don't include current number\n                dp[i][j] = dp[i-1][j];\n                \n                // Include current number if its count allows\n                if (j > 0 && freq[i-1] > 0) {\n                    dp[i][j] = (dp[i][j] + dp[i-1][j-1]) % MOD;\n                }\n            }\n        }\n        \n        // Populate result array\n        for (int k = 1; k <= n + 1; k++) {\n            result[k-1] = dp[n+1][k];\n        }\n        \n        return result;\n    }\n}",
+    "timestamp": "2025-08-05 23:19:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int n;\n    cin >> n;\n    \n    vector<int> arr(n+1);\n    for (int i = 1; i <= n; i++) {\n        cin >> arr[i];\n    }\n    \n    vector<vector<int>> dp(n+2, vector<int>(n+2, 0));\n    dp[0][0] = 1;\n    \n    for (int i = 1; i <= n; i++) {\n        for (int j = 0; j <= n; j++) {\n            dp[i][j] = dp[i-1][j];\n            if (j > 0) {\n                dp[i][j] = (dp[i][j] + dp[i-1][j-1]) % MOD;\n            }\n        }\n    }\n    \n    vector<int> result(n+2, 0);\n    for (int k = 1; k <= n+1; k++) {\n        for (int len = k; len <= n; len++) {\n            result[k] = (result[k] + dp[n][len]) % MOD;\n        }\n    }\n    \n    for (int k = 1; k <= n+1; k++) {\n        cout << result[k] << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:19:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_subsequences(sequence):\n    MOD = 10**9 + 7\n    n = len(sequence) - 1\n\n    results = [0] * (n + 2)\n    results[1] = n + 1  # There are n+1 subsequences of length 1\n\n    for k in range(2, n + 2):\n        ways = 1\n        for i in range(k - 1):\n            ways = ways * (n - i) // (i + 1) % MOD\n        results[k] = ways * (n + 1) % MOD\n\n    return results[1:]\n\n# Example usage:\nsequence = [1, 2, 3, 4, 1, 5]  # Example sequence\nprint(count_subsequences(sequence))",
+    "timestamp": "2025-08-13 14:43:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SubsequencesCounter {\n\n    private static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int[] sequence = new int[n + 1];\n        for (int i = 0; i < n + 1; i++) {\n            sequence[i] = scanner.nextInt();\n        }\n        long[] dp = new long[n + 2];\n        dp[0] = 1;\n        \n        for (int num : sequence) {\n            for (int k = n + 1; k > 0; k--) {\n                dp[k] = (dp[k] + dp[k - 1]) % MOD;\n            }\n        }\n        \n        for (int k = 1; k <= n + 1; k++) {\n            System.out.println(dp[k]);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 14:43:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n\nlong long mod_exponentiation(long long base, long long exp, long long mod) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % mod;\n        }\n        base = (base * base) % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    long long *fact = (long long*) malloc((n+2) * sizeof(long long));\n    fact[0] = 1;\n    for (int i = 1; i <= n+1; i++) {\n        fact[i] = (fact[i-1] * i) % MOD;\n    }\n    \n    for (int k = 1; k <= n+1; k++) {\n        long long count_subseq = (fact[n+1] * mod_exponentiation(fact[k+1], MOD-2, MOD)) % MOD;\n        count_subseq = (count_subseq * mod_exponentiation(fact[n+1-k], MOD-2, MOD)) % MOD;\n        printf(\"%lld\\n\", count_subseq);\n    }\n    \n    free(fact);\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:43:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nconst int MOD = 1000000007;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<int> sequence(n + 1);\n    for (int i = 0; i < n + 1; ++i) {\n        cin >> sequence[i];\n    }\n\n    vector<long long> dp(n + 2, 0);\n    dp[0] = 1;\n    for (int num : sequence) {\n        for (int k = n + 1; k > 0; --k) {\n            dp[k] = (dp[k] + dp[k - 1]) % MOD;\n        }\n    }\n\n    for (int k = 1; k <= n + 1; ++k) {\n        cout << dp[k] << \"\\n\";\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:43:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(arr):\n    n = len(arr) - 1\n    mod = 10**9 + 7\n    \n    # Initialize DP table\n    dp = [[0] * (n + 2) for _ in range(n + 2)]\n    dp[0][0] = 1\n    \n    # Frequency count of each number\n    freq = [0] * (n + 1)\n    for num in arr:\n        freq[num] += 1\n    \n    # Dynamic programming calculation\n    for i in range(1, n + 2):\n        for j in range(1, i + 1):\n            # Not including current number\n            dp[i][j] = dp[i-1][j]\n            \n            # Including current number if it exists in the original sequence\n            if freq[i] > 0:\n                dp[i][j] += dp[i-1][j-1]\n            \n            dp[i][j] %= mod\n    \n    # Return subsequence counts for each length\n    return [dp[n+1][k] for k in range(1, n + 2)]",
+    "timestamp": "2025-08-13 14:44:11"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef solve():\n    n = int(sys.stdin.readline())\n    arr = list(map(int, sys.stdin.readline().split()))\n    \n    pos = [-1] * (n + 2)\n    x = -1\n    for i in range(n + 1):\n        if pos[arr[i]] != -1:\n            x = arr[i]\n            l = pos[arr[i]]\n            r = i\n            break\n        pos[arr[i]] = i\n    \n    max_n = n + 2\n    fact = [1] * (max_n)\n    inv_fact = [1] * (max_n)\n    for i in range(1, max_n):\n        fact[i] = fact[i-1] * i % MOD\n    inv_fact[max_n - 1] = pow(fact[max_n - 1], MOD-2, MOD)\n    for i in range(max_n - 2, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    def comb(a, b):\n        if a < 0 or b < 0 or a < b:\n            return 0\n        return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD\n    \n    total = l + (n + 1 - r - 1)\n    for k in range(1, n + 2):\n        res = comb(n + 1, k) - comb(total, k - 1)\n        res %= MOD\n        print(res)\n\nsolve()",
+    "timestamp": "2025-08-13 14:44:24"
+  }
+]

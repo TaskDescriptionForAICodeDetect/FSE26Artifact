@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "1 0 1 0\n3\ndna: a b\na: [AT]\nb: [GC]",
+      "output": "1"
+    },
+    {
+      "input": "1 1 1 2\n1\nk: [ATG] [ATG] [ATG] [C] [C]",
+      "output": "6"
+    },
+    {
+      "input": "3 1 1 1\n3\ninv: at b b b\nat: [ATG] b\nb: [C]",
+      "output": "0"
+    }
+  ]
+}

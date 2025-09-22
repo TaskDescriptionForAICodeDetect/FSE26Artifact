@@ -1,0 +1,1 @@
+Calculate the number of cities where residents are dissatisfied with the railway company after fare increases over several years in the JOI Country, given information about cities, railway routes, and fare increase plans.

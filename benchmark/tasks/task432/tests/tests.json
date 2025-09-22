@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "000",
+      "output": "0"
+    },
+    {
+      "input": "0.0",
+      "output": "2"
+    },
+    {
+      "input": "...",
+      "output": "7"
+    },
+    {
+      "input": "(1.1)",
+      "output": "2"
+    },
+    {
+      "input": "0-1.",
+      "output": "-1"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+There is a tree with N vertices, numbered 1 through N. The i-th of the N-1 edges connects the vertices p_i and q_i. Among the sequences of distinct vertices v_1, v_2, ..., v_M that satisfy the following condition, find the maximum value of M. For every 1 ≤ i < M, the path connecting the vertices v_i and v_{i+1} does not contain any vertex in v, except for v_i and v_{i+1}.

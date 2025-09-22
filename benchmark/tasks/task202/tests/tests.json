@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "19\n  1 +x 1 +y +z 3 +z \n  3 +y -z +x +y -z -x +z 2 +z  \n  2 +y\n19\n  1 +x 1 +y +z 3 +y -z +x +y -z -x +z 2 +y  \n  3 +z \n  2 +z\n19\n  1 +x 1 +y +z 3 +z \n  3 +y -z +x +y -z -x +z 2 +y  \n  2 +y\n18\n  1 -y\n  1 +y -z +x\n  1 +z +y +x +z +y -x -y 2 -y\n  2 +z\n3 +x +y +z\n3 +y +z -x\n0",
+      "output": "SAME\nSAME\nDIFFERENT"
+    }
+  ]
+}

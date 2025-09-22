@@ -1,0 +1,6 @@
+Microbial power generation.
+Dr. Iinuma discovered a mysterious microorganism in the fumarole of Mount Bandai. When one male and one female microorganism fuse, they release electrical energy. Researching this microorganism may help save us from future energy crises.
+
+It was observed that electrical energy is generated only when the microorganisms fuse, and further fusion of the fused microorganisms does not occur. Continued observation revealed that the amount of electrical energy released during fusion is determined by the unknown particles (named B particles after Mount Bandai) held within the microorganisms. If the amounts of B particles held by the male and female being fused are denoted as bm and bw respectively, the electrical energy released by the fusion can be calculated using the formula |bm - bw| × (|bm - bw| - 30)².
+
+This discovery allows us to calculate the maximum electrical energy obtained from a population of microorganisms. Thus, when given the number of males and females in a population and the amount of B particles each individual possesses, create a program to calculate the maximum electrical energy obtainable from the microbial population.

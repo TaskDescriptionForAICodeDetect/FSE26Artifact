@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <math.h>\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n <= 3) return true;\n    if (n % 2 == 0 || n % 3 == 0) return false;\n    \n    for (int i = 5; i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) return false;\n    }\n    return true;\n}\n\nint countSimilarNumbers(int l, int r) {\n    int count = 0;\n    for (int x = l; x <= r; x += 2) {\n        if (isPrime(x) && isPrime((x + 1) / 2)) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int Q;\n    scanf(\"%d\", &Q);\n    \n    while (Q--) {\n        int l, r;\n        scanf(\"%d %d\", &l, &r);\n        \n        if (l % 2 == 0) l++;\n        \n        printf(\"%d\\n\", countSimilarNumbers(l, r));\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX 1000000\n\nbool is_prime[MAX + 1];\nint prefix[MAX + 1];\n\nvoid sieve() {\n    memset(is_prime, true, sizeof(is_prime));\n    is_prime[0] = is_prime[1] = false;\n    for (int i = 2; i * i <= MAX; i++) {\n        if (is_prime[i]) {\n            for (int j = i * i; j <= MAX; j += i) {\n                is_prime[j] = false;\n            }\n        }\n    }\n}\n\nvoid precompute() {\n    sieve();\n    prefix[0] = 0;\n    for (int i = 1; i <= MAX; i++) {\n        if (i % 2 != 0 && is_prime[i] && is_prime[(i + 1) / 2]) {\n            prefix[i] = prefix[i - 1] + 1;\n        } else {\n            prefix[i] = prefix[i - 1];\n        }\n    }\n}\n\nint main() {\n    precompute();\n    int Q;\n    scanf(\"%d\", &Q);\n    while (Q--) {\n        int l, r;\n        scanf(\"%d %d\", &l, &r);\n        printf(\"%d\\n\", prefix[r] - prefix[l - 1]);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MAX = 1e5 + 10;\n\nvector<bool> sieve(int n) {\n    vector<bool> is_prime(n + 1, true);\n    is_prime[0] = is_prime[1] = false;\n    for (int i = 2; i * i <= n; ++i) {\n        if (is_prime[i]) {\n            for (int j = i * i; j <= n; j += i) {\n                is_prime[j] = false;\n            }\n        }\n    }\n    return is_prime;\n}\n\nint main() {\n    vector<bool> is_prime = sieve(MAX);\n    vector<int> prefix(MAX + 1, 0);\n    for (int i = 1; i <= MAX; ++i) {\n        prefix[i] = prefix[i - 1];\n        if (i % 2 == 1 && is_prime[i] && is_prime[(i + 1) / 2]) {\n            prefix[i]++;\n        }\n    }\n\n    int Q;\n    cin >> Q;\n    while (Q--) {\n        int l, r;\n        cin >> l >> r;\n        cout << prefix[r] - prefix[l - 1] << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int max = 100000;\n        boolean[] isPrime = new boolean[max + 1];\n        Arrays.fill(isPrime, true);\n        isPrime[0] = isPrime[1] = false;\n        for (int i = 2; i * i <= max; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= max; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n\n        int[] prefix = new int[max + 1];\n        for (int i = 1; i <= max; i++) {\n            prefix[i] = prefix[i - 1];\n            if (i % 2 != 0 && isPrime[i] && isPrime[(i + 1) / 2]) {\n                prefix[i]++;\n            }\n        }\n\n        int Q = sc.nextInt();\n        for (int q = 0; q < Q; q++) {\n            int l = sc.nextInt();\n            int r = sc.nextInt();\n            System.out.println(prefix[r] - prefix[l - 1]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:11:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    static final int MAX = 10000000;\n    static boolean[] isPrime = new boolean[MAX + 1];\n\n    static void sieve() {\n        Arrays.fill(isPrime, true);\n        isPrime[0] = isPrime[1] = false;\n        for (int i = 2; i * i <= MAX; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= MAX; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n    }\n\n    static boolean isSimilarTo2017(int x) {\n        return (isPrime[x] && isPrime[(x + 1) / 2]);\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));\n\n        sieve();\n\n        int Q = Integer.parseInt(br.readLine());\n        for (int q = 0; q < Q; q++) {\n            StringTokenizer st = new StringTokenizer(br.readLine());\n            int l = Integer.parseInt(st.nextToken());\n            int r = Integer.parseInt(st.nextToken());\n\n            int count = 0;\n            for (int x = l; x <= r; x += 2) {\n                if (isSimilarTo2017(x)) {\n                    count++;\n                }\n            }\n\n            bw.write(count + \"\\n\");\n        }\n\n        bw.flush();\n        bw.close();\n        br.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:11:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MAXN = 1e6 + 5;\nbool is_prime[MAXN];\n\nvoid sieve() {\n    memset(is_prime, true, sizeof(is_prime));\n    is_prime[0] = is_prime[1] = false;\n    for (int i = 2; i * i < MAXN; i++) {\n        if (is_prime[i]) {\n            for (int j = i * i; j < MAXN; j += i) {\n                is_prime[j] = false;\n            }\n        }\n    }\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    sieve();\n    int Q;\n    cin >> Q;\n\n    vector<int> similar_to_2017;\n    for (int x = 3; x < MAXN; x += 2) {\n        if (is_prime[x] && is_prime[(x + 1) / 2]) {\n            similar_to_2017.push_back(x);\n        }\n    }\n\n    while (Q--) {\n        int l, r;\n        cin >> l >> r;\n        int count = upper_bound(similar_to_2017.begin(), similar_to_2017.end(), r) - \n                    lower_bound(similar_to_2017.begin(), similar_to_2017.end(), l);\n        cout << count << \"\\n\";\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sieve_of_eratosthenes(max_number):\n    is_prime = [True] * (max_number + 1)\n    p = 2\n    while (p * p <= max_number):\n        if is_prime[p]:\n            for i in range(p * p, max_number + 1, p):\n                is_prime[i] = False\n        p += 1\n    is_prime[0], is_prime[1] = False, False\n    return is_prime\n\ndef precompute_similar_to_2017(max_number):\n    primes_up_to_max = sieve_of_eratosthenes(max_number)\n    similar_to_2017 = []\n    for n in range(3, max_number + 1, 2):\n        if primes_up_to_max[n] and primes_up_to_max[(n + 1) // 2]:\n            similar_to_2017.append(n)\n    return similar_to_2017\n\ndef count_similar_to_2017(similar_to_2017, l, r):\n    from bisect import bisect_left, bisect_right\n    left_index = bisect_left(similar_to_2017, l)\n    right_index = bisect_right(similar_to_2017, r)\n    return right_index - left_index\n\ndef solve(queries, max_number=1000000):\n    similar_to_2017 = precompute_similar_to_2017(max_number)\n    results = []\n    for l, r in queries:\n        result = count_similar_to_2017(similar_to_2017, l, r)\n        results.append(result)\n    return results\n\n# Example usage:\n# queries = [(3, 7), (1, 100)]\n# print(solve(queries))",
+    "timestamp": "2025-08-13 14:02:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SimilarTo2017 {\n\n    static final int MAX = 100000;\n    static boolean[] isPrime = new boolean[MAX + 1];\n    static int[] similarTo2017Count = new int[MAX + 1];\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int Q = scanner.nextInt();\n\n        sievePrime();\n        precalculateSimilarTo2017();\n\n        for (int q = 0; q < Q; q++) {\n            int l = scanner.nextInt();\n            int r = scanner.nextInt();\n            System.out.println(countSimilarTo2017InRange(l, r));\n        }\n    }\n\n    static void sievePrime() {\n        Arrays.fill(isPrime, true);\n        isPrime[0] = isPrime[1] = false;\n        for (int i = 2; i * i <= MAX; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= MAX; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n    }\n\n    static void precalculateSimilarTo2017() {\n        for (int i = 3; i <= MAX; i += 2) {\n            if (isPrime[i] && isPrime[(i + 1) / 2]) {\n                similarTo2017Count[i] = 1;\n            }\n        }\n\n        for (int i = 1; i <= MAX; i++) {\n            similarTo2017Count[i] += similarTo2017Count[i - 1];\n        }\n    }\n\n    static int countSimilarTo2017InRange(int l, int r) {\n        if (l < 1) l = 1;\n        if (r > MAX) r = MAX;\n        return similarTo2017Count[r] - similarTo2017Count[l - 1];\n    }\n}",
+    "timestamp": "2025-08-13 14:02:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <math.h>\n\n// Function to determine if a number is prime\nbool is_prime(int num) {\n    if (num <= 1) return false;\n    if (num == 2) return true;\n    if (num % 2 == 0) return false;\n    for (int i = 3; i <= sqrt(num); i += 2) {\n        if (num % i == 0) return false;\n    }\n    return true;\n}\n\n// Function to check if a number is similar to 2017\nbool is_similar_to_2017(int n) {\n    if (!is_prime(n)) return false;\n    int half_plus_one = (n + 1) / 2;\n    return is_prime(half_plus_one);\n}\n\nint main() {\n    // Reading number of queries\n    int Q;\n    scanf(\"%d\", &Q);\n    \n    // Processing each query\n    while (Q--) {\n        int l, r, count = 0;\n        \n        // Reading the query range\n        scanf(\"%d %d\", &l, &r);\n        \n        // Ensure l and r are odd\n        if (l % 2 == 0) l++;\n        if (r % 2 == 0) r--;\n        \n        // Count the numbers similar to 2017 within the range\n        for (int i = l; i <= r; i += 2) {\n            if (is_similar_to_2017(i)) {\n                count++;\n            }\n        }\n        \n        // Output the result for the current query\n        printf(\"%d\\n\", count);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:02:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isPrime(num) {\n    if (num <= 1) return false;\n    if (num <= 3) return true;\n    if (num % 2 === 0 || num % 3 === 0) return false;\n    for (let i = 5; i * i <= num; i += 6) {\n        if (num % i === 0 || num % (i + 2) === 0) return false;\n    }\n    return true;\n}\n\nfunction preprocess(limit) {\n    const similarTo2017 = new Array(limit + 1).fill(false);\n    for (let n = 3; n <= limit; n += 2) {\n        if (isPrime(n) && isPrime((n + 1) / 2)) {\n            similarTo2017[n] = true;\n        }\n    }\n    const prefixSum = new Array(limit + 1).fill(0);\n    for (let i = 1; i <= limit; i++) {\n        prefixSum[i] = prefixSum[i - 1] + (similarTo2017[i] ? 1 : 0);\n    }\n    return prefixSum;\n}\n\nfunction countSimilar2017Numbers(queries, limit) {\n    const prefixSum = preprocess(limit);\n    const results = [];\n    for (const [l, r] of queries) {\n        results.push(prefixSum[r] - prefixSum[l - 1]);\n    }\n    return results;\n}\n\n// Example usage:\nconst queries = [\n    [3, 17],\n    [11, 29],\n    [5, 5]\n];\nconst limit = 100000;\nconst results = countSimilar2017Numbers(queries, limit);\nconsole.log(results); // The output will show the result for each query",
+    "timestamp": "2025-08-13 14:03:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef count_similar_numbers(l, r):\n    count = 0\n    for x in range(l, r+1, 2):\n        if is_prime(x) and is_prime((x+1)//2):\n            count += 1\n    return count\n\ndef main():\n    Q = int(input())\n    for _ in range(Q):\n        l, r = map(int, input().split())\n        print(count_similar_numbers(l, r))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 14:03:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function isPrime(n) {\n    if (n < 2) return false;\n    for (let i = 2; i * i <= n; i++) {\n        if (n % i === 0) return false;\n    }\n    return true;\n}\n\nfunction solve(queries) {\n    const result = [];\n    \n    for (const [l, r] of queries) {\n        let count = 0;\n        \n        for (let x = l; x <= r; x += 2) {\n            if (isPrime(x) && isPrime((x + 1) / 2)) {\n                count++;\n            }\n        }\n        \n        result.push(count);\n    }\n    \n    return result;\n}\n\n// Example usage\nconst Q = 2;\nconst queries = [\n    [1, 100],\n    [3, 50]\n];\n\nconsole.log(solve(queries));",
+    "timestamp": "2025-08-13 14:03:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef sieve(max_limit):\n    is_prime = [True] * (max_limit + 1)\n    is_prime[0] = is_prime[1] = False\n    for i in range(2, int(max_limit ** 0.5) + 1):\n        if is_prime[i]:\n            for j in range(i * i, max_limit + 1, i):\n                is_prime[j] = False\n    return is_prime\n\ndef precompute_similar_numbers(max_limit):\n    is_prime = sieve(max_limit)\n    prefix = [0] * (max_limit + 1)\n    for n in range(3, max_limit + 1, 2):\n        if is_prime[n] and is_prime[(n + 1) // 2]:\n            prefix[n] = 1\n    # Compute prefix sums\n    for i in range(1, max_limit + 1):\n        prefix[i] += prefix[i - 1]\n    return prefix\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    Q = int(input[ptr])\n    ptr += 1\n    queries = []\n    max_r = 0\n    for _ in range(Q):\n        l = int(input[ptr])\n        r = int(input[ptr + 1])\n        queries.append((l, r))\n        if r > max_r:\n            max_r = r\n        ptr += 2\n    prefix = precompute_similar_numbers(max_r)\n    for l, r in queries:\n        print(prefix[r] - prefix[l - 1])\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 14:03:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync(0, 'utf-8').trim().split('\\n');\n\nfunction solve() {\n    const max = 1e5;\n    const sieve = new Array(max + 1).fill(true);\n    sieve[0] = sieve[1] = false;\n    for (let i = 2; i * i <= max; i++) {\n        if (sieve[i]) {\n            for (let j = i * i; j <= max; j += i) {\n                sieve[j] = false;\n            }\n        }\n    }\n\n    const similar = new Array(max + 1).fill(0);\n    for (let n = 1; n <= max; n += 2) {\n        if (sieve[n] && sieve[(n + 1) / 2]) {\n            similar[n] = 1;\n        }\n    }\n\n    const prefix = new Array(max + 1).fill(0);\n    for (let i = 1; i <= max; i++) {\n        prefix[i] = prefix[i - 1] + similar[i];\n    }\n\n    const Q = parseInt(input[0]);\n    const output = [];\n    for (let i = 1; i <= Q; i++) {\n        const [l, r] = input[i].split(' ').map(Number);\n        output.push(prefix[r] - prefix[l - 1]);\n    }\n    console.log(output.join('\\n'));\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:03:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n <= 3) return true;\n    if (n % 2 == 0 || n % 3 == 0) return false;\n    for (int i = 5; i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) return false;\n    }\n    return true;\n}\n\nstd::vector<int> preprocessSimilarTo2017(int maxN) {\n    std::vector<int> similar(maxN + 1, 0);\n    for (int i = 3; i <= maxN; i += 2) {\n        if (isPrime(i) && isPrime((i + 1) / 2)) {\n            similar[i] = 1;\n        }\n    }\n    for (int i = 1; i <= maxN; ++i) {\n        similar[i] += similar[i - 1];\n    }\n    return similar;\n}\n\nint main() {\n    int maxN = 100000;\n    std::vector<int> similarTo2017 = preprocessSimilarTo2017(maxN);\n\n    int Q;\n    std::cin >> Q;\n    while (Q--) {\n        int l, r;\n        std::cin >> l >> r;\n        std::cout << similarTo2017[r] - similarTo2017[l - 1] << std::endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:42:04"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX_N 100005\n\ntypedef struct Edge {\n    int to;\n    int weight;\n    struct Edge* next;\n} Edge;\n\nEdge* graph[MAX_N];\nint color[MAX_N];\nbool visited[MAX_N];\n\nvoid addEdge(int u, int v, int w) {\n    Edge* newEdge = malloc(sizeof(Edge));\n    newEdge->to = v;\n    newEdge->weight = w;\n    newEdge->next = graph[u];\n    graph[u] = newEdge;\n}\n\nbool dfs(int node, int currentColor) {\n    visited[node] = true;\n    color[node] = currentColor;\n\n    for (Edge* edge = graph[node]; edge != NULL; edge = edge->next) {\n        int neighbor = edge->to;\n\n        if (!visited[neighbor]) {\n            int nextColor = (currentColor == 0) ? 1 : 0;\n            if (!dfs(neighbor, nextColor)) return false;\n        } else {\n            if (color[neighbor] == color[node]) return false;\n        }\n    }\n\n    return true;\n}\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n\n    for (int i = 0; i < M; i++) {\n        int u, v, w;\n        scanf(\"%d %d %d\", &u, &v, &w);\n        addEdge(u, v, w);\n        addEdge(v, u, w);\n    }\n\n    memset(color, -1, sizeof(color));\n    memset(visited, false, sizeof(visited));\n\n    for (int i = 1; i <= N; i++) {\n        if (!visited[i]) {\n            if (!dfs(i, 0)) {\n                printf(\"Impossible\\n\");\n                return 0;\n            }\n        }\n    }\n\n    for (int i = 1; i <= N; i++) {\n        printf(\"%d \", color[i]);\n    }\n    printf(\"\\n\");\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int to;\n    int weight;\n    int next;\n} Edge;\n\nEdge edges[200010];\nint head[100010];\nint color[100010];\nint edgeCount = 0;\n\nvoid addEdge(int u, int v, int w) {\n    edges[edgeCount].to = v;\n    edges[edgeCount].weight = w;\n    edges[edgeCount].next = head[u];\n    head[u] = edgeCount++;\n}\n\nvoid dfs(int u, int parent, int c) {\n    color[u] = c;\n    for (int i = head[u]; i != -1; i = edges[i].next) {\n        int v = edges[i].to;\n        int w = edges[i].weight;\n        if (v == parent) continue;\n        dfs(v, u, c ^ (w % 2));\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    for (int i = 1; i <= N; ++i) {\n        head[i] = -1;\n    }\n    for (int i = 0; i < N - 1; ++i) {\n        int u, v, w;\n        scanf(\"%d %d %d\", &u, &v, &w);\n        addEdge(u, v, w);\n        addEdge(v, u, w);\n    }\n    dfs(1, -1, 0);\n    for (int i = 1; i <= N; ++i) {\n        printf(\"%d\\n\", color[i]);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:50:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<vector<pair<int, int>>> adj(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int u, v, w;\n        cin >> u >> v >> w;\n        adj[u].emplace_back(v, w);\n        adj[v].emplace_back(u, w);\n    }\n\n    vector<int> color(N + 1, -1);\n    queue<int> q;\n    color[1] = 0;\n    q.push(1);\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n        for (auto &edge : adj[u]) {\n            int v = edge.first;\n            int w = edge.second;\n            if (color[v] == -1) {\n                color[v] = (color[u] + w) % 2;\n                q.push(v);\n            }\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        cout << color[i] << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:51:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static class Edge {\n        int to, weight;\n        Edge(int to, int weight) {\n            this.to = to;\n            this.weight = weight;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        List<List<Edge>> tree = new ArrayList<>();\n        for (int i = 0; i <= N; i++) {\n            tree.add(new ArrayList<>());\n        }\n        for (int i = 0; i < N - 1; i++) {\n            int u = sc.nextInt();\n            int v = sc.nextInt();\n            int w = sc.nextInt();\n            tree.get(u).add(new Edge(v, w));\n            tree.get(v).add(new Edge(u, w));\n        }\n\n        int[] color = new int[N + 1];\n        Arrays.fill(color, -1);\n        Queue<Integer> queue = new LinkedList<>();\n        color[1] = 0;\n        queue.add(1);\n\n        while (!queue.isEmpty()) {\n            int u = queue.poll();\n            for (Edge e : tree.get(u)) {\n                if (color[e.to] == -1) {\n                    color[e.to] = (color[u] + e.weight) % 2;\n                    queue.add(e.to);\n                }\n            }\n        }\n\n        for (int i = 1; i <= N; i++) {\n            System.out.println(color[i]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:51:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class TreeColoring {\n    static final int MAXN = 200005;\n    static List<int[]>[] graph = new ArrayList[MAXN];\n    static int[] color = new int[MAXN];\n    static boolean[] visited = new boolean[MAXN];\n\n    public static void dfs(int node, int currentColor) {\n        visited[node] = true;\n        color[node] = currentColor;\n        \n        for (int[] edge : graph[node]) {\n            int neighbor = edge[0];\n            int weight = edge[1];\n            \n            if (!visited[neighbor]) {\n                int nextColor = (currentColor == 1) ? 2 : 1;\n                dfs(neighbor, nextColor);\n            }\n        }\n    }\n\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        for (int i = 1; i <= N; i++) {\n            graph[i] = new ArrayList<>();\n        }\n        \n        for (int i = 0; i < M; i++) {\n            st = new StringTokenizer(br.readLine());\n            int u = Integer.parseInt(st.nextToken());\n            int v = Integer.parseInt(st.nextToken());\n            int w = Integer.parseInt(st.nextToken());\n            \n            graph[u].add(new int[]{v, w});\n            graph[v].add(new int[]{u, w});\n        }\n        \n        dfs(1, 1);\n        \n        for (int i = 1; i <= N; i++) {\n            System.out.print(color[i] + \" \");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:52:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n\nusing namespace std;\n\nconst int MAXN = 1e5 + 5;\n\nvector<pair<int, int>> graph[MAXN];\nint color[MAXN];\nbool visited[MAXN];\n\nvoid bfs(int start) {\n    queue<int> q;\n    q.push(start);\n    color[start] = 0;\n    visited[start] = true;\n\n    while (!q.empty()) {\n        int u = q.front();\n        q.pop();\n\n        for (auto& [v, w] : graph[u]) {\n            if (!visited[v]) {\n                color[v] = color[u] ^ (w % 2);\n                visited[v] = true;\n                q.push(v);\n            }\n        }\n    }\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n\n    int N, M;\n    cin >> N >> M;\n\n    for (int i = 0; i < M; i++) {\n        int u, v, w;\n        cin >> u >> v >> w;\n        graph[u].push_back({v, w});\n        graph[v].push_back({u, w});\n    }\n\n    bfs(1);\n\n    for (int i = 1; i <= N; i++) {\n        cout << color[i] << \" \";\n    }\n    cout << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:52:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def tree_coloring(N, edges):\n    from collections import defaultdict, deque\n\n    graph = defaultdict(list)\n    color = [-1] * (N + 1)  # -1 means uncolored\n\n    for u, v, w in edges:\n        graph[u].append((v, w))\n        graph[v].append((u, w))\n\n    queue = deque([(1, 0)])  # Start from vertex 1, color it with 0 (white)\n\n    while queue:\n        node, col = queue.popleft()\n        if color[node] != -1:\n            continue\n        color[node] = col\n\n        for neighbor, weight in graph[node]:\n            if color[neighbor] == -1:\n                # If weight is even, neighbor gets same color\n                # If weight is odd, neighbor gets different color\n                queue.append((neighbor, col if weight % 2 == 0 else 1 - col))\n\n    # Print the colors of the vertices from 1 to N\n    for i in range(1, N + 1):\n        print(color[i])\n\n# Example Usage\n# N = number of vertices\n# edges = list of tuples (u, v, w) representing an edge between u and v with weight w\nN = 5\nedges = [(1, 2, 1), (2, 3, 1), (2, 4, 2), (3, 5, 2)]\ntree_coloring(N, edges)",
+    "timestamp": "2025-08-13 12:46:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class TreeColoring {\n\n    static class Edge {\n        int to, weight;\n\n        Edge(int to, int weight) {\n            this.to = to;\n            this.weight = weight;\n        }\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n\n        List<List<Edge>> graph = new ArrayList<>();\n        for (int i = 0; i <= n; i++) {\n            graph.add(new ArrayList<>());\n        }\n\n        for (int i = 0; i < n - 1; i++) {\n            int u = scanner.nextInt();\n            int v = scanner.nextInt();\n            int w = scanner.nextInt();\n            graph.get(u).add(new Edge(v, w));\n            graph.get(v).add(new Edge(u, w));\n        }\n\n        int[] colors = new int[n + 1];\n        Arrays.fill(colors, -1); // -1 indicates unvisited\n\n        // BFS or DFS from any node, for example starting from node 1\n        Queue<Integer> queue = new LinkedList<>();\n        queue.add(1);\n        colors[1] = 0; // Assign color 0 (e.g., black)\n\n        while (!queue.isEmpty()) {\n            int node = queue.poll();\n            for (Edge edge : graph.get(node)) {\n                if (colors[edge.to] == -1) {\n                    // Alternate color based on edge weight\n                    colors[edge.to] = (colors[node] + edge.weight) % 2;\n                    queue.add(edge.to);\n                }\n            }\n        }\n\n        // Print coloring result\n        for (int i = 1; i <= n; i++) {\n            System.out.println(colors[i]);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 12:46:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAXN 100000\n#define WHITE 0\n#define BLACK 1\n\ntypedef struct {\n    int v, w;\n} Edge;\n\nEdge adj[MAXN + 1][MAXN];\nint adjSize[MAXN + 1];\nint color[MAXN + 1];\n\nvoid dfs(int node, int col) {\n    color[node] = col;\n    for (int i = 0; i < adjSize[node]; ++i) {\n        Edge e = adj[node][i];\n        if (color[e.v] == -1) { // Not visited\n            dfs(e.v, col ^ (e.w % 2));\n        }\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    for (int i = 0; i <= N; ++i) {\n        adjSize[i] = 0;\n        color[i] = -1; // Unvisited\n    }\n    \n    for (int i = 0; i < N - 1; ++i) {\n        int u, v, w;\n        scanf(\"%d %d %d\", &u, &v, &w);\n        adj[u][adjSize[u]++] = (Edge){v, w};\n        adj[v][adjSize[v]++] = (Edge){u, w};\n    }\n    \n    dfs(1, WHITE);\n    \n    for (int i = 1; i <= N; ++i) {\n        printf(\"%d\\n\", color[i]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 12:46:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nvoid dfs(int node, int color, vector<vector<pair<int, int>>>& adj, vector<int>& colors) {\n    colors[node] = color;\n    for (auto& edge : adj[node]) {\n        int neighbor = edge.first;\n        int weight = edge.second;\n        if (colors[neighbor] == -1) {  // not visited\n            dfs(neighbor, (color + weight) % 2, adj, colors);\n        }\n    }\n}\n\nint main() {\n    int N;\n    cin >> N;\n\n    vector<vector<pair<int, int>>> adj(N + 1);\n    for (int i = 0; i < N - 1; ++i) {\n        int u, v, w;\n        cin >> u >> v >> w;\n        adj[u].emplace_back(v, w);\n        adj[v].emplace_back(u, w);\n    }\n\n    vector<int> colors(N + 1, -1);\n    dfs(1, 0, adj, colors);\n\n    for (int i = 1; i <= N; ++i) {\n        cout << colors[i] << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:47:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from collections import defaultdict, deque\n\ndef solve_vertex_coloring(N, edges):\n    # Create adjacency list representation of the tree\n    graph = defaultdict(list)\n    for u, v, w in edges:\n        graph[u].append((v, w))\n        graph[v].append((u, w))\n    \n    # Initialize color array\n    color = [0] * (N + 1)\n    \n    # BFS to color vertices\n    def color_vertices():\n        # Start BFS from vertex 1\n        start = 1\n        color[start] = 1  # Color first vertex white\n        \n        queue = deque([start])\n        visited = set([start])\n        \n        while queue:\n            current = queue.popleft()\n            \n            for neighbor, edge_weight in graph[current]:\n                if neighbor not in visited:\n                    # Color neighbor opposite of current vertex\n                    color[neighbor] = 3 - color[current]\n                    queue.append(neighbor)\n                    visited.add(neighbor)\n        \n        return color[1:]\n    \n    return color_vertices()\n\n# Read input\nN = int(input())\nedges = []\nfor _ in range(N-1):\n    u, v, w = map(int, input().split())\n    edges.append((u, v, w))\n\n# Solve and print result\nresult = solve_vertex_coloring(N, edges)\nprint(*result)",
+    "timestamp": "2025-08-13 12:47:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import deque\n\ndef solve():\n    N = int(sys.stdin.readline())\n    adj = [[] for _ in range(N+1)]\n    for _ in range(N-1):\n        u, v, w = map(int, sys.stdin.readline().split())\n        adj[u].append((v, w))\n        adj[v].append((u, w))\n    \n    color = [-1] * (N + 1)\n    color[1] = 0\n    q = deque([1])\n    \n    while q:\n        u = q.popleft()\n        for v, w in adj[u]:\n            if color[v] == -1:\n                color[v] = color[u] ^ (w % 2)\n                q.append(v)\n    \n    for i in range(1, N+1):\n        print(color[i])\n\nsolve()",
+    "timestamp": "2025-08-13 12:47:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function paintTree(N, edges) {\n    const adjList = Array.from({ length: N + 1 }, () => []);\n    const colors = Array(N + 1).fill(null);\n\n    for (const [u, v, w] of edges) {\n        adjList[u].push([v, w]);\n        adjList[v].push([u, w]);\n    }\n\n    const queue = [[1, 0]];\n    colors[1] = 0; // Start coloring the first vertex as 0 (white)\n\n    while (queue.length > 0) {\n        const [node, color] = queue.shift();\n\n        for (const [neighbor, weight] of adjList[node]) {\n            if (colors[neighbor] === null) {\n                colors[neighbor] = (color + weight) % 2;\n                queue.push([neighbor, colors[neighbor]]);\n            }\n        }\n    }\n\n    return colors.slice(1).join('\\n');\n}\n\n// Example usage\nconst N = 3;\nconst edges = [\n    [1, 2, 1],\n    [2, 3, 1]\n];\nconsole.log(paintTree(N, edges));",
+    "timestamp": "2025-08-13 12:48:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, edges) {\n    // Create adjacency list representation of the tree\n    const graph = Array.from({ length: N + 1 }, () => []);\n    for (const [u, v, w] of edges) {\n        graph[u].push([v, w]);\n        graph[v].push([u, w]);\n    }\n\n    // Colors array to store vertex colors\n    const colors = new Array(N + 1).fill(0);\n\n    // BFS to color vertices\n    function bfs(start) {\n        const queue = [[start, 0]];\n        colors[start] = 1;  // Start with color 1 (white)\n\n        while (queue.length) {\n            const [curr, dist] = queue.shift();\n\n            for (const [next, weight] of graph[curr]) {\n                if (colors[next] === 0) {\n                    // Color based on distance parity\n                    colors[next] = (dist + weight) % 2 === 0 ? colors[curr] : 3 - colors[curr];\n                    queue.push([next, dist + weight]);\n                }\n            }\n        }\n    }\n\n    // Color the tree starting from vertex 1\n    bfs(1);\n\n    // Replace color numbers with actual colors\n    return colors.slice(1).map(c => c === 1 ? 1 : 2);\n}",
+    "timestamp": "2025-08-13 12:48:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n\nfunction solve() {\n    const N = parseInt(input[0], 10);\n    const adj = Array.from({ length: N + 1 }, () => []);\n    \n    for (let i = 1; i <= N - 1; i++) {\n        const [u, v, w] = input[i].split(' ').map(Number);\n        adj[u].push([v, w]);\n        adj[v].push([u, w]);\n    }\n    \n    const color = new Array(N + 1).fill(-1);\n    color[1] = 0;\n    const queue = [1];\n    \n    while (queue.length > 0) {\n        const u = queue.shift();\n        for (const [v, w] of adj[u]) {\n            if (color[v] === -1) {\n                color[v] = (color[u] + w) % 2;\n                queue.push(v);\n            }\n        }\n    }\n    \n    for (let i = 1; i <= N; i++) {\n        console.log(color[i]);\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:48:17"
+  }
+]

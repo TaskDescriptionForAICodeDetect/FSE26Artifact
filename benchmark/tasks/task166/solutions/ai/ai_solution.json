@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int height;\n    int index;\n} Section;\n\nint compare(const void *a, const void *b) {\n    Section *s1 = (Section *)a;\n    Section *s2 = (Section *)b;\n    return s1->height - s2->height;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    Section *sections = (Section *)malloc(N * sizeof(Section));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &sections[i].height);\n        sections[i].index = i;\n    }\n\n    qsort(sections, N, sizeof(Section), compare);\n\n    int *land = (int *)calloc(N, sizeof(int));\n    int max_islands = 0;\n    int current_islands = 0;\n\n    for (int i = 0; i < N; i++) {\n        int idx = sections[i].index;\n        land[idx] = 1;\n\n        int left = (idx > 0) && land[idx - 1];\n        int right = (idx < N - 1) && land[idx + 1];\n\n        if (left && right) {\n            current_islands--;\n        } else if (!left && !right) {\n            current_islands++;\n        }\n\n        if (i < N - 1 && sections[i].height == sections[i + 1].height) {\n            continue;\n        }\n\n        if (current_islands > max_islands) {\n            max_islands = current_islands;\n        }\n    }\n\n    printf(\"%d\\n\", max_islands);\n\n    free(sections);\n    free(land);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:52:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class JapanIslands {\n    public static int countMaxIslands(int[] heights) {\n        int n = heights.length;\n        int maxIslands = 0;\n        \n        for (int seaLevel = 0; seaLevel <= 1000; seaLevel++) {\n            List<Integer> landSections = new ArrayList<>();\n            \n            for (int i = 0; i < n; i++) {\n                if (heights[i] > seaLevel) {\n                    landSections.add(i);\n                }\n            }\n            \n            int currentIslands = 0;\n            \n            for (int i = 0; i < landSections.size(); i++) {\n                if (i == 0 || landSections.get(i) > landSections.get(i - 1) + 1) {\n                    currentIslands++;\n                }\n            }\n            \n            maxIslands = Math.max(maxIslands, currentIslands);\n        }\n        \n        return maxIslands;\n    }\n    \n    public static void main(String[] args) {\n        int[] heights = {1, 3, 2, 4, 1, 2, 3};\n        System.out.println(countMaxIslands(heights));\n    }\n}",
+    "timestamp": "2025-08-05 18:53:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <unordered_set>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    vector<pair<int, int>> heights;\n    for (int i = 0; i < N; ++i) {\n        heights.emplace_back(A[i], i);\n    }\n    sort(heights.begin(), heights.end());\n\n    unordered_set<int> active;\n    int max_islands = 0;\n    int current_islands = 0;\n\n    for (int i = 0; i < N; ) {\n        int current_height = heights[i].first;\n        int j = i;\n        while (j < N && heights[j].first == current_height) {\n            int pos = heights[j].second;\n            bool left_land = (pos > 0 && active.count(pos - 1));\n            bool right_land = (pos < N - 1 && active.count(pos + 1));\n\n            if (left_land && right_land) {\n                current_islands--;\n            } else if (!left_land && !right_land) {\n                current_islands++;\n            }\n            j++;\n        }\n\n        for (int k = i; k < j; ++k) {\n            active.insert(heights[k].second);\n        }\n\n        if (current_islands > max_islands) {\n            max_islands = current_islands;\n        }\n        i = j;\n    }\n\n    cout << max_islands << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:20"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint count_max_islands(int N, int* heights) {\n    int max_islands = 0;\n    int current_sea_level = 0;\n    \n    while (1) {\n        int islands = 0;\n        int in_island = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (heights[i] > current_sea_level) {\n                if (!in_island) {\n                    if ((i == 0 || heights[i-1] <= current_sea_level) && \n                        (i == N-1 || heights[i+1] <= current_sea_level)) {\n                        islands++;\n                    }\n                    in_island = 1;\n                }\n            } else {\n                in_island = 0;\n            }\n        }\n        \n        max_islands = (islands > max_islands) ? islands : max_islands;\n        \n        int all_submerged = 1;\n        for (int i = 0; i < N; i++) {\n            if (heights[i] > current_sea_level) {\n                all_submerged = 0;\n                break;\n            }\n        }\n        \n        if (all_submerged) break;\n        current_sea_level++;\n    }\n    \n    return max_islands;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* heights = malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &heights[i]);\n    }\n    \n    int result = count_max_islands(N, heights);\n    printf(\"%d\\n\", result);\n    \n    free(heights);\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint maxIslands(std::vector<int>& heights) {\n    int n = heights.size();\n    int maxIslands = 0;\n    \n    for (int seaLevel = 0; seaLevel <= *std::max_element(heights.begin(), heights.end()); seaLevel++) {\n        int currentIslands = 0;\n        bool inIsland = false;\n        \n        for (int i = 0; i < n; i++) {\n            if (heights[i] > seaLevel) {\n                if (!inIsland) {\n                    if ((i > 0 && heights[i-1] <= seaLevel) && \n                        (i < n-1 && heights[i+1] <= seaLevel)) {\n                        currentIslands++;\n                    }\n                    inIsland = true;\n                }\n            } else {\n                inIsland = false;\n            }\n        }\n        \n        maxIslands = std::max(maxIslands, currentIslands);\n    }\n    \n    return maxIslands;\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    \n    std::vector<int> heights(n);\n    for (int i = 0; i < n; i++) {\n        std::cin >> heights[i];\n    }\n    \n    std::cout << maxIslands(heights) << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:53:34"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextInt();\n        }\n\n        List<Integer> uniqueHeights = new ArrayList<>();\n        Set<Integer> seen = new HashSet<>();\n        for (int height : A) {\n            if (!seen.contains(height)) {\n                seen.add(height);\n                uniqueHeights.add(height);\n            }\n        }\n        Collections.sort(uniqueHeights);\n\n        int maxIslands = 0;\n        UnionFind uf = new UnionFind(N);\n        boolean[] isLand = new boolean[N];\n\n        for (int h : uniqueHeights) {\n            for (int i = 0; i < N; i++) {\n                if (A[i] > h && !isLand[i]) {\n                    isLand[i] = true;\n                    if (i > 0 && isLand[i - 1]) {\n                        uf.union(i, i - 1);\n                    }\n                    if (i < N - 1 && isLand[i + 1]) {\n                        uf.union(i, i + 1);\n                    }\n                }\n            }\n            int islands = 0;\n            for (int i = 0; i < N; i++) {\n                if (isLand[i] && uf.find(i) == i) {\n                    islands++;\n                }\n            }\n            if (islands > maxIslands) {\n                maxIslands = islands;\n            }\n        }\n\n        System.out.println(maxIslands);\n    }\n\n    static class UnionFind {\n        int[] parent;\n\n        UnionFind(int size) {\n            parent = new int[size];\n            for (int i = 0; i < size; i++) {\n                parent[i] = i;\n            }\n        }\n\n        int find(int x) {\n            if (parent[x] != x) {\n                parent[x] = find(parent[x]);\n            }\n            return parent[x];\n        }\n\n        void union(int x, int y) {\n            int rootX = find(x);\n            int rootY = find(y);\n            if (rootX != rootY) {\n                parent[rootY] = rootX;\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:53:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_max_islands(heights):\n    max_islands = 0\n    current_islands = 0\n    n = len(heights)\n    \n    def is_land(height, sea_level):\n        return height > sea_level\n    \n    max_height = max(heights)\n    \n    for sea_level in range(max_height + 1):\n        in_island = False\n        current_islands = 0\n        \n        for i in range(n):\n            if is_land(heights[i], sea_level):\n                if not in_island:\n                    in_island = True\n                    if i == 0 or not is_land(heights[i - 1], sea_level):\n                        current_islands += 1\n            else:\n                in_island = False\n        \n        max_islands = max(max_islands, current_islands)\n        \n    return max_islands\n\n# Example usage:\nheights = [2, 1, 3, 2, 4, 1, 2]\nprint(count_max_islands(heights))",
+    "timestamp": "2025-08-13 01:23:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MaxIslands {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        int maxIslands = 0;\n\n        // Loop through each possible sea level\n        for (int seaLevel = 0; seaLevel <= 1000; seaLevel++) {\n            int currentIslands = 0;\n            boolean inIsland = false;\n\n            for (int i = 0; i < N; i++) {\n                if (A[i] > seaLevel) { // This section is land\n                    if (!inIsland) {\n                        currentIslands++;\n                        inIsland = true;\n                    }\n                } else {\n                    inIsland = false;\n                }\n            }\n\n            maxIslands = Math.max(maxIslands, currentIslands);\n        }\n\n        System.out.println(maxIslands);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 01:24:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint maxIslands(int N, int A[]) {\n    int maxIslands = 0;\n\n    for (int seaLevel = 0; ; seaLevel++) {\n        int islands = 0;\n        int inIsland = 0;\n        int allSubmerged = 1;\n\n        for (int i = 0; i < N; i++) {\n            if (A[i] > seaLevel) {\n                allSubmerged = 0;\n                if (!inIsland) {\n                    islands++;\n                    inIsland = 1;\n                }\n            } else {\n                inIsland = 0;\n            }\n        }\n        \n        if (allSubmerged) {\n            break;\n        }\n\n        if (islands > maxIslands) {\n            maxIslands = islands;\n        }\n    }\n\n    return maxIslands;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    printf(\"%d\\n\", maxIslands(N, A));\n    return 0;\n}",
+    "timestamp": "2025-08-13 01:24:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_max_islands(N, heights):\n    max_islands = 0\n    \n    for sea_level in range(max(heights) + 1):\n        current_islands = 0\n        is_land = False\n        \n        for i in range(N):\n            if heights[i] > sea_level:\n                if not is_land:\n                    current_islands += 1\n                    is_land = True\n            else:\n                is_land = False\n        \n        max_islands = max(max_islands, current_islands)\n    \n    return max_islands\n\n# Example usage\nN = int(input())\nheights = list(map(int, input().split()))\nresult = count_max_islands(N, heights)\nprint(result)",
+    "timestamp": "2025-08-13 01:24:12"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    A = list(map(int, data[1:N+1]))\n    \n    # Create a list of tuples (height, index)\n    height_indices = [(A[i], i) for i in range(N)]\n    # Sort based on height\n    height_indices.sort()\n    \n    visited = [False] * N\n    max_islands = 0\n    current_islands = 0\n    \n    for i in range(N):\n        height, idx = height_indices[i]\n        # Check if the current height is different from the previous one\n        if i > 0 and height != height_indices[i-1][0]:\n            max_islands = max(max_islands, current_islands)\n        \n        visited[idx] = True\n        left_land = idx > 0 and visited[idx-1]\n        right_land = idx < N-1 and visited[idx+1]\n        \n        if left_land and right_land:\n            current_islands -= 1\n        elif not left_land and not right_land:\n            current_islands += 1\n        # else, no change\n    \n    max_islands = max(max_islands, current_islands)\n    print(max_islands)\n\nsolve()",
+    "timestamp": "2025-08-13 01:24:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint countIslands(const std::vector<int>& heights) {\n    int maxIslands = 0;\n    int currentSeaLevel = 0;\n    int N = heights.size();\n    \n    while (true) {\n        int islands = 0;\n        bool inIsland = false;\n        \n        for (int i = 0; i < N; ++i) {\n            if (heights[i] > currentSeaLevel) {\n                if (!inIsland) {\n                    islands++;\n                    inIsland = true;\n                }\n            } else {\n                inIsland = false;\n            }\n        }\n        \n        if (islands == 0) {\n            break;\n        }\n        \n        maxIslands = std::max(maxIslands, islands);\n        currentSeaLevel++;\n    }\n    \n    return maxIslands;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> heights(N);\n    \n    for (int i = 0; i < N; ++i) {\n        std::cin >> heights[i];\n    }\n    \n    std::cout << countIslands(heights) << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 10:59:56"
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "examples": [
+    {
+      "input": "3\na\nb\nab\nabab",
+      "output": "4"
+    },
+    {
+      "input": "3\na\nb\nc\nxyz",
+      "output": "0"
+    },
+    {
+      "input": "7\nabc\nab\nbc\na\nb\nc\naa\naaabcbccababbc",
+      "output": "160"
+    },
+    {
+      "input": "10\na\naa\naaa\naaaa\naaaaa\naaaaaa\naaaaaaa\naaaaaaaaa\naaaaaaaaaa\naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "output": "461695029"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+In CODE FESTIVAL XXXX, there are N+1 participants from around the world, including Takahashi. Takahashi found the time gap (defined as the minimum of d hours and 24-d hours) between his city's local time and the i-th person's city, which is given as D_i hours. For each pair of two people chosen from these N+1, the goal is to find the maximum possible smallest time gap among them.

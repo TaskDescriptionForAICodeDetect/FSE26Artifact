@@ -1,0 +1,1 @@
+For a given array of N elements and an integer K, find the smallest sub-array size (length) such that the elements in the sub-array contain all integers in the range [1, 2, ..., K]. If no such sub-array exists, return 0.

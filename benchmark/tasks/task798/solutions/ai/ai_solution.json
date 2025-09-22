@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint solve(int N, int A[], int B[]) {\n    int totalA = 0, totalB = 0, changes = 0;\n    \n    for (int i = 0; i < N; i++) {\n        totalA += A[i];\n        totalB += B[i];\n    }\n    \n    if (totalA < totalB) return -1;\n    \n    int surplus = totalA - totalB;\n    \n    for (int i = 0; i < N; i++) {\n        if (A[i] < B[i]) {\n            changes += B[i] - A[i];\n            surplus -= B[i] - A[i];\n        }\n    }\n    \n    return surplus == 0 ? changes : -1;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int A[N], B[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &B[i]);\n    }\n    \n    int result = solve(N, A, B);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int A[N], B[N];\n    long long sumA = 0, sumB = 0;\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n        sumA += A[i];\n    }\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &B[i]);\n        sumB += B[i];\n    }\n    \n    if (sumA < sumB) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n    \n    long long deficit = 0;\n    int changes = 0;\n    int surplus[N];\n    int surplusCount = 0;\n    \n    for (int i = 0; i < N; i++) {\n        if (A[i] < B[i]) {\n            deficit += (B[i] - A[i]);\n            changes++;\n        } else if (A[i] > B[i]) {\n            surplus[surplusCount++] = A[i] - B[i];\n        }\n    }\n    \n    if (deficit == 0) {\n        printf(\"0\\n\");\n        return 0;\n    }\n    \n    // Sort surplus in descending order (using simple bubble sort for small N)\n    for (int i = 0; i < surplusCount - 1; i++) {\n        for (int j = 0; j < surplusCount - i - 1; j++) {\n            if (surplus[j] < surplus[j + 1]) {\n                int temp = surplus[j];\n                surplus[j] = surplus[j + 1];\n                surplus[j + 1] = temp;\n            }\n        }\n    }\n    \n    long long covered = 0;\n    for (int i = 0; i < surplusCount; i++) {\n        covered += surplus[i];\n        changes++;\n        if (covered >= deficit) {\n            break;\n        }\n    }\n    \n    printf(\"%d\\n\", changes);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N), B(N);\n    int sumA = 0, sumB = 0;\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        sumA += A[i];\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> B[i];\n        sumB += B[i];\n    }\n    \n    if (sumA < sumB) {\n        cout << -1 << endl;\n        return 0;\n    }\n    \n    vector<int> diff;\n    int deficit = 0;\n    int changes = 0;\n    for (int i = 0; i < N; ++i) {\n        if (A[i] < B[i]) {\n            deficit += (B[i] - A[i]);\n            changes++;\n        } else if (A[i] > B[i]) {\n            diff.push_back(A[i] - B[i]);\n        }\n    }\n    \n    if (deficit == 0) {\n        cout << 0 << endl;\n        return 0;\n    }\n    \n    sort(diff.rbegin(), diff.rend());\n    \n    int covered = 0;\n    for (int d : diff) {\n        covered += d;\n        changes++;\n        if (covered >= deficit) {\n            break;\n        }\n    }\n    \n    cout << changes << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:56:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        int[] B = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            B[i] = scanner.nextInt();\n        }\n        \n        long sumA = 0;\n        long sumB = 0;\n        for (int i = 0; i < N; i++) {\n            sumA += A[i];\n            sumB += B[i];\n        }\n        \n        if (sumA < sumB) {\n            System.out.println(-1);\n            return;\n        }\n        \n        List<Integer> surplus = new ArrayList<>();\n        int changes = 0;\n        long deficitTotal = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (A[i] < B[i]) {\n                deficitTotal += (B[i] - A[i]);\n                changes++;\n            } else if (A[i] > B[i]) {\n                surplus.add(A[i] - B[i]);\n            }\n        }\n        \n        if (deficitTotal == 0) {\n            System.out.println(0);\n            return;\n        }\n        \n        Collections.sort(surplus, Collections.reverseOrder());\n        \n        long covered = 0;\n        int additionalChanges = 0;\n        for (int s : surplus) {\n            if (covered >= deficitTotal) {\n                break;\n            }\n            covered += s;\n            additionalChanges++;\n        }\n        \n        System.out.println(changes + additionalChanges);\n    }\n}",
+    "timestamp": "2025-08-05 22:57:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int minimumChanges(int[] A, int[] B) {\n        int totalSum = 0;\n        int changes = 0;\n        \n        for (int i = 0; i < A.length; i++) {\n            totalSum += A[i];\n        }\n        \n        int deficitSum = 0;\n        \n        for (int i = 0; i < A.length; i++) {\n            if (A[i] < B[i]) {\n                deficitSum += B[i] - A[i];\n            }\n        }\n        \n        int surplusSum = 0;\n        \n        for (int i = 0; i < A.length; i++) {\n            if (A[i] > B[i]) {\n                surplusSum += A[i] - B[i];\n            }\n        }\n        \n        if (deficitSum > surplusSum) {\n            return -1;\n        }\n        \n        for (int i = 0; i < A.length; i++) {\n            if (A[i] < B[i]) {\n                changes++;\n            }\n        }\n        \n        return changes;\n    }\n}",
+    "timestamp": "2025-08-05 22:57:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N), B(N);\n    int totalA = 0, totalB = 0;\n    \n    for (int i = 0; i < N; i++) {\n        cin >> A[i];\n        totalA += A[i];\n    }\n    \n    for (int i = 0; i < N; i++) {\n        cin >> B[i];\n        totalB += B[i];\n    }\n    \n    if (totalA < totalB) {\n        cout << -1 << endl;\n        return 0;\n    }\n    \n    vector<int> excess;\n    int deficit = 0;\n    \n    for (int i = 0; i < N; i++) {\n        if (A[i] < B[i]) {\n            deficit += B[i] - A[i];\n        } else {\n            excess.push_back(A[i] - B[i]);\n        }\n    }\n    \n    sort(excess.begin(), excess.end());\n    \n    int changes = 0;\n    for (int val : excess) {\n        if (deficit > 0) {\n            int reduce = min(val, deficit);\n            deficit -= reduce;\n            changes += reduce;\n        }\n    }\n    \n    if (deficit > 0) {\n        cout << -1 << endl;\n    } else {\n        cout << changes << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:57:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_changes_to_pass_exams(N, A, B):\n    deficit = 0\n    surplus = 0\n    changes = [0] * N\n\n    for i in range(N):\n        if A[i] < B[i]:\n            deficit += (B[i] - A[i])\n            changes[i] = B[i] - A[i]\n        else:\n            surplus += (A[i] - B[i])\n\n    if deficit > surplus:\n        return -1\n\n    changes_made = 0\n    surplus_list = []\n\n    for i in range(N):\n        if A[i] > B[i]:\n            surplus_list.append(A[i] - B[i])\n\n    surplus_list.sort(reverse=True)\n\n    extra_changes_needed = deficit\n\n    for surplus_value in surplus_list:\n        if extra_changes_needed <= 0:\n            break\n        if surplus_value > 0:\n            changes_made += 1\n            extra_changes_needed -= surplus_value\n\n    return changes_made\n\n# Example usage:\n# N = 3\n# A = [2, 4, 3]\n# B = [3, 3, 3]\n# print(min_changes_to_pass_exams(N, A, B)) # Output: 1",
+    "timestamp": "2025-08-13 13:06:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class ExaminationReadiness {\n    public static int minChanges(int[] A, int[] B) {\n        int N = A.length;\n        int totalA = 0;\n        for (int a : A) totalA += a;\n        \n        int sumB = Arrays.stream(B).sum();\n        if (sumB > totalA) return -1;  // Impossible to satisfy condition\n        \n        int changes = 0;\n        int[] C = new int[N];\n        PriorityQueue<Integer> excess = new PriorityQueue<>(Collections.reverseOrder());\n        \n        for (int i = 0; i < N; i++) {\n            if (A[i] < B[i]) {\n                changes += B[i] - A[i];\n                C[i] = B[i];\n            } else {\n                excess.offer(A[i]);\n            }\n        }\n        \n        int needed = sumB - Arrays.stream(C).sum();\n        \n        while (!excess.isEmpty() && needed > 0) {\n            int maxExcess = excess.poll();\n            if (maxExcess > needed) {\n                maxExcess -= needed;\n                needed = 0;\n            } else {\n                needed -= maxExcess;\n                maxExcess = 0;\n            }\n            changes += maxExcess;\n        }\n        \n        return needed > 0 ? -1 : changes;\n    }\n    \n    public static void main(String[] args) {\n        int[] A = {1, 5, 3, 6};\n        int[] B = {4, 5, 2, 5};\n        System.out.println(minChanges(A, B)); // Output: 3\n    }\n}",
+    "timestamp": "2025-08-13 13:06:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minChangesToPassExams(int n, int A[], int B[]) {\n    int totalA = 0;\n    int excess = 0;\n    int deficit = 0;\n    \n    for (int i = 0; i < n; ++i) {\n        totalA += A[i];\n        if (A[i] < B[i]) {\n            deficit += B[i] - A[i];\n        }\n    }\n    \n    if (deficit > totalA) {\n        return -1;\n    }\n    \n    int changes = 0;\n    for (int i = 0; i < n; ++i) {\n        if (A[i] > B[i]) {\n            excess += A[i] - B[i];\n        } else if (A[i] < B[i]) {\n            changes++;\n        }\n    }\n    \n    changes += (deficit > excess) ? (deficit - excess) : 0;\n    \n    return changes;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int A[N], B[N];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &A[i]);\n    }\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d\", &B[i]);\n    }\n    \n    int result = minChangesToPassExams(N, A, B);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 13:06:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nint minChangesToPassExams(std::vector<int>& A, std::vector<int>& B) {\n    int N = A.size();\n    int totalA = std::accumulate(A.begin(), A.end(), 0);\n    int totalB = std::accumulate(B.begin(), B.end(), 0);\n\n    if(totalB > totalA) return -1;\n\n    std::vector<int> requiredIncreases;\n    for(int i = 0; i < N; ++i) {\n        if(A[i] < B[i]) {\n            requiredIncreases.push_back(B[i] - A[i]);\n        }\n    }\n\n    std::sort(requiredIncreases.begin(), requiredIncreases.end());\n\n    int changes = requiredIncreases.size();\n    int sumIncreases = std::accumulate(requiredIncreases.begin(), requiredIncreases.end(), 0);\n\n    if(sumIncreases > totalA - totalB) return -1;\n\n    return changes;\n}\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> A(N), B(N);\n\n    for(int i = 0; i < N; ++i) std::cin >> A[i];\n    for(int i = 0; i < N; ++i) std::cin >> B[i];\n\n    std::cout << minChangesToPassExams(A, B) << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:06:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_changes_to_pass_exams(N, A, B):\n    # Calculate initial deficit and total sum\n    deficit = sum(max(0, B[i] - A[i]) for i in range(N))\n    total_sum = sum(A)\n    \n    # Check if total surplus is enough to cover deficits\n    surplus = sum(max(0, A[i] - B[i]) for i in range(N))\n    \n    if surplus < deficit:\n        return -1\n    \n    return deficit\n\n# Example usage\n# N = number of exams\n# A = current readiness scores\n# B = minimum required readiness scores\n# result = min_changes_to_pass_exams(N, A, B)",
+    "timestamp": "2025-08-13 13:06:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N = int(sys.stdin.readline())\n    A = list(map(int, sys.stdin.readline().split()))\n    B = list(map(int, sys.stdin.readline().split()))\n    \n    sum_A = sum(A)\n    sum_B = sum(B)\n    \n    if sum_A < sum_B:\n        print(-1)\n        return\n    \n    deficit = 0\n    surplus = []\n    changes = 0\n    \n    for a, b in zip(A, B):\n        if a < b:\n            deficit += (b - a)\n            changes += 1\n        elif a > b:\n            surplus.append(a - b)\n    \n    if deficit == 0:\n        print(0)\n        return\n    \n    surplus.sort(reverse=True)\n    total = 0\n    count = 0\n    for s in surplus:\n        total += s\n        count += 1\n        if total >= deficit:\n            break\n    \n    print(changes + count)\n\nsolve()",
+    "timestamp": "2025-08-13 13:07:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimumChanges(N, A, B) {\n    let totalA = A.reduce((acc, x) => acc + x, 0);\n    let totalB = B.reduce((acc, x) => acc + x, 0);\n\n    if (totalA < totalB) return -1;\n\n    let deficit = [];\n    let surplus = [];\n    let changes = 0;\n\n    for (let i = 0; i < N; i++) {\n        if (A[i] < B[i]) {\n            deficit.push(B[i] - A[i]);\n            changes += B[i] - A[i];\n        } else {\n            surplus.push(A[i] - B[i]);\n        }\n    }\n\n    surplus.sort((x, y) => y - x);\n\n    for (let d of deficit) {\n        if (surplus.length === 0) return -1;\n        let s = surplus.pop();\n        s -= d;\n        if (s > 0) surplus.push(s);\n    }\n\n    return changes;\n}",
+    "timestamp": "2025-08-13 13:07:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minimumChanges(N, A, B) {\n    let totalA = A.reduce((sum, num) => sum + num, 0);\n    let totalB = B.reduce((sum, num) => sum + num, 0);\n    \n    if (totalA < totalB) return -1;\n    \n    let changes = 0;\n    let remainingSum = totalA;\n    \n    for (let i = 0; i < N; i++) {\n        if (A[i] < B[i]) {\n            changes++;\n            remainingSum -= A[i];\n            remainingSum += B[i];\n        }\n    }\n    \n    return changes;\n}",
+    "timestamp": "2025-08-13 13:07:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const N = parseInt(input[0], 10);\n    const A = input[1].split(' ').map(Number);\n    const B = input[2].split(' ').map(Number);\n    \n    let sumA = A.reduce((acc, val) => acc + val, 0);\n    let sumB = B.reduce((acc, val) => acc + val, 0);\n    \n    if (sumA < sumB) {\n        console.log(-1);\n        return;\n    }\n    \n    let deficit = 0;\n    let changes = 0;\n    let surplusList = [];\n    \n    for (let i = 0; i < N; i++) {\n        if (A[i] < B[i]) {\n            deficit += (B[i] - A[i]);\n            changes++;\n        } else if (A[i] > B[i]) {\n            surplusList.push(A[i] - B[i]);\n        }\n    }\n    \n    if (deficit === 0) {\n        console.log(0);\n        return;\n    }\n    \n    surplusList.sort((a, b) => b - a);\n    \n    let totalSurplus = 0;\n    let additionalChanges = 0;\n    \n    for (const surplus of surplusList) {\n        totalSurplus += surplus;\n        additionalChanges++;\n        if (totalSurplus >= deficit) {\n            break;\n        }\n    }\n    \n    console.log(changes + additionalChanges);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:07:27"
+  }
+]

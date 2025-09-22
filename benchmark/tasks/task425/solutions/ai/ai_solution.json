@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint solve(int n, int* strength, int** adjacency) {\n    int* dp = (int*)calloc(n + 2, sizeof(int));\n    dp[0] = 0;\n    dp[1] = strength[0];\n    \n    for (int i = 2; i <= n; i++) {\n        int include = strength[i - 1] + dp[i - 2];\n        int exclude = dp[i - 1];\n        dp[i] = max(include, exclude);\n    }\n    \n    int result = dp[n];\n    free(dp);\n    return result;\n}\n\nint main() {\n    int n, m;\n    while (scanf(\"%d %d\", &n, &m) == 2) {\n        int* strength = (int*)malloc(n * sizeof(int));\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &strength[i]);\n        }\n        \n        int** adjacency = (int**)malloc(n * sizeof(int*));\n        for (int i = 0; i < n; i++) {\n            adjacency[i] = (int*)calloc(n, sizeof(int));\n        }\n        \n        for (int i = 0; i < m; i++) {\n            int a, b;\n            scanf(\"%d %d\", &a, &b);\n            adjacency[a - 1][b - 1] = 1;\n            adjacency[b - 1][a - 1] = 1;\n        }\n        \n        int* new_strength = (int*)malloc(n * sizeof(int));\n        int* visited = (int*)calloc(n, sizeof(int));\n        int index = 0;\n        \n        for (int i = 0; i < n; i++) {\n            if (!visited[i]) {\n                int* queue = (int*)malloc(n * sizeof(int));\n                int front = 0, rear = 0;\n                queue[rear++] = i;\n                visited[i] = 1;\n                \n                while (front < rear) {\n                    int current = queue[front++];\n                    new_strength[index++] = strength[current];\n                    \n                    for (int j = 0; j < n; j++) {\n                        if (adjacency[current][j] && !visited[j]) {\n                            visited[j] = 1;\n                            queue[rear++] = j;\n                        }\n                    }\n                }\n                free(queue);\n            }\n        }\n        \n        for (int i = 0; i < n; i++) {\n            free(adjacency[i]);\n        }\n        free(adjacency);\n        free(visited);\n        \n        int result = solve(n, new_strength, NULL);\n        printf(\"%d\\n\", result);\n        \n        free(strength);\n        free(new_strength);\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:29:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint max_military_strength(vector<int>& strengths) {\n    int n = strengths.size();\n    if (n == 0) return 0;\n    if (n == 1) return strengths[0];\n    \n    vector<int> dp(n, 0);\n    dp[0] = strengths[0];\n    dp[1] = max(strengths[0], strengths[1]);\n    \n    for (int i = 2; i < n; ++i) {\n        dp[i] = max(dp[i-1], dp[i-2] + strengths[i]);\n    }\n    \n    return dp[n-1];\n}\n\nint main() {\n    int t;\n    cin >> t;\n    while (t--) {\n        int n;\n        cin >> n;\n        vector<int> strengths(n);\n        for (int i = 0; i < n; ++i) {\n            cin >> strengths[i];\n        }\n        cout << max_military_strength(strengths) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:29:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MilitaryAlliance {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNext()) {\n            int n = scanner.nextInt();\n            int[] strength = new int[n];\n            for (int i = 0; i < n; i++) {\n                strength[i] = scanner.nextInt();\n            }\n            List<List<Integer>> adj = new ArrayList<>();\n            for (int i = 0; i < n; i++) {\n                adj.add(new ArrayList<>());\n            }\n            for (int i = 0; i < n - 1; i++) {\n                int u = scanner.nextInt() - 1;\n                int v = scanner.nextInt() - 1;\n                adj.get(u).add(v);\n                adj.get(v).add(u);\n            }\n            int[] result = dfs(0, -1, adj, strength);\n            System.out.println(Math.max(result[0], result[1]));\n        }\n        scanner.close();\n    }\n\n    private static int[] dfs(int node, int parent, List<List<Integer>> adj, int[] strength) {\n        int[] res = new int[2];\n        int include = strength[node];\n        int exclude = 0;\n        for (int neighbor : adj.get(node)) {\n            if (neighbor != parent) {\n                int[] child = dfs(neighbor, node, adj, strength);\n                include += child[1];\n                exclude += Math.max(child[0], child[1]);\n            }\n        }\n        res[0] = include;\n        res[1] = exclude;\n        return res;\n    }\n}",
+    "timestamp": "2025-08-05 21:30:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MilitaryAlliances {\n    public static int maxMilitaryStrength(int[] strengths) {\n        int n = strengths.length;\n        if (n == 0) return 0;\n        if (n == 1) return strengths[0];\n        \n        int[] dp = new int[n];\n        dp[0] = strengths[0];\n        dp[1] = Math.max(strengths[0], strengths[1]);\n        \n        for (int i = 2; i < n; i++) {\n            dp[i] = Math.max(dp[i-1], dp[i-2] + strengths[i]);\n        }\n        \n        return dp[n-1];\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n        \n        for (int t = 0; t < datasets; t++) {\n            int countries = scanner.nextInt();\n            int[] strengths = new int[countries];\n            \n            for (int i = 0; i < countries; i++) {\n                strengths[i] = scanner.nextInt();\n            }\n            \n            System.out.println(maxMilitaryStrength(strengths));\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:30:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_COUNTRIES 1000\n\nint maxStrength(int strengths[], int adjacency[][MAX_COUNTRIES], int n) {\n    int dp[MAX_COUNTRIES][2];\n    memset(dp, 0, sizeof(dp));\n\n    dp[0][1] = strengths[0];\n\n    for (int i = 1; i < n; i++) {\n        dp[i][0] = fmax(dp[i-1][0], dp[i-1][1]);\n\n        dp[i][1] = strengths[i];\n        for (int j = 0; j < i; j++) {\n            if (adjacency[i][j]) {\n                dp[i][1] = fmax(dp[i][1], dp[j][0] + strengths[i]);\n            }\n        }\n    }\n\n    return fmax(dp[n-1][0], dp[n-1][1]);\n}\n\nint main() {\n    int datasets;\n    scanf(\"%d\", &datasets);\n\n    for (int d = 0; d < datasets; d++) {\n        int n;\n        scanf(\"%d\", &n);\n\n        int strengths[MAX_COUNTRIES];\n        int adjacency[MAX_COUNTRIES][MAX_COUNTRIES] = {0};\n\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &strengths[i]);\n        }\n\n        for (int i = 0; i < n; i++) {\n            for (int j = 0; j < n; j++) {\n                scanf(\"%d\", &adjacency[i][j]);\n            }\n        }\n\n        printf(\"%d\\n\", maxStrength(strengths, adjacency, n));\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxMilitaryStrength(vector<int>& strengths) {\n    int n = strengths.size();\n    if (n == 0) return 0;\n    if (n == 1) return strengths[0];\n    if (n == 2) return max(strengths[0], strengths[1]);\n\n    vector<int> dp(n);\n    dp[0] = strengths[0];\n    dp[1] = max(strengths[0], strengths[1]);\n\n    for (int i = 2; i < n; i++) {\n        dp[i] = max(dp[i-1], dp[i-2] + strengths[i]);\n    }\n\n    return dp[n-1];\n}\n\nint main() {\n    int T;\n    cin >> T;\n\n    while (T--) {\n        int N;\n        cin >> N;\n\n        vector<int> strengths(N);\n        for (int i = 0; i < N; i++) {\n            cin >> strengths[i];\n        }\n\n        cout << maxMilitaryStrength(strengths) << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:30:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def maximum_strength(datasets):\n    def dfs(node, visited, adj_list, strength):\n        if node in visited:\n            return 0\n        visited.add(node)\n\n        wo_current = 0\n        for neighbor in adj_list[node]:\n            if neighbor not in visited:\n                wo_current += dfs(neighbor, visited, adj_list, strength)\n        \n        w_current = strength[node]\n        for neighbor in adj_list[node]:\n            for n_neighbor in adj_list[neighbor]:\n                if n_neighbor not in visited:\n                    w_current += dfs(n_neighbor, visited, adj_list, strength)\n\n        visited.remove(node)\n        return max(w_current, wo_current)\n    \n    results = []\n    for dataset in datasets:\n        n, adjacency, strengths = dataset\n        adj_list = {i: [] for i in range(n)}\n        for i, neighbors in enumerate(adjacency):\n            for neigh in neighbors:\n                adj_list[i].append(neigh)\n\n        max_strength = 0\n        for i in range(n):\n            max_strength = max(max_strength, dfs(i, set(), adj_list, strengths))\n        results.append(max_strength)\n\n    return results\n\n# Example Usage\ndatasets = [\n    (3, [[1], [0, 2], [1]], [4, 5, 1]),\n    (5, [[1, 2], [0, 3], [0, 4], [1], [2]], [7, 3, 1, 5, 2])\n]\nprint(maximum_strength(datasets))",
+    "timestamp": "2025-08-13 06:43:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class MilitaryAlliance {\n\n    static int maximizeStrength(List<Integer>[] countryStrengths) {\n        int n = countryStrengths.length;\n        int[] dp = new int[n];\n        \n        for (int i = 0; i < n; i++) {\n            dp[i] = countryStrengths[i].get(0);\n            if (i > 0) dp[i] = Math.max(dp[i], dp[i - 1]);\n            if (i > 1) dp[i] = Math.max(dp[i], dp[i - 2] + countryStrengths[i].get(0));\n        }\n        \n        return dp[n - 1];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int datasets = scanner.nextInt();\n\n        for (int d = 0; d < datasets; d++) {\n            int numCountries = scanner.nextInt();\n            List<Integer>[] countryStrengths = new ArrayList[numCountries];\n\n            for (int i = 0; i < numCountries; i++) {\n                countryStrengths[i] = new ArrayList<>();\n                countryStrengths[i].add(scanner.nextInt());\n            }\n\n            System.out.println(maximizeStrength(countryStrengths));\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 06:43:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define max(a, b) ((a) > (b) ? (a) : (b))\n\nint maxStrength(int *strength, int n) {\n    if (n == 0) return 0;\n    if (n == 1) return strength[0];\n    \n    int dp[n];\n    dp[0] = strength[0];\n    dp[1] = max(strength[0], strength[1]);\n    \n    for (int i = 2; i < n; ++i) {\n        dp[i] = max(dp[i - 1], strength[i] + dp[i - 2]);\n    }\n    \n    return dp[n - 1];\n}\n\nint main() {\n    int t;\n    scanf(\"%d\", &t); // Number of datasets\n    while (t--) {\n        int n;\n        scanf(\"%d\", &n); // Number of countries\n        int strength[n];\n        \n        for (int i = 0; i < n; ++i) {\n            scanf(\"%d\", &strength[i]); // Military strength of each country\n        }\n        \n        printf(\"%d\\n\", maxStrength(strength, n));\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 06:43:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_military_strength(n, strengths):\n    if n <= 2:\n        return max(strengths)\n    \n    dp = [0] * n\n    dp[0] = strengths[0]\n    dp[1] = strengths[1]\n    dp[2] = strengths[0] + strengths[2]\n    \n    for i in range(3, n):\n        dp[i] = max(dp[i-2] + strengths[i], dp[i-3] + strengths[i])\n    \n    return max(dp[-1], dp[-2])\n\ndef solve_datasets():\n    t = int(input())\n    for _ in range(t):\n        n = int(input())\n        strengths = list(map(int, input().split()))\n        print(max_military_strength(n, strengths))\n\nsolve_datasets()",
+    "timestamp": "2025-08-13 06:43:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_military_strength():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    T = int(data[idx])\n    idx += 1\n    for _ in range(T):\n        N = int(data[idx])\n        idx += 1\n        strengths = list(map(int, data[idx:idx+N]))\n        idx += N\n        if N == 0:\n            print(0)\n            continue\n        if N == 1:\n            print(strengths[0])\n            continue\n        dp = [0] * N\n        dp[0] = strengths[0]\n        dp[1] = max(strengths[0], strengths[1])\n        for i in range(2, N):\n            dp[i] = max(dp[i-1], dp[i-2] + strengths[i])\n        print(dp[-1])\n\nmax_military_strength()",
+    "timestamp": "2025-08-13 06:43:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint findMaxStrength(std::vector<int>& strengths) {\n    int n = strengths.size();\n    if (n == 0) return 0;\n    if (n == 1) return strengths[0];\n    if (n == 2) return std::max(strengths[0], strengths[1]);\n    \n    std::vector<int> dp(n, 0);\n    \n    dp[0] = strengths[0];\n    dp[1] = std::max(strengths[0], strengths[1]);\n    \n    for (int i = 2; i < n; ++i) {\n        dp[i] = std::max(dp[i-1], dp[i-2] + strengths[i]);\n    }\n    \n    return dp[n-1];\n}\n\nint main() {\n    int numDatasets;\n    std::cin >> numDatasets;\n    \n    for (int i = 0; i < numDatasets; ++i) {\n        int numCountries;\n        std::cin >> numCountries;\n        \n        std::vector<int> strengths(numCountries);\n        for (int j = 0; j < numCountries; ++j) {\n            std::cin >> strengths[j];\n        }\n        \n        int maxStrength = findMaxStrength(strengths);\n        std::cout << maxStrength << std::endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:33:50"
+  }
+]

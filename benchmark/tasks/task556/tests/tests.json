@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "5\nyou\nate\nmy\nhum\ntoast\n",
+      "output": "e\nt\nu\n"
+    },
+    {
+      "input": "7\nshe\nsells\nsea\nshells\nby\nthe\nseashore\n",
+      "output": "a\ne\ny\n"
+    }
+  ]
+}

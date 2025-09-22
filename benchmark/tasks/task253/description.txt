@@ -1,0 +1,1 @@
+Given the weights of stones and the width of a room, design the widest possible mobile that uses all the stones and has a width less than the width of the room. A mobile can be a single stone or a rod with sub-mobiles on both ends. The weights and distances must satisfy the condition of equilibrium. If no valid mobile can be created, return -1.

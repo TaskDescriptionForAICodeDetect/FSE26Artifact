@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def count_common_elements(a1, b1, a2, b2, L, R):\n    def gcd(x, y):\n        while y:\n            x, y = y, x % y\n        return x\n\n    def find_first_common(a1, b1, a2, b2):\n        # Using extended Euclidean algorithm to solve linear Diophantine equation\n        g = gcd(a1, a2)\n        \n        if (b2 - b1) % g != 0:\n            return -1\n        \n        # Solve ax + by = c\n        x0 = (b2 - b1) // g\n        \n        # General solution for x: x = x0 + k*(a2/g)\n        return x0\n\n    first = find_first_common(a1, b1, a2, b2)\n    \n    if first == -1:\n        return 0\n    \n    # Find minimal x that satisfies the conditions\n    a = a1 * a2 // gcd(a1, a2)\n    \n    # Find first valid value >= L\n    start = first\n    while start < L:\n        start += a\n    \n    # Find last valid value <= R\n    end = first\n    while end > R:\n        end -= a\n    \n    # Count valid numbers\n    if start > R or end < L:\n        return 0\n    \n    return (end - start) // a + 1\n\n# Read input\na1, b1, a2, b2, L, R = map(int, input().split())\nprint(count_common_elements(a1, b1, a2, b2, L, R))",
+    "timestamp": "2025-08-05 17:31:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "import math\n\na1, b1, a2, b2, L, R = map(int, input().split())\n\ndef extended_gcd(a, b):\n    if b == 0:\n        return (a, 1, 0)\n    else:\n        g, x, y = extended_gcd(b, a % b)\n        return (g, y, x - (a // b) * y)\n\ndef solve_congruence(a, b, m):\n    g = math.gcd(a, m)\n    if b % g != 0:\n        return None\n    a_div = a // g\n    b_div = b // g\n    m_div = m // g\n    _, inv_a, _ = extended_gcd(a_div, m_div)\n    x0 = (b_div * inv_a) % m_div\n    return x0, m_div\n\n# x ≡ b1 mod a1\n# x ≡ b2 mod a2\n# We need to solve x ≡ b1 (mod a1) and x ≡ b2 (mod a2)\n# Let's find x = k*a1 + b1 ≡ b2 mod a2 => k*a1 ≡ (b2 - b1) mod a2\n# Solve k*a1 ≡ (b2 - b1) mod a2\nc = b2 - b1\ng = math.gcd(a1, a2)\nif c % g != 0:\n    print(0)\nelse:\n    sol = solve_congruence(a1, c, a2)\n    if sol is None:\n        print(0)\n    else:\n        k0, mod = sol\n        # General solution is k = k0 + t*mod, t integer\n        # x = a1*k + b1 = a1*(k0 + t*mod) + b1 = a1*k0 + b1 + t*(a1*mod)\n        x0 = a1 * k0 + b1\n        lcm_a = (a1 // g) * a2\n        # Now x ≡ x0 mod lcm_a\n        # Find all x in [L, R] such that x ≡ x0 mod lcm_a\n        # x = x0 + t*lcm_a\n        # Find t such that L <= x0 + t*lcm_a <= R\n        # Also, since k' >=0 and l' >=0:\n        # k' = (x - b1)/a1 >=0 => x >= b1\n        # l' = (x - b2)/a2 >=0 => x >= b2\n        lower_x = max(b1, b2, L)\n        upper_x = R\n        if lower_x > upper_x:\n            print(0)\n        else:\n            # Adjust x0 to be the smallest x >= lower_x congruent to x0 mod lcm_a\n            # x0 + t*lcm_a >= lower_x\n            # t >= (lower_x - x0)/lcm_a\n            # Find minimal t such that x0 + t*lcm_a >= lower_x\n            # t_min = ceil( (lower_x - x0) / lcm_a )\n            delta = lower_x - x0\n            if delta <= 0:\n                t_min = (-delta) // lcm_a\n                if x0 + t_min * lcm_a < lower_x:\n                    t_min += 1\n            else:\n                t_min = (delta + lcm_a - 1) // lcm_a\n            first_x = x0 + t_min * lcm_a\n            if first_x > upper_x:\n                print(0)\n            else:\n                # t_max = floor( (upper_x - x0) / lcm_a )\n                t_max = (upper_x - x0) // lcm_a\n                count = t_max - t_min + 1\n                print(count)",
+    "timestamp": "2025-08-05 17:31:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from math import gcd\n\ndef shared_integers_count(a1, b1, a2, b2, L, R):\n    g = gcd(a1, a2)\n    x0 = (b2 - b1) % g\n    if x0 < 0:\n        x0 += g\n    if x0 > R - L:\n        return 0\n    \n    first_possible_k = (L - b1 + a1 - 1) // a1\n    first_possible_l = (L - b2 + a2 - 1) // a2\n    \n    x_first = max(a1 * first_possible_k + b1, a2 * first_possible_l + b2)\n    if x_first > R:\n        return 0\n    \n    d = (a1 * a2) // g\n    count = (R - x_first) // d + 1\n    \n    return count\n\na1, b1, a2, b2, L, R = map(int, input().strip().split())\nprint(shared_integers_count(a1, b1, a2, b2, L, R))",
+    "timestamp": "2025-08-12 21:40:21"
+  }
+]

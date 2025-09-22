@@ -1,0 +1,1 @@
+Find the number of permutations of {1, 2, ..., n} that have an oddness of k, where the oddness is defined as the sum of the absolute differences between the index and the value at that index in the permutation.

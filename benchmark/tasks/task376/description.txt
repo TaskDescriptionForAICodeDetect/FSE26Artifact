@@ -1,0 +1,1 @@
+A rabbit has n train tickets, each numbered from 0 to n - 1. By using ticket k, the rabbit can travel p * a^k + q * b^k stations. The rabbit wants to get to a carrot buffet m stations away from its current station while minimizing the walking distance. When only using the tickets to travel on the train's outbound line, how many stations must the rabbit walk to reach the buffet?

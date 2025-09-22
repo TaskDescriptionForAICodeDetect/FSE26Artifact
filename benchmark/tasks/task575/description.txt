@@ -1,0 +1,1 @@
+There are n processes in a queue. Each process has a name and execution time. The round-robin scheduling algorithm processes these tasks in order, allowing each process a specific time quantum before moving it to the back of the queue if not completed. Your task is to write a program that simulates this round-robin scheduling.

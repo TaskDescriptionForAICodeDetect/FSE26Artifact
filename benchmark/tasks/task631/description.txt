@@ -1,0 +1,1 @@
+You are given a sequence A_1, A_2, ..., A_N and an integer K. Print the maximum possible length of a sequence B that satisfies the following conditions: B is a (not necessarily continuous) subsequence of A. For each pair of adjacent elements of B, the absolute difference of the elements is at most K.

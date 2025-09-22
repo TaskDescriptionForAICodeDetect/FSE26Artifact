@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "7 4\n9R2A993\n0E314A0\n8A900DE\n820R037\n0 0",
+      "output": "23900037"
+    },
+    {
+      "input": "6 7\nJH03HE\nID7722\n0DA1AH\n30C9G5\n99971A\nCA7EAI\nAHLBEM\n0 0",
+      "output": "771971"
+    },
+    {
+      "input": "20 2\nA1234567891234CBDEGH\nBDEDF908034265091499\n0 0",
+      "output": "12345908034265091499"
+    }
+  ]
+}

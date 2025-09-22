@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\nCyan Yellow Red Magenta Green Blue\nCyan Yellow Red Magenta Green Blue\nRed Yellow Magenta Blue Green Cyan\n4\nRed Magenta Blue Green Yellow Cyan\nRed Yellow Magenta Blue Green Cyan\nMagenta Green Red Cyan Yellow Blue\nCyan Green Yellow Blue Magenta Red\n0\n",
+      "output": "1\n1\n"
+    }
+  ]
+}

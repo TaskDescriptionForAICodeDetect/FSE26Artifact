@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2479c998-1343-4ed6-85f5-3b5a8fbe4910" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Extra/SicBoAnalyzer/eas.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Extra/newsc/eas.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/lmsync_util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/CodeRewrite/examPass/judge.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/CodeRewrite/examPass/judge.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/CodeRewrite/examPass/oj_executor.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/CodeRewrite/examPass/oj_executor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/CodeRewrite/examPass/run_rewrites_on_oj.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/CodeRewrite/examPass/run_rewrites_on_oj.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/Embedding/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/Embedding/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/Embedding/utils/AST.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/Embedding/utils/AST.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectCodeGPT/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectCodeGPT/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/ablation_parts.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/ablation_parts.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/detect_existing_pertubed.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/detect_existing_pertubed.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/progress_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/DetectGPT/progress_util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/Entropy/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/Entropy/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/LogRank/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/LogRank/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/inferutil.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/inferutil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/PERPLEXITY/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/PERPLEXITY/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/baseline/Zeroshot/GPTJudge/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/baseline/Zeroshot/GPTJudge/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TransferTesting/case2/main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TransferTesting/case3/xstream-1.4.13.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TransferTesting/case3/xstream-1.4.15.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TransferTesting/case4/hamcrest-library-1.3.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../TransferTesting/case6/test-documents.rar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/CVE_vulMethod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/count_Github_filenum.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/crawlGitHub/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/crawlGitHub/utils/TokenManager.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/crawlGitHub/utils/globalVars.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/crawlGitHub/utils/utils.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../enlargeDataset/sync_code.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../writesUp/main.py" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="32uI0hzQBvNBta4h44QVwUcjIJo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "last_opened_file_path": "/Users/alan/Desktop/FSE26Artifact/baseline/PERPLEXITY",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "http.proxy",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/baseline/PERPLEXITY" />
+      <recent name="$PROJECT_DIR$/baseline/CodeRewrite" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="strip_comments" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="FSE26Artifact" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/strip_comments.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.strip_comments" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2479c998-1343-4ed6-85f5-3b5a8fbe4910" name="Changes" comment="" />
+      <created>1758263811407</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1758263811407</updated>
+      <workItem from="1758263814859" duration="1190000" />
+      <workItem from="1758276695000" duration="11934000" />
+      <workItem from="1758350159795" duration="3853000" />
+      <workItem from="1758520448361" duration="577000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FSE26Artifact$strip_comments.coverage" NAME="strip_comments Coverage Results" MODIFIED="1758263969210" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

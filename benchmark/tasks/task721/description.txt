@@ -1,0 +1,1 @@
+Given a positive even number N, find the number of strings s of length N consisting of characters A, B, and C that can be converted to an empty string by repeatedly erasing two consecutive characters, except that pairs AB and BA cannot be erased. The result must be computed modulo 998244353.

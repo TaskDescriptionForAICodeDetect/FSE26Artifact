@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "atcoderregularcontest",
+      "output": "b"
+    },
+    {
+      "input": "abcdefghijklmnopqrstuvwxyz",
+      "output": "aa"
+    },
+    {
+      "input": "frqnvhydscshfcgdemurlfrutcpzhopfotpifgepnqjxupnskapziurswqazdwnwbgdhyktfyhqqxpoidfhjdakoxraiedxskywuepzfniuyskxiyjpjlxuqnfgmnjcvtlpnclfkpervxmdbvrbrdn",
+      "output": "aca"
+    }
+  ]
+}

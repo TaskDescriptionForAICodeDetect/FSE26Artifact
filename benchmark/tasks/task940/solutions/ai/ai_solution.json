@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_LENGTH 100\n\nvoid processBall(char* devices, int length) {\n    char temp[MAX_LENGTH];\n    strcpy(temp, devices);\n    \n    for (int i = 0; i < length; i++) {\n        if (temp[i] == 'A') {\n            devices[i] = 'B';\n        } else {\n            devices[i] = 'A';\n        }\n    }\n}\n\nint main() {\n    int length, k;\n    char devices[MAX_LENGTH];\n    \n    scanf(\"%d %d\", &length, &k);\n    scanf(\"%s\", devices);\n    \n    for (int i = 0; i < k; i++) {\n        processBall(devices, length);\n    }\n    \n    printf(\"%s\\n\", devices);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:46"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    char S[N+1];\n    scanf(\"%s\", S);\n    \n    for (int k = 0; k < K; k++) {\n        char new_S[N+1];\n        for (int i = 0; i < N; i++) {\n            if (S[i] == 'A') {\n                new_S[i] = 'B';\n            } else {\n                new_S[i] = 'A';\n            }\n        }\n        strcpy(S, new_S);\n    }\n    \n    printf(\"%s\\n\", S);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    string S;\n    cin >> N >> K >> S;\n\n    vector<char> state(S.begin(), S.end());\n\n    for (int k = 0; k < K; ++k) {\n        vector<char> new_state = state;\n        for (int i = 0; i < N; ++i) {\n            int left = (i - 1 + N) % N;\n            int right = (i + 1) % N;\n            if (state[i] == 'A') {\n                if (state[left] == 'A' && state[right] == 'A') {\n                    new_state[i] = 'B';\n                } else if (state[left] == 'A' && state[right] == 'B') {\n                    new_state[i] = 'A';\n                } else if (state[left] == 'B' && state[right] == 'A') {\n                    new_state[i] = 'A';\n                } else if (state[left] == 'B' && state[right] == 'B') {\n                    new_state[i] = 'B';\n                }\n            } else { // state[i] == 'B'\n                if (state[left] == 'A' && state[right] == 'A') {\n                    new_state[i] = 'A';\n                } else if (state[left] == 'A' && state[right] == 'B') {\n                    new_state[i] = 'B';\n                } else if (state[left] == 'B' && state[right] == 'A') {\n                    new_state[i] = 'B';\n                } else if (state[left] == 'B' && state[right] == 'B') {\n                    new_state[i] = 'A';\n                }\n            }\n        }\n        state = new_state;\n    }\n\n    cout << string(state.begin(), state.end()) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        String S = scanner.next();\n        char[] devices = S.toCharArray();\n\n        for (int i = 0; i < K; i++) {\n            StringBuilder newDevices = new StringBuilder();\n            for (int j = 0; j < N; j++) {\n                char left = devices[(j - 1 + N) % N];\n                char right = devices[(j + 1) % N];\n                char current = devices[j];\n                if (current == 'A') {\n                    if (left == 'A' && right == 'B') {\n                        newDevices.append('B');\n                    } else if (left == 'B' && right == 'A') {\n                        newDevices.append('B');\n                    } else if (left == 'B' && right == 'B') {\n                        newDevices.append('A');\n                    } else {\n                        newDevices.append('A');\n                    }\n                } else {\n                    if (left == 'A' && right == 'A') {\n                        newDevices.append('A');\n                    } else if (left == 'A' && right == 'B') {\n                        newDevices.append('B');\n                    } else if (left == 'B' && right == 'A') {\n                        newDevices.append('B');\n                    } else {\n                        newDevices.append('B');\n                    }\n                }\n            }\n            devices = newDevices.toString().toCharArray();\n        }\n        System.out.println(new String(devices));\n    }\n}",
+    "timestamp": "2025-08-05 23:25:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CylinderDevices {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int N = sc.nextInt();\n        int K = sc.nextInt();\n        String S = sc.next();\n        \n        char[] devices = S.toCharArray();\n        \n        for (int i = 0; i < K; i++) {\n            char[] newDevices = devices.clone();\n            \n            for (int j = 0; j < N; j++) {\n                if (j == 0) {\n                    newDevices[j] = 'B';\n                } else {\n                    if (devices[j-1] == 'A') {\n                        newDevices[j] = 'A';\n                    } else {\n                        newDevices[j] = 'B';\n                    }\n                }\n            }\n            \n            devices = newDevices;\n        }\n        \n        for (char device : devices) {\n            System.out.print(device);\n        }\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 23:25:34"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N, K;\n    string S;\n    \n    cin >> N >> K >> S;\n    \n    vector<char> devices(S.begin(), S.end());\n    \n    for (int ball = 0; ball < K; ball++) {\n        vector<char> next_devices = devices;\n        \n        for (int i = 0; i < N; i++) {\n            if (devices[i] == 'A') {\n                if (i > 0 && devices[i-1] == 'B') {\n                    next_devices[i] = 'B';\n                }\n            } else {\n                if (i < N-1 && devices[i+1] == 'A') {\n                    next_devices[i] = 'A';\n                }\n            }\n        }\n        \n        devices = next_devices;\n    }\n    \n    for (char device : devices) {\n        cout << device;\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def final_states(S, K):\n    devices = list(S)\n    n = len(devices)\n\n    def toggle_state(state):\n        return 'A' if state == 'B' else 'B'\n\n    for _ in range(K):\n        i = 0\n        while i < n:\n            devices[i] = toggle_state(devices[i])\n            if devices[i] == 'A':\n                i += 1\n            else:\n                break\n\n    return ''.join(devices)\n\n# Example usage:\nS = \"ABAB\"\nK = 2\nprint(final_states(S, K))  # Output: \"AAAA\"",
+    "timestamp": "2025-08-13 15:12:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class TakahashiDevices {\n    public static String finalState(String s, int k) {\n        char[] devices = s.toCharArray();\n        int n = devices.length;\n        for (int j = 0; j < k; j++) {\n            for (int i = 0; i < n; i++) {\n                if (devices[i] == 'A') {\n                    devices[i] = 'B';\n                } else {\n                    devices[i] = 'A';\n                    if (i + 1 < n) {\n                        devices[i + 1] = devices[i + 1] == 'A' ? 'B' : 'A';\n                    }\n                    break;\n                }\n            }\n        }\n        return new String(devices);\n    }\n\n    public static void main(String[] args) {\n        String initialConfig = \"ABA\"; // example input\n        int k = 3; // example input\n        System.out.println(finalState(initialConfig, k));\n    }\n}",
+    "timestamp": "2025-08-13 15:12:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nvoid processBall(char *devices, int numDevices) {\n    for (int i = 0; i < numDevices; ++i) {\n        if (devices[i] == 'A') {\n            devices[i] = 'B';\n        } else {\n            devices[i] = 'A';\n            break;\n        }\n    }\n}\n\nint main() {\n    int K;\n    char S[101];\n    \n    scanf(\"%d\", &K);\n    scanf(\"%s\", S);\n    \n    int numDevices = strlen(S);\n    \n    for (int i = 0; i < K; ++i) {\n        processBall(S, numDevices);\n    }\n    \n    printf(\"%s\\n\", S);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:12:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nstd::string processDevices(const std::string &initialState, int K) {\n    std::string currentState = initialState;\n    int n = currentState.size();\n\n    for (int i = 0; i < K; ++i) {\n        std::string nextState = currentState;\n        for (int j = 0; j < n; ++j) {\n            if (currentState[j] == 'A') {\n                nextState[j] = 'B';\n            } else {\n                nextState[j] = 'A';\n                if (j + 1 < n) {\n                    nextState[j + 1] = (currentState[j + 1] == 'A') ? 'B' : 'A';\n                }\n            }\n        }\n        currentState = nextState;\n    }\n\n    return currentState;\n}\n\nint main() {\n    int K;\n    std::string S;\n    \n    std::cin >> S >> K;\n\n    std::string finalState = processDevices(S, K);\n\n    std::cout << finalState << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:12:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_device_states(S, K):\n    # Convert initial state string to list\n    devices = list(S)\n    N = len(devices)\n    \n    # Simulate ball processing for K iterations\n    for _ in range(K):\n        # Create a copy of current state to track changes\n        next_devices = devices.copy()\n        \n        # Process each ball's impact\n        for i in range(N):\n            if devices[i] == 'A':\n                # If current device is in state A\n                if i > 0 and devices[i-1] == 'B':\n                    next_devices[i] = 'B'\n            else:\n                # If current device is in state B\n                if i < N-1 and devices[i+1] == 'A':\n                    next_devices[i] = 'A'\n        \n        # Update devices with new states\n        devices = next_devices\n    \n    # Return final state as a string\n    return ''.join(devices)\n\n# Read input\nS = input().strip()\nK = int(input())\n\n# Print result\nprint(solve_device_states(S, K))",
+    "timestamp": "2025-08-13 15:13:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n, k = map(int, input().split())\ns = list(input().strip())\n\nfor _ in range(k):\n    current_s = s * 2\n    new_s = []\n    for i in range(n):\n        a = current_s[2*i]\n        b = current_s[2*i +1]\n        if a == b:\n            new_s.append(a)\n        elif (a == 'A' and b == 'B') or (a == 'B' and b == 'A'):\n            new_s.append('B')\n        elif (a == 'A' and b == 'C') or (a == 'C' and b == 'A'):\n            new_s.append('C')\n        elif (a == 'B' and b == 'C') or (a == 'C' and b == 'B'):\n            new_s.append('A')\n    s = new_s\n\nprint(''.join(s))",
+    "timestamp": "2025-08-13 15:13:08"
+  }
+]

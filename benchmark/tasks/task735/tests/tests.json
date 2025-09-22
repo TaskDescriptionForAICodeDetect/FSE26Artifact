@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "contest\nson",
+      "output": "10"
+    },
+    {
+      "input": "contest\nprogramming",
+      "output": "-1"
+    },
+    {
+      "input": "contest\nsentence",
+      "output": "33"
+    }
+  ]
+}

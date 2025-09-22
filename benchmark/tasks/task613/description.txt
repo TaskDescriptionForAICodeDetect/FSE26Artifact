@@ -1,0 +1,1 @@
+The range search problem consists of a set of attributed records S to determine which records from S intersect with a given range. For n points on a plane, report a set of points that are within a given range. You do not need to consider insert and delete operations for the set.

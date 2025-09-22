@@ -1,0 +1,1 @@
+You are tasked with calculating the minimum sum of the squared lengths of a set of N-dimensional vectors. You can record each vector as is or as a difference from another previously recorded vector using a real coefficient. The goal is to preprocess the vectors to minimize the total squared length when recorded.

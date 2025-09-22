@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdbool.h>\n\n#define MAX_N 15\n\nchar matrix[MAX_N][MAX_N];\nchar result[MAX_N + 1];\nbool used_rows[MAX_N];\nbool used_cols[MAX_N];\n\nbool backtrack(int N, int selected) {\n    if (selected == N) {\n        result[N] = '\\0';\n        return true;\n    }\n\n    for (int row = 0; row < N; row++) {\n        if (used_rows[row]) continue;\n\n        for (int col = 0; col < N; col++) {\n            if (used_cols[col]) continue;\n\n            bool valid = true;\n            for (int k = 0; k < selected; k++) {\n                if (matrix[row][col] < result[k]) {\n                    valid = false;\n                    break;\n                }\n            }\n\n            if (valid) {\n                result[selected] = matrix[row][col];\n                used_rows[row] = true;\n                used_cols[col] = true;\n\n                if (backtrack(N, selected + 1)) {\n                    return true;\n                }\n\n                used_rows[row] = false;\n                used_cols[col] = false;\n            }\n        }\n    }\n\n    return false;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", matrix[i]);\n    }\n\n    memset(used_rows, 0, sizeof(used_rows));\n    memset(used_cols, 0, sizeof(used_cols));\n\n    if (backtrack(N, 0)) {\n        printf(\"%s\\n\", result);\n    } else {\n        printf(\"No solution\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:37"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAX_N 8\n\nchar plate[MAX_N][MAX_N];\nchar result[MAX_N + 1];\nint used_col[MAX_N];\nint N;\n\nvoid backtrack(int row, char *current, char *best) {\n    if (row == N) {\n        if (strcmp(current, best) < 0) {\n            strcpy(best, current);\n        }\n        return;\n    }\n\n    for (int col = 0; col < N; col++) {\n        if (!used_col[col]) {\n            used_col[col] = 1;\n            current[row] = plate[row][col];\n            backtrack(row + 1, current, best);\n            used_col[col] = 0;\n        }\n    }\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; i++) {\n        scanf(\"%s\", plate[i]);\n    }\n\n    char current[MAX_N + 1] = {0};\n    char best[MAX_N + 1];\n    for (int i = 0; i < N; i++) {\n        best[i] = 'z' + 1;\n    }\n    best[N] = '\\0';\n\n    backtrack(0, current, best);\n\n    printf(\"%s\\n\", best);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:52:50"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nstring solve(int N, vector<vector<char>>& matrix) {\n    vector<string> candidates;\n    vector<int> perm(N);\n    for (int i = 0; i < N; ++i) perm[i] = i;\n    \n    do {\n        string s;\n        for (int i = 0; i < N; ++i) {\n            s += matrix[i][perm[i]];\n        }\n        candidates.push_back(s);\n    } while (next_permutation(perm.begin(), perm.end()));\n    \n    sort(candidates.begin(), candidates.end());\n    return candidates[0];\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<vector<char>> matrix(N, vector<char>(N));\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            cin >> matrix[i][j];\n        }\n    }\n    cout << solve(N, matrix) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class StonePlateDecoder {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        scanner.nextLine(); // consume the newline\n        char[][] matrix = new char[N][N];\n        for (int i = 0; i < N; i++) {\n            String line = scanner.nextLine();\n            for (int j = 0; j < N; j++) {\n                matrix[i][j] = line.charAt(j);\n            }\n        }\n        String result = findLexSmallestString(matrix, N);\n        System.out.println(result);\n    }\n\n    private static String findLexSmallestString(char[][] matrix, int N) {\n        PriorityQueue<String> pq = new PriorityQueue<>();\n        backtrack(matrix, 0, new boolean[N], new StringBuilder(), pq);\n        return pq.peek();\n    }\n\n    private static void backtrack(char[][] matrix, int row, boolean[] usedCols, StringBuilder current, PriorityQueue<String> pq) {\n        if (row == matrix.length) {\n            pq.add(current.toString());\n            return;\n        }\n        for (int col = 0; col < matrix.length; col++) {\n            if (!usedCols[col]) {\n                usedCols[col] = true;\n                current.append(matrix[row][col]);\n                backtrack(matrix, row + 1, usedCols, current, pq);\n                current.deleteCharAt(current.length() - 1);\n                usedCols[col] = false;\n                if (!pq.isEmpty()) {\n                    return; // Early termination if the smallest is found\n                }\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:53:16"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class AncientMessageDecoder {\n    public static String decodeMessage(char[][] plate) {\n        int N = plate.length;\n        \n        // Create list to track used rows and columns\n        boolean[] usedRows = new boolean[N];\n        boolean[] usedCols = new boolean[N];\n        \n        // Result string to store selected characters\n        StringBuilder result = new StringBuilder();\n        \n        // Iterate N times to select N characters\n        for (int k = 0; k < N; k++) {\n            char minChar = '{'; // character after 'z' in ASCII\n            int minRow = -1, minCol = -1;\n            \n            // Find lexicographically smallest character not in used row/column\n            for (int i = 0; i < N; i++) {\n                if (usedRows[i]) continue;\n                \n                for (int j = 0; j < N; j++) {\n                    if (usedCols[j]) continue;\n                    \n                    if (plate[i][j] < minChar) {\n                        minChar = plate[i][j];\n                        minRow = i;\n                        minCol = j;\n                    }\n                }\n            }\n            \n            // Mark row and column as used\n            usedRows[minRow] = true;\n            usedCols[minCol] = true;\n            \n            // Add character to result\n            result.append(minChar);\n        }\n        \n        return result.toString();\n    }\n    \n    public static void main(String[] args) {\n        char[][] plate = {\n            {'A', 'B', 'C'},\n            {'D', 'E', 'F'},\n            {'G', 'H', 'I'}\n        };\n        \n        System.out.println(decodeMessage(plate));\n    }\n}",
+    "timestamp": "2025-08-05 21:53:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nclass Solution {\npublic:\n    string decodeMessage(vector<vector<char>>& plate, int N) {\n        vector<bool> rowUsed(N, false);\n        vector<bool> colUsed(N, false);\n        string result;\n\n        for (int k = 0; k < N; k++) {\n            char smallest = '{';  // char after 'z'\n            int bestRow = -1, bestCol = -1;\n\n            for (int i = 0; i < N; i++) {\n                if (rowUsed[i]) continue;\n                for (int j = 0; j < N; j++) {\n                    if (colUsed[j]) continue;\n                    if (plate[i][j] < smallest) {\n                        smallest = plate[i][j];\n                        bestRow = i;\n                        bestCol = j;\n                    }\n                }\n            }\n\n            result += smallest;\n            rowUsed[bestRow] = true;\n            colUsed[bestCol] = true;\n        }\n\n        return result;\n    }\n};\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<vector<char>> plate(N, vector<char>(N));\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            cin >> plate[i][j];\n        }\n    }\n\n    Solution solution;\n    cout << solution.decodeMessage(plate, N) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:53:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def decode_plate(matrix):\n    import itertools\n    \n    n = len(matrix)\n    min_string = None\n    \n    def is_valid(selection):\n        rows = set()\n        cols = set()\n        for r, c in selection:\n            if r in rows or c in cols:\n                return False\n            rows.add(r)\n            cols.add(c)\n        return True\n\n    all_positions = list(itertools.product(range(n), range(n)))\n    for selection in itertools.combinations(all_positions, n):\n        if not is_valid(selection):\n            continue\n        current_string = ''.join(matrix[r][c] for r, c in sorted(selection))\n        if min_string is None or current_string < min_string:\n            min_string = current_string\n\n    return min_string\n\n# Example Usage\nplate = [\n    ['b', 'c', 'a'],\n    ['d', 'e', 'f'],\n    ['g', 'h', 'i']\n]\n\nprint(decode_plate(plate))",
+    "timestamp": "2025-08-13 07:55:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class AncientMessageDecoder {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        char[][] matrix = new char[N][N];\n\n        for (int i = 0; i < N; i++) {\n            String row = scanner.next();\n            matrix[i] = row.toCharArray();\n        }\n\n        scanner.close();\n\n        int[] columnIndices = new int[N];\n        for (int i = 0; i < N; i++) {\n            columnIndices[i] = i;\n        }\n\n        String lexicographicallySmallest = findLexicographicallySmallest(matrix, columnIndices);\n        System.out.println(lexicographicallySmallest);\n    }\n\n    private static String findLexicographicallySmallest(char[][] matrix, int[] columnIndices) {\n        String result = new String(new char[matrix.length]).replace('\\0', 'z');\n        Arrays.sort(columnIndices);\n\n        do {\n            StringBuilder currentString = new StringBuilder();\n            for (int i = 0; i < matrix.length; i++) {\n                currentString.append(matrix[i][columnIndices[i]]);\n            }\n            String current = currentString.toString();\n            if (current.compareTo(result) < 0) {\n                result = current;\n            }\n        } while (nextPermutation(columnIndices));\n\n        return result;\n    }\n\n    private static boolean nextPermutation(int[] array) {\n        int i = array.length - 2;\n        while (i >= 0 && array[i] >= array[i + 1]) {\n            i--;\n        }\n        if (i < 0) {\n            return false;\n        }\n        int j = array.length - 1;\n        while (array[j] <= array[i]) {\n            j--;\n        }\n        swap(array, i, j);\n        reverse(array, i + 1, array.length - 1);\n        return true;\n    }\n\n    private static void swap(int[] array, int i, int j) {\n        int temp = array[i];\n        array[i] = array[j];\n        array[j] = temp;\n    }\n\n    private static void reverse(int[] array, int start, int end) {\n        while (start < end) {\n            swap(array, start++, end--);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 07:56:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MAXN 20 // Assume maximum N is 20 for simplicity\n\nint N;\nchar matrix[MAXN][MAXN];\nchar selected[MAXN];\nint usedRow[MAXN], usedCol[MAXN];\nchar best[MAXN + 1];\n\nvoid findBest(int depth) {\n    if (depth == N) {\n        selected[N] = '\\0';\n        if (strcmp(selected, best) < 0) {\n            strcpy(best, selected);\n        }\n        return;\n    }\n\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            if (!usedRow[i] && !usedCol[j]) {\n                selected[depth] = matrix[i][j];\n                usedRow[i] = usedCol[j] = 1;\n\n                findBest(depth + 1);\n                \n                usedRow[i] = usedCol[j] = 0;\n            }\n        }\n    }\n}\n\nint main() {\n    scanf(\"%d\", &N);\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%s\", matrix[i]);\n    }\n\n    memset(usedRow, 0, sizeof(usedRow));\n    memset(usedCol, 0, sizeof(usedCol));\n    memset(best, 'z' + 1, N);\n    best[N] = '\\0';\n\n    findBest(0);\n\n    printf(\"%s\\n\", best);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 07:56:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_plate_decoding(matrix):\n    N = len(matrix)\n    \n    def backtrack(selected_chars, used_rows, used_cols):\n        if len(selected_chars) == N:\n            return selected_chars\n        \n        best_solution = None\n        for row in range(N):\n            if row in used_rows:\n                continue\n            \n            for col in range(N):\n                if col in used_cols:\n                    continue\n                \n                current_char = matrix[row][col]\n                new_chars = selected_chars + [current_char]\n                \n                result = backtrack(new_chars, used_rows | {row}, used_cols | {col})\n                \n                if result is not None:\n                    if best_solution is None or result < best_solution:\n                        best_solution = result\n        \n        return best_solution\n    \n    return ''.join(backtrack([], set(), set()))",
+    "timestamp": "2025-08-13 07:56:09"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import heapq\n\ndef decode_plate(matrix):\n    n = len(matrix)\n    # We'll use a priority queue to explore the smallest lex strings\n    # Each element in the queue is (current_string, rows_used, cols_used)\n    # Initialize the queue with empty string and no rows/cols used\n    heap = []\n    heapq.heappush(heap, ('', [], []))\n    \n    while heap:\n        current_str, used_rows, used_cols = heapq.heappop(heap)\n        if len(current_str) == n:\n            return current_str\n        next_row = len(current_str)\n        for col in range(n):\n            if col not in used_cols:\n                new_str = current_str + matrix[next_row][col]\n                new_used_rows = used_rows + [next_row]\n                new_used_cols = used_cols + [col]\n                heapq.heappush(heap, (new_str, new_used_rows, new_used_cols))\n    return \"\"",
+    "timestamp": "2025-08-13 07:56:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <algorithm>\n\nvoid decodePlate(const std::vector<std::string>& plate, int n) {\n    std::vector<bool> usedCol(n, false);\n    std::string result;\n\n    for (int i = 0; i < n; ++i) {\n        char minChar = 'Z' + 1;\n        int minCol = -1;\n        for (int j = 0; j < n; ++j) {\n            if (!usedCol[j] && plate[i][j] < minChar) {\n                minChar = plate[i][j];\n                minCol = j;\n            }\n        }\n        result += minChar;\n        usedCol[minCol] = true;\n    }\n\n    std::cout << result << std::endl;\n}\n\nint main() {\n    int n;\n    std::cin >> n;\n    std::vector<std::string> plate(n);\n\n    for (int i = 0; i < n; ++i) {\n        std::cin >> plate[i];\n    }\n\n    decodePlate(plate, n);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:41:58"
+  }
+]

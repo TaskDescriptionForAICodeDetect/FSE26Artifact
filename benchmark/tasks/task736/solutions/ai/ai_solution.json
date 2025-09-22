@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#define MOD 1000000007\n\nint countPairs(int L, int R) {\n    long long result = 0;\n    \n    for (int x = L; x <= R; x++) {\n        for (int y = x; y <= R; y++) {\n            if ((y % x) == (y ^ x)) {\n                result++;\n            }\n        }\n    }\n    \n    return result % MOD;\n}",
+    "timestamp": "2025-08-05 22:44:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nint solve(int L, int R) {\n    int count = 0;\n    for (int x = L; x <= R; x++) {\n        for (int y = x; y <= R; y++) {\n            if ((y % x) == (y ^ x)) {\n                count++;\n                if (count >= MOD) {\n                    count -= MOD;\n                }\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int L, R;\n    scanf(\"%d %d\", &L, &R);\n    printf(\"%d\\n\", solve(L, R));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:44:22"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nint solve(int L, int R) {\n    int count = 0;\n    for (int x = L; x <= R; ++x) {\n        for (int y = x; y <= R; ++y) {\n            if ((y % x) == (y ^ x)) {\n                count++;\n                if (count >= MOD) count -= MOD;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int L, R;\n    cin >> L >> R;\n    cout << solve(L, R) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:44:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    private static final int MOD = 1000000007;\n\n    public static int solve(int L, int R) {\n        int count = 0;\n        for (int x = L; x <= R; x++) {\n            for (int y = x; y <= R; y++) {\n                if ((y % x) == (y ^ x)) {\n                    count++;\n                    if (count >= MOD) {\n                        count -= MOD;\n                    }\n                }\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 22:44:38"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int countPairs(int L, int R) {\n        final int MOD = 1_000_000_007;\n        long count = 0;\n        \n        for (int x = L; x <= R; x++) {\n            for (int y = x; y <= R; y++) {\n                if ((y % x) == (y ^ x)) {\n                    count++;\n                }\n            }\n        }\n        \n        return (int)(count % MOD);\n    }\n}",
+    "timestamp": "2025-08-05 22:44:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int countPairs(int L, int R) {\n        const int MOD = 1e9 + 7;\n        long long result = 0;\n        \n        for (int x = L; x <= R; x++) {\n            for (int y = x; y <= R; y++) {\n                if (y % x == (y ^ x)) {\n                    result++;\n                }\n            }\n        }\n        \n        return result % MOD;\n    }\n};",
+    "timestamp": "2025-08-05 22:44:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_valid_pairs(L, R):\n    MOD = 10**9 + 7\n    count = 0\n\n    for x in range(L, R + 1):\n        for y in range(x, R + 1):\n            if y % x == y ^ x:\n                count += 1\n                count %= MOD\n\n    return count\n\n# Example usage\nL = 1\nR = 10\nprint(count_valid_pairs(L, R))",
+    "timestamp": "2025-08-13 12:21:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class Main {\n    private static final long MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        int L = 1; // Example lower bound\n        int R = 10; // Example upper bound\n        System.out.println(countPairs(L, R));\n    }\n\n    private static long countPairs(int L, int R) {\n        long count = 0;\n        for (int x = L; x <= R; x++) {\n            for (int y = x; y <= R; y++) {\n                if ((y % x) == (y ^ x)) {\n                    count++;\n                    if (count >= MOD) count -= MOD;\n                }\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-13 12:22:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nint countPairs(int L, int R) {\n    int count = 0;\n\n    for (int x = L; x <= R; x++) {\n        for (int y = x; y <= R; y++) {\n            if ((y % x) == (y ^ x)) {\n                count = (count + 1) % MOD;\n            }\n        }\n    }\n\n    return count;\n}\n\nint main() {\n    int L, R;\n    scanf(\"%d %d\", &L, &R);\n    printf(\"%d\\n\", countPairs(L, R));\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:22:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\nconst int MOD = 1e9 + 7;\n\nint countPairs(int L, int R) {\n    long long count = 0;\n    for (int x = L; x <= R; ++x) {\n        for (int y = x; y <= R; ++y) {\n            if ((y % x) == (y ^ x)) {\n                count = (count + 1) % MOD;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int L, R;\n    cin >> L >> R;\n    cout << countPairs(L, R) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:22:08"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "class Solution:\n    def countPairs(self, L: int, R: int) -> int:\n        MOD = 10**9 + 7\n        count = 0\n        \n        for x in range(L, R + 1):\n            for y in range(x, R + 1):\n                if y % x == (y ^ x):\n                    count += 1\n        \n        return count % MOD",
+    "timestamp": "2025-08-13 12:22:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef solve(L, R):\n    count = 0\n    for x in range(L, R + 1):\n        max_y = min(R, 2 * x - 1)\n        if max_y >= x:\n            count += max_y - x + 1\n    return count % MOD",
+    "timestamp": "2025-08-13 12:22:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function countPairs(L, R) {\n    const MOD = 1000000007;\n    let count = 0;\n    \n    for (let x = L; x <= R; x++) {\n        for (let y = x; y <= R; y++) {\n            if ((y % x) === (y ^ x)) {\n                count = (count + 1) % MOD;\n            }\n        }\n    }\n    \n    return count;\n}\n\n// Example usage\nconsole.log(countPairs(L, R)); // replace L and R with actual values",
+    "timestamp": "2025-08-13 12:22:31"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "var countPairs = function(L, R) {\n    const MOD = 1e9 + 7;\n    let count = 0;\n    \n    for (let x = L; x <= R; x++) {\n        for (let y = x; y <= R; y++) {\n            if (y % x === (y ^ x)) {\n                count++;\n            }\n        }\n    }\n    \n    return count % MOD;\n};",
+    "timestamp": "2025-08-13 12:22:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(L, R) {\n    const MOD = 1e9 + 7;\n    let count = 0;\n    \n    for (let x = L; x <= R; x++) {\n        for (let y = x; y <= R; y++) {\n            if ((y % x) === (y ^ x)) {\n                count = (count + 1) % MOD;\n            }\n        }\n    }\n    \n    return count;\n}",
+    "timestamp": "2025-08-13 12:22:38"
+  }
+]

@@ -1,0 +1,1 @@
+For a given number of segments that are parallel to the X-axis or Y-axis, find the number of intersections between them. Each segment is defined by the coordinates of its endpoints.

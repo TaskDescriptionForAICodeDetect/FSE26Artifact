@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def f(x):\n    return x // 2 if x % 2 == 0 else x - 1\n\ndef path(v):\n    result = [v]\n    while result[-1] != 1:\n        result.append(f(result[-1]))\n    return result\n\ndef solve(n, k):\n    paths = [path(x) for x in range(1, n+1)]\n    \n    value_counts = {}\n    for p in paths:\n        unique_p = set(p)\n        for val in unique_p:\n            value_counts[val] = value_counts.get(val, 0) + 1\n    \n    max_count_values = [val for val, count in value_counts.items() if count >= k]\n    \n    return max(max_count_values) if max_count_values else 1\n\nn, k = map(int, input().split())\nprint(solve(n, k))",
+    "timestamp": "2025-08-05 17:32:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve():\n    n, k = map(int, input().split())\n    low = 1\n    high = n\n    best = 1\n    \n    # Check for odd candidates first\n    left = 1\n    right = n\n    best_odd = 0\n    while left <= right:\n        mid = (left + right) // 2\n        current = mid\n        # Count numbers <=n where path contains 'current' (odd)\n        count = 0\n        # The sequence is current, current*2, current*2+1, current*4, current*4+1, current*4+2, current*4+3, etc.\n        # So for current (must be odd), the numbers are current * 2^m and current *2^m + delta where delta < 2^m\n        power = 1\n        total = 0\n        while True:\n            lower = current * power\n            upper = current * power + (power - 1)\n            if lower > n:\n                break\n            upper = min(upper, n)\n            total += upper - lower + 1\n            power *= 2\n        if total >= k:\n            best_odd = current\n            left = mid + 2\n        else:\n            right = mid - 2\n    best = max(best, best_odd)\n    \n    # Check for even candidates\n    left = 2\n    right = n\n    best_even = 0\n    while left <= right:\n        mid = (left + right) // 2\n        if mid % 2 != 0:\n            mid += 1\n        if mid > right:\n            mid -= 1\n            if mid % 2 != 0:\n                break\n        current = mid\n        # Count numbers <=n where path contains 'current' (even)\n        count = 0\n        # The sequence is current, current/2 (if even), etc. But for counting, similar to odd but shifted.\n        # The numbers are current * 2^m and current*2^m + delta where delta < 2^m, but current must be even.\n        power = 1\n        total = 0\n        while True:\n            lower = current * power\n            upper = current * power + (power - 1)\n            if lower > n:\n                break\n            upper = min(upper, n)\n            total += upper - lower + 1\n            power *= 2\n        if total >= k:\n            best_even = current\n            left = mid + 2\n        else:\n            right = mid - 2\n    best = max(best, best_even)\n    \n    print(best)\n\nsolve()",
+    "timestamp": "2025-08-05 17:32:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_y_in_paths(n, k):\n    def count_paths_containing(y):\n        return (n // (2**y)) - (n // (2**(y + 1)))\n\n    left, right = 1, n.bit_length() + 1\n\n    while left < right:\n        mid = (left + right) // 2\n        if count_paths_containing(mid) >= k:\n            left = mid + 1\n        else:\n            right = mid\n\n    return left - 1\n\nn, k = map(int, input().split())\nprint(max_y_in_paths(n, k))",
+    "timestamp": "2025-08-12 21:42:58"
+  }
+]

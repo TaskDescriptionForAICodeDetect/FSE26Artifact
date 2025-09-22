@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX(a, b) ((a) > (b) ? (a) : (b))\n\nint maxDistance(char **grid, int H, int W) {\n    int maxDist = 0;\n    \n    for (int i1 = 0; i1 < H; i1++) {\n        for (int j1 = 0; j1 < W; j1++) {\n            if (grid[i1][j1] == 'B') {\n                for (int i2 = 0; i2 < H; i2++) {\n                    for (int j2 = 0; j2 < W; j2++) {\n                        if (grid[i2][j2] == 'B') {\n                            int dist = abs(i1 - i2) + abs(j1 - j2);\n                            maxDist = MAX(maxDist, dist);\n                        }\n                    }\n                }\n            }\n        }\n    }\n    \n    return maxDist;\n}\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    \n    char **grid = malloc(H * sizeof(char *));\n    for (int i = 0; i < H; i++) {\n        grid[i] = malloc((W + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n    \n    int result = maxDistance(grid, H, W);\n    printf(\"%d\\n\", result);\n    \n    for (int i = 0; i < H; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:30"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    char grid[H][W+1]; // +1 for null terminator\n    for (int i = 0; i < H; i++) {\n        scanf(\"%s\", grid[i]);\n    }\n\n    int max_distance = 0;\n    for (int i1 = 0; i1 < H; i1++) {\n        for (int j1 = 0; j1 < W; j1++) {\n            if (grid[i1][j1] == 'B') {\n                for (int i2 = 0; i2 < H; i2++) {\n                    for (int j2 = 0; j2 < W; j2++) {\n                        if (grid[i2][j2] == 'B') {\n                            int distance = abs(i1 - i2) + abs(j1 - j2);\n                            if (distance > max_distance) {\n                                max_distance = distance;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n    printf(\"%d\\n\", max_distance);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:43"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<string> grid(H);\n    for (int i = 0; i < H; ++i) {\n        cin >> grid[i];\n    }\n\n    vector<pair<int, int>> buildings;\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (grid[i][j] == 'B') {\n                buildings.emplace_back(i, j);\n            }\n        }\n    }\n\n    int max_dist = 0;\n    int n = buildings.size();\n    for (int i = 0; i < n; ++i) {\n        for (int j = i + 1; j < n; ++j) {\n            int dist = abs(buildings[i].first - buildings[j].first) + abs(buildings[i].second - buildings[j].second);\n            max_dist = max(max_dist, dist);\n        }\n    }\n\n    cout << max_dist << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        scanner.nextLine(); // consume the remaining newline\n        \n        List<int[]> buildings = new ArrayList<>();\n        \n        for (int i = 0; i < H; i++) {\n            String line = scanner.nextLine();\n            for (int j = 0; j < W; j++) {\n                if (line.charAt(j) == 'B') {\n                    buildings.add(new int[]{i, j});\n                }\n            }\n        }\n        \n        int maxDistance = 0;\n        for (int i = 0; i < buildings.size(); i++) {\n            int[] b1 = buildings.get(i);\n            for (int j = i + 1; j < buildings.size(); j++) {\n                int[] b2 = buildings.get(j);\n                int distance = Math.abs(b1[0] - b2[0]) + Math.abs(b1[1] - b2[1]);\n                if (distance > maxDistance) {\n                    maxDistance = distance;\n                }\n            }\n        }\n        \n        System.out.println(maxDistance);\n    }\n}",
+    "timestamp": "2025-08-05 22:05:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class MaxBuildingDistance {\n    public static int findMaxDistance(int H, int W, char[][] grid) {\n        List<int[]> buildings = new ArrayList<>();\n        \n        // Find all building locations\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                if (grid[i][j] == 'B') {\n                    buildings.add(new int[]{i, j});\n                }\n            }\n        }\n        \n        // If no buildings or only one building\n        if (buildings.size() <= 1) return 0;\n        \n        int maxDistance = 0;\n        \n        // Check distance between every pair of buildings\n        for (int i = 0; i < buildings.size(); i++) {\n            for (int j = i + 1; j < buildings.size(); j++) {\n                int[] b1 = buildings.get(i);\n                int[] b2 = buildings.get(j);\n                \n                int distance = Math.abs(b1[0] - b2[0]) + Math.abs(b1[1] - b2[1]);\n                maxDistance = Math.max(maxDistance, distance);\n            }\n        }\n        \n        return maxDistance;\n    }\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int H = Integer.parseInt(st.nextToken());\n        int W = Integer.parseInt(st.nextToken());\n        \n        char[][] grid = new char[H][W];\n        \n        for (int i = 0; i < H; i++) {\n            String row = br.readLine();\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = row.charAt(j);\n            }\n        }\n        \n        System.out.println(findMaxDistance(H, W, grid));\n    }\n}",
+    "timestamp": "2025-08-05 22:05:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <climits>\n#include <algorithm>\n\nusing namespace std;\n\nint findMaxBuildingDistance(vector<vector<char>>& campus) {\n    int H = campus.size();\n    int W = campus[0].size();\n    vector<pair<int, int>> buildings;\n    \n    // Find all building locations\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (campus[i][j] == 'B') {\n                buildings.push_back({i, j});\n            }\n        }\n    }\n    \n    // If no buildings, return 0\n    if (buildings.empty()) return 0;\n    \n    int maxDistance = 0;\n    \n    // Check Manhattan distance between all pairs of buildings\n    for (int i = 0; i < buildings.size(); i++) {\n        for (int j = i + 1; j < buildings.size(); j++) {\n            int dist = abs(buildings[i].first - buildings[j].first) + \n                       abs(buildings[i].second - buildings[j].second);\n            maxDistance = max(maxDistance, dist);\n        }\n    }\n    \n    return maxDistance;\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    \n    vector<vector<char>> campus(H, vector<char>(W));\n    \n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            cin >> campus[i][j];\n        }\n    }\n    \n    cout << findMaxBuildingDistance(campus) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_distance_between_buildings(H, W, grid):\n    buildings = [(i, j) for i in range(H) for j in range(W) if grid[i][j] == 'B']\n    \n    max_distance = 0\n    for i in range(len(buildings)):\n        for j in range(i + 1, len(buildings)):\n            x1, y1 = buildings[i]\n            x2, y2 = buildings[j]\n            distance = abs(x1 - x2) + abs(y1 - y2)\n            max_distance = max(max_distance, distance)\n    \n    return max_distance\n\n# Example usage:\nH = 4\nW = 5\ngrid = [\n    \"B....\",\n    \"..B..\",\n    \".....\",\n    \"...B.\"\n]\n\nprint(max_distance_between_buildings(H, W, grid))  # Output example: 5",
+    "timestamp": "2025-08-13 08:54:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class MaxBuildingDistance {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        scanner.nextLine(); // consume the rest of the line\n        \n        char[][] grid = new char[H][W];\n        List<int[]> buildingPositions = new ArrayList<>();\n        \n        for (int i = 0; i < H; i++) {\n            String line = scanner.nextLine();\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = line.charAt(j);\n                if (grid[i][j] == 'B') {\n                    buildingPositions.add(new int[]{i, j});\n                }\n            }\n        }\n        \n        int maxDistance = 0;\n        \n        for (int[] pos1 : buildingPositions) {\n            for (int[] pos2 : buildingPositions) {\n                int distance = Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);\n                maxDistance = Math.max(maxDistance, distance);\n            }\n        }\n        \n        System.out.println(maxDistance);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 08:54:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint maxDistance(char** grid, int H, int W) {\n    int maxDist = 0;\n    int* buildingX = (int*)malloc(H * W * sizeof(int));\n    int* buildingY = (int*)malloc(H * W * sizeof(int));\n    int buildingCount = 0;\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            if (grid[i][j] == 'B') {\n                buildingX[buildingCount] = i;\n                buildingY[buildingCount] = j;\n                ++buildingCount;\n            }\n        }\n    }\n\n    for (int i = 0; i < buildingCount; ++i) {\n        for (int j = i + 1; j < buildingCount; ++j) {\n            int dist = abs(buildingX[i] - buildingX[j]) + abs(buildingY[i] - buildingY[j]);\n            if (dist > maxDist) {\n                maxDist = dist;\n            }\n        }\n    }\n\n    free(buildingX);\n    free(buildingY);\n\n    return maxDist;\n}\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n\n    char** grid = (char**)malloc(H * sizeof(char*));\n    for (int i = 0; i < H; ++i) {\n        grid[i] = (char*)malloc((W + 1) * sizeof(char));\n        scanf(\"%s\", grid[i]);\n    }\n\n    int result = maxDistance(grid, H, W);\n    printf(\"%d\\n\", result);\n\n    for (int i = 0; i < H; ++i) {\n        free(grid[i]);\n    }\n    free(grid);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:54:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_building_distance(grid):\n    buildings = []\n    for i in range(len(grid)):\n        for j in range(len(grid[0])):\n            if grid[i][j] == 'B':\n                buildings.append((i, j))\n    \n    if len(buildings) < 2:\n        return 0\n    \n    max_dist = 0\n    for k in range(len(buildings)):\n        for l in range(k+1, len(buildings)):\n            x1, y1 = buildings[k]\n            x2, y2 = buildings[l]\n            dist = abs(x1 - x2) + abs(y1 - y2)\n            max_dist = max(max_dist, dist)\n    \n    return max_dist",
+    "timestamp": "2025-08-13 08:54:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "h, w = map(int, input().split())\ngrid = [input().strip() for _ in range(h)]\nbuildings = []\n\nfor i in range(h):\n    for j in range(w):\n        if grid[i][j] == 'B':\n            buildings.append((i, j))\n\nmax_distance = 0\nn = len(buildings)\nfor i in range(n):\n    for j in range(i + 1, n):\n        x1, y1 = buildings[i]\n        x2, y2 = buildings[j]\n        distance = abs(x1 - x2) + abs(y1 - y2)\n        if distance > max_distance:\n            max_distance = distance\n\nprint(max_distance)",
+    "timestamp": "2025-08-13 08:54:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cstdlib> // for abs\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<pair<int, int>> buildings;\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            char cell;\n            cin >> cell;\n            if (cell == 'B') {\n                buildings.push_back({i, j});\n            }\n        }\n    }\n\n    int maxDistance = 0;\n    for (const auto& b1 : buildings) {\n        for (const auto& b2 : buildings) {\n            int dist = abs(b1.first - b2.first) + abs(b1.second - b2.second);\n            maxDistance = max(maxDistance, dist);\n        }\n    }\n\n    cout << maxDistance << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:18"
+  }
+]

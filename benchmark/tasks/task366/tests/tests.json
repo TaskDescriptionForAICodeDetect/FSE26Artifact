@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "3\n......\n......\n......\n......\n......\n......\n......\n......\n.RGB..\nRGOP..\nRGBPB.\nRGBPP.\nGBRGYP\nGBRRYP\nBGGRBB\nBPRGYY\nGGPRRY\nBYPPRB\nYGGGPB\nGYYYPR\nYRBRBR\nYBRBRB\nBRBRBR\nBRBRBR\n......\n......\n......\n......\n......\n......\n......\n......\n......\n......\n..OO..\n..OO..",
+      "output": "3\n18\n0"
+    }
+  ]
+}

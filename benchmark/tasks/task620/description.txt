@@ -1,0 +1,1 @@
+Find the sum of weights of edges of the Minimum Spanning Tree for a given weighted undirected graph G = (V, E).

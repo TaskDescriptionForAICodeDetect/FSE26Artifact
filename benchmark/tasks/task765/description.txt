@@ -1,0 +1,1 @@
+Given an arithmetic progression with n terms defined by the first term x and a common difference d, compute the product of all terms in this sequence modulo 1,000,003. You are given Q queries, and for each query, compute the answer based on specific values of x, d, and n.

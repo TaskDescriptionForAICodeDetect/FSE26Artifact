@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "3 3 2",
+      "output": "LRR"
+    },
+    {
+      "input": "12 578 2214",
+      "output": "RLLLRRRLRRLL"
+    },
+    {
+      "input": "59 471605241352156968 431565444592236940",
+      "output": "LRRRLRRLLRRRRLLLLRLLRRRLRRLLRLLLLLLRLRLLRLRLLLRLRLLRLLRRRLL"
+    }
+  ]
+}

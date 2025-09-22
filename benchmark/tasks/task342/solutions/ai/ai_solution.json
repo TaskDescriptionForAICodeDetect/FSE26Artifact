@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX_LEN 2048\n#define MAX_SOUNDS 8\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    getchar(); // consume newline\n\n    char patterns[N][MAX_LEN + 1];\n    int max_length = 0;\n\n    for (int i = 0; i < N; i++) {\n        fgets(patterns[i], MAX_LEN + 1, stdin);\n        patterns[i][strcspn(patterns[i], \"\\n\")] = '\\0'; // remove newline\n        int len = strlen(patterns[i]);\n        if (len > max_length) {\n            max_length = len;\n        }\n    }\n\n    char result[MAX_LEN + 1] = {0};\n    int result_len = 0;\n\n    for (int i = 0; i < max_length; i++) {\n        char current_sounds[MAX_SOUNDS + 1] = {0};\n        int sound_count = 0;\n\n        for (int j = 0; j < N; j++) {\n            if (i < strlen(patterns[j])) {\n                char c = patterns[j][i];\n                if (c != '.') {\n                    int found = 0;\n                    for (int k = 0; k < sound_count; k++) {\n                        if (current_sounds[k] == c) {\n                            found = 1;\n                            break;\n                        }\n                    }\n                    if (!found && sound_count < MAX_SOUNDS) {\n                        current_sounds[sound_count++] = c;\n                    } else if (sound_count >= MAX_SOUNDS) {\n                        printf(\"Too complex.\\n\");\n                        return 0;\n                    }\n                }\n            }\n        }\n\n        if (sound_count == 0) {\n            result[result_len++] = '.';\n        } else {\n            for (int k = 0; k < sound_count; k++) {\n                result[result_len++] = current_sounds[k];\n            }\n        }\n    }\n\n    if (result_len > MAX_LEN) {\n        printf(\"Too complex.\\n\");\n    } else {\n        result[result_len] = '\\0';\n        printf(\"%s\\n\", result);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:09:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<string> patterns(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> patterns[i];\n    }\n\n    size_t max_length = 0;\n    for (const auto& pattern : patterns) {\n        max_length = max(max_length, pattern.size());\n    }\n\n    string result;\n    for (size_t i = 0; i < max_length; ++i) {\n        set<char> sounds;\n        for (const auto& pattern : patterns) {\n            if (i < pattern.size() && pattern[i] != '.') {\n                sounds.insert(pattern[i]);\n            }\n        }\n        if (sounds.empty()) {\n            result += '.';\n        } else {\n            string merged(sounds.begin(), sounds.end());\n            result += merged;\n        }\n    }\n\n    if (result.size() > 2048) {\n        cout << \"Too complex\" << endl;\n    } else {\n        cout << result << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:09:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\nimport java.util.TreeSet;\n\npublic class RhythmPatternConverter {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        scanner.nextLine(); // consume the newline\n        \n        TreeSet<Integer> timings = new TreeSet<>();\n        String[] patterns = new String[N];\n        \n        for (int i = 0; i < N; i++) {\n            patterns[i] = scanner.nextLine();\n            for (int j = 0; j < patterns[i].length(); j++) {\n                if (patterns[i].charAt(j) == 'X') {\n                    timings.add(j);\n                }\n            }\n        }\n        \n        StringBuilder result = new StringBuilder();\n        for (int timing : timings) {\n            StringBuilder sounds = new StringBuilder();\n            for (int i = 0; i < N; i++) {\n                if (timing < patterns[i].length() && patterns[i].charAt(timing) == 'X') {\n                    sounds.append(i + 1);\n                }\n            }\n            result.append(sounds).append(\":\");\n        }\n        \n        if (result.length() > 0) {\n            result.setLength(result.length() - 1); // remove trailing ':'\n        }\n        \n        if (result.length() > 2048) {\n            System.out.println(\"Too complex\");\n        } else {\n            System.out.println(result.toString());\n        }\n    }\n}",
+    "timestamp": "2025-08-05 21:10:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RhythmPatternConverter {\n    public static String convertRhythmPattern(String[] patterns) {\n        if (patterns == null || patterns.length == 0) {\n            return \"\";\n        }\n\n        int maxLength = 0;\n        for (String pattern : patterns) {\n            maxLength = Math.max(maxLength, pattern.length());\n        }\n\n        StringBuilder result = new StringBuilder();\n        for (int i = 0; i < maxLength; i++) {\n            StringBuilder rowPattern = new StringBuilder();\n            for (String pattern : patterns) {\n                char symbol = (i < pattern.length()) ? pattern.charAt(i) : '.';\n                rowPattern.append(symbol);\n            }\n            result.append(rowPattern).append('\\n');\n        }\n\n        String finalPattern = result.toString().trim();\n        return finalPattern.length() > 2048 ? \"Too complex.\" : finalPattern;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        scanner.nextLine();\n\n        String[] patterns = new String[N];\n        for (int i = 0; i < N; i++) {\n            patterns[i] = scanner.nextLine();\n        }\n\n        System.out.println(convertRhythmPattern(patterns));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 21:10:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_PATTERNS 10\n#define MAX_LENGTH 256\n#define OUTPUT_MAX 2048\n\nint main() {\n    int N, i, j, k, max_length = 0;\n    char patterns[MAX_PATTERNS][MAX_LENGTH];\n    char output[OUTPUT_MAX] = {0};\n\n    scanf(\"%d\", &N);\n    for (i = 0; i < N; i++) {\n        scanf(\"%s\", patterns[i]);\n        int len = strlen(patterns[i]);\n        max_length = (len > max_length) ? len : max_length;\n    }\n\n    for (j = 0; j < max_length; j++) {\n        char current_beat[9] = {0};\n        for (i = 0; i < N; i++) {\n            if (j < strlen(patterns[i]) && patterns[i][j] != '.') {\n                for (k = 0; k < 8; k++) {\n                    if (current_beat[k] == 0) {\n                        current_beat[k] = patterns[i][j];\n                        break;\n                    }\n                    if (current_beat[k] == patterns[i][j]) {\n                        break;\n                    }\n                }\n                if (k == 8) {\n                    printf(\"Too complex\\n\");\n                    return 0;\n                }\n            }\n        }\n        \n        strcat(output, current_beat[0] ? current_beat : \".\");\n        if (strlen(output) > 2048) {\n            printf(\"Too complex\\n\");\n            return 0;\n        }\n    }\n\n    printf(\"%s\\n\", output);\n    return 0;\n}",
+    "timestamp": "2025-08-05 21:10:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<string> patterns(N);\n    for (int i = 0; i < N; i++) {\n        cin >> patterns[i];\n    }\n    \n    int maxLen = 0;\n    for (const string& pattern : patterns) {\n        maxLen = max(maxLen, (int)pattern.length());\n    }\n    \n    string result(maxLen, '0');\n    \n    for (int i = 0; i < maxLen; i++) {\n        set<char> sounds;\n        for (const string& pattern : patterns) {\n            if (i < pattern.length() && pattern[i] != '0') {\n                sounds.insert(pattern[i]);\n            }\n        }\n        \n        if (sounds.size() > 8) {\n            cout << \"Too complex\\n\";\n            return 0;\n        }\n        \n        result[i] = sounds.empty() ? '0' : *sounds.begin();\n    }\n    \n    if (result.length() > 2048) {\n        cout << \"Too complex\\n\";\n        return 0;\n    }\n    \n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 21:10:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def combine_rhythm_patterns(old_patterns):\n    combined_pattern = ''\n    max_length = max(len(pattern) for pattern in old_patterns)\n    \n    for i in range(max_length):\n        current_sounds = ''\n        for pattern in old_patterns:\n            if i < len(pattern) and pattern[i] != '-':\n                current_sounds += pattern[i]\n        \n        if len(current_sounds) > 8:\n            return 'Too complex'\n        \n        if current_sounds == '':\n            combined_pattern += '-'\n        else:\n            combined_pattern += current_sounds\n    \n    return 'Too complex' if len(combined_pattern) > 2048 else combined_pattern\n\n# Example usage:\n# old_patterns = [\"-a-b\", \"--c-\", \"d---\"]\n# new_pattern = combine_rhythm_patterns(old_patterns)\n# print(new_pattern)",
+    "timestamp": "2025-08-13 05:14:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class RhythmPatternConverter {\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        scanner.nextLine();  // Consume the newline\n        \n        StringBuilder[] patterns = new StringBuilder[N];\n        int maxLength = 0;\n\n        for (int i = 0; i < N; i++) {\n            patterns[i] = new StringBuilder(scanner.nextLine());\n            maxLength = Math.max(maxLength, patterns[i].length());\n        }\n\n        StringBuilder result = new StringBuilder();\n        \n        for (int i = 0; i < maxLength; i++) {\n            Set<Character> soundsAtTime = new HashSet<>();\n            for (int j = 0; j < N; j++) {\n                if (i < patterns[j].length()) {\n                    char ch = patterns[j].charAt(i);\n                    if (ch != '.') {\n                        soundsAtTime.add(ch);\n                    }\n                }\n            }\n            if (soundsAtTime.isEmpty()) {\n                result.append('.');\n            } else {\n                for (char sound : soundsAtTime) {\n                    result.append(sound);\n                }\n            }\n        }\n\n        if (result.length() > 2048) {\n            System.out.println(\"Too complex\");\n        } else {\n            System.out.println(result.toString());\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 05:14:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_PATTERNS 2048\n#define MAX_TIMING_POINTS 256\n\nvoid combinePatterns(char patterns[MAX_TIMING_POINTS][MAX_PATTERNS], int numPatterns, char *result) {\n    int timingPoint;\n    int length = 0;\n\n    for (timingPoint = 0; timingPoint < MAX_TIMING_POINTS; timingPoint++) {\n        char combinedSound = 0x00; // No sound at this timing point initially\n        for (int i = 0; i < numPatterns; i++) {\n            combinedSound |= patterns[timingPoint][i];\n        }\n\n        if (combinedSound != 0x00) {\n            length++;\n            if (length >= MAX_PATTERNS) {\n                strcpy(result, \"Too complex\");\n                return;\n            }\n            result[timingPoint] = combinedSound;\n        }\n    }\n\n    result[length] = '\\0';\n}\n\nint main() {\n    char oldPatterns[MAX_TIMING_POINTS][MAX_PATTERNS] = {\n        // Example patterns for old machine (one per row)\n        // Represent using binary, e.g., '00000001' for first sound, '00000010' for second, etc.\n    };\n    int numPatterns = 3; // Adjust based on number of old patterns\n\n    char newPattern[MAX_PATTERNS];\n    combinePatterns(oldPatterns, numPatterns, newPattern);\n\n    if (strcmp(newPattern, \"Too complex\") == 0) {\n        printf(\"Too complex\\n\");\n    } else {\n        printf(\"Combined pattern: %s\\n\", newPattern);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 05:14:13"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def combine_rhythm_patterns(patterns):\n    max_length = max(len(p) for p in patterns)\n    \n    for pattern in patterns:\n        if len(pattern) > 2048:\n            return 'Too complex.'\n    \n    combined_pattern = ['0'] * max_length\n    \n    for i in range(max_length):\n        current_sounds = []\n        for pattern in patterns:\n            if i < len(pattern) and pattern[i] == '1':\n                current_sounds.append('1')\n            else:\n                current_sounds.append('0')\n        \n        combined_pattern[i] = '1' if '1' in current_sounds else '0'\n    \n    return ''.join(combined_pattern)\n\ndef main():\n    N = int(input())\n    patterns = []\n    \n    for _ in range(N):\n        pattern = input().strip()\n        patterns.append(pattern)\n    \n    result = combine_rhythm_patterns(patterns)\n    print(result)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 05:14:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\npatterns = [input().strip() for _ in range(n)]\nmax_length = max(len(p) for p in patterns)\nresult = []\n\nfor i in range(max_length):\n    combined = []\n    for p in patterns:\n        if i < len(p) and p[i] != '.':\n            combined.append(p[i])\n    if combined:\n        combined_sorted = sorted(combined)\n        result.append(''.join(combined_sorted))\n    else:\n        result.append('.')\n\noutput = ''.join(result)\nif len(output) > 2048:\n    print(\"Too complex\")\nelse:\n    print(output)",
+    "timestamp": "2025-08-13 05:14:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nusing namespace std;\n\n// Function to generate the combined rhythm pattern\nstring combineRhythmPatterns(const vector<string>& oldPatterns) {\n    vector<string> newPattern(256, string(8, ' ')); // 256 slots each with 8 sounds (' ' indicates no sound, initially)\n    \n    for (const string& pattern : oldPatterns) {\n        size_t pos = 0;\n        while ((pos = pattern.find_first_of(\"XYZ\", pos)) != string::npos) { // Assume 'XYZ' are placeholders for sounds\n            int slot = pos / 8; // Determine slot position\n            int soundIndex = pos % 8; // Determine sound index within the slot\n            if (newPattern[slot][soundIndex] == ' ') { // Place the sound if empty at the slot\n                newPattern[slot][soundIndex] = pattern[pos];\n            }\n            pos++;\n        }\n    }\n\n    // Construct the final combined pattern\n    string finalPattern;\n    for (const string& slot : newPattern) {\n        for (char sound : slot) {\n            if (sound != ' ') finalPattern += sound;\n        }\n    }\n\n    return finalPattern.length() > 2048 ? \"Too complex\" : finalPattern;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<string> oldPatterns(N);\n\n    for (int i = 0; i < N; ++i) {\n        cin >> oldPatterns[i];\n    }\n\n    string result = combineRhythmPatterns(oldPatterns);\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:23:46"
+  }
+]

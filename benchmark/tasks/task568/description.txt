@@ -1,0 +1,1 @@
+For a given weighted graph G = (V, E), find the minimum spanning tree (MST) of G and print the total weight of the edges belonging to the MST.

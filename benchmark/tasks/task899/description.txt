@@ -1,0 +1,1 @@
+You are given a tree with N vertices. A tree is a connected undirected graph with N-1 edges. Each edge connects two vertices and has a certain length. You are also given Q queries and an integer K. For each query, you need to find the length of the shortest path from Vertex x_j to Vertex y_j that passes through Vertex K.

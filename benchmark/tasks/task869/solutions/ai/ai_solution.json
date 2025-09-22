@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint solve(int K, int* A, int groupSizesLength) {\n    int minN = 2;\n    int maxN = INT_MAX;\n\n    for (int i = 0; i < groupSizesLength; i++) {\n        int groupSize = A[i];\n        \n        // Min calculation\n        minN = (minN + groupSize - 1) / groupSize;\n        \n        // Max calculation \n        maxN = maxN / groupSize;\n    }\n\n    // Validate final conditions\n    if (minN > maxN || minN <= 0 || maxN < 2) {\n        return -1;\n    }\n\n    // Return smallest possible N\n    return minN;\n}\n\nint main() {\n    int K, groupSizesLength;\n    scanf(\"%d %d\", &K, &groupSizesLength);\n    \n    int A[groupSizesLength];\n    for (int i = 0; i < groupSizesLength; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int result = solve(K, A, groupSizesLength);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:10:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint main() {\n    int K;\n    scanf(\"%d\", &K);\n    \n    int A[K];\n    for (int i = 0; i < K; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    long long min_N = 2, max_N = 2;\n    int possible = 1;\n    \n    for (int i = K - 1; i >= 0; i--) {\n        long long new_min = (min_N + A[i] - 1) / A[i] * A[i];\n        long long new_max = (max_N / A[i] + 1) * A[i] - 1;\n        \n        if (new_min > new_max) {\n            possible = 0;\n            break;\n        }\n        \n        min_N = new_min;\n        max_N = new_max;\n    }\n    \n    if (possible) {\n        printf(\"%lld %lld\\n\", min_N, max_N);\n    } else {\n        printf(\"-1\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:10:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\npair<int, int> solve(int K, const vector<int>& A) {\n    int min_N = 2;\n    int max_N = 2;\n\n    for (int i = K - 1; i >= 0; --i) {\n        int a = A[i];\n        if (min_N % a != 0) {\n            min_N = (min_N / a + 1) * a;\n        }\n        max_N = (max_N / a + 1) * a - 1;\n        if (min_N > max_N) {\n            return {-1, -1};\n        }\n    }\n\n    return {min_N, max_N};\n}\n\nint main() {\n    int K;\n    cin >> K;\n    vector<int> A(K);\n    for (int i = 0; i < K; ++i) {\n        cin >> A[i];\n    }\n\n    auto result = solve(K, A);\n    if (result.first == -1) {\n        cout << -1 << endl;\n    } else {\n        cout << result.first << \" \" << result.second << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class IceRinkGame {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int K = scanner.nextInt();\n        int[] A = new int[K];\n        for (int i = 0; i < K; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        long minN = 2;\n        long maxN = 2;\n        boolean possible = true;\n        \n        for (int i = K - 1; i >= 0; i--) {\n            long a = A[i];\n            long newMin = (minN + a - 1) / a * a;\n            long newMax = (maxN / a) * a + a - 1;\n            \n            if (newMin > newMax) {\n                possible = false;\n                break;\n            }\n            \n            minN = newMin;\n            maxN = newMax;\n        }\n        \n        if (possible) {\n            System.out.println(minN + \" \" + maxN);\n        } else {\n            System.out.println(-1);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:11:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int[] findMinMaxChildren(int[] groupSizes, int K) {\n        int minN = findMinN(groupSizes, K);\n        int maxN = findMaxN(groupSizes, K);\n        \n        return new int[]{minN, maxN};\n    }\n    \n    private int findMinN(int[] groupSizes, int K) {\n        int minN = 0;\n        for (int size : groupSizes) {\n            minN += size;\n        }\n        minN += 2;\n        \n        for (int i = 0; i < K; i++) {\n            minN -= groupSizes[i];\n        }\n        \n        return minN >= 2 ? minN : -1;\n    }\n    \n    private int findMaxN(int[] groupSizes, int K) {\n        int maxN = 0;\n        for (int size : groupSizes) {\n            maxN += size;\n        }\n        maxN += 2;\n        \n        for (int i = 0; i < K; i++) {\n            maxN = Math.max(maxN - groupSizes[i], 2);\n        }\n        \n        return maxN >= 2 ? maxN : -1;\n    }\n}",
+    "timestamp": "2025-08-05 23:11:24"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int findGroupSize(vector<int>& groups, int& minN, int& maxN) {\n        minN = 2;\n        maxN = INT_MAX;\n        \n        for (int group : groups) {\n            // Update minimum possible N\n            minN = max(minN, group);\n            \n            // Update maximum possible N\n            if (maxN != INT_MAX) {\n                maxN = min(maxN, (maxN / group) * group);\n            }\n            \n            // If no valid solution exists, return -1\n            if (minN > maxN) return -1;\n        }\n        \n        // Check if minN and maxN lead to exactly 2 children\n        if (minN % 2 != 0 || maxN % 2 != 0) return -1;\n        \n        return (minN + maxN) / 2;\n    }\n};",
+    "timestamp": "2025-08-05 23:11:29"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def possible_initial_children(group_sizes, rounds):\n    min_children, max_children = 2, 2\n\n    for size in reversed(group_sizes):\n        min_children = ((min_children + size - 1) // size) * size\n        max_children = (max_children // size) * size + size - 1\n\n    if min_children > max_children or min_children < 2:\n        return -1\n\n    smallest_N = max(min_children, 2)\n    largest_N = max_children\n\n    if smallest_N > largest_N:\n        return -1\n\n    return smallest_N, largest_N\n\n# Example usage:\n# group_sizes = [3, 2, 6]\n# rounds = 3\n# print(possible_initial_children(group_sizes, rounds)) # Output: (14, 20)",
+    "timestamp": "2025-08-13 14:01:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class IceRinkGame {\n    public static int[] findChildRange(int K, int[] A) {\n        int minN = 2;\n        int maxN = 2;\n        \n        for (int i = K - 1; i >= 0; i--) {\n            int groupSize = A[i];\n            \n            if (minN % groupSize != 0) {\n                minN = ((minN / groupSize) + 1) * groupSize;\n            }\n            \n            maxN = (maxN / groupSize) * groupSize + (groupSize - 1);\n            \n            if (minN > maxN) return new int[]{-1};\n        }\n        \n        return new int[]{minN, maxN};\n    }\n\n    public static void main(String[] args) {\n        int K = 3;\n        int[] A = {3, 5, 2};\n        int[] result = findChildRange(K, A);\n\n        if (result.length == 1 && result[0] == -1) {\n            System.out.println(\"No valid N exists.\");\n        } else {\n            System.out.println(\"Min N: \" + result[0] + \", Max N: \" + result[1]);\n        }\n    }\n}",
+    "timestamp": "2025-08-13 14:01:49"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int K;\n    scanf(\"%d\", &K);\n\n    int A[1000];\n    for (int i = 0; i < K; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    int min_N = 2, max_N = 2;\n    for (int i = K - 1; i >= 0; i--) {\n        if ((min_N - 1) % A[i] == 0) {\n            min_N = min_N;\n        } else {\n            min_N = (min_N - 1) / A[i] * A[i] + A[i];\n        }\n\n        if ((max_N - 1) % A[i] == 0) {\n            max_N = max_N;\n        } else {\n            max_N = (max_N - 1) / A[i] * A[i] + A[i];\n        }\n    }\n\n    if (min_N == 2 && max_N == 2) {\n        printf(\"-1\\n\");\n    } else {\n        printf(\"%d %d\\n\", min_N, max_N);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:01:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findSmallestAndLargestN(K, groupSizes) {\n    let minN = 2, maxN = 2;\n\n    for (let i = K - 1; i >= 0; i--) {\n        const groupSize = groupSizes[i];\n        if (groupSize <= 0) return -1;\n        \n        minN = Math.ceil((minN + (groupSize - 1)) / groupSize) * groupSize;\n        maxN = Math.floor((maxN + (groupSize - 1)) / groupSize) * groupSize;\n        \n        if (minN > maxN) return -1;\n    }\n    \n    return [minN, maxN];\n}\n\n// Example usage:\n// const K = 3;\n// const groupSizes = [3, 2, 5];\n// console.log(findSmallestAndLargestN(K, groupSizes)); // Outputs: [8, 8]",
+    "timestamp": "2025-08-13 14:01:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_game(K, A):\n    # Find the minimum possible initial number of children\n    min_n = 2\n    for round_size in A:\n        min_n = max(min_n, round_size)\n    \n    # Find the maximum possible initial number of children\n    max_n = 2\n    for round_size in A:\n        max_n += round_size - 2\n    \n    # Check each possible N from min_n to max_n\n    for N in range(min_n, max_n + 1):\n        # Simulate the game\n        children = N\n        valid = True\n        \n        for round_size in A:\n            if children < round_size:\n                valid = False\n                break\n            \n            # Form groups and remove extra children\n            groups = children // round_size\n            remaining = children % round_size\n            \n            if remaining != 2:\n                valid = False\n                break\n            \n            children = 2\n        \n        # Check if game ends with exactly 2 children\n        if valid and children == 2:\n            return N\n    \n    return -1",
+    "timestamp": "2025-08-13 14:02:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculateChildrenCount(groupSizes) {\n    let minN = 2;\n    let maxN = 2;\n\n    for (let i = 0; i < groupSizes.length; i++) {\n        // For minimum calculation\n        minN = Math.max(minN, groupSizes[i]);\n        \n        // For maximum calculation\n        maxN += groupSizes[i] - 2;\n    }\n\n    // Check if solution is valid\n    if (minN > maxN || minN < 2) {\n        return -1;\n    }\n\n    return [minN, maxN];\n}",
+    "timestamp": "2025-08-13 14:02:03"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    K = int(input())\n    A = list(map(int, input().split()))\n    \n    low = 2\n    high = 2\n    \n    for a in reversed(A):\n        # Calculate the minimal and maximal possible previous N\n        new_low = (low + a - 1) // a * a\n        new_high = (high // a) * a + a - 1\n        \n        if new_low > new_high:\n            print(-1)\n            return\n        \n        low, high = new_low, new_high\n    \n    print(low, high)\n\nsolve()",
+    "timestamp": "2025-08-13 14:02:07"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function findMinMaxN(K, A) {\n    let minN = 2;\n    let maxN = 2;\n\n    for (let i = K - 1; i >= 0; i--) {\n        const a = A[i];\n        if (minN % a !== 0 || maxN % a !== 0) {\n            return -1;\n        }\n        minN = minN / a * (a + 1);\n        maxN = maxN / a * (a + 1) + (a - 1);\n    }\n\n    return [minN, maxN];\n}\n\nfunction solve() {\n    const input = require('fs').readFileSync(0, 'utf-8').trim().split('\\n');\n    const K = parseInt(input[0], 10);\n    const A = input[1].split(' ').map(Number);\n\n    const result = findMinMaxN(K, A);\n    if (result === -1) {\n        console.log(-1);\n    } else {\n        console.log(result.join(' '));\n    }\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:02:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint findMinimumInitialChildren(const vector<int>& groupSizes) {\n    int low = 2, high = 2;\n    for (int size : groupSizes) {\n        high += size - 2;\n    }\n    return low;\n}\n\nint findMaximumInitialChildren(const vector<int>& groupSizes, int K) {\n    int low = 2, high = 2;\n    for (int size : groupSizes) {\n        high += size - 2;\n        low = max(low, size);\n    }\n    high += (K - 1) * low;\n    return high;\n}\n\nint main() {\n    int K;\n    cin >> K;\n    vector<int> groupSizes(K);\n    for (int i = 0; i < K; ++i) {\n        cin >> groupSizes[i];\n    }\n\n    int minimumChildren = findMinimumInitialChildren(groupSizes);\n    int maximumChildren = findMaximumInitialChildren(groupSizes, K);\n\n    int validMinN = -1;\n    int validMaxN = -1;\n\n    for (int N = minimumChildren; N <= maximumChildren; ++N) {\n        int childrenLeft = N;\n        for (int size : groupSizes) {\n            if (childrenLeft < size) {\n                childrenLeft = -1;\n                break;\n            }\n            childrenLeft -= size;\n            childrenLeft += 2;\n        }\n        if (childrenLeft == 2) {\n            if (validMinN == -1) validMinN = N;\n            validMaxN = N;\n        }\n    }\n\n    if (validMinN == -1 || validMaxN == -1) {\n        cout << -1 << endl;\n    } else {\n        cout << validMinN << \" \" << validMaxN << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:42:00"
+  }
+]

@@ -1,0 +1,1 @@
+Consider writing each of the integers from 1 to N multiplied by M in a grid with N rows and M columns, without duplicates. Given the largest value in the i-th row as A_i and in the j-th column as B_j, find the number of ways to write the numbers under these conditions, modulo 10^9 + 7.

@@ -1,0 +1,16 @@
+Scone Delivery Planning
+
+Aika runs a small café where her mother's scones are very popular, leading to a bustling business. As a waitress, one of Aika's tasks is to deliver the freshly baked scones to customers' tables. The scones are placed on trays, arranged in a line on the counter. Let Ki be the number of scones on the i-th tray. Aika must deliver exactly m scones to each customer. She can carry as many trays as she wants at once and can distribute scones from multiple trays to one customer or from a single tray to multiple customers.
+
+Due to the high demand at the café, even if Aika transports all the scones from the counter, she cannot deliver to all customers. However, she may end up with some scones, less than m, which she can keep as a reward. Aika is considering whether by selecting only a specific range of contiguous trays instead of all trays at once, she can maximize the amount of leftover scones. The leftover trays will be taken away by her parents, which gives Aika only one chance to collect scones.
+
+Write a program to calculate the maximum number of scones Aika can keep. The number of trays n is between 1 and 30,000, and m is between 1 and 100,000. Each element Ki is between 0 and 2^32 - 1.
+
+Input
+The input consists of multiple datasets, with the end of the input signified by two zeroes on a line. Each dataset is structured as follows:
+1st line: n m (two integers separated by a space)
+2nd line: K1 K2 ... Kn (the number of scones on each tray, all integers separated by space)
+The number of datasets does not exceed 50.
+
+Output
+For each dataset, output the maximum number of scones Aika can keep on a new line.

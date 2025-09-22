@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int l[N], r[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &l[i], &r[i]);\n    }\n\n    long long min_cost = LLONG_MAX;\n    for (int x = l[0]; x <= r[0]; x++) {\n        long long current_cost = 0;\n\n        for (int i = 1; i < N; i++) {\n            int move_left = x + (i - 0);\n            int move_right = x + (i - 0);\n\n            if (move_left < l[i]) {\n                current_cost += l[i] - move_left;\n            } else if (move_right > r[i]) {\n                current_cost += move_right - r[i];\n            }\n        }\n\n        min_cost = (current_cost < min_cost) ? current_cost : min_cost;\n    }\n\n    printf(\"%lld\\n\", min_cost);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:27"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int *)a - *(int *)b);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *l = (int *)malloc(N * sizeof(int));\n    int *r = (int *)malloc(N * sizeof(int));\n    int *medians = (int *)malloc(N * sizeof(int));\n    \n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &l[i], &r[i]);\n        medians[i] = l[i] + r[i];\n    }\n    \n    qsort(medians, N, sizeof(int), compare);\n    int median = medians[N / 2];\n    \n    long long cost = 0;\n    for (int i = 0; i < N; i++) {\n        cost += abs(medians[i] - median);\n    }\n    \n    printf(\"%lld\\n\", cost / 2);\n    \n    free(l);\n    free(r);\n    free(medians);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> l(N), r(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> l[i] >> r[i];\n    }\n    \n    vector<int> sorted_l = l;\n    vector<int> sorted_r = r;\n    sort(sorted_l.begin(), sorted_l.end());\n    sort(sorted_r.begin(), sorted_r.end());\n    \n    int median_l = sorted_l[N / 2];\n    int median_r = sorted_r[N / 2];\n    \n    long long cost = 0;\n    for (int i = 0; i < N; ++i) {\n        cost += abs(l[i] - median_l) + abs(r[i] - median_r);\n    }\n    \n    cout << cost << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:24:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] l = new int[N];\n        int[] r = new int[N];\n        for (int i = 0; i < N; i++) {\n            l[i] = scanner.nextInt();\n            r[i] = scanner.nextInt();\n        }\n        \n        Arrays.sort(l);\n        Arrays.sort(r);\n        \n        int medianL = l[N / 2];\n        int medianR = r[N / 2];\n        \n        long cost = 0;\n        for (int i = 0; i < N; i++) {\n            cost += Math.abs(l[i] - medianL) + (r[i] - l[i]) + Math.abs(r[i] - medianR);\n        }\n        \n        System.out.println(cost);\n    }\n}",
+    "timestamp": "2025-08-05 23:24:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class AtCoDeerRectangles {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        \n        int[] left = new int[N];\n        int[] right = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            left[i] = sc.nextInt();\n            right[i] = sc.nextInt();\n        }\n        \n        int minCost = solve(N, left, right);\n        System.out.println(minCost);\n        \n        sc.close();\n    }\n    \n    public static int solve(int N, int[] left, int[] right) {\n        int minLeft = left[0];\n        int maxRight = right[0];\n        \n        for (int i = 1; i < N; i++) {\n            minLeft = Math.min(minLeft, left[i]);\n            maxRight = Math.max(maxRight, right[i]);\n        }\n        \n        int minCost = Integer.MAX_VALUE;\n        \n        for (int target = minLeft; target <= maxRight; target++) {\n            int currentCost = 0;\n            \n            for (int i = 0; i < N; i++) {\n                if (target < left[i]) {\n                    currentCost += left[i] - target;\n                } else if (target > right[i]) {\n                    currentCost += target - right[i];\n                }\n            }\n            \n            minCost = Math.min(minCost, currentCost);\n        }\n        \n        return minCost;\n    }\n}",
+    "timestamp": "2025-08-05 23:25:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> L(N), R(N);\n    for (int i = 0; i < N; i++) {\n        cin >> L[i] >> R[i];\n    }\n    \n    int minCost = INT_MAX;\n    \n    for (int target = L[0]; target <= R[0]; target++) {\n        int totalCost = 0;\n        \n        for (int i = 1; i < N; i++) {\n            int bestMove = INT_MAX;\n            \n            for (int j = L[i]; j <= R[i]; j++) {\n                int moveDistance = abs(j - target);\n                int prevMove = abs(j - target);\n                \n                for (int k = 0; k < i; k++) {\n                    prevMove = min(prevMove, abs(j - (L[k] + R[k]) / 2));\n                }\n                \n                bestMove = min(bestMove, moveDistance + prevMove);\n            }\n            \n            totalCost += bestMove;\n            target = (L[i] + R[i]) / 2;\n        }\n        \n        minCost = min(minCost, totalCost);\n    }\n    \n    cout << minCost << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:25:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_cost_to_connect_rectangles(N, lr_pairs):\n    sorted_pairs = sorted(lr_pairs)\n    left_shifts = [0] * N\n    right_shifts = [0] * N\n    \n    # Calculate the shift required to align and connect to the previous rectangle\n    for i in range(1, N):\n        left_shifts[i] = max(0, sorted_pairs[i-1][1] - sorted_pairs[i][0])\n    \n    # Calculate the shift required to align and connect to the next rectangle\n    for i in range(N-2, -1, -1):\n        right_shifts[i] = max(0, sorted_pairs[i+1][0] - sorted_pairs[i][1])\n    \n    # Use accumulated shifts to calculate final positions\n    left_cost, right_cost, min_cost = 0, 0, float('inf')\n    for i in range(N):\n        left_cost += left_shifts[i]\n        right_cost += right_shifts[N-i-1]\n        min_cost = min(min_cost, left_cost + right_cost)\n    \n    return min_cost\n\n# Example usage:\nN = 4\nlr_pairs = [(1, 3), (2, 5), (6, 9), (8, 10)]\nprint(minimum_cost_to_connect_rectangles(N, lr_pairs))",
+    "timestamp": "2025-08-13 15:11:28"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class RectangleConnectivity {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] l = new int[N];\n        int[] r = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            l[i] = scanner.nextInt();\n            r[i] = scanner.nextInt();\n        }\n        \n        int[][] dp = new int[N][2];\n        dp[0][0] = r[0] - l[0];\n        dp[0][1] = r[0] - l[0];\n\n        for (int i = 1; i < N; i++) {\n            dp[i][0] = Math.min(\n                dp[i - 1][0] + Math.abs(l[i] - r[i - 1]),\n                dp[i - 1][1] + Math.abs(l[i] - l[i - 1])\n            ) + (r[i] - l[i]);\n\n            dp[i][1] = Math.min(\n                dp[i - 1][0] + Math.abs(r[i] - r[i - 1]),\n                dp[i - 1][1] + Math.abs(r[i] - l[i - 1])\n            ) + (r[i] - l[i]);\n        }\n        \n        int result = Math.min(dp[N - 1][0], dp[N - 1][1]);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-13 15:11:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint minCost(int N, int l[], int r[]) {\n    int dp[N];\n    dp[0] = 0;\n    \n    for (int i = 1; i < N; ++i) {\n        int min_cost = INT_MAX;\n        for (int j = 0; j < i; ++j) {\n            int dist = (l[i] > r[j]) ? l[i] - r[j] : ((r[i] < l[j]) ? l[j] - r[i] : 0);\n            int cost = dp[j] + dist;\n            if (cost < min_cost) {\n                min_cost = cost;\n            }\n        }\n        dp[i] = min_cost;\n    }\n    \n    return dp[N-1];\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int l[N], r[N];\n    for (int i = 0; i < N; ++i) {\n        scanf(\"%d %d\", &l[i], &r[i]);\n    }\n\n    printf(\"%d\\n\", minCost(N, l, r));\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:11:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> l(N), r(N);\n    for (int i = 0; i < N; i++) {\n        cin >> l[i] >> r[i];\n    }\n    \n    vector<int> start(N), end(N);\n    start[0] = l[0];\n    end[0] = r[0];\n    long long cost = 0;\n    \n    for (int i = 1; i < N; i++) {\n        int shift;\n        if (r[i] < start[i-1]) {\n            shift = start[i-1] - r[i];\n            cost += shift;\n            start[i] = start[i-1];\n            end[i] = end[i-1];\n        } else if (l[i] > end[i-1]) {\n            shift = l[i] - end[i-1];\n            cost += shift;\n            start[i] = start[i-1];\n            end[i] = end[i-1];\n        } else {\n            start[i] = l[i];\n            end[i] = r[i];\n        }\n    }\n    \n    cout << cost << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:11:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_connectivity(N, intervals):\n    # Sort intervals by their vertical position\n    sorted_intervals = sorted(intervals, key=lambda x: x[0])\n    \n    # Find the minimum and maximum x coordinates\n    min_x = min(interval[0] for interval in sorted_intervals)\n    max_x = max(interval[1] for interval in sorted_intervals)\n    \n    # Try to minimize total horizontal movement\n    min_cost = float('inf')\n    \n    for target_start in range(min_x, max_x + 1):\n        current_cost = 0\n        \n        # Simulate moving each rectangle\n        for i, (l, r) in enumerate(sorted_intervals):\n            # Calculate distance to move this rectangle\n            if i == 0:\n                # First rectangle moves to target_start\n                current_cost += abs(l - target_start)\n                current_x = target_start\n            else:\n                # Subsequent rectangles move to be next to previous rectangle\n                move_distance = abs((current_x + r - l) - l)\n                current_cost += move_distance\n                current_x = current_x + r - l\n        \n        # Update minimum cost\n        min_cost = min(min_cost, current_cost)\n    \n    return min_cost\n\n# Read input\nN = int(input())\nintervals = []\nfor _ in range(N):\n    l, r = map(int, input().split())\n    intervals.append((l, r))\n\n# Solve and print result\nprint(solve_connectivity(N, intervals))",
+    "timestamp": "2025-08-13 15:11:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n = int(input())\nl = []\nr = []\nfor _ in range(n):\n    li, ri = map(int, input().split())\n    l.append(li)\n    r.append(ri)\n\nl_sorted = sorted(l)\nr_sorted = sorted(r)\n\nmedian_l = l_sorted[n // 2]\nmedian_r = r_sorted[n // 2]\n\ntotal_cost = 0\nfor i in range(n):\n    total_cost += abs(l[i] - median_l) + (r[i] - l[i]) + abs(r[i] - median_r)\n\nprint(total_cost)",
+    "timestamp": "2025-08-13 15:11:53"
+  }
+]

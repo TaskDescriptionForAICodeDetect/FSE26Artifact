@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint count_combinations(int N, int V, int *A, int *B, int *C, int *D) {\n    int count = 0;\n    \n    for (int a = 0; a < N; a++) {\n        for (int b = 0; b < N; b++) {\n            for (int c = 0; c < N; c++) {\n                for (int d = 0; d < N; d++) {\n                    if (A[a] + B[b] + C[c] + D[d] == V) {\n                        count++;\n                    }\n                }\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int N, V;\n    scanf(\"%d %d\", &N, &V);\n    \n    int *A = malloc(N * sizeof(int));\n    int *B = malloc(N * sizeof(int));\n    int *C = malloc(N * sizeof(int));\n    int *D = malloc(N * sizeof(int));\n    \n    for (int i = 0; i < N; i++) scanf(\"%d\", &A[i]);\n    for (int i = 0; i < N; i++) scanf(\"%d\", &B[i]);\n    for (int i = 0; i < N; i++) scanf(\"%d\", &C[i]);\n    for (int i = 0; i < N; i++) scanf(\"%d\", &D[i]);\n    \n    int result = count_combinations(N, V, A, B, C, D);\n    printf(\"%d\\n\", result);\n    \n    free(A);\n    free(B);\n    free(C);\n    free(D);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:17:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, V;\n    scanf(\"%d %d\", &N, &V);\n    \n    int a[N], b[N], c[N], d[N];\n    \n    for (int i = 0; i < N; i++) scanf(\"%d\", &a[i]);\n    for (int i = 0; i < N; i++) scanf(\"%d\", &b[i]);\n    for (int i = 0; i < N; i++) scanf(\"%d\", &c[i]);\n    for (int i = 0; i < N; i++) scanf(\"%d\", &d[i]);\n    \n    int count = 0;\n    \n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j < N; j++) {\n            for (int k = 0; k < N; k++) {\n                for (int l = 0; l < N; l++) {\n                    if (a[i] + b[j] + c[k] + d[l] == V) {\n                        count++;\n                    }\n                }\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:17:57"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <unordered_map>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N, V;\n    cin >> N >> V;\n    \n    vector<int> a(N), b(N), c(N), d(N);\n    for (int i = 0; i < N; ++i) cin >> a[i];\n    for (int i = 0; i < N; ++i) cin >> b[i];\n    for (int i = 0; i < N; ++i) cin >> c[i];\n    for (int i = 0; i < N; ++i) cin >> d[i];\n    \n    unordered_map<int, int> sumAB;\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            sumAB[a[i] + b[j]]++;\n        }\n    }\n    \n    int count = 0;\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            int sumCD = c[i] + d[j];\n            int target = V - sumCD;\n            if (sumAB.find(target) != sumAB.end()) {\n                count += sumAB[target];\n            }\n        }\n    }\n    \n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class CoinCombinations {\n    public static long countCombinations(int N, int[] a, int[] b, int[] c, int[] d, int V) {\n        Map<Integer, Integer> sumAB = new HashMap<>();\n        long count = 0;\n\n        // Calculate all possible sums of a[i] + b[j]\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                int sum = a[i] + b[j];\n                sumAB.put(sum, sumAB.getOrDefault(sum, 0) + 1);\n            }\n        }\n\n        // Calculate all possible sums of c[k] + d[l] and check if V - sum exists in sumAB\n        for (int k = 0; k < N; k++) {\n            for (int l = 0; l < N; l++) {\n                int sum = c[k] + d[l];\n                count += sumAB.getOrDefault(V - sum, 0);\n            }\n        }\n\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 22:18:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class CoinCombinations {\n    public static long countCombinations(int N, long V, long[] A, long[] B, long[] C, long[] D) {\n        Map<Long, Integer> sumCount = new HashMap<>();\n        \n        // Calculate sums for first two bags\n        for (int i = 0; i < N; i++) {\n            for (int j = 0; j < N; j++) {\n                long sum = A[i] + B[j];\n                sumCount.put(sum, sumCount.getOrDefault(sum, 0) + 1);\n            }\n        }\n        \n        long combinations = 0;\n        \n        // Check combinations for last two bags\n        for (int k = 0; k < N; k++) {\n            for (int l = 0; l < N; l++) {\n                long complement = V - (C[k] + D[l]);\n                combinations += sumCount.getOrDefault(complement, 0);\n            }\n        }\n        \n        return combinations;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        long V = scanner.nextLong();\n        \n        long[] A = new long[N];\n        long[] B = new long[N];\n        long[] C = new long[N];\n        long[] D = new long[N];\n        \n        for (int i = 0; i < N; i++) A[i] = scanner.nextLong();\n        for (int i = 0; i < N; i++) B[i] = scanner.nextLong();\n        for (int i = 0; i < N; i++) C[i] = scanner.nextLong();\n        for (int i = 0; i < N; i++) D[i] = scanner.nextLong();\n        \n        long result = countCombinations(N, V, A, B, C, D);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:18:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nlong long countCombinations(int N, int V, vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {\n    unordered_map<int, int> sumFreq;\n    \n    // Count frequency of sums from first two bags\n    for (int a : A) {\n        for (int b : B) {\n            sumFreq[a + b]++;\n        }\n    }\n    \n    long long combinations = 0;\n    \n    // Check combinations from last two bags that complete the target sum\n    for (int c : C) {\n        for (int d : D) {\n            int complement = V - (c + d);\n            if (sumFreq.count(complement)) {\n                combinations += sumFreq[complement];\n            }\n        }\n    }\n    \n    return combinations;\n}\n\nint main() {\n    int N, V;\n    cin >> N >> V;\n    \n    vector<int> A(N), B(N), C(N), D(N);\n    \n    for (int i = 0; i < N; i++) cin >> A[i];\n    for (int i = 0; i < N; i++) cin >> B[i];\n    for (int i = 0; i < N; i++) cin >> C[i];\n    for (int i = 0; i < N; i++) cin >> D[i];\n    \n    cout << countCombinations(N, V, A, B, C, D) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:18:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_combinations(A, B, C, D, N, V):\n    count = 0\n    for a in A:\n        for b in B:\n            for c in C:\n                for d in D:\n                    if a + b + c + d == V:\n                        count += 1\n    return count\n\n# Example usage:\n# A = [1, 2, 3]\n# B = [4, 5, 6]\n# C = [7, 8, 9]\n# D = [10, 11, 12]\n# N = 3\n# V = 22\n# print(count_combinations(A, B, C, D, N, V))",
+    "timestamp": "2025-08-13 09:53:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class CoinCombinations {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        int N = scanner.nextInt();\n        int V = scanner.nextInt();\n\n        int[] a = new int[N];\n        int[] b = new int[N];\n        int[] c = new int[N];\n        int[] d = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            b[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            c[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            d[i] = scanner.nextInt();\n        }\n\n        int combinations = 0;\n        for (int ai : a) {\n            for (int bi : b) {\n                for (int ci : c) {\n                    for (int di : d) {\n                        if (ai + bi + ci + di == V) {\n                            combinations++;\n                        }\n                    }\n                }\n            }\n        }\n\n        System.out.println(combinations);\n    }\n}",
+    "timestamp": "2025-08-13 09:53:32"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N, V;\n    scanf(\"%d %d\", &N, &V);\n    \n    int a[N], b[N], c[N], d[N];\n    \n    for (int i = 0; i < N; ++i)\n        scanf(\"%d\", &a[i]);\n    for (int i = 0; i < N; ++i)\n        scanf(\"%d\", &b[i]);\n    for (int i = 0; i < N; ++i)\n        scanf(\"%d\", &c[i]);\n    for (int i = 0; i < N; ++i)\n        scanf(\"%d\", &d[i]);\n    \n    int count = 0;\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            for (int k = 0; k < N; ++k) {\n                for (int l = 0; l < N; ++l) {\n                    if (a[i] + b[j] + c[k] + d[l] == V) {\n                        count++;\n                    }\n                }\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:53:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_coin_combinations(A, B, C, D, V):\n    count = 0\n    \n    for a in A:\n        for b in B:\n            for c in C:\n                for d in D:\n                    if a + b + c + d == V:\n                        count += 1\n    \n    return count\n\n# Example usage\ndef main():\n    N = int(input())\n    V = int(input())\n    \n    A = list(map(int, input().split()))\n    B = list(map(int, input().split()))\n    C = list(map(int, input().split()))\n    D = list(map(int, input().split()))\n    \n    result = count_coin_combinations(A, B, C, D, V)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:53:41"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import defaultdict\n\ndef solve():\n    N, V = map(int, sys.stdin.readline().split())\n    A = list(map(int, sys.stdin.readline().split()))\n    B = list(map(int, sys.stdin.readline().split()))\n    C = list(map(int, sys.stdin.readline().split()))\n    D = list(map(int, sys.stdin.readline().split()))\n    \n    # Create sum dictionaries for A+B and C+D\n    sum_ab = defaultdict(int)\n    for a in A:\n        for b in B:\n            sum_ab[a + b] += 1\n    \n    sum_cd = defaultdict(int)\n    for c in C:\n        for d in D:\n            sum_cd[c + d] += 1\n    \n    count = 0\n    for s in sum_ab:\n        target = V - s\n        if target in sum_cd:\n            count += sum_ab[s] * sum_cd[target]\n    \n    print(count)\n\nsolve()",
+    "timestamp": "2025-08-13 09:53:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nint countCombinations(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D, int V) {\n    int N = A.size();\n    unordered_map<int, int> AB_sums;\n    \n    // Calculate all possible sums from bags A and B\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            int sumAB = A[i] + B[j];\n            AB_sums[sumAB]++;\n        }\n    }\n    \n    int count = 0;\n    \n    // Calculate all possible sums from bags C and D and check against AB_sums to achieve the target V\n    for (int i = 0; i < N; ++i) {\n        for (int j = 0; j < N; ++j) {\n            int sumCD = C[i] + D[j];\n            int targetAB = V - sumCD;\n            if (AB_sums.find(targetAB) != AB_sums.end()) {\n                count += AB_sums[targetAB];\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    int N, V;\n    cin >> N >> V;\n    vector<int> A(N), B(N), C(N), D(N);\n    \n    for (int i = 0; i < N; ++i) cin >> A[i];\n    for (int i = 0; i < N; ++i) cin >> B[i];\n    for (int i = 0; i < N; ++i) cin >> C[i];\n    for (int i = 0; i < N; ++i) cin >> D[i];\n    \n    cout << countCombinations(A, B, C, D, V) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:55:38"
+  }
+]

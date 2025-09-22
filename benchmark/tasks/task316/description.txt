@@ -1,0 +1,1 @@
+Write a computer program that computes the largest possible capacity of a pond that can be built in a garden site with given elevations. The ponds are defined as rectangular areas where the outermost cells have to be higher than the inner cells. For each dataset which represents a grid map, calculate and output the maximum water capacity of a possible pond.

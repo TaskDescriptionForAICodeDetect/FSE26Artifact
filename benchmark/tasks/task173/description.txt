@@ -1,0 +1,1 @@
+Given several sets of integers and a series of set operations to perform, determine the result of expressions involving these sets. The set operations include union, intersection, difference, symmetric difference, and complement. The universal set is defined as the union of all sets specified in the input.

@@ -1,0 +1,1 @@
+To maximize the number of JOI emblems in a new JOI flag based on an old JOI flag and a given JOI emblem, determine the maximum number of instances of the JOI emblem that can be created in the new flag by optionally changing one square of the old flag using a blank square where any character J, O, or I can be written.

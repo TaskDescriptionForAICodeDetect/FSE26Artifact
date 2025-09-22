@@ -1,0 +1,1 @@
+Given an integer sequence A_1, ..., A_N of length N, choose exactly ⌊N/2⌋ elements from this sequence so that no two adjacent elements are chosen. Find the maximum possible sum of the chosen elements.

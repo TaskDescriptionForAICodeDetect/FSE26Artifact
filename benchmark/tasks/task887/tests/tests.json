@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "12 2 1",
+      "output": "1RY\nGR"
+    },
+    {
+      "input": "22 3 2",
+      "output": "2RYB\nRGB"
+    }
+  ]
+}

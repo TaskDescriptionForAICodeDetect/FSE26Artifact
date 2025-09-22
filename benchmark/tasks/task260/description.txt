@@ -1,0 +1,1 @@
+You are given a number of element strings, and you need to count the occurrences of all possible concatenated strings that can be formed by these element strings in a given text. The concatenated strings should be considered in all possible orders, and you need to count distinct occurrences, taking into account overlaps and identical strings.

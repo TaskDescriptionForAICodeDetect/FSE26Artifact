@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_N 5005\n#define MAX_K 105\n\nint dp[MAX_N];\nint segments[MAX_K][2];\n\nint solve(int N, int K) {\n    memset(dp, 0, sizeof(dp));\n    dp[1] = 1;\n\n    for (int i = 1; i < N; i++) {\n        if (dp[i] == 0) continue;\n\n        for (int j = 0; j < K; j++) {\n            int left = segments[j][0];\n            int right = segments[j][1];\n\n            for (int d = left; d <= right; d++) {\n                if (i + d <= N) {\n                    dp[i + d] = (dp[i + d] + dp[i]) % MOD;\n                }\n            }\n        }\n    }\n\n    return dp[N];\n}\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n\n    for (int i = 0; i < K; i++) {\n        scanf(\"%d %d\", &segments[i][0], &segments[i][1]);\n    }\n\n    printf(\"%d\\n\", solve(N, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 998244353\n#define MAX_N 500010\n\nint N, K;\nint L[11], R[11];\nlong long dp[MAX_N];\nlong long prefix[MAX_N];\n\nint main() {\n    scanf(\"%d %d\", &N, &K);\n    for (int i = 0; i < K; i++) {\n        scanf(\"%d %d\", &L[i], &R[i]);\n    }\n\n    memset(dp, 0, sizeof(dp));\n    memset(prefix, 0, sizeof(prefix));\n    dp[1] = 1;\n    prefix[1] = 1;\n\n    for (int i = 2; i <= N; i++) {\n        for (int j = 0; j < K; j++) {\n            int left = i - R[j];\n            int right = i - L[j];\n            if (right < 1) continue;\n            left = left > 1 ? left : 1;\n            long long sum = (prefix[right] - (left > 1 ? prefix[left - 1] : 0) + MOD) % MOD;\n            dp[i] = (dp[i] + sum) % MOD;\n        }\n        prefix[i] = (prefix[i - 1] + dp[i]) % MOD;\n    }\n\n    printf(\"%lld\\n\", dp[N]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    vector<pair<int, int>> segments(K);\n    for (int i = 0; i < K; ++i) {\n        cin >> segments[i].first >> segments[i].second;\n    }\n    \n    vector<long long> dp(N + 2, 0);\n    vector<long long> prefix(N + 2, 0);\n    dp[1] = 1;\n    prefix[1] = 1;\n    \n    for (int i = 2; i <= N; ++i) {\n        long long sum = 0;\n        for (const auto& seg : segments) {\n            int L = seg.first;\n            int R = seg.second;\n            int l = i - R;\n            int r = i - L;\n            if (r < 1) continue;\n            l = max(l, 1);\n            sum = (sum + prefix[r] - (l > 0 ? prefix[l - 1] : 0) + MOD) % MOD;\n        }\n        dp[i] = sum;\n        prefix[i] = (prefix[i - 1] + dp[i]) % MOD;\n    }\n    \n    cout << dp[N] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 998244353;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int K = sc.nextInt();\n        List<int[]> segments = new ArrayList<>();\n        for (int i = 0; i < K; i++) {\n            int L = sc.nextInt();\n            int R = sc.nextInt();\n            segments.add(new int[]{L, R});\n        }\n\n        long[] dp = new long[N + 2];\n        long[] prefix = new long[N + 2];\n        dp[1] = 1;\n        prefix[1] = 1;\n\n        for (int i = 2; i <= N; i++) {\n            long sum = 0;\n            for (int[] seg : segments) {\n                int L = seg[0];\n                int R = seg[1];\n                int left = i - R;\n                int right = i - L;\n                if (right < 1) continue;\n                left = Math.max(left, 1);\n                sum = (sum + prefix[right] - (left > 0 ? prefix[left - 1] : 0) + MOD) % MOD;\n            }\n            dp[i] = sum;\n            prefix[i] = (prefix[i - 1] + sum) % MOD;\n        }\n\n        System.out.println(dp[N] % MOD);\n    }\n}",
+    "timestamp": "2025-08-05 22:24:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    static final int MOD = 998244353;\n\n    public static int countWays(int N, int K, int[][] segments) {\n        int[] dp = new int[N + 1];\n        dp[1] = 1;\n\n        for (int i = 1; i < N; i++) {\n            if (dp[i] == 0) continue;\n\n            for (int[] segment : segments) {\n                int start = segment[0], end = segment[1];\n                for (int d = start; d <= end; d++) {\n                    if (i + d <= N) {\n                        dp[i + d] = (dp[i + d] + dp[i]) % MOD;\n                    }\n                }\n            }\n        }\n\n        return dp[N];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int K = scanner.nextInt();\n        int[][] segments = new int[K][2];\n\n        for (int i = 0; i < K; i++) {\n            segments[i][0] = scanner.nextInt();\n            segments[i][1] = scanner.nextInt();\n        }\n\n        System.out.println(countWays(N, K, segments));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:24:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nconst int MOD = 998244353;\nconst int MAXN = 1e5 + 5;\n\nint main() {\n    int N, K;\n    cin >> N >> K;\n    \n    vector<pair<int, int>> segments(K);\n    for (int i = 0; i < K; ++i) {\n        cin >> segments[i].first >> segments[i].second;\n    }\n    \n    vector<long long> dp(N + 1, 0);\n    dp[1] = 1;\n    \n    for (int i = 2; i <= N; ++i) {\n        for (auto& seg : segments) {\n            int left = max(1, i - seg.second);\n            int right = max(1, i - seg.first);\n            \n            for (int j = left; j <= right; ++j) {\n                dp[i] = (dp[i] + dp[j]) % MOD;\n            }\n        }\n    }\n    \n    cout << dp[N] << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:24:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_paths(N, segments):\n    MOD = 998244353\n    dp = [0] * (N + 1)\n    dp[1] = 1\n    \n    for i in range(1, N):\n        if dp[i]:\n            for l, r in segments:\n                if i + l <= N:\n                    dp[i + l] = (dp[i + l] + dp[i]) % MOD\n                if i + r + 1 <= N:\n                    dp[i + r + 1] = (dp[i + r + 1] - dp[i]) % MOD\n    \n    # Compute prefix sums to make range updates efficient\n    for i in range(1, N + 1):\n        dp[i] = (dp[i] + dp[i - 1]) % MOD\n    \n    return dp[N]\n\n# Example usage:\n# N = 5\n# segments = [(1, 2), (2, 3)]\n# print(count_paths(N, segments))",
+    "timestamp": "2025-08-13 10:28:56"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class DistinctWaysInGrid {\n    private static final int MOD = 998244353;\n\n    public static int countDistinctWays(int n, Set<Integer> segments) {\n        int[] ways = new int[n + 1];\n        ways[1] = 1; // Start from cell 1\n\n        for (int i = 1; i <= n; i++) {\n            if (ways[i] > 0) {\n                for (int d : segments) {\n                    int nextCell = i + d;\n                    if (nextCell <= n) {\n                        ways[nextCell] = (ways[nextCell] + ways[i]) % MOD;\n                    }\n                }\n            }\n        }\n\n        return ways[n];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int k = scanner.nextInt();\n        Set<Integer> segments = new HashSet<>();\n        for (int i = 0; i < k; i++) {\n            int l = scanner.nextInt();\n            int r = scanner.nextInt();\n            for (int j = l; j <= r; j++) {\n                segments.add(j);\n            }\n        }\n\n        System.out.println(countDistinctWays(n, segments));\n    }\n}",
+    "timestamp": "2025-08-13 10:28:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 998244353\n\nint main() {\n    int N, K;\n    scanf(\"%d %d\", &N, &K);\n    \n    int start[K], end[K];\n    for (int i = 0; i < K; i++) {\n        scanf(\"%d %d\", &start[i], &end[i]);\n    }\n    \n    long long dp[N + 1];\n    dp[1] = 1;\n    for (int i = 2; i <= N; i++) {\n        dp[i] = 0;\n        for (int j = 0; j < K; j++) {\n            if (i - start[j] >= 1) {\n                dp[i] = (dp[i] + dp[i - start[j]]) % MOD;\n            }\n            if (i - end[j] - 1 >= 1) {\n                dp[i] = (dp[i] - dp[i - end[j] - 1] + MOD) % MOD;\n            }\n        }\n    }\n    \n    printf(\"%lld\\n\", dp[N]);\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:29:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_ways(N, K, segments):\n    MOD = 998244353\n    dp = [0] * (N + 1)\n    dp[1] = 1\n\n    for i in range(2, N + 1):\n        for seg in segments:\n            start, end = seg\n            if start <= i <= end:\n                for j in range(max(1, i - end), min(i - start + 1, i)):\n                    dp[i] = (dp[i] + dp[j]) % MOD\n\n    return dp[N]",
+    "timestamp": "2025-08-13 10:29:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 998244353\n\ndef solve():\n    N, K = map(int, sys.stdin.readline().split())\n    segments = []\n    for _ in range(K):\n        L, R = map(int, sys.stdin.readline().split())\n        segments.append((L, R))\n    \n    dp = [0] * (N + 2)\n    dp[1] = 1\n    prefix = [0] * (N + 2)\n    prefix[1] = 1\n    \n    for i in range(2, N + 1):\n        res = 0\n        for L, R in segments:\n            l = i - R\n            r = i - L\n            if r < 1:\n                continue\n            l = max(l, 1)\n            res += prefix[r] - (prefix[l-1] if l > 1 else 0)\n            res %= MOD\n        dp[i] = res % MOD\n        prefix[i] = (prefix[i-1] + dp[i]) % MOD\n    \n    print(dp[N] % MOD)\n\nsolve()",
+    "timestamp": "2025-08-13 10:29:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nconst int MOD = 998244353;\n\nint main() {\n    int N, K;\n    std::cin >> N >> K;\n    \n    std::vector<std::pair<int, int>> segments(K);\n    for (int i = 0; i < K; ++i) {\n        std::cin >> segments[i].first >> segments[i].second;\n    }\n\n    std::vector<int> dp(N + 1, 0);\n    dp[1] = 1;\n\n    for (int i = 1; i <= N; ++i) {\n        if (dp[i] == 0) continue;\n        for (const auto& seg : segments) {\n            for (int d = seg.first; d <= seg.second; ++d) {\n                if (i + d <= N) {\n                    dp[i + d] = (dp[i + d] + dp[i]) % MOD;\n                }\n            }\n        }\n    }\n\n    std::cout << dp[N] << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:59:20"
+  }
+]

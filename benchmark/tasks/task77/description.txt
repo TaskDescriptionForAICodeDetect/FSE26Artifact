@@ -1,0 +1,1 @@
+Create a program that displays a spiral pattern called 'guruguru moyo'. The spiral pattern should be displayed as a string of n rows and n columns when given a side length n. The pattern starts from the bottom left corner and rotates clockwise. The 'lines' are represented by '#' (hash) and the 'spaces' by ' ' (single space). There should be a space between the lines.

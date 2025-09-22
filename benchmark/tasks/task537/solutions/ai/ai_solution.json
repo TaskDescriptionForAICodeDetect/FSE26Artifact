@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nlong long countRectangles(long long S) {\n    long long count = 0;\n    for (long long a = 1; a * a <= S; a++) {\n        for (long long b = a; b * a <= S; b++) {\n            for (long long c = 1; c * a <= S; c++) {\n                for (long long d = c; d * a <= S; d++) {\n                    long long rectSum = \n                        (b * d * a * a) - \n                        (b * c * a * a) - \n                        (a * d * a * a) + \n                        (a * c * a * a);\n                    \n                    if (rectSum == S) {\n                        count += (a != b) + (c != d) ? 4 : 1;\n                    }\n                }\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    long long S;\n    scanf(\"%lld\", &S);\n    printf(\"%lld\\n\", countRectangles(S));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint countTuples(int S) {\n    int count = 0;\n    for (int i = 1; i <= sqrt(S); ++i) {\n        if (S % i == 0) {\n            int m = i;\n            int n = S / i;\n            int ways_m = m - (i - 1);\n            int ways_n = n - (S / i - 1);\n            count += ways_m * ways_n;\n            if (i != S / i) {\n                ways_m = n - (S / i - 1);\n                ways_n = m - (i - 1);\n                count += ways_m * ways_n;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int S;\n    scanf(\"%d\", &S);\n    printf(\"%d\\n\", countTuples(S));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n\nusing namespace std;\n\nint countTuples(int S) {\n    int count = 0;\n    for (int i = 1; i <= sqrt(S); ++i) {\n        if (S % i == 0) {\n            int j = S / i;\n            int ways_a_b = (i + 1) * i / 2;\n            int ways_c_d = (j + 1) * j / 2;\n            count += ways_a_b * ways_c_d;\n            if (i != j) {\n                ways_a_b = (j + 1) * j / 2;\n                ways_c_d = (i + 1) * i / 2;\n                count += ways_a_b * ways_c_d;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int S;\n    cin >> S;\n    cout << countTuples(S) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int S = scanner.nextInt();\n        int count = 0;\n\n        for (int a = 1; a <= S; a++) {\n            for (int b = a; b <= S; b++) {\n                int abSum = a * (a + 1) / 2 * b * (b + 1) / 2;\n                if (abSum > S) {\n                    break;\n                }\n                if (S % abSum != 0) {\n                    continue;\n                }\n                int k = S / abSum;\n                int cdPairs = countPairs(k);\n                count += cdPairs;\n            }\n        }\n\n        System.out.println(count);\n    }\n\n    private static int countPairs(int k) {\n        int count = 0;\n        for (int c = 1; c * c <= k; c++) {\n            if (k % c == 0) {\n                int d = k / c;\n                if (d >= c) {\n                    count++;\n                }\n                if (c != d && c <= d) {\n                    count++;\n                }\n            }\n        }\n        return count;\n    }\n}",
+    "timestamp": "2025-08-05 22:04:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static long countRectangles(int S) {\n        long count = 0;\n        for (int a = 1; a * a <= S; a++) {\n            for (int b = a; a * b <= S; b++) {\n                for (int c = 1; c * c <= S; c++) {\n                    int maxD = Math.min(b, S / (a * b * c));\n                    for (int d = c; d <= maxD; d++) {\n                        long rectSum = (long) a * b * c * d;\n                        if (rectSum == S) {\n                            count += (a == b ? 1 : 2) * (c == d ? 1 : 2);\n                        } else if (rectSum > S) {\n                            break;\n                        }\n                    }\n                }\n            }\n        }\n        return count;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int S = scanner.nextInt();\n        System.out.println(countRectangles(S));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:04:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nlong long countRectangles(long long S) {\n    long long count = 0;\n    \n    for (long long a = 1; a * a <= S; ++a) {\n        for (long long b = a; a * b <= S; ++b) {\n            for (long long c = 1; c * c <= S; ++c) {\n                long long maxD = min((S / (a * b * c)), c);\n                \n                for (long long d = c; d <= maxD; ++d) {\n                    long long sum = a * b * c * d;\n                    \n                    if (sum == S) {\n                        count += (a == b ? 1 : 2) * (c == d ? 1 : 2);\n                    } else if (sum > S) {\n                        break;\n                    }\n                }\n            }\n        }\n    }\n    \n    return count;\n}\n\nint main() {\n    long long S;\n    cin >> S;\n    \n    cout << countRectangles(S) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_tuples(S):\n    count = 0\n    for a in range(1, int(S**0.5) + 1):\n        for b in range(a, int(S**0.5) + 1):\n            if (b * (b + 1) * (2 * b + 1) // 6 - (a - 1) * a * (2 * a - 1) // 6) <= S:\n                for c in range(1, int(S**0.5) + 1):\n                    for d in range(c, int(S**0.5) + 1):\n                        if a * c + a * d + b * c + b * d - (a + b + c + d) + 1 == S:\n                            count += 1\n    return count\n\nS = int(input())\nprint(count_tuples(S))",
+    "timestamp": "2025-08-13 08:49:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class MultiplicationTableSums {\n    \n    public static void main(String[] args) {\n        int S = 36; // Example input\n        System.out.println(countRectangles(S));\n    }\n\n    public static long countRectangles(int S) {\n        long count = 0;\n        Map<Integer, Integer> valueCountMap = new HashMap<>();\n\n        for (int a = 1; a * a <= S; a++) {\n            for (int c = 1; c * c <= S; c++) {\n                int productAC = a * c;\n                if (S % productAC == 0) {\n                    int target = S / productAC;\n                    for (int b = a; b <= target / c; b++) {\n                        if (target % b == 0) {\n                            int d = target / b;\n                            if (c <= d) {\n                                count++;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n\n        return count;\n    }\n}",
+    "timestamp": "2025-08-13 08:50:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int S;\n    scanf(\"%d\", &S);\n    \n    int count = 0;\n    for (int a = 1; a <= S; a++) {\n        for (int b = a; b <= S; b++) {\n            for (int c = 1; c <= S; c++) {\n                for (int d = c; d <= S; d++) {\n                    int sum = 0;\n                    for (int i = a; i <= b; i++) {\n                        for (int j = c; j <= d; j++) {\n                            sum += i * j;\n                        }\n                    }\n                    if (sum == S) {\n                        count++;\n                    }\n                }\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:50:07"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_tuples(S):\n    count = 0\n    for a in range(1, int(S**0.5) + 1):\n        for b in range(a, int(S**0.5) + 1):\n            for c in range(1, int(S**0.5) + 1):\n                for d in range(c, int(S**0.5) + 1):\n                    rect_sum = (b * d - (a-1) * d - b * (c-1) + (a-1) * (c-1)) * a * c\n                    if rect_sum == S:\n                        count += 1\n    return count\n\n# Example usage\nS = int(input())\nprint(count_tuples(S))",
+    "timestamp": "2025-08-13 08:50:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef count_tuples(S):\n    count = 0\n    max_i = int(math.isqrt(S)) + 2\n    for i in range(1, max_i + 1):\n        if S % i == 0:\n            j = S // i\n            count_i = 0\n            # Count pairs (a, b) where a <= b and i = a*b\n            max_a = int(math.isqrt(i)) + 1\n            for a in range(1, max_a + 1):\n                if i % a == 0:\n                    b = i // a\n                    if b >= a:\n                        count_i += 1\n            # Count pairs (c, d) where c <= d and j = c*d\n            count_j = 0\n            max_c = int(math.isqrt(j)) + 1\n            for c in range(1, max_c + 1):\n                if j % c == 0:\n                    d = j // c\n                    if d >= c:\n                        count_j += 1\n            count += count_i * count_j\n            if i != j:\n                count += count_j * count_i\n    return count\n\nS = int(input())\nprint(count_tuples(S))",
+    "timestamp": "2025-08-13 08:50:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int S;\n    cin >> S;\n    int count = 0;\n\n    for (int a = 1; a <= S; ++a) {\n        for (int b = a; b <= S; ++b) {\n            for (int c = 1; c <= S; ++c) {\n                for (int d = c; d <= S; ++d) {\n                    int sum = 0;\n                    for (int i = a; i <= b; ++i) {\n                        for (int j = c; j <= d; ++j) {\n                            sum += i * j;\n                        }\n                    }\n                    if (sum == S) {\n                        ++count;\n                    }\n                }\n            }\n        }\n    }\n\n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:57"
+  }
+]

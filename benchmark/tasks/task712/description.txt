@@ -1,0 +1,1 @@
+N problems are proposed for an upcoming contest. Each problem has an initial score. M judges will vote for V problems each, increasing their scores by 1. After all votes, the problems are sorted by score, and the top P problems are chosen for the problemset. The task is to determine how many problems can potentially be selected for the problemset.

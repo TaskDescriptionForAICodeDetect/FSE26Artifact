@@ -1,0 +1,43 @@
+Ridge
+
+The JOI Caldera is a beautiful terrain loved by many climbers for its scenic views. In particular, the view from a place called ridge is spectacular.
+
+The land of JOI Caldera is a rectangle that stretches H kilometers north-south and W kilometers east-west. The land is divided into H×W areas every 1 kilometer in both north-south and east-west directions, and these areas are called regions. The elevation is constant within each region, and regions with different elevations have different heights.
+
+When it rains in a region, the rainwater flows into all adjacent regions (up to 4 regions), which have an elevation lower than that of the current region. If there are no such regions, the rainwater will accumulate in that region. This also applies to rainwater that flows from other regions. The outside of the JOI Caldera is surrounded by steep cliffs of the outer rim, so rainwater will not flow out of the JOI Caldera.
+
+A region is called a ridge if, after it rains exclusively over that region, rainwater accumulates in multiple regions. Create a program that determines how many ridge regions there are.
+
+Input:
+The input consists of 1 + H lines. The first line contains 2 integers H and W (1 ≦ H ≦ 1000, 1 ≦ W ≦ 1000), indicating that the JOI Caldera stretches H kilometers north-south and W kilometers east-west.
+
+The next H lines contain W integers each, separated by spaces, representing the elevation information. The integer Mi,j in the i-th row and j-th column (1 ≦ i ≦ H, 1 ≦ j ≦ W) represents the elevation of the region located at the i-th row from the north and the j-th column from the west. For any two distinct regions (i,j) ≠ (k,l), it holds that Mi,j ≠ Mk,l.
+
+Output:
+Output the number of ridge regions in a single line.
+
+Input-output examples:
+
+Example 1:
+Input:
+3 3
+2 9 4
+7 5 3
+6 1 8
+
+Output:
+4
+
+Example 2:
+Input:
+3 5
+5 3 8 2 14
+9 10 4 1 13
+12 7 11 6 15
+
+Output:
+4
+
+In example 1, the regions with elevations 5, 7, 8, and 9 are ridges. For instance, if it rains in the region with elevation 9, the rainwater will eventually accumulate in the three regions with elevations 1, 2, and 3. Therefore, the region with elevation 9 is a ridge. Conversely, if it rains in the region with elevation 6, the rainwater will only accumulate in the region with elevation 1; thus, the region with elevation 6 is not a ridge.
+
+In example 2, the regions with elevations 8, 10, 11, and 12 are ridges.

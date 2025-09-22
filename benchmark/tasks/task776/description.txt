@@ -1,0 +1,1 @@
+Consider a circle whose perimeter is divided by N points into N arcs of equal length, with each arc painted red or blue. The circle generates a string S from every point based on specific movement rules. You need to calculate the number of ways to paint the arcs such that the generated string S can be created from every initial point, modulo 10^9+7.

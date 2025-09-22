@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint orientation(Point p, Point q, Point r) {\n    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n    if (val == 0) return 0;\n    return val > 0 ? 1 : 2;\n}\n\nint on_segment(Point p, Point q, Point r) {\n    return q.x <= (p.x > r.x ? p.x : r.x) && q.x >= (p.x < r.x ? p.x : r.x) &&\n           q.y <= (p.y > r.y ? p.y : r.y) && q.y >= (p.y < r.y ? p.y : r.y);\n}\n\nint do_intersect(Point p0, Point p1, Point p2, Point p3) {\n    int o1 = orientation(p0, p1, p2);\n    int o2 = orientation(p0, p1, p3);\n    int o3 = orientation(p2, p3, p0);\n    int o4 = orientation(p2, p3, p1);\n\n    if (o1 != o2 && o3 != o4) return 1;\n    if (o1 == 0 && on_segment(p0, p2, p1)) return 1;\n    if (o2 == 0 && on_segment(p0, p3, p1)) return 1;\n    if (o3 == 0 && on_segment(p2, p0, p3)) return 1;\n    if (o4 == 0 && on_segment(p2, p1, p3)) return 1;\n\n    return 0;\n}\n\nint main() {\n    Point p0, p1, p2, p3;\n    scanf(\"%d %d %d %d %d %d %d %d\", \n          &p0.x, &p0.y, &p1.x, &p1.y, \n          &p2.x, &p2.y, &p3.x, &p3.y);\n    \n    printf(\"%d\\n\", do_intersect(p0, p1, p2, p3));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:14:10"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint ccw(Point a, Point b, Point c) {\n    int val = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n    if (val < 0) return -1;\n    if (val > 0) return 1;\n    return 0;\n}\n\nint intersect(Point p0, Point p1, Point p2, Point p3) {\n    int d1 = ccw(p0, p1, p2);\n    int d2 = ccw(p0, p1, p3);\n    int d3 = ccw(p2, p3, p0);\n    int d4 = ccw(p2, p3, p1);\n\n    if ((d1 * d2 < 0) && (d3 * d4 < 0)) return 1;\n\n    if (d1 == 0 && (p2.x >= p0.x && p2.x <= p1.x || p2.x >= p1.x && p2.x <= p0.x) && (p2.y >= p0.y && p2.y <= p1.y || p2.y >= p1.y && p2.y <= p0.y)) return 1;\n    if (d2 == 0 && (p3.x >= p0.x && p3.x <= p1.x || p3.x >= p1.x && p3.x <= p0.x) && (p3.y >= p0.y && p3.y <= p1.y || p3.y >= p1.y && p3.y <= p0.y)) return 1;\n    if (d3 == 0 && (p0.x >= p2.x && p0.x <= p3.x || p0.x >= p3.x && p0.x <= p2.x) && (p0.y >= p2.y && p0.y <= p3.y || p0.y >= p3.y && p0.y <= p2.y)) return 1;\n    if (d4 == 0 && (p1.x >= p2.x && p1.x <= p3.x || p1.x >= p3.x && p1.x <= p2.x) && (p1.y >= p2.y && p1.y <= p3.y || p1.y >= p3.y && p1.y <= p2.y)) return 1;\n\n    return 0;\n}\n\nint main() {\n    Point p0, p1, p2, p3;\n    scanf(\"%d %d %d %d\", &p0.x, &p0.y, &p1.x, &p1.y);\n    scanf(\"%d %d %d %d\", &p2.x, &p2.y, &p3.x, &p3.y);\n    printf(\"%d\\n\", intersect(p0, p1, p2, p3));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:14:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\nusing namespace std;\n\nstruct Point {\n    int x, y;\n};\n\nint orientation(Point p, Point q, Point r) {\n    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n    if (val == 0) return 0;\n    return (val > 0) ? 1 : 2;\n}\n\nbool onSegment(Point p, Point q, Point r) {\n    if (q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&\n        q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y))\n        return true;\n    return false;\n}\n\nbool doIntersect(Point p1, Point q1, Point p2, Point q2) {\n    int o1 = orientation(p1, q1, p2);\n    int o2 = orientation(p1, q1, q2);\n    int o3 = orientation(p2, q2, p1);\n    int o4 = orientation(p2, q2, q1);\n\n    if (o1 != o2 && o3 != o4)\n        return true;\n\n    if (o1 == 0 && onSegment(p1, p2, q1)) return true;\n    if (o2 == 0 && onSegment(p1, q2, q1)) return true;\n    if (o3 == 0 && onSegment(p2, p1, q2)) return true;\n    if (o4 == 0 && onSegment(p2, q1, q2)) return true;\n\n    return false;\n}\n\nint main() {\n    Point p0, p1, p2, p3;\n    cin >> p0.x >> p0.y >> p1.x >> p1.y >> p2.x >> p2.y >> p3.x >> p3.y;\n    cout << (doIntersect(p0, p1, p2, p3) ? \"1\" : \"0\") << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:14:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class SegmentIntersection {\n    static class Point {\n        long x, y;\n        Point(long x, long y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n\n    static int orientation(Point p, Point q, Point r) {\n        long val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n        if (val == 0) return 0;\n        return (val > 0) ? 1 : 2;\n    }\n\n    static boolean onSegment(Point p, Point q, Point r) {\n        return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&\n               q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);\n    }\n\n    static boolean doIntersect(Point p1, Point q1, Point p2, Point q2) {\n        int o1 = orientation(p1, q1, p2);\n        int o2 = orientation(p1, q1, q2);\n        int o3 = orientation(p2, q2, p1);\n        int o4 = orientation(p2, q2, q1);\n\n        if (o1 != o2 && o3 != o4) return true;\n\n        if (o1 == 0 && onSegment(p1, p2, q1)) return true;\n        if (o2 == 0 && onSegment(p1, q2, q1)) return true;\n        if (o3 == 0 && onSegment(p2, p1, q2)) return true;\n        if (o4 == 0 && onSegment(p2, q1, q2)) return true;\n\n        return false;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        Point p0 = new Point(scanner.nextLong(), scanner.nextLong());\n        Point p1 = new Point(scanner.nextLong(), scanner.nextLong());\n        Point p2 = new Point(scanner.nextLong(), scanner.nextLong());\n        Point p3 = new Point(scanner.nextLong(), scanner.nextLong());\n\n        System.out.println(doIntersect(p0, p1, p2, p3) ? \"1\" : \"0\");\n    }\n}",
+    "timestamp": "2025-08-05 22:15:22"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class SegmentIntersection {\n    public static int doIntersect(Point p0, Point p1, Point p2, Point p3) {\n        int o1 = orientation(p0, p1, p2);\n        int o2 = orientation(p0, p1, p3);\n        int o3 = orientation(p2, p3, p0);\n        int o4 = orientation(p2, p3, p1);\n\n        if (o1 != o2 && o3 != o4)\n            return 1;\n\n        if (o1 == 0 && onSegment(p0, p2, p1)) return 1;\n        if (o2 == 0 && onSegment(p0, p3, p1)) return 1;\n        if (o3 == 0 && onSegment(p2, p0, p3)) return 1;\n        if (o4 == 0 && onSegment(p2, p1, p3)) return 1;\n\n        return 0;\n    }\n\n    private static int orientation(Point p, Point q, Point r) {\n        int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n        if (val == 0) return 0;\n        return (val > 0) ? 1 : 2;\n    }\n\n    private static boolean onSegment(Point p, Point q, Point r) {\n        return q.x <= Math.max(p.x, r.x) && q.x >= Math.min(p.x, r.x) &&\n               q.y <= Math.max(p.y, r.y) && q.y >= Math.min(p.y, r.y);\n    }\n\n    static class Point {\n        int x, y;\n        Point(int x, int y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:15:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nstruct Point {\n    int x, y;\n};\n\nint orientation(Point p, Point q, Point r) {\n    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n    if (val == 0) return 0;\n    return (val > 0) ? 1 : 2;\n}\n\nbool onSegment(Point p, Point q, Point r) {\n    return q.x <= max(p.x, r.x) && q.x >= min(p.x, r.x) &&\n           q.y <= max(p.y, r.y) && q.y >= min(p.y, r.y);\n}\n\nbool doIntersect(Point p1, Point q1, Point p2, Point q2) {\n    int o1 = orientation(p1, q1, p2);\n    int o2 = orientation(p1, q1, q2);\n    int o3 = orientation(p2, q2, p1);\n    int o4 = orientation(p2, q2, q1);\n\n    if (o1 != o2 && o3 != o4)\n        return true;\n\n    if (o1 == 0 && onSegment(p1, p2, q1)) return true;\n    if (o2 == 0 && onSegment(p1, q2, q1)) return true;\n    if (o3 == 0 && onSegment(p2, p1, q2)) return true;\n    if (o4 == 0 && onSegment(p2, q1, q2)) return true;\n\n    return false;\n}\n\nint main() {\n    Point p0, p1, p2, p3;\n    cin >> p0.x >> p0.y >> p1.x >> p1.y >> p2.x >> p2.y >> p3.x >> p3.y;\n    \n    cout << (doIntersect(p0, p1, p2, p3) ? 1 : 0) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:15:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def orientation(p, q, r):\n    val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])\n    if val == 0:\n        return 0\n    elif val > 0:\n        return 1\n    else:\n        return 2\n\ndef on_segment(p, q, r):\n    if min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(p[1], r[1]):\n        return True\n    return False\n\ndef do_intersect(p0, p1, p2, p3):\n    o1 = orientation(p0, p1, p2)\n    o2 = orientation(p0, p1, p3)\n    o3 = orientation(p2, p3, p0)\n    o4 = orientation(p2, p3, p1)\n\n    if o1 != o2 and o3 != o4:\n        return 1\n\n    if o1 == 0 and on_segment(p0, p2, p1):\n        return 1\n\n    if o2 == 0 and on_segment(p0, p3, p1):\n        return 1\n\n    if o3 == 0 and on_segment(p2, p0, p3):\n        return 1\n\n    if o4 == 0 and on_segment(p2, p1, p3):\n        return 1\n\n    return 0\n\np0 = (0, 0)\np1 = (4, 4)\np2 = (1, 1)\np3 = (5, 5)\n\nprint(do_intersect(p0, p1, p2, p3))",
+    "timestamp": "2025-08-13 09:37:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class SegmentIntersection {\n    public static void main(String[] args) {\n        int x0 = 1, y0 = 1, x1 = 4, y1 = 4; // endpoints of s1\n        int x2 = 1, y2 = 8, x3 = 2, y3 = 4; // endpoints of s2\n\n        System.out.println(doIntersect(x0, y0, x1, y1, x2, y2, x3, y3));\n    }\n\n    public static int doIntersect(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3) {\n        if (segmentsIntersect(x0, y0, x1, y1, x2, y2, x3, y3)) {\n            return 1;\n        } else {\n            return 0;\n        }\n    }\n\n    private static boolean segmentsIntersect(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3) {\n        int d1 = direction(x2, y2, x3, y3, x0, y0);\n        int d2 = direction(x2, y2, x3, y3, x1, y1);\n        int d3 = direction(x0, y0, x1, y1, x2, y2);\n        int d4 = direction(x0, y0, x1, y1, x3, y3);\n\n        if (d1 != d2 && d3 != d4) return true;\n        if (d1 == 0 && onSegment(x2, y2, x3, y3, x0, y0)) return true;\n        if (d2 == 0 && onSegment(x2, y2, x3, y3, x1, y1)) return true;\n        if (d3 == 0 && onSegment(x0, y0, x1, y1, x2, y2)) return true;\n        if (d4 == 0 && onSegment(x0, y0, x1, y1, x3, y3)) return true;\n\n        return false;\n    }\n\n    private static int direction(int xi, int yi, int xj, int yj, int xk, int yk) {\n        return (xk - xi) * (yj - yi) - (xj - xi) * (yk - yi);\n    }\n\n    private static boolean onSegment(int xi, int yi, int xj, int yj, int xk, int yk) {\n        return Math.min(xi, xj) <= xk && xk <= Math.max(xi, xj) && Math.min(yi, yj) <= yk && yk <= Math.max(yi, yj);\n    }\n}",
+    "timestamp": "2025-08-13 09:37:48"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x, y;\n} Point;\n\nint orientation(Point p, Point q, Point r) {\n    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n    if (val == 0) return 0;  // collinear\n    return (val > 0) ? 1 : 2; // clock or counterclockwise\n}\n\nint onSegment(Point p, Point q, Point r) {\n    if (q.x <= fmax(p.x, r.x) && q.x >= fmin(p.x, r.x) &&\n        q.y <= fmax(p.y, r.y) && q.y >= fmin(p.y, r.y))\n        return 1;\n    return 0;\n}\n\nint doIntersect(Point p0, Point p1, Point p2, Point p3) {\n    int o1 = orientation(p0, p1, p2);\n    int o2 = orientation(p0, p1, p3);\n    int o3 = orientation(p2, p3, p0);\n    int o4 = orientation(p2, p3, p1);\n\n    if (o1 != o2 && o3 != o4)\n        return 1;\n\n    // Special Cases\n    if (o1 == 0 && onSegment(p0, p2, p1)) return 1;\n    if (o2 == 0 && onSegment(p0, p3, p1)) return 1;\n    if (o3 == 0 && onSegment(p2, p0, p3)) return 1;\n    if (o4 == 0 && onSegment(p2, p1, p3)) return 1;\n\n    return 0;\n}\n\nint main() {\n    Point p0 = {0, 0}, p1 = {1, 1};\n    Point p2 = {1, 0}, p3 = {0, 1};\n\n    printf(\"%d\\n\", doIntersect(p0, p1, p2, p3));\n    return 0;\n}",
+    "timestamp": "2025-08-13 09:37:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def orientation(p, q, r):\n    val = (q[1] - p[1]) * (r[0] - q[0]) - (q[0] - p[0]) * (r[1] - q[1])\n    if val == 0:\n        return 0\n    return 1 if val > 0 else 2\n\ndef on_segment(p, q, r):\n    return (min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and \n            min(p[1], r[1]) <= q[1] <= max(p[1], r[1]))\n\ndef do_intersect(p0, p1, p2, p3):\n    o1 = orientation(p0, p1, p2)\n    o2 = orientation(p0, p1, p3)\n    o3 = orientation(p2, p3, p0)\n    o4 = orientation(p2, p3, p1)\n\n    if o1 != o2 and o3 != o4:\n        return True\n\n    if o1 == 0 and on_segment(p0, p2, p1):\n        return True\n    if o2 == 0 and on_segment(p0, p3, p1):\n        return True\n    if o3 == 0 and on_segment(p2, p0, p3):\n        return True\n    if o4 == 0 and on_segment(p2, p1, p3):\n        return True\n\n    return False\n\np0 = list(map(int, input().split()))\np1 = list(map(int, input().split()))\np2 = list(map(int, input().split()))\np3 = list(map(int, input().split()))\n\nprint('1' if do_intersect(p0, p1, p2, p3) else '0')",
+    "timestamp": "2025-08-13 09:38:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def cross_product(a, b):\n    return a[0] * b[1] - a[1] * b[0]\n\ndef direction(p1, p2, p3):\n    return cross_product((p3[0]-p1[0], p3[1]-p1[1]), (p2[0]-p1[0], p2[1]-p1[1]))\n\ndef on_segment(p1, p2, p3):\n    if min(p1[0], p2[0]) <= p3[0] <= max(p1[0], p2[0]) and min(p1[1], p2[1]) <= p3[1] <= max(p1[1], p2[1]):\n        return True\n    return False\n\ndef segments_intersect(p0, p1, p2, p3):\n    d1 = direction(p2, p3, p0)\n    d2 = direction(p2, p3, p1)\n    d3 = direction(p0, p1, p2)\n    d4 = direction(p0, p1, p3)\n\n    if ((d1 > 0 and d2 < 0) or (d1 < 0 and d2 > 0)) and ((d3 > 0 and d4 < 0) or (d3 < 0 and d4 > 0)):\n        return 1\n\n    if d1 == 0 and on_segment(p2, p3, p0):\n        return 1\n    if d2 == 0 and on_segment(p2, p3, p1):\n        return 1\n    if d3 == 0 and on_segment(p0, p1, p2):\n        return 1\n    if d4 == 0 and on_segment(p0, p1, p3):\n        return 1\n\n    return 0\n\np0 = tuple(map(int, input().split()))\np1 = tuple(map(int, input().split()))\np2 = tuple(map(int, input().split()))\np3 = tuple(map(int, input().split()))\n\nprint(segments_intersect(p0, p1, p2, p3))",
+    "timestamp": "2025-08-13 09:38:20"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n\nstruct Point {\n    int x, y;\n};\n\nint orientation(Point p, Point q, Point r) {\n    int val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);\n    if (val == 0) return 0;\n    return (val > 0) ? 1 : 2;\n}\n\nbool onSegment(Point p, Point q, Point r) {\n    if (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) && \n        q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y))\n        return true;\n    return false;\n}\n\nbool doIntersect(Point p0, Point p1, Point p2, Point p3) {\n    int o1 = orientation(p0, p1, p2);\n    int o2 = orientation(p0, p1, p3);\n    int o3 = orientation(p2, p3, p0);\n    int o4 = orientation(p2, p3, p1);\n\n    if (o1 != o2 && o3 != o4)\n        return true;\n\n    if (o1 == 0 && onSegment(p0, p2, p1)) return true;\n    if (o2 == 0 && onSegment(p0, p3, p1)) return true;\n    if (o3 == 0 && onSegment(p2, p0, p3)) return true;\n    if (o4 == 0 && onSegment(p2, p1, p3)) return true;\n\n    return false;\n}\n\nint main() {\n    Point p0, p1, p2, p3;\n    std::cin >> p0.x >> p0.y >> p1.x >> p1.y;\n    std::cin >> p2.x >> p2.y >> p3.x >> p3.y;\n    \n    if (doIntersect(p0, p1, p2, p3)) {\n        std::cout << '1';\n    } else {\n        std::cout << '0';\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:53:03"
+  }
+]

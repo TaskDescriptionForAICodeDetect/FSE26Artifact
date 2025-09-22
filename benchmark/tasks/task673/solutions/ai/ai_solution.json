@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MOD 1000000007\n\nint main() {\n    int N, M;\n    scanf(\"%d %d\", &N, &M);\n    \n    long long count = 1;\n    for (int i = 0; i < M; i++) {\n        count = (count * (1LL << N)) % MOD;\n    }\n    \n    printf(\"%lld\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\n#define MOD 1000000007\n#define MAX_N 18\n#define MAX_M 500000\n\nint N, M;\nlong long dp[MAX_N + 1][MAX_N + 1];\nlong long fact[MAX_M + 1];\nlong long inv_fact[MAX_M + 1];\n\nlong long power(long long a, long long b) {\n    long long res = 1;\n    while (b > 0) {\n        if (b & 1) {\n            res = res * a % MOD;\n        }\n        a = a * a % MOD;\n        b >>= 1;\n    }\n    return res;\n}\n\nvoid precompute_factorials() {\n    fact[0] = 1;\n    for (int i = 1; i <= MAX_M; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n    }\n    inv_fact[MAX_M] = power(fact[MAX_M], MOD - 2);\n    for (int i = MAX_M - 1; i >= 0; i--) {\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD;\n    }\n}\n\nlong long comb(int a, int b) {\n    if (a < 0 || b < 0 || a < b) return 0;\n    return fact[a] * inv_fact[b] % MOD * inv_fact[a - b] % MOD;\n}\n\nint main() {\n    scanf(\"%d %d\", &N, &M);\n    precompute_factorials();\n    \n    memset(dp, 0, sizeof(dp));\n    for (int k = 0; k <= N; k++) {\n        for (int d = 0; d <= N; d++) {\n            if (d == 0) {\n                dp[k][d] = 1;\n                continue;\n            }\n            if (k == 0) {\n                dp[k][d] = 0;\n                continue;\n            }\n            dp[k][d] = dp[k - 1][d];\n            if (d >= 1) {\n                dp[k][d] = (dp[k][d] + dp[k - 1][d - 1] * power(2, d - 1)) % MOD;\n            }\n        }\n    }\n    \n    long long res = 0;\n    for (int k = 0; k <= N; k++) {\n        long long term = comb(N, k);\n        term = term * power(dp[k][N], M) % MOD;\n        if ((N - k) % 2 == 0) {\n            res = (res + term) % MOD;\n        } else {\n            res = (res - term + MOD) % MOD;\n        }\n    }\n    \n    printf(\"%lld\\n\", res);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    vector<vector<int>> dp(N + 1, vector<int>(1 << N, 0));\n    for (int mask = 0; mask < (1 << N); ++mask) {\n        dp[0][mask] = 1;\n    }\n    \n    for (int d = 1; d <= N; ++d) {\n        for (int mask = 0; mask < (1 << N); ++mask) {\n            dp[d][mask] = dp[d - 1][mask];\n            if (mask & (1 << (d - 1))) {\n                dp[d][mask] = (dp[d][mask] + dp[d - 1][mask ^ (1 << (d - 1))]) % MOD;\n            }\n        }\n    }\n    \n    vector<int> res(1 << N, 1);\n    for (int i = 0; i < M; ++i) {\n        for (int mask = 0; mask < (1 << N); ++mask) {\n            res[mask] = 1LL * res[mask] * dp[N][mask] % MOD;\n        }\n    }\n    \n    int ans = 0;\n    for (int mask = 0; mask < (1 << N); ++mask) {\n        int cnt = __builtin_popcount(mask);\n        int sign = (cnt % 2 == 0) ? 1 : -1;\n        ans = (ans + sign * res[mask] + MOD) % MOD;\n    }\n    \n    cout << ans << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = 1_000_000_007;\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int M = sc.nextInt();\n\n        long[] dp = new long[1 << N];\n        Arrays.fill(dp, 1);\n\n        for (int j = 1; j < M; j++) {\n            long[] newDp = new long[1 << N];\n            for (int mask = 0; mask < (1 << N); mask++) {\n                for (int sup = mask; ; sup = (sup - 1) & mask) {\n                    newDp[mask] = (newDp[mask] + dp[sup]) % MOD;\n                    if (sup == 0) break;\n                }\n            }\n            dp = newDp;\n        }\n\n        long res = 0;\n        for (long num : dp) {\n            res = (res + num) % MOD;\n        }\n        System.out.println(res);\n    }\n}",
+    "timestamp": "2025-08-05 22:32:39"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.io.*;\nimport java.util.*;\n\npublic class Solution {\n    static final int MOD = 1_000_000_007;\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int M = Integer.parseInt(st.nextToken());\n        \n        long[][] dp = new long[M][1 << N];\n        \n        for (int j = 0; j < (1 << N); j++) {\n            dp[0][j] = 1;\n        }\n        \n        for (int i = 1; i < M; i++) {\n            for (int j = 0; j < (1 << N); j++) {\n                for (int k = 0; k < (1 << N); k++) {\n                    if (canSwap(j, k)) {\n                        dp[i][j] = (dp[i][j] + dp[i-1][k]) % MOD;\n                    }\n                }\n            }\n        }\n        \n        long result = 0;\n        for (int j = 0; j < (1 << N); j++) {\n            result = (result + dp[M-1][j]) % MOD;\n        }\n        \n        System.out.println(result);\n    }\n    \n    static boolean canSwap(int a, int b) {\n        int xor = a ^ b;\n        return Integer.bitCount(xor) == 1;\n    }\n}",
+    "timestamp": "2025-08-05 22:32:45"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\n\nconst int MOD = 1e9 + 7;\n\nbool check_sortable(vector<int>& arr) {\n    int n = arr.size();\n    vector<int> sorted_arr = arr;\n    sort(sorted_arr.begin(), sorted_arr.end());\n    \n    vector<vector<bool>> graph(n);\n    for (int i = 0; i < n; i++) {\n        for (int j = i + 1; j < n; j++) {\n            if (__builtin_popcount(arr[i] ^ arr[j]) == 1) {\n                graph[i].push_back(j);\n                graph[j].push_back(i);\n            }\n        }\n    }\n    \n    vector<int> path;\n    vector<bool> visited(n, false);\n    \n    function<bool(int)> dfs = [&](int curr) {\n        visited[curr] = true;\n        path.push_back(curr);\n        \n        if (path.size() == n) {\n            vector<int> current_path_elements;\n            for (int idx : path) {\n                current_path_elements.push_back(arr[idx]);\n            }\n            return current_path_elements == sorted_arr;\n        }\n        \n        for (int next : graph[curr]) {\n            if (!visited[next]) {\n                if (dfs(next)) return true;\n            }\n        }\n        \n        visited[curr] = false;\n        path.pop_back();\n        return false;\n    };\n    \n    for (int start = 0; start < n; start++) {\n        path.clear();\n        fill(visited.begin(), visited.end(), false);\n        if (dfs(start)) return true;\n    }\n    \n    return false;\n}\n\nint main() {\n    int N, M;\n    cin >> N >> M;\n    \n    int count = 0;\n    \n    for (int mask = 0; mask < (1 << (N * M)); mask++) {\n        vector<int> arr(M);\n        for (int i = 0; i < M; i++) {\n            arr[i] = (mask >> (N * i)) & ((1 << N) - 1);\n        }\n        \n        if (check_sortable(arr)) {\n            count = (count + 1) % MOD;\n        }\n    }\n    \n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "MOD = 10**9 + 7\n\ndef count_sortable_sequences(N, M):\n    def is_possible_to_sort(seq):\n        for i in range(len(seq) - 1):\n            if bin(seq[i]).count('1') + 1 != bin(seq[i+1]).count('1'):\n                return False\n        return True\n\n    count = 0\n    limit = 2**N\n    for mask in range(1 << M):\n        seq = []\n        for i in range(M):\n            num = (mask >> i) & 1\n            seq.append(limit - 1 if num else 0)\n        if is_possible_to_sort(seq):\n            count += 1\n\n    return count % MOD\n\n# Example usage:\nN = 3  # for example\nM = 2  # for example\nprint(count_sortable_sequences(N, M))",
+    "timestamp": "2025-08-13 11:10:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class BitwiseGame {\n\n    private static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int m = scanner.nextInt();\n        int n = scanner.nextInt();\n        scanner.close();\n\n        long[][] dp = new long[m + 1][1 << n];\n        dp[0][0] = 1;\n\n        for (int i = 1; i <= m; i++) {\n            for (int mask = 0; mask < (1 << n); mask++) {\n                for (int d = 0; d < n; d++) {\n                    int newMask = mask & ~(1 << d);\n                    dp[i][mask] = (dp[i][mask] + dp[i - 1][newMask]) % MOD;\n                }\n            }\n        }\n\n        long result = 0;\n        for (int mask = 0; mask < (1 << n); mask++) {\n            if (isNonDecreasing(mask, n)) {\n                result = (result + dp[m][mask]) % MOD;\n            }\n        }\n        \n        System.out.println(result);\n    }\n\n    private static boolean isNonDecreasing(int mask, int n) {\n        for (int d = 0; d < n - 1; d++) {\n            if ((mask & (1 << d)) > (mask & (1 << (d + 1)))) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-13 11:10:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n\nint powMod(int base, int exp, int mod) {\n    int result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (long long)result * base % mod;\n        }\n        base = (long long)base * base % mod;\n        exp /= 2;\n    }\n    return result;\n}\n\nint countSortableSequences(int M, int N) {\n    // Calculate 2^N\n    int maxValue = powMod(2, N, MOD);\n    \n    // Since Snuke can set bits to 0, they are always less than maxValue,\n    // thus the number of sortable sequences is independent of this.\n    // Takahashi can only sort sequences already sorted, generated by composing M elements from the given range.\n    return powMod(maxValue, M, MOD);\n}\n\nint main() {\n    int M, N;\n    scanf(\"%d %d\", &M, &N);\n    \n    int result = countSortableSequences(M, N);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:11:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function bitOperationGame(N, M) {\n    const MOD = 1e9 + 7;\n\n    function factorial(x) {\n        let result = 1;\n        for (let i = 2; i <= x; i++) {\n            result = (result * i) % MOD;\n        }\n        return result;\n    }\n\n    function power(base, exp, mod) {\n        if (exp === 0) return 1;\n        let half = power(base, Math.floor(exp / 2), mod);\n        let result = (half * half) % mod;\n        if (exp % 2 !== 0) result = (result * base) % mod;\n        return result;\n    }\n\n    function modularInverse(x, mod) {\n        return power(x, mod - 2, mod);\n    }\n\n    function comb(n, k, mod) {\n        if (n < k) return 0;\n        return factorial(n) * modularInverse(factorial(k), mod) % mod * modularInverse(factorial(n - k), mod) % mod;\n    }\n\n    let totalWays = 1;\n    for (let bit = 0; bit < N; bit++) {\n        const validWays = comb(2 ** (N - 1), M, MOD);\n        totalWays = (totalWays * validWays) % MOD;\n    }\n\n    return totalWays;\n}\n\n// Example usage:\n// const N = 3;\n// const M = 2;\n// console.log(bitOperationGame(N, M)); // Output will be calculated based on the logic",
+    "timestamp": "2025-08-13 11:11:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(N, M):\n    MOD = 10**9 + 7\n    \n    def count_sorted_sequences(N, M):\n        dp = [[0] * (1 << N) for _ in range(M + 1)]\n        dp[1] = [1] * (1 << N)\n        \n        for m in range(2, M + 1):\n            for current in range(1 << N):\n                for prev in range(1 << N):\n                    if bin(current ^ prev).count('1') == 1:\n                        dp[m][current] += dp[m-1][prev]\n                        dp[m][current] %= MOD\n        \n        return sum(dp[M]) % MOD\n    \n    return count_sorted_sequences(N, M)\n\n# Example usage\nN, M = map(int, input().split())\nprint(solve(N, M))",
+    "timestamp": "2025-08-13 11:11:14"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve(N, M) {\n    const MOD = 1e9 + 7;\n    \n    function countBits(x) {\n        return x.toString(2).split('').filter(bit => bit === '1').length;\n    }\n    \n    function canSort(sequence) {\n        const n = sequence.length;\n        const sorted = [...sequence].sort((a, b) => a - b);\n        \n        for (let i = 0; i < n; i++) {\n            let found = false;\n            for (let j = i; j < n; j++) {\n                if (sequence[j] === sorted[i]) {\n                    while (j > i) {\n                        if (countBits(sequence[j] ^ sequence[j-1]) !== 1) {\n                            return false;\n                        }\n                        [sequence[j], sequence[j-1]] = [sequence[j-1], sequence[j]];\n                        j--;\n                    }\n                    found = true;\n                    break;\n                }\n            }\n            if (!found) return false;\n        }\n        return true;\n    }\n    \n    let count = 0;\n    for (let mask = 0; mask < (1 << (N * M)); mask++) {\n        const sequence = [];\n        for (let i = 0; i < M; i++) {\n            const num = (mask >> (N * i)) & ((1 << N) - 1);\n            sequence.push(num);\n        }\n        \n        if (canSort([...sequence])) {\n            count = (count + 1) % MOD;\n        }\n    }\n    \n    return count;\n}",
+    "timestamp": "2025-08-13 11:11:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef solve():\n    N, M = map(int, sys.stdin.readline().split())\n    max_mask = 1 << N\n    dp = [[0] * max_mask for _ in range(N+1)]\n    dp[0][0] = 1\n    \n    for _ in range(M):\n        new_dp = [[0] * max_mask for _ in range(N+1)]\n        for d in range(N+1):\n            for mask in range(max_mask):\n                if dp[d][mask] == 0:\n                    continue\n                for bit in range(N):\n                    new_mask = mask | (1 << bit)\n                    new_d = max(d, bit + 1)\n                    new_dp[new_d][new_mask] = (new_dp[new_d][new_mask] + dp[d][mask]) % MOD\n        dp = new_dp\n    \n    total = 0\n    for d in range(N+1):\n        for mask in range(max_mask):\n            if dp[d][mask]:\n                total = (total + dp[d][mask]) % MOD\n    print(total)\n\nsolve()",
+    "timestamp": "2025-08-13 11:11:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction solve() {\n    const [N, M] = readline().split(' ').map(Number);\n    \n    // Precompute factorial, inverse factorial, and power of 2 arrays\n    const max = Math.max(N, M);\n    const fact = new Array(max + 1).fill(1);\n    const invFact = new Array(max + 1).fill(1);\n    const pow2 = new Array(max + 1).fill(1);\n    \n    for (let i = 1; i <= max; i++) {\n        fact[i] = fact[i - 1] * i % MOD;\n        pow2[i] = pow2[i - 1] * 2 % MOD;\n    }\n    \n    invFact[max] = modInverse(fact[max], MOD);\n    for (let i = max - 1; i >= 0; i--) {\n        invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n    }\n    \n    function comb(n, k) {\n        if (k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n    \n    let res = 0;\n    for (let k = 0; k <= N; k++) {\n        let term = comb(N, k);\n        term = term * pow2[k] % MOD;\n        term = term * fact[M] % MOD;\n        term = term * comb(pow2[k] + M - 1, M) % MOD;\n        res = (res + (k % 2 === 0 ? 1 : -1) * term + MOD) % MOD;\n    }\n    \n    console.log(res);\n}\n\nfunction modInverse(a, mod) {\n    let [g, x, y] = extendedGcd(a, mod);\n    if (g !== 1) return 0; // No inverse exists\n    return (x % mod + mod) % mod;\n}\n\nfunction extendedGcd(a, b) {\n    if (b === 0) return [a, 1, 0];\n    const [g, x, y] = extendedGcd(b, a % b);\n    return [g, y, x - Math.floor(a / b) * y];\n}\n\n// Helper function to read input (adjust according to your environment)\nfunction readline() {\n    // Replace with actual input reading logic\n    return require('readline').createInterface({\n        input: process.stdin,\n        output: process.stdout\n    }).question('', ans => ans);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 11:11:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nconst int MOD = 1000000007;\n\nint countSortableSequences(int M, int N) {\n    int totalNumbers = 1 << N;\n\n    // dp[mask] will hold the number of ways to create a sequence ending with a certain bitmask\n    std::vector<int> dp(totalNumbers, 0);\n\n    // Initialize dp\n    dp[0] = 1;\n\n    for (int i = 0; i < M; ++i) {\n        std::vector<int> new_dp(totalNumbers, 0);\n        for (int mask = 0; mask < totalNumbers; ++mask) {\n            for (int next_mask = 0; next_mask < totalNumbers; ++next_mask) {\n                if ((mask & next_mask) == mask) {\n                    new_dp[next_mask] = (new_dp[next_mask] + dp[mask]) % MOD;\n                }\n            }\n        }\n        dp = new_dp;\n    }\n\n    int sum = 0;\n    for (int mask = 0; mask < totalNumbers; ++mask) {\n        sum = (sum + dp[mask]) % MOD;\n    }\n\n    return sum;\n}\n\nint main() {\n    int M, N;\n    std::cin >> M >> N;\n\n    std::cout << countSortableSequences(M, N) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:41"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nlong long combination(int n, int k) {\n    long long dp[k + 1];\n    memset(dp, 0, sizeof(dp));\n    dp[0] = 1;\n    \n    for (int i = 1; i <= n; i++) {\n        for (int j = (k < i ? k : i); j > 0; j--) {\n            dp[j] = (dp[j] + dp[j - 1]) % MOD;\n        }\n    }\n    \n    return dp[k];\n}\n\nint main() {\n    int r1, r2, c1, c2;\n    scanf(\"%d %d %d %d\", &r1, &r2, &c1, &c2);\n    \n    long long total = 0;\n    \n    for (int r = r1; r <= r2; r++) {\n        for (int c = c1; c <= c2; c++) {\n            total = (total + combination(r + c, r)) % MOD;\n        }\n    }\n    \n    printf(\"%lld\\n\", total);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:19"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MOD 1000000007\n#define MAX 2000002\n\nlong long fact[MAX];\nlong long inv_fact[MAX];\n\nlong long mod_pow(long long base, long long exp) {\n    long long result = 1;\n    while (exp > 0) {\n        if (exp % 2 == 1) {\n            result = (result * base) % MOD;\n        }\n        base = (base * base) % MOD;\n        exp /= 2;\n    }\n    return result;\n}\n\nvoid precompute() {\n    fact[0] = 1;\n    for (int i = 1; i < MAX; i++) {\n        fact[i] = (fact[i-1] * i) % MOD;\n    }\n    inv_fact[MAX-1] = mod_pow(fact[MAX-1], MOD-2);\n    for (int i = MAX-2; i >= 0; i--) {\n        inv_fact[i] = (inv_fact[i+1] * (i+1)) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (n < 0 || k < 0 || k > n) return 0;\n    return (fact[n] * inv_fact[k] % MOD) * inv_fact[n - k] % MOD;\n}\n\nlong long f(int r, int c) {\n    return comb(r + c, r);\n}\n\nlong long sum_f(int r, int c) {\n    return f(r + 1, c + 1) - 1;\n}\n\nlong long solve(int r1, int r2, int c1, int c2) {\n    long long total = sum_f(r2, c2);\n    total = (total - sum_f(r1 - 1, c2) + MOD) % MOD;\n    total = (total - sum_f(r2, c1 - 1) + MOD) % MOD;\n    total = (total + sum_f(r1 - 1, c1 - 1)) % MOD;\n    return total;\n}\n\nint main() {\n    precompute();\n    int r1, r2, c1, c2;\n    scanf(\"%d %d %d %d\", &r1, &r2, &c1, &c2);\n    printf(\"%lld\\n\", solve(r1, r2, c1, c2));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:37:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nconst int MOD = 1e9 + 7;\nconst int MAX = 2e6 + 10;\n\nvector<long long> fact(MAX), inv_fact(MAX);\n\nlong long mod_pow(long long a, long long b) {\n    long long res = 1;\n    while (b > 0) {\n        if (b & 1) res = res * a % MOD;\n        a = a * a % MOD;\n        b >>= 1;\n    }\n    return res;\n}\n\nvoid precompute() {\n    fact[0] = 1;\n    for (int i = 1; i < MAX; ++i) {\n        fact[i] = fact[i-1] * i % MOD;\n    }\n    inv_fact[MAX-1] = mod_pow(fact[MAX-1], MOD-2);\n    for (int i = MAX-2; i >= 0; --i) {\n        inv_fact[i] = inv_fact[i+1] * (i+1) % MOD;\n    }\n}\n\nlong long comb(int n, int k) {\n    if (n < 0 || k < 0 || k > n) return 0;\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD;\n}\n\nlong long f(int r, int c) {\n    return comb(r + c, r);\n}\n\nlong long sum_f(int r, int c) {\n    return f(r + 1, c + 1) - 1;\n}\n\nlong long solve(int r1, int r2, int c1, int c2) {\n    long long res = sum_f(r2, c2);\n    res = (res - sum_f(r1 - 1, c2) + MOD) % MOD;\n    res = (res - sum_f(r2, c1 - 1) + MOD) % MOD;\n    res = (res + sum_f(r1 - 1, c1 - 1)) % MOD;\n    return res;\n}\n\nint main() {\n    precompute();\n    int r1, r2, c1, c2;\n    cin >> r1 >> r2 >> c1 >> c2;\n    cout << solve(r1, r2, c1, c2) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:38:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static final int MOD = (int)1e9 + 7;\n    static final int MAX = 2000002; // Adjust based on constraints\n    static long[] fact = new long[MAX];\n    static long[] invFact = new long[MAX];\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        precomputeFactorials();\n        int r1 = sc.nextInt();\n        int r2 = sc.nextInt();\n        int c1 = sc.nextInt();\n        int c2 = sc.nextInt();\n        long result = (computeSum(r2, c2) - computeSum(r1 - 1, c2) - computeSum(r2, c1 - 1) + computeSum(r1 - 1, c1 - 1)) % MOD;\n        if (result < 0) result += MOD;\n        System.out.println(result);\n    }\n\n    static void precomputeFactorials() {\n        fact[0] = 1;\n        for (int i = 1; i < MAX; i++) {\n            fact[i] = fact[i - 1] * i % MOD;\n        }\n        invFact[MAX - 1] = modInverse(fact[MAX - 1], MOD);\n        for (int i = MAX - 2; i >= 0; i--) {\n            invFact[i] = invFact[i + 1] * (i + 1) % MOD;\n        }\n    }\n\n    static long modInverse(long a, int mod) {\n        return power(a, mod - 2, mod);\n    }\n\n    static long power(long a, long b, int mod) {\n        long result = 1;\n        a %= mod;\n        while (b > 0) {\n            if ((b & 1) == 1) {\n                result = result * a % mod;\n            }\n            a = a * a % mod;\n            b >>= 1;\n        }\n        return result;\n    }\n\n    static long comb(int n, int k) {\n        if (n < 0 || k < 0 || k > n) return 0;\n        return fact[n] * invFact[k] % MOD * invFact[n - k] % MOD;\n    }\n\n    static long f(int r, int c) {\n        return comb(r + c, r);\n    }\n\n    static long computeSum(int r, int c) {\n        if (r < 0 || c < 0) return 0;\n        return (f(r + 1, c + 1) - 1) % MOD;\n    }\n}",
+    "timestamp": "2025-08-05 22:38:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class SnukePath {\n    private static final int MOD = 1_000_000_007;\n\n    public static int countPaths(int r1, int r2, int c1, int c2) {\n        long[][] combinatorics = new long[r2 + c2 + 1][r2 + c2 + 1];\n        precomputeCombinations(combinatorics);\n\n        long totalPaths = 0;\n        for (int i = r1; i <= r2; i++) {\n            for (int j = c1; j <= c2; j++) {\n                totalPaths += calculatePathsToPoint(i, j, combinatorics);\n                totalPaths %= MOD;\n            }\n        }\n\n        return (int) totalPaths;\n    }\n\n    private static void precomputeCombinations(long[][] combinatorics) {\n        combinatorics[0][0] = 1;\n        for (int i = 1; i < combinatorics.length; i++) {\n            combinatorics[i][0] = 1;\n            for (int j = 1; j <= i; j++) {\n                combinatorics[i][j] = (combinatorics[i-1][j-1] + combinatorics[i-1][j]) % MOD;\n            }\n        }\n    }\n\n    private static long calculatePathsToPoint(int r, int c, long[][] combinatorics) {\n        return combinatorics[r + c][r];\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int r1 = scanner.nextInt();\n        int r2 = scanner.nextInt();\n        int c1 = scanner.nextInt();\n        int c2 = scanner.nextInt();\n        \n        System.out.println(countPaths(r1, r2, c1, c2));\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:38:36"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\nusing ll = long long;\nconst int MOD = 1e9 + 7;\n\nll choose(int n, int k) {\n    if (k > n) return 0;\n    ll res = 1;\n    for (int i = 1; i <= k; i++) {\n        res = res * (n - i + 1) / i;\n    }\n    return res;\n}\n\nll f(int r, int c) {\n    return choose(r + c, r);\n}\n\nint main() {\n    int r1, r2, c1, c2;\n    cin >> r1 >> r2 >> c1 >> c2;\n    \n    ll total = 0;\n    for (int i = r1; i <= r2; i++) {\n        for (int j = c1; j <= c2; j++) {\n            total = (total + f(i, j)) % MOD;\n        }\n    }\n    \n    cout << total << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:38:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sum_of_paths(r1, r2, c1, c2):\n    MOD = 10**9 + 7\n\n    def factorial(n, mod=MOD):\n        res = 1\n        for i in range(2, n + 1):\n            res = (res * i) % mod\n        return res\n\n    def mod_inverse(a, mod=MOD):\n        return pow(a, mod - 2, mod)\n\n    def binomial_coefficient(n, k, mod=MOD):\n        if k > n or n < 0 or k < 0:\n            return 0\n        num = factorial(n, mod)  # n!\n        denom = (factorial(k, mod) * factorial(n - k, mod)) % mod  # k! * (n-k)!\n        return (num * mod_inverse(denom, mod)) % mod\n\n    def f(r, c):\n        return binomial_coefficient(r + c, r, MOD)\n\n    sum_paths = 0\n    for i in range(r1, r2 + 1):\n        for j in range(c1, c2 + 1):\n            sum_paths = (sum_paths + f(i, j)) % MOD\n\n    return sum_paths\n\n# Example usage:\n# print(sum_of_paths(r1, r2, c1, c2)) with your values",
+    "timestamp": "2025-08-13 11:49:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.math.BigInteger;\n\npublic class SnukePaths {\n    private static final int MOD = 1000000007;\n\n    public static void main(String[] args) {\n        int r1 = 1, r2 = 3, c1 = 1, c2 = 3;\n        System.out.println(computePathsSum(r1, r2, c1, c2));\n    }\n\n    public static int computePathsSum(int r1, int r2, int c1, int c2) {\n        int result = 0;\n        for (int i = r1; i <= r2; i++) {\n            for (int j = c1; j <= c2; j++) {\n                result = (result + numberOfPaths(i, j)) % MOD;\n            }\n        }\n        return result;\n    }\n\n    private static int numberOfPaths(int r, int c) {\n        return binomialCoefficient(r + c, c);\n    }\n\n    private static int binomialCoefficient(int n, int k) {\n        BigInteger result = BigInteger.ONE;\n        for (int i = 0; i < k; i++) {\n            result = result.multiply(BigInteger.valueOf(n - i))\n                           .divide(BigInteger.valueOf(i + 1));\n        }\n        return result.mod(BigInteger.valueOf(MOD)).intValue();\n    }\n}",
+    "timestamp": "2025-08-13 11:49:53"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MOD 1000000007\n\nlong long modInv(long long a, long long m) {\n    long long m0 = m;\n    long long y = 0, x = 1;\n    while (a > 1) {\n        long long q = a / m;\n        long long t = m;\n        m = a % m;\n        a = t;\n        t = y;\n        y = x - q * y;\n        x = t;\n    }\n    return (x < 0) ? x + m0 : x;\n}\n\nlong long nCrMod(long long n, long long r, long long mod) {\n    if (r > n) return 0;\n    long long p = 1, k = 1;\n    r = r < n - r ? r : n - r;\n    for (; r > 0; n--, r--) {\n        p = (p * n) % mod;\n        k = (k * r) % mod;\n    }\n    return (p * modInv(k, mod)) % mod;\n}\n\nlong long sumPaths(int r1, int r2, int c1, int c2) {\n    long long total = 0;\n    for (int i = r1; i <= r2; ++i) {\n        for (int j = c1; j <= c2; ++j) {\n            total = (total + nCrMod(i + j, i, MOD)) % MOD;\n        }\n    }\n    return total;\n}\n\nint main() {\n    int r1, r2, c1, c2;\n    scanf(\"%d %d %d %d\", &r1, &r2, &c1, &c2);\n    printf(\"%lld\\n\", sumPaths(r1, r2, c1, c2));\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:49:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function sumOfPaths(r1, r2, c1, c2) {\n    const mod = 1000000007;\n\n    function modInverse(a, m) {\n        let m0 = m, t, q;\n        let x0 = 0, x1 = 1;\n        if (m === 1) return 0;\n        while (a > 1) {\n            q = Math.floor(a / m);\n            t = m;\n            m = a % m;\n            a = t;\n            t = x0;\n            x0 = x1 - q * x0;\n            x1 = t;\n        }\n        if (x1 < 0) x1 += m0;\n        return x1;\n    }\n\n    function factorial(n) {\n        let result = 1;\n        for (let i = 2; i <= n; i++) {\n            result = (result * i) % mod;\n        }\n        return result;\n    }\n\n    function combination(n, k) {\n        if (n < k) return 0;\n        return (factorial(n) * modInverse(factorial(k), mod) % mod * modInverse(factorial(n - k), mod) % mod) % mod;\n    }\n\n    function f(r, c) {\n        return combination(r + c, c);\n    }\n\n    function sumF(r, c1, c2) {\n        let sum = 0;\n        for (let j = c1; j <= c2; j++) {\n            sum = (sum + f(r, j)) % mod;\n        }\n        return sum;\n    }\n\n    let totalSum = 0;\n    for (let i = r1; i <= r2; i++) {\n        totalSum = (totalSum + sumF(i, c1, c2)) % mod;\n    }\n\n    return totalSum;\n}\n\n// Example usage:\n// console.log(sumOfPaths(1, 2, 1, 2)); // Specify your desired input parameters",
+    "timestamp": "2025-08-13 11:50:05"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(r1, r2, c1, c2):\n    MOD = 10**9 + 7\n    \n    # Compute binomial coefficients for all possible paths\n    def count_paths(r, c):\n        return comb(r + c, r)\n    \n    # Precompute factorial and inverse factorial for combination calculation\n    def precompute_factorials(n):\n        fact = [1] * (n + 1)\n        inv_fact = [1] * (n + 1)\n        for i in range(1, n + 1):\n            fact[i] = (fact[i-1] * i) % MOD\n        inv_fact[n] = pow(fact[n], MOD - 2, MOD)\n        for i in range(n-1, -1, -1):\n            inv_fact[i] = (inv_fact[i+1] * (i+1)) % MOD\n        return fact, inv_fact\n    \n    # Combination calculation\n    def comb(n, k):\n        if k < 0 or k > n:\n            return 0\n        return (fact[n] * inv_fact[k] % MOD * inv_fact[n-k]) % MOD\n    \n    # Maximum possible coordinate\n    max_coord = r2 + c2\n    fact, inv_fact = precompute_factorials(max_coord)\n    \n    # Calculate total sum of paths\n    total_paths = 0\n    for r in range(r1, r2 + 1):\n        for c in range(c1, c2 + 1):\n            total_paths = (total_paths + count_paths(r, c)) % MOD\n    \n    return total_paths",
+    "timestamp": "2025-08-13 11:50:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function calculatePaths(r1, r2, c1, c2) {\n    const MOD = 1000000007;\n    const paths = Array.from({ length: r2 + 1 }, () => new Array(c2 + 1).fill(0));\n    \n    for (let i = 0; i <= r2; i++) {\n        paths[i][0] = 1;\n    }\n    \n    for (let j = 0; j <= c2; j++) {\n        paths[0][j] = 1;\n    }\n    \n    for (let i = 1; i <= r2; i++) {\n        for (let j = 1; j <= c2; j++) {\n            paths[i][j] = (paths[i-1][j] + paths[i][j-1]) % MOD;\n        }\n    }\n    \n    let totalPaths = 0;\n    for (let i = r1; i <= r2; i++) {\n        for (let j = c1; j <= c2; j++) {\n            totalPaths = (totalPaths + paths[i][j]) % MOD;\n        }\n    }\n    \n    return totalPaths;\n}",
+    "timestamp": "2025-08-13 11:50:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nMOD = 10**9 + 7\n\ndef precompute_factorials(max_n, MOD):\n    fact = [1] * (max_n + 1)\n    inv_fact = [1] * (max_n + 1)\n    \n    for i in range(1, max_n + 1):\n        fact[i] = fact[i-1] * i % MOD\n    \n    inv_fact[max_n] = pow(fact[max_n], MOD-2, MOD)\n    for i in range(max_n - 1, -1, -1):\n        inv_fact[i] = inv_fact[i + 1] * (i + 1) % MOD\n    \n    return fact, inv_fact\n\nmax_r = 2 * 10**6 + 10\nfact, inv_fact = precompute_factorials(max_r, MOD)\n\ndef comb(n, k):\n    if n < 0 or k < 0 or k > n:\n        return 0\n    return fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD\n\ndef f(r, c):\n    return comb(r + c, r)\n\ndef compute_sum(r1, r2, c1, c2):\n    total = 0\n    # Sum_{i=r1..r2} Sum_{j=c1..c2} C(i+j, i)\n    # Using the identity Sum_{j=c1..c2} C(i+j, i) = C(i+c2+1, i+1) - C(i+c1, i+1)\n    for i in range(r1, r2 + 1):\n        term1 = comb(i + c2 + 1, i + 1)\n        term2 = comb(i + c1, i + 1)\n        total = (total + term1 - term2) % MOD\n    return total\n\nr1, r2, c1, c2 = map(int, sys.stdin.readline().split())\nresult = compute_sum(r1, r2, c1, c2)\nprint(result)",
+    "timestamp": "2025-08-13 11:50:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const MOD = 1e9 + 7;\n\nfunction precomputeFactorials(max, MOD) {\n    const fact = new Array(max + 1);\n    const invFact = new Array(max + 1);\n    fact[0] = 1;\n    for (let i = 1; i <= max; i++) {\n        fact[i] = (fact[i - 1] * i) % MOD;\n    }\n    invFact[max] = modInverse(fact[max], MOD);\n    for (let i = max - 1; i >= 0; i--) {\n        invFact[i] = (invFact[i + 1] * (i + 1)) % MOD;\n    }\n    return { fact, invFact };\n}\n\nfunction modInverse(a, MOD) {\n    let b = MOD;\n    let x = 0, y = 1, u = 1, v = 0;\n    while (a !== 0) {\n        const q = Math.floor(b / a);\n        [a, b] = [b % a, a];\n        [x, y] = [y - q * x, x];\n        [u, v] = [v - q * u, u];\n    }\n    return (y + MOD) % MOD;\n}\n\nfunction comb(n, k, fact, invFact, MOD) {\n    if (k < 0 || k > n) return 0;\n    return (fact[n] * invFact[k] % MOD) * invFact[n - k] % MOD;\n}\n\nfunction pathSum(r1, r2, c1, c2) {\n    const maxN = r2 + c2 + 2;\n    const { fact, invFact } = precomputeFactorials(maxN, MOD);\n    \n    function computeSum(r, c) {\n        return comb(r + c + 2, r + 1, fact, invFact, MOD) - 1;\n    }\n    \n    const total = (computeSum(r2, c2) - computeSum(r1 - 1, c2) - computeSum(r2, c1 - 1) + computeSum(r1 - 1, c1 - 1)) % MOD;\n    return (total + MOD) % MOD;\n}\n\n// Example usage:\n// const result = pathSum(r1, r2, c1, c2);\n// console.log(result);",
+    "timestamp": "2025-08-13 11:50:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\nusing namespace std;\n\nconst int MOD = 1000000007;\n\n// Function to calculate nCk % MOD\nlong long modComb(int n, int k, long long mod) {\n    long long res = 1;\n    for (int i = 0; i < k; ++i) {\n        res = res * (n - i) % mod;\n        res = res * modInverse(i + 1, mod) % mod;\n    }\n    return res;\n}\n\n// Function to calculate modular inverse using Fermat's Little Theorem\nlong long modInverse(long long a, long long mod) {\n    long long result = 1, power = mod - 2;\n    while (power) {\n        if (power & 1) {\n            result = result * a % mod;\n        }\n        a = a * a % mod;\n        power >>= 1;\n    }\n    return result;\n}\n\n// Function to calculate f(r, c)\nlong long f(int r, int c) {\n    return modComb(r + c, r, MOD);\n}\n\nint main() {\n    int r_1, r_2, c_1, c_2;\n    cin >> r_1 >> r_2 >> c_1 >> c_2;\n\n    long long answer = 0;\n    for (int i = r_1; i <= r_2; ++i) {\n        for (int j = c_1; j <= c_2; ++j) {\n            answer = (answer + f(i, j)) % MOD;\n        }\n    }\n\n    cout << answer << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:05:39"
+  }
+]

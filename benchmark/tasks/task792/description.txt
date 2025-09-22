@@ -1,0 +1,1 @@
+Find the largest integer that can be formed with exactly N matchsticks, where every digit in the integer must be one of the given digits A_1, A_2, ..., A_M. The number of matchsticks required to form each digit is predefined.

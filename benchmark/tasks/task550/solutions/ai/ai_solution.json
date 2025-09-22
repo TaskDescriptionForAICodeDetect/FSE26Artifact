@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\nvoid processQuery(int* arr, int N, int type, int l, int r, int x) {\n    for (int i = l; i <= r; i++) {\n        if (type == 1) {  // Add and multiply\n            arr[i] += x;\n            arr[i] *= x;\n        } else {  // Subtract and divide\n            arr[i] -= x;\n            if (x != 0) arr[i] /= x;\n        }\n    }\n}\n\nint countInRange(int* arr, int N, int L, int R) {\n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        if (arr[i] >= L && arr[i] <= R) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    int* arr = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &arr[i]);\n    }\n    \n    while (Q--) {\n        int type, l, r, x;\n        scanf(\"%d %d %d %d\", &type, &l, &r, &x);\n        processQuery(arr, N, type, l-1, r-1, x);\n    }\n    \n    int L, R;\n    scanf(\"%d %d\", &L, &R);\n    \n    int result = countInRange(arr, N, L, R);\n    printf(\"%d\\n\", result);\n    \n    free(arr);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:05:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nvoid processQueries(int A[], int N, int Q, int queries[][4], int L, int R) {\n    for (int i = 0; i < Q; i++) {\n        int type = queries[i][0];\n        int x = queries[i][1];\n        int y = queries[i][2];\n        int val = queries[i][3];\n        \n        if (type == 1) {\n            for (int j = x; j <= y; j++) {\n                A[j] += val;\n                A[j] *= val;\n            }\n        } else if (type == 2) {\n            for (int j = x; j <= y; j++) {\n                A[j] -= val;\n                A[j] /= val;\n            }\n        }\n    }\n    \n    int count = 0;\n    for (int i = 0; i < N; i++) {\n        if (A[i] >= L && A[i] <= R) {\n            count++;\n        }\n    }\n    \n    printf(\"%d\\n\", count);\n}\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    int A[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    int queries[Q][4];\n    for (int i = 0; i < Q; i++) {\n        scanf(\"%d %d %d %d\", &queries[i][0], &queries[i][1], &queries[i][2], &queries[i][3]);\n    }\n    \n    int L, R;\n    scanf(\"%d %d\", &L, &R);\n    \n    processQueries(A, N, Q, queries, L, R);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:06:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n    vector<long long> A(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n    }\n\n    while (Q--) {\n        char op;\n        int x, y, v;\n        cin >> op >> x >> y >> v;\n        x--; y--;\n        if (op == 'A') {\n            for (int i = x; i <= y; ++i) {\n                A[i] += v;\n                A[i] *= v;\n            }\n        } else if (op == 'S') {\n            for (int i = x; i <= y; ++i) {\n                A[i] -= v;\n                A[i] /= v;\n            }\n        }\n    }\n\n    int L, R;\n    cin >> L >> R;\n    int count = 0;\n    for (int i = 0; i < N; ++i) {\n        if (A[i] >= L && A[i] <= R) {\n            count++;\n        }\n    }\n    cout << count << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:06:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class ArrayQueryProcessor {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        int Q = scanner.nextInt();\n        for (int q = 0; q < Q; q++) {\n            int type = scanner.nextInt();\n            if (type == 1) {\n                int x = scanner.nextInt();\n                int y = scanner.nextInt();\n                int add = scanner.nextInt();\n                int mul = scanner.nextInt();\n                for (int i = x - 1; i < y; i++) {\n                    A[i] += add;\n                    A[i] *= mul;\n                }\n            } else if (type == 2) {\n                int x = scanner.nextInt();\n                int y = scanner.nextInt();\n                int sub = scanner.nextInt();\n                int div = scanner.nextInt();\n                for (int i = x - 1; i < y; i++) {\n                    A[i] -= sub;\n                    A[i] /= div;\n                }\n            }\n        }\n        \n        int L = scanner.nextInt();\n        int R = scanner.nextInt();\n        int count = 0;\n        for (int num : A) {\n            if (num >= L && num <= R) {\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:06:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int countElementsInRange(int[] A, int[][] queries, int L, int R) {\n        for (int[] query : queries) {\n            int type = query[0];\n            int l = query[1] - 1;\n            int r = query[2] - 1;\n            int x = query[3];\n\n            if (type == 1) {\n                // Add and multiply\n                for (int i = l; i <= r; i++) {\n                    A[i] += x;\n                    A[i] *= x;\n                }\n            } else {\n                // Subtract and divide\n                for (int i = l; i <= r; i++) {\n                    A[i] -= x;\n                    A[i] /= x;\n                }\n            }\n        }\n\n        int count = 0;\n        for (int num : A) {\n            if (num >= L && num <= R) {\n                count++;\n            }\n        }\n\n        return count;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] A = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        int Q = scanner.nextInt();\n        int[][] queries = new int[Q][4];\n        \n        for (int i = 0; i < Q; i++) {\n            queries[i][0] = scanner.nextInt();\n            queries[i][1] = scanner.nextInt();\n            queries[i][2] = scanner.nextInt();\n            queries[i][3] = scanner.nextInt();\n        }\n        \n        int L = scanner.nextInt();\n        int R = scanner.nextInt();\n        \n        int result = countElementsInRange(A, queries, L, R);\n        System.out.println(result);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:07:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> processQueries(vector<int>& arr, vector<vector<int>>& queries, int L, int R) {\n        int n = arr.size();\n        \n        for (auto& query : queries) {\n            int type = query[0];\n            int start = query[1];\n            int end = query[2];\n            int val = query[3];\n            \n            if (type == 1) {  // Add and multiply\n                for (int i = start; i <= end; i++) {\n                    arr[i] += val;\n                    arr[i] *= val;\n                }\n            } else {  // Subtract and divide\n                for (int i = start; i <= end; i++) {\n                    arr[i] -= val;\n                    if (val != 0) {\n                        arr[i] /= val;\n                    }\n                }\n            }\n        }\n        \n        vector<int> result;\n        for (int num : arr) {\n            if (num >= L && num <= R) {\n                result.push_back(num);\n            }\n        }\n        \n        return result;\n    }\n};\n\nint main() {\n    Solution sol;\n    vector<int> arr = {1, 2, 3, 4, 5};\n    vector<vector<int>> queries = {{1, 0, 2, 2}, {2, 1, 3, 1}};\n    int L = 2, R = 6;\n    \n    vector<int> result = sol.processQueries(arr, queries, L, R);\n    \n    for (int num : result) {\n        cout << num << \" \";\n    }\n    cout << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:07:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def process_queries_and_count_in_range(A, queries, L, R):\n    for query in queries:\n        op, i_start, i_end, value = query\n        for i in range(i_start, i_end + 1):\n            if op == \"add_multiply\":\n                A[i] = (A[i] + value[0]) * value[1]\n            elif op == \"subtract_divide\":\n                A[i] = (A[i] - value[0]) // value[1]\n\n    count = sum(1 for x in A if L <= x <= R)\n    return count\n\n# Example usage\nA = [1, 2, 3, 4, 5]\nqueries = [\n    (\"add_multiply\", 0, 2, (1, 2)),\n    (\"subtract_divide\", 1, 3, (2, 1))\n]\nL, R = 3, 8\nresult = process_queries_and_count_in_range(A, queries, L, R)\nprint(result)",
+    "timestamp": "2025-08-13 09:00:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class ArrayQueries {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n\n        // Read N and Q\n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n\n        // Read array A\n        int[] A = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        // Process Q queries\n        for (int i = 0; i < Q; i++) {\n            String queryType = scanner.next();\n            int X = scanner.nextInt();\n            int Y = scanner.nextInt();\n\n            if (queryType.equals(\"ADD_MULTIPLY\")) {\n                int addValue = scanner.nextInt();\n                int multiplyValue = scanner.nextInt();\n                for (int j = X; j <= Y; j++) {\n                    A[j] = (A[j] + addValue) * multiplyValue;\n                }\n            } else if (queryType.equals(\"SUBTRACT_DIVIDE\")) {\n                int subtractValue = scanner.nextInt();\n                int divideValue = scanner.nextInt();\n                for (int j = X; j <= Y; j++) {\n                    A[j] = (A[j] - subtractValue) / divideValue;\n                }\n            }\n        }\n\n        // Read range [L, R]\n        int L = scanner.nextInt();\n        int R = scanner.nextInt();\n\n        // Count how many elements are within the range [L, R]\n        int count = 0;\n        for (int i = 0; i < N; i++) {\n            if (A[i] >= L && A[i] <= R) {\n                count++;\n            }\n        }\n\n        // Output the result\n        System.out.println(count);\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 09:00:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\n#define MAX_N 1000\n#define MAX_Q 1000\n\nint main() {\n    int N, Q, L, R, i;\n    int A[MAX_N];\n    int type, idx, val, start, end, count;\n    \n    // Read the number of elements in array A\n    scanf(\"%d\", &N);\n    for (i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    // Read the number of queries\n    scanf(\"%d\", &Q);\n    for (i = 0; i < Q; i++) {\n        // Read the type of query\n        scanf(\"%d\", &type);\n        if (type == 1) {\n            // Add and multiply operation\n            scanf(\"%d %d %d\", &idx, &val, &start);\n            if (idx >= 0 && idx < N) {\n                A[idx] += val;\n            }\n            for (int j = start; j < N; j++) {\n                A[j] *= 2;\n            }\n        } else if (type == 2) {\n            // Subtract and divide operation\n            scanf(\"%d %d %d\", &idx, &val, &end);\n            if (idx >= 0 && idx < N) {\n                A[idx] -= val;\n            }\n            for (int j = 0; j <= end; j++) {\n                A[j] /= 2;\n            }\n        }\n    }\n\n    // Read the range [L, R]\n    scanf(\"%d %d\", &L, &R);\n    \n    // Calculate the count of elements in the range [L, R]\n    count = 0;\n    for (i = 0; i < N; i++) {\n        if (A[i] >= L && A[i] <= R) {\n            count++;\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 09:00:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_queries(N, A, queries, L, R):\n    # Process each query\n    for query_type, start, end, value in queries:\n        if query_type == 'add_multiply':\n            for i in range(start, end + 1):\n                A[i] += value\n                A[i] *= value\n        elif query_type == 'subtract_divide':\n            for i in range(start, end + 1):\n                A[i] -= value\n                if value != 0:\n                    A[i] //= value\n\n    # Count elements within range [L, R]\n    count = sum(1 for num in A if L <= num <= R)\n    return count\n\n# Example usage\nN = 5\nA = [1, 2, 3, 4, 5]\nqueries = [\n    ('add_multiply', 0, 2, 2),\n    ('subtract_divide', 1, 3, 1)\n]\nL, R = 3, 10\n\nresult = solve_queries(N, A, queries, L, R)\nprint(result)",
+    "timestamp": "2025-08-13 09:00:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    N, Q = map(int, input[ptr:ptr+2])\n    ptr +=2\n    A = list(map(int, input[ptr:ptr+N]))\n    ptr +=N\n    \n    for _ in range(Q):\n        query = input[ptr]\n        if query == '1':\n            # Add and multiply\n            l, r, x, y = map(int, input[ptr+1:ptr+5])\n            ptr +=5\n            for i in range(l-1, r):\n                A[i] = (A[i] + x) * y\n        elif query == '2':\n            # Subtract and divide\n            l, r, x, y = map(int, input[ptr+1:ptr+5])\n            ptr +=5\n            for i in range(l-1, r):\n                A[i] = (A[i] - x) // y\n        else:\n            # Count in range [L, R]\n            L, R = map(int, input[ptr+1:ptr+3])\n            ptr +=3\n            count = 0\n            for num in A:\n                if L <= num <= R:\n                    count +=1\n            print(count)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 09:00:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nstruct Query {\n    char type;\n    int index1, index2;\n    int val1, val2;\n};\n\nint main() {\n    int N, Q, L, R;\n    std::cin >> N;\n    std::vector<int> A(N);\n    \n    for (int i = 0; i < N; ++i) {\n        std::cin >> A[i];\n    }\n    \n    std::cin >> Q;\n    std::vector<Query> queries(Q);\n    \n    for (int i = 0; i < Q; ++i) {\n        std::cin >> queries[i].type >> queries[i].index1 >> queries[i].index2 >> queries[i].val1 >> queries[i].val2;\n    }\n    \n    std::cin >> L >> R;\n    \n    for (auto &query : queries) {\n        if (query.type == 'A') {\n            A[query.index1] += query.val1;\n            A[query.index2] *= query.val2;\n        } else if (query.type == 'S') {\n            A[query.index1] -= query.val1;\n            if (query.val2 != 0) {\n                A[query.index2] /= query.val2;\n            }\n        }\n    }\n    \n    int count = 0;\n    for (auto &element : A) {\n        if (element >= L && element <= R) {\n            ++count;\n        }\n    }\n    \n    std::cout << count << std::endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 11:48:57"
+  }
+]

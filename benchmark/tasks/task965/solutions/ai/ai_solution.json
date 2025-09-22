@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n#include <limits.h>\n\n#define MAX_VERTICES 1000\n\nint minEdgesForGraph(int N, int u, int v, int distU, int distV) {\n    if (N < 2) return -1;\n    \n    // Check impossible scenarios\n    if (distU + distV >= N) return -1;\n    if (abs(distU - distV) > 1) return -1;\n    \n    // Minimum edges calculation\n    int centralDist = (distU + distV) / 2;\n    int remainingNodes = N - centralDist - 2;\n    \n    // Compute minimum possible edges\n    int minEdges = centralDist + (remainingNodes > 0 ? remainingNodes : 0);\n    \n    return minEdges;\n}\n\nint main() {\n    int N, u, v, distU, distV;\n    \n    // Read input\n    scanf(\"%d %d %d %d %d\", &N, &u, &v, &distU, &distV);\n    \n    // Calculate and print result\n    int result = minEdgesForGraph(N, u, v, distU, distV);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:00"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <limits.h>\n\n#define MAX_N 1000\n\nint main() {\n    int N, a, b;\n    scanf(\"%d %d %d\", &N, &a, &b);\n    a--; b--; // converting to 0-based index\n\n    int da[MAX_N], db[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &da[i]);\n    }\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &db[i]);\n    }\n\n    // Check if the constraints are valid\n    if (da[a] != 0 || db[b] != 0 || da[b] != db[a]) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    for (int i = 0; i < N; i++) {\n        if (da[i] + db[i] < da[b] || abs(da[i] - db[i]) > da[b]) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n    }\n\n    // Construct the graph\n    printf(\"%d\\n\", N - 1); // Minimum edges for a connected graph is N-1\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nbool isPossible(int N, const vector<int>& d1, const vector<int>& d2) {\n    for (int i = 0; i < N; ++i) {\n        if (abs(d1[i] - d2[i]) > 1) {\n            return false;\n        }\n    }\n    return true;\n}\n\nint minEdges(int N, const vector<int>& d1, const vector<int>& d2) {\n    int edges = 0;\n    for (int i = 0; i < N; ++i) {\n        if (d1[i] == 1 && d2[i] == 1) {\n            edges += 1;\n        } else if (d1[i] == 1 || d2[i] == 1) {\n            edges += 1;\n        }\n    }\n    return edges - 1;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> d1(N), d2(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> d1[i];\n    }\n    for (int i = 0; i < N; ++i) {\n        cin >> d2[i];\n    }\n\n    if (!isPossible(N, d1, d2)) {\n        cout << -1 << endl;\n    } else {\n        cout << minEdges(N, d1, d2) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:30:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GraphConstruction {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int x = scanner.nextInt();\n        int y = scanner.nextInt();\n        int[] d1 = new int[N];\n        int[] d2 = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            d1[i] = scanner.nextInt();\n        }\n        for (int i = 0; i < N; i++) {\n            d2[i] = scanner.nextInt();\n        }\n        \n        if (!isValid(N, x, y, d1, d2)) {\n            System.out.println(-1);\n            return;\n        }\n        \n        int minEdges = findMinEdges(N, x, y, d1, d2);\n        System.out.println(minEdges);\n    }\n    \n    private static boolean isValid(int N, int x, int y, int[] d1, int[] d2) {\n        if (d1[x - 1] != 0 || d2[y - 1] != 0) {\n            return false;\n        }\n        if (d1[y - 1] != d2[x - 1]) {\n            return false;\n        }\n        for (int i = 0; i < N; i++) {\n            if (Math.abs(d1[i] - d2[i]) != d1[y - 1]) {\n                return false;\n            }\n        }\n        return true;\n    }\n    \n    private static int findMinEdges(int N, int x, int y, int[] d1, int[] d2) {\n        int D = d1[y - 1];\n        List<Integer>[] layers = new List[D + 1];\n        for (int i = 0; i <= D; i++) {\n            layers[i] = new ArrayList<>();\n        }\n        \n        for (int i = 0; i < N; i++) {\n            layers[d1[i]].add(i);\n        }\n        \n        int edges = 0;\n        edges += layers[1].size();\n        \n        for (int i = 1; i < D; i++) {\n            if (layers[i].isEmpty() || layers[i + 1].isEmpty()) {\n                return -1;\n            }\n            edges += layers[i + 1].size();\n        }\n        \n        edges += layers[D - 1].size();\n        \n        for (int i = 1; i < D; i++) {\n            if (layers[i].size() == 1 && layers[i + 1].size() == 1) {\n                edges--;\n            }\n        }\n        \n        return edges;\n    }\n}",
+    "timestamp": "2025-08-05 23:30:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GraphConstraintsSolver {\n    public static int findMinEdges(int N, int vertex1, int vertex2, int dist1, int dist2) {\n        // Impossible cases\n        if (N < 2) return -1;\n        if (dist1 + dist2 + 1 < N) return -1;\n        if (Math.abs(dist1 - dist2) >= N) return -1;\n\n        // Minimum edges required\n        int minEdges = N - 1;\n\n        // Additional edges for connecting vertices based on distance constraints\n        int additionalEdges = Math.max(0, dist1 + dist2 - (N - 1));\n\n        return minEdges + additionalEdges;\n    }\n\n    public static void main(String[] args) {\n        // Example usage\n        int N = 5;\n        int vertex1 = 1;\n        int vertex2 = 3;\n        int dist1 = 2;\n        int dist2 = 3;\n\n        int result = findMinEdges(N, vertex1, vertex2, dist1, dist2);\n        System.out.println(result);\n    }\n}",
+    "timestamp": "2025-08-05 23:31:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <climits>\n\nusing namespace std;\n\nclass GraphConstraintSolver {\nprivate:\n    int N;\n    int distA, distB;\n    \n    bool isValidGraph(int edges) {\n        // Check if graph can exist with given constraints\n        int minEdges = N - 1;  // Minimum edges for a connected graph\n        int maxEdges = (N * (N - 1)) / 2;  // Maximum edges in complete graph\n        \n        if (edges < minEdges || edges > maxEdges) \n            return false;\n        \n        // Additional constraint checks can be added here\n        return true;\n    }\n    \n    int computeMinEdges() {\n        // Minimum possible edges satisfying distance constraints\n        int minRequiredEdges = max(N - 1, \n            max(distA + distB, \n                max((distA + 1) / 2 + (distB + 1) / 2, \n                    abs(distA - distB) + 1)));\n        \n        return minRequiredEdges;\n    }\n\npublic:\n    GraphConstraintSolver(int vertices, int da, int db) : \n        N(vertices), distA(da), distB(db) {}\n    \n    int solve() {\n        int minEdges = computeMinEdges();\n        \n        return isValidGraph(minEdges) ? minEdges : -1;\n    }\n};\n\nint main() {\n    int N, distA, distB;\n    cin >> N >> distA >> distB;\n    \n    GraphConstraintSolver solver(N, distA, distB);\n    int result = solver.solve();\n    \n    cout << result << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_edges_required(N, a, x, b, y):\n    if (x + y < N - 1) or (a == b and x + y > 1):\n        return -1\n\n    # Compute necessary edges for paths a-b with constraints\n    edges_to_connect_all = N - 1\n    edges_to_separate_a_b = max(0, (x + y + 1) - edges_to_connect_all)\n\n    return edges_to_connect_all + edges_to_separate_a_b\n\ndef main():\n    # Example input\n    N = 5  # Number of vertices\n    a = 1  # Vertex a\n    x = 2  # Maximum distance from a\n    b = 2  # Vertex b\n    y = 2  # Maximum distance from b\n\n    result = min_edges_required(N, a, x, b, y)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 15:38:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class GraphDistanceConstraints {\n\n    static class Graph {\n        int V;\n        List<List<Integer>> adjList;\n        \n        public Graph(int V) {\n            this.V = V;\n            adjList = new ArrayList<>();\n            for (int i = 0; i <= V; i++) {\n                adjList.add(new ArrayList<>());\n            }\n        }\n        \n        public void addEdge(int u, int v) {\n            adjList.get(u).add(v);\n            adjList.get(v).add(u);\n        }\n\n        public int bfsDistance(int start, int end) {\n            boolean[] visited = new boolean[V + 1];\n            int[] distance = new int[V + 1];\n            Queue<Integer> queue = new LinkedList<>();\n            queue.add(start);\n            visited[start] = true;\n            distance[start] = 0;\n\n            while (!queue.isEmpty()) {\n                int node = queue.poll();\n\n                for (int neighbour : adjList.get(node)) {\n                    if (!visited[neighbour]) {\n                        queue.add(neighbour);\n                        visited[neighbour] = true;\n                        distance[neighbour] = distance[node] + 1;\n                        if (neighbour == end) {\n                            return distance[end];\n                        }\n                    }\n                }\n            }\n            return -1; // In case there is no path (shouldn't happen in connected graph)\n        }\n    }\n\n    public static int minEdgesRequired(int N, int d1, int d2) {\n        if (d1 + d2 > N - 1) {\n            return -1;\n        }\n\n        Graph g = new Graph(N + 1);\n        for (int i = 1; i <= N - 1; i++) {\n            g.addEdge(i, i + 1);\n        }\n\n        if (g.bfsDistance(1, N) == d1 && g.bfsDistance(N, 1) == d2) {\n            return N - 1;\n        }\n\n        return -1;\n    }\n\n    public static void main(String[] args) {\n        int N = 5;\n        int d1 = 1;\n        int d2 = 4;\n        System.out.println(minEdgesRequired(N, d1, d2));\n    }\n}",
+    "timestamp": "2025-08-13 15:39:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define INF 1000000000\n\nint main() {\n    int N, D1, D2;\n    scanf(\"%d %d %d\", &N, &D1, &D2);\n\n    if (D1 + D2 > N - 1 || D1 < 0 || D2 < 0) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    int add_edges = (D1 + D2 < N - 1);\n    int min_edges = (N - 1) + add_edges;\n    if (D1 + D2 > min_edges) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n\n    printf(\"%d\\n\", min_edges);\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:39:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <queue>\n#include <algorithm>\n\nint main() {\n    int N, d1, d2;\n    std::cin >> N >> d1 >> d2;\n    \n    if (d1 + d2 + 1 > N) {\n        std::cout << \"No solution\" << std::endl;\n        return 0;\n    }\n\n    std::vector<std::pair<int, int>> edges;\n    int current_vertex = 1;\n    \n    std::vector<int> path1, path2;\n    \n    for (int i = 0; i < d1; ++i) {\n        path1.push_back(current_vertex++);\n    }\n    \n    for (int i = 0; i < d2; ++i) {\n        path2.push_back(current_vertex++);\n    }\n    \n    if (path1.empty()) path1.push_back(current_vertex++);\n    if (path2.empty()) path2.push_back(current_vertex++);\n    \n    for (int i = 0; i < path1.size() - 1; ++i) {\n        edges.emplace_back(path1[i], path1[i + 1]);\n    }\n    for (int i = 0; i < path2.size() - 1; ++i) {\n        edges.emplace_back(path2[i], path2[i + 1]);\n    }\n    edges.emplace_back(path1.back(), path2.back());\n    \n    for (; current_vertex <= N; ++current_vertex) {\n        edges.emplace_back(path1[0], current_vertex);\n    }\n\n    if (edges.size() > N - 1) {\n        std::cout << \"No solution\" << std::endl;\n    } else {\n        std::cout << \"Edge list: \" << std::endl;\n        for (const auto& edge : edges) {\n            std::cout << edge.first << \" \" << edge.second << std::endl;\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 15:39:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_graph_construction(N, u, v, du, dv):\n    # Check basic constraints\n    if du + dv > N - 1:\n        return -1\n    \n    if abs(du - dv) > N - 1:\n        return -1\n    \n    # Minimum possible edges\n    min_edges = max(du + dv - (N - 1), 0)\n    \n    # Check if graph is possible\n    if du + dv <= 2 * (N - 1):\n        return min_edges\n    \n    return -1\n\n# Example usage\ndef main():\n    # Input parameters\n    N = int(input())  # Number of vertices\n    u, v = map(int, input().split())  # Two specific vertices\n    du, dv = map(int, input().split())  # Distances from u and v\n\n    result = solve_graph_construction(N, u, v, du, dv)\n    print(result)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 15:39:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef solve():\n    N, A, B = map(int, sys.stdin.readline().split())\n    DA = list(map(int, sys.stdin.readline().split()))\n    DB = list(map(int, sys.stdin.readline().split()))\n    \n    if DA[B] != DB[A]:\n        print(-1)\n        return\n    \n    D = DA[B]\n    edges = []\n    \n    # Create a path between A and B with D edges\n    prev = A\n    for i in range(1, D):\n        edges.append((prev, N + i))\n        prev = N + i\n    edges.append((prev, B))\n    \n    # Attach remaining vertices to A or B based on distances\n    used = set()\n    used.add(A)\n    used.add(B)\n    for i in range(1, N + 1):\n        if i == A or i == B:\n            continue\n        if DA[i - 1] + DB[i - 1] == D:\n            if DA[i - 1] == 0:\n                edges.append((A, i))\n            elif DB[i - 1] == 0:\n                edges.append((B, i))\n            else:\n                # Find the node at distance DA[i-1] from A on the A-B path\n                if DA[i - 1] < D:\n                    # The node is at position DA[i-1] in the path (0-based)\n                    path_node = A if DA[i - 1] == 0 else (N + DA[i - 1] if DA[i - 1] < D else B)\n                    edges.append((path_node, i))\n                else:\n                    edges.append((B, i))\n            used.add(i)\n        else:\n            print(-1)\n            return\n    \n    # Check if all vertices are included\n    if len(used) != N:\n        print(-1)\n        return\n    \n    # Output the edges\n    print(len(edges))\n    for u, v in edges:\n        print(u, v)\n\nsolve()",
+    "timestamp": "2025-08-13 15:39:29"
+  }
+]

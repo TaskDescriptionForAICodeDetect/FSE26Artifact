@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "NicoNicoNi",
+      "output": "Love Nico!"
+    },
+    {
+      "input": "KashikoiKawaiiElichika",
+      "output": "mitomerarenaiWA"
+    },
+    {
+      "input": "LiveLiveL",
+      "output": "Love Live!"
+    },
+    {
+      "input": "AizunyanPeroPero",
+      "output": "mitomerarenaiWA"
+    },
+    {
+      "input": "AAAAAAAAAAAAAA",
+      "output": "Love AAAAA!"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int L, N, M;\n    scanf(\"%d\", &L);\n\n    N = L + 1;\n    M = 2 * L;\n\n    printf(\"%d %d\\n\", N, M);\n\n    for (int i = 1; i <= L; i++) {\n        printf(\"%d %d %d\\n\", i, i + 1, i - 1);\n        printf(\"%d %d %d\\n\", i, N, L - i);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:02:52"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int L;\n    scanf(\"%d\", &L);\n    \n    int N = 0, M = 0;\n    int edges[60][3]; // u, v, length\n    \n    if (L == 1) {\n        N = 2;\n        M = 1;\n        edges[0][0] = 1;\n        edges[0][1] = 2;\n        edges[0][2] = 0;\n    } else {\n        int k = 0;\n        while ((1 << k) <= L) k++;\n        k--;\n        \n        N = k + 2;\n        M = 0;\n        \n        // Build binary paths\n        for (int i = 1; i <= k; i++) {\n            edges[M][0] = i;\n            edges[M][1] = i + 1;\n            edges[M][2] = 0;\n            M++;\n            \n            if (i < k) {\n                edges[M][0] = i;\n                edges[M][1] = i + 1;\n                edges[M][2] = (1 << (k - i - 1));\n                M++;\n            }\n        }\n        \n        int remaining = L - (1 << k);\n        if (remaining > 0) {\n            N++;\n            edges[M][0] = 1;\n            edges[M][1] = N;\n            edges[M][2] = (1 << k);\n            M++;\n            \n            for (int i = 0; i < k; i++) {\n                if (remaining & (1 << i)) {\n                    edges[M][0] = i + 2;\n                    edges[M][1] = N;\n                    edges[M][2] = (1 << k) - (1 << (i + 1));\n                    M++;\n                }\n            }\n        }\n    }\n    \n    printf(\"%d %d\\n\", N, M);\n    for (int i = 0; i < M; i++) {\n        printf(\"%d %d %d\\n\", edges[i][0], edges[i][1], edges[i][2]);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int L;\n    cin >> L;\n\n    vector<int> bits;\n    int temp = L;\n    while (temp > 0) {\n        bits.push_back(temp % 2);\n        temp /= 2;\n    }\n\n    int N = bits.size() + 1;\n    int M = 2 * (N - 1) - 1;\n    vector<pair<pair<int, int>, int>> edges;\n\n    for (int i = 1; i < N; ++i) {\n        if (i == 1) {\n            edges.push_back({{i, i + 1}, 0});\n            edges.push_back({{i, i + 1}, 1});\n        } else {\n            edges.push_back({{i, i + 1}, 0});\n            edges.push_back({{i, i + 1}, 1 << (i - 1)});\n        }\n    }\n\n    cout << N << \" \" << edges.size() << endl;\n    for (auto edge : edges) {\n        cout << edge.first.first << \" \" << edge.first.second << \" \" << edge.second << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:03:58"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int L = sc.nextInt();\n        \n        List<String> edges = new ArrayList<>();\n        int N = 0;\n        \n        if (L == 1) {\n            N = 2;\n            edges.add(\"1 2 0\");\n        } else {\n            int k = 0;\n            int temp = L;\n            while (temp > 0) {\n                temp >>= 1;\n                k++;\n            }\n            k--;\n            \n            N = k + 2;\n            for (int i = 1; i <= k + 1; i++) {\n                if (i == 1) {\n                    edges.add(\"1 \" + (i + 1) + \" 0\");\n                    edges.add(\"1 \" + (i + 1) + \" \" + (1 << (k - i + 1)));\n                } else {\n                    if (i < k + 1) {\n                        edges.add(i + \" \" + (i + 1) + \" 0\");\n                        edges.add(i + \" \" + (i + 1) + \" \" + (1 << (k - i)));\n                    } else {\n                        edges.add(i + \" \" + (i + 1) + \" 0\");\n                    }\n                }\n            }\n            \n            int rem = L - (1 << k);\n            for (int i = 0; i < 20; i++) {\n                if ((rem & (1 << i)) != 0) {\n                    int len = (1 << i) + (1 << k) - 1 - (1 << (i + 1)) + 1;\n                    edges.add((i + 2) + \" \" + (k + 2) + \" \" + len);\n                }\n            }\n        }\n        \n        System.out.println(N + \" \" + edges.size());\n        for (String edge : edges) {\n            System.out.println(edge);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:04:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GraphConstruction {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int L = scanner.nextInt();\n        \n        int N = Math.min(L + 1, 20);\n        List<int[]> edges = new ArrayList<>();\n        \n        // Create a direct path from vertex 1 to N\n        for (int i = 1; i < N; i++) {\n            edges.add(new int[]{i, i+1, 0});\n        }\n        \n        // Add additional paths with unique lengths\n        int currentLength = 1;\n        for (int i = 1; i < N && edges.size() < 60 && currentLength < L; i++) {\n            for (int j = i + 2; j <= N && edges.size() < 60 && currentLength < L; j++) {\n                edges.add(new int[]{i, j, currentLength});\n                currentLength++;\n            }\n        }\n        \n        // Output graph details\n        System.out.println(N + \" \" + edges.size());\n        for (int[] edge : edges) {\n            System.out.println(edge[0] + \" \" + edge[1] + \" \" + edge[2]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:04:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\nusing namespace std;\n\nint main() {\n    int L;\n    cin >> L;\n    \n    vector<pair<int, pair<int, int>>> edges;\n    \n    int N = min(L + 1, 20);\n    int M = 0;\n    \n    for (int i = 1; i < N; i++) {\n        for (int j = i + 1; j <= N; j++) {\n            if (M >= 60) break;\n            \n            set<int> used_lengths;\n            for (int k = 0; k < L && M < 60; k++) {\n                if (used_lengths.count(k)) continue;\n                \n                edges.push_back({k, {i, j}});\n                used_lengths.insert(k);\n                M++;\n            }\n        }\n    }\n    \n    cout << N << \" \" << M << endl;\n    \n    for (auto& edge : edges) {\n        cout << edge.second.first << \" \" << edge.second.second << \" \" << edge.first << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:05:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def construct_graph(L):\n    N = 20\n    edges = []\n\n    binary = bin(L)[2:]\n    K = len(binary)\n\n    vertex_count = 2 + K\n    length = 0\n\n    # Create initial path from vertex 1 through vertices 2 to K+1 to vertex N\n    for i in range(1, K+2):\n        edges.append((i, i+1, length))\n        length += 2**(i-1)\n\n    # Adjust the first path to use a different weight pattern\n    if L > 0:\n        edges.append((1, K+2, 0))\n\n    current_vertex = 2\n    carry = 0\n    value = L\n\n    for i in range(K):\n        if (value >> i) & 1:\n            edges.append((current_vertex, K+2, carry))\n            carry += 2**i\n        current_vertex += 1\n\n    vertices = K + 2\n\n    print(vertices, len(edges))\n    for u, v, w in edges:\n        print(u, v, w)\n\n# Example usage\nconstruct_graph(11)",
+    "timestamp": "2025-08-13 13:28:45"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class DirectedGraphConstructor {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int L = scanner.nextInt();\n        \n        int N = 20;\n        int M = 60;\n        \n        List<int[]> edges = new ArrayList<>();\n        \n        int currentLength = 0;\n        \n        for (int i = 1; i < 20 && currentLength < L; i++) {\n            for (int j = i + 1; j <= 20 && currentLength < L; j++) {\n                edges.add(new int[]{i, j, currentLength});\n                currentLength++;\n            }\n        }\n        \n        System.out.println(N + \" \" + edges.size());\n        for (int[] edge : edges) {\n            System.out.println(edge[0] + \" \" + edge[1] + \" \" + edge[2]);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 13:28:47"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int L;\n    scanf(\"%d\", &L);\n    \n    if (L == 1) {\n        printf(\"2 1\\n1 2 0\\n\");\n        return 0;\n    }\n    \n    int N = 21; // Choose 21 based on an approach using binary representation strategy\n    int edges[60][3]; // M is at most 60;\n    int edgeCount = 0;\n\n    for (int i = 1; i < N; i++) {\n        edges[edgeCount][0] = i;\n        edges[edgeCount][1] = i + 1;\n        edges[edgeCount][2] = 0; // Base edge with length 0\n        edgeCount++;\n    }\n\n    int bitLen = 1;\n    while ((1 << bitLen) - 1 < L) bitLen++;\n    \n    for (int i = 1; i <= bitLen; i++) {\n        int add_edge_check = L & (1 << (i - 1));\n        if (add_edge_check) {\n            edges[edgeCount][0] = i;\n            edges[edgeCount][1] = 21;\n            edges[edgeCount][2] = (1 << (i - 1));\n            edgeCount++;\n        }\n    }\n    \n    printf(\"%d %d\\n\", N, edgeCount);\n    for (int i = 0; i < edgeCount; i++) {\n        printf(\"%d %d %d\\n\", edges[i][0], edges[i][1], edges[i][2]);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:28:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructGraph(L) {\n  const edges = [];\n  let vertexCount = 2;\n  let power = 1;\n\n  while (power <= L) {\n    vertexCount++;\n    power *= 2;\n  }\n\n  for (let i = 1; i < vertexCount; i++) {\n    edges.push([i, i + 1, 0]);\n    edges.push([i, i + 1, 1 << (i - 1)]);\n  }\n\n  let remainingPaths = L - (1 << (vertexCount - 2));\n  for (let i = 1; i < vertexCount - 1; i++) {\n    if (remainingPaths & (1 << (i - 1))) {\n      edges.push([i, vertexCount, remainingPaths]);\n    }\n  }\n\n  let result = `${vertexCount} ${edges.length}\\n`;\n  edges.forEach(edge => {\n    result += `${edge[0]} ${edge[1]} ${edge[2]}\\n`;\n  });\n\n  return result.trim();\n}",
+    "timestamp": "2025-08-13 13:28:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve(L):\n    # Special cases\n    if L > 20:\n        return None\n    \n    # Initialize graph structures\n    edges = []\n    \n    # Always use full graph to maximize path possibilities\n    N = min(L + 1, 20)\n    \n    # Create paths with different lengths\n    for length in range(L):\n        # Connect using a path with specified length\n        for start in range(1, N):\n            for end in range(start+1, N+1):\n                # Create an edge if it helps create a unique path\n                if len(edges) < 60:\n                    edges.append((start, end, length))\n    \n    # Ensure we have exactly L different paths\n    if len(set(edge[2] for edge in edges)) < L:\n        return None\n    \n    # Output graph details\n    print(N, len(edges))\n    for start, end, length in edges:\n        print(f\"{start} {end} {length}\")\n    \n    return True\n\n# Read input and solve\nL = int(input())\nsolve(L)",
+    "timestamp": "2025-08-13 13:29:01"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructGraph(L) {\n    const N = Math.min(L + 1, 20);\n    const edges = [];\n\n    // Create edges to ensure exactly L unique paths\n    for (let i = 1; i < N; i++) {\n        for (let j = i + 1; j <= N; j++) {\n            if (edges.length >= 60) break;\n\n            // Create edges with different lengths covering each unique path length\n            for (let pathLength = 0; pathLength < L; pathLength++) {\n                if (edges.length >= 60) break;\n                \n                edges.push({\n                    from: i,\n                    to: j,\n                    length: pathLength\n                });\n            }\n        }\n    }\n\n    // Output graph details\n    console.log(N, edges.length);\n    edges.forEach(edge => {\n        console.log(`${edge.from} ${edge.to} ${edge.length}`);\n    });\n}\n\n// Example usage\nconstructGraph(5);",
+    "timestamp": "2025-08-13 13:29:06"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "L = int(input())\n\nif L == 1:\n    print(2, 1)\n    print(1, 2, 0)\nelse:\n    k = L.bit_length() - 1\n    N = k + 2\n    edges = []\n    \n    # Construct binary representation layers\n    for i in range(1, k + 1):\n        edges.append((i, i + 1, 0))\n        edges.append((i, i + 1, 1 << (i - 1)))\n    \n    # Adjust for remaining paths\n    remaining = L - (1 << k)\n    current = 1 << k\n    for i in range(k, 0, -1):\n        if remaining >= (1 << (i - 1)):\n            edges.append((i, N, current))\n            current += (1 << (i - 1))\n            remaining -= (1 << (i - 1))\n    \n    M = len(edges)\n    print(N, M)\n    for u, v, w in edges:\n        print(u, v, w)",
+    "timestamp": "2025-08-13 13:29:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    rl.question('', (L) => {\n        L = parseInt(L);\n        let N = 0;\n        let M = 0;\n        let edges = [];\n\n        if (L === 1) {\n            N = 2;\n            M = 1;\n            edges.push([1, 2, 0]);\n        } else {\n            let k = 0;\n            while ((1 << k) <= L) k++;\n            k--;\n\n            N = k + 2;\n            for (let i = 1; i <= k + 1; i++) {\n                edges.push([i, i + 1, 0]);\n                if (i <= k) {\n                    edges.push([i, i + 1, 1 << (i - 1)]);\n                }\n            }\n\n            let remaining = L - (1 << k);\n            let current = 1 << k;\n            for (let i = k - 1; i >= 0; i--) {\n                if (remaining >= (1 << i)) {\n                    edges.push([i + 1, k + 1, current]);\n                    current += (1 << i);\n                    remaining -= (1 << i);\n                }\n            }\n            M = edges.length;\n        }\n\n        console.log(N, M);\n        edges.forEach(edge => {\n            console.log(edge.join(' '));\n        });\n\n        rl.close();\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 13:29:22"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nstruct Edge {\n    int from, to, length;\n};\n\nint main() {\n    int L;\n    cin >> L;\n\n    int N = 20;  // Maximum number of vertices allowed\n\n    vector<Edge> edges;\n    \n    // Construct base binary-like path system to ensure unique sums (this creates 2^i paths)\n    for (int i = 1; i < N; ++i) {\n        edges.push_back({ i, i + 1, 0 });\n        for (int j = i + 1; j < N; ++j) {\n            edges.push_back({ i, j, 1 << (j - (i + 1)) });\n        }\n    }\n\n    // Path from 1 to N\n    int path_count = 1 << (N - 2);\n\n    // Create unique path sums between 0 and L-1\n    for (int i = 0; i < N - 1; ++i) {\n        int length = 1 << i;\n        int j = i + 2;\n        while (j <= N && length <= L) {\n            if ((L & length) == length) {\n                edges.push_back({ i + 1, j, length });\n            }\n            ++j;\n            length <<= 1;\n        }\n    }\n\n    int M = edges.size();\n\n    cout << N << \" \" << M << endl;\n    for (const auto& edge : edges) {\n        cout << edge.from << \" \" << edge.to << \" \" << edge.length << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:39:53"
+  }
+]

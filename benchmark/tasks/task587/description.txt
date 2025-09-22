@@ -1,0 +1,1 @@
+For given three points p0, p1, p2, print 'COUNTER_CLOCKWISE' if p0, p1, p2 make a counterclockwise turn, 'CLOCKWISE' if they make a clockwise turn, 'ONLINE_BACK' if p2 is on a line p0, p1 in the order p2, p0, p1, 'ONLINE_FRONT' if p2 is on a line p0, p1 in the order p0, p1, p2, and 'ON_SEGMENT' if p2 is on the segment p0p1.

@@ -1,0 +1,1 @@
+There are N positive integers A_1, A_2, ..., A_N. Takahashi can perform the following operation on these integers any number of times: Choose 1 ≤ i ≤ N and multiply the value of A_i by -2. He would like to make A_1 ≤ A_2 ≤ ... ≤ A_N hold. Find the minimum number of operations required. If it is impossible, print -1.

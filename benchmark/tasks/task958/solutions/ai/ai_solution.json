@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\n#define MAX_PILES 100\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int a[MAX_PILES];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int nim_sum = 0;\n    for (int i = 0; i < N; i++) {\n        nim_sum ^= a[i];\n    }\n    \n    if (nim_sum == 0) {\n        printf(\"-1\\n\");\n        return 0;\n    }\n    \n    int min_stones = -1;\n    for (int mask = 0; mask < (1 << N); mask++) {\n        int new_nim_sum = nim_sum;\n        int stones_eaten = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                new_nim_sum ^= a[i];\n                new_nim_sum ^= (a[i] - 1);\n                stones_eaten++;\n            }\n        }\n        \n        if (new_nim_sum == 0) {\n            if (min_stones == -1 || stones_eaten < min_stones) {\n                min_stones = stones_eaten;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", min_stones);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:29:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *a = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    int total_xor = 0;\n    for (int i = 0; i < N; i++) {\n        total_xor ^= a[i];\n    }\n\n    if (total_xor == 0) {\n        printf(\"0\\n\");\n        free(a);\n        return 0;\n    }\n\n    int min_stones = -1;\n    for (int i = 0; i < N; i++) {\n        int new_val = a[i] - 1;\n        int new_xor = total_xor ^ a[i] ^ new_val;\n        if (new_xor == 0) {\n            if (min_stones == -1 || 1 < min_stones) {\n                min_stones = 1;\n            }\n        }\n    }\n\n    if (min_stones != -1) {\n        printf(\"%d\\n\", min_stones);\n    } else {\n        printf(\"-1\\n\");\n    }\n\n    free(a);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:29:16"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n\n    int total_xor = 0;\n    for (int num : a) {\n        total_xor ^= num;\n    }\n\n    if (total_xor == 0) {\n        cout << 0 << endl;\n        return 0;\n    }\n\n    int min_stones = -1;\n    for (int i = 0; i < N; ++i) {\n        int new_num = a[i] - 1;\n        int new_xor = total_xor ^ a[i] ^ new_num;\n        if (new_xor == 0) {\n            if (min_stones == -1 || 1 < min_stones) {\n                min_stones = 1;\n            }\n        } else if (new_num > 0) {\n            int stones = 1;\n            if (stones < min_stones || min_stones == -1) {\n                min_stones = stones;\n            }\n        }\n    }\n\n    cout << min_stones << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:29:31"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class NimCheater {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        int totalXOR = 0;\n        for (int num : a) {\n            totalXOR ^= num;\n        }\n\n        if (totalXOR == 0) {\n            System.out.println(0);\n            return;\n        }\n\n        int minStones = Integer.MAX_VALUE;\n        for (int i = 0; i < N; i++) {\n            int newVal = a[i] ^ totalXOR;\n            if (newVal < a[i]) {\n                int stones = a[i] - newVal;\n                if (stones < minStones) {\n                    minStones = stones;\n                }\n            }\n        }\n\n        if (minStones != Integer.MAX_VALUE) {\n            System.out.println(minStones);\n        } else {\n            System.out.println(-1);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:29:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class NimGame {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        StringTokenizer st = new StringTokenizer(br.readLine());\n        \n        int N = Integer.parseInt(st.nextToken());\n        int[] a = new int[N];\n        \n        st = new StringTokenizer(br.readLine());\n        for (int i = 0; i < N; i++) {\n            a[i] = Integer.parseInt(st.nextToken());\n        }\n        \n        int result = solve(a);\n        System.out.println(result);\n    }\n    \n    static int solve(int[] a) {\n        int xorSum = 0;\n        for (int stones : a) {\n            xorSum ^= stones;\n        }\n        \n        if (xorSum == 0) {\n            return -1;\n        }\n        \n        int minStones = Integer.MAX_VALUE;\n        for (int i = 0; i < a.length; i++) {\n            int newXorSum = xorSum ^ a[i];\n            \n            for (int j = 0; j <= 1; j++) {\n                int newPile = a[i] - j;\n                int currentXorSum = newXorSum ^ newPile;\n                \n                if (currentXorSum == 0) {\n                    minStones = Math.min(minStones, j);\n                }\n            }\n        }\n        \n        return minStones == Integer.MAX_VALUE ? -1 : minStones;\n    }\n}",
+    "timestamp": "2025-08-05 23:29:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> a(N);\n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n    }\n    \n    int xorSum = 0;\n    for (int x : a) {\n        xorSum ^= x;\n    }\n    \n    if (xorSum == 0) {\n        // Cheetah can force a win without cheater's help\n        cout << -1 << endl;\n        return 0;\n    }\n    \n    int minStones = N;\n    for (int mask = 0; mask < (1 << N); mask++) {\n        vector<int> modified = a;\n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                modified[i]--;\n            }\n        }\n        \n        int newXorSum = 0;\n        for (int x : modified) {\n            newXorSum ^= x;\n        }\n        \n        if (newXorSum == 0) {\n            int stonesEaten = __builtin_popcount(mask);\n            minStones = min(minStones, stonesEaten);\n        }\n    }\n    \n    cout << minStones << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:29:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_stones_to_guarantee_win(piles):\n    def nim_sum(piles):\n        nim_sum_value = 0\n        for pile in piles:\n            nim_sum_value ^= pile\n        return nim_sum_value\n    \n    nim_sum_initial = nim_sum(piles)\n    \n    if nim_sum_initial == 0:\n        return -1  # Impossible for the cheater to guarantee a win\n    \n    min_stones_to_eat = float('inf')\n    \n    for i in range(len(piles)):\n        if piles[i] > 0:\n            # Try taking one stone from pile i\n            piles[i] -= 1\n            if nim_sum(piles) == 0:\n                min_stones_to_eat = min(min_stones_to_eat, 1)\n            piles[i] += 1  # Restore the pile\n    \n    return min_stones_to_eat if min_stones_to_eat != float('inf') else -1\n\n# Example usage:\npiles = [3, 4, 5]\nprint(minimum_stones_to_guarantee_win(piles))",
+    "timestamp": "2025-08-13 15:29:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class NimGame {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] piles = new int[N];\n        \n        for (int i = 0; i < N; i++) {\n            piles[i] = scanner.nextInt();\n        }\n        \n        scanner.close();\n        \n        int xorSum = 0;\n        for (int stones : piles) {\n            xorSum ^= stones;\n        }\n\n        if (xorSum == 0) {\n            System.out.println(\"0\");\n        } else {\n            boolean canGuaranteeWin = false;\n\n            for (int stones : piles) {\n                int newXor = xorSum ^ stones;\n                if ((newXor ^ (stones - 1)) == 0) {\n                    canGuaranteeWin = true;\n                    break;\n                }\n            }\n            \n            System.out.println(canGuaranteeWin ? \"1\" : \"-1\");\n        }\n    }\n}",
+    "timestamp": "2025-08-13 15:29:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    \n    int a[n];\n    for (int i = 0; i < n; ++i) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    int originalXor = 0;\n    for (int i = 0; i < n; ++i) {\n        originalXor ^= a[i];\n    }\n    \n    if (originalXor == 0) {\n        // If original XOR is 0, cheater already wins.\n        printf(\"0\\n\");\n        return 0;\n    }\n\n    int minStonesToEat = n; // Maximum of taking 1 stone per pile\n    for (int i = 0; i < n; ++i) {\n        if (a[i] > 0) {\n            int newXor = originalXor ^ a[i] ^ (a[i] - 1);\n            if (newXor == 0) { // Can remove one stone to make XOR 0\n                minStonesToEat = 1;\n            }\n        }\n    }\n    \n    if (minStonesToEat == n) {\n        // Check if we can make operation to get XOR 0 if it's never been 0\n        int findSolution = 0;\n        for (int i = 0; i < n; ++i) {\n            if (a[i] > 0) {\n                int newXor = originalXor ^ a[i];\n                if (newXor < a[i]) {\n                    findSolution = 1;\n                    break;\n                }\n            }\n        }\n        if (!findSolution) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n    }\n    \n    printf(\"%d\\n\", minStonesToEat);\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:29:23"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\n// Function to calculate the XOR for a vector\nint calculateXOR(const vector<int>& a) {\n    int xorSum = 0;\n    for (int num : a) {\n        xorSum ^= num;\n    }\n    return xorSum;\n}\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> a[i];\n    }\n\n    int initialXOR = calculateXOR(a);\n\n    // If the initial XOR is zero, the cheater can't guarantee a win without modification\n    if (initialXOR == 0) {\n        cout << \"0\" << endl;\n        return 0;\n    }\n\n    int minStonesToEat = -1;\n\n    // Check each pile to see if taking one stone makes the XOR zero\n    for (int i = 0; i < N; ++i) {\n        if (a[i] > 0) {\n            a[i]--;\n            int newXOR = calculateXOR(a);\n            if (newXOR == 0) {\n                minStonesToEat = (minStonesToEat == -1) ? 1 : min(minStonesToEat, 1);\n            }\n            a[i]++;\n        }\n    }\n\n    cout << minStonesToEat << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:29:29"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_nim_game(N, piles):\n    # Calculate initial Nim-sum\n    nim_sum = 0\n    for pile in piles:\n        nim_sum ^= pile\n\n    # If initial Nim-sum is 0, the first player will lose without intervention\n    if nim_sum == 0:\n        return -1\n\n    min_stones_to_eat = float('inf')\n    \n    # Try removing 0 or 1 stone from each pile\n    for i in range(N):\n        for stones_to_remove in range(2):\n            # Create a copy of piles to modify\n            modified_piles = piles.copy()\n            \n            # Remove stones from current pile\n            modified_piles[i] = max(0, modified_piles[i] - stones_to_remove)\n            \n            # Recalculate Nim-sum\n            modified_nim_sum = 0\n            for pile in modified_piles:\n                modified_nim_sum ^= pile\n            \n            # If Nim-sum becomes 0, the cheater can guarantee a win\n            if modified_nim_sum == 0:\n                min_stones_to_eat = min(min_stones_to_eat, stones_to_remove)\n\n    return min_stones_to_eat if min_stones_to_eat != float('inf') else -1\n\n# Read input\nN = int(input())\npiles = list(map(int, input().split()))\n\n# Solve and print result\nresult = solve_nim_game(N, piles)\nprint(result)",
+    "timestamp": "2025-08-13 15:29:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    \n    N = int(data[0])\n    a = list(map(int, data[1:N+1]))\n    \n    total_xor = 0\n    for num in a:\n        total_xor ^= num\n    \n    if total_xor == 0:\n        print(0)\n        return\n    \n    min_stones = float('inf')\n    for num in a:\n        new_xor = total_xor ^ num\n        if new_xor < num:\n            min_stones = min(min_stones, num - new_xor)\n    \n    if min_stones != float('inf'):\n        print(min_stones)\n    else:\n        print(-1)\n\nsolve()",
+    "timestamp": "2025-08-13 15:29:54"
+  }
+]

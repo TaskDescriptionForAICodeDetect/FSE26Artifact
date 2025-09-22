@@ -1,0 +1,1 @@
+At CoDeer, there are N cards with positive integers written on them. A subset of the cards is called good if the sum of the numbers in the subset is at least K. For each card, it is deemed unnecessary if removing it from any good subset still allows the remaining subset to be good. The challenge is to determine the number of unnecessary cards.

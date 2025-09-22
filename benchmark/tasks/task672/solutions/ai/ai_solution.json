@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\nint solve(int* A, int N) {\n    int max_leaves = 1;\n    int total_vertices = 1;\n    \n    for (int d = 0; d < N; d++) {\n        int curr_nodes = max_leaves;\n        int next_leaves = A[d+1];\n        \n        if (next_leaves > 2 * curr_nodes) {\n            return -1;\n        }\n        \n        total_vertices += curr_nodes;\n        max_leaves = next_leaves;\n    }\n    \n    total_vertices += max_leaves;\n    return total_vertices;\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int* A = malloc((N+1) * sizeof(int));\n    for (int i = 0; i <= N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n    \n    if (A[0] != 1) {\n        printf(\"-1\\n\");\n        free(A);\n        return 0;\n    }\n    \n    int result = solve(A, N);\n    printf(\"%d\\n\", result);\n    \n    free(A);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int A[N+1];\n    for (int i = 0; i <= N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    // Check if the sequence is valid\n    long long max_leaves = 1;\n    long long total_vertices = 0;\n    long long current_vertices = 0;\n\n    for (int d = 0; d <= N; d++) {\n        if (A[d] > max_leaves) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n        current_vertices += A[d];\n        total_vertices += current_vertices;\n        max_leaves = (max_leaves - A[d]) * 2;\n        if (max_leaves < 0) max_leaves = 0; // Prevent negative overflow\n    }\n\n    printf(\"%lld\\n\", total_vertices);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N + 1);\n    for (int i = 0; i <= N; ++i) {\n        cin >> A[i];\n    }\n\n    bool possible = true;\n    long long max_vertices = 0;\n    long long current_max = 1; // root at depth 0\n\n    if (A[0] != 1) {\n        possible = false;\n    }\n\n    max_vertices = current_max;\n    for (int d = 1; d <= N; ++d) {\n        if (A[d] > 2 * (current_max - A[d - 1])) {\n            possible = false;\n            break;\n        }\n        current_max = 2 * (current_max - A[d - 1]);\n        max_vertices += min(current_max, (long long)A[d]);\n    }\n\n    if (!possible) {\n        cout << -1 << endl;\n    } else {\n        // Re-check from bottom to top to ensure no contradictions\n        long long next_max = A[N];\n        long long total = next_max;\n        for (int d = N - 1; d >= 0; --d) {\n            next_max = min(A[d], next_max + A[d + 1]);\n            total += next_max;\n        }\n        cout << total << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:31:48"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class BinaryTreeLeaves {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N + 1];\n        for (int i = 0; i <= N; i++) {\n            A[i] = scanner.nextInt();\n        }\n\n        long[] maxNodes = new long[N + 1];\n        maxNodes[N] = A[N];\n        boolean possible = true;\n\n        for (int d = N - 1; d >= 0; d--) {\n            maxNodes[d] = maxNodes[d + 1] + A[d];\n            if (maxNodes[d] > (1L << d)) {\n                possible = false;\n                break;\n            }\n        }\n\n        if (!possible) {\n            System.out.println(-1);\n            return;\n        }\n\n        long[] minNodes = new long[N + 1];\n        minNodes[0] = 1;\n        for (int d = 1; d <= N; d++) {\n            minNodes[d] = Math.max(A[d], (minNodes[d - 1] - A[d - 1]) * 2);\n            if (minNodes[d] > maxNodes[d]) {\n                possible = false;\n                break;\n            }\n        }\n\n        if (!possible) {\n            System.out.println(-1);\n            return;\n        }\n\n        long total = 0;\n        for (int d = 0; d <= N; d++) {\n            total += Math.min(maxNodes[d], minNodes[d]);\n        }\n\n        System.out.println(total);\n    }\n}",
+    "timestamp": "2025-08-05 22:32:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TreeConstruction {\n    public static void solve(int[] A) {\n        int N = A.length - 1;\n        long[] nodes = new long[N + 1];\n        \n        nodes[0] = 1;\n        for (int d = 1; d <= N; d++) {\n            nodes[d] = Math.min(nodes[d-1] * 2, (long)1e15);\n        }\n        \n        long totalLeaves = 0;\n        for (int d = 0; d <= N; d++) {\n            long maxLeavesAtDepth = Math.min(nodes[d], A[d]);\n            totalLeaves += maxLeavesAtDepth;\n        }\n        \n        long maxPossibleLeaves = nodes[N];\n        \n        if (totalLeaves > maxPossibleLeaves) {\n            System.out.println(-1);\n            return;\n        }\n        \n        long totalNodes = 0;\n        for (int d = 0; d <= N; d++) {\n            long leavesAtDepth = Math.min(nodes[d], A[d]);\n            totalNodes += leavesAtDepth;\n            \n            if (d < N) {\n                long remainingNodes = Math.max(0, Math.min(nodes[d] - leavesAtDepth, (nodes[d+1] - leavesAtDepth)));\n                totalNodes += remainingNodes;\n            }\n        }\n        \n        System.out.println(totalNodes);\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] A = new int[N + 1];\n        \n        for (int i = 0; i <= N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        solve(A);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:32:10"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> A(N + 1);\n    for (int i = 0; i <= N; i++) {\n        cin >> A[i];\n    }\n    \n    if (A[0] != 1) {\n        cout << -1 << endl;\n        return 0;\n    }\n    \n    vector<int> max_leaves(N + 1, 0);\n    max_leaves[0] = 1;\n    \n    int total_vertices = 1;\n    int current_level_nodes = 1;\n    \n    for (int d = 1; d <= N; d++) {\n        current_level_nodes = current_level_nodes * 2;\n        max_leaves[d] = min(current_level_nodes, (1 << d));\n        \n        if (A[d] > max_leaves[d]) {\n            cout << -1 << endl;\n            return 0;\n        }\n        \n        total_vertices += current_level_nodes;\n        current_level_nodes -= A[d];\n    }\n    \n    if (current_level_nodes != 0) {\n        cout << -1 << endl;\n        return 0;\n    }\n    \n    cout << total_vertices << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:32:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_vertices(N, A):\n    maxNodes = 1\n    countNodes = 1\n    \n    for d in range(1, N + 1):\n        maxNodes = min(maxNodes * 2, sum(A[d:]))\n        if A[d] > maxNodes:\n            return -1\n        countNodes += A[d]\n        maxNodes -= A[d]\n    \n    return countNodes\n\nif __name__ == \"__main__\":\n    import sys\n    input = sys.stdin.readline\n    N = int(input())\n    A = list(map(int, input().split()))\n    print(max_vertices(N, A))",
+    "timestamp": "2025-08-13 11:10:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class BinaryTreeLeaves {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int[] A = new int[N + 1];\n        for (int i = 0; i <= N; i++) {\n            A[i] = scanner.nextInt();\n        }\n        \n        long totalVertices = 0;\n        long currentLeaves = 1;\n        \n        for (int depth = 0; depth <= N; depth++) {\n            if (A[depth] > currentLeaves) {\n                System.out.println(\"-1\");\n                return;\n            }\n            \n            totalVertices += (depth == 0) ? 1 : currentLeaves;\n            currentLeaves = 2 * (currentLeaves - A[depth]);\n        }\n        \n        System.out.println(totalVertices);\n    }\n}",
+    "timestamp": "2025-08-13 11:10:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int A[N + 1];\n    for (int i = 0; i <= N; i++) {\n        scanf(\"%d\", &A[i]);\n    }\n\n    long long totalLeaves = 0;\n    for (int i = 0; i <= N; i++) {\n        totalLeaves += A[i];\n    }\n\n    long long maxNodes = 0;\n    long long currentLevelCapacity = 1;\n    for (int i = 0; i <= N; i++) {\n        if (A[i] > currentLevelCapacity) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n        \n        maxNodes += A[i];\n        currentLevelCapacity = 2 * (currentLevelCapacity - A[i]);\n        if (i < N) {\n            currentLevelCapacity += A[i + 1];\n        }\n        if (currentLevelCapacity < 0) {\n            printf(\"-1\\n\");\n            return 0;\n        }\n    }\n\n    printf(\"%lld\\n\", maxNodes);\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:10:18"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxVertices(N, A) {\n    let currentLeaves = 1;\n    let maxVertices = 1;\n    \n    for (let d = 0; d <= N; d++) {\n        if (A[d] > currentLeaves) return -1;\n        maxVertices += currentLeaves;\n        currentLeaves -= A[d];\n        currentLeaves = Math.min(currentLeaves * 2, A[d] * 2);\n    }\n\n    return maxVertices;\n}\n\n// Example use:\n// const N = 2;\n// const A = [1, 2, 1];\n// console.log(maxVertices(N, A));  // Output should be 6",
+    "timestamp": "2025-08-13 11:10:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_tree_construction(A):\n    N = len(A) - 1\n    \n    # Check initial constraints\n    if A[0] != 1:\n        return -1\n    \n    # Track leaves at each depth\n    leaves = A[0]\n    \n    for depth in range(1, N + 1):\n        # Maximum possible parent nodes from previous depth\n        max_parents = leaves\n        \n        # Calculate potential leaves at current depth\n        new_leaves = A[depth]\n        \n        # Check if possible to have these leaves\n        if new_leaves > 2 * max_parents:\n            return -1\n        \n        # Update leaves for next iteration\n        leaves = new_leaves\n    \n    # Calculate total vertices\n    total_vertices = 0\n    leaves = A[0]\n    \n    for depth in range(N + 1):\n        total_vertices += leaves\n        \n        if depth < N:\n            # Calculate parent nodes\n            parents = min(leaves, 2 * leaves // 2)\n            leaves = A[depth + 1]\n    \n    return total_vertices\n\n# Read input\nN = int(input())\nA = list(map(int, input().split()))\n\n# Output result\nprint(solve_tree_construction(A))",
+    "timestamp": "2025-08-13 11:10:28"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function constructTree(A) {\n    const N = A.length - 1;\n    \n    // Check if first element matches total tree leaf count\n    if (A[N] !== A[0]) return -1;\n    \n    // Maximum possible leaves at each depth\n    const maxLeaves = new Array(N + 1).fill(0);\n    maxLeaves[0] = 1;\n    \n    for (let d = 1; d <= N; d++) {\n        maxLeaves[d] = maxLeaves[d-1] * 2;\n    }\n    \n    // Check if each depth's leaf count is possible\n    for (let d = 0; d <= N; d++) {\n        if (A[d] > maxLeaves[d]) return -1;\n    }\n    \n    // Compute total vertices\n    let totalVertices = 0;\n    for (let d = 0; d <= N; d++) {\n        totalVertices += Math.min(A[d], maxLeaves[d]);\n    }\n    \n    return totalVertices;\n}",
+    "timestamp": "2025-08-13 11:10:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    N, *rest = map(int, sys.stdin.read().split())\n    A = rest[:N+1]\n    \n    if N == 0:\n        if A[0] == 1:\n            print(1)\n        else:\n            print(-1)\n        return\n    \n    if A[0] != 1:\n        print(-1)\n        return\n    \n    # Check if the sequence is possible\n    total_from_bottom = 0\n    possible = True\n    for d in range(N, -1, -1):\n        total_from_bottom += A[d]\n        if d > 0 and total_from_bottom > (1 << d):\n            possible = False\n            break\n    if not possible:\n        print(-1)\n        return\n    \n    max_vertices = 0\n    current_max = 1  # root node\n    max_vertices += current_max\n    remaining = sum(A) - A[0]\n    \n    for d in range(1, N+1):\n        current_max = min(2 * (current_max - A[d-1]), remaining)\n        if current_max < A[d]:\n            print(-1)\n            return\n        max_vertices += current_max\n        remaining -= A[d]\n    \n    print(max_vertices)\n\nsolve()",
+    "timestamp": "2025-08-13 11:10:44"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const N = parseInt(readline());\n    const A = readline().split(' ').map(Number);\n    \n    if (A[0] !== 1) {\n        console.log(-1);\n        return;\n    }\n    \n    let total = 0;\n    let prevNodes = 1;\n    total += prevNodes;\n    \n    for (let d = 1; d <= N; d++) {\n        const currentLeaves = A[d];\n        if (currentLeaves > 2 * prevNodes) {\n            console.log(-1);\n            return;\n        }\n        prevNodes = Math.min(2 * prevNodes, A.slice(d).reduce((a, b) => a + b, 0)) - currentLeaves;\n        total += prevNodes + currentLeaves;\n    }\n    \n    console.log(total);\n}\n\n// For testing purposes, you can replace readline() with actual input functions\n// Example:\n// const readline = () => {\n//     const lines = ['3', '1 2 1 1'];\n//     return lines.shift();\n// };\n// solve();",
+    "timestamp": "2025-08-13 11:10:50"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N+1);\n    for (int i = 0; i <= N; ++i) {\n        cin >> A[i];\n    }\n    \n    vector<int> nodes(N+1, 0);\n    nodes[0] = 1;\n    \n    for (int i = 1; i <= N; ++i) {\n        nodes[i] = 2 * nodes[i-1] - A[i-1];\n        if (nodes[i] < A[i]) {\n            cout << -1 << endl;\n            return 0;\n        }\n    }\n    \n    int sum_vertices = 0;\n    for (int i = 0; i <= N; ++i) {\n        sum_vertices += nodes[i];\n    }\n    \n    cout << sum_vertices << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:02:37"
+  }
+]

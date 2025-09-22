@@ -1,0 +1,1 @@
+In a cinema arranged in N rows and N seats, viewers leave in a given order. When a viewer x leaves, they might pass through a seat currently occupied by viewer y, causing y to hate x forever. The task is to compute the number of pairs of viewers (x, y) such that y will hate x forever, given the starting arrangement and the exit order.

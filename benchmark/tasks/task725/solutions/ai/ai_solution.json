@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint minOperations(char* s, int k) {\n    int len = strlen(s);\n    int totalLen = len * k;\n    int operations = 0;\n    \n    for (int i = 0; i < totalLen; i++) {\n        if (i > 0 && s[i % len] == s[(i-1) % len]) {\n            operations++;\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    char s[100];\n    int k;\n    \n    scanf(\"%s %d\", s, &k);\n    \n    printf(\"%d\\n\", minOperations(s, k));\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint minChanges(char* S, int K) {\n    int len = strlen(S);\n    if (len == 1) {\n        return (K > 1) ? K / 2 : 0;\n    }\n    \n    int changes = 0;\n    for (int i = 1; i < len; i++) {\n        if (S[i] == S[i-1]) {\n            changes++;\n            i++; // Skip next to prevent overlapping\n        }\n    }\n    \n    if (S[0] == S[len-1]) {\n        if (len > 2 && S[len-1] == S[len-2]) {\n            // Already handled in loop\n        } else {\n            changes += K - 1;\n        }\n    }\n    \n    return changes * K;\n}\n\nint main() {\n    char S[100000];\n    int K;\n    scanf(\"%s %d\", S, &K);\n    printf(\"%d\\n\", minChanges(S, K));\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:15"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint solve() {\n    int N, K;\n    string S;\n    cin >> N >> K >> S;\n\n    if (K == 1) {\n        int changes = 0;\n        for (int i = 1; i < N; ++i) {\n            if (S[i] == S[i-1]) {\n                changes++;\n                i++; // Skip next to prevent overlapping issues\n            }\n        }\n        return changes;\n    }\n\n    int total_changes = 0;\n    for (int i = 0; i < N; ) {\n        int j = i;\n        while (j < N && S[j] == S[i]) {\n            j++;\n        }\n        int len = j - i;\n        total_changes += len / 2;\n        i = j;\n    }\n\n    if (S[0] == S.back()) {\n        int i = 0;\n        while (i < N && S[i] == S[0]) {\n            i++;\n        }\n        int j = N - 1;\n        while (j >= 0 && S[j] == S.back()) {\n            j--;\n        }\n        if (i <= j) {\n            int prefix = i;\n            int suffix = N - 1 - j;\n            total_changes += (prefix + suffix) / 2 - (prefix / 2 + suffix / 2);\n        } else {\n            total_changes = (N * K) / 2;\n        }\n    }\n\n    return total_changes * K;\n}\n\nint main() {\n    cout << solve() << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.next();\n        int K = scanner.nextInt();\n        System.out.println(minOperations(S, K));\n    }\n\n    private static int minOperations(String S, int K) {\n        if (S.length() == 1) {\n            return K > 1 ? K / 2 : 0;\n        }\n\n        int n = S.length();\n        int totalChanges = 0;\n        int consecutive = 1;\n\n        for (int i = 1; i < n; i++) {\n            if (S.charAt(i) == S.charAt(i - 1)) {\n                consecutive++;\n            } else {\n                totalChanges += consecutive / 2;\n                consecutive = 1;\n            }\n        }\n        totalChanges += consecutive / 2;\n\n        if (allSameChars(S)) {\n            return (n * K) / 2;\n        }\n\n        if (S.charAt(0) != S.charAt(n - 1)) {\n            return totalChanges * K;\n        } else {\n            int firstGroup = 1;\n            for (int i = 1; i < n && S.charAt(i) == S.charAt(0); i++) {\n                firstGroup++;\n            }\n            int lastGroup = 1;\n            for (int i = n - 2; i >= 0 && S.charAt(i) == S.charAt(n - 1); i--) {\n                lastGroup++;\n            }\n            return totalChanges * K - (firstGroup / 2 + lastGroup / 2 - (firstGroup + lastGroup) / 2) * (K - 1);\n        }\n    }\n\n    private static boolean allSameChars(String s) {\n        char first = s.charAt(0);\n        for (int i = 1; i < s.length(); i++) {\n            if (s.charAt(i) != first) {\n                return false;\n            }\n        }\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 22:42:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int minOperations(String s, int k) {\n        String t = s.repeat(k);\n        int operations = 0;\n        \n        for (int i = 1; i < t.length(); i++) {\n            if (t.charAt(i) == t.charAt(i - 1)) {\n                operations++;\n                t = replaceChar(t, i);\n            }\n        }\n        \n        return operations;\n    }\n    \n    private String replaceChar(String t, int index) {\n        char[] chars = t.toCharArray();\n        char current = chars[index];\n        \n        for (char c = 'a'; c <= 'z'; c++) {\n            if (c != current && (index == 0 || c != chars[index - 1]) && \n                (index == chars.length - 1 || c != chars[index + 1])) {\n                chars[index] = c;\n                break;\n            }\n        }\n        \n        return new String(chars);\n    }\n}",
+    "timestamp": "2025-08-05 22:42:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nusing namespace std;\n\nint minOperations(string S, int K) {\n    int n = S.length();\n    string T = \"\";\n    \n    // Create T by concatenating K copies of S\n    for (int i = 0; i < K; i++) {\n        T += S;\n    }\n    \n    int operations = 0;\n    \n    // Iterate through T and count operations needed\n    for (int i = 0; i < T.length() - 1; i++) {\n        if (T[i] == T[i+1]) {\n            operations++;\n            \n            // Replace with a different character\n            char newChar = 'a';\n            while (newChar == T[i] || (i+1 < T.length() && newChar == T[i+1])) {\n                newChar++;\n            }\n            \n            T[i+1] = newChar;\n        }\n    }\n    \n    return operations;\n}\n\nint main() {\n    string S;\n    int K;\n    cin >> S >> K;\n    \n    cout << minOperations(S, K) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(S, K):\n    T = S * K\n    n = len(T)\n    operations = 0\n    i = 0\n\n    while i < n - 1:\n        if T[i] == T[i + 1]:\n            operations += 1\n            # Move to the next pair to avoid consecutive duplicates\n            i += 2\n        else:\n            i += 1\n\n    return operations\n\n# Example usage:\nS = \"abc\"\nK = 5\nprint(min_operations(S, K))  # Adjust S and K as needed and run the function",
+    "timestamp": "2025-08-13 12:14:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class MinOperations {\n    public static int minOperations(String S, int K) {\n        int n = S.length();\n        char prevChar = ' ';\n        int operations = 0;\n\n        for (int i = 0; i < K * n; i++) {\n            char currentChar = S.charAt(i % n);\n            if (currentChar == prevChar) {\n                operations++;\n                prevChar = '#'; // using a placeholder character different from 'a' to 'z'\n            } else {\n                prevChar = currentChar;\n            }\n        }\n\n        return operations;\n    }\n\n    public static void main(String[] args) {\n        String S = \"abc\";\n        int K = 3;\n        System.out.println(minOperations(S, K)); // Output\n    }\n}",
+    "timestamp": "2025-08-13 12:14:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint minOperations(char *s, int k) {\n    int len = strlen(s);\n    int totalLength = len * k;\n    int ops = 0;\n\n    for (int i = 1; i < totalLength; i++) {\n        if (s[i % len] == s[(i - 1) % len]) {\n            ops++;\n            i++;  // Skip the next character to ensure they are not the same\n        }\n    }\n\n    return ops;\n}\n\nint main() {\n    char s[] = \"abab\";\n    int k = 3;\n    printf(\"%d\\n\", minOperations(s, k));  // Example usage\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:14:39"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n#include <algorithm>\n\nint minOperations(const std::string &S, int K) {\n    int n = S.size();\n    int totalLen = n * K;\n    int operations = 0;\n\n    for (int i = 0; i < n; ++i) {\n        int count = 0;\n        for (int j = i; j < totalLen; j += n) {\n            if (j > 0 && T[j] == T[j - 1]) {\n                ++count;\n            }\n        }\n        operations += count / 2;\n    }\n\n    return operations;\n}\n\nint main() {\n    std::string S;\n    int K;\n    std::cin >> S >> K;\n\n    int result = minOperations(S, K);\n    std::cout << result << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:14:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(S, K):\n    T = S * K\n    \n    def solve(T):\n        operations = 0\n        for i in range(len(T) - 1):\n            if T[i] == T[i + 1]:\n                operations += 1\n                T = T[:i + 1] + chr((ord(T[i + 1]) - ord('a') + 1) % 26 + ord('a')) + T[i + 2:]\n        return operations\n\n    return solve(T)",
+    "timestamp": "2025-08-13 12:14:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def min_operations(S, K):\n    n = len(S)\n    if n == 1:\n        if K == 1:\n            return 0\n        else:\n            return K // 2\n    \n    # Check if all characters in S are the same\n    all_same = True\n    for c in S:\n        if c != S[0]:\n            all_same = False\n            break\n    if all_same:\n        return (n * K) // 2\n    \n    # Count operations for a single S\n    cnt_single = 0\n    prev = S[0]\n    run_length = 1\n    for c in S[1:]:\n        if c == prev:\n            run_length += 1\n        else:\n            cnt_single += run_length // 2\n            run_length = 1\n            prev = c\n    cnt_single += run_length // 2\n    \n    # Count operations for two concatenated S\n    cnt_double = 0\n    prev = S[0]\n    run_length = 1\n    for c in (S + S)[1:]:\n        if c == prev:\n            run_length += 1\n        else:\n            cnt_double += run_length // 2\n            run_length = 1\n            prev = c\n    cnt_double += run_length // 2\n    \n    # The pattern for K S's is cnt_single + (K - 1) * (cnt_double - cnt_single)\n    return cnt_single + (K - 1) * (cnt_double - cnt_single)\n\n# Example usage:\n# S = \"aab\"\n# K = 2\n# print(min_operations(S, K))  # Output: 2",
+    "timestamp": "2025-08-13 12:14:54"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperations(S, K) {\n    const T = S.repeat(K);\n    let operations = 0;\n\n    for (let i = 1; i < T.length; i++) {\n        if (T[i] === T[i - 1]) {\n            operations++;\n            // Logic to replace the character with a different one\n            // Since we only need the count we don't perform actual replacement.\n        }\n    }\n\n    return operations;\n}",
+    "timestamp": "2025-08-13 12:14:57"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperations(s, k) {\n    const n = s.length;\n    const t = s.repeat(k);\n    \n    let operations = 0;\n    \n    for (let i = 0; i < t.length - 1; i++) {\n        if (t[i] === t[i + 1]) {\n            operations++;\n            const otherChars = new Set(\n                'abcdefghijklmnopqrstuvwxyz'.split('').filter(c => c !== t[i])\n            );\n            t = t.substring(0, i + 1) + [...otherChars][0] + t.substring(i + 2);\n        }\n    }\n    \n    return operations;\n}",
+    "timestamp": "2025-08-13 12:15:01"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function minOperations(S, K) {\n    const n = S.length;\n    if (n === 1) {\n        return K > 1 ? Math.floor(K / 2) : 0;\n    }\n    \n    let totalChanges = 0;\n    let changesForCycle = 0;\n    \n    // Calculate changes for one cycle (S)\n    for (let i = 0; i < n; i++) {\n        const prev = i === 0 ? S[n - 1] : S[i - 1];\n        if (S[i] === prev) {\n            changesForCycle++;\n            i++; // Skip next to avoid overlapping\n        }\n    }\n    \n    // Calculate changes for the entire T (K cycles)\n    if (S[0] === S[n - 1]) {\n        totalChanges = changesForCycle * K;\n        // Adjust for overlapping between cycles\n        const firstChar = S[0];\n        let left = 0;\n        while (left < n && S[left] === firstChar) left++;\n        let right = n - 1;\n        while (right >= 0 && S[right] === firstChar) right--;\n        const consecutiveFirstChars = left + (n - 1 - right);\n        const overlappingChanges = Math.floor(consecutiveFirstChars / 2) * (K - 1);\n        totalChanges -= overlappingChanges;\n    } else {\n        totalChanges = changesForCycle * K;\n    }\n    \n    return totalChanges;\n}",
+    "timestamp": "2025-08-13 12:15:08"
+  }
+]

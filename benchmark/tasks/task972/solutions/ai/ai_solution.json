@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX(a, b) ((a) > (b) ? (a) : (b))\n\nint maxSouvenirs(int h, int w, int** grid) {\n    int dp[h][w];\n    memset(dp, 0, sizeof(dp));\n    \n    dp[0][0] = grid[0][0];\n    \n    // Fill first row\n    for (int j = 1; j < w; j++) {\n        dp[0][j] = dp[0][j-1] + grid[0][j];\n    }\n    \n    // Fill first column\n    for (int i = 1; i < h; i++) {\n        dp[i][0] = dp[i-1][0] + grid[i][0];\n    }\n    \n    // Fill rest of the dp table\n    for (int i = 1; i < h; i++) {\n        for (int j = 1; j < w; j++) {\n            dp[i][j] = MAX(dp[i-1][j], dp[i][j-1]) + grid[i][j];\n        }\n    }\n    \n    return dp[h-1][w-1];\n}\n\nint main() {\n    int h, w;\n    scanf(\"%d %d\", &h, &w);\n    \n    int** grid = malloc(h * sizeof(int*));\n    for (int i = 0; i < h; i++) {\n        grid[i] = malloc(w * sizeof(int));\n        for (int j = 0; j < w; j++) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n    \n    int result = maxSouvenirs(h, w, grid);\n    printf(\"%d\\n\", result);\n    \n    // Free allocated memory\n    for (int i = 0; i < h; i++) {\n        free(grid[i]);\n    }\n    free(grid);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:17"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint max(int a, int b) {\n    return (a > b) ? a : b;\n}\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    \n    int a[H][W];\n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            scanf(\"%d\", &a[i][j]);\n        }\n    }\n    \n    int dp[H][W];\n    memset(dp, 0, sizeof(dp));\n    dp[0][0] = a[0][0];\n    \n    for (int i = 0; i < H; i++) {\n        for (int j = 0; j < W; j++) {\n            if (i == 0 && j == 0) continue;\n            int from_top = (i > 0) ? dp[i-1][j] : 0;\n            int from_left = (j > 0) ? dp[i][j-1] : 0;\n            dp[i][j] = max(from_top, from_left) + a[i][j];\n        }\n    }\n    \n    printf(\"%d\\n\", dp[H-1][W-1]);\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<vector<int>> a(H, vector<int>(W));\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cin >> a[i][j];\n        }\n    }\n\n    vector<vector<vector<int>>> dp(H, vector<vector<int>>(W, vector<int>(H + W, -1)));\n    dp[0][0][0] = a[0][0];\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            for (int k = 0; k < H + W - 1; ++k) {\n                if (dp[i][j][k] == -1) continue;\n                if (i + 1 < H) {\n                    int nk = k + 1;\n                    dp[i + 1][j][nk] = max(dp[i + 1][j][nk], dp[i][j][k] + a[i + 1][j]);\n                }\n                if (j + 1 < W) {\n                    int nk = k + 1;\n                    dp[i][j + 1][nk] = max(dp[i][j + 1][nk], dp[i][j][k] + a[i][j + 1]);\n                }\n            }\n        }\n    }\n\n    cout << dp[H - 1][W - 1][H + W - 2] << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:31:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int H = scanner.nextInt();\n        int W = scanner.nextInt();\n        int[][] grid = new int[H][W];\n        for (int i = 0; i < H; i++) {\n            for (int j = 0; j < W; j++) {\n                grid[i][j] = scanner.nextInt();\n            }\n        }\n\n        int[][][] dp = new int[H][W][H + W];\n        dp[0][0][0] = grid[0][0];\n\n        for (int k = 1; k < H + W - 1; k++) {\n            for (int i = 0; i < H; i++) {\n                for (int j = 0; j < W; j++) {\n                    if (i + j > k) continue;\n                    int maxPrev = 0;\n                    if (i > 0) maxPrev = Math.max(maxPrev, dp[i - 1][j][k - 1]);\n                    if (j > 0) maxPrev = Math.max(maxPrev, dp[i][j - 1][k - 1]);\n                    if (maxPrev > 0 || (i == 0 && j == 0 && k == 0)) {\n                        dp[i][j][k] = maxPrev + grid[i][j];\n                    }\n                }\n            }\n        }\n\n        System.out.println(dp[H - 1][W - 1][H + W - 2]);\n    }\n}",
+    "timestamp": "2025-08-05 23:32:00"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class MaxSouvenirs {\n    public static int maxSouvenirs(int[][] grid) {\n        int H = grid.length;\n        int W = grid[0].length;\n        int[][] dp = new int[H][W];\n        \n        // Initialize first cell\n        dp[0][0] = grid[0][0];\n        \n        // Initialize first row\n        for (int j = 1; j < W; j++) {\n            dp[0][j] = dp[0][j-1] + grid[0][j];\n        }\n        \n        // Initialize first column\n        for (int i = 1; i < H; i++) {\n            dp[i][0] = dp[i-1][0] + grid[i][0];\n        }\n        \n        // Fill dp table\n        for (int i = 1; i < H; i++) {\n            for (int j = 1; j < W; j++) {\n                dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]) + grid[i][j];\n            }\n        }\n        \n        return dp[H-1][W-1];\n    }\n    \n    public static void main(String[] args) {\n        int[][] grid = {\n            {1, 3, 1},\n            {1, 5, 1},\n            {4, 2, 1}\n        };\n        System.out.println(maxSouvenirs(grid));\n    }\n}",
+    "timestamp": "2025-08-05 23:32:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint maxSouvenirs(vector<vector<int>>& grid) {\n    int H = grid.size();\n    int W = grid[0].size();\n    vector<vector<vector<int>>> dp(H, vector<vector<int>>(W, vector<int>(H + W, 0)));\n    \n    dp[0][0][0] = grid[0][0];\n    \n    for (int steps = 1; steps < H + W - 1; ++steps) {\n        for (int r1 = 0; r1 < H; ++r1) {\n            for (int r2 = 0; r2 < H; ++r2) {\n                int c1 = steps - r1;\n                int c2 = steps - r2;\n                \n                if (c1 < 0 || c1 >= W || c2 < 0 || c2 >= W) continue;\n                \n                int souvenir = grid[r1][c1];\n                if (r1 != r2) souvenir += grid[r2][c2];\n                \n                for (int pr1 : {r1-1, r1}) {\n                    for (int pr2 : {r2-1, r2}) {\n                        if (pr1 >= 0 && pr1 < H && pr2 >= 0 && pr2 < H && c1 >= 0 && c1 < W && c2 >= 0 && c2 < W) {\n                            dp[r1][r2][steps] = max(dp[r1][r2][steps], \n                                                    dp[pr1][pr2][steps-1] + souvenir);\n                        }\n                    }\n                }\n            }\n        }\n    }\n    \n    int maxSouv = 0;\n    for (int r1 = 0; r1 < H; ++r1) {\n        for (int r2 = 0; r2 < H; ++r2) {\n            if (r1 == H-1 && r2 == H-1) {\n                maxSouv = max(maxSouv, dp[r1][r2][H+W-2]);\n            }\n        }\n    }\n    \n    return maxSouv;\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<vector<int>> grid(H, vector<int>(W));\n    \n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    cout << maxSouvenirs(grid) << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:32:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_souvenirs(H, W, grid):\n    dp = [[-float('inf')] * W for _ in range(H)]\n    dp[0][0] = grid[0][0]\n    for i in range(H):\n        for j in range(W):\n            if i > 0:\n                dp[i][j] = max(dp[i][j], dp[i - 1][j] + grid[i][j])\n            if j > 0:\n                dp[i][j] = max(dp[i][j], dp[i][j - 1] + grid[i][j])\n\n    return dp[-1][-1]\n\n# Example usage:\nH = 3\nW = 3\ngrid = [\n    [5, 3, 8],\n    [8, 3, 2],\n    [4, 7, 6]\n]\nprint(max_souvenirs(H, W, grid))  # Output should be the maximum souvenirs they can gather",
+    "timestamp": "2025-08-13 15:47:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\n\npublic class MaxSouvenirs {\n    \n    public static int maxSouvenirs(int[][] grid) {\n        int h = grid.length;\n        int w = grid[0].length;\n        int[][] dp = new int[h][w];\n\n        dp[0][0] = grid[0][0];\n        \n        for (int i = 1; i < h; i++) {\n            dp[i][0] = dp[i - 1][0] + grid[i][0];\n        }\n\n        for (int j = 1; j < w; j++) {\n            dp[0][j] = dp[0][j - 1] + grid[0][j];\n        }\n\n        for (int i = 1; i < h; i++) {\n            for (int j = 1; j < w; j++) {\n                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];\n            }\n        }\n\n        return dp[h - 1][w - 1];\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int h = scanner.nextInt();\n        int w = scanner.nextInt();\n        int[][] grid = new int[h][w];\n\n        for (int i = 0; i < h; i++) {\n            for (int j = 0; j < w; j++) {\n                grid[i][j] = scanner.nextInt();\n            }\n        }\n\n        scanner.close();\n\n        System.out.println(maxSouvenirs(grid));\n    }\n}",
+    "timestamp": "2025-08-13 15:47:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define max(x, y) ((x) > (y) ? (x) : (y))\n\nint maxSouvenirs(int** grid, int H, int W) {\n    int dp[H][W];\n    dp[0][0] = grid[0][0];\n\n    // Fill first row\n    for (int j = 1; j < W; ++j)\n        dp[0][j] = dp[0][j - 1] + grid[0][j];\n    \n    // Fill first column\n    for (int i = 1; i < H; ++i)\n        dp[i][0] = dp[i - 1][0] + grid[i][0];\n    \n    // Fill remaining cells\n    for (int i = 1; i < H; ++i) {\n        for (int j = 1; j < W; ++j) {\n            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];\n        }\n    }\n\n    return dp[H - 1][W - 1];\n}\n\nint main() {\n    int H, W;\n    scanf(\"%d %d\", &H, &W);\n    int** grid = (int**)malloc(H * sizeof(int*));\n    for (int i = 0; i < H; ++i) {\n        grid[i] = (int*)malloc(W * sizeof(int));\n        for (int j = 0; j < W; ++j) {\n            scanf(\"%d\", &grid[i][j]);\n        }\n    }\n\n    int result = maxSouvenirs(grid, H, W);\n    printf(\"%d\\n\", result);\n\n    for (int i = 0; i < H; ++i)\n        free(grid[i]);\n    free(grid);\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:47:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint maxSouvenirs(vector<vector<int>>& grid) {\n    int H = grid.size();\n    int W = grid[0].size();\n    \n    vector<vector<int>> dp(H, vector<int>(W, 0));\n\n    dp[0][0] = grid[0][0];\n\n    for (int i = 1; i < H; ++i) {\n        dp[i][0] = dp[i - 1][0] + grid[i][0];\n    }\n\n    for (int j = 1; j < W; ++j) {\n        dp[0][j] = dp[0][j - 1] + grid[0][j];\n    }\n    \n    for (int i = 1; i < H; ++i) {\n        for (int j = 1; j < W; ++j) {\n            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];\n        }\n    }\n\n    return dp[H - 1][W - 1];\n}\n\nint main() {\n    int H, W;\n    cin >> H >> W;\n    vector<vector<int>> grid(H, vector<int>(W));\n\n    for (int i = 0; i < H; ++i) {\n        for (int j = 0; j < W; ++j) {\n            cin >> grid[i][j];\n        }\n    }\n    \n    cout << maxSouvenirs(grid) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 15:47:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_souvenirs(grid):\n    H, W = len(grid), len(grid[0])\n    dp = [[0] * W for _ in range(H)]\n    dp[0][0] = grid[0][0]\n\n    # Initialize first row\n    for j in range(1, W):\n        dp[0][j] = dp[0][j-1] + grid[0][j]\n\n    # Initialize first column\n    for i in range(1, H):\n        dp[i][0] = dp[i-1][0] + grid[i][0]\n\n    # Fill DP table\n    for i in range(1, H):\n        for j in range(1, W):\n            dp[i][j] = max(dp[i-1][j], dp[i][j-1]) + grid[i][j]\n\n    return dp[H-1][W-1]\n\ndef solve(H, W, grid):\n    return max_souvenirs(grid)",
+    "timestamp": "2025-08-13 15:47:56"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    H, W = map(int, input().split())\n    grid = [list(map(int, input().split())) for _ in range(H)]\n    \n    max_moves = H + W - 2\n    if max_moves == 0:\n        print(grid[0][0])\n        return\n    \n    # DP table: dp[move][i1][i2] represents the max souvenirs collected after 'move' steps,\n    # with Sigma at (i1, move - i1) and Sugim at (i2, move - i2)\n    dp_prev = [[-1 for _ in range(H)] for __ in range(H)]\n    dp_prev[0][0] = grid[0][0]\n    \n    for move in range(1, max_moves + 1):\n        dp_current = [[-1 for _ in range(H)] for __ in range(H)]\n        for i1 in range(H):\n            for i2 in range(H):\n                if dp_prev[i1][i2] == -1:\n                    continue\n                j1 = move - 1 - i1\n                j2 = move - 1 - i2\n                if j1 < 0 or j1 >= W or j2 < 0 or j2 >= W:\n                    continue\n                # Generate next possible positions\n                for di1, dj1 in [(0, 1), (1, 0)]:\n                    new_i1 = i1 + di1\n                    new_j1 = j1 + dj1\n                    if new_i1 >= H or new_j1 >= W:\n                        continue\n                    for di2, dj2 in [(0, 1), (1, 0)]:\n                        new_i2 = i2 + di2\n                        new_j2 = j2 + dj2\n                        if new_i2 >= H or new_j2 >= W:\n                            continue\n                        if new_i1 == new_i2 and new_j1 == new_j2:\n                            added = grid[new_i1][new_j1]\n                        else:\n                            added = grid[new_i1][new_j1] + grid[new_i2][new_j2]\n                        if dp_current[new_i1][new_i2] < dp_prev[i1][i2] + added:\n                            dp_current[new_i1][new_i2] = dp_prev[i1][i2] + added\n        dp_prev = dp_current\n    \n    print(dp_prev[H-1][H-1])\n\nsolve()",
+    "timestamp": "2025-08-13 15:48:19"
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100\n\nvoid solve(int N, int a[]) {\n    int ops[MAX_N * MAX_N][3];\n    int op_count = 0;\n\n    for (int i = 1; i < N; i++) {\n        while (a[i] < a[i-1]) {\n            int max_j = -1;\n            for (int j = 0; j < i; j++) {\n                if (a[j] > 0 && (max_j == -1 || a[j] > a[max_j])) {\n                    max_j = j;\n                }\n            }\n            \n            a[i] += a[max_j];\n            ops[op_count][0] = max_j + 1;\n            ops[op_count][1] = i + 1;\n            ops[op_count][2] = 1;\n            op_count++;\n        }\n    }\n\n    printf(\"%d\\n\", op_count);\n    for (int i = 0; i < op_count; i++) {\n        printf(\"%d %d %d\\n\", ops[i][0], ops[i][1], ops[i][2]);\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    \n    int a[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    solve(N, a);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    int x, y;\n} Operation;\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N+1];\n    for (int i = 1; i <= N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n\n    Operation operations[2*N];\n    int op_count = 0;\n\n    // Find the minimal element and its position\n    int min_pos = 1;\n    for (int i = 2; i <= N; i++) {\n        if (a[i] < a[min_pos]) {\n            min_pos = i;\n        }\n    }\n\n    // Make all elements non-negative by adding the minimal element if needed\n    for (int i = 1; i <= N; i++) {\n        if (i != min_pos && a[i] < 0) {\n            int q = (-a[i] + a[min_pos] - 1) / a[min_pos];\n            a[i] += q * a[min_pos];\n            operations[op_count].x = min_pos;\n            operations[op_count].y = i;\n            op_count++;\n        }\n    }\n\n    // Now perform prefix sums to make the sequence non-decreasing\n    for (int i = 2; i <= N; i++) {\n        if (a[i] < a[i-1]) {\n            int q = (a[i-1] - a[i] + a[i-1] - 1) / a[i-1];\n            a[i] += q * a[i-1];\n            operations[op_count].x = i-1;\n            operations[op_count].y = i;\n            op_count++;\n        }\n    }\n\n    printf(\"%d\\n\", op_count);\n    for (int i = 0; i < op_count; i++) {\n        printf(\"%d %d\\n\", operations[i].x, operations[i].y);\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:11:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <utility>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> a(N + 1);\n    for (int i = 1; i <= N; ++i) {\n        cin >> a[i];\n    }\n\n    vector<pair<int, int>> operations;\n    int min_pos = 1;\n    for (int i = 2; i <= N; ++i) {\n        if (a[i] < a[min_pos]) {\n            min_pos = i;\n        }\n    }\n\n    for (int i = 1; i <= N; ++i) {\n        if (i != min_pos) {\n            operations.emplace_back(min_pos, i);\n            a[i] += a[min_pos];\n        }\n    }\n\n    for (int i = 2; i <= N; ++i) {\n        if (a[i] < a[i - 1]) {\n            operations.emplace_back(i - 1, i);\n            a[i] += a[i - 1];\n        }\n    }\n\n    cout << operations.size() << endl;\n    for (auto &op : operations) {\n        cout << op.first << \" \" << op.second << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.ArrayList;\nimport java.util.List;\nimport java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        List<int[]> operations = new ArrayList<>();\n        int[] pos = new int[N + 1];\n        for (int i = 1; i <= N; i++) {\n            pos[i] = i;\n        }\n\n        for (int i = 1; i <= N; i++) {\n            for (int j = 1; j < N; j++) {\n                if (a[j] > a[j + 1]) {\n                    operations.add(new int[]{pos[j + 1], pos[j]});\n                    a[j + 1] += a[j];\n                    int temp = pos[j];\n                    pos[j] = pos[j + 1];\n                    pos[j + 1] = temp;\n                }\n            }\n        }\n\n        System.out.println(operations.size());\n        for (int[] op : operations) {\n            System.out.println(op[0] + \" \" + op[1]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 23:12:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class Solution {\n    public static void solve(int N, int[] a) {\n        List<int[]> operations = new ArrayList<>();\n        \n        while (!isSorted(a)) {\n            for (int x = 1; x <= N; x++) {\n                for (int y = 1; y <= N; y++) {\n                    if (x != y) {\n                        int times = calculateTimes(a, x, y);\n                        if (times > 0) {\n                            for (int k = 0; k < times; k++) {\n                                a[y - 1] += a[x - 1];\n                                operations.add(new int[]{x, y});\n                            }\n                        }\n                    }\n                }\n            }\n        }\n        \n        System.out.println(operations.size());\n        for (int[] op : operations) {\n            System.out.println(op[0] + \" \" + op[1]);\n        }\n    }\n    \n    private static int calculateTimes(int[] a, int x, int y) {\n        int needed = 0;\n        int[] copy = a.clone();\n        \n        while (!isSorted(copy)) {\n            if (needToAdd(copy, x, y)) {\n                copy[y - 1] += copy[x - 1];\n                needed++;\n            } else {\n                break;\n            }\n        }\n        \n        return needed > 2 * a.length ? 0 : needed;\n    }\n    \n    private static boolean needToAdd(int[] a, int x, int y) {\n        for (int i = 0; i < a.length - 1; i++) {\n            if (a[i] > a[i + 1]) {\n                return (i + 1) == (y - 1);\n            }\n        }\n        return false;\n    }\n    \n    private static boolean isSorted(int[] a) {\n        for (int i = 0; i < a.length - 1; i++) {\n            if (a[i] > a[i + 1]) {\n                return false;\n            }\n        }\n        return true;\n    }\n    \n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine());\n        String[] input = br.readLine().split(\" \");\n        int[] a = new int[N];\n        for (int i = 0; i < N; i++) {\n            a[i] = Integer.parseInt(input[i]);\n        }\n        solve(N, a);\n    }\n}",
+    "timestamp": "2025-08-05 23:12:30"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nvoid solve() {\n    int N;\n    cin >> N;\n    vector<int> a(N);\n    for (int i = 0; i < N; i++) {\n        cin >> a[i];\n    }\n    \n    vector<pair<int, int>> operations;\n    \n    for (int i = 1; i < N; i++) {\n        while (a[i] < a[i-1]) {\n            int j = i - 1;\n            while (j >= 0 && a[j] > a[i]) {\n                operations.emplace_back(j + 1, i + 1);\n                a[i] += a[j];\n                j--;\n            }\n        }\n    }\n    \n    cout << operations.size() << endl;\n    for (auto op : operations) {\n        cout << op.first << \" \" << op.second << endl;\n    }\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(nullptr);\n    \n    solve();\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 23:12:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sort_sequence(a):\n    N = len(a)\n    operations = []\n    \n    for i in range(N):\n        for j in range(i + 1, N):\n            if a[i] > a[j]:\n                diff = a[i] - a[j]\n                times = (diff + a[j]) // a[j]\n                a[j] += times * a[j]\n                operations.append((i + 1, j + 1, times))\n    \n    return a, operations\n\n# Example usage:\na = [3, 1, 2]\nsorted_sequence, ops = sort_sequence(a)\n\nprint(\"Sorted sequence:\", sorted_sequence)\nprint(\"Operations:\")\nfor op in ops:\n    print(op)",
+    "timestamp": "2025-08-13 14:04:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class SnukeSequence {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int[] a = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            a[i] = scanner.nextInt();\n        }\n\n        List<String> operations = new ArrayList<>();\n\n        // Make the sequence non-decreasing\n        for (int i = N - 1; i > 0; i--) {\n            while (a[i - 1] > a[i]) {\n                int diff = a[i - 1] - a[i];\n                int addTimes = Math.min(diff / a[i], 2 * N);\n                if (addTimes == 0) addTimes = 1;\n                a[i] += a[i] * addTimes;\n                operations.add((i + 1) + \" \" + (i + 1) + \" \" + addTimes);\n            }\n        }\n\n        System.out.println(operations.size());\n        for (String op : operations) {\n            System.out.println(op);\n        }\n\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-13 14:04:19"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nvoid solve(int a[], int N) {\n    for (int i = 0; i < N - 1; i++) {\n        if (a[i] > a[i + 1]) {\n            int diff = a[i] - a[i + 1];\n            a[i + 1] += ((diff + a[i] - 1) / a[i]) * a[i]; // add enough times to make a[i+1] greater than or equal to a[i]\n        }\n    }\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int a[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &a[i]);\n    }\n    \n    solve(a, N);\n    \n    for (int i = 0; i < N; i++) {\n        printf(\"%d \", a[i]);\n    }\n    printf(\"\\n\");\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 14:04:25"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nint main() {\n    int N;\n    std::cin >> N;\n    std::vector<int> a(N);\n    for (int i = 0; i < N; ++i) {\n        std::cin >> a[i];\n    }\n\n    // Sort the sequence using operations\n    for (int i = 0; i < N - 1; ++i) {\n        for (int j = i + 1; j < N; ++j) {\n            while (a[i] > a[j]) {\n                a[j] += a[i];\n                std::cout << i + 1 << \" \" << j + 1 << '\\n';\n            }\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 14:04:28"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_sequence(a):\n    N = len(a)\n    result = []\n\n    for i in range(1, N):\n        while a[i-1] > a[i]:\n            max_x, max_val = -1, float('-inf')\n            for x in range(i):\n                if a[x] > max_val:\n                    max_val = a[x]\n                    max_x = x\n            a[i] += a[max_x]\n            result.append((max_x + 1, i + 1))\n\n    return result\n\ndef main():\n    N = int(input())\n    a = list(map(int, input().split()))\n    \n    operations = solve_sequence(a)\n    \n    print(len(operations))\n    for x, y in operations:\n        print(x, y)\n\nif __name__ == '__main__':\n    main()",
+    "timestamp": "2025-08-13 14:04:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    N = int(data[0])\n    a = list(map(int, data[1:N+1]))\n    \n    operations = []\n    \n    # Find the minimum element and its position\n    min_val = min(a)\n    min_pos = a.index(min_val) + 1  # 1-based\n    \n    # Step 1: Make all elements non-negative by adding min_val\n    for i in range(1, N+1):\n        if i != min_pos:\n            operations.append((min_pos, i))\n    \n    # Now, a is [a1, a2, ..., aN] where all elements except a[min_pos] are a_i + a_min\n    # But after operations, a[min_pos] remains as min_val, others are a_i + k*min_val (k is number of operations)\n    # However, the above step is not sufficient, so we proceed to step 2\n    \n    # Step 2: Perform prefix sums to make the sequence non-decreasing\n    for i in range(2, N+1):\n        operations.append((i-1, i))\n    \n    print(len(operations))\n    for x, y in operations:\n        print(x, y)\n\nsolve()",
+    "timestamp": "2025-08-13 14:04:41"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function makeNonDecreasingSequence(a) {\n    const operations = [];\n    const N = a.length;\n    for (let i = 0; i < N - 1; i++) {\n        if (a[i] > a[i + 1]) {\n            let diff = a[i] - a[i + 1];\n            let times = Math.ceil(diff / a[i]);\n            operations.push([i + 1, i + 2, times]);\n            a[i + 1] += a[i] * times;\n        }\n    }\n    return operations;\n}\n\n// Example usage:\nconst a = [4, 1, 3, 2];\nconst ops = makeNonDecreasingSequence(a);\nconsole.log(ops);",
+    "timestamp": "2025-08-13 14:04:47"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solveSequence(a) {\n    const N = a.length;\n    \n    for (let i = 1; i < N; i++) {\n        let j = i;\n        while (j > 0 && a[j-1] > a[j]) {\n            const timesToAdd = Math.floor((a[j-1] - a[j]) / a[j] + 1);\n            a[j] += a[j-1];\n            j--;\n        }\n    }\n    \n    return a;\n}",
+    "timestamp": "2025-08-13 14:04:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const readline = require('readline');\n    const rl = readline.createInterface({\n        input: process.stdin,\n        output: process.stdout\n    });\n\n    let N;\n    let a = [];\n    let operations = [];\n\n    rl.on('line', (line) => {\n        if (!N) {\n            N = parseInt(line.trim(), 10);\n        } else {\n            a = line.trim().split(' ').map(Number);\n            rl.close();\n        }\n    }).on('close', () => {\n        // Find the minimum element and its position\n        let minPos = 0;\n        for (let i = 1; i < N; i++) {\n            if (a[i] < a[minPos]) {\n                minPos = i;\n            }\n        }\n\n        // Make all elements non-negative by adding the minimum element\n        for (let i = 0; i < N; i++) {\n            if (i !== minPos && a[i] < a[minPos]) {\n                const diff = a[minPos] - a[i];\n                a[i] += diff;\n                operations.push(`${minPos + 1} ${i + 1}`);\n            }\n        }\n\n        // Now perform prefix sums to make the sequence non-decreasing\n        for (let i = 1; i < N; i++) {\n            if (a[i] < a[i - 1]) {\n                const diff = a[i - 1] - a[i];\n                a[i] += diff;\n                operations.push(`${i} ${i + 1}`);\n            }\n        }\n\n        console.log(operations.length);\n        for (const op of operations) {\n            console.log(op);\n        }\n    });\n}\n\nsolve();",
+    "timestamp": "2025-08-13 14:05:05"
+  }
+]

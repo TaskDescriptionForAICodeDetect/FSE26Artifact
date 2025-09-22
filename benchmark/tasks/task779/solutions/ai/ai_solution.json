@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    char board[N + 1];\n    scanf(\"%s\", board);\n    \n    int golems[N + 1];\n    for (int i = 1; i <= N; i++) {\n        golems[i] = 1;\n    }\n    \n    for (int i = 0; i < Q; i++) {\n        char c;\n        char direction;\n        scanf(\" %c %c\", &c, &direction);\n        \n        for (int j = 1; j <= N; j++) {\n            if (board[j - 1] == c && golems[j] > 0) {\n                if (direction == 'L') {\n                    if (j == 1) {\n                        golems[j] = 0;\n                    } else {\n                        golems[j]--;\n                        golems[j - 1]++;\n                    }\n                } else {\n                    if (j == N) {\n                        golems[j] = 0;\n                    } else {\n                        golems[j]--;\n                        golems[j + 1]++;\n                    }\n                }\n            }\n        }\n    }\n    \n    int total_golems = 0;\n    for (int i = 1; i <= N; i++) {\n        total_golems += golems[i];\n    }\n    \n    printf(\"%d\\n\", total_golems);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:05"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    char *squares = (char *)malloc((N + 1) * sizeof(char));\n    scanf(\"%s\", squares);\n    \n    int *golems = (int *)malloc((N + 2) * sizeof(int));\n    for (int i = 1; i <= N; i++) {\n        golems[i] = 1;\n    }\n    golems[0] = 0;\n    golems[N + 1] = 0;\n    \n    for (int i = 0; i < Q; i++) {\n        char t, d;\n        scanf(\" %c %c\", &t, &d);\n        \n        if (d == 'L') {\n            for (int j = 1; j <= N; j++) {\n                if (squares[j - 1] == t) {\n                    golems[j - 1] += golems[j];\n                    golems[j] = 0;\n                }\n            }\n        } else if (d == 'R') {\n            for (int j = N; j >= 1; j--) {\n                if (squares[j - 1] == t) {\n                    golems[j + 1] += golems[j];\n                    golems[j] = 0;\n                }\n            }\n        }\n    }\n    \n    int total = 0;\n    for (int i = 1; i <= N; i++) {\n        total += golems[i];\n    }\n    \n    printf(\"%d\\n\", total);\n    \n    free(squares);\n    free(golems);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n    string S;\n    cin >> S;\n\n    unordered_map<char, vector<int>> charIndices;\n    for (int i = 0; i < N; ++i) {\n        charIndices[S[i]].push_back(i + 1); // 1-based\n    }\n\n    int left = 1; // left boundary\n    int right = N; // right boundary\n\n    for (int q = 0; q < Q; ++q) {\n        char t;\n        char d;\n        cin >> t >> d;\n\n        if (d == 'L') {\n            if (charIndices.count(t)) {\n                auto& indices = charIndices[t];\n                int cnt = 0;\n                for (int pos : indices) {\n                    if (pos == left) {\n                        cnt++;\n                    }\n                }\n                left += cnt;\n            }\n        } else if (d == 'R') {\n            if (charIndices.count(t)) {\n                auto& indices = charIndices[t];\n                int cnt = 0;\n                for (int pos : indices) {\n                    if (pos == right) {\n                        cnt++;\n                    }\n                }\n                right -= cnt;\n            }\n        }\n    }\n\n    int remaining = max(0, right - left + 1);\n    cout << remaining << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:53:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GolemMovement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        scanner.nextLine();\n        String squares = scanner.nextLine();\n        char[] chars = squares.toCharArray();\n        int[] golems = new int[N + 2]; // 1-based to N\n        Arrays.fill(golems, 1);\n        golems[0] = 0;\n        golems[N + 1] = 0;\n\n        for (int i = 0; i < Q; i++) {\n            String spell = scanner.next();\n            char c = spell.charAt(0);\n            String dir = scanner.next();\n            if (dir.equals(\"L\")) {\n                for (int j = 1; j <= N; j++) {\n                    if (chars[j - 1] == c) {\n                        golems[j - 1] += golems[j];\n                        golems[j] = 0;\n                    }\n                }\n            } else if (dir.equals(\"R\")) {\n                for (int j = N; j >= 1; j--) {\n                    if (chars[j - 1] == c) {\n                        golems[j + 1] += golems[j];\n                        golems[j] = 0;\n                    }\n                }\n            }\n        }\n\n        int total = 0;\n        for (int i = 1; i <= N; i++) {\n            total += golems[i];\n        }\n        System.out.println(total);\n    }\n}",
+    "timestamp": "2025-08-05 22:53:52"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GolemMovement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        \n        String squares = scanner.next();\n        int[] golems = new int[N];\n        Arrays.fill(golems, 1);\n        \n        for (int i = 0; i < Q; i++) {\n            char c = scanner.next().charAt(0);\n            String direction = scanner.next();\n            \n            for (int j = 0; j < N; j++) {\n                if (squares.charAt(j) == c && golems[j] > 0) {\n                    if (direction.equals(\"L\")) {\n                        if (j == 0) {\n                            golems[j] = 0;\n                        } else {\n                            golems[j]--;\n                            golems[j-1]++;\n                        }\n                    } else {\n                        if (j == N - 1) {\n                            golems[j] = 0;\n                        } else {\n                            golems[j]--;\n                            golems[j+1]++;\n                        }\n                    }\n                }\n            }\n        }\n        \n        int totalGolems = Arrays.stream(golems).sum();\n        System.out.println(totalGolems);\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:53:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nusing namespace std;\n\nint main() {\n    int N, Q;\n    cin >> N >> Q;\n    \n    string board;\n    cin >> board;\n    \n    vector<int> golems(N, 1);\n    \n    while (Q--) {\n        char c;\n        string dir;\n        cin >> c >> dir;\n        \n        // Find squares with the specified character\n        vector<int> affected_squares;\n        for (int i = 0; i < N; i++) {\n            if (board[i] == c) {\n                affected_squares.push_back(i);\n            }\n        }\n        \n        // Move golems in specified direction\n        for (int square : affected_squares) {\n            if (golems[square] == 0) continue;\n            \n            if (dir == \"L\") {\n                if (square == 0) {\n                    golems[square] = 0;\n                } else {\n                    golems[square]--;\n                    golems[square-1]++;\n                }\n            } else {  // \"R\"\n                if (square == N-1) {\n                    golems[square] = 0;\n                } else {\n                    golems[square]--;\n                    golems[square+1]++;\n                }\n            }\n        }\n    }\n    \n    // Count remaining golems\n    int total_golems = 0;\n    for (int count : golems) {\n        total_golems += count;\n    }\n    \n    cout << total_golems << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:54:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def remaining_golems(N, characters, spells):\n    golem_positions = [1] * N\n    \n    for character, direction in spells:\n        for i in range(N):\n            if characters[i] == character:\n                if direction == 'L':\n                    if i > 0:\n                        golem_positions[i - 1] += golem_positions[i]\n                    golem_positions[i] = 0\n                elif direction == 'R':\n                    if i < N - 1:\n                        golem_positions[i + 1] += golem_positions[i]\n                    golem_positions[i] = 0\n    \n    return sum(golem_positions)\n\n# Example usage:\nN = 5\ncharacters = ['a', 'b', 'c', 'd', 'e']\nspells = [('a', 'L'), ('c', 'R')]\nprint(remaining_golems(N, characters, spells))  # Output: 3",
+    "timestamp": "2025-08-13 12:52:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.HashMap;\nimport java.util.Map;\nimport java.util.Scanner;\n\npublic class GolemsMovement {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int N = scanner.nextInt();\n        int Q = scanner.nextInt();\n        \n        String squares = scanner.next();\n        \n        Map<Character, Character> spellMap = new HashMap<>();\n        for (int i = 0; i < Q; i++) {\n            char character = scanner.next().charAt(0);\n            char direction = scanner.next().charAt(0);\n            spellMap.put(character, direction);\n        }\n        \n        int totalGolems = N;\n        for (int i = 0; i < N; i++) {\n            char c = squares.charAt(i);\n            \n            if (spellMap.containsKey(c)) {\n                char direction = spellMap.get(c);\n                \n                if (direction == 'L' && i == 0) {\n                    totalGolems--;\n                } else if (direction == 'R' && i == N - 1) {\n                    totalGolems--;\n                }\n            }\n        }\n        \n        System.out.println(totalGolems);\n    }\n}",
+    "timestamp": "2025-08-13 12:52:24"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int N, Q;\n    scanf(\"%d %d\", &N, &Q);\n    \n    char squares[N+1];\n    scanf(\"%s\", squares);\n\n    int golems[N+1];\n    memset(golems, 0, sizeof(golems));\n    for (int i = 1; i <= N; i++) {\n        golems[i] = 1;\n    }\n\n    while (Q--) {\n        char spellChar, direction;\n        scanf(\" %c %c\", &spellChar, &direction);\n        \n        int newGolems[N+1];\n        memset(newGolems, 0, sizeof(newGolems));\n\n        for (int i = 1; i <= N; i++) {\n            if (squares[i-1] == spellChar) {\n                if (direction == 'L' && i > 1) {\n                    newGolems[i-1] += golems[i];\n                } else if (direction == 'R' && i < N) {\n                    newGolems[i+1] += golems[i];\n                }\n            } else {\n                newGolems[i] += golems[i];\n            }\n        }\n        memcpy(golems, newGolems, sizeof(golems));\n    }\n\n    int totalGolems = 0;\n    for (int i = 1; i <= N; i++) {\n        totalGolems += golems[i];\n    }\n    \n    printf(\"%d\\n\", totalGolems);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:52:27"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n\nint main() {\n    int N, Q;\n    std::cin >> N >> Q;\n\n    std::string squares;\n    std::cin >> squares;\n\n    std::unordered_map<char, char> spellMap;\n    for (int i = 0; i < Q; ++i) {\n        char character, direction;\n        std::cin >> character >> direction;\n        spellMap[character] = direction;\n    }\n\n    std::vector<bool> golemExists(N, true);\n    \n    for (int i = 0; i < N; ++i) {\n        char placedChar = squares[i];\n        if (spellMap.find(placedChar) != spellMap.end()) {\n            if (spellMap[placedChar] == 'L') {\n                if (i > 0) {\n                    golemExists[i - 1] = (golemExists[i - 1] || golemExists[i]);\n                }\n                golemExists[i] = false;\n            } else if (spellMap[placedChar] == 'R') {\n                if (i < N - 1) {\n                    golemExists[i + 1] = (golemExists[i + 1] || golemExists[i]);\n                }\n                golemExists[i] = false;\n            }\n        }\n    }\n\n    int remainingCount = 0;\n    for (bool exists : golemExists) {\n        if (exists) {\n            remainingCount++;\n        }\n    }\n    \n    std::cout << remainingCount << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:52:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_golem_problem(N, Q, spells):\n    golems = [1] * N\n    \n    for char, direction in spells:\n        for i in range(N):\n            if golems[i] > 0 and chr(ord('a') + i) == char:\n                if direction == 'L':\n                    if i == 0:\n                        golems[i] = 0\n                    else:\n                        golems[i] -= 1\n                        golems[i-1] += 1\n                else:  # direction == 'R'\n                    if i == N-1:\n                        golems[i] = 0\n                    else:\n                        golems[i] -= 1\n                        golems[i+1] += 1\n    \n    return sum(golems)\n\n# Example usage\nN, Q = map(int, input().split())\nspells = []\nfor _ in range(Q):\n    char, direction = input().split()\n    spells.append((char, direction))\n\nresult = solve_golem_problem(N, Q, spells)\nprint(result)",
+    "timestamp": "2025-08-13 12:52:38"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve():\n    import sys\n    input = sys.stdin.read\n    data = input().split()\n    idx = 0\n    N = int(data[idx])\n    idx += 1\n    Q = int(data[idx])\n    idx += 1\n    S = data[idx]\n    idx += 1\n    \n    left = 0\n    right = N - 1\n    \n    for _ in range(Q):\n        t = data[idx]\n        idx += 1\n        d = data[idx]\n        idx += 1\n        \n        if d == 'L':\n            if left < N and S[left] == t:\n                left += 1\n        else:\n            if right >= 0 and S[right] == t:\n                right -= 1\n    \n    print(max(0, right - left + 1))\n\nsolve()",
+    "timestamp": "2025-08-13 12:52:43"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function remainingGolems(N, S, queries) {\n  let golems = Array(N).fill(1);\n\n  queries.forEach(([c, d]) => {\n    const newGolems = Array(N).fill(0);\n\n    for (let i = 0; i < N; i++) {\n      if (S[i] === c) {\n        if (d === 'L' && i > 0) {\n          newGolems[i - 1] += golems[i];\n        } else if (d === 'R' && i < N - 1) {\n          newGolems[i + 1] += golems[i];\n        }\n      } else {\n        newGolems[i] += golems[i];\n      }\n    }\n\n    golems = newGolems;\n  });\n\n  return golems.reduce((acc, count) => acc + count, 0);\n}\n\n// Example usage:\nconst N = 6;\nconst S = \"abcabd\";\nconst queries = [\n  ['a', 'L'],\n  ['c', 'R']\n];\n\nconsole.log(remainingGolems(N, S, queries)); // Outputs the total number of golems remaining",
+    "timestamp": "2025-08-13 12:53:27"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solveGolemProblem(N, spells) {\n    let golems = new Array(N).fill(1);\n    \n    for (let spell of spells) {\n        let [char, direction] = spell;\n        let charIndex = char.charCodeAt(0) - 'A'.charCodeAt(0);\n        \n        if (golems[charIndex] > 0) {\n            if (direction === 'L') {\n                if (charIndex === 0) {\n                    golems[charIndex] = 0;\n                } else {\n                    golems[charIndex]--;\n                    golems[charIndex - 1]++;\n                }\n            } else {\n                if (charIndex === N - 1) {\n                    golems[charIndex] = 0;\n                } else {\n                    golems[charIndex]--;\n                    golems[charIndex + 1]++;\n                }\n            }\n        }\n    }\n    \n    return golems.reduce((a, b) => a + b, 0);\n}",
+    "timestamp": "2025-08-13 12:53:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "const fs = require('fs');\nconst input = fs.readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n\nconst [N, Q] = input[0].split(' ').map(Number);\nconst S = input[1].trim();\nconst queries = input.slice(2, 2 + Q).map(line => line.trim().split(' '));\n\nlet left = 0;\nlet right = N - 1;\n\nfor (const [t, d] of queries) {\n    if (d === 'L') {\n        if (left < N && S[left] === t) {\n            left++;\n        }\n    } else if (d === 'R') {\n        if (right >= 0 && S[right] === t) {\n            right--;\n        }\n    }\n}\n\nconst remaining = Math.max(0, right - left + 1);\nconsole.log(remaining);",
+    "timestamp": "2025-08-13 12:53:41"
+  }
+]

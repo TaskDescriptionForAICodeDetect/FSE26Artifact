@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def count_full_glasses(n, t):\n    # Initialize pyramid with 0 fullness\n    pyramid = [[0.0] * (i + 1) for i in range(n)]\n    \n    # Pour champagne from top\n    pyramid[0][0] = min(t, 1.0)\n    \n    # Distribute overflow\n    for level in range(n - 1):\n        for glass in range(len(pyramid[level])):\n            overflow = max(0, pyramid[level][glass] - 1.0)\n            if overflow > 0:\n                pyramid[level][glass] = 1.0\n                pyramid[level + 1][glass] += overflow / 2\n                pyramid[level + 1][glass + 1] += overflow / 2\n    \n    # Count full glasses\n    full_glasses = 0\n    for level in range(n):\n        for glass in range(len(pyramid[level])):\n            if pyramid[level][glass] >= 1.0:\n                full_glasses += 1\n    \n    return full_glasses\n\n# Read input\nn, t = map(int, input().split())\nprint(count_full_glasses(n, t))",
+    "timestamp": "2025-08-05 17:31:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, t = map(int, input().split())\n\npyramid = [[0.0 for _ in range(i)] for i in range(1, n+1)]\n\nfor _ in range(t):\n    pyramid[0][0] += 1.0\n    for i in range(n):\n        for j in range(len(pyramid[i])):\n            if pyramid[i][j] > 1.0:\n                excess = pyramid[i][j] - 1.0\n                pyramid[i][j] = 1.0\n                if i + 1 < n:\n                    pyramid[i+1][j] += excess / 2.0\n                    pyramid[i+1][j+1] += excess / 2.0\n\nfull_glasses = sum(1 for row in pyramid for glass in row if glass >= 1.0)\nprint(full_glasses)",
+    "timestamp": "2025-08-05 17:31:52"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def full_glasses(n, t):\n    glasses = [[0] * (i + 1) for i in range(n)]\n    glasses[0][0] = t\n    full_count = 0\n    \n    for i in range(n):\n        for j in range(i + 1):\n            if glasses[i][j] >= 1:\n                full_count += 1\n                overflow = glasses[i][j] - 1\n                if overflow > 0 and i + 1 < n:\n                    glasses[i + 1][j] += overflow / 2\n                    glasses[i + 1][j + 1] += overflow / 2\n    \n    return full_count\n\nn, t = map(int, input().split())\nprint(full_glasses(n, t))",
+    "timestamp": "2025-08-12 21:41:03"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(n, k):\n    stones = [1] * n\n    coins = [1] * n\n    moves = 0\n    pos = k - 1\n\n    while sum(coins) > 0:\n        if stones[pos] > 0:\n            # Throw stone to another manhole\n            target = (pos + 1) % n if pos < n - 1 else pos - 1\n            stones[pos] -= 1\n            stones[target] += 1\n            moves += 1\n        elif stones[pos] == 0 and coins[pos] == 1:\n            # Pick coin\n            coins[pos] = 0\n            moves += 1\n        else:\n            # Move to adjacent manhole\n            if pos > 0 and (stones[pos-1] > 0 or coins[pos-1] == 1):\n                pos -= 1\n            elif pos < n - 1 and (stones[pos+1] > 0 or coins[pos+1] == 1):\n                pos += 1\n            moves += 1\n\n    return moves\n\nn, k = map(int, input().split())\nprint(solve(n, k))",
+    "timestamp": "2025-08-05 17:32:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n, k = map(int, input().split())\nres = n + 3\nleft = k - 1\nright = n - k\nmin_side = min(left, right)\nres += n + min_side * (n + 1)\nprint(res)",
+    "timestamp": "2025-08-05 17:32:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimum_moves(n, k):\n    k -= 1  # converting to 0-indexed\n    left_distance = k\n    right_distance = n - k - 1\n    # Calculate minimum moves necessary\n    return 2 * n - 1 + min(left_distance, right_distance)\n\n# Read input\nn, k = map(int, input().strip().split())\n# Print output\nprint(minimum_moves(n, k))",
+    "timestamp": "2025-08-12 21:53:54"
+  }
+]

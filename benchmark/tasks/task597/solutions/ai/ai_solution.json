@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\nint main() {\n    double x1, y1, r1, x2, y2, r2;\n    scanf(\"%lf %lf %lf %lf %lf %lf\", &x1, &y1, &r1, &x2, &y2, &r2);\n\n    double distance = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));\n    double radii_sum = r1 + r2;\n    double radii_diff = fabs(r1 - r2);\n\n    if (distance > radii_sum) {\n        printf(\"4\");\n    } else if (fabs(distance - radii_sum) < 1e-9) {\n        printf(\"3\");\n    } else if (distance < radii_sum && distance > radii_diff) {\n        printf(\"2\");\n    } else if (fabs(distance - radii_diff) < 1e-9) {\n        printf(\"1\");\n    } else if (distance < radii_diff) {\n        printf(\"0\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:15:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <math.h>\n\ntypedef struct {\n    double x, y, r;\n} Circle;\n\nint main() {\n    Circle c1, c2;\n    scanf(\"%lf %lf %lf\", &c1.x, &c1.y, &c1.r);\n    scanf(\"%lf %lf %lf\", &c2.x, &c2.y, &c2.r);\n\n    double dx = c1.x - c2.x;\n    double dy = c1.y - c2.y;\n    double distance = sqrt(dx * dx + dy * dy);\n    double sum_r = c1.r + c2.r;\n    double diff_r = fabs(c1.r - c2.r);\n\n    if (distance > sum_r) {\n        printf(\"4\\n\");\n    } else if (distance == sum_r) {\n        printf(\"3\\n\");\n    } else if (distance < sum_r && distance > diff_r) {\n        printf(\"2\\n\");\n    } else if (distance == diff_r) {\n        if (distance == 0) {\n            printf(\"-1\\n\");\n        } else {\n            printf(\"1\\n\");\n        }\n    } else {\n        printf(\"0\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:16:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <algorithm>\nusing namespace std;\n\nstruct Point {\n    double x, y;\n};\n\nstruct Circle {\n    Point center;\n    double r;\n};\n\nint countTangents(Circle c1, Circle c2) {\n    double dx = c1.center.x - c2.center.x;\n    double dy = c1.center.y - c2.center.y;\n    double distance_sq = dx * dx + dy * dy;\n    double distance = sqrt(distance_sq);\n    double r_sum = c1.r + c2.r;\n    double r_diff = abs(c1.r - c2.r);\n\n    if (distance > r_sum) {\n        return 4;\n    } else if (distance == r_sum) {\n        return 3;\n    } else if (distance > r_diff) {\n        return 2;\n    } else if (distance == r_diff) {\n        return 1;\n    } else {\n        return 0;\n    }\n}\n\nint main() {\n    Circle c1, c2;\n    cin >> c1.center.x >> c1.center.y >> c1.r;\n    cin >> c2.center.x >> c2.center.y >> c2.r;\n    cout << countTangents(c1, c2) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:16:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class CircleTangents {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int x1 = scanner.nextInt();\n        int y1 = scanner.nextInt();\n        int r1 = scanner.nextInt();\n        int x2 = scanner.nextInt();\n        int y2 = scanner.nextInt();\n        int r2 = scanner.nextInt();\n\n        double distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));\n        int sum = r1 + r2;\n        int diff = Math.abs(r1 - r2);\n\n        if (distance > sum) {\n            System.out.println(\"4\");\n        } else if (distance == sum) {\n            System.out.println(\"3\");\n        } else if (distance < sum && distance > diff) {\n            System.out.println(\"2\");\n        } else if (distance == diff) {\n            if (distance == 0 && r1 == r2) {\n                System.out.println(\"-1\");\n            } else {\n                System.out.println(\"1\");\n            }\n        } else {\n            System.out.println(\"0\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:17:06"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class CircleIntersection {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        double x1 = sc.nextDouble();\n        double y1 = sc.nextDouble();\n        double r1 = sc.nextDouble();\n        double x2 = sc.nextDouble();\n        double y2 = sc.nextDouble();\n        double r2 = sc.nextDouble();\n        \n        double distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));\n        \n        if (distance > r1 + r2) {\n            System.out.println(4);\n        } else if (Math.abs(distance - (r1 + r2)) < 1e-9) {\n            System.out.println(3);\n        } else if (distance < r1 + r2 && distance > Math.abs(r1 - r2)) {\n            System.out.println(2);\n        } else if (Math.abs(distance - Math.abs(r1 - r2)) < 1e-9) {\n            System.out.println(1);\n        } else {\n            System.out.println(0);\n        }\n        \n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:17:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <iomanip>\n\nusing namespace std;\n\nclass Circle {\npublic:\n    double x, y, r;\n    Circle(double x = 0, double y = 0, double r = 0) : x(x), y(y), r(r) {}\n};\n\nint countTangentLines(Circle c1, Circle c2) {\n    double dist = sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));\n    double radSum = c1.r + c2.r;\n    double radDiff = abs(c1.r - c2.r);\n\n    if (dist > radSum) return 4;\n    if (abs(dist - radSum) < 1e-9) return 3;\n    if (dist < radSum && dist > radDiff) return 2;\n    if (abs(dist - radDiff) < 1e-9) return 1;\n    return 0;\n}\n\nint main() {\n    double x1, y1, r1, x2, y2, r2;\n    cin >> x1 >> y1 >> r1 >> x2 >> y2 >> r2;\n\n    Circle c1(x1, y1, r1), c2(x2, y2, r2);\n    \n    cout << countTangentLines(c1, c2) << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:17:16"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef circle_intersections(x1, y1, r1, x2, y2, r2):\n    d = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)\n    \n    if d > r1 + r2:\n        print('4')\n    elif d == r1 + r2:\n        print('3')\n    elif r1 - r2 < d < r1 + r2:\n        print('2')\n    elif d == abs(r1 - r2):\n        print('1')\n    else:  # d < abs(r1 - r2)\n        print('0')\n\n# Example usage:\n# circle_intersections(0, 0, 5, 10, 5, 5) - Example input.",
+    "timestamp": "2025-08-13 09:46:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class CircleIntersections {\n    public static void main(String[] args) {\n        Circle c1 = new Circle(0, 0, 5);\n        Circle c2 = new Circle(8, 0, 3);\n\n        System.out.println(findCommonTangentLines(c1, c2));\n    }\n\n    public static int findCommonTangentLines(Circle c1, Circle c2) {\n        double distance = Math.hypot(c2.x - c1.x, c2.y - c1.y);\n        double r1 = c1.radius;\n        double r2 = c2.radius;\n\n        if (distance > r1 + r2) {\n            return 4; // Do not cross\n        } else if (distance == r1 + r2) {\n            return 3; // Circumscribed\n        } else if (distance < r1 + r2 && distance > Math.abs(r1 - r2)) {\n            return 2; // Intersect\n        } else if (distance == Math.abs(r1 - r2)) {\n            return 1; // Inscribed\n        } else {\n            return 0; // One includes the other\n        }\n    }\n}\n\nclass Circle {\n    double x;\n    double y;\n    double radius;\n\n    public Circle(double x, double y, double radius) {\n        this.x = x;\n        this.y = y;\n        this.radius = radius;\n    }\n}",
+    "timestamp": "2025-08-13 09:46:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <math.h>\n\n// Function to calculate the number of common tangent lines\nint commonTangentLines(double x1, double y1, double r1, double x2, double y2, double r2) {\n    double distance = sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));\n    \n    if (distance > r1 + r2) {\n        return 4;\n    } else if (distance == r1 + r2) {\n        return 3;\n    } else if (distance > fabs(r1 - r2)) {\n        return 2;\n    } else if (distance == fabs(r1 - r2)) {\n        return 1;\n    } else {\n        return 0;\n    }\n}\n\nint main() {\n    double x1, y1, r1, x2, y2, r2;\n    \n    // Input for circle c1: x1, y1, r1\n    // Input for circle c2: x2, y2, r2\n    printf(\"Enter x1, y1, r1 for circle c1: \");\n    scanf(\"%lf %lf %lf\", &x1, &y1, &r1);\n    printf(\"Enter x2, y2, r2 for circle c2: \");\n    scanf(\"%lf %lf %lf\", &x2, &y2, &r2);\n    \n    int result = commonTangentLines(x1, y1, r1, x2, y2, r2);\n    printf(\"%d\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 09:46:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def circle_intersections(x1, y1, r1, x2, y2, r2):\n    distance = ((x1 - x2)**2 + (y1 - y2)**2)**0.5\n    \n    if distance > r1 + r2:\n        return 4\n    elif abs(distance - (r1 + r2)) < 1e-10:\n        return 3\n    elif distance < abs(r1 - r2):\n        return 0\n    elif abs(distance - abs(r1 - r2)) < 1e-10:\n        return 1\n    else:\n        return 2\n\n# Input handling\nx1, y1, r1 = map(float, input().split())\nx2, y2, r2 = map(float, input().split())\n\n# Print result\nprint(circle_intersections(x1, y1, r1, x2, y2, r2))",
+    "timestamp": "2025-08-13 09:46:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import math\n\ndef common_tangents(x1, y1, r1, x2, y2, r2):\n    dx = x2 - x1\n    dy = y2 - y1\n    distance_sq = dx * dx + dy * dy\n    distance = math.sqrt(distance_sq)\n    sum_r = r1 + r2\n    diff_r = abs(r1 - r2)\n    \n    if distance > sum_r:\n        return 4\n    elif math.isclose(distance, sum_r):\n        return 3\n    elif distance > diff_r:\n        return 2\n    elif math.isclose(distance, diff_r):\n        return 1\n    else:\n        return 0\n\nx1, y1, r1 = map(int, input().split())\nx2, y2, r2 = map(int, input().split())\nprint(common_tangents(x1, y1, r1, x2, y2, r2))",
+    "timestamp": "2025-08-13 09:46:37"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <cmath>\n\nstruct Circle {\n    double x, y, r;\n};\n\nint commonTangents(Circle c1, Circle c2) {\n    double d = sqrt(pow(c1.x - c2.x, 2) + pow(c1.y - c2.y, 2));\n    if (d > c1.r + c2.r)\n        return 4; // No crossing, two external tangents and two internal\n    else if (d == c1.r + c2.r)\n        return 3; // Circumscribed, common external tangent\n    else if (d > fabs(c1.r - c2.r))\n        return 2; // Intersect, two internal tangents\n    else if (d == fabs(c1.r - c2.r))\n        return 1; // Inscribed, common internal tangent\n    else\n        return 0; // One circle includes the other\n}\n\nint main() {\n    Circle c1, c2;\n    std::cin >> c1.x >> c1.y >> c1.r;\n    std::cin >> c2.x >> c2.y >> c2.r;\n\n    int tangents = commonTangents(c1, c2);\n\n    std::cout << tangents << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:54:42"
+  }
+]

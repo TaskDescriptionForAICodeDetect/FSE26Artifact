@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve(N):\n    # Calculate total number of segments\n    total_segments = (N * (N + 1)) // 2\n    \n    # Use a greedy approach to find minimum layers\n    layers = 0\n    used_segments = 0\n    \n    while used_segments < total_segments:\n        # Sort remaining segments by length \n        segments = []\n        for start in range(N + 1):\n            for end in range(start, N + 1):\n                if not any(start >= s[0] and end <= s[1] for s in segments):\n                    segments.append((start, end))\n                    used_segments += 1\n                    break\n        \n        layers += 1\n    \n    return layers\n\n# Read input\nN = int(input())\n\n# Print result \nprint(solve(N))",
+    "timestamp": "2025-08-05 17:31:55"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "n = int(input())\nif n % 2 == 0:\n    print((n // 2) * (n // 2 + 1))\nelse:\n    k = (n + 1) // 2\n    print(k * k)",
+    "timestamp": "2025-08-05 17:32:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def minimal_layers(n):\n    return (n * (n + 1)) // 2 // n\n\nN = int(input().strip())\nprint(minimal_layers(N))",
+    "timestamp": "2025-08-12 21:42:48"
+  }
+]

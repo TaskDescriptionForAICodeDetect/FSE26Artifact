@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char commands[101];\n    int power_count = 0;\n    \n    scanf(\"%s\", commands);\n    int len = strlen(commands);\n    \n    for (int start = 0; start < len; start++) {\n        int direction = 0;\n        int valid_sequence = 1;\n        \n        for (int i = start; i < len; i++) {\n            if (commands[i] == 'R') {\n                direction = (direction + 1) % 4;\n            } else {\n                direction = (direction - 1 + 4) % 4;\n            }\n            \n            if (direction == 0 && i != start) {\n                if (i == len - 1) {\n                    power_count++;\n                } else {\n                    valid_sequence = 0;\n                    break;\n                }\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", power_count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:14"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char S[1001];\n    scanf(\"%s\", S);\n    int len = strlen(S);\n    int count = 0;\n    int direction = 0; // 0: North, 1: East, 2: South, 3: West\n\n    for (int i = 0; i < len; i++) {\n        if (S[i] == 'R') {\n            direction = (direction + 1) % 4;\n        } else if (S[i] == 'L') {\n            direction = (direction - 1 + 4) % 4;\n        }\n\n        if (direction == 0) {\n            int j = i + 1;\n            int temp_dir = direction;\n            int found = 0;\n\n            while (j < len) {\n                if (S[j] == 'R') {\n                    temp_dir = (temp_dir + 1) % 4;\n                } else if (S[j] == 'L') {\n                    temp_dir = (temp_dir - 1 + 4) % 4;\n                }\n\n                if (temp_dir == 0) {\n                    found = 1;\n                    break;\n                }\n                j++;\n            }\n\n            if (found) {\n                int k = i + 1;\n                temp_dir = direction;\n                int valid = 1;\n\n                while (k < j) {\n                    if (S[k] == 'R') {\n                        temp_dir = (temp_dir + 1) % 4;\n                    } else if (S[k] == 'L') {\n                        temp_dir = (temp_dir - 1 + 4) % 4;\n                    }\n\n                    if (temp_dir == 0) {\n                        valid = 0;\n                        break;\n                    }\n                    k++;\n                }\n\n                if (valid) {\n                    count++;\n                    i = j;\n                    direction = 0;\n                }\n            }\n        }\n    }\n\n    printf(\"%d\\n\", count);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:33"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\n\nusing namespace std;\n\nint main() {\n    string S;\n    cin >> S;\n    int count = 0;\n    int n = S.size();\n    \n    for (int i = 0; i < n; ++i) {\n        int direction = 0; // 0: North, 1: East, 2: South, 3: West\n        if (S[i] != 'R') continue;\n        \n        direction = 1; // After first 'R', face East\n        int j = i + 1;\n        bool valid = true;\n        \n        while (j < n && direction != 0) {\n            if (S[j] == 'R') {\n                direction = (direction + 1) % 4;\n            } else if (S[j] == 'L') {\n                direction = (direction - 1 + 4) % 4;\n            }\n            j++;\n        }\n        \n        if (direction == 0 && j > i + 1) {\n            count++;\n            i = j - 1;\n        }\n    }\n    \n    cout << count << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:03:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class GuruGuruGururin {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String S = scanner.next();\n        int count = 0;\n        int direction = 0; // 0: North, 1: East, 2: South, 3: West\n        boolean inSequence = false;\n        int startIndex = -1;\n\n        for (int i = 0; i < S.length(); i++) {\n            char c = S.charAt(i);\n            if (c == 'R') {\n                direction = (direction + 1) % 4;\n            } else if (c == 'L') {\n                direction = (direction - 1 + 4) % 4;\n            }\n\n            if (direction == 0) {\n                if (!inSequence) {\n                    inSequence = true;\n                    startIndex = i;\n                } else {\n                    boolean hasNonNorth = false;\n                    for (int j = startIndex + 1; j < i; j++) {\n                        char ch = S.charAt(j);\n                        int tempDir = 0;\n                        for (int k = startIndex; k <= j; k++) {\n                            char cmd = S.charAt(k);\n                            if (cmd == 'R') {\n                                tempDir = (tempDir + 1) % 4;\n                            } else if (cmd == 'L') {\n                                tempDir = (tempDir - 1 + 4) % 4;\n                            }\n                        }\n                        if (tempDir != 0) {\n                            hasNonNorth = true;\n                            break;\n                        }\n                    }\n                    if (hasNonNorth) {\n                        count++;\n                    }\n                    startIndex = i;\n                }\n            }\n        }\n        System.out.println(count);\n    }\n}",
+    "timestamp": "2025-08-05 22:04:04"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "public class GuruGuruGururin {\n    public static int countMagicalPowers(String commands) {\n        int magicalPowers = 0;\n        int currentDirection = 0; // 0: North, 1: East, 2: South, 3: West\n        \n        for (int start = 0; start < commands.length(); start++) {\n            int direction = 0;\n            boolean northToNorth = true;\n            boolean everNotNorth = false;\n            \n            for (int i = start; i < commands.length(); i++) {\n                char cmd = commands.charAt(i);\n                \n                if (cmd == 'R') {\n                    direction = (direction + 1) % 4;\n                } else {\n                    direction = (direction - 1 + 4) % 4;\n                }\n                \n                if (direction != 0) {\n                    everNotNorth = true;\n                }\n                \n                if (direction == 0 && everNotNorth) {\n                    magicalPowers++;\n                    break;\n                }\n            }\n        }\n        \n        return magicalPowers;\n    }\n    \n    public static void main(String[] args) {\n        String commands = \"RRLRL\";\n        System.out.println(countMagicalPowers(commands));\n    }\n}",
+    "timestamp": "2025-08-05 22:04:09"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint solve(string commands) {\n    int count = 0;\n    for (int start = 0; start < commands.length(); start++) {\n        int direction = 0;\n        bool validSequence = true;\n        bool northStart = true;\n        \n        for (int i = start; i < commands.length(); i++) {\n            if (commands[i] == 'R') {\n                direction = (direction + 1) % 4;\n            } else {\n                direction = (direction - 1 + 4) % 4;\n            }\n            \n            if (northStart && direction != 0) {\n                northStart = false;\n            }\n            \n            if (direction == 0) {\n                if (northStart && i != start) {\n                    count++;\n                }\n                northStart = true;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    string commands;\n    cin >> commands;\n    cout << solve(commands) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:04:14"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_magical_sequences(commands):\n    current_direction = 0  # 0: North, 1: East, 2: South, 3: West\n    magical_count = 0\n    in_sequence = False\n\n    for command in commands:\n        if command == 'R':\n            current_direction = (current_direction + 1) % 4\n        elif command == 'L':\n            current_direction = (current_direction - 1) % 4\n        \n        if current_direction == 0:\n            if in_sequence:\n                magical_count += 1\n            in_sequence = not in_sequence\n        else:\n            in_sequence = True\n\n    return magical_count\n\n# Example usage\ncommands = \"RRRRLLRR\"\nprint(count_magical_sequences(commands))",
+    "timestamp": "2025-08-13 08:48:26"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class GuruGuruGururin {\n    \n    public static int countMagicalSequences(String commands) {\n        char[] directions = {'N', 'E', 'S', 'W'};\n        int directionIndex = 0; // start facing north\n        int count = 0;\n        boolean isMagical = false;\n\n        for (char command : commands.toCharArray()) {\n            // apply the command\n            if (command == 'R') {\n                directionIndex = (directionIndex + 1) % 4;\n            } else if (command == 'L') {\n                directionIndex = (directionIndex + 3) % 4;\n            }\n\n            // check for magical sequence\n            if (directions[directionIndex] == 'N') {\n                if (isMagical) {\n                    count++;\n                }\n                isMagical = true;\n            } else {\n                isMagical = false;\n            }\n        }\n        \n        return count;\n    }\n\n    public static void main(String[] args) {\n        String commands = \"RL\"; // Example input\n        System.out.println(countMagicalSequences(commands));\n    }\n}",
+    "timestamp": "2025-08-13 08:48:34"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char commands[1001]; // assume the maximum length of commands is 1000\n    scanf(\"%s\", commands);\n    \n    int n = strlen(commands);\n    int direction = 0; // 0: north, 1: east, 2: south, 3: west\n    int magicalCount = 0;\n    int inSequence = 0;\n    \n    // Iterate through the list of commands\n    for (int i = 0; i < n; i++) {\n        if (commands[i] == 'R') {\n            direction = (direction + 1) % 4;\n        } else if (commands[i] == 'L') {\n            direction = (direction + 3) % 4; // (4 + direction - 1) % 4\n        }\n\n        if (inSequence) {\n            if (direction == 0) { // End of a sequence\n                magicalCount++;\n                inSequence = 0;\n            }\n        } else {\n            if (direction == 0 && i == 0) { // start facing north\n                inSequence = 1;\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", magicalCount);\n    return 0;\n}",
+    "timestamp": "2025-08-13 08:48:37"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_magic_sequences(commands):\n    total_sequences = 0\n    \n    for start in range(len(commands)):\n        directions = ['N', 'E', 'S', 'W']\n        current_dir_index = 0\n        sequence_valid = False\n        \n        for i in range(start, len(commands)):\n            if commands[i] == 'R':\n                current_dir_index = (current_dir_index + 1) % 4\n            else:  # 'L'\n                current_dir_index = (current_dir_index - 1 + 4) % 4\n            \n            if current_dir_index == 0 and start != i:\n                if sequence_valid:\n                    total_sequences += 1\n                sequence_valid = False\n            \n            if current_dir_index != 0:\n                sequence_valid = True\n    \n    return total_sequences",
+    "timestamp": "2025-08-13 08:48:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def count_magical_power_sequences(commands):\n    count = 0\n    n = len(commands)\n    for i in range(n):\n        direction = 0  # 0: North, 1: East, 2: South, 3: West\n        has_non_north = False\n        for j in range(i, n):\n            if commands[j] == 'R':\n                direction = (direction + 1) % 4\n            else:\n                direction = (direction - 1) % 4\n            if direction == 0:\n                if j > i and has_non_north:\n                    count += 1\n                break\n            else:\n                has_non_north = True\n    return count",
+    "timestamp": "2025-08-13 08:48:55"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <string>\n\nint countMagicalSequences(const std::string &commands) {\n    int count = 0;\n    char direction = 'N'; // Starting facing north\n    bool sequenceStarted = false;\n    int seqCount = 0;\n\n    for (char cmd : commands) {\n        if (cmd == 'R') {\n            direction = (direction == 'N') ? 'E' : (direction == 'E') ? 'S' : (direction == 'S') ? 'W' : 'N';\n        } else if (cmd == 'L') {\n            direction = (direction == 'N') ? 'W' : (direction == 'W') ? 'S' : (direction == 'S') ? 'E' : 'N';\n        }\n\n        if (!sequenceStarted && direction == 'N') {\n            sequenceStarted = true;\n            seqCount++;\n        } else if (sequenceStarted && direction == 'N') {\n            count++;\n            sequenceStarted = false;\n        }\n    }\n\n    return count;\n}\n\nint main() {\n    std::string commands;\n    std::cin >> commands;\n    int result = countMagicalSequences(commands);\n    std::cout << result << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:47:51"
+  }
+]

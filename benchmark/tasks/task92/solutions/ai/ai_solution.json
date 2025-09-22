@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <string.h>\n\n#define MAX 1000000\n\nbool sieve[MAX + 1];\n\nvoid createSieve() {\n    memset(sieve, true, sizeof(sieve));\n    sieve[0] = sieve[1] = false;\n    for (int p = 2; p * p <= MAX; p++) {\n        if (sieve[p]) {\n            for (int i = p * p; i <= MAX; i += p) {\n                sieve[i] = false;\n            }\n        }\n    }\n}\n\nint countGoldbachPairs(int n) {\n    int count = 0;\n    for (int p = 2; p <= n / 2; p++) {\n        if (sieve[p] && sieve[n - p]) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    createSieve();\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) {\n        printf(\"%d\\n\", countGoldbachPairs(n));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:34:35"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class GoldbachConjecture {\n    static boolean[] sieve = new boolean[1000001];\n    \n    static void createSieve() {\n        Arrays.fill(sieve, true);\n        sieve[0] = sieve[1] = false;\n        \n        for (int i = 2; i * i <= 1000000; i++) {\n            if (sieve[i]) {\n                for (int j = i * i; j <= 1000000; j += i) {\n                    sieve[j] = false;\n                }\n            }\n        }\n    }\n    \n    static boolean isPrime(int n) {\n        return sieve[n];\n    }\n    \n    public static void main(String[] args) {\n        createSieve();\n        Scanner scanner = new Scanner(System.in);\n        \n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            \n            int count = 0;\n            for (int p = 2; p <= n/2; p++) {\n                if (isPrime(p) && isPrime(n - p)) {\n                    count++;\n                }\n            }\n            \n            System.out.println(count);\n        }\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 18:34:40"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\nusing namespace std;\n\nconst int MAX = 1000000;\nvector<bool> isPrime(MAX + 1, true);\n\nvoid sieve() {\n    isPrime[0] = isPrime[1] = false;\n    for (int i = 2; i * i <= MAX; ++i) {\n        if (isPrime[i]) {\n            for (int j = i * i; j <= MAX; j += i) {\n                isPrime[j] = false;\n            }\n        }\n    }\n}\n\nint countPairs(int n) {\n    int count = 0;\n    for (int p = 2; p <= n / 2; ++p) {\n        if (isPrime[p] && isPrime[n - p]) {\n            ++count;\n        }\n    }\n    return count;\n}\n\nint main() {\n    sieve();\n    int n;\n    while (cin >> n && n != 0) {\n        cout << countPairs(n) << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:34:50"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool is_prime(int num) {\n    if (num < 2) return false;\n    for (int i = 2; i * i <= num; i++) {\n        if (num % i == 0) return false;\n    }\n    return true;\n}\n\nint count_goldbach_pairs(int n) {\n    int count = 0;\n    for (int p = 2; p <= n / 2; p++) {\n        if (is_prime(p)) {\n            int q = n - p;\n            if (p <= q && is_prime(q)) {\n                count++;\n            }\n        }\n    }\n    return count;\n}\n\nint main() {\n    int n;\n    while (1) {\n        scanf(\"%d\", &n);\n        if (n == 0) break;\n        printf(\"%d\\n\", count_goldbach_pairs(n));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:34:55"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nusing namespace std;\n\nvector<bool> sieve(1000001, true);\n\nvoid generatePrimes() {\n    sieve[0] = sieve[1] = false;\n    for (int i = 2; i * i <= 1000000; i++) {\n        if (sieve[i]) {\n            for (int j = i * i; j <= 1000000; j += i) {\n                sieve[j] = false;\n            }\n        }\n    }\n}\n\nint countGoldbachPairs(int n) {\n    int count = 0;\n    for (int p = 2; p <= n / 2; p++) {\n        if (sieve[p] && sieve[n - p]) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n\n    generatePrimes();\n\n    int n;\n    while (cin >> n && n != 0) {\n        cout << countGoldbachPairs(n) << \"\\n\";\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:34:59"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class GoldbachConjecture {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        boolean[] isPrime = sieveOfEratosthenes(1000000);\n        \n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) {\n                break;\n            }\n            int count = 0;\n            for (int p = 2; p <= n / 2; p++) {\n                if (isPrime[p] && isPrime[n - p]) {\n                    count++;\n                }\n            }\n            System.out.println(count);\n        }\n        scanner.close();\n    }\n    \n    private static boolean[] sieveOfEratosthenes(int max) {\n        boolean[] isPrime = new boolean[max + 1];\n        for (int i = 2; i <= max; i++) {\n            isPrime[i] = true;\n        }\n        for (int p = 2; p * p <= max; p++) {\n            if (isPrime[p]) {\n                for (int i = p * p; i <= max; i += p) {\n                    isPrime[i] = false;\n                }\n            }\n        }\n        return isPrime;\n    }\n}",
+    "timestamp": "2025-08-05 18:35:11"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\n\ndef sieve_of_eratosthenes(limit):\n    is_prime = [True] * (limit + 1)\n    p = 2\n    while p * p <= limit:\n        if is_prime[p]:\n            for i in range(p * p, limit + 1, p):\n                is_prime[i] = False\n        p += 1\n    is_prime[0], is_prime[1] = False, False\n    primes = [p for p in range(limit + 1) if is_prime[p]]\n    return primes, is_prime\n\ndef count_goldbach_pairs(n, primes, is_prime):\n    count = 0\n    for p in primes:\n        if p > n // 2:\n            break\n        if is_prime[n - p]:\n            count += 1\n    return count\n\ndef process_input():\n    max_limit = 1000000\n    primes, is_prime = sieve_of_eratosthenes(max_limit)\n    \n    for line in sys.stdin:\n        n = int(line.strip())\n        if n == 0:\n            break\n        print(count_goldbach_pairs(n, primes, is_prime))\n\nprocess_input()",
+    "timestamp": "2025-08-12 23:55:12"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Scanner;\nimport java.util.Arrays;\n\npublic class GoldbachPairs {\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int maxNumber = 1000000;\n        boolean[] isPrime = sieveOfEratosthenes(maxNumber);\n        \n        while (true) {\n            int n = scanner.nextInt();\n            if (n == 0) break;\n            \n            int count = getGoldbachPairsCount(n, isPrime);\n            System.out.println(count);\n        }\n\n        scanner.close();\n    }\n\n    private static boolean[] sieveOfEratosthenes(int limit) {\n        boolean[] isPrime = new boolean[limit + 1];\n        Arrays.fill(isPrime, true);\n        isPrime[0] = isPrime[1] = false;\n        \n        for (int i = 2; i * i <= limit; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= limit; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n\n        return isPrime;\n    }\n\n    private static int getGoldbachPairsCount(int n, boolean[] isPrime) {\n        int count = 0;\n        \n        for (int p = 2; p <= n / 2; p++) {\n            int q = n - p;\n            if (isPrime[p] && isPrime[q]) {\n                count++;\n            }\n        }\n        \n        return count;\n    }\n}",
+    "timestamp": "2025-08-12 23:55:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_N 1000000\n\nbool is_prime[MAX_N + 1];\n\nvoid sieve_of_eratosthenes() {\n    for (int i = 0; i <= MAX_N; i++) {\n        is_prime[i] = true;\n    }\n    is_prime[0] = is_prime[1] = false;\n    for (int p = 2; p * p <= MAX_N; p++) {\n        if (is_prime[p]) {\n            for (int multiple = p * p; multiple <= MAX_N; multiple += p) {\n                is_prime[multiple] = false;\n            }\n        }\n    }\n}\n\nint count_goldbach_pairs(int n) {\n    int count = 0;\n    for (int p = 2; p <= n / 2; p++) {\n        int q = n - p;\n        if (is_prime[p] && is_prime[q]) {\n            count++;\n        }\n    }\n    return count;\n}\n\nint main() {\n    sieve_of_eratosthenes();\n    int n;\n    while (scanf(\"%d\", &n), n != 0) {\n        printf(\"%d\\n\", count_goldbach_pairs(n));\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:55:19"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_prime(num):\n    if num < 2:\n        return False\n    for i in range(2, int(num**0.5) + 1):\n        if num % i == 0:\n            return False\n    return True\n\ndef count_goldbach_pairs(n):\n    count = 0\n    for p in range(2, n // 2 + 1):\n        if is_prime(p) and is_prime(n - p):\n            count += 1\n    return count\n\ndef main():\n    while True:\n        n = int(input())\n        if n == 0:\n            break\n        print(count_goldbach_pairs(n))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:55:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\n\ndef sieve(max_limit):\n    sieve = [True] * (max_limit + 1)\n    sieve[0] = sieve[1] = False\n    for i in range(2, int(math.sqrt(max_limit)) + 1):\n        if sieve[i]:\n            sieve[i*i::i] = [False] * len(sieve[i*i::i])\n    return sieve\n\nmax_n = 1000000\nprime_cache = sieve(max_n)\n\ndef count_goldbach_pairs(n):\n    count = 0\n    for p in range(2, n // 2 + 1):\n        q = n - p\n        if prime_cache[p] and prime_cache[q]:\n            count += 1\n    return count\n\ndef main():\n    input_lines = sys.stdin.read().split()\n    idx = 0\n    while True:\n        n = int(input_lines[idx])\n        idx += 1\n        if n == 0:\n            break\n        print(count_goldbach_pairs(n))\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:55:46"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cstring>\n\nusing namespace std;\n\nconst int MAX_N = 1000000;\n\nvector<int> sieve(int n) {\n    vector<bool> is_prime(n + 1, true);\n    vector<int> primes;\n    is_prime[0] = is_prime[1] = false;\n\n    for (int i = 2; i <= n; ++i) {\n        if (is_prime[i]) {\n            primes.push_back(i);\n            for (int j = 2 * i; j <= n; j += i) {\n                is_prime[j] = false;\n            }\n        }\n    }\n\n    return primes;\n}\n\nint main() {\n    vector<int> primes = sieve(MAX_N);\n    int n;\n\n    while (cin >> n && n > 0) {\n        int count = 0;\n        for (int p : primes) {\n            if (p > n / 2) break;\n            int q = n - p;\n            if (binary_search(primes.begin(), primes.end(), q)) {\n                ++count;\n            }\n        }\n        cout << count << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:51:49"
+  }
+]

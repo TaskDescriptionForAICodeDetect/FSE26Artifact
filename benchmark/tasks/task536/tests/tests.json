@@ -1,0 +1,24 @@
+{
+  "examples": [
+    {
+      "input": "2\nwhite 20\nblack 10\n2\nblack\nwhite\n",
+      "output": "Yes"
+    },
+    {
+      "input": "2\nwhite 10\nblack 10\n2\nblack\nwhite\n",
+      "output": "No"
+    },
+    {
+      "input": "2\nwhite 20\nblack 10\n2\nblack\norange\n",
+      "output": "No"
+    },
+    {
+      "input": "3\nwhite 10\nred 20\nwhite 30\n3\nwhite\nred\nwhite\n",
+      "output": "Yes"
+    },
+    {
+      "input": "4\nred 3444\nred 3018\nred 3098\nred 3319\n4\nred\nred\nred\nred\n",
+      "output": "Yes"
+    }
+  ]
+}

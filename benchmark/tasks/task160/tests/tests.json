@@ -1,0 +1,16 @@
+{
+  "examples": [
+    {
+      "input": "5\nJOIOI\n",
+      "output": "6\n"
+    },
+    {
+      "input": "7\nJJJOIII\n",
+      "output": "18\n"
+    },
+    {
+      "input": "4\nOIIJ\n",
+      "output": "2\n"
+    }
+  ]
+}

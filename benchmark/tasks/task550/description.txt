@@ -1,0 +1,1 @@
+You have an array A of N integers. You need to process Q queries on this array where each query either adds and multiplies certain elements or subtracts and divides others. After all queries, count how many elements are within a specified range [L, R].

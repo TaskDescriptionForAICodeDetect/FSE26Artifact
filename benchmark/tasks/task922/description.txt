@@ -1,0 +1,1 @@
+You have N items and a bag of strength W. The i-th item has a weight of w_i and a value of v_i. You will select some items to put in the bag such that the total weight of the selected items does not exceed W. Your goal is to maximize the total value of the selected items.

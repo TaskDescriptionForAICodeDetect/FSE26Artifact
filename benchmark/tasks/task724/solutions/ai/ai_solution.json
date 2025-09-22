@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n\nint main() {\n    int N, i, j, k, count;\n    scanf(\"%d\", &N);\n    \n    int cards[N];\n    for (i = 0; i < N; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n    \n    for (K = 1; K <= N; K++) {\n        count = 0;\n        int used[N];\n        memset(used, 0, sizeof(used));\n        \n        while (1) {\n            int selected[K];\n            int valid = 0;\n            \n            for (i = 0; i < K; i++) {\n                for (j = 0; j < N; j++) {\n                    if (!used[j]) {\n                        int already_selected = 0;\n                        for (int m = 0; m < i; m++) {\n                            if (selected[m] == cards[j]) {\n                                already_selected = 1;\n                                break;\n                            }\n                        }\n                        \n                        if (!already_selected) {\n                            selected[i] = cards[j];\n                            used[j] = 1;\n                            valid++;\n                            break;\n                        }\n                    }\n                }\n            }\n            \n            if (valid == K) {\n                count++;\n            } else {\n                break;\n            }\n        }\n        \n        printf(\"%d\\n\", count);\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:04"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 200000\n\nint freq[MAX_N + 1] = {0};\n\nint compare(const void *a, const void *b) {\n    return (*(int *)b - *(int *)a);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n    int *A = (int *)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &A[i]);\n        freq[A[i]]++;\n    }\n\n    int unique = 0;\n    for (int i = 1; i <= N; i++) {\n        if (freq[i] > 0) {\n            unique++;\n        }\n    }\n\n    int *counts = (int *)malloc((N + 1) * sizeof(int));\n    for (int i = 1; i <= N; i++) {\n        counts[i] = 0;\n    }\n    for (int i = 1; i <= N; i++) {\n        if (freq[i] > 0) {\n            counts[freq[i]]++;\n        }\n    }\n\n    int *prefix = (int *)malloc((N + 2) * sizeof(int));\n    int *suffix = (int *)malloc((N + 2) * sizeof(int));\n    for (int i = 0; i <= N + 1; i++) {\n        prefix[i] = 0;\n        suffix[i] = 0;\n    }\n\n    for (int i = 1; i <= N; i++) {\n        prefix[i] = prefix[i - 1] + counts[i] * i;\n    }\n    for (int i = N; i >= 1; i--) {\n        suffix[i] = suffix[i + 1] + counts[i];\n    }\n\n    for (int K = 1; K <= N; K++) {\n        int res = (prefix[K] + K * suffix[K + 1]) / K;\n        printf(\"%d\\n\", res);\n    }\n\n    free(A);\n    free(counts);\n    free(prefix);\n    free(suffix);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:24"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> A(N);\n    map<int, int> freq;\n    \n    for (int i = 0; i < N; ++i) {\n        cin >> A[i];\n        freq[A[i]]++;\n    }\n    \n    vector<int> freq_counts;\n    for (auto& p : freq) {\n        freq_counts.push_back(p.second);\n    }\n    \n    sort(freq_counts.rbegin(), freq_counts.rend());\n    \n    vector<int> ans(N + 1, 0);\n    int m = freq_counts.size();\n    vector<int> prefix(m + 1, 0);\n    \n    for (int i = 0; i < m; ++i) {\n        prefix[i + 1] = prefix[i] + freq_counts[i];\n    }\n    \n    for (int K = 1; K <= N; ++K) {\n        int low = 0, high = N / K;\n        int best = 0;\n        while (low <= high) {\n            int mid = (low + high) / 2;\n            int pos = upper_bound(freq_counts.begin(), freq_counts.end(), mid, greater<int>()) - freq_counts.begin();\n            long long sum = prefix[pos] + (long long)mid * (m - pos);\n            if (sum >= (long long)K * mid) {\n                best = mid;\n                low = mid + 1;\n            } else {\n                high = mid - 1;\n            }\n        }\n        ans[K] = best;\n    }\n    \n    for (int K = 1; K <= N; ++K) {\n        cout << ans[K] << \"\\n\";\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:42:42"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int i = 0; i < N; i++) {\n            int num = sc.nextInt();\n            freq.put(num, freq.getOrDefault(num, 0) + 1);\n        }\n        \n        List<Integer> counts = new ArrayList<>(freq.values());\n        Collections.sort(counts, Collections.reverseOrder());\n        \n        int[] res = new int[N + 1];\n        int sum = 0;\n        for (int K = 1; K <= N; K++) {\n            if (K <= counts.size()) {\n                sum += counts.get(K - 1);\n            }\n            res[K] = sum / K;\n        }\n        \n        for (int K = 1; K <= N; K++) {\n            System.out.println(res[K]);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:42:53"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\nimport java.io.*;\n\npublic class CardOperation {\n    public static void main(String[] args) throws IOException {\n        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));\n        int N = Integer.parseInt(br.readLine());\n        \n        String[] input = br.readLine().split(\" \");\n        int[] cards = new int[N];\n        for (int i = 0; i < N; i++) {\n            cards[i] = Integer.parseInt(input[i]);\n        }\n        \n        int[] result = new int[N];\n        \n        for (int K = 1; K <= N; K++) {\n            int operations = 0;\n            boolean[] used = new boolean[N];\n            \n            while (true) {\n                Set<Integer> uniqueNumbers = new HashSet<>();\n                \n                for (int i = 0; i < N; i++) {\n                    if (!used[i] && !uniqueNumbers.contains(cards[i]) && uniqueNumbers.size() < K) {\n                        uniqueNumbers.add(cards[i]);\n                        used[i] = true;\n                    }\n                }\n                \n                if (uniqueNumbers.size() == K) {\n                    operations++;\n                } else {\n                    break;\n                }\n            }\n            \n            result[K-1] = operations;\n        }\n        \n        for (int val : result) {\n            System.out.println(val);\n        }\n    }\n}",
+    "timestamp": "2025-08-05 22:42:59"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <set>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    \n    vector<int> cards(N);\n    for (int i = 0; i < N; i++) {\n        cin >> cards[i];\n    }\n    \n    for (int K = 1; K <= N; K++) {\n        int operations = 0;\n        vector<int> remainingCards = cards;\n        \n        while (true) {\n            set<int> selectedCards;\n            \n            for (auto it = remainingCards.begin(); it != remainingCards.end();) {\n                if (selectedCards.size() == K) break;\n                \n                if (selectedCards.find(*it) == selectedCards.end()) {\n                    selectedCards.insert(*it);\n                    it = remainingCards.erase(it);\n                } else {\n                    ++it;\n                }\n            }\n            \n            if (selectedCards.size() == K) {\n                operations++;\n            } else {\n                break;\n            }\n        }\n        \n        cout << operations << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:43:03"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def cards_operations(N, cards):\n    from collections import Counter\n    \n    card_count = Counter(cards)\n    max_count = max(card_count.values())\n    \n    result = [min(max_count, count // k) for k, count in enumerate(sorted(card_count.values(), reverse=True), start=1)]\n    \n    # Fill result with zeros for remaining K values\n    result.extend([0] * (N - len(result)))\n    \n    return result\n\n# Example usage\nN = 5\ncards = [1, 1, 2, 2, 3]\n\nprint(cards_operations(N, cards))",
+    "timestamp": "2025-08-13 12:14:00"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class CardGame {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] cards = new int[n];\n        for (int i = 0; i < n; i++) {\n            cards[i] = sc.nextInt();\n        }\n\n        Map<Integer, Integer> cardFrequency = new HashMap<>();\n        for (int card : cards) {\n            cardFrequency.put(card, cardFrequency.getOrDefault(card, 0) + 1);\n        }\n\n        List<Integer> frequencies = new ArrayList<>(cardFrequency.values());\n        Collections.sort(frequencies, Collections.reverseOrder());\n\n        int[] answer = new int[n + 1];\n        int remaining = n;\n        int distinctCount = 0;\n\n        for (int freq : frequencies) {\n            distinctCount++;\n            remaining -= freq;\n            for (int k = 1; k <= distinctCount; k++) {\n                int possibleSets = remaining / (k + 1) + 1;\n                answer[k] = Math.max(answer[k], possibleSets);\n            }\n        }\n\n        for (int k = 1; k <= n; k++) {\n            System.out.println(answer[k]);\n        }\n\n        sc.close();\n    }\n}",
+    "timestamp": "2025-08-13 12:14:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return (*(int*)a - *(int*)b);\n}\n\nvoid calculate_operations(int* cards, int N) {\n    qsort(cards, N, sizeof(int), compare);\n\n    int *unique_counts = (int*)calloc(N + 1, sizeof(int));\n    int unique_index = 0;\n    \n    for (int i = 0; i < N;) {\n        int count = 0;\n        int current = cards[i];\n        while (i < N && cards[i] == current) {\n            count++;\n            i++;\n        }\n        \n        for (int j = 0; j < count; j++) {\n            if (unique_index + j <= N) {\n                unique_counts[unique_index + j]++;\n            }\n        }\n        unique_index += count;\n    }\n\n    int remaining = 0;\n    for (int i = N; i >= 1; i--) {\n        remaining += unique_counts[i];\n        printf(\"%d\\n\", remaining);\n    }\n\n    free(unique_counts);\n}\n\nint main() {\n    int N;\n    scanf(\"%d\", &N);\n\n    int *cards = (int*)malloc(N * sizeof(int));\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d\", &cards[i]);\n    }\n\n    calculate_operations(cards, N);\n\n    free(cards);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:14:17"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <unordered_map>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N;\n    cin >> N;\n    vector<int> cards(N);\n    unordered_map<int, int> card_count;\n\n    for (int i = 0; i < N; ++i) {\n        cin >> cards[i];\n        card_count[cards[i]]++;\n    }\n\n    vector<int> freq;\n    for (const auto& count : card_count) {\n        freq.push_back(count.second);\n    }\n\n    sort(freq.rbegin(), freq.rend());\n    vector<int> operations(N + 1, 0);\n    int sum_frequencies = 0;\n    for (int k = 1; k <= N; ++k) {\n        if (k > freq.size()) break;\n        sum_frequencies += freq[k - 1];\n        operations[k] = sum_frequencies / k;\n    }\n\n    for (int k = 1; k <= N; ++k) {\n        cout << operations[k] << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:14:21"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def solve_card_selection(cards):\n    N = len(cards)\n    result = [0] * N\n    \n    for K in range(1, N + 1):\n        used = set()\n        selections = 0\n        cards_copy = cards.copy()\n        \n        while len(cards_copy) >= K:\n            current_selection = []\n            for _ in range(K):\n                valid_cards = [card for card in cards_copy if card not in used]\n                if not valid_cards:\n                    break\n                selected_card = max(valid_cards)\n                current_selection.append(selected_card)\n                cards_copy.remove(selected_card)\n                used.add(selected_card)\n            \n            if len(current_selection) == K:\n                selections += 1\n            else:\n                break\n        \n        result[K-1] = selections\n    \n    return result\n\n# Input handling\nN = int(input())\ncards = list(map(int, input().split()))\n\n# Get and print result\nresult = solve_card_selection(cards)\nprint(*result)",
+    "timestamp": "2025-08-13 12:14:26"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom collections import defaultdict\n\ndef solve():\n    input = sys.stdin.read().split()\n    N = int(input[0])\n    A = list(map(int, input[1:N+1]))\n    \n    freq = defaultdict(int)\n    for num in A:\n        freq[num] += 1\n    \n    counts = sorted(freq.values(), reverse=True)\n    max_possible = len(counts)\n    \n    res = [0] * (N + 2)\n    for K in range(1, N + 1):\n        low = 1\n        high = N // K\n        best = 0\n        while low <= high:\n            mid = (low + high) // 2\n            total = 0\n            for cnt in counts:\n                total += min(cnt, mid)\n                if total >= K * mid:\n                    break\n            if total >= K * mid:\n                best = mid\n                low = mid + 1\n            else:\n                high = mid - 1\n        res[K] = best\n    \n    for K in range(1, N + 1):\n        print(res[K])\n\nsolve()",
+    "timestamp": "2025-08-13 12:14:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxOperations(cards) {\n    const frequencyMap = new Map();\n    cards.forEach(card => {\n        frequencyMap.set(card, (frequencyMap.get(card) || 0) + 1);\n    });\n\n    const frequencies = Array.from(frequencyMap.values()).sort((a, b) => b - a);\n    const n = cards.length;\n    const result = Array(n + 1).fill(0);\n    let sum = 0;\n\n    for (let i = 0; i < frequencies.length; i++) {\n        sum += frequencies[i];\n        for (let k = 1; k <= Math.min(n, sum / (i + 1)); k++) {\n            result[k] = Math.max(result[k], i + 1);\n        }\n    }\n    return result.slice(1);\n}\n\n// Example usage:\n// const cards = [1, 2, 3, 4, 5];\n// console.log(maxOperations(cards)); // Output result for the example cards",
+    "timestamp": "2025-08-13 12:14:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solveCardProblem(cards) {\n    const N = cards.length;\n    const result = new Array(N).fill(0);\n    \n    for (let K = 1; K <= N; K++) {\n        const uniqueCount = new Set(cards).size;\n        if (uniqueCount < K) {\n            continue;\n        }\n        \n        const frequencyMap = new Map();\n        cards.forEach(card => {\n            frequencyMap.set(card, (frequencyMap.get(card) || 0) + 1);\n        });\n        \n        let operations = 0;\n        const usedCards = new Set();\n        \n        while (true) {\n            const selectedCards = new Set();\n            for (const [card, freq] of frequencyMap.entries()) {\n                if (selectedCards.size === K) break;\n                if (!usedCards.has(card) && freq > 0) {\n                    selectedCards.add(card);\n                    frequencyMap.set(card, freq - 1);\n                    usedCards.add(card);\n                }\n            }\n            \n            if (selectedCards.size < K) break;\n            operations++;\n        }\n        \n        result[K-1] = operations;\n    }\n    \n    return result;\n}",
+    "timestamp": "2025-08-13 12:14:47"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const N = parseInt(readline());\n    const A = readline().split(' ').map(Number);\n    const freq = {};\n    \n    for (const num of A) {\n        freq[num] = (freq[num] || 0) + 1;\n    }\n    \n    const counts = Object.values(freq).sort((a, b) => b - a);\n    const maxFreq = counts[0] || 0;\n    const res = new Array(N).fill(0);\n    \n    for (let K = 1; K <= N; K++) {\n        let low = 1, high = Math.floor(N / K), ans = 0;\n        while (low <= high) {\n            const mid = Math.floor((low + high) / 2);\n            let sum = 0;\n            for (const cnt of counts) {\n                sum += Math.min(cnt, mid);\n                if (sum >= K * mid) break;\n            }\n            if (sum >= K * mid) {\n                ans = mid;\n                low = mid + 1;\n            } else {\n                high = mid - 1;\n            }\n        }\n        res[K - 1] = ans;\n    }\n    \n    console.log(res.join('\\n'));\n}\n\n// For testing purposes, replace readline with appropriate input handling\n// Example:\n// const readline = () => {\n//     const lines = ['3', '1 2 1'];\n//     let index = 0;\n//     return lines[index++];\n// };\n// solve();",
+    "timestamp": "2025-08-13 12:14:55"
+  }
+]

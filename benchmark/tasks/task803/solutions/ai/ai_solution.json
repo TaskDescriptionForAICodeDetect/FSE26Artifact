@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX_LEN 1000\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nvoid longestCommonSubsequence(char* s, char* t, char* result) {\n    int m = strlen(s);\n    int n = strlen(t);\n    int dp[MAX_LEN + 1][MAX_LEN + 1];\n    \n    // Initialize DP table\n    for (int i = 0; i <= m; i++) {\n        for (int j = 0; j <= n; j++) {\n            dp[i][j] = 0;\n        }\n    }\n    \n    // Fill DP table\n    for (int i = 1; i <= m; i++) {\n        for (int j = 1; j <= n; j++) {\n            if (s[i-1] == t[j-1]) {\n                dp[i][j] = dp[i-1][j-1] + 1;\n            } else {\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1]);\n            }\n        }\n    }\n    \n    // Reconstruct longest common subsequence\n    int index = dp[m][n];\n    result[index] = '\\0';\n    \n    int i = m, j = n;\n    while (i > 0 && j > 0) {\n        if (s[i-1] == t[j-1]) {\n            result[--index] = s[i-1];\n            i--;\n            j--;\n        } else if (dp[i-1][j] > dp[i][j-1]) {\n            i--;\n        } else {\n            j--;\n        }\n    }\n}\n\nint main() {\n    char s[MAX_LEN + 1], t[MAX_LEN + 1], result[MAX_LEN + 1];\n    \n    scanf(\"%s %s\", s, t);\n    \n    longestCommonSubsequence(s, t, result);\n    \n    printf(\"%s\\n\", result);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:57:29"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <string.h>\n#include <stdlib.h>\n\n#define MAX 1000\n\nvoid longestCommonSubsequence(char *s, char *t) {\n    int m = strlen(s);\n    int n = strlen(t);\n    int dp[MAX + 1][MAX + 1];\n    int i, j;\n\n    for (i = 0; i <= m; i++) {\n        for (j = 0; j <= n; j++) {\n            if (i == 0 || j == 0) {\n                dp[i][j] = 0;\n            } else if (s[i - 1] == t[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            } else {\n                dp[i][j] = (dp[i - 1][j] > dp[i][j - 1]) ? dp[i - 1][j] : dp[i][j - 1];\n            }\n        }\n    }\n\n    int length = dp[m][n];\n    char *lcs = (char *)malloc((length + 1) * sizeof(char));\n    lcs[length] = '\\0';\n\n    i = m;\n    j = n;\n    while (i > 0 && j > 0) {\n        if (s[i - 1] == t[j - 1]) {\n            lcs[length - 1] = s[i - 1];\n            i--;\n            j--;\n            length--;\n        } else if (dp[i - 1][j] > dp[i][j - 1]) {\n            i--;\n        } else {\n            j--;\n        }\n    }\n\n    printf(\"%s\\n\", lcs);\n    free(lcs);\n}\n\nint main() {\n    char s[MAX], t[MAX];\n    scanf(\"%s\", s);\n    scanf(\"%s\", t);\n    longestCommonSubsequence(s, t);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:58:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nstring longestCommonSubsequence(string s, string t) {\n    int m = s.size();\n    int n = t.size();\n    vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));\n\n    for (int i = 1; i <= m; ++i) {\n        for (int j = 1; j <= n; ++j) {\n            if (s[i - 1] == t[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            } else {\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);\n            }\n        }\n    }\n\n    string lcs;\n    int i = m, j = n;\n    while (i > 0 && j > 0) {\n        if (s[i - 1] == t[j - 1]) {\n            lcs.push_back(s[i - 1]);\n            --i;\n            --j;\n        } else if (dp[i - 1][j] > dp[i][j - 1]) {\n            --i;\n        } else {\n            --j;\n        }\n    }\n    reverse(lcs.begin(), lcs.end());\n    return lcs;\n}\n\nint main() {\n    string s, t;\n    cin >> s >> t;\n    cout << longestCommonSubsequence(s, t) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:58:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class LongestCommonSubsequence {\n    public static String longestCommonSubsequence(String s, String t) {\n        int m = s.length();\n        int n = t.length();\n        int[][] dp = new int[m + 1][n + 1];\n\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (s.charAt(i - 1) == t.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1] + 1;\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n\n        StringBuilder sb = new StringBuilder();\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (s.charAt(i - 1) == t.charAt(j - 1)) {\n                sb.append(s.charAt(i - 1));\n                i--;\n                j--;\n            } else if (dp[i - 1][j] > dp[i][j - 1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n\n        return sb.reverse().toString();\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String s = scanner.next();\n        String t = scanner.next();\n        System.out.println(longestCommonSubsequence(s, t));\n    }\n}",
+    "timestamp": "2025-08-05 22:58:51"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public String longestCommonSubsequence(String s, String t) {\n        int m = s.length();\n        int n = t.length();\n        \n        // DP table to store lengths of common subsequences\n        int[][] dp = new int[m + 1][n + 1];\n        \n        // Fill DP table\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (s.charAt(i - 1) == t.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1] + 1;\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n        \n        // Reconstruct the longest common subsequence\n        StringBuilder result = new StringBuilder();\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (s.charAt(i - 1) == t.charAt(j - 1)) {\n                result.insert(0, s.charAt(i - 1));\n                i--;\n                j--;\n            } else if (dp[i - 1][j] > dp[i][j - 1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n        \n        return result.toString();\n    }\n}",
+    "timestamp": "2025-08-05 22:58:56"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    string longestCommonSubsequence(string s, string t) {\n        int m = s.length(), n = t.length();\n        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));\n        \n        // Fill DP table\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (s[i-1] == t[j-1]) {\n                    dp[i][j] = dp[i-1][j-1] + 1;\n                } else {\n                    dp[i][j] = max(dp[i-1][j], dp[i][j-1]);\n                }\n            }\n        }\n        \n        // Reconstruct longest common subsequence\n        string lcs;\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (s[i-1] == t[j-1]) {\n                lcs = s[i-1] + lcs;\n                i--;\n                j--;\n            } else if (dp[i-1][j] > dp[i][j-1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n        \n        return lcs;\n    }\n};",
+    "timestamp": "2025-08-05 22:59:01"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longest_common_subsequence(s, t):\n    m, n = len(s), len(t)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    \n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if s[i - 1] == t[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n    \n    i, j = m, n\n    lcs = []\n    \n    while i > 0 and j > 0:\n        if s[i - 1] == t[j - 1]:\n            lcs.append(s[i - 1])\n            i -= 1\n            j -= 1\n        elif dp[i - 1][j] > dp[i][j - 1]:\n            i -= 1\n        else:\n            j -= 1\n    \n    return ''.join(reversed(lcs))\n\n# Example usage\ns = \"abcde\"\nt = \"ace\"\nprint(longest_common_subsequence(s, t))  # Output: \"ace\"",
+    "timestamp": "2025-08-13 13:09:59"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class LongestCommonSubsequence {\n\n    public String longestCommonSubsequence(String s, String t) {\n        int m = s.length();\n        int n = t.length();\n        int[][] dp = new int[m + 1][n + 1];\n\n        // Fill the dp array\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (s.charAt(i - 1) == t.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1] + 1;\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n\n        // Reconstruct the longest common subsequence\n        StringBuilder lcs = new StringBuilder();\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (s.charAt(i - 1) == t.charAt(j - 1)) {\n                lcs.append(s.charAt(i - 1));\n                i--;\n                j--;\n            } else if (dp[i - 1][j] > dp[i][j - 1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n\n        return lcs.reverse().toString();\n    }\n\n    public static void main(String[] args) {\n        LongestCommonSubsequence lcsSolver = new LongestCommonSubsequence();\n        String s = \"abcde\";\n        String t = \"ace\";\n        System.out.println(lcsSolver.longestCommonSubsequence(s, t)); // Output: \"ace\"\n    }\n}",
+    "timestamp": "2025-08-13 13:10:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\n#define MAX(a,b) ((a) > (b) ? (a) : (b))\n\n// Function to find the longest common subsequence\nvoid longestCommonSubsequence(char *s, char *t, char *result) {\n    int lenS = strlen(s);\n    int lenT = strlen(t);\n    int lcs[lenS+1][lenT+1];\n\n    // Build LCS table\n    for (int i = 0; i <= lenS; i++) {\n        for (int j = 0; j <= lenT; j++) {\n            if (i == 0 || j == 0) {\n                lcs[i][j] = 0;\n            } else if (s[i-1] == t[j-1]) {\n                lcs[i][j] = lcs[i-1][j-1] + 1;\n            } else {\n                lcs[i][j] = MAX(lcs[i-1][j], lcs[i][j-1]);\n            }\n        }\n    }\n\n    // Trace back to find the LCS\n    int index = lcs[lenS][lenT];\n    result[index] = '\\0';\n\n    int i = lenS, j = lenT;\n    while (i > 0 && j > 0) {\n        if (s[i-1] == t[j-1]) {\n            result[index-1] = s[i-1];\n            i--; j--; index--;\n        } else if (lcs[i-1][j] > lcs[i][j-1]) {\n            i--;\n        } else {\n            j--;\n        }\n    }\n}\n\nint main() {\n    char s[] = \"abcde\";\n    char t[] = \"ace\";\n    char result[100]; // Assuming the result will not exceed 100 characters\n    longestCommonSubsequence(s, t, result);\n    printf(\"Longest Common Subsequence: %s\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:10:21"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <string>\n\nstd::string longestCommonSubsequence(std::string s, std::string t) {\n    int m = s.size();\n    int n = t.size();\n    std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1, 0));\n\n    // Fill dp table\n    for (int i = 1; i <= m; ++i) {\n        for (int j = 1; j <= n; ++j) {\n            if (s[i - 1] == t[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            } else {\n                dp[i][j] = std::max(dp[i - 1][j], dp[i][j - 1]);\n            }\n        }\n    }\n\n    // Reconstruct the longest common subsequence\n    int i = m, j = n;\n    std::string lcs = \"\";\n    while (i > 0 && j > 0) {\n        if (s[i - 1] == t[j - 1]) {\n            lcs = s[i - 1] + lcs;\n            --i;\n            --j;\n        } else if (dp[i - 1][j] > dp[i][j - 1]) {\n            --i;\n        } else {\n            --j;\n        }\n    }\n\n    return lcs;\n}\n\nint main() {\n    std::string s = \"abcde\";\n    std::string t = \"ace\";\n    std::string result = longestCommonSubsequence(s, t);\n    std::cout << result << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 13:10:26"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longestCommonSubsequence(s: str, t: str) -> str:\n    m, n = len(s), len(t)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    \n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if s[i-1] == t[j-1]:\n                dp[i][j] = dp[i-1][j-1] + 1\n            else:\n                dp[i][j] = max(dp[i-1][j], dp[i][j-1])\n    \n    # Reconstruct the longest common subsequence\n    lcs = []\n    i, j = m, n\n    while i > 0 and j > 0:\n        if s[i-1] == t[j-1]:\n            lcs.append(s[i-1])\n            i -= 1\n            j -= 1\n        elif dp[i-1][j] > dp[i][j-1]:\n            i -= 1\n        else:\n            j -= 1\n    \n    return ''.join(reversed(lcs))",
+    "timestamp": "2025-08-13 13:10:32"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def longest_common_subsequence(s, t):\n    m, n = len(s), len(t)\n    dp = [[0] * (n + 1) for _ in range(m + 1)]\n    \n    for i in range(1, m + 1):\n        for j in range(1, n + 1):\n            if s[i - 1] == t[j - 1]:\n                dp[i][j] = dp[i - 1][j - 1] + 1\n            else:\n                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])\n    \n    i, j = m, n\n    lcs = []\n    while i > 0 and j > 0:\n        if s[i - 1] == t[j - 1]:\n            lcs.append(s[i - 1])\n            i -= 1\n            j -= 1\n        elif dp[i - 1][j] > dp[i][j - 1]:\n            i -= 1\n        else:\n            j -= 1\n    \n    return ''.join(reversed(lcs))",
+    "timestamp": "2025-08-13 13:10:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function longestCommonSubsequence(s, t) {\n    const m = s.length, n = t.length;\n    const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(''));\n\n    for (let i = 1; i <= m; i++) {\n        for (let j = 1; j <= n; j++) {\n            if (s[i - 1] === t[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + s[i - 1];\n            } else {\n                dp[i][j] = dp[i - 1][j].length > dp[i][j - 1].length ? dp[i - 1][j] : dp[i][j - 1];\n            }\n        }\n    }\n\n    return dp[m][n];\n}",
+    "timestamp": "2025-08-13 13:10:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function longestCommonSubsequence(s, t) {\n    const m = s.length;\n    const n = t.length;\n    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(''));\n\n    for (let i = 1; i <= m; i++) {\n        for (let j = 1; j <= n; j++) {\n            if (s[i - 1] === t[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + s[i - 1];\n            } else {\n                dp[i][j] = dp[i - 1][j].length > dp[i][j - 1].length ? dp[i - 1][j] : dp[i][j - 1];\n            }\n        }\n    }\n\n    return dp[m][n];\n}",
+    "timestamp": "2025-08-13 13:10:53"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function longestCommonSubsequence(s, t) {\n    const m = s.length;\n    const n = t.length;\n    const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));\n    \n    for (let i = 1; i <= m; i++) {\n        for (let j = 1; j <= n; j++) {\n            if (s[i - 1] === t[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            } else {\n                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n            }\n        }\n    }\n    \n    let i = m, j = n;\n    let result = [];\n    while (i > 0 && j > 0) {\n        if (s[i - 1] === t[j - 1]) {\n            result.unshift(s[i - 1]);\n            i--;\n            j--;\n        } else if (dp[i - 1][j] > dp[i][j - 1]) {\n            i--;\n        } else {\n            j--;\n        }\n    }\n    \n    return result.join('');\n}",
+    "timestamp": "2025-08-13 13:11:02"
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "6 5\nFORWARD 3\nRIGHT\nFORWARD 5\nLEFT\nBACKWARD 2\nSTOP",
+      "output": "6 2"
+    },
+    {
+      "input": "3 1\nFORWARD 2\nSTOP",
+      "output": "1 1"
+    }
+  ]
+}

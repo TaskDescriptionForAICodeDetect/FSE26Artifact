@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n#include <math.h>\n\nbool canFit(int* radii, int n, int W) {\n    int sum = 0;\n    for (int i = 0; i < n; i++) {\n        sum += radii[i];\n    }\n    if (2 * sum <= W) {\n        return true;\n    }\n    \n    int* perm = (int*)malloc(n * sizeof(int));\n    for (int i = 0; i < n; i++) {\n        perm[i] = radii[i];\n    }\n    \n    do {\n        double total = perm[0] + perm[n - 1];\n        for (int i = 0; i < n - 1; i++) {\n            double r1 = perm[i];\n            double r2 = perm[i + 1];\n            total += 2 * sqrt(r1 * r2);\n        }\n        if (total <= W) {\n            free(perm);\n            return true;\n        }\n    } while (next_permutation(perm, n));\n    \n    free(perm);\n    return false;\n}\n\nbool next_permutation(int* a, int n) {\n    int i = n - 2;\n    while (i >= 0 && a[i] >= a[i + 1]) {\n        i--;\n    }\n    if (i < 0) {\n        return false;\n    }\n    int j = n - 1;\n    while (a[j] <= a[i]) {\n        j--;\n    }\n    int temp = a[i];\n    a[i] = a[j];\n    a[j] = temp;\n    \n    int left = i + 1;\n    int right = n - 1;\n    while (left < right) {\n        temp = a[left];\n        a[left] = a[right];\n        a[right] = temp;\n        left++;\n        right--;\n    }\n    return true;\n}\n\nint main() {\n    int W, n;\n    while (scanf(\"%d\", &W) == 1) {\n        int radii[12];\n        n = 0;\n        while (scanf(\"%d\", &radii[n]) == 1) {\n            n++;\n            if (getchar() == '\\n') break;\n        }\n        if (canFit(radii, n, W)) {\n            printf(\"OK\\n\");\n        } else {\n            printf(\"NA\\n\");\n        }\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:11"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class RollCakes {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        while (scanner.hasNextInt()) {\n            int boxWidth = scanner.nextInt();\n            \n            List<Integer> radii = new ArrayList<>();\n            while (scanner.hasNextInt()) {\n                int radius = scanner.nextInt();\n                radii.add(radius);\n                if (scanner.hasNextLine() && scanner.nextLine().trim().isEmpty()) {\n                    break;\n                }\n            }\n            \n            if (canArrangeCakes(boxWidth, radii)) {\n                System.out.println(\"OK\");\n            } else {\n                System.out.println(\"NA\");\n            }\n        }\n        \n        scanner.close();\n    }\n    \n    private static boolean canArrangeCakes(int boxWidth, List<Integer> radii) {\n        int n = radii.size();\n        Collections.sort(radii);\n        \n        do {\n            int currentWidth = 0;\n            for (int radius : radii) {\n                currentWidth += 2 * radius;\n            }\n            \n            if (currentWidth <= boxWidth) {\n                return true;\n            }\n        } while (nextPermutation(radii));\n        \n        return false;\n    }\n    \n    private static boolean nextPermutation(List<Integer> arr) {\n        int i = arr.size() - 2;\n        while (i >= 0 && arr.get(i) >= arr.get(i + 1)) {\n            i--;\n        }\n        \n        if (i < 0) {\n            return false;\n        }\n        \n        int j = arr.size() - 1;\n        while (j > i && arr.get(j) <= arr.get(i)) {\n            j--;\n        }\n        \n        Collections.swap(arr, i, j);\n        \n        Collections.reverse(arr.subList(i + 1, arr.size()));\n        return true;\n    }\n}",
+    "timestamp": "2025-08-05 18:28:18"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <cmath>\n\nusing namespace std;\n\nbool checkFit(const vector<int>& radii, int W) {\n    vector<int> perm = radii;\n    do {\n        double total = perm[0];\n        for (size_t i = 1; i < perm.size(); ++i) {\n            int r1 = perm[i-1];\n            int r2 = perm[i];\n            total += 2 * sqrt(r1 * r2);\n        }\n        total += perm.back();\n        if (total <= W + 1e-9) {\n            return true;\n        }\n    } while (next_permutation(perm.begin(), perm.end()));\n    return false;\n}\n\nint main() {\n    int W, n;\n    while (cin >> W) {\n        vector<int> radii;\n        int r;\n        while (cin.peek() != '\\n' && cin >> r) {\n            radii.push_back(r);\n        }\n        sort(radii.begin(), radii.end());\n        bool fits = false;\n        do {\n            double total = radii[0];\n            for (size_t i = 1; i < radii.size(); ++i) {\n                int r1 = radii[i-1];\n                int r2 = radii[i];\n                total += 2 * sqrt(r1 * r2);\n            }\n            total += radii.back();\n            if (total <= W + 1e-9) {\n                fits = true;\n                break;\n            }\n        } while (next_permutation(radii.begin(), radii.end()));\n        cout << (fits ? \"OK\" : \"NA\") << endl;\n    }\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:33"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n#include <stdbool.h>\n\n#define MAX_CAKES 12\n\nvoid quickSort(int arr[], int low, int high);\nint partition(int arr[], int low, int high);\nbool canFitInBox(int radii[], int n, int boxLength);\n\nint main() {\n    int boxLength, n;\n    int radii[MAX_CAKES];\n\n    while (scanf(\"%d\", &boxLength) == 1) {\n        scanf(\"%d\", &n);\n        for (int i = 0; i < n; i++) {\n            scanf(\"%d\", &radii[i]);\n        }\n\n        quickSort(radii, 0, n - 1);\n\n        if (canFitInBox(radii, n, boxLength)) {\n            printf(\"OK\\n\");\n        } else {\n            printf(\"NA\\n\");\n        }\n    }\n\n    return 0;\n}\n\nvoid quickSort(int arr[], int low, int high) {\n    if (low < high) {\n        int pi = partition(arr, low, high);\n        quickSort(arr, low, pi - 1);\n        quickSort(arr, pi + 1, high);\n    }\n}\n\nint partition(int arr[], int low, int high) {\n    int pivot = arr[high];\n    int i = low - 1;\n\n    for (int j = low; j <= high - 1; j++) {\n        if (arr[j] > pivot) {\n            i++;\n            int temp = arr[i];\n            arr[i] = arr[j];\n            arr[j] = temp;\n        }\n    }\n\n    int temp = arr[i + 1];\n    arr[i + 1] = arr[high];\n    arr[high] = temp;\n\n    return i + 1;\n}\n\nbool canFitInBox(int radii[], int n, int boxLength) {\n    int totalWidth = 0;\n    for (int i = 0; i < n; i++) {\n        totalWidth += 2 * radii[i];\n    }\n    return totalWidth <= boxLength;\n}",
+    "timestamp": "2025-08-05 18:28:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n#include <numeric>\n\nusing namespace std;\n\nbool canFitCakes(int boxWidth, vector<int>& radii) {\n    sort(radii.begin(), radii.end());\n    int currentWidth = 0;\n    \n    do {\n        currentWidth = 0;\n        for (int radius : radii) {\n            currentWidth += 2 * radius;\n        }\n        \n        if (currentWidth <= boxWidth) {\n            return true;\n        }\n    } while (next_permutation(radii.begin(), radii.end()));\n    \n    return false;\n}\n\nint main() {\n    int W, n;\n    \n    while (cin >> W) {\n        vector<int> radii;\n        int radius;\n        \n        while (cin >> radius) {\n            radii.push_back(radius);\n            \n            if (cin.get() == '\\n') {\n                break;\n            }\n        }\n        \n        if (canFitCakes(W, radii)) {\n            cout << \"OK\" << endl;\n        } else {\n            cout << \"NA\" << endl;\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:28:45"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    static boolean[] used;\n    static int[] radii;\n    static int W;\n    static boolean found;\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNext()) {\n            W = scanner.nextInt();\n            List<Integer> radiusList = new ArrayList<>();\n            while (scanner.hasNextInt()) {\n                int r = scanner.nextInt();\n                radiusList.add(r);\n            }\n            scanner.nextLine(); // consume the rest of the line\n\n            radii = new int[radiusList.size()];\n            for (int i = 0; i < radii.length; i++) {\n                radii[i] = radiusList.get(i);\n            }\n            used = new boolean[radii.length];\n            found = false;\n            backtrack(0, 0);\n            System.out.println(found ? \"OK\" : \"NA\");\n        }\n        scanner.close();\n    }\n\n    static void backtrack(int pos, double currentWidth) {\n        if (found) return;\n        if (pos == radii.length) {\n            if (currentWidth <= W) {\n                found = true;\n            }\n            return;\n        }\n\n        for (int i = 0; i < radii.length; i++) {\n            if (!used[i]) {\n                used[i] = true;\n                double newWidth;\n                if (pos == 0) {\n                    newWidth = radii[i];\n                } else {\n                    int r1 = radii[i];\n                    newWidth = currentWidth + 2 * Math.sqrt(r1 * radii[i]);\n                }\n                if (newWidth <= W) {\n                    backtrack(pos + 1, newWidth);\n                }\n                used[i] = false;\n            }\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:29:02"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def can_fit_in_box(W, radii):\n    return 'OK' if sum(radii) * 2 <= W else 'NA'\n\nimport sys\n\ninput = sys.stdin.read\ndata = input().strip().split('\\n')\n\nfor line in data:\n    inputs = list(map(int, line.split()))\n    W, radii = inputs[0], inputs[1:]\n    result = can_fit_in_box(W, radii)\n    print(result)",
+    "timestamp": "2025-08-12 23:22:06"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Scanner;\n\npublic class PastryChef {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        while (scanner.hasNextLine()) {\n            String[] input = scanner.nextLine().trim().split(\"\\\\s+\");\n            int W = Integer.parseInt(input[0]);\n            int[] radii = new int[input.length - 1];\n            for (int i = 1; i < input.length; i++) {\n                radii[i - 1] = Integer.parseInt(input[i]);\n            }\n            Arrays.sort(radii);\n            if (canFit(W, radii)) {\n                System.out.println(\"OK\");\n            } else {\n                System.out.println(\"NA\");\n            }\n        }\n    }\n\n    private static boolean canFit(int W, int[] radii) {\n        int n = radii.length;\n\n        do {\n            int width = 0;\n            for (int r : radii) {\n                width += 2 * r;\n            }\n            if (width <= W) {\n                return true;\n            }\n        } while (nextPermutation(radii));\n\n        return false;\n    }\n\n    private static boolean nextPermutation(int[] nums) {\n        int i = nums.length - 2;\n        while (i >= 0 && nums[i] >= nums[i + 1]) {\n            i--;\n        }\n        if (i < 0) {\n            return false;\n        }\n        int j = nums.length - 1;\n        while (nums[j] <= nums[i]) {\n            j--;\n        }\n        swap(nums, i, j);\n        reverse(nums, i + 1, nums.length - 1);\n        return true;\n    }\n\n    private static void swap(int[] nums, int i, int j) {\n        int temp = nums[i];\n        nums[i] = nums[j];\n        nums[j] = temp;\n    }\n\n    private static void reverse(int[] nums, int start, int end) {\n        while (start < end) {\n            swap(nums, start, end);\n            start++;\n            end--;\n        }\n    }\n}",
+    "timestamp": "2025-08-12 23:22:13"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\nint compare(const void *a, const void *b) {\n    return *(int *)a - *(int *)b;\n}\n\nint main() {\n    int W;\n    \n    while (scanf(\"%d\", &W) != EOF) {\n        int radii[12];\n        int radiusCount = 0;\n        \n        while (scanf(\"%d\", &radii[radiusCount]) == 1) {\n            radiusCount++;\n            if (getchar() == '\\n') {\n                break;\n            }\n        }\n        \n        qsort(radii, radiusCount, sizeof(int), compare);\n        \n        int totalWidth = 0;\n        for (int i = 0; i < radiusCount; i++) {\n            totalWidth += 2 * radii[i];\n        }\n        \n        if (totalWidth <= W) {\n            printf(\"OK\\n\");\n        } else {\n            printf(\"NA\\n\");\n        }\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-12 23:22:17"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "from itertools import permutations\n\ndef solve_cake_arrangement(width, radii):\n    for perm in permutations(radii):\n        current_width = 0\n        for radius in perm:\n            current_width += 2 * radius\n            if current_width > width:\n                break\n        else:\n            return 'OK'\n    return 'NA'\n\ndef main():\n    while True:\n        try:\n            inputs = list(map(int, input().split()))\n            width = inputs[0]\n            radii = inputs[1:]\n            \n            result = solve_cake_arrangement(width, radii)\n            print(result)\n        except EOFError:\n            break\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-12 23:22:25"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nfrom itertools import permutations\n\ndef solve():\n    for line in sys.stdin:\n        parts = list(map(int, line.strip().split()))\n        if not parts:\n            continue\n        W = parts[0]\n        radii = parts[1:]\n        n = len(radii)\n        found = False\n        \n        for perm in permutations(radii):\n            total = 0\n            if n == 1:\n                total = 2 * perm[0]\n            else:\n                total = perm[0] + perm[-1]\n                for i in range(n - 1):\n                    total += ((perm[i] + perm[i+1])**2 - (perm[i] - perm[i+1])**2)**0.5\n            if total <= W + 1e-8:\n                found = True\n                break\n        print('OK' if found else 'NA')\n\nsolve()",
+    "timestamp": "2025-08-12 23:22:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nbool canFitCakes(int W, const std::vector<int>& radii) {\n    int totalWidth = 0;\n    for (int radius : radii) {\n        totalWidth += 2 * radius;\n    }\n    return totalWidth <= W;\n}\n\nint main() {\n    int W;\n    while (std::cin >> W) {\n        std::vector<int> radii;\n        int radius;\n        while (std::cin.peek() != '\\n' && std::cin >> radius) {\n            radii.push_back(radius);\n        }\n\n        std::sort(radii.rbegin(), radii.rend());\n        \n        do {\n            if (canFitCakes(W, radii)) {\n                std::cout << \"OK\" << std::endl;\n                break;\n            }\n        } while (std::prev_permutation(radii.begin(), radii.end()));\n        \n        if (!canFitCakes(W, radii)) {\n            std::cout << \"NA\" << std::endl;\n        }\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:49:56"
+  }
+]

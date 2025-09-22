@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {
+      "input": "5\n12:57 59\n20:12 15\n12:19 21\n18:52 03\n16:09 14\n0",
+      "output": "lunch 100\ndinner 50\nmidnight no guest"
+    }
+  ]
+}

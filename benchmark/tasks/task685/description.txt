@@ -1,0 +1,1 @@
+Given a positive integer N, choose an integer K between 2 and N (inclusive). Repeat the operation: if K divides N, replace N with N/K; otherwise, replace N with N-K. Count how many choices of K will lead to N becoming 1 in the end.

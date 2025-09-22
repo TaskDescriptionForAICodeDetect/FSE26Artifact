@@ -1,0 +1,1 @@
+Calculate the probability that a remained undirected graph is connected after each edge disappears with a constant probability.

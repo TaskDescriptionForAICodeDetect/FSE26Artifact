@@ -1,0 +1,1 @@
+Create a program to calculate the toll fee for a toll road based on the starting and ending interchanges, including the time of passage. The toll fee is half during the time period from 17:30 to 19:30 for vehicles traveling 40km or less. The fee is rounded up to the nearest 50 yen. The program should take multiple datasets as input and output the toll fee for each.

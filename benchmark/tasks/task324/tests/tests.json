@@ -1,0 +1,28 @@
+{
+  "examples": [
+    {
+      "input": "1 1\n.\n",
+      "output": "SAFE"
+    },
+    {
+      "input": "3 3\n...\n.W.\n...\n",
+      "output": "SAFE"
+    },
+    {
+      "input": "10 10\n..........\n.DDDDCCC..\n.DDDDCCC..\n.DDDDCCC..\nADDDDCCC..\nAAA..CCC..\nAAABBBBC..\nAAABBBB...\n..BBBBB...\n..........\n",
+      "output": "SAFE"
+    },
+    {
+      "input": "10 10\n..........\n.DDDDDD...\n.DDDDCCC..\n.DDDDCCC..\nADDDDCCC..\nAAA..CCC..\nAAABBBBC..\nAAABBBB...\n..BBBBB...\n..........\n",
+      "output": "SUSPICIOUS"
+    },
+    {
+      "input": "10 10\nR..E..C.T.\nR.EEE.C.T.\n.EEEEE....\nEEEEEEE...\n.EEEEEEE..\n..EEEEEEE.\n...EEEEEEE\n....EEEEE.\n.....EEE..\n......E...\n",
+      "output": "SUSPICIOUS"
+    },
+    {
+      "input": "16 50\n..................................................\n.........AAAAAAAAAAAAAAAA..........................\n....PPP...AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.....\n....PPP...AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.....\n....PPP...AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA....\n....PPP..............AAAAA.AAAAAAAAAAAAAAAA.......\n....PPP................A....AAA.AAAAAAAAAA........\n....PPP...........IIIIIAAIIAIII.AAAAAAAAAA........\n..CCCCCCCCCCCCC...IIIIIIAAAAAAAAAAAAAAAAAA........\n..CCCCCCCCCCCCC...IIIIIIIIIIIII...AAAAAAAAAA......\n....PPP............................AAAAAAAAAA.....\nMMMMPPPMMMMMMMMMMMMMMM.............AAAAAAAAAAA....\nMMMMPPPMMMMMMMMMMMMMMM..............AAAAAAAAAAA...\nMMMMMMMMMMMMMMMMMMMMMM...............AAAAAAAAAA...\nMMMMMMMMMMMMMMMMMMMMMM...............AAAAAAAAAA...\nMMMMMMMMMMMMMMMMMMMMMM............................\n",
+      "output": "SUSPICIOUS"
+    }
+  ]
+}

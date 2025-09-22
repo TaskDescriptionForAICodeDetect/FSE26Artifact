@@ -1,0 +1,1 @@
+You are a master craftsman in the stone age tasked with creating tools based on orders. Each order specifies a tool's name, time required to create it without support, a supporting tool, and time required to create it with that support. Your goal is to determine the minimum number of days required to fill all orders using an efficient schedule.

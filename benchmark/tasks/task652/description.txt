@@ -1,0 +1,1 @@
+Limak can repeatedly remove one of the first two characters of a string. You are given N different strings S_1, S_2, ..., S_N. Among N * (N-1) / 2 pairs (S_i, S_j), determine how many pairs could Limak obtain one string from the other.

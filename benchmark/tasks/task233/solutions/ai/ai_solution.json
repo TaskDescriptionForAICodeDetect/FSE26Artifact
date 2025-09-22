@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n == 2) return true;\n    if (n % 2 == 0) return false;\n    for (int i = 3; i * i <= n; i += 2) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nvoid findMaxPrimePath(int totalCaves, int startCave, int *maxCount, int *lastPrime) {\n    *maxCount = 0;\n    *lastPrime = -1;\n    int current = startCave;\n    int count = 0;\n    int last = -1;\n\n    while (current <= totalCaves) {\n        if (isPrime(current)) {\n            count++;\n            last = current;\n        }\n        current = current * 2 + 1;\n    }\n\n    *maxCount = count;\n    *lastPrime = last;\n}\n\nint main() {\n    int totalCaves, startCave;\n    scanf(\"%d %d\", &totalCaves, &startCave);\n\n    int maxCount, lastPrime;\n    findMaxPrimePath(totalCaves, startCave, &maxCount, &lastPrime);\n\n    printf(\"%d %d\\n\", maxCount, lastPrime);\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:13:42"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PrimeCavesRoute {\n    public static void dfs(int[][] graph, int start, boolean[] visited, int[] primes, \n                           int currentPrimes, int currentCave, int[] maxResult) {\n        visited[currentCave] = true;\n        \n        int updatedPrimes = currentPrimes + (primes[currentCave] == 1 ? 1 : 0);\n        \n        if (updatedPrimes > maxResult[0] || \n           (updatedPrimes == maxResult[0] && currentCave > maxResult[1])) {\n            maxResult[0] = updatedPrimes;\n            maxResult[1] = currentCave;\n        }\n        \n        for (int nextCave = 0; nextCave < graph.length; nextCave++) {\n            if (graph[currentCave][nextCave] == 1 && !visited[nextCave]) {\n                dfs(graph, start, visited, primes, updatedPrimes, nextCave, maxResult);\n            }\n        }\n        \n        visited[currentCave] = false;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        int totalCaves = scanner.nextInt();\n        int startCave = scanner.nextInt() - 1;\n        \n        int[][] graph = new int[totalCaves][totalCaves];\n        for (int i = 0; i < totalCaves; i++) {\n            for (int j = 0; j < totalCaves; j++) {\n                graph[i][j] = scanner.nextInt();\n            }\n        }\n        \n        int[] primes = new int[totalCaves];\n        for (int i = 0; i < totalCaves; i++) {\n            primes[i] = scanner.nextInt();\n        }\n        \n        boolean[] visited = new boolean[totalCaves];\n        int[] maxResult = new int[2];\n        \n        dfs(graph, startCave, visited, primes, 0, startCave, maxResult);\n        \n        System.out.println(maxResult[0] + \" \" + (maxResult[1] + 1));\n        \n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 19:13:49"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n == 2) return true;\n    if (n % 2 == 0) return false;\n    for (int i = 3; i * i <= n; i += 2) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nvoid dfs(int current, int n, vector<int>& path, vector<int>& bestPath) {\n    path.push_back(current);\n    int left = 2 * current;\n    int right = 2 * current + 1;\n\n    if (left > n && right > n) {\n        if (path.size() > bestPath.size()) {\n            bestPath = path;\n        }\n    } else {\n        if (left <= n) {\n            dfs(left, n, path, bestPath);\n        }\n        if (right <= n) {\n            dfs(right, n, path, bestPath);\n        }\n    }\n    path.pop_back();\n}\n\nint main() {\n    int n, start;\n    cin >> n >> start;\n\n    vector<int> path, bestPath;\n    dfs(start, n, path, bestPath);\n\n    int primeCount = 0;\n    int lastPrime = -1;\n    for (int cave : bestPath) {\n        if (isPrime(cave)) {\n            primeCount++;\n            lastPrime = cave;\n        }\n    }\n\n    cout << primeCount << \" \" << lastPrime << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:03"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nvoid findMaxPrimeCaves(int caves, int start, int** routes, int* primeCaveCount, int* lastPrimeCave) {\n    int maxPrimes = 0;\n    int lastPrime = 0;\n\n    for (int i = 0; i < caves; i++) {\n        int currentPrimes = 0;\n        int current = start;\n        int path[caves];\n        int pathLength = 0;\n        bool visited[caves];\n        \n        for (int j = 0; j < caves; j++) visited[j] = false;\n        \n        while (current != -1) {\n            path[pathLength++] = current;\n            visited[current] = true;\n            \n            if (isPrime(current)) {\n                currentPrimes++;\n            }\n            \n            int nextCave = -1;\n            for (int j = 0; j < caves; j++) {\n                if (routes[current][j] && !visited[j]) {\n                    nextCave = j;\n                    break;\n                }\n            }\n            \n            current = nextCave;\n        }\n        \n        if (currentPrimes > maxPrimes) {\n            maxPrimes = currentPrimes;\n            lastPrime = path[pathLength - 1];\n        }\n    }\n    \n    *primeCaveCount = maxPrimes;\n    *lastPrimeCave = lastPrime;\n}\n\nint main() {\n    int caves, start;\n    scanf(\"%d %d\", &caves, &start);\n    \n    int** routes = malloc(caves * sizeof(int*));\n    for (int i = 0; i < caves; i++) {\n        routes[i] = malloc(caves * sizeof(int));\n        for (int j = 0; j < caves; j++) {\n            scanf(\"%d\", &routes[i][j]);\n        }\n    }\n    \n    int primeCaveCount, lastPrimeCave;\n    findMaxPrimeCaves(caves, start, routes, &primeCaveCount, &lastPrimeCave);\n    \n    printf(\"%d %d\\n\", primeCaveCount, lastPrimeCave);\n    \n    for (int i = 0; i < caves; i++) {\n        free(routes[i]);\n    }\n    free(routes);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:12"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    for (int i = 2; i * i <= n; i++) {\n        if (n % i == 0) return false;\n    }\n    return true;\n}\n\nvoid dfs(vector<vector<int>>& graph, int current, int start, vector<bool>& visited, \n         int primeCount, int lastPrimeCave, int& maxPrimeCount, int& maxLastPrimeCave) {\n    \n    visited[current] = true;\n    \n    if (isPrime(current)) {\n        primeCount++;\n        lastPrimeCave = current;\n    }\n    \n    if (primeCount > maxPrimeCount || \n        (primeCount == maxPrimeCount && lastPrimeCave > maxLastPrimeCave)) {\n        maxPrimeCount = primeCount;\n        maxLastPrimeCave = lastPrimeCave;\n    }\n    \n    for (int neighbor : graph[current]) {\n        if (!visited[neighbor] && neighbor < current) {\n            dfs(graph, neighbor, start, visited, primeCount, lastPrimeCave, \n                maxPrimeCount, maxLastPrimeCave);\n        }\n    }\n    \n    visited[current] = false;\n}\n\nint main() {\n    int n, start;\n    cin >> n >> start;\n    \n    vector<vector<int>> graph(n + 1);\n    \n    for (int i = 1; i <= n; i++) {\n        int k;\n        cin >> k;\n        for (int j = 0; j < k; j++) {\n            int cave;\n            cin >> cave;\n            graph[i].push_back(cave);\n        }\n    }\n    \n    int maxPrimeCount = 0;\n    int maxLastPrimeCave = 0;\n    vector<bool> visited(n + 1, false);\n    \n    dfs(graph, start, start, visited, 0, 0, maxPrimeCount, maxLastPrimeCave);\n    \n    cout << maxPrimeCount << \" \" << maxLastPrimeCave << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 19:14:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class PrimeCavePath {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int totalCaves = scanner.nextInt();\n        int startCave = scanner.nextInt();\n        \n        boolean[] isPrime = new boolean[totalCaves + 1];\n        Arrays.fill(isPrime, true);\n        isPrime[0] = isPrime[1] = false;\n        \n        for (int i = 2; i * i <= totalCaves; i++) {\n            if (isPrime[i]) {\n                for (int j = i * i; j <= totalCaves; j += i) {\n                    isPrime[j] = false;\n                }\n            }\n        }\n        \n        int currentCave = startCave;\n        int primeCount = 0;\n        int lastPrime = -1;\n        \n        while (currentCave >= 1) {\n            if (isPrime[currentCave]) {\n                primeCount++;\n                lastPrime = currentCave;\n            }\n            currentCave--;\n        }\n        \n        System.out.println(primeCount + \" \" + lastPrime);\n    }\n}",
+    "timestamp": "2025-08-05 19:14:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_prime(n):\n    if n <= 1:\n        return False\n    if n <= 3:\n        return True\n    if n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n\ndef find_max_prime_path(total_caves, start_cave):\n    max_prime_count = 0\n    last_prime = None\n    current_cave = start_cave\n    prime_count = 0\n    \n    for cave in range(start_cave, 0, -1):\n        if is_prime(cave):\n            prime_count += 1\n            last_prime = cave\n        \n    print(prime_count, last_prime if last_prime else \"No prime cave\")\n\n# Example usage:\ntotal_caves = 100\nstart_cave = 50\nfind_max_prime_path(total_caves, start_cave)",
+    "timestamp": "2025-08-13 03:00:31"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.*;\n\npublic class CaveExplorer {\n\n    // Method to check if a number is a prime number\n    private static boolean isPrime(int num) {\n        if (num <= 1) return false;\n        if (num <= 3) return true;\n        if (num % 2 == 0 || num % 3 == 0) return false;\n        for (int i = 5; i * i <= num; i += 6) {\n            if (num % i == 0 || num % (i + 2) == 0) return false;\n        }\n        return true;\n    }\n\n    // Method to find the descending route with the most prime caves\n    private static List<Integer> findMaxPrimeRoute(int totalCaves, int startCave) {\n        List<Integer> primes = new ArrayList<>();\n        for (int i = startCave; i >= 1; i--) {\n            if (isPrime(i)) {\n                primes.add(i);\n            }\n        }\n        return primes;\n    }\n\n    // Main method\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // Reading the number of caves and starting visited cave number\n        int totalCaves = sc.nextInt();\n        int startCave = sc.nextInt();\n\n        // Finding the path with maximum number of prime caves\n        List<Integer> primeRoute = findMaxPrimeRoute(totalCaves, startCave);\n\n        // Output the result\n        if (primeRoute.isEmpty()) {\n            System.out.println(\"0\");\n        } else {\n            System.out.println(primeRoute.size());\n            System.out.println(primeRoute.get(primeRoute.size() - 1));\n        }\n    }\n}",
+    "timestamp": "2025-08-13 03:00:35"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <math.h>\n\n#define MAX_CAVES 100\n\nbool isPrime(int n) {\n    if (n <= 1) return false;\n    if (n <= 3) return true;\n    if (n % 2 == 0 || n % 3 == 0) return false;\n    for (int i = 5; i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) return false;\n    }\n    return true;\n}\n\nvoid findMaxPrimeDescRoute(int start, int numCaves, int *maxPrimeCount, int *lastPrime) {\n    int current = start;\n    *maxPrimeCount = 0;\n    *lastPrime = -1;\n    \n    while (current >= 1) {\n        if (isPrime(current)) {\n            (*maxPrimeCount)++;\n            *lastPrime = current;\n        }\n        current--;\n    }\n}\n\nint main() {\n    int numCaves, startingCave;\n    scanf(\"%d %d\", &numCaves, &startingCave);\n    \n    int maxPrimeCount = 0, lastPrime = -1;\n    findMaxPrimeDescRoute(startingCave, numCaves, &maxPrimeCount, &lastPrime);\n    \n    printf(\"%d %d\\n\", maxPrimeCount, lastPrime);\n    \n    return 0;\n}",
+    "timestamp": "2025-08-13 03:00:40"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_prime(n):\n    if n < 2:\n        return False\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return False\n    return True\n\ndef find_max_prime_caves(total_caves, start_cave):\n    # Create adjacency list representation of descending routes\n    graph = [[] for _ in range(total_caves + 1)]\n    for i in range(1, total_caves + 1):\n        for j in range(1, i):\n            graph[i].append(j)\n    \n    # Track max prime caves path\n    max_prime_caves = 0\n    last_prime_cave = 0\n    \n    # DFS to explore all possible paths\n    def dfs(current, path, prime_count):\n        nonlocal max_prime_caves, last_prime_cave\n        \n        # Update max prime caves if current path is better\n        if prime_count > max_prime_caves or (prime_count == max_prime_caves and current > last_prime_cave):\n            max_prime_caves = prime_count\n            last_prime_cave = current\n        \n        # Explore descending routes\n        for next_cave in graph[current]:\n            new_prime_count = prime_count + (1 if is_prime(next_cave) else 0)\n            dfs(next_cave, path + [next_cave], new_prime_count)\n    \n    # Start DFS from start cave\n    dfs(start_cave, [start_cave], 1 if is_prime(start_cave) else 0)\n    \n    return max_prime_caves, last_prime_cave\n\n# Read input\ntotal_caves, start_cave = map(int, input().split())\n\n# Find and print result\nmax_primes, last_prime = find_max_prime_caves(total_caves, start_cave)\nprint(max_primes, last_prime)",
+    "timestamp": "2025-08-13 03:00:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "import sys\nimport math\n\ndef is_prime(n):\n    if n <= 1:\n        return False\n    if n == 2:\n        return True\n    if n % 2 == 0:\n        return False\n    for i in range(3, int(math.sqrt(n)) + 1, 2):\n        if n % i == 0:\n            return False\n    return True\n\ndef find_max_prime_path(N, start):\n    max_primes = 0\n    last_prime = -1\n    current = start\n    primes_in_path = 0\n    \n    while current >= 1:\n        if is_prime(current):\n            primes_in_path += 1\n            last_prime = current\n        if primes_in_path > max_primes:\n            max_primes = primes_in_path\n            best_last_prime = last_prime\n        current = current // 2\n    \n    return (max_primes, best_last_prime)\n\ndef main():\n    input = sys.stdin.read().split()\n    N = int(input[0])\n    start = int(input[1])\n    max_primes, last_prime = find_max_prime_path(N, start)\n    print(max_primes, last_prime)\n\nif __name__ == \"__main__\":\n    main()",
+    "timestamp": "2025-08-13 03:01:04"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <cmath>\n\nbool isPrime(int num) {\n    if (num <= 1) return false;\n    if (num <= 3) return true;\n    if (num % 2 == 0 || num % 3 == 0) return false;\n    for (int i = 5; i * i <= num; i += 6) {\n        if (num % i == 0 || num % (i + 2) == 0) return false;\n    }\n    return true;\n}\n\nint main() {\n    int n, startingCave;\n    std::cout << \"Enter total number of caves: \";\n    std::cin >> n;\n    std::cout << \"Enter the cave visited first: \";\n    std::cin >> startingCave;\n\n    int maxPrimes = 0, lastPrime = -1;\n    for (int i = startingCave; i >= 2; --i) {\n        if (isPrime(i)) {\n            maxPrimes++;\n            lastPrime = i;\n        }\n    }\n\n    std::cout << \"Number of prime caves: \" << maxPrimes << std::endl;\n    std::cout << \"Last prime cave: \" << lastPrime << std::endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 11:09:13"
+  }
+]

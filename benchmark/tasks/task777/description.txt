@@ -1,0 +1,1 @@
+Find the number, modulo 998244353, of sequences of length N consisting of 0, 1 and 2 such that none of their contiguous subsequences totals to X.

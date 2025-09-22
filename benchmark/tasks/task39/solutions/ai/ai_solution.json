@@ -1,0 +1,23 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "def solve_caterpillar_problem(h1, h2, a, b):\n    # Distance to travel\n    distance = h2 - h1\n    \n    # Check if impossible\n    if a <= b:\n        return -1\n    \n    # Daytime progress\n    net_daily_progress = a - b\n    \n    # Check if can reach in zero days\n    if distance <= a and h1 + a >= h2:\n        return 0\n    \n    # Calculate full days needed\n    full_days = (distance - (a - b)) // net_daily_progress\n    \n    # Check if can reach on last partial day\n    remaining_height = distance - (full_days * net_daily_progress)\n    \n    if remaining_height <= a:\n        return full_days + 1\n    \n    return -1\n\n# Read input\nh1, h2 = map(int, input().split())\na, b = map(int, input().split())\n\n# Solve and print result\nprint(solve_caterpillar_problem(h1, h2, a, b))",
+    "timestamp": "2025-08-05 17:32:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Python",
+    "code": "h1, h2 = map(int, input().split())\na, b = map(int, input().split())\n\nremaining = h2 - h1\ndaily_net = 12 * (a - b)\n\nif a <= b:\n    if 8 * a >= remaining:\n        print(0)\n    else:\n        print(-1)\nelse:\n    remaining -= 8 * a\n    if remaining <= 0:\n        print(0)\n    else:\n        days_needed = (remaining + daily_net - 1) // daily_net\n        print(days_needed)",
+    "timestamp": "2025-08-05 17:32:44"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def days_until_apple(caterpillar_height, apple_height, day_climb, night_slip):\n    if day_climb * 12 >= apple_height - caterpillar_height:\n        return 0\n    \n    net_day_climb = day_climb * 12\n    net_night_slip = night_slip * 12\n    \n    if net_day_climb <= net_night_slip:\n        return -1\n\n    current_height = caterpillar_height + net_day_climb - net_night_slip\n    days = 1\n    \n    while current_height < apple_height:\n        current_height += net_day_climb - net_night_slip\n        days += 1\n    \n    return days\n\n# Gather input and call the function\nh_1, h_2 = map(int, input().split())\na, b = map(int, input().split())\n\nprint(days_until_apple(h_1, h_2, a, b))",
+    "timestamp": "2025-08-12 21:54:20"
+  }
+]

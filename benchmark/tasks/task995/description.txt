@@ -1,0 +1,1 @@
+Snuke received positive integers s_1,...,s_N from his mother as a birthday present. He wants to circle some of these integers while ensuring that the product of any two circled integers is not a cubic number. The goal is to find the maximum number of integers that Snuke can circle.

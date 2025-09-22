@@ -1,0 +1,107 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\n#define MAX_N 100\n\nint max(int a, int b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    int N, T;\n    scanf(\"%d %d\", &N, &T);\n\n    int A[MAX_N], B[MAX_N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &A[i], &B[i]);\n    }\n\n    int dp[MAX_N + 1][T * 2 + 1];\n    for (int i = 0; i <= N; i++) {\n        for (int j = 0; j <= T * 2; j++) {\n            dp[i][j] = 0;\n        }\n    }\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j <= T * 2; j++) {\n            dp[i + 1][j] = max(dp[i + 1][j], dp[i][j]);\n            \n            if (j + A[i] <= T * 2) {\n                dp[i + 1][j + A[i]] = max(dp[i + 1][j + A[i]], dp[i][j] + B[i]);\n            }\n        }\n    }\n\n    int max_happiness = 0;\n    for (int j = 0; j <= T * 2; j++) {\n        max_happiness = max(max_happiness, dp[N][j]);\n    }\n\n    printf(\"%d\\n\", max_happiness);\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:02"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdlib.h>\n\ntypedef struct {\n    int a;\n    int b;\n} Dish;\n\nint compare(const void *x, const void *y) {\n    Dish *dish1 = (Dish *)x;\n    Dish *dish2 = (Dish *)y;\n    return dish1->a - dish2->a;\n}\n\nint main() {\n    int N, T;\n    scanf(\"%d %d\", &N, &T);\n    Dish dishes[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &dishes[i].a, &dishes[i].b);\n    }\n    qsort(dishes, N, sizeof(Dish), compare);\n\n    int max_time = T - 1;\n    int dp[N + 1][max_time + 1];\n    for (int i = 0; i <= N; i++) {\n        for (int j = 0; j <= max_time; j++) {\n            if (i == 0 || j == 0) {\n                dp[i][j] = 0;\n            } else if (dishes[i - 1].a <= j) {\n                dp[i][j] = (dp[i - 1][j] > dp[i - 1][j - dishes[i - 1].a] + dishes[i - 1].b) ? dp[i - 1][j] : dp[i - 1][j - dishes[i - 1].a] + dishes[i - 1].b;\n            } else {\n                dp[i][j] = dp[i - 1][j];\n            }\n        }\n    }\n\n    int max_happiness = 0;\n    for (int i = 1; i <= N; i++) {\n        if (dishes[i - 1].a <= max_time) {\n            int current = dp[i - 1][max_time - dishes[i - 1].a] + dishes[i - 1].b;\n            if (current > max_happiness) {\n                max_happiness = current;\n            }\n        } else {\n            if (dishes[i - 1].b > max_happiness) {\n                max_happiness = dishes[i - 1].b;\n            }\n        }\n    }\n\n    printf(\"%d\\n\", max_happiness);\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\n\nusing namespace std;\n\nint main() {\n    int N, T;\n    cin >> N >> T;\n    vector<pair<int, int>> dishes(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> dishes[i].first >> dishes[i].second;\n    }\n    \n    sort(dishes.begin(), dishes.end(), [](const pair<int, int>& a, const pair<int, int>& b) {\n        return a.first < b.first;\n    });\n    \n    vector<int> dp(T, 0);\n    int max_happiness = 0;\n    \n    for (int i = 0; i < N; ++i) {\n        int a = dishes[i].first;\n        int b = dishes[i].second;\n        \n        for (int t = T - 1; t >= 0; --t) {\n            if (t + a < T) {\n                dp[t + a] = max(dp[t + a], dp[t] + b);\n            }\n            max_happiness = max(max_happiness, dp[t] + b);\n        }\n    }\n    \n    cout << max_happiness << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:35"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int N = sc.nextInt();\n        int T = sc.nextInt();\n        int[] A = new int[N];\n        int[] B = new int[N];\n        for (int i = 0; i < N; i++) {\n            A[i] = sc.nextInt();\n            B[i] = sc.nextInt();\n        }\n\n        int maxTime = T - 1;\n        int[][] dp = new int[N + 1][maxTime + 1];\n\n        for (int i = 1; i <= N; i++) {\n            for (int j = 0; j <= maxTime; j++) {\n                if (j >= A[i - 1]) {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i - 1][j - A[i - 1]] + B[i - 1]);\n                } else {\n                    dp[i][j] = dp[i - 1][j];\n                }\n            }\n        }\n\n        int maxHappiness = 0;\n        for (int i = 0; i <= maxTime; i++) {\n            if (dp[N][i] > maxHappiness) {\n                maxHappiness = dp[N][i];\n            }\n        }\n\n        System.out.println(maxHappiness);\n    }\n}",
+    "timestamp": "2025-08-05 22:41:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class DishHappinessMaximizer {\n    public static int maximizeHappiness(int N, int T, int[] A, int[] B) {\n        int[][] dishes = new int[N][2];\n        for (int i = 0; i < N; i++) {\n            dishes[i][0] = A[i];\n            dishes[i][1] = B[i];\n        }\n\n        Arrays.sort(dishes, (a, b) -> {\n            double ratioA = (double) a[1] / a[0];\n            double ratioB = (double) b[1] / b[0];\n            return Double.compare(ratioB, ratioA);\n        });\n\n        int maxHappiness = 0;\n        double remainingTime = T;\n\n        for (int[] dish : dishes) {\n            if (dish[0] <= remainingTime) {\n                maxHappiness += dish[1];\n                remainingTime -= dish[0];\n            }\n        }\n\n        return maxHappiness;\n    }\n\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int N = scanner.nextInt();\n        int T = scanner.nextInt();\n        int[] A = new int[N];\n        int[] B = new int[N];\n\n        for (int i = 0; i < N; i++) {\n            A[i] = scanner.nextInt();\n            B[i] = scanner.nextInt();\n        }\n\n        int result = maximizeHappiness(N, T, A, B);\n        System.out.println(result);\n        scanner.close();\n    }\n}",
+    "timestamp": "2025-08-05 22:41:54"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    int N, T;\n    cin >> N >> T;\n    \n    vector<int> A(N), B(N);\n    for (int i = 0; i < N; i++) {\n        cin >> A[i] >> B[i];\n    }\n    \n    int max_happiness = 0;\n    \n    for (int mask = 0; mask < (1 << N); mask++) {\n        int current_time = 0;\n        int current_happiness = 0;\n        \n        for (int i = 0; i < N; i++) {\n            if (mask & (1 << i)) {\n                if (current_time + A[i] <= T) {\n                    current_time += A[i];\n                    current_happiness += B[i];\n                }\n            }\n        }\n        \n        max_happiness = max(max_happiness, current_happiness);\n    }\n    \n    cout << max_happiness << endl;\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 22:41:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_happiness(N, T, dishes):\n    dishes.sort(key=lambda x: x[0])\n    dp = [[0] * (T + 1) for _ in range(N + 1)]\n\n    for i in range(1, N + 1):\n        time, deliciousness = dishes[i - 1]\n        for j in range(T + 1):\n            if j >= time:\n                dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - time] + deliciousness)\n            else:\n                dp[i][j] = dp[i - 1][j]\n\n    max_happiness = 0\n    for i in range(N):\n        for j in range(T):\n            max_happiness = max(max_happiness, dp[i][j] + (dishes[i][1] if j + dishes[i][0] <= T else 0))\n\n    return max_happiness\n\n# Example usage:\nN = 3\nT = 5\ndishes = [(3, 30), (4, 50), (5, 60)]\nprint(max_happiness(N, T, dishes))  # Example output should be 80",
+    "timestamp": "2025-08-13 12:09:33"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "import java.util.Arrays;\nimport java.util.Comparator;\n\npublic class Main {\n\n    static class Dish {\n        int time;\n        int deliciousness;\n\n        Dish(int time, int deliciousness) {\n            this.time = time;\n            this.deliciousness = deliciousness;\n        }\n    }\n\n    public static int getMaxHappiness(int N, int T, int[] A, int[] B) {\n        Dish[] dishes = new Dish[N];\n        \n        for (int i = 0; i < N; i++) {\n            dishes[i] = new Dish(A[i], B[i]);\n        }\n\n        Arrays.sort(dishes, Comparator.comparingInt(d -> d.time));\n        \n        int[][] dp = new int[N + 1][T + 1];\n        \n        for (int i = 1; i <= N; i++) {\n            int time = dishes[i - 1].time;\n            int deliciousness = dishes[i - 1].deliciousness;\n            \n            for (int j = 0; j <= T; j++) {\n                dp[i][j] = dp[i - 1][j];\n                if (j >= time) {\n                    dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - time] + deliciousness);\n                }\n            }\n        }\n\n        int maxHappiness = 0;\n        for (int i = 0; i <= T; i++) {\n            maxHappiness = Math.max(maxHappiness, dp[N][i]);\n        }\n\n        return maxHappiness;\n    }\n\n    public static void main(String[] args) {\n        int N = 3;\n        int T = 5;\n        int[] A = {3, 2, 4};\n        int[] B = {30, 40, 50};\n        \n        System.out.println(getMaxHappiness(N, T, A, B)); // Sample usage\n    }\n}",
+    "timestamp": "2025-08-13 12:09:38"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n#include <string.h>\n\nint main() {\n    int N, T;\n    scanf(\"%d %d\", &N, &T);\n    \n    int A[N], B[N];\n    for (int i = 0; i < N; i++) {\n        scanf(\"%d %d\", &A[i], &B[i]);\n    }\n\n    int dp[N+1][T+1];\n    memset(dp, 0, sizeof(dp));\n\n    for (int i = 0; i < N; i++) {\n        for (int j = 0; j <= T; j++) {\n            if (j >= A[i]) {\n                dp[i+1][j] = dp[i][j] > dp[i][j-A[i]] + B[i] ? dp[i][j] : dp[i][j-A[i]] + B[i];\n            } else {\n                dp[i+1][j] = dp[i][j];\n            }\n        }\n    }\n\n    int maxHappiness = 0;\n    for (int i = 0; i <= N; i++) {\n        for (int j = 0; j < T; j++) {\n            if (dp[i][j] > maxHappiness) {\n                maxHappiness = dp[i][j];\n            }\n        }\n    }\n    \n    printf(\"%d\\n\", maxHappiness);\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:09:42"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nstruct Dish {\n    int time;\n    int deliciousness;\n};\n\nbool compareDishes(const Dish &a, const Dish &b) {\n    return a.time < b.time;\n}\n\nint maxHappiness(vector<Dish> &dishes, int T) {\n    int n = dishes.size();\n\n    // Sort dishes by time taken to eat\n    sort(dishes.begin(), dishes.end(), compareDishes);\n\n    vector<int> dp(T * 2, 0);\n\n    for (int i = 0; i < n; ++i) {\n        for (int t = T * 2 - 1; t >= dishes[i].time * 2; --t) {\n            dp[t] = max(dp[t], dp[t - dishes[i].time * 2] + dishes[i].deliciousness);\n        }\n    }\n\n    return *max_element(dp.begin(), dp.end());\n}\n\nint main() {\n    int N, T;\n    cin >> N >> T;\n    vector<Dish> dishes(N);\n    for (int i = 0; i < N; ++i) {\n        cin >> dishes[i].time >> dishes[i].deliciousness;\n    }\n\n    int result = maxHappiness(dishes, T);\n    cout << result << endl;\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 12:09:46"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def max_happiness(N, T, A, B):\n    # Create a list of tuples (deliciousness/time, deliciousness, time)\n    dishes = [(B[i] / A[i], B[i], A[i]) for i in range(N)]\n    \n    # Sort dishes by deliciousness per minute in descending order\n    dishes.sort(reverse=True)\n    \n    max_happiness = 0\n    current_time = 0\n    \n    for _, deliciousness, time in dishes:\n        if current_time + time <= T:\n            max_happiness += deliciousness\n            current_time += time\n        \n        if current_time >= T:\n            break\n    \n    return max_happiness\n\n# Read input\nN, T = map(int, input().split())\nA = list(map(int, input().split()))\nB = list(map(int, input().split()))\n\n# Print result\nprint(max_happiness(N, T, A, B))",
+    "timestamp": "2025-08-13 12:09:51"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "n, t = map(int, input().split())\ndishes = []\nfor _ in range(n):\n    a, b = map(int, input().split())\n    dishes.append((a, b))\n\ndishes.sort()\nmax_time = t - 1\ndp = [[0] * (max_time + 1) for _ in range(n + 1)]\n\nmax_happiness = 0\n\nfor i in range(1, n + 1):\n    a, b = dishes[i - 1]\n    for j in range(max_time + 1):\n        if j >= a:\n            dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - a] + b)\n        else:\n            dp[i][j] = dp[i - 1][j]\n    if i < n:\n        max_happiness = max(max_happiness, dp[i][max_time] + dishes[i][1])\n    else:\n        max_happiness = max(max_happiness, dp[i][max_time])\n\nprint(max_happiness)",
+    "timestamp": "2025-08-13 12:09:57"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxHappiness(N, T, dishes) {\n  const dp = Array.from({ length: N + 1 }, () => Array(T + 1).fill(0));\n\n  for (let i = 1; i <= N; i++) {\n    const [A, B] = dishes[i - 1];\n    for (let t = 0; t <= T; t++) {\n      dp[i][t] = dp[i - 1][t];\n      if (t >= A) {\n        dp[i][t] = Math.max(dp[i][t], dp[i - 1][t - A] + B);\n      }\n    }\n  }\n\n  let maxHappiness = 0;\n  for (let i = 1; i <= N; i++) {\n    for (let t = 0; t < T; t++) {\n      maxHappiness = Math.max(maxHappiness, dp[i][t]);\n    }\n  }\n\n  return maxHappiness;\n}",
+    "timestamp": "2025-08-13 12:10:23"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function maxHappiness(N, T, A, B) {\n    const dp = new Array(N).fill(0);\n    \n    for (let i = 0; i < N; i++) {\n        let currentTime = 0;\n        let happiness = 0;\n        const visited = new Array(N).fill(false);\n        visited[i] = true;\n        \n        currentTime += A[i];\n        happiness += B[i];\n        \n        for (let j = 0; j < N; j++) {\n            if (j === i) continue;\n            \n            let minIndex = -1;\n            let minTime = Infinity;\n            \n            for (let k = 0; k < N; k++) {\n                if (!visited[k] && currentTime + A[k] <= T) {\n                    if (A[k] < minTime) {\n                        minTime = A[k];\n                        minIndex = k;\n                    }\n                }\n            }\n            \n            if (minIndex === -1) break;\n            \n            currentTime += A[minIndex];\n            happiness += B[minIndex];\n            visited[minIndex] = true;\n        }\n        \n        dp[i] = happiness;\n    }\n    \n    return Math.max(...dp);\n}",
+    "timestamp": "2025-08-13 12:10:28"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "js",
+    "code": "function solve() {\n    const input = require('fs').readFileSync('/dev/stdin', 'utf8').trim().split('\\n');\n    const [N, T] = input[0].split(' ').map(Number);\n    const dishes = [];\n    for (let i = 1; i <= N; i++) {\n        const [A, B] = input[i].split(' ').map(Number);\n        dishes.push({ A, B });\n    }\n    \n    // Sort dishes by A_i in ascending order\n    dishes.sort((a, b) => a.A - b.A);\n    \n    // Initialize DP table\n    const dp = new Array(T).fill(0);\n    let maxHappiness = 0;\n    \n    for (const dish of dishes) {\n        const { A, B } = dish;\n        for (let t = T - 1; t >= 0; t--) {\n            if (t + A < T) {\n                if (dp[t + A] < dp[t] + B) {\n                    dp[t + A] = dp[t] + B;\n                }\n            }\n            // The last dish can be eaten even if it exceeds T - 0.5\n            if (t + A <= T) {\n                if (dp[t] + B > maxHappiness) {\n                    maxHappiness = dp[t] + B;\n                }\n            }\n        }\n    }\n    \n    console.log(maxHappiness);\n}\n\nsolve();",
+    "timestamp": "2025-08-13 12:10:36"
+  }
+]

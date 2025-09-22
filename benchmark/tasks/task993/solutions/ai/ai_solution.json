@@ -1,0 +1,86 @@
+[
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "int f(int base, int n) {\n    int sum = 0;\n    while (n > 0) {\n        sum += n % base;\n        n /= base;\n    }\n    return sum;\n}\n\nint findBase(int n, int s) {\n    for (int b = 2; b <= n + 1; b++) {\n        if (f(b, n) == s) {\n            return b;\n        }\n    }\n    return -1;\n}",
+    "timestamp": "2025-08-05 23:36:08"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <limits.h>\n\nint sumDigits(int n, int b) {\n    int sum = 0;\n    while (n > 0) {\n        sum += n % b;\n        n /= b;\n    }\n    return sum;\n}\n\nint findMinBase(int n, int s) {\n    if (n < s) return -1;\n    if (n == s) return n + 1;\n    \n    for (int b = 2; b * b <= n; b++) {\n        if (sumDigits(n, b) == s) {\n            return b;\n        }\n    }\n    \n    for (int k = 1; k * k <= n; k++) {\n        if ((n - s) % k != 0) continue;\n        int b = (n - s) / k + 1;\n        if (b >= 2 && k < b && sumDigits(n, b) == s) {\n            return b;\n        }\n    }\n    \n    return -1;\n}\n\nint main() {\n    int n, s;\n    scanf(\"%d %d\", &n, &s);\n    printf(\"%d\\n\", findMinBase(n, s));\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:36:20"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <algorithm>\n#include <climits>\n#include <cmath>\n\nusing namespace std;\n\nint sumDigits(int n, int b) {\n    int sum = 0;\n    while (n > 0) {\n        sum += n % b;\n        n /= b;\n    }\n    return sum;\n}\n\nint findMinBase(int n, int s) {\n    if (n < s) return -1;\n    if (n == s) return n + 1;\n    \n    int maxPossibleB = n - s + 1;\n    int minB = INT_MAX;\n    \n    for (int b = 2; b <= maxPossibleB; ++b) {\n        if (sumDigits(n, b) == s) {\n            return b;\n        }\n    }\n    \n    for (int k = 1; k * k <= n; ++k) {\n        if ((n - s) % k == 0) {\n            int b = (n - s) / k + 1;\n            if (b >= 2 && sumDigits(n, b) == s) {\n                minB = min(minB, b);\n            }\n        }\n    }\n    \n    return (minB != INT_MAX) ? minB : -1;\n}\n\nint main() {\n    int n, s;\n    cin >> n >> s;\n    cout << findMinBase(n, s) << endl;\n    return 0;\n}",
+    "timestamp": "2025-08-05 23:36:36"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class Solution {\n    public static int findMinBase(int n, int s) {\n        if (n < s) {\n            return -1;\n        }\n        if (n == s) {\n            return n + 1;\n        }\n        \n        int maxB = n - s + 1;\n        for (int b = 2; b <= maxB; b++) {\n            if (sumDigitsInBase(n, b) == s) {\n                return b;\n            }\n        }\n        return -1;\n    }\n    \n    private static int sumDigitsInBase(int num, int base) {\n        int sum = 0;\n        while (num > 0) {\n            sum += num % base;\n            num /= base;\n        }\n        return sum;\n    }\n}",
+    "timestamp": "2025-08-05 23:36:44"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "class Solution {\n    public int findSmallestBase(int n, int s) {\n        if (s > n) return -1;\n        \n        for (int b = 2; b <= n + 1; b++) {\n            if (digitSum(n, b) == s) {\n                return b;\n            }\n        }\n        \n        return -1;\n    }\n    \n    private int digitSum(int n, int base) {\n        int sum = 0;\n        while (n > 0) {\n            sum += n % base;\n            n /= base;\n        }\n        return sum;\n    }\n}",
+    "timestamp": "2025-08-05 23:36:49"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "class Solution {\npublic:\n    int smallestBase(int n, int s) {\n        for (int b = 2; b <= n; ++b) {\n            if (digitSum(n, b) == s) {\n                return b;\n            }\n        }\n        return -1;\n    }\n    \nprivate:\n    int digitSum(int n, int base) {\n        int sum = 0;\n        while (n > 0) {\n            sum += n % base;\n            n /= base;\n        }\n        return sum;\n    }\n};",
+    "timestamp": "2025-08-05 23:36:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sum_of_digits_in_base(n, b):\n    total = 0\n    while n > 0:\n        total += n % b\n        n //= b\n    return total\n\ndef find_base(n, s):\n    for b in range(2, n + 2):\n        if sum_of_digits_in_base(n, b) == s:\n            return b\n    return -1",
+    "timestamp": "2025-08-13 16:25:05"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class BaseSum {\n\n    public static int findBase(int n, int s) {\n        for (int b = 2; b <= n; b++) {\n            if (sumOfDigitsInBase(n, b) == s) {\n                return b;\n            }\n        }\n        return -1;\n    }\n\n    private static int sumOfDigitsInBase(int n, int b) {\n        int sum = 0;\n        while (n > 0) {\n            sum += n % b;\n            n /= b;\n        }\n        return sum;\n    }\n\n    public static void main(String[] args) {\n        int n = 21;\n        int s = 6;\n        System.out.println(findBase(n, s)); // Output: 5\n    }\n}",
+    "timestamp": "2025-08-13 16:25:07"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\nint sum_of_digits_in_base(int n, int b) {\n    int sum = 0;\n    while (n > 0) {\n        sum += n % b;\n        n /= b;\n    }\n    return sum;\n}\n\nint find_base(int n, int s) {\n    for (int b = 2; b <= n; ++b) {\n        if (sum_of_digits_in_base(n, b) == s) {\n            return b;\n        }\n    }\n    return -1;\n}\n\nint main() {\n    int n, s;\n    // Example usage (replace with actual input values)\n    n = 10;\n    s = 2;\n    int result = find_base(n, s);\n    printf(\"%d\\n\", result);\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:25:10"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n\n// Function to calculate the sum of digits of n in base b\nint sumOfDigitsInBase(int n, int b) {\n    int sum = 0;\n    while (n > 0) {\n        sum += n % b;\n        n /= b;\n    }\n    return sum;\n}\n\n// Function to find the smallest b such that the digit sum in base b is s\nint findSmallestBase(int n, int s) {\n    for (int b = 2; b < n; ++b) {\n        if (sumOfDigitsInBase(n, b) == s) {\n            return b;\n        }\n    }\n    // Check b = n, which implies the representation 10 in base n, sum is 1 + 0 = 1 (when s == 1)\n    if (s == 1 && n >= 2) {\n        return n;\n    }\n    return -1;\n}\n\nint main() {\n    int n, s;\n    std::cin >> n >> s;\n    std::cout << findSmallestBase(n, s) << std::endl;\n    return 0;\n}",
+    "timestamp": "2025-08-13 16:25:18"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def find_base(n, s):\n    for b in range(2, n + 2):\n        digit_sum = 0\n        temp = n\n        while temp > 0:\n            digit_sum += temp % b\n            temp //= b\n        if digit_sum == s:\n            return b\n    return -1",
+    "timestamp": "2025-08-13 16:25:21"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sum_digits_in_base(n, b):\n    total = 0\n    while n > 0:\n        total += n % b\n        n = n // b\n    return total\n\ndef find_min_base(n, s):\n    if n < s:\n        return -1\n    if n == s:\n        return n + 1\n    max_b = n - s + 1\n    for b in range(2, max_b + 1):\n        if sum_digits_in_base(n, b) == s:\n            return b\n    return -1",
+    "timestamp": "2025-08-13 16:25:26"
+  }
+]

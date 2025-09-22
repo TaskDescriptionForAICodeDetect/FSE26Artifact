@@ -1,0 +1,12 @@
+{
+  "examples": [
+    {
+      "input": "[[m-y]-[a-o]]\no 0\na 1\ny 2\nm 0",
+      "output": "Yes"
+    },
+    {
+      "input": "[[r-i]-[m-e]]\ne 0\nr 1\ni 1\nm 2",
+      "output": "No"
+    }
+  ]
+}

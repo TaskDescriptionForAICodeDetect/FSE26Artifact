@@ -1,0 +1,86 @@
+[
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble cross_product(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nint is_inside_triangle(Point p, Point a, Point b, Point c) {\n    double d1 = cross_product(p, a, b);\n    double d2 = cross_product(p, b, c);\n    double d3 = cross_product(p, c, a);\n\n    int has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);\n    int has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);\n\n    return !(has_neg && has_pos);\n}\n\nint main() {\n    Point a, b, c, p1, p2;\n    scanf(\"%lf %lf %lf %lf %lf %lf\", &a.x, &a.y, &b.x, &b.y, &c.x, &c.y);\n    scanf(\"%lf %lf %lf %lf\", &p1.x, &p1.y, &p2.x, &p2.y);\n\n    int p1_inside = is_inside_triangle(p1, a, b, c);\n    int p2_inside = is_inside_triangle(p2, a, b, c);\n\n    if ((p1_inside && !p2_inside) || (!p1_inside && p2_inside)) {\n        printf(\"OK\\n\");\n    } else {\n        printf(\"NG\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:15"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.*;\n\npublic class TriangleCharacterCheck {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        \n        double[] triangleX = new double[3];\n        double[] triangleY = new double[3];\n        \n        for (int i = 0; i < 3; i++) {\n            triangleX[i] = scanner.nextDouble();\n            triangleY[i] = scanner.nextDouble();\n        }\n        \n        double[] char1X = new double[2];\n        double[] char1Y = new double[2];\n        \n        for (int i = 0; i < 2; i++) {\n            char1X[i] = scanner.nextDouble();\n            char1Y[i] = scanner.nextDouble();\n        }\n        \n        boolean char1Inside = isPointInTriangle(triangleX, triangleY, char1X[0], char1Y[0]);\n        boolean char2Inside = isPointInTriangle(triangleX, triangleY, char1X[1], char1Y[1]);\n        \n        if ((char1Inside && !char2Inside) || (!char1Inside && char2Inside)) {\n            System.out.println(\"OK\");\n        } else {\n            System.out.println(\"NG\");\n        }\n    }\n    \n    private static boolean isPointInTriangle(double[] triangleX, double[] triangleY, double px, double py) {\n        double area = calculateTriangleArea(triangleX[0], triangleY[0], triangleX[1], triangleY[1], triangleX[2], triangleY[2]);\n        double area1 = calculateTriangleArea(px, py, triangleX[1], triangleY[1], triangleX[2], triangleY[2]);\n        double area2 = calculateTriangleArea(triangleX[0], triangleY[0], px, py, triangleX[2], triangleY[2]);\n        double area3 = calculateTriangleArea(triangleX[0], triangleY[0], triangleX[1], triangleY[1], px, py);\n        \n        return Math.abs(area - (area1 + area2 + area3)) < 1e-9;\n    }\n    \n    private static double calculateTriangleArea(double x1, double y1, double x2, double y2, double x3, double y3) {\n        return Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0;\n    }\n}",
+    "timestamp": "2025-08-05 18:29:23"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <utility>\n\nusing namespace std;\n\ntypedef pair<double, double> Point;\n\ndouble crossProduct(const Point &a, const Point &b, const Point &c) {\n    return (b.first - a.first) * (c.second - a.second) - (b.second - a.second) * (c.first - a.first);\n}\n\nbool isInside(const Point &a, const Point &b, const Point &c, const Point &p) {\n    double d1 = crossProduct(a, b, p);\n    double d2 = crossProduct(b, c, p);\n    double d3 = crossProduct(c, a, p);\n\n    bool has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);\n    bool has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);\n\n    return !(has_neg && has_pos);\n}\n\nint main() {\n    Point a, b, c, p1, p2;\n    cin >> a.first >> a.second;\n    cin >> b.first >> b.second;\n    cin >> c.first >> c.second;\n    cin >> p1.first >> p1.second;\n    cin >> p2.first >> p2.second;\n\n    bool p1_inside = isInside(a, b, c, p1);\n    bool p2_inside = isInside(a, b, c, p2);\n\n    if ((p1_inside && !p2_inside) || (!p1_inside && p2_inside)) {\n        cout << \"OK\" << endl;\n    } else {\n        cout << \"NG\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:41"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C",
+    "code": "#include <stdio.h>\n#include <stdbool.h>\n#include <math.h>\n\ntypedef struct {\n    double x;\n    double y;\n} Point;\n\ndouble cross_product(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nbool is_inside_triangle(Point triangle[3], Point p) {\n    double cp1 = cross_product(triangle[0], triangle[1], p);\n    double cp2 = cross_product(triangle[1], triangle[2], p);\n    double cp3 = cross_product(triangle[2], triangle[0], p);\n    \n    return (cp1 > 0 && cp2 > 0 && cp3 > 0) || (cp1 < 0 && cp2 < 0 && cp3 < 0);\n}\n\nint main() {\n    Point triangle[3];\n    Point char1, char2;\n    \n    for (int i = 0; i < 3; i++) {\n        scanf(\"%lf %lf\", &triangle[i].x, &triangle[i].y);\n    }\n    \n    scanf(\"%lf %lf\", &char1.x, &char1.y);\n    scanf(\"%lf %lf\", &char2.x, &char2.y);\n    \n    bool char1_inside = is_inside_triangle(triangle, char1);\n    bool char2_inside = is_inside_triangle(triangle, char2);\n    \n    if ((char1_inside && !char2_inside) || (!char1_inside && char2_inside)) {\n        printf(\"OK\\n\");\n    } else {\n        printf(\"NG\\n\");\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:48"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "C++",
+    "code": "#include <iostream>\n#include <cmath>\n#include <vector>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n};\n\ndouble cross_product(Point a, Point b, Point c) {\n    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);\n}\n\nbool is_inside_triangle(Point triangle[], Point p) {\n    double sign1 = cross_product(triangle[0], triangle[1], p);\n    double sign2 = cross_product(triangle[1], triangle[2], p);\n    double sign3 = cross_product(triangle[2], triangle[0], p);\n    \n    return (sign1 >= 0 && sign2 >= 0 && sign3 >= 0) || \n           (sign1 <= 0 && sign2 <= 0 && sign3 <= 0);\n}\n\nint main() {\n    Point triangle[3];\n    Point characters[2];\n    \n    for (int i = 0; i < 3; i++) {\n        cin >> triangle[i].x >> triangle[i].y;\n    }\n    \n    for (int i = 0; i < 2; i++) {\n        cin >> characters[i].x >> characters[i].y;\n    }\n    \n    bool inside1 = is_inside_triangle(triangle, characters[0]);\n    bool inside2 = is_inside_triangle(triangle, characters[1]);\n    \n    if ((inside1 && !inside2) || (!inside1 && inside2)) {\n        cout << \"OK\" << endl;\n    } else {\n        cout << \"NG\" << endl;\n    }\n    \n    return 0;\n}",
+    "timestamp": "2025-08-05 18:29:54"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "Java",
+    "code": "import java.util.Scanner;\n\npublic class Main {\n    static class Point {\n        double x, y;\n\n        Point(double x, double y) {\n            this.x = x;\n            this.y = y;\n        }\n    }\n\n    static double sign(Point a, Point b, Point c) {\n        return (a.x - c.x) * (b.y - c.y) - (b.x - c.x) * (a.y - c.y);\n    }\n\n    static boolean pointInTriangle(Point p, Point a, Point b, Point c) {\n        double d1 = sign(p, a, b);\n        double d2 = sign(p, b, c);\n        double d3 = sign(p, c, a);\n\n        boolean hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);\n        boolean hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);\n\n        return !(hasNeg && hasPos);\n    }\n\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        Point[] triangle = new Point[3];\n        for (int i = 0; i < 3; i++) {\n            double x = sc.nextDouble();\n            double y = sc.nextDouble();\n            triangle[i] = new Point(x, y);\n        }\n        Point[] characters = new Point[2];\n        for (int i = 0; i < 2; i++) {\n            double x = sc.nextDouble();\n            double y = sc.nextDouble();\n            characters[i] = new Point(x, y);\n        }\n\n        boolean firstInside = pointInTriangle(characters[0], triangle[0], triangle[1], triangle[2]);\n        boolean secondInside = pointInTriangle(characters[1], triangle[0], triangle[1], triangle[2]);\n\n        if ((firstInside && !secondInside) || (!firstInside && secondInside)) {\n            System.out.println(\"OK\");\n        } else {\n            System.out.println(\"NG\");\n        }\n    }\n}",
+    "timestamp": "2025-08-05 18:30:15"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def is_point_inside_triangle(px, py, ax, ay, bx, by, cx, cy):\n    def sign(x1, y1, x2, y2, x3, y3):\n        return (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3)\n\n    d1 = sign(px, py, ax, ay, bx, by)\n    d2 = sign(px, py, bx, by, cx, cy)\n    d3 = sign(px, py, cx, cy, ax, ay)\n\n    has_neg = (d1 < 0) or (d2 < 0) or (d3 < 0)\n    has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)\n\n    return not (has_neg and has_pos)\n\ndef check_positions(triangle, char1, char2):\n    ax, ay = triangle[0]\n    bx, by = triangle[1]\n    cx, cy = triangle[2]\n    \n    char1_inside = is_point_inside_triangle(char1[0], char1[1], ax, ay, bx, by, cx, cy)\n    char2_inside = is_point_inside_triangle(char2[0], char2[1], ax, ay, bx, by, cx, cy)\n    \n    if (char1_inside and not char2_inside) or (char2_inside and not char1_inside):\n        return 'OK'\n    else:\n        return 'NG'\n\n# Example use case:\ntriangle_vertices = [(0, 0), (5, 0), (0, 5)]\ncharacter1 = (2, 1)\ncharacter2 = (6, 1)\nprint(check_positions(triangle_vertices, character1, character2))",
+    "timestamp": "2025-08-12 23:26:51"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "java",
+    "code": "public class TriangleCharacterCheck {\n    public static void main(String[] args) {\n        int[] A = {0, 0}; // Vertex A\n        int[] B = {5, 0}; // Vertex B\n        int[] C = {0, 5}; // Vertex C\n        int[] P = {1, 1}; // Character P\n        int[] Q = {6, 6}; // Character Q\n\n        if (isPointInTriangle(P, A, B, C) != isPointInTriangle(Q, A, B, C)) {\n            System.out.println(\"OK\");\n        } else {\n            System.out.println(\"NG\");\n        }\n    }\n\n    private static boolean isPointInTriangle(int[] p, int[] a, int[] b, int[] c) {\n        double areaOrigin = triangleArea(a, b, c);\n        double area1 = triangleArea(p, b, c);\n        double area2 = triangleArea(p, a, c);\n        double area3 = triangleArea(p, a, b);\n        double sumOfAreas = area1 + area2 + area3;\n        \n        return Math.abs(sumOfAreas - areaOrigin) < 1e-9;\n    }\n\n    private static double triangleArea(int[] p1, int[] p2, int[] p3) {\n        return Math.abs(\n            p1[0] * (p2[1] - p3[1]) +\n            p2[0] * (p3[1] - p1[1]) +\n            p3[0] * (p1[1] - p2[1])\n        ) / 2.0;\n    }\n}",
+    "timestamp": "2025-08-12 23:26:58"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c",
+    "code": "#include <stdio.h>\n\ntypedef struct {\n    double x, y;\n} Point;\n\ndouble sign(Point p1, Point p2, Point p3) {\n    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);\n}\n\nint isInside(Point pt, Point v1, Point v2, Point v3) {\n    int b1, b2, b3;\n    b1 = sign(pt, v1, v2) < 0.0;\n    b2 = sign(pt, v2, v3) < 0.0;\n    b3 = sign(pt, v3, v1) < 0.0;\n    return ((b1 == b2) && (b2 == b3));\n}\n\nint main() {\n    Point v1, v2, v3, c1, c2;\n\n    // Read vertices of the triangle\n    scanf(\"%lf %lf\", &v1.x, &v1.y);\n    scanf(\"%lf %lf\", &v2.x, &v2.y);\n    scanf(\"%lf %lf\", &v3.x, &v3.y);\n\n    // Read positions of the two characters\n    scanf(\"%lf %lf\", &c1.x, &c1.y);\n    scanf(\"%lf %lf\", &c2.x, &c2.y);\n\n    // Check conditions\n    int c1Inside = isInside(c1, v1, v2, v3);\n    int c2Inside = isInside(c2, v1, v2, v3);\n\n    if ((c1Inside && !c2Inside) || (!c1Inside && c2Inside)) {\n        printf(\"OK\\n\");\n    } else {\n        printf(\"NG\\n\");\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-12 23:27:02"
+  },
+  {
+    "model": "claude-3-5-haiku-20241022",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def sign(p1, p2, p3):\n    return (p1[0] - p3[0]) * (p2[1] - p3[1]) - (p2[0] - p3[0]) * (p1[1] - p3[1])\n\ndef point_in_triangle(pt, v1, v2, v3):\n    d1 = sign(pt, v1, v2)\n    d2 = sign(pt, v2, v3)\n    d3 = sign(pt, v3, v1)\n\n    has_neg = (d1 < 0) or (d2 < 0) or (d3 < 0)\n    has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)\n\n    return not (has_neg and has_pos)\n\ndef solve():\n    x1, y1 = map(int, input().split())\n    x2, y2 = map(int, input().split())\n    x3, y3 = map(int, input().split())\n    xa, ya = map(int, input().split())\n    xb, yb = map(int, input().split())\n\n    triangle = [(x1, y1), (x2, y2), (x3, y3)]\n    a = (xa, ya)\n    b = (xb, yb)\n\n    a_in = point_in_triangle(a, triangle[0], triangle[1], triangle[2])\n    b_in = point_in_triangle(b, triangle[0], triangle[1], triangle[2])\n\n    print('OK' if a_in != b_in else 'NG')\n\nsolve()",
+    "timestamp": "2025-08-12 23:27:13"
+  },
+  {
+    "model": "deepseek-v3",
+    "prompt_type": "zero_shot",
+    "language": "python",
+    "code": "def point_in_triangle(p, p0, p1, p2):\n    def sign(a, b, c):\n        return (a[0] - c[0]) * (b[1] - c[1]) - (b[0] - c[0]) * (a[1] - c[1])\n\n    d1 = sign(p, p0, p1)\n    d2 = sign(p, p1, p2)\n    d3 = sign(p, p2, p0)\n\n    has_neg = (d1 < 0) or (d2 < 0) or (d3 < 0)\n    has_pos = (d1 > 0) or (d2 > 0) or (d3 > 0)\n\n    return not (has_neg and has_pos)\n\nx0, y0, x1, y1, x2, y2 = map(int, input().split())\nax, ay, bx, by = map(int, input().split())\n\np0 = (x0, y0)\np1 = (x1, y1)\np2 = (x2, y2)\na = (ax, ay)\nb = (bx, by)\n\na_in = point_in_triangle(a, p0, p1, p2)\nb_in = point_in_triangle(b, p0, p1, p2)\n\nif (a_in and not b_in) or (not a_in and b_in):\n    print(\"OK\")\nelse:\n    print(\"NG\")",
+    "timestamp": "2025-08-12 23:27:30"
+  },
+  {
+    "model": "gpt-4o",
+    "prompt_type": "zero_shot",
+    "language": "c++",
+    "code": "#include <iostream>\n\nusing namespace std;\n\nstruct Point {\n    double x, y;\n};\n\n// Function to check if a point is inside a triangle using cross product\nbool isPointInsideTriangle(Point p, Point a, Point b, Point c) {\n    double cross1 = (b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x);\n    double cross2 = (c.x - b.x) * (p.y - b.y) - (c.y - b.y) * (p.x - b.x);\n    double cross3 = (a.x - c.x) * (p.y - c.y) - (a.y - c.y) * (p.x - c.x);\n\n    bool has_neg = (cross1 < 0) || (cross2 < 0) || (cross3 < 0);\n    bool has_pos = (cross1 > 0) || (cross2 > 0) || (cross3 > 0);\n\n    return !(has_neg && has_pos);\n}\n\nint main() {\n    Point a, b, c, char1, char2;\n    \n    // Reading the input positions for the vertices of the triangle and the two characters\n    cin >> a.x >> a.y >> b.x >> b.y >> c.x >> c.y;\n    cin >> char1.x >> char1.y >> char2.x >> char2.y;\n    \n    bool char1_inside = isPointInsideTriangle(char1, a, b, c);\n    bool char2_inside = isPointInsideTriangle(char2, a, b, c);\n    \n    if ((char1_inside && !char2_inside) || (!char1_inside && char2_inside)) {\n        cout << \"OK\" << endl;\n    } else {\n        cout << \"NG\" << endl;\n    }\n\n    return 0;\n}",
+    "timestamp": "2025-08-13 10:50:21"
+  }
+]

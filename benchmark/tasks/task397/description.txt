@@ -1,0 +1,1 @@
+A rabbit named Taro wants to hold a party and needs to invite friends to maximize the satisfaction scores of the guests. Each rabbit has a satisfaction score based on their minimal friendliness with other invited guests. The task is to calculate the maximal possible satisfaction score for the party based on given pairs of rabbit friendships and their friendliness levels.
